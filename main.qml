@@ -30,7 +30,7 @@ ApplicationWindow {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        anchors.bottom: volume_slider.top
+        anchors.bottom: time_text.top
 
         onPlay: {
             playMusic.source = path
@@ -101,16 +101,17 @@ ApplicationWindow {
         id: volume_slider
         height: 50
         width: 210
-        anchors.left: parent.left
-        anchors.bottom: btn_row.top
+        anchors.left: btn_row.right
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
         value: 0.5
     }
 
     Slider {
         id: progress_timer
         height: 50
-        anchors.left: btn_row.right
-        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.bottom: btn_row.top
         anchors.right: parent.right
         value: playMusic.position / playMusic.duration
 
@@ -122,9 +123,10 @@ ApplicationWindow {
     }
     Text {
         id: time_text
-        height: 20
+        height: 50
         anchors.horizontalCenter: progress_timer.horizontalCenter
         anchors.bottom: progress_timer.top
+        verticalAlignment: Text.AlignVCenter
         text: Functions.millisToMinSec(progress_timer.value * playMusic.duration)
               + "/"
               + Functions.millisToMinSec(playMusic.duration)
