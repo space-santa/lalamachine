@@ -1,5 +1,9 @@
 .pragma library
 
+function millisToSec(millis) {
+    return Math.floor(millis / 1000)
+}
+
 function millisToMinSec(millis) {
     var min = Math.floor(millis / 1000 / 60).toString()
     var rem = Math.floor(millis / 1000 % 60).toString()
