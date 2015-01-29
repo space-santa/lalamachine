@@ -15,12 +15,44 @@ ApplicationWindow {
     MediaPlayer {
         id: playMusic
         volume: volume_slider.value
+
+        onStopped: {
+            console.log("stopped", position, duration)
+            if (Functions.millisToSec(position)
+                    === Functions.millisToSec(duration)) {
+                playlist.playNext()
+            }
+        }
+    }
+
+    Playlist {
+        id: playlist
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: volume_slider.top
+
+        onPlay: {
+            playMusic.source = path
+            playMusic.play()
+        }
     }
 
     Row {
         id: btn_row
         anchors.left: parent.left
         anchors.bottom: parent.bottom
+
+        ImageButton {
+            id: back_btn
+            width: 70
+            height: 70
+            source: "qrc:/images/images/back.png"
+
+            onClicked: {
+                playlist.playPrevious()
+            }
+        }
 
         ImageButton {
             id: play_btn
@@ -51,6 +83,17 @@ ApplicationWindow {
             source: "qrc:/images/images/eject.png"
 
             onClicked: fileDialog.visible = true
+        }
+
+        ImageButton {
+            id: next_btn
+            width: 70
+            height: 70
+            source: "qrc:/images/images/forward.png"
+
+            onClicked: {
+                playlist.playNext()
+            }
         }
     }
 
@@ -93,7 +136,8 @@ ApplicationWindow {
         title: "Please choose a file"
         onAccepted: {
             console.log("You chose: " + fileDialog.fileUrls)
-            playMusic.source = fileDialog.fileUrl
+            //playMusic.source = fileDialog.fileUrl
+            playlist.add(fileDialog.fileUrl.toString())
             visible = false
         }
         onRejected: {
