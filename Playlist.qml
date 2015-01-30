@@ -18,6 +18,12 @@ Rectangle {
         playlist_model.clear()
     }
 
+    function addList(list) {
+        for (var i = 0; i < list.length; ++i) {
+            add(list[i].toString())
+        }
+    }
+
     function add(path) {
         playlist_model.append({mrl: path})
     }

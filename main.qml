@@ -196,10 +196,10 @@ ApplicationWindow {
         id: fileDialog
         visible: false
         title: "Please choose a file"
+        selectMultiple: true
         onAccepted: {
             console.log("You chose: " + fileDialog.fileUrls)
-            //playMusic.source = fileDialog.fileUrl
-            playlist.add(fileDialog.fileUrl.toString())
+            playlist.addList(fileDialog.fileUrls)
             visible = false
         }
         onRejected: {
