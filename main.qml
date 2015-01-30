@@ -151,6 +151,7 @@ ApplicationWindow {
         anchors.bottom: btn_row.top
         anchors.right: parent.right
         value: playMusic.position / playMusic.duration
+        enabled: playMusic.hasAudio
 
         onPressedChanged: {
             if (!pressed) {
