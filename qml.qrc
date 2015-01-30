@@ -11,5 +11,6 @@
         <file>images/play.png</file>
         <file>images/forward.png</file>
         <file>images/back.png</file>
+        <file>images/lalamachine.png</file>
     </qresource>
 </RCC>
