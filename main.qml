@@ -12,6 +12,21 @@ ApplicationWindow {
     height: 480
     title: qsTr("lalamachine")
 
+    Rectangle {
+        anchors.fill: parent
+        gradient: Gradient {
+            GradientStop {
+                position: 0.65;
+                color: "#ffbb00";
+            }
+            GradientStop {
+                position: 1.00;
+                color: "#ffffff";
+            }
+        }
+
+    }
+
     MediaPlayer {
         id: playMusic
         volume: volume_slider.value
