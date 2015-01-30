@@ -158,15 +158,37 @@ ApplicationWindow {
             }
         }
     }
+
     Text {
         id: time_text
         height: 50
-        anchors.horizontalCenter: progress_timer.horizontalCenter
+        anchors.right: parent.right
+        anchors.rightMargin: 20
         anchors.bottom: progress_timer.top
         verticalAlignment: Text.AlignVCenter
-        text: Functions.millisToMinSec(progress_timer.value * playMusic.duration)
-              + "/"
+        text: getMetaData()
+              + Functions.millisToMinSec(progress_timer.value * playMusic.duration)
+              + " / "
               + Functions.millisToMinSec(playMusic.duration)
+
+        function getMetaData() {
+            var retVal = ""
+
+            if (typeof(playMusic.metaData.title) !== "undefined") {
+                retVal += playMusic.metaData.title
+            }
+            if (typeof(playMusic.metaData.albumArtist) !== "undefined") {
+                if (retVal.length > 0) {
+                    retVal += " - "
+                }
+                retVal += playMusic.metaData.albumArtist
+            }
+            if (retVal.length > 0) {
+                retVal += " | "
+            }
+
+            return retVal
+        }
     }
 
     FileDialog {
