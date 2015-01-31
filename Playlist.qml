@@ -148,6 +148,9 @@ Rectangle {
         return playlist_model.get(i).artist < playlist_model.get(j).artist
     }
     // returns true if at i > j
+    // I implemented the descending functions. Just negating the
+    // ascending functions doesn't work. That would contain the equal.
+    // Having equal doesn't work.
     function trackDes(i, j) {
         return playlist_model.get(i).track > playlist_model.get(j).track
     }
