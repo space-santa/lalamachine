@@ -19,3 +19,6 @@ include(deployment.pri)
 
 HEADERS += \
     metadataprovider.h
+
+OTHER_FILES += \
+    README.md
