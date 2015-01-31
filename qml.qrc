@@ -5,6 +5,7 @@
         <file>functions.js</file>
         <file>Playlist.qml</file>
         <file>PlaylistButtons.qml</file>
+        <file>PlayerControlButtons.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/eject.png</file>

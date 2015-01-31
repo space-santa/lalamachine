@@ -52,6 +52,8 @@ ApplicationWindow {
             id: playlist_buttons
             anchors.left: parent.left
             anchors.bottom: parent.bottom
+
+            onClearList: playlist.clearList()
         }
 
         Playlist {
@@ -68,55 +70,25 @@ ApplicationWindow {
         }
     }
 
-    Row {
+    PlayerControlButtons {
         id: btn_row
         anchors.left: parent.left
         anchors.bottom: parent.bottom
 
-        ImageButton {
-            id: back_btn
-            width: 70
-            height: 70
-            source: "qrc:/images/images/back.png"
-            onClicked: playlist.playPrevious()
-        }
+        onPlayPrevious: playlist.playPrevious()
 
-        ImageButton {
-            id: play_btn
-            width: 70
-            height: 70
-            source: "qrc:/images/images/play.png"
-
-            onClicked: {
-                if (playMusic.hasAudio) {
-                    playMusic.play()
-                }
+        onPlay: {
+            if (playMusic.hasAudio) {
+                playMusic.play()
             }
         }
 
-        ImageButton {
-            id: pause_btn
-            width: 70
-            height: 70
-            source: "qrc:/images/images/pause.png"
-            onClicked: playMusic.pause()
+        onPause: playMusic.pause()
+        onOpen: {
+            console.log("open clicked")
+            fileDialog.visible = true
         }
-
-        ImageButton {
-            id: open_btn
-            width: 70
-            height: 70
-            source: "qrc:/images/images/eject.png"
-            onClicked: fileDialog.visible = true
-        }
-
-        ImageButton {
-            id: next_btn
-            width: 70
-            height: 70
-            source: "qrc:/images/images/forward.png"
-            onClicked: playlist.playNext()
-        }
+        onPlayNext: playlist.playNext()
     }
 
     Rectangle {
