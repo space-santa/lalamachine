@@ -67,6 +67,11 @@ Rectangle {
     //   4 = genre
     //   5 = artist
     // how is ascending (=0) or descending (=1)
+    // WARNING! DANGER! Just negating the ascending function doesn't work.
+    // Then it would try to sort equal which leads to an infinite loop.
+    // We would check that something is not smaller than the other and then
+    // swap those values. This would always be true if we have the equal
+    // in there.
     function sort(what, how) {
         var sorter
         if (what === 0) {
