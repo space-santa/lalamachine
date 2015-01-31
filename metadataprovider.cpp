@@ -47,6 +47,7 @@ QJsonObject MetaDataProvider::metaData(const QUrl &path) const
 
 QString MetaDataProvider::secToMinSec(int sec) const
 {
+    Q_ASSERT(sec > 0);
     QTime t(0, 0, 0, 0);
     return t.addSecs(sec).toString("mm:ss");
 }
