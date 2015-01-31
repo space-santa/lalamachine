@@ -59,6 +59,114 @@ Rectangle {
         }
     }
 
+    // what can be one of the keys
+    //   0 = track
+    //   1 = title
+    //   2 = comment
+    //   3 = lengthString
+    //   4 = genre
+    //   5 = artist
+    // how is ascending (=0) or descending (=1)
+    function sort(what, how) {
+        var sorter
+        if (what === 0) {
+            if (how === 0) {
+                sorter = trackAsc
+            } else {
+                sorter = trackDes
+            }
+        } else if (what === 1) {
+            if (how === 0) {
+                sorter = titleAsc
+            } else {
+                sorter = titleDes
+            }
+        } else if (what === 2) {
+            if (how === 0) {
+                sorter = commentAsc
+            } else {
+                sorter = commentDes
+            }
+        } else if (what === 3) {
+            if (how === 0) {
+                sorter = lengthAsc
+            } else {
+                sorter = lengthDes
+            }
+        } else if (what === 4) {
+            if (how === 0) {
+                sorter = genreAsc
+            } else {
+                sorter = genreDes
+            }
+        } else if (what === 5) {
+            if (how === 0) {
+                sorter = artistAsc
+            } else {
+                sorter = artistDes
+            }
+        } else {
+            console.error("sort criterion is wrong")
+            return
+        }
+
+        for (var i = 0; i < playlist_model.count; ++i) {
+            if (i < 1) {
+                continue
+            }
+            if (i === 1) {
+                // if 0 is not < 1 move 0 to 1
+                if (sorter(1, 0)) {
+                    playlist_model.move(0, 1, 1)
+                }
+                continue
+            }
+            if (sorter(i, i - 1)) {
+                playlist_model.move(i - 1, i, 1)
+                i -= 2
+            }
+        }
+    }
+
+    // returns true if at i < j
+    function trackAsc(i, j) {
+        return playlist_model.get(i).track < playlist_model.get(j).track
+    }
+    function titleAsc(i, j) {
+        return playlist_model.get(i).title < playlist_model.get(j).title
+    }
+    function commentAsc(i, j) {
+        return playlist_model.get(i).comment < playlist_model.get(j).comment
+    }
+    function lengthAsc(i, j) {
+        return playlist_model.get(i).length < playlist_model.get(j).length
+    }
+    function genreAsc(i, j) {
+        return playlist_model.get(i).genre < playlist_model.get(j).genre
+    }
+    function artistAsc(i, j) {
+        return playlist_model.get(i).artist < playlist_model.get(j).artist
+    }
+    // returns true if at i > j
+    function trackDes(i, j) {
+        return playlist_model.get(i).track > playlist_model.get(j).track
+    }
+    function titleDes(i, j) {
+        return playlist_model.get(i).title > playlist_model.get(j).title
+    }
+    function commentDes(i, j) {
+        return playlist_model.get(i).comment > playlist_model.get(j).comment
+    }
+    function lengthDes(i, j) {
+        return playlist_model.get(i).length > playlist_model.get(j).length
+    }
+    function genreDes(i, j) {
+        return playlist_model.get(i).genre > playlist_model.get(j).genre
+    }
+    function artistDes(i, j) {
+        return playlist_model.get(i).artist > playlist_model.get(j).artist
+    }
+
     ListModel {
         id: playlist_model
     }
@@ -101,5 +209,15 @@ Rectangle {
         onModelChanged: playlist_view.resizeColumnsToContents()
 
         onDoubleClicked: playRow(row)
+
+        sortIndicatorVisible: true
+        onSortIndicatorColumnChanged: {
+            console.log(sortIndicatorColumn)
+            sort(sortIndicatorColumn, sortIndicatorOrder)
+        }
+        onSortIndicatorOrderChanged: {
+            console.log(sortIndicatorOrder)
+            sort(sortIndicatorColumn, sortIndicatorOrder)
+        }
     }
 }
