@@ -135,7 +135,8 @@ Rectangle {
 
     // returns true if at i < j
     function trackAsc(i, j) {
-        return playlist_model.get(i).track < playlist_model.get(j).track
+        return parseInt(playlist_model.get(i).track) < parseInt(
+                    playlist_model.get(j).track)
     }
     function titleAsc(i, j) {
         return playlist_model.get(i).title < playlist_model.get(j).title
@@ -157,7 +158,8 @@ Rectangle {
     // ascending functions doesn't work. That would contain the equal.
     // Having equal doesn't work.
     function trackDes(i, j) {
-        return playlist_model.get(i).track > playlist_model.get(j).track
+        return parseInt(playlist_model.get(i).track) > parseInt(
+                    playlist_model.get(j).track)
     }
     function titleDes(i, j) {
         return playlist_model.get(i).title > playlist_model.get(j).title
