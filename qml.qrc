@@ -4,6 +4,7 @@
         <file>ImageButton.qml</file>
         <file>functions.js</file>
         <file>Playlist.qml</file>
+        <file>PlaylistButtons.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/eject.png</file>
@@ -16,5 +17,6 @@
         <file>images/go-down.png</file>
         <file>images/go-top.png</file>
         <file>images/go-up.png</file>
+        <file>images/edit-clear.png</file>
     </qresource>
 </RCC>
