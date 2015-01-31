@@ -2,6 +2,10 @@ TEMPLATE = app
 
 QT += qml quick widgets
 
+INCLUDEPATH += /usr/include/taglib
+
+LIBS += -ltag
+
 SOURCES += main.cpp
 
 RESOURCES += qml.qrc
@@ -11,3 +15,5 @@ QML_IMPORT_PATH =
 
 # Default rules for deployment.
 include(deployment.pri)
+
+HEADERS +=
