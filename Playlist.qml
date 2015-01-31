@@ -67,11 +67,12 @@ Rectangle {
         id: playlist_view
         anchors.fill: parent
         model: playlist_model
-        TableViewColumn{ role: "title"  ; title: "title"}
-        TableViewColumn{ role: "comment"  ; title: "comment"}
-        TableViewColumn{ role: "lengthString"  ; title: "length"}
-        TableViewColumn{ role: "genre"  ; title: "genre"}
-        TableViewColumn{ role: "artist"  ; title: "artist"}
+        TableViewColumn{ role: "track"  ; title: "track"; width: 50}
+        TableViewColumn{ role: "title"  ; title: "title"; width: 200}
+        TableViewColumn{ role: "comment"  ; title: "comment"; width: 100}
+        TableViewColumn{ role: "lengthString"  ; title: "length"; width: 100}
+        TableViewColumn{ role: "genre"  ; title: "genre"; width: 150}
+        TableViewColumn{ role: "artist"  ; title: "artist"; width: 150}
 
         onModelChanged: playlist_view.resizeColumnsToContents()
 

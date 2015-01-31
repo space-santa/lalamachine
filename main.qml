@@ -8,7 +8,7 @@ import "qrc:/functions.js" as Functions
 
 ApplicationWindow {
     visible: true
-    width: 640
+    width: 750
     height: 480
     title: qsTr("lalamachine")
 
