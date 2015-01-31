@@ -177,6 +177,22 @@ Rectangle {
         return playlist_model.get(i).artist > playlist_model.get(j).artist
     }
 
+    function moveTop() {
+        playlist_model.move(playlist_view.currentRow, 0, 1)
+    }
+    function moveUp() {
+        playlist_model.move(playlist_view.currentRow,
+                            playlist_view.currentRow - 1, 1)
+    }
+    function moveDown() {
+        playlist_model.move(playlist_view.currentRow,
+                            playlist_view.currentRow + 1, 1)
+    }
+    function moveBottom() {
+        playlist_model.move(playlist_view.currentRow,
+                            playlist_model.count - 1, 1)
+    }
+
     ListModel {
         id: playlist_model
     }

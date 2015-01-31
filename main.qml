@@ -53,6 +53,10 @@ ApplicationWindow {
             anchors.left: parent.left
             anchors.bottom: parent.bottom
 
+            onMoveTop: playlist.moveTop()
+            onMoveUp: playlist.moveUp()
+            onMoveDown: playlist.moveDown()
+            onMoveBottom: playlist.moveBottom()
             onClearList: playlist.clearList()
         }
 
