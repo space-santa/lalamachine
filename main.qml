@@ -203,6 +203,8 @@ ApplicationWindow {
         visible: false
         title: "Please choose a file"
         selectMultiple: true
+        nameFilters: [ "Audio files (*.mp3 *.m4a *.ogg *.wav)" ]
+
         onAccepted: {
             console.log("You chose: " + fileDialog.fileUrls)
             playlist.addList(fileDialog.fileUrls)
