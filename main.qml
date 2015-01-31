@@ -13,15 +13,18 @@ ApplicationWindow {
     title: qsTr("lalamachine")
 
     Rectangle {
-        anchors.fill: parent
+        anchors.top: playlist.bottom
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
         gradient: Gradient {
             GradientStop {
-                position: 0.65;
-                color: "#ffbb00";
+                position: 0.00;
+                color: "#000000";
             }
             GradientStop {
                 position: 1.00;
-                color: "#ffffff";
+                color: "#717171";
             }
         }
 
@@ -162,6 +165,7 @@ ApplicationWindow {
     Text {
         id: time_text
         height: 50
+        color: "#ffffff"
         anchors.right: parent.right
         anchors.rightMargin: 20
         anchors.bottom: progress_timer.top
@@ -170,6 +174,9 @@ ApplicationWindow {
               + Functions.millisToMinSec(progress_timer.value * playMusic.duration)
               + " / "
               + Functions.millisToMinSec(playMusic.duration)
+        font.pointSize: 12
+        styleColor: "#000000"
+        style: Text.Outline
 
         function getMetaData() {
             var retVal = ""
