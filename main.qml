@@ -12,13 +12,13 @@ ApplicationWindow {
     title: qsTr("lalamachine")
 
     Rectangle {
-        anchors.top: playlist.bottom
+        anchors.top: parent.top
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         gradient: Gradient {
             GradientStop {
-                position: 0.00
+                position: 0.49
                 color: "#000000"
             }
             GradientStop {
@@ -40,16 +40,31 @@ ApplicationWindow {
         }
     }
 
-    Playlist {
-        id: playlist
+    Rectangle {
+        id: playlist_container
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: time_text.top
+        color: "transparent"
 
-        onPlay: {
-            playMusic.source = path
-            playMusic.play()
+        PlaylistButtons {
+            id: playlist_buttons
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+        }
+
+        Playlist {
+            id: playlist
+            anchors.left: playlist_buttons.right
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+
+            onPlay: {
+                playMusic.source = path
+                playMusic.play()
+            }
         }
     }
 
@@ -63,10 +78,7 @@ ApplicationWindow {
             width: 70
             height: 70
             source: "qrc:/images/images/back.png"
-
-            onClicked: {
-                playlist.playPrevious()
-            }
+            onClicked: playlist.playPrevious()
         }
 
         ImageButton {
@@ -87,7 +99,6 @@ ApplicationWindow {
             width: 70
             height: 70
             source: "qrc:/images/images/pause.png"
-
             onClicked: playMusic.pause()
         }
 
@@ -96,7 +107,6 @@ ApplicationWindow {
             width: 70
             height: 70
             source: "qrc:/images/images/eject.png"
-
             onClicked: fileDialog.visible = true
         }
 
@@ -105,10 +115,7 @@ ApplicationWindow {
             width: 70
             height: 70
             source: "qrc:/images/images/forward.png"
-
-            onClicked: {
-                playlist.playNext()
-            }
+            onClicked: playlist.playNext()
         }
     }
 
@@ -171,9 +178,9 @@ ApplicationWindow {
         anchors.rightMargin: 20
         anchors.bottom: progress_timer.top
         verticalAlignment: Text.AlignVCenter
-        text: getNowPlayingInfo()
-              + Functions.millisToMinSec(progress_timer.value * playMusic.duration)
-              + " / " + Functions.millisToMinSec(playMusic.duration)
+        text: getNowPlayingInfo() + Functions.millisToMinSec(
+                  progress_timer.value * playMusic.duration) + " / " + Functions.millisToMinSec(
+                  playMusic.duration)
         font.pointSize: 12
         styleColor: "#000000"
         style: Text.Outline
