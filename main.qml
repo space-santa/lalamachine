@@ -5,7 +5,6 @@ import QtQuick.Dialogs 1.2
 
 import "qrc:/functions.js" as Functions
 
-
 ApplicationWindow {
     visible: true
     width: 750
@@ -19,15 +18,14 @@ ApplicationWindow {
         anchors.right: parent.right
         gradient: Gradient {
             GradientStop {
-                position: 0.00;
-                color: "#000000";
+                position: 0.00
+                color: "#000000"
             }
             GradientStop {
-                position: 1.00;
-                color: "#717171";
+                position: 1.00
+                color: "#717171"
             }
         }
-
     }
 
     MediaPlayer {
@@ -35,8 +33,8 @@ ApplicationWindow {
         volume: volume_slider.value
 
         onStopped: {
-            if (Functions.millisToSec(position)
-                    === Functions.millisToSec(duration)) {
+            if (Functions.millisToSec(position) === Functions.millisToSec(
+                        duration)) {
                 playlist.playNext()
             }
         }
@@ -126,7 +124,7 @@ ApplicationWindow {
             id: vol_icon
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
-            height : iconSize()
+            height: iconSize()
             width: height
             source: "qrc:/images/images/lalamachine.png"
 
@@ -142,6 +140,7 @@ ApplicationWindow {
         height: 50
         anchors.left: vol_icon_container.right
         anchors.right: parent.right
+        anchors.rightMargin: 20
         anchors.bottom: parent.bottom
         value: 0.5
     }
@@ -152,6 +151,8 @@ ApplicationWindow {
         anchors.left: parent.left
         anchors.bottom: btn_row.top
         anchors.right: parent.right
+        anchors.leftMargin: 20
+        anchors.rightMargin: 20
         value: playMusic.position / playMusic.duration
         enabled: playMusic.hasAudio
 
@@ -172,8 +173,7 @@ ApplicationWindow {
         verticalAlignment: Text.AlignVCenter
         text: getMetaData()
               + Functions.millisToMinSec(progress_timer.value * playMusic.duration)
-              + " / "
-              + Functions.millisToMinSec(playMusic.duration)
+              + " / " + Functions.millisToMinSec(playMusic.duration)
         font.pointSize: 12
         styleColor: "#000000"
         style: Text.Outline
@@ -181,10 +181,10 @@ ApplicationWindow {
         function getMetaData() {
             var retVal = ""
 
-            if (typeof(playMusic.metaData.title) !== "undefined") {
+            if (typeof (playMusic.metaData.title) !== "undefined") {
                 retVal += playMusic.metaData.title
             }
-            if (typeof(playMusic.metaData.albumArtist) !== "undefined") {
+            if (typeof (playMusic.metaData.albumArtist) !== "undefined") {
                 if (retVal.length > 0) {
                     retVal += " - "
                 }
@@ -203,7 +203,7 @@ ApplicationWindow {
         visible: false
         title: "Please choose a file"
         selectMultiple: true
-        nameFilters: [ "Audio files (*.mp3 *.m4a *.ogg *.wav)" ]
+        nameFilters: ["Audio files (*.mp3 *.m4a *.ogg *.wav)"]
 
         onAccepted: {
             console.log("You chose: " + fileDialog.fileUrls)
