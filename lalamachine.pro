@@ -6,7 +6,8 @@ INCLUDEPATH += /usr/include/taglib
 
 LIBS += -ltag
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    metadataprovider.cpp
 
 RESOURCES += qml.qrc
 
@@ -16,4 +17,5 @@ QML_IMPORT_PATH =
 # Default rules for deployment.
 include(deployment.pri)
 
-HEADERS +=
+HEADERS += \
+    metadataprovider.h

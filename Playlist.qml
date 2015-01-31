@@ -1,6 +1,8 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.2
 
+import Lala 1.0
+
 Rectangle {
     property int rowPlaying: -1
     onRowPlayingChanged: {
@@ -14,6 +16,10 @@ Rectangle {
         playlist_model.remove(playlist_view.currentRow)
     }
 
+    Metadata {
+        id: meta
+    }
+
     function clearList() {
         playlist_model.clear()
     }
@@ -25,7 +31,7 @@ Rectangle {
     }
 
     function add(path) {
-        playlist_model.append({mrl: path})
+        playlist_model.append(meta.metaData(path))
     }
 
     function playRow(row) {
@@ -61,7 +67,10 @@ Rectangle {
         id: playlist_view
         anchors.fill: parent
         model: playlist_model
-        TableViewColumn{ role: "mrl"  ; title: "path" ; width: parent.width}
+        TableViewColumn{ role: "title"  ; title: "title"}
+        TableViewColumn{ role: "comment"  ; title: "comment"}
+        TableViewColumn{ role: "genre"  ; title: "genre"}
+        TableViewColumn{ role: "artist"  ; title: "artist"}
 
         onModelChanged: playlist_view.resizeColumnsToContents()
 
