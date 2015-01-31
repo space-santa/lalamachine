@@ -32,7 +32,6 @@ ApplicationWindow {
         volume: volume_slider.value
 
         onStopped: {
-            console.log("stopped", position, duration)
             if (Functions.millisToSec(position)
                     === Functions.millisToSec(duration)) {
                 playlist.playNext()
