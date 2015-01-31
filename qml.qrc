@@ -12,5 +12,9 @@
         <file>images/forward.png</file>
         <file>images/back.png</file>
         <file>images/lalamachine.png</file>
+        <file>images/go-bottom.png</file>
+        <file>images/go-down.png</file>
+        <file>images/go-top.png</file>
+        <file>images/go-up.png</file>
     </qresource>
 </RCC>
