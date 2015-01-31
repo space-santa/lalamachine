@@ -1,7 +1,7 @@
 .pragma library
 
 function millisToSec(millis) {
-    return Math.floor(millis / 1000)
+    return Math.round(millis / 1000)
 }
 
 function millisToMinSec(millis) {
