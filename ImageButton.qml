@@ -3,6 +3,8 @@ import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.2
 
 Button {
+    width: 70
+    height: width
     property string source
     Image {
         anchors.centerIn: parent
