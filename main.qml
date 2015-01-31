@@ -171,14 +171,14 @@ ApplicationWindow {
         anchors.rightMargin: 20
         anchors.bottom: progress_timer.top
         verticalAlignment: Text.AlignVCenter
-        text: getMetaData()
+        text: getTimeData()
               + Functions.millisToMinSec(progress_timer.value * playMusic.duration)
               + " / " + Functions.millisToMinSec(playMusic.duration)
         font.pointSize: 12
         styleColor: "#000000"
         style: Text.Outline
 
-        function getMetaData() {
+        function getTimeData() {
             var retVal = ""
 
             if (typeof (playMusic.metaData.title) !== "undefined") {
