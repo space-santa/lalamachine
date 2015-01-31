@@ -4,6 +4,7 @@
 #include <QString>
 #include <QVariantMap>
 #include <QJsonObject>
+#include <QTime>
 
 #include "tag.h"
 #include "fileref.h"
@@ -13,7 +14,7 @@ MetaDataProvider::MetaDataProvider(QQuickItem *parent) :
 {
 }
 
-QJsonObject MetaDataProvider::metaData(const QUrl &path)
+QJsonObject MetaDataProvider::metaData(const QUrl &path) const
 {
     QString line(path.path());
     TagLib::FileRef f(line.toLocal8Bit().data());
@@ -37,7 +38,15 @@ QJsonObject MetaDataProvider::metaData(const QUrl &path)
                       QString::fromUtf8(tag->genre().toCString()));
         tmpmap.insert("path", line);
         tmpmap.insert("mrl", path);
+        tmpmap.insert("length", f.audioProperties()->length());
+        tmpmap.insert("lengthString", secToMinSec(f.audioProperties()->length()));
     }
 
     return QJsonObject::fromVariantMap(tmpmap);
+}
+
+QString MetaDataProvider::secToMinSec(int sec) const
+{
+    QTime t(0, 0, 0, 0);
+    return t.addSecs(sec).toString("mm:ss");
 }

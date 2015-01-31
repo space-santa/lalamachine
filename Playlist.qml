@@ -69,6 +69,7 @@ Rectangle {
         model: playlist_model
         TableViewColumn{ role: "title"  ; title: "title"}
         TableViewColumn{ role: "comment"  ; title: "comment"}
+        TableViewColumn{ role: "lengthString"  ; title: "length"}
         TableViewColumn{ role: "genre"  ; title: "genre"}
         TableViewColumn{ role: "artist"  ; title: "artist"}
 

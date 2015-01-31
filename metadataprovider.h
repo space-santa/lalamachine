@@ -10,7 +10,9 @@ class MetaDataProvider : public QQuickItem
 public:
     explicit MetaDataProvider(QQuickItem *parent = 0);
 
-    Q_INVOKABLE QJsonObject metaData(const QUrl &path);
+    Q_INVOKABLE QJsonObject metaData(const QUrl &path) const;
+
+    Q_INVOKABLE QString secToMinSec(int sec) const;
 
 signals:
 
