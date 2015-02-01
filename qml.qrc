@@ -7,6 +7,7 @@
         <file>PlaylistButtons.qml</file>
         <file>PlayerControlButtons.qml</file>
         <file>SavePlaylistDialog.qml</file>
+        <file>VolumeControl.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/eject.png</file>

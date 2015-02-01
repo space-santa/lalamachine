@@ -30,7 +30,7 @@ ApplicationWindow {
 
     MediaPlayer {
         id: playMusic
-        volume: volume_slider.value
+        volume: volume_control.value
 
         onStopped: {
             if (Functions.millisToSec(position) === Functions.millisToSec(
@@ -45,7 +45,7 @@ ApplicationWindow {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        anchors.bottom: time_text.top
+        anchors.bottom: now_playing_container.top
         color: "transparent"
 
         PlaylistButtons {
@@ -75,6 +75,67 @@ ApplicationWindow {
         }
     }
 
+    Rectangle {
+        id: now_playing_container
+        anchors.bottom: btn_row.top
+        anchors.right: parent.right
+        width: playlist.width
+        height: 100
+        color: "transparent"
+        Slider {
+            id: progress_timer
+            height: 50
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            anchors.leftMargin: 20
+            anchors.rightMargin: 20
+            value: playMusic.position / playMusic.duration
+            enabled: playMusic.hasAudio
+
+            onPressedChanged: {
+                if (!pressed) {
+                    playMusic.seek(value * playMusic.duration)
+                }
+            }
+        }
+
+        Text {
+            id: time_text
+            height: 50
+            color: "#ffffff"
+            anchors.right: parent.right
+            anchors.rightMargin: 20
+            anchors.bottom: progress_timer.top
+            verticalAlignment: Text.AlignVCenter
+            text: getNowPlayingInfo() + Functions.millisToMinSec(
+                      progress_timer.value * playMusic.duration) + " / " + Functions.millisToMinSec(
+                      playMusic.duration)
+            font.pointSize: 12
+            styleColor: "#000000"
+            style: Text.Outline
+
+            function getNowPlayingInfo() {
+                var retVal = ""
+
+                if (typeof (playMusic.metaData.title) !== "undefined") {
+                    retVal += playMusic.metaData.title
+                }
+                if (typeof (playMusic.metaData.albumArtist) !== "undefined") {
+                    if (retVal.length > 0) {
+                        retVal += " - "
+                    }
+                    retVal += playMusic.metaData.albumArtist
+                }
+                if (retVal.length > 0) {
+                    retVal += " | "
+                }
+
+                return retVal
+            }
+        }
+    }
+
     PlayerControlButtons {
         id: btn_row
         anchors.left: parent.left
@@ -96,90 +157,11 @@ ApplicationWindow {
         onPlayNext: playlist.playNext()
     }
 
-    Rectangle {
-        id: vol_icon_container
-        width: 70
-        height: width
+    VolumeControl {
+        id: volume_control
         anchors.bottom: parent.bottom
         anchors.left: btn_row.right
-        color: "transparent"
-
-        Image {
-            id: vol_icon
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottom: parent.bottom
-            height: iconSize()
-            width: height
-            source: "qrc:/images/images/lalamachine.png"
-
-            function iconSize() {
-                // The icon should still be visible if volume is 0.
-                return parent.height * (0.25 + 0.75 * volume_slider.value)
-            }
-        }
-    }
-
-    Slider {
-        id: volume_slider
-        height: 50
-        anchors.left: vol_icon_container.right
         anchors.right: parent.right
-        anchors.rightMargin: 20
-        anchors.bottom: parent.bottom
-        value: 0.5
-    }
-
-    Slider {
-        id: progress_timer
-        height: 50
-        anchors.left: parent.left
-        anchors.bottom: btn_row.top
-        anchors.right: parent.right
-        anchors.leftMargin: 20
-        anchors.rightMargin: 20
-        value: playMusic.position / playMusic.duration
-        enabled: playMusic.hasAudio
-
-        onPressedChanged: {
-            if (!pressed) {
-                playMusic.seek(value * playMusic.duration)
-            }
-        }
-    }
-
-    Text {
-        id: time_text
-        height: 50
-        color: "#ffffff"
-        anchors.right: parent.right
-        anchors.rightMargin: 20
-        anchors.bottom: progress_timer.top
-        verticalAlignment: Text.AlignVCenter
-        text: getNowPlayingInfo() + Functions.millisToMinSec(
-                  progress_timer.value * playMusic.duration) + " / " + Functions.millisToMinSec(
-                  playMusic.duration)
-        font.pointSize: 12
-        styleColor: "#000000"
-        style: Text.Outline
-
-        function getNowPlayingInfo() {
-            var retVal = ""
-
-            if (typeof (playMusic.metaData.title) !== "undefined") {
-                retVal += playMusic.metaData.title
-            }
-            if (typeof (playMusic.metaData.albumArtist) !== "undefined") {
-                if (retVal.length > 0) {
-                    retVal += " - "
-                }
-                retVal += playMusic.metaData.albumArtist
-            }
-            if (retVal.length > 0) {
-                retVal += " | "
-            }
-
-            return retVal
-        }
     }
 
     FileDialog {
