@@ -3,12 +3,19 @@ import QtQuick 2.0
 Column {
     height: childrenRect.height
     width: childrenRect.width
+    signal saveList
     signal moveTop
     signal moveUp
     signal moveDown
     signal moveBottom
     signal clearList
 
+    ImageButton {
+        id: save_btn
+        width: 50
+        source: "qrc:/images/images/save.png"
+        onClicked: saveList()
+    }
     ImageButton {
         id: top_btn
         width: 50

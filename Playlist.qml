@@ -10,6 +10,8 @@ Rectangle {
         playlist_view.selection.select(rowPlaying)
     }
 
+    property alias savePlaylistVisible: save_playlist_dialog.visible
+
     signal play(string path)
 
     Keys.onDeletePressed: {
@@ -18,6 +20,28 @@ Rectangle {
 
     Metadata {
         id: meta
+    }
+
+    M3uInOut {
+        id: m3u_inout
+    }
+
+    SavePlaylistDialog {
+        id: save_playlist_dialog
+        onAccepted: {
+            writePlaylist(save_playlist_dialog.playlistName)
+            save_playlist_dialog.visible = false
+        }
+    }
+
+    function writePlaylist(name) {
+        var list = []
+
+        for (var i = 0; i < playlist_model.count; ++i) {
+            list[i] = playlist_model.get(i)["path"]
+        }
+
+        m3u_inout.writePlaylist(name, list);
     }
 
     function clearList() {

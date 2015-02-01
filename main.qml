@@ -53,6 +53,7 @@ ApplicationWindow {
             anchors.left: parent.left
             anchors.bottom: parent.bottom
 
+            onSaveList: playlist.savePlaylistVisible = true
             onMoveTop: playlist.moveTop()
             onMoveUp: playlist.moveUp()
             onMoveDown: playlist.moveDown()

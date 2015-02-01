@@ -6,6 +6,7 @@
         <file>Playlist.qml</file>
         <file>PlaylistButtons.qml</file>
         <file>PlayerControlButtons.qml</file>
+        <file>SavePlaylistDialog.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/eject.png</file>
@@ -19,5 +20,6 @@
         <file>images/go-top.png</file>
         <file>images/go-up.png</file>
         <file>images/edit-clear.png</file>
+        <file>images/save.png</file>
     </qresource>
 </RCC>

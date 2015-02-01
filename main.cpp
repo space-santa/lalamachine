@@ -4,6 +4,7 @@
 #include <QIcon>
 
 #include "metadataprovider.h"
+#include "m3uinout.h"
 
 int main(int argc, char *argv[])
 {
@@ -12,6 +13,7 @@ int main(int argc, char *argv[])
     app.setWindowIcon(QIcon(QPixmap(":/images/images/lalamachine.png")));
 
     qmlRegisterType<MetaDataProvider>("Lala", 1, 0, "Metadata");
+    qmlRegisterType<M3uInOut>("Lala", 1, 0, "M3uInOut");
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
