@@ -37,6 +37,7 @@ Rectangle {
     function playRow(row) {
         rowPlaying = row
         play(playlist_model.get(row)["mrl"])
+        playlist_view.currentRow = rowPlaying
     }
 
     function hasNext() {
@@ -201,6 +202,10 @@ Rectangle {
         id: playlist_view
         anchors.fill: parent
         model: playlist_model
+        onCurrentRowChanged: {
+            selection.clear()
+            selection.select(currentRow)
+        }
         TableViewColumn {
             role: "track"
             title: "track"
