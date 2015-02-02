@@ -14,3 +14,11 @@ function secToMinSec(sec) {
     rem = rem.length === 1 ? "0" + rem : rem
     return min + ":" + rem
 }
+
+function getSafeValue(value) {
+    if (typeof(value) === "undefined") {
+        return ""
+    } else {
+        return value
+    }
+}
