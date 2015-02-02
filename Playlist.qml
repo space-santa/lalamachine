@@ -5,6 +5,7 @@ import Lala 1.0
 
 Rectangle {
     property int rowPlaying: -1
+    property url nowPlayingSource
     onRowPlayingChanged: {
         playlist_view.selection.clear()
         playlist_view.selection.select(rowPlaying)
@@ -34,6 +35,18 @@ Rectangle {
         }
     }
 
+    function updateNowPlayingRow() {
+        var row = -1
+        for (var i = 0; i < playlist_model.count; ++i) {
+            if (nowPlayingSource == playlist_model.get(i)["mrl"]) {
+                console.log("true")
+                row = i
+            }
+        }
+
+        rowPlaying = row
+    }
+
     function writePlaylist(name) {
         var list = []
 
@@ -50,6 +63,7 @@ Rectangle {
 
     function clearList() {
         playlist_model.clear()
+        updateNowPlayingRow()
     }
 
     function addList(list) {
@@ -60,6 +74,8 @@ Rectangle {
 
     function add(path) {
         playlist_model.append(meta.metaData(path))
+
+        updateNowPlayingRow()
     }
 
     function playRow(row) {
@@ -160,6 +176,8 @@ Rectangle {
                 i -= 2
             }
         }
+
+        updateNowPlayingRow()
     }
 
     // returns true if at i < j

@@ -76,6 +76,8 @@ ApplicationWindow {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
 
+            nowPlayingSource: playMusic.source
+
             onPlay: {
                 playMusic.source = path
                 playMusic.play()
