@@ -23,5 +23,6 @@
         <file>images/go-up.png</file>
         <file>images/edit-clear.png</file>
         <file>images/save.png</file>
+        <file>images/open.png</file>
     </qresource>
 </RCC>

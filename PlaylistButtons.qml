@@ -3,6 +3,7 @@ import QtQuick 2.0
 Column {
     height: childrenRect.height
     width: childrenRect.width
+    signal openList
     signal saveList
     signal moveTop
     signal moveUp
@@ -10,6 +11,12 @@ Column {
     signal moveBottom
     signal clearList
 
+    ImageButton {
+        id: open_btn
+        width: 50
+        source: "qrc:/images/images/open.png"
+        onClicked: openList()
+    }
     ImageButton {
         id: save_btn
         width: 50
