@@ -8,8 +8,16 @@ import "qrc:/functions.js" as Functions
 ApplicationWindow {
     visible: true
     width: 750
-    height: 480
+    height: 550
     title: qsTr("lalamachine")
+
+    Component.onCompleted: {
+        playlist.readPlaylist("misc")
+    }
+
+    onClosing: {
+        playlist.writePlaylist("misc")
+    }
 
     Rectangle {
         anchors.top: parent.top

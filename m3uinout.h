@@ -13,6 +13,8 @@ public:
 
     Q_INVOKABLE void writePlaylist(const QString &name,
                                    const QStringList files) const;
+    Q_INVOKABLE QStringList readPlaylist(const QString &name) const;
+    Q_INVOKABLE QStringList getPlaylistNames() const;
 
 signals:
 

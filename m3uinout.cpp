@@ -32,6 +32,29 @@ void M3uInOut::writePlaylist(const QString &name,
     }
 }
 
+QStringList M3uInOut::readPlaylist(const QString &name) const
+{
+    QFile file(m3uPath(name));
+    QStringList retVal;
+
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&file);
+
+        while (!in.atEnd()) {
+            retVal.append("file://" + in.readLine());
+        }
+    }
+
+    return retVal;
+}
+
+QStringList M3uInOut::getPlaylistNames() const
+{
+    QDir d(PLAYLISTDIR);
+    d.setFilter(".m3u");
+    return d.entryList();
+}
+
 QString M3uInOut::m3uPath(const QString &name) const
 {
     return PLAYLISTDIR + "/" + name + ".m3u";

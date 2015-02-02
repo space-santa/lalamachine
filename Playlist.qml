@@ -44,6 +44,10 @@ Rectangle {
         m3u_inout.writePlaylist(name, list);
     }
 
+    function readPlaylist(name) {
+        addList(m3u_inout.readPlaylist(name))
+    }
+
     function clearList() {
         playlist_model.clear()
     }
