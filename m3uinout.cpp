@@ -51,7 +51,9 @@ QStringList M3uInOut::readPlaylist(const QString &name) const
 QStringList M3uInOut::getPlaylistNames() const
 {
     QDir d(PLAYLISTDIR);
-    d.setFilter(".m3u");
+    QStringList filters;
+    filters << "*.m3u";
+    d.setNameFilters(filters);
     return d.entryList();
 }
 
