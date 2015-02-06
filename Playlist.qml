@@ -6,15 +6,16 @@ import Lala 1.0
 Rectangle {
     property int rowPlaying: -1
     property url nowPlayingSource
-    onRowPlayingChanged: {
-        playlist_view.selection.clear()
-        playlist_view.selection.select(rowPlaying)
-    }
-
+    property bool repeatAll: false
     property alias savePlaylistVisible: save_playlist_dialog.visible
 
     signal play(string path)
     signal stop
+
+    onRowPlayingChanged: {
+        playlist_view.selection.clear()
+        playlist_view.selection.select(rowPlaying)
+    }
 
     Keys.onDeletePressed: {
         playlist_model.remove(playlist_view.currentRow)
