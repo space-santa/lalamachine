@@ -6,6 +6,9 @@ Button {
     width: 70
     height: width
     property string source
+    property string colourUp: "transparent"
+    property string colourDown: "lightgrey"
+
     Image {
         anchors.centerIn: parent
         width: parent.width - 10
@@ -15,7 +18,8 @@ Button {
     style: ButtonStyle {
         background: Rectangle {
             anchors.fill: parent
-            color: control.pressed ? "lightgrey" : "transparent"
+            color: checkable ? (checked ? colourDown : colourUp)
+                             : (control.pressed ? colourDown : colourUp)
         }
     }
 }
