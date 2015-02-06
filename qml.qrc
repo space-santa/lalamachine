@@ -24,5 +24,8 @@
         <file>images/edit-clear.png</file>
         <file>images/save.png</file>
         <file>images/open.png</file>
+        <file>images/random.png</file>
+        <file>images/repeat1.png</file>
+        <file>images/repeatAll.png</file>
     </qresource>
 </RCC>

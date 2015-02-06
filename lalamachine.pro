@@ -23,4 +23,5 @@ HEADERS += \
     m3uinout.h
 
 OTHER_FILES += \
-    README.md
+    README.md \
+    images/license-icons.txt
