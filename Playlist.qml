@@ -14,6 +14,7 @@ Rectangle {
     property alias savePlaylistVisible: save_playlist_dialog.visible
 
     signal play(string path)
+    signal stop
 
     Keys.onDeletePressed: {
         playlist_model.remove(playlist_view.currentRow)
@@ -285,7 +286,10 @@ Rectangle {
 
         onModelChanged: playlist_view.resizeColumnsToContents()
 
-        onDoubleClicked: playRow(row)
+        onDoubleClicked: {
+            stop()
+            playRow(row)
+        }
 
         sortIndicatorVisible: true
         onSortIndicatorColumnChanged: {

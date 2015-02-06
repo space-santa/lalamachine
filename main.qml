@@ -78,6 +78,10 @@ ApplicationWindow {
 
             nowPlayingSource: playMusic.source
 
+            onStop: {
+                playMusic.stop()
+            }
+
             onPlay: {
                 playMusic.source = path
                 playMusic.play()
