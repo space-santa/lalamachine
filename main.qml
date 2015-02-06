@@ -76,6 +76,8 @@ ApplicationWindow {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
 
+            repeatAll: now_playing_container.repeat
+
             nowPlayingSource: playMusic.source
 
             onStop: {

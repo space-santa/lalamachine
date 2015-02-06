@@ -12,13 +12,24 @@ Rectangle {
     property int duration
     property int position
     property bool hasAudio
+    property bool repeat: repeat_btn.checked
 
     signal seek(var pos)
+
+    ImageButton {
+        id: repeat_btn
+        width: 50
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        source: "qrc:/images/images/repeatAll.png"
+        checkable: true
+        checked: false
+    }
 
     Slider {
         id: progress_timer
         height: 50
-        anchors.left: parent.left
+        anchors.left: repeat_btn.right
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         anchors.leftMargin: 20

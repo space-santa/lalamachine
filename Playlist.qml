@@ -92,7 +92,13 @@ Rectangle {
 
     function playNext() {
         if (hasNext()) {
+            console.log("playNext has next")
             playRow(rowPlaying + 1)
+        } else if (repeatAll) {
+            console.log("playNext repeat")
+            playRow(0)
+        } else {
+            console.log("playlist finished")
         }
     }
 
