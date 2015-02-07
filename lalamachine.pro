@@ -26,4 +26,4 @@ OTHER_FILES += \
     README.md \
     images/license-icons.txt \
     lalamachine.desktop \
-    lalamachine-0.0.9.spec
+    lalamachine.spec
