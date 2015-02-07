@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.0.9
+Version: 0.1.0
 Release: 1
 License: GPLv3
 Summary: A music player that is awesome.
@@ -34,9 +34,9 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %build
 qmake-qt5 "target.path=%{buildroot}/%{_rmeandir}/bin" \
-	  "icon.path=%{buildroot}/%{_rmeandir}/icons" \
-	  "desktop.path=%{buildroot}/usr/share/applications" \
-	  lalamachine.pro
+      "icon.path=%{buildroot}/%{_rmeandir}/icons" \
+      "desktop.path=%{buildroot}/usr/share/applications" \
+      lalamachine.pro
 make %{?_smp_mflags}
 
 %install
@@ -59,5 +59,8 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat Feb 07 2015 %packager
+  0.1.0-1: Release 0.1 - A useable player.
+
 * Sat Feb 07 2015 %packager
   0.0.9-1: Initial package.
