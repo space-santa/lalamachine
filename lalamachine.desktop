@@ -1,0 +1,13 @@
+[Desktop Entry]
+Comment=
+Exec=lalamachine
+Icon=/opt/rmean/icons/lalamachine.png
+Name=lalamachine
+NoDisplay=false
+Path[$e]=$HOME
+StartupNotify=true
+Terminal=0
+TerminalOptions=
+Type=Application
+Categories=Multimedia;Music;Audio Player
+MimeType=audio/*

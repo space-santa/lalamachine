@@ -24,4 +24,5 @@ HEADERS += \
 
 OTHER_FILES += \
     README.md \
-    images/license-icons.txt
+    images/license-icons.txt \
+    lalamachine.desktop
