@@ -1,27 +1,25 @@
-android-no-sdk {
-    target.path = /data/user/qt
+isEmpty(target.path) {
+    target.path = /opt/rmean/bin
     export(target.path)
-    INSTALLS += target
-} else:android {
-    x86 {
-        target.path = /libs/x86
-    } else: armeabi-v7a {
-        target.path = /libs/armeabi-v7a
-    } else {
-        target.path = /libs/armeabi
-    }
-    export(target.path)
-    INSTALLS += target
-} else:unix {
-    isEmpty(target.path) {
-        qnx {
-            target.path = /tmp/$${TARGET}/bin
-        } else {
-            target.path = /opt/$${TARGET}/bin
-        }
-        export(target.path)
-    }
-    INSTALLS += target
 }
+INSTALLS += target
+
+icon.files = lalamachine.png
+export(icon.files)
+isEmpty(icon.path) {
+    icon.path = /opt/rmean/icons
+    export(icon.path)
+}
+
+INSTALLS += icon
+
+desktop.files = lalamachine.desktop
+export(desktop.files)
+isEmpty(desktop.path) {
+    desktop.path = /usr/share/applications
+    export(desktop.path)
+}
+
+INSTALLS += desktop
 
 export(INSTALLS)
