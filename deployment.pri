@@ -4,7 +4,7 @@ isEmpty(target.path) {
 }
 INSTALLS += target
 
-icon.files = lalamachine.png
+icon.files = images/lalamachine.png
 export(icon.files)
 isEmpty(icon.path) {
     icon.path = /opt/rmean/icons
