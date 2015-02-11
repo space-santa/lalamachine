@@ -70,7 +70,16 @@ void Config::setVolume(double val)
 
 double Config::volume()
 {
+    double retval = 0;
     QJsonValue v = config_.value("volume");
-    qDebug() << "Volume loaded" << v.toDouble();
-    return v.toDouble();
+
+    if (v.isDouble()) {
+        retval = v.toDouble();
+    }
+    else {
+        qWarning("No proper volume defined in config.json");
+    }
+
+    qDebug() << "Volume loaded" << retval;
+    return retval;
 }
