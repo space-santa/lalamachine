@@ -5,6 +5,7 @@
 
 #include "metadataprovider.h"
 #include "m3uinout.h"
+#include "config.h"
 
 int main(int argc, char *argv[])
 {
@@ -14,6 +15,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<MetaDataProvider>("Lala", 1, 0, "Metadata");
     qmlRegisterType<M3uInOut>("Lala", 1, 0, "M3uInOut");
+    qmlRegisterType<Config>("Lala", 1, 0, "Config");
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
