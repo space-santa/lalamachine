@@ -9,6 +9,7 @@
         <file>SavePlaylistDialog.qml</file>
         <file>VolumeControl.qml</file>
         <file>NowPlayingDisplay.qml</file>
+        <file>Configuration.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/eject.png</file>
