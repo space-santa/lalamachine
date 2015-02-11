@@ -23,6 +23,32 @@ ApplicationWindow {
         config.saveConfig()
     }
 
+    KeyEvents {
+        id: key_events
+        anchors.fill: parent
+
+        onVolumeUp: volume_control.volumeUp()
+        onVolumeDown: volume_control.volumeDown()
+        onForward: playlist.playNext()
+        onBack: playlist.playPrevious()
+        onPause: {
+            if (playMusic.playbackState === MediaPlayer.PlayingState) {
+                playMusic.pause()
+                return
+            }
+            if (playMusic.playbackState === MediaPlayer.PausedState) {
+                playMusic.play()
+                return
+            }
+            if (playMusic.playbackState === MediaPlayer.StoppedState) {
+                playlist.playCurrentTrack()
+                return
+            }
+        }
+        onDeleteTrack: playlist.deleteCurrentTrack()
+        onStartPlaying:playlist.playCurrentTrack()
+    }
+
     Rectangle {
         anchors.top: parent.top
         anchors.left: parent.left

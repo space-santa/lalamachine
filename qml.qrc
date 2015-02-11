@@ -10,6 +10,7 @@
         <file>VolumeControl.qml</file>
         <file>NowPlayingDisplay.qml</file>
         <file>Configuration.qml</file>
+        <file>KeyEvents.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/eject.png</file>

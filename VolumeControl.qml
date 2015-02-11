@@ -4,6 +4,23 @@ import QtQuick.Controls 1.2
 Rectangle {
     property alias value: volume_slider.value
     color: "transparent"
+
+    function volumeUp() {
+        if (volume_slider.value < 0.9) {
+            volume_slider.value += 0.1
+        } else {
+            volume_slider.value = 1
+        }
+    }
+
+    function volumeDown() {
+        if (volume_slider.value > 0.1) {
+            volume_slider.value -= 0.1
+        } else {
+            volume_slider.value = 0
+        }
+    }
+
     Rectangle {
         id: vol_icon_container
         width: 70

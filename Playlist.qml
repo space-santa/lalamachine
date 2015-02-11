@@ -17,10 +17,6 @@ Rectangle {
         playlist_view.selection.select(rowPlaying)
     }
 
-    Keys.onDeletePressed: {
-        playlist_model.remove(playlist_view.currentRow)
-    }
-
     Metadata {
         id: meta
     }
@@ -35,6 +31,14 @@ Rectangle {
             writePlaylist(save_playlist_dialog.playlistName)
             save_playlist_dialog.visible = false
         }
+    }
+
+    function deleteCurrentTrack() {
+        playlist_model.remove(playlist_view.currentRow)
+    }
+
+    function playCurrentTrack() {
+        playRow(playlist_view.currentRow)
     }
 
     function updateNowPlayingRow() {
