@@ -9,8 +9,6 @@ class M3uInOut : public QQuickItem
 public:
     explicit M3uInOut(QQuickItem *parent = 0);
 
-    static const QString PLAYLISTDIR;
-
     Q_INVOKABLE void writePlaylist(const QString &name,
                                    const QStringList files) const;
     Q_INVOKABLE QStringList readPlaylist(const QString &name) const;

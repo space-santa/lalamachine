@@ -3,15 +3,14 @@
 #include <QStandardPaths>
 #include <QDir>
 
-const QString M3uInOut::PLAYLISTDIR = QStandardPaths::writableLocation(
-        QStandardPaths::GenericConfigLocation) + "/lalamachine/playlists";
+#include "config.h"
 
 M3uInOut::M3uInOut(QQuickItem *parent) :
     QQuickItem(parent)
 {
     qDebug() <<  m3uPath("test");
-    QDir dir(PLAYLISTDIR);
-    dir.mkpath(PLAYLISTDIR);
+    QDir dir(Config::PLAYLISTDIR);
+    dir.mkpath(Config::PLAYLISTDIR);
 }
 
 void M3uInOut::writePlaylist(const QString &name,
@@ -50,7 +49,7 @@ QStringList M3uInOut::readPlaylist(const QString &name) const
 
 QStringList M3uInOut::getPlaylistNames() const
 {
-    QDir d(PLAYLISTDIR);
+    QDir d(Config::PLAYLISTDIR);
     QStringList filters;
     filters << "*.m3u";
     d.setNameFilters(filters);
@@ -59,5 +58,5 @@ QStringList M3uInOut::getPlaylistNames() const
 
 QString M3uInOut::m3uPath(const QString &name) const
 {
-    return PLAYLISTDIR + "/" + name + ".m3u";
+    return Config::PLAYLISTDIR + "/" + name + ".m3u";
 }
