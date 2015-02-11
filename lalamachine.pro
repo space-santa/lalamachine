@@ -8,7 +8,8 @@ LIBS += -ltag
 
 SOURCES += main.cpp \
     metadataprovider.cpp \
-    m3uinout.cpp
+    m3uinout.cpp \
+    config.cpp
 
 RESOURCES += qml.qrc
 
@@ -20,7 +21,8 @@ include(deployment.pri)
 
 HEADERS += \
     metadataprovider.h \
-    m3uinout.h
+    m3uinout.h \
+    config.h
 
 OTHER_FILES += \
     README.md \
