@@ -13,10 +13,14 @@ ApplicationWindow {
 
     Component.onCompleted: {
         playlist.readPlaylist("misc")
+        volume_control.value = config.volume
+        console.log("Volume on load", config.volume)
     }
 
     onClosing: {
         playlist.writePlaylist("misc")
+        config.volume = volume_control.value
+        config.saveConfig()
     }
 
     Rectangle {
@@ -34,6 +38,10 @@ ApplicationWindow {
                 color: "#717171"
             }
         }
+    }
+
+    Configuration {
+        id: config
     }
 
     MediaPlayer {
