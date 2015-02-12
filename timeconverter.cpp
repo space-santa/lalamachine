@@ -2,7 +2,8 @@
 
 #include <QString>
 
-TimeConverter::TimeConverter() :
+TimeConverter::TimeConverter(QQuickItem *parent) :
+    QQuickItem(parent),
     totalSec_(0),
     sec_(0),
     mins_(0),

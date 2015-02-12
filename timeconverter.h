@@ -1,12 +1,31 @@
 #ifndef TIMECONVERTER_H
 #define TIMECONVERTER_H
 
+#include <QQuickItem>
 #include <QString>
 
-class TimeConverter
+class TimeConverter : public QQuickItem
 {
+    Q_OBJECT
+
+    Q_PROPERTY(int seconds READ seconds WRITE setSeconds NOTIFY secondsChanged)
+    Q_PROPERTY(QString timestring READ timestring NOTIFY timestringChanged)
+
 public:
-    TimeConverter();
+    TimeConverter(QQuickItem *parent = 0);
+
+    void setSeconds(int seconds) {
+        addSec(seconds);
+        emit secondsChanged();
+        emit timestringChanged();
+    }
+    int seconds() {
+        return totalSec_;
+    }
+
+    QString timestring() {
+        return toString();
+    }
 
     void addSec(int sec);
 
@@ -19,6 +38,10 @@ public:
     QString numToString(int num);
 
     void clear();
+
+signals:
+    void secondsChanged();
+    void timestringChanged();
 
 private:
     int totalSec_;
