@@ -60,7 +60,7 @@ Rectangle {
             list[i] = playlist_model.get(i)["path"]
         }
 
-        m3u_inout.writePlaylist(name, list);
+        m3u_inout.writePlaylist(name, list)
     }
 
     function readPlaylist(name) {
