@@ -9,7 +9,8 @@ LIBS += -ltag
 SOURCES += main.cpp \
     metadataprovider.cpp \
     m3uinout.cpp \
-    config.cpp
+    config.cpp \
+    timeconverter.cpp
 
 RESOURCES += qml.qrc
 
@@ -22,7 +23,8 @@ include(deployment.pri)
 HEADERS += \
     metadataprovider.h \
     m3uinout.h \
-    config.h
+    config.h \
+    timeconverter.h
 
 OTHER_FILES += \
     README.md \
