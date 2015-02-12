@@ -8,6 +8,7 @@ Rectangle {
     property url nowPlayingSource
     property bool repeatAll: false
     property alias savePlaylistVisible: save_playlist_dialog.visible
+    property alias totalPlaytimeString: tc.timestring
 
     signal play(string path)
     signal stop
@@ -25,12 +26,25 @@ Rectangle {
         id: m3u_inout
     }
 
+    TimeConverter {
+        id: tc
+        seconds: totalPlaytime()
+    }
+
     SavePlaylistDialog {
         id: save_playlist_dialog
         onAccepted: {
             writePlaylist(save_playlist_dialog.playlistName)
             save_playlist_dialog.visible = false
         }
+    }
+
+    function totalPlaytime() {
+        var l = 0
+        for (var i = 0; i < playlist_model.count; ++i) {
+            i += playlist_model.get(i)["length"]
+        }
+        return i
     }
 
     function deleteCurrentTrack() {
