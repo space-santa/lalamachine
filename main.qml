@@ -108,7 +108,7 @@ ApplicationWindow {
             anchors.left: playlist_buttons.right
             anchors.right: parent.right
             anchors.top: parent.top
-            anchors.bottom: parent.bottom
+            anchors.bottom: playlist_text.top
 
             repeatAll: now_playing_container.repeat
 
@@ -122,6 +122,21 @@ ApplicationWindow {
                 playMusic.source = path
                 playMusic.play()
             }
+        }
+
+        Text {
+            id: playlist_text
+            anchors.left: playlist_buttons.right
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            height: 30
+            color: "#ffffff"
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignLeft
+            text: "Total length = " + playlist.totalPlaytimeString
+            font.pointSize: 12
+            styleColor: "#000000"
+            style: Text.Outline
         }
     }
 

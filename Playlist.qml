@@ -40,11 +40,12 @@ Rectangle {
     }
 
     function totalPlaytime() {
-        var l = 0
+        var lenght = 0
         for (var i = 0; i < playlist_model.count; ++i) {
-            i += playlist_model.get(i)["length"]
+            lenght += playlist_model.get(i).length
         }
-        return i
+        console.log(lenght)
+        return lenght
     }
 
     function deleteCurrentTrack() {
