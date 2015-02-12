@@ -9,6 +9,8 @@
 #include "tag.h"
 #include "fileref.h"
 
+#include "timeconverter.h"
+
 MetaDataProvider::MetaDataProvider(QQuickItem *parent) :
     QQuickItem(parent)
 {
@@ -19,6 +21,7 @@ QJsonObject MetaDataProvider::metaData(const QUrl &path) const
     QString line(path.path());
     TagLib::FileRef f(line.toLocal8Bit().data());
     QVariantMap tmpmap;
+    TimeConverter tc;
 
     if (!f.isNull() && f.tag()) {
         TagLib::Tag *tag = f.tag();
@@ -39,7 +42,10 @@ QJsonObject MetaDataProvider::metaData(const QUrl &path) const
         tmpmap.insert("path", line);
         tmpmap.insert("mrl", path);
         tmpmap.insert("length", f.audioProperties()->length());
-        tmpmap.insert("lengthString", secToMinSec(f.audioProperties()->length()));
+        // Clearing the timeconverter and get the time as displayable string.
+        tc.clear();
+        tc.addSec(f.audioProperties()->length());
+        tmpmap.insert("lengthString", tc.toString());
     }
 
     return QJsonObject::fromVariantMap(tmpmap);
