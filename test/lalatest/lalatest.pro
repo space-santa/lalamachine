@@ -4,9 +4,11 @@
 #
 #-------------------------------------------------
 
-QT       += testlib
+QT       += testlib qml quick widgets
 
-QT       -= gui
+INCLUDEPATH += /usr/include/taglib
+
+LIBS += -ltag
 
 TARGET = tst_lalatesttest
 CONFIG   += console
@@ -15,5 +17,15 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 
-SOURCES += tst_lalatesttest.cpp
+SOURCES += tst_lalatesttest.cpp \
+    ../../config.cpp \
+    ../../m3uinout.cpp \
+    ../../metadataprovider.cpp \
+    ../../timeconverter.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
+
+HEADERS += \
+    ../../config.h \
+    ../../m3uinout.h \
+    ../../metadataprovider.h \
+    ../../timeconverter.h
