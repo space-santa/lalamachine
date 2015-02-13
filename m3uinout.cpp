@@ -53,7 +53,14 @@ QStringList M3uInOut::getPlaylistNames() const
     QStringList filters;
     filters << "*.m3u";
     d.setNameFilters(filters);
-    return d.entryList();
+    QStringList names;
+    QFileInfoList entries = d.entryInfoList();
+
+    for (int i = 0; i < entries.length(); ++i) {
+        names.append(entries[i].baseName());
+    }
+
+    return names;
 }
 
 QString M3uInOut::m3uPath(const QString &name) const
