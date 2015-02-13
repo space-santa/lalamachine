@@ -11,6 +11,7 @@
         <file>NowPlayingDisplay.qml</file>
         <file>Configuration.qml</file>
         <file>KeyEvents.qml</file>
+        <file>OpenPlaylistDialog.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/eject.png</file>

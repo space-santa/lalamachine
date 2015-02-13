@@ -7,6 +7,7 @@ Rectangle {
     property int rowPlaying: -1
     property url nowPlayingSource
     property bool repeatAll: false
+    property alias openPlaylistVisible: open_playlist_dialog.visible
     property alias savePlaylistVisible: save_playlist_dialog.visible
     property alias totalPlaytimeString: tc.timestring
 
@@ -29,6 +30,19 @@ Rectangle {
     TimeConverter {
         id: tc
         seconds: totalPlaytime()
+    }
+
+    OpenPlaylistDialog {
+        id: open_playlist_dialog
+
+        onVisibleChanged: {
+            // visibleChanged is always emitted twice, presumably because of
+            // the alias.
+            open_playlist_dialog.clearList()
+            if (visible) {
+                open_playlist_dialog.addList(m3u_inout.getPlaylistNames())
+            }
+        }
     }
 
     SavePlaylistDialog {
