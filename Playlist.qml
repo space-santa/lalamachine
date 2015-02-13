@@ -93,6 +93,7 @@ Rectangle {
     }
 
     function readPlaylist(name) {
+        clearList()
         addList(m3u_inout.readPlaylist(name))
     }
 
