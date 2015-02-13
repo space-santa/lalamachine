@@ -14,11 +14,7 @@ class TimeConverter : public QQuickItem
 public:
     TimeConverter(QQuickItem *parent = 0);
 
-    void setSeconds(int seconds) {
-        addSec(seconds);
-        emit secondsChanged();
-        emit timestringChanged();
-    }
+    void setSeconds(int sec);
     int seconds() {
         return totalSec_;
     }
@@ -26,8 +22,6 @@ public:
     QString timestring() {
         return toString();
     }
-
-    void addSec(int sec);
 
     QString toString();
 

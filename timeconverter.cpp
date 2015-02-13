@@ -12,8 +12,7 @@ TimeConverter::TimeConverter(QQuickItem *parent) :
 {
 }
 
-void TimeConverter::addSec(int sec)
-{
+void TimeConverter::setSeconds(int sec) {
     totalSec_ = sec;
     // Integer division to get the days.
     days_ = sec / dayInSec;
@@ -33,6 +32,8 @@ void TimeConverter::addSec(int sec)
     Q_ASSERT(mins_ >= 0);
     Q_ASSERT(hours_ < 24);
     Q_ASSERT(hours_ >= 0);
+    emit secondsChanged();
+    emit timestringChanged();
 }
 
 QString TimeConverter::toString()

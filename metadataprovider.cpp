@@ -44,7 +44,7 @@ QJsonObject MetaDataProvider::metaData(const QUrl &path) const
         tmpmap.insert("length", f.audioProperties()->length());
         // Clearing the timeconverter and get the time as displayable string.
         tc.clear();
-        tc.addSec(f.audioProperties()->length());
+        tc.setSeconds(f.audioProperties()->length());
         tmpmap.insert("lengthString", tc.toString());
     }
 
