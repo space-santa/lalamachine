@@ -9,6 +9,21 @@ Dialog {
     visible: false
     standardButtons: StandardButton.Open | StandardButton.Cancel
 
+    property string selection: ""
+
+    onAccepted: {
+        selection = namelist_model.get(namelist_view.currentRow).listname
+        close()
+    }
+    onRejected: {
+        selection = ""
+        close()
+    }
+    function close() {
+        clearList()
+        visible = false
+    }
+
     function addList(list) {
         for (var i = 0; i < list.length; ++i) {
             add(list[i].toString())
@@ -52,6 +67,10 @@ Dialog {
                 role: "listname"
                 title: "name"
                 width: parent.width
+            }
+
+            onDoubleClicked: {
+                accepted()
             }
         }
     }

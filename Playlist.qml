@@ -43,6 +43,10 @@ Rectangle {
                 open_playlist_dialog.addList(m3u_inout.getPlaylistNames())
             }
         }
+
+        onAccepted: {
+            readPlaylist(selection)
+        }
     }
 
     SavePlaylistDialog {
