@@ -109,6 +109,10 @@ Rectangle {
     }
 
     function add(path) {
+        if (typeof (path) === "undefined" || path === "") {
+            return
+        }
+
         playlist_model.append(meta.metaData(path))
 
         updateNowPlayingRow()
