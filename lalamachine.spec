@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.2.2
+Version: 0.2.3
 Release: 1
 License: GPLv3
 Summary: A music player that is awesome.
@@ -49,7 +49,7 @@ ln -s %{_rmeandir}/bin/lalamachine /usr/local/bin/lalamachine
 %preun
 if [$1 -lt 1]; then
     rm -f /usr/local/bin/lalamachine
-done
+fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -61,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat Feb 07 2015 %packager
+  0.2.3-1: Fixed the condition done should be fi.
+
 * Sat Feb 07 2015 %packager
   0.2.2-1: Changed the removal of the sumlink from postun to preun.
 
