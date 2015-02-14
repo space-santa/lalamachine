@@ -10,7 +10,8 @@ SOURCES += main.cpp \
     metadataprovider.cpp \
     m3uinout.cpp \
     config.cpp \
-    timeconverter.cpp
+    timeconverter.cpp \
+    musiclib.cpp
 
 RESOURCES += qml.qrc
 
@@ -24,7 +25,8 @@ HEADERS += \
     metadataprovider.h \
     m3uinout.h \
     config.h \
-    timeconverter.h
+    timeconverter.h \
+    musiclib.h
 
 OTHER_FILES += \
     README.md \
