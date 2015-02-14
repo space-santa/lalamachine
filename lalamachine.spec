@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.2.0
+Version: 0.2.1
 Release: 1
 License: GPLv3
 Summary: A music player that is awesome.
@@ -47,7 +47,9 @@ rm -f /usr/local/bin/lalamachine
 ln -s %{_rmeandir}/bin/lalamachine /usr/local/bin/lalamachine
 
 %postun
-rm -f /usr/local/bin/lalamachine
+if [$1 -lt 1]; then
+    rm -f /usr/local/bin/lalamachine
+done
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -59,6 +61,10 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat Feb 07 2015 %packager
+  0.2.1-1: Fixed the postun scriptlet in the spec file to not remove the
+  symlink on upgrade.
+
 * Sat Feb 07 2015 %packager
   0.2.0-1: Release 0.2
   * Added keyboard control.
