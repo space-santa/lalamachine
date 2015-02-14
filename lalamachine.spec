@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.2.1
+Version: 0.2.2
 Release: 1
 License: GPLv3
 Summary: A music player that is awesome.
@@ -46,7 +46,7 @@ make install
 rm -f /usr/local/bin/lalamachine
 ln -s %{_rmeandir}/bin/lalamachine /usr/local/bin/lalamachine
 
-%postun
+%preun
 if [$1 -lt 1]; then
     rm -f /usr/local/bin/lalamachine
 done
@@ -61,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat Feb 07 2015 %packager
+  0.2.2-1: Changed the removal of the sumlink from postun to preun.
+
 * Sat Feb 07 2015 %packager
   0.2.1-1: Fixed the postun scriptlet in the spec file to not remove the
   symlink on upgrade.
