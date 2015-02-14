@@ -63,7 +63,6 @@ void Config::loadConfig()
 
 void Config::setVolume(double val)
 {
-    qDebug() << "Volume changed" << val;
     config_.insert("volume", val);
     emit volumeChanged();
 }
