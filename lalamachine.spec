@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.1.0
+Version: 0.2.0
 Release: 1
 License: GPLv3
 Summary: A music player that is awesome.
@@ -59,6 +59,14 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat Feb 07 2015 %packager
+  0.2.0-1: Release 0.2
+  * Added keyboard control.
+  * Playlists can now be saved and loaded.
+  * The total playtime of the playlist is now displayed.
+  * App settings can now be stored in a JSON file.
+  * The last volume is remembered on app start.
+
 * Sat Feb 07 2015 %packager
   0.1.0-1: Release 0.1 - A useable player.
 
