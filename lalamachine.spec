@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.2.3
+Version: 0.2.4
 Release: 1
 License: GPLv3
 Summary: A music player that is awesome.
@@ -61,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat Feb 07 2015 %packager
+  0.2.4-1: Testrelease to see if the preun scriptlet now works.
+
 * Sat Feb 07 2015 %packager
   0.2.3-1: Fixed the condition done should be fi.
 
