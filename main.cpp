@@ -7,6 +7,7 @@
 #include "m3uinout.h"
 #include "config.h"
 #include "timeconverter.h"
+#include "musiclib.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,6 +19,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<M3uInOut>("Lala", 1, 0, "M3uInOut");
     qmlRegisterType<Config>("Lala", 1, 0, "Config");
     qmlRegisterType<TimeConverter>("Lala", 1, 0, "TimeConverter");
+    qmlRegisterType<MusicLib>("Lala", 1, 0, "MusicLib");
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
