@@ -75,8 +75,25 @@ MusicLib::MusicLib(QQuickItem *parent)
 
 MusicLib::~MusicLib()
 {
-    scannerThread_->quit();
-    scannerThread_->wait();
+    scannerThread_.quit();
+    scannerThread_.wait();
+    qDebug() << "MusicLib::~MusicLib()";
+}
+
+void MusicLib::readLibFile()
+{
+    lib_ = Config::loadJsonFile(Config::MUSICLIBPATH);
+}
+
+void MusicLib::writeLibFile()
+{
+    Config::saveJsonFile(Config::MUSICLIBPATH, lib_);
+}
+
+QJsonObject MusicLib::displayLib() const
+{
+    QJsonObject retVal;
+    return retVal;
 }
 
 void MusicLib::scanFinished(const QJsonObject &lib)

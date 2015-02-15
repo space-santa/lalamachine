@@ -33,12 +33,57 @@ class MusicLib : public QQuickItem
                READ musicLib
                NOTIFY musicLibChanged)
 
+    Q_PROPERTY(QJsonObject displayLib
+               READ displayLib
+               NOTIFY displayLibChanged)
+
+    Q_PROPERTY(QString libPath READ libPath WRITE setLibPath NOTIFY libPathChanged)
+    Q_PROPERTY(QString genre READ genre WRITE setGenre NOTIFY genreChanged)
+    Q_PROPERTY(QString artist READ artist WRITE setArtist NOTIFY artistChanged)
+    Q_PROPERTY(QString album READ album WRITE setAlbum NOTIFY albumChanged)
+
 public:
     MusicLib(QQuickItem *parent = 0);
     ~MusicLib();
 
-    QJsonObject musicLib() {
+    QJsonObject musicLib() const {
         return lib_;
+    }
+
+    QJsonObject displayLib() const;
+
+    QString libPath() const {
+        return libPath_;
+    }
+    void setLibPath(const QString &path) {
+        libPath_ = path;
+        emit libPathChanged();
+        emit startScan(libPath_);
+    }
+
+    QString genre() const {
+        return genre_;
+    }
+    void setGenre(const QString &val) {
+        genre_ = val;
+        emit genreChanged();
+        emit displayLibChanged();
+    }
+    QString artist() const {
+        return artist_;
+    }
+    void setArtist(const QString &val) {
+        artist_ = val;
+        emit artistChanged();
+        emit displayLibChanged();
+    }
+    QString album() const {
+        return album_;
+    }
+    void setAlbum(const QString &val) {
+        genre_ = val;
+        emit albumChanged();
+        emit displayLibChanged();
     }
 
 public slots:
@@ -47,6 +92,13 @@ public slots:
 signals:
     void startScan(const QString &path);
     void musicLibChanged();
+
+    void displayLibChanged();
+
+    void libPathChanged();
+    void genreChanged();
+    void artistChanged();
+    void albumChanged();
 
 private:
     // scanner_ MUST be a raw pointer. When this is moved to a new thread, that
@@ -57,6 +109,14 @@ private:
     QThread scannerThread_;
 
     QJsonObject lib_;
+    QString genre_{""};
+    QString artist_{""};
+    QString album_{""};
+    QString libPath_{""};
+
+private slots:
+    void readLibFile();
+    void writeLibFile();
 };
 
 #endif // MUSICLIB_H
