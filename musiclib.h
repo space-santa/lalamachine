@@ -49,8 +49,12 @@ signals:
     void musicLibChanged();
 
 private:
-    MusicLibScanner *scanner_;
-    QThread *scannerThread_;
+    // scanner_ MUST be a raw pointer. When this is moved to a new thread, that
+    // QThread becomes the parent. When the parent dies so does the child.
+    // If this is then not a raw pointer a double free happens, because
+    // the thread and this is trying to destroy the scanner.
+    MusicLibScanner *scanner_{new MusicLibScanner()};
+    QThread scannerThread_;
 
     QJsonObject lib_;
 };

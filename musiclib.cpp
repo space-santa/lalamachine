@@ -58,12 +58,14 @@ bool MusicLibScanner::suffixCheck(const QString &val) const
 
 
 MusicLib::MusicLib(QQuickItem *parent)
-    : QQuickItem(parent),
-      scanner_(new MusicLibScanner(this)),
-      scannerThread_(new QThread(this))
+    : QQuickItem(parent)
 {
-    scanner_->moveToThread(scannerThread_);
-    connect(scannerThread_, &QThread::finished, scanner_, &QObject::deleteLater);
+    readLibFile();
+    // This moveToThread is making the thread the parent of the scanner_.
+    // Therefor it is vital that the scanner_ is a raw pointer, or double free
+    // happens.
+    scanner_->moveToThread(&scannerThread_);
+    connect(&scannerThread_, &QThread::finished, scanner_, &QObject::deleteLater);
     connect(this, &MusicLib::startScan, scanner_, &MusicLibScanner::scanLib);
     connect(scanner_, &MusicLibScanner::scanComplete, this,
             &MusicLib::scanFinished);
