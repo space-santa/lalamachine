@@ -3,12 +3,7 @@
 #include <QString>
 
 TimeConverter::TimeConverter(QQuickItem *parent) :
-    QQuickItem(parent),
-    totalSec_(0),
-    sec_(0),
-    mins_(0),
-    hours_(0),
-    days_(0)
+    QQuickItem(parent)
 {
 }
 

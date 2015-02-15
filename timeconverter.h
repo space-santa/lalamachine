@@ -38,11 +38,11 @@ signals:
     void timestringChanged();
 
 private:
-    int totalSec_;
-    int sec_;
-    int mins_;
-    int hours_;
-    int days_;
+    int totalSec_{0};
+    int sec_{0};
+    int mins_{0};
+    int hours_{0};
+    int days_{0};
 };
 
 #endif // TIMECONVERTER_H
