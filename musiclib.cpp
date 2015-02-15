@@ -77,7 +77,7 @@ MusicLib::~MusicLib()
 {
     scannerThread_.quit();
     scannerThread_.wait();
-    qDebug() << "MusicLib::~MusicLib()";
+    qDebug() << "MusicLib::~MusicLib()" << displayLib();
 }
 
 void MusicLib::readLibFile()
@@ -93,6 +93,21 @@ void MusicLib::writeLibFile()
 QJsonObject MusicLib::displayLib() const
 {
     QJsonObject retVal;
+    QJsonObject::const_iterator itr;
+
+    for (itr = lib_.constBegin(); itr != lib_.constEnd(); ++itr) {
+        if (itr.value().isObject()) {
+            QJsonObject tmp = itr.value().toObject();
+
+            if (checkVal(genre(), tmp.value("genre").toString()) &&
+                checkVal(artist(), tmp.value("artist").toString()) &&
+                checkVal(album(), tmp.value("album").toString()))
+            {
+                retVal.insert(itr.key(), tmp);
+            }
+        }
+    }
+
     return retVal;
 }
 
@@ -100,4 +115,10 @@ void MusicLib::scanFinished(const QJsonObject &lib)
 {
     lib_ = lib;
     emit musicLibChanged();
+    emit displayLibChanged();
+}
+
+bool MusicLib::checkVal(const QString &check, const QString &val) const
+{
+    return check == "" || check == val;
 }

@@ -114,6 +114,8 @@ private:
     QString album_{""};
     QString libPath_{""};
 
+    bool checkVal(const QString &check, const QString &val) const;
+
 private slots:
     void readLibFile();
     void writeLibFile();
