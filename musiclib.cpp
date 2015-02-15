@@ -69,7 +69,8 @@ MusicLib::MusicLib(QQuickItem *parent)
     connect(this, &MusicLib::startScan, scanner_, &MusicLibScanner::scanLib);
     connect(scanner_, &MusicLibScanner::scanComplete, this,
             &MusicLib::scanFinished);
-    scannerThread_->start();
+    connect(this, &MusicLib::musicLibChanged, this, &MusicLib::writeLibFile);
+    scannerThread_.start();
 }
 
 MusicLib::~MusicLib()
