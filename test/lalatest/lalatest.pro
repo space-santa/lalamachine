@@ -6,6 +6,8 @@
 
 QT       += testlib qml quick widgets
 
+config += c++11
+
 INCLUDEPATH += /usr/include/taglib
 
 LIBS += -ltag
