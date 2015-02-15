@@ -49,6 +49,10 @@ ApplicationWindow {
         onStartPlaying:playlist.playCurrentTrack()
     }
 
+    LibraryView {
+
+    }
+
     Rectangle {
         anchors.top: parent.top
         anchors.left: parent.left

@@ -12,6 +12,7 @@
         <file>Configuration.qml</file>
         <file>KeyEvents.qml</file>
         <file>OpenPlaylistDialog.qml</file>
+        <file>LibraryView.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/eject.png</file>
