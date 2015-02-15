@@ -26,40 +26,12 @@ Config::Config(QQuickItem *parent) :
 
 void Config::saveConfig()
 {
-    QJsonDocument d(config_);
-    QFile saveFile(Config::CONFIGPATH);
-    qDebug() << "Config::setData";
-
-    if (!saveFile.open(QIODevice::WriteOnly)) {
-        qWarning("Couldn't open config file.");
-        return;
-    }
-
-    saveFile.write(d.toJson());
+    saveJsonFile(Config::CONFIGPATH, config_);
 }
 
 void Config::loadConfig()
 {
-    // Reading the JSON
-    QFile loadFile(Config::CONFIGPATH);
-
-    if (!loadFile.open(QIODevice::ReadOnly)) {
-        qWarning("Couldn't open config file.");
-        return;
-    }
-
-    QByteArray val;
-    val = loadFile.readAll();
-    // Create the JsonDocument
-    QJsonDocument d = QJsonDocument::fromJson(val);
-
-    if (!d.isObject() || d.isEmpty() || d.isNull()) {
-        qWarning("Invalid config file.");
-        return;
-    }
-    else {
-        config_ = d.object();
-    }
+    config_ = loadJsonFile(Config::CONFIGPATH);
 }
 
 void Config::setVolume(double val)
@@ -82,4 +54,43 @@ double Config::volume()
 
     qDebug() << "Volume loaded" << retval;
     return retval;
+}
+
+QJsonObject Config::loadJsonFile(const QString &path)
+{
+    // Reading the JSON
+    QFile loadFile(path);
+
+    if (!loadFile.open(QIODevice::ReadOnly)) {
+        qWarning("Couldn't open json file.");
+        return QJsonObject();
+    }
+
+    QByteArray val;
+    val = loadFile.readAll();
+    // Create the JsonDocument
+    QJsonDocument d = QJsonDocument::fromJson(val);
+
+    if (!d.isObject() || d.isEmpty() || d.isNull()) {
+        qWarning("Invalid config file.");
+        return QJsonObject();
+    }
+    else {
+        return d.object();
+    }
+}
+
+void Config::saveJsonFile(const QString &path, const QJsonObject &obj)
+{
+    QJsonDocument d(obj);
+    QFile saveFile(path);
+    qDebug() << "Config::setData";
+
+    if (!saveFile.open(QIODevice::WriteOnly)) {
+        qWarning("Couldn't open config file.");
+        return;
+    }
+
+    saveFile.write(d.toJson());
+    qDebug() << "Config::dataSet";
 }
