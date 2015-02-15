@@ -38,6 +38,9 @@ void LalatestTest::testCase1()
 void LalatestTest::timeTest() {
     QString testString("");
     TimeConverter tc;
+    // Initialization
+    testString = "00:00";
+    Q_ASSERT(tc.toString() == testString);
     // one minute
     testString = "01:00";
     tc.setSeconds(60);
