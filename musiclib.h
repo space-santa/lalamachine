@@ -37,10 +37,33 @@ class MusicLib : public QQuickItem
                READ displayLib
                NOTIFY displayLibChanged)
 
-    Q_PROPERTY(QString libPath READ libPath WRITE setLibPath NOTIFY libPathChanged)
-    Q_PROPERTY(QString genre READ genre WRITE setGenre NOTIFY genreChanged)
-    Q_PROPERTY(QString artist READ artist WRITE setArtist NOTIFY artistChanged)
-    Q_PROPERTY(QString album READ album WRITE setAlbum NOTIFY albumChanged)
+    Q_PROPERTY(QString libPath
+               READ libPath
+               WRITE setLibPath
+               NOTIFY libPathChanged)
+
+    Q_PROPERTY(QString genreFilter
+               READ genreFilter
+               WRITE setGenreFilter
+               NOTIFY genreFilterChanged)
+    Q_PROPERTY(QString artistFilter
+               READ artistFilter
+               WRITE setArtistFilter
+               NOTIFY artistFilterChanged)
+    Q_PROPERTY(QString albumFilter
+               READ albumFilter
+               WRITE setAlbumFilter
+               NOTIFY albumFilterChanged)
+
+    Q_PROPERTY(QStringList genreList
+               READ genreList
+               NOTIFY genreListChanged)
+    Q_PROPERTY(QStringList artistList
+               READ artistList
+               NOTIFY artistListChanged)
+    Q_PROPERTY(QStringList albumList
+               READ albumList
+               NOTIFY albumListChanged)
 
 public:
     MusicLib(QQuickItem *parent = 0);
