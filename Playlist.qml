@@ -11,6 +11,8 @@ Rectangle {
     property alias savePlaylistVisible: save_playlist_dialog.visible
     property alias totalPlaytimeString: tc.timestring
 
+    property alias provideTotalTime: tc.enabled
+
     signal play(string path)
     signal stop
 
@@ -58,12 +60,16 @@ Rectangle {
     }
 
     function totalPlaytime() {
-        var lenght = 0
-        for (var i = 0; i < playlist_model.count; ++i) {
-            lenght += playlist_model.get(i).length
+        if (tc.enabled) {
+            var lenght = 0
+            for (var i = 0; i < playlist_model.count; ++i) {
+                lenght += playlist_model.get(i).length
+            }
+            console.log(lenght)
+            return lenght
+        } else {
+            return 0
         }
-        console.log(lenght)
-        return lenght
     }
 
     function deleteCurrentTrack() {
@@ -120,6 +126,12 @@ Rectangle {
         playlist_model.append(meta.metaData(path))
 
         updateNowPlayingRow()
+    }
+
+    function addLib(json) {
+        for (var i in json) {
+            playlist_model.append(json[i])
+        }
     }
 
     function playRow(row) {
