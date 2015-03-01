@@ -351,7 +351,10 @@ Rectangle {
             width: 150
         }
 
-        onModelChanged: playlist_view.resizeColumnsToContents()
+        onModelChanged: {
+            playlist_view.resizeColumnsToContents()
+            updateNowPlayingRow()
+        }
 
         onDoubleClicked: {
             stop()
