@@ -13,6 +13,7 @@
         <file>KeyEvents.qml</file>
         <file>OpenPlaylistDialog.qml</file>
         <file>LibraryView.qml</file>
+        <file>StringListView.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/eject.png</file>
