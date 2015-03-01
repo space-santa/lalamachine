@@ -7,6 +7,8 @@ import Lala 1.0
 Rectangle {
     color: "transparent"
 
+    signal addTrack(string path)
+
     MusicLib {
         id: lib
         libPath: "/home/rmean/musiclib"
@@ -70,5 +72,7 @@ Rectangle {
         color: "transparent"
 
         provideTotalTime: false
+
+        onPlay: addTrack(path)
     }
 }
