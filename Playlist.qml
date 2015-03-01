@@ -82,6 +82,9 @@ Rectangle {
         playRow(playlist_view.currentRow)
     }
 
+    // This function is broken because a track can be added multiple times to
+    // the playlist.
+    // FIXME: Fix that!
     function updateNowPlayingRow() {
         var row = -1
         for (var i = 0; i < playlist_model.count; ++i) {
