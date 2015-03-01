@@ -3,6 +3,8 @@ import QtQuick.Controls 1.2
 
 import Lala 1.0
 
+import "qrc:/functions.js" as Functions
+
 Rectangle {
     property int rowPlaying: -1
     property url nowPlayingSource
@@ -83,7 +85,8 @@ Rectangle {
     function updateNowPlayingRow() {
         var row = -1
         for (var i = 0; i < playlist_model.count; ++i) {
-            if (nowPlayingSource == playlist_model.get(i)["mrl"]) {
+            if (Functions.checkMrl(nowPlayingSource) == Functions.checkMrl(
+                        playlist_model.get(i)["mrl"])) {
                 console.log("true")
                 row = i
             }
