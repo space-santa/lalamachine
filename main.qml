@@ -2,13 +2,14 @@ import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtMultimedia 5.0
 import QtQuick.Dialogs 1.2
+import QtQuick.Window 2.2
 
 import "qrc:/functions.js" as Functions
 
 ApplicationWindow {
     visible: true
-    width: 750
-    height: 550
+    width: Screen.width
+    height: Screen.height
     title: qsTr("lalamachine")
 
     Component.onCompleted: {
@@ -49,10 +50,6 @@ ApplicationWindow {
         onStartPlaying:playlist.playCurrentTrack()
     }
 
-    LibraryView {
-
-    }
-
     Rectangle {
         anchors.top: parent.top
         anchors.left: parent.left
@@ -87,107 +84,129 @@ ApplicationWindow {
     }
 
     Rectangle {
-        id: playlist_container
+        id: left_shelve
         anchors.left: parent.left
-        anchors.right: parent.right
         anchors.top: parent.top
-        anchors.bottom: now_playing_container.top
+        anchors.bottom: parent.bottom
+        width: parent.width/2
         color: "transparent"
 
-        PlaylistButtons {
-            id: playlist_buttons
+        Rectangle {
+            id: playlist_container
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: now_playing_container.top
+            color: "transparent"
+
+            PlaylistButtons {
+                id: playlist_buttons
+                anchors.left: parent.left
+                anchors.bottom: parent.bottom
+
+                onOpenList: playlist.openPlaylistVisible = true
+                onSaveList: playlist.savePlaylistVisible = true
+                onMoveTop: playlist.moveTop()
+                onMoveUp: playlist.moveUp()
+                onMoveDown: playlist.moveDown()
+                onMoveBottom: playlist.moveBottom()
+                onClearList: playlist.clearList()
+            }
+
+            Playlist {
+                id: playlist
+                anchors.left: playlist_buttons.right
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.bottom: playlist_text.top
+
+                repeatAll: now_playing_container.repeat
+
+                nowPlayingSource: playMusic.source
+
+                onStop: {
+                    playMusic.stop()
+                }
+
+                onPlay: {
+                    playMusic.source = path
+                    playMusic.play()
+                }
+            }
+
+            Text {
+                id: playlist_text
+                anchors.left: playlist_buttons.right
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                height: 30
+                color: "#ffffff"
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignLeft
+                text: "Total length = " + playlist.totalPlaytimeString
+                font.pointSize: 12
+                styleColor: "#000000"
+                style: Text.Outline
+            }
+        }
+
+        NowPlayingDisplay {
+            id: now_playing_container
+            anchors.bottom: btn_row.top
+            anchors.right: parent.right
+            width: playlist.width
+
+            title: Functions.getSafeValue(playMusic.metaData.title)
+            albumArtist: Functions.getSafeValue(playMusic.metaData.albumArtist)
+            duration: playMusic.duration
+            position: playMusic.position
+            hasAudio: playMusic.hasAudio
+
+            onSeek: {
+                playMusic.seek(pos)
+            }
+        }
+
+        PlayerControlButtons {
+            id: btn_row
             anchors.left: parent.left
             anchors.bottom: parent.bottom
 
-            onOpenList: playlist.openPlaylistVisible = true
-            onSaveList: playlist.savePlaylistVisible = true
-            onMoveTop: playlist.moveTop()
-            onMoveUp: playlist.moveUp()
-            onMoveDown: playlist.moveDown()
-            onMoveBottom: playlist.moveBottom()
-            onClearList: playlist.clearList()
-        }
-
-        Playlist {
-            id: playlist
-            anchors.left: playlist_buttons.right
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.bottom: playlist_text.top
-
-            repeatAll: now_playing_container.repeat
-
-            nowPlayingSource: playMusic.source
-
-            onStop: {
-                playMusic.stop()
-            }
+            onPlayPrevious: playlist.playPrevious()
 
             onPlay: {
-                playMusic.source = path
-                playMusic.play()
+                if (playMusic.hasAudio) {
+                    playMusic.play()
+                }
             }
+
+            onPause: playMusic.pause()
+            onOpen: {
+                console.log("open clicked")
+                fileDialog.visible = true
+            }
+            onPlayNext: playlist.playNext()
         }
 
-        Text {
-            id: playlist_text
-            anchors.left: playlist_buttons.right
-            anchors.right: parent.right
+        VolumeControl {
+            id: volume_control
             anchors.bottom: parent.bottom
-            height: 30
-            color: "#ffffff"
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignLeft
-            text: "Total length = " + playlist.totalPlaytimeString
-            font.pointSize: 12
-            styleColor: "#000000"
-            style: Text.Outline
+            anchors.left: btn_row.right
+            anchors.right: parent.right
         }
     }
 
-    NowPlayingDisplay {
-        id: now_playing_container
-        anchors.bottom: btn_row.top
-        anchors.right: parent.right
-        width: playlist.width
-
-        title: Functions.getSafeValue(playMusic.metaData.title)
-        albumArtist: Functions.getSafeValue(playMusic.metaData.albumArtist)
-        duration: playMusic.duration
-        position: playMusic.position
-        hasAudio: playMusic.hasAudio
-
-        onSeek: {
-            playMusic.seek(pos)
-        }
-    }
-
-    PlayerControlButtons {
-        id: btn_row
-        anchors.left: parent.left
+    Rectangle {
+        id: right_shelve
+        anchors.left: left_shelve.right
+        anchors.top: parent.top
         anchors.bottom: parent.bottom
-
-        onPlayPrevious: playlist.playPrevious()
-
-        onPlay: {
-            if (playMusic.hasAudio) {
-                playMusic.play()
-            }
-        }
-
-        onPause: playMusic.pause()
-        onOpen: {
-            console.log("open clicked")
-            fileDialog.visible = true
-        }
-        onPlayNext: playlist.playNext()
-    }
-
-    VolumeControl {
-        id: volume_control
-        anchors.bottom: parent.bottom
-        anchors.left: btn_row.right
         anchors.right: parent.right
+        color: "transparent"
+
+        LibraryView {
+            anchors.fill: parent
+        }
     }
 
     FileDialog {
