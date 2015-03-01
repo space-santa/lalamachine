@@ -5,9 +5,6 @@ import QtQuick.Layouts 1.1
 import Lala 1.0
 
 Rectangle {
-    width: 100
-    height: 62
-
     color: "transparent"
 
     MusicLib {
@@ -33,29 +30,33 @@ Rectangle {
 
         color: "transparent"
 
-        RowLayout {
-            anchors.fill: parent
-            StringListView {
-                id: genreList
-                width: parent.width / 3
-                height: parent.height
-                roleString: "genre"
-                stringList: lib.genreList
-            }
-            StringListView {
-                id: artistList
-                width: parent.width / 3
-                height: parent.height
-                roleString: "artist"
-                stringList: lib.artistList
-            }
-            StringListView {
-                id: albumList
-                width: parent.width / 3
-                height: parent.height
-                roleString: "album"
-                stringList: lib.albumList
-            }
+        StringListView {
+            id: genreList
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            width: parent.width / 3
+            roleString: "genre"
+            stringList: lib.genreList
+        }
+        StringListView {
+            id: artistList
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: genreList.right
+            width: parent.width / 3
+            height: parent.height
+            roleString: "artist"
+            stringList: lib.artistList
+        }
+        StringListView {
+            id: albumList
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            width: parent.width / 3
+            roleString: "album"
+            stringList: lib.albumList
         }
     }
 
