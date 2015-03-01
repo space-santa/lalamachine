@@ -107,8 +107,6 @@ signals:
     void artistListChanged();
     void albumListChanged();
 
-    void displayListChanged();
-
 private:
     // scanner_ MUST be a raw pointer. When this is moved to a new thread, that
     // QThread becomes the parent. When the parent dies so does the child.
@@ -118,6 +116,7 @@ private:
     QThread scannerThread_;
 
     QJsonObject lib_;
+    QJsonObject displayLib_;
     QString genreFilter_ {""};
     QString artistFilter_ {""};
     QString albumFilter_ {""};
@@ -133,6 +132,13 @@ private:
 private slots:
     void readLibFile();
     void writeLibFile();
+
+    void debugSignal();
+
+    void setDisplayLib();
+    void setGenreList();
+    void setArtistList();
+    void setAlbumList();
 };
 
 #endif // MUSICLIB_H
