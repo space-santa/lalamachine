@@ -8,7 +8,6 @@
 M3uInOut::M3uInOut(QQuickItem *parent) :
     QQuickItem(parent)
 {
-    qDebug() <<  m3uPath("test");
     QDir dir(Config::PLAYLISTDIR);
     dir.mkpath(Config::PLAYLISTDIR);
 }
