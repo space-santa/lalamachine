@@ -209,6 +209,8 @@ ApplicationWindow {
 
         LibraryView {
             anchors.fill: parent
+
+            onAddTrack: playlist.add(path)
         }
     }
 
