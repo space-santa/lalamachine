@@ -33,8 +33,8 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 %setup -q
 
 %build
-qmake-qt5 "target.path=%{buildroot}/%{_rmeandir}/bin" \
-      "icon.path=%{buildroot}/%{_rmeandir}/icons" \
+qmake-qt5 "target.path=%{buildroot}/opt/rmean/bin" \
+      "icon.path=%{buildroot}/opt/rmean/icons" \
       "desktop.path=%{buildroot}/usr/share/applications" \
       lalamachine.pro
 make %{?_smp_mflags}
@@ -44,7 +44,7 @@ make install
 
 %post
 rm -f /usr/local/bin/lalamachine
-ln -s %{_rmeandir}/bin/lalamachine /usr/local/bin/lalamachine
+ln -s /opt/rmean/bin/lalamachine /usr/local/bin/lalamachine
 
 %preun
 if [$1 -lt 1]; then
@@ -55,29 +55,32 @@ fi
 rm -rf $RPM_BUILD_ROOT
 
 %files
+%dir /opt/rmean
+%dir /opt/rmean/bin
+%dir /opt/rmean/icons
 %defattr(-,root,root)
-%{_rmeandir}/bin/lalamachine
-%{_rmeandir}/icons/lalamachine.png
+/opt/rmean/bin/lalamachine
+/opt/rmean/icons/lalamachine.png
 /usr/share/applications/lalamachine.desktop
 
 %changelog
-* Sun Mar 01 2015 %packager
+* Sun Mar 01 2015 r-mean
   0.3.0-1: Added a rhythmbox like music library.
 
-* Sat Feb 07 2015 %packager
+* Sat Feb 07 2015 r-mean
   0.2.4-1: Testrelease to see if the preun scriptlet now works.
 
-* Sat Feb 07 2015 %packager
+* Sat Feb 07 2015 r-mean
   0.2.3-1: Fixed the condition done should be fi.
 
-* Sat Feb 07 2015 %packager
+* Sat Feb 07 2015 r-mean
   0.2.2-1: Changed the removal of the sumlink from postun to preun.
 
-* Sat Feb 07 2015 %packager
+* Sat Feb 07 2015 r-mean
   0.2.1-1: Fixed the postun scriptlet in the spec file to not remove the
   symlink on upgrade.
 
-* Sat Feb 07 2015 %packager
+* Sat Feb 07 2015 r-mean
   0.2.0-1: Release 0.2
   * Added keyboard control.
   * Playlists can now be saved and loaded.
@@ -85,8 +88,8 @@ rm -rf $RPM_BUILD_ROOT
   * App settings can now be stored in a JSON file.
   * The last volume is remembered on app start.
 
-* Sat Feb 07 2015 %packager
+* Sat Feb 07 2015 r-mean
   0.1.0-1: Release 0.1 - A useable player.
 
-* Sat Feb 07 2015 %packager
+* Sat Feb 07 2015 r-mean
   0.0.9-1: Initial package.
