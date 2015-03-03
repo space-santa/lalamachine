@@ -229,7 +229,7 @@ QStringList MusicLib::getList(const QString &what) const
     Q_ASSERT(what == "genre" || what == "artist" || what == "album");
     QStringList retVal;
     // Add the field to display all.
-    retVal << "all";
+    retVal << "##--All--##";
     QJsonObject tmplib = displayLib();
     QJsonObject::const_iterator itr;
 
@@ -260,6 +260,7 @@ void MusicLib::setGenreList()
 
     qDebug() << "MusicLib::genreList()";
     genreList_ = tmp;
+    genreList_.sort();
     emit genreListChanged();
 }
 
@@ -275,6 +276,7 @@ void MusicLib::setArtistList()
     }
 
     artistList_ = tmp;
+    artistList_.sort();
     emit artistListChanged();
 }
 
@@ -291,6 +293,7 @@ void MusicLib::setAlbumList()
     }
 
     albumList_ = tmp;
+    albumList_.sort();
     emit albumListChanged();
 }
 
