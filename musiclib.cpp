@@ -92,6 +92,8 @@ MusicLib::~MusicLib()
     scannerThread_.wait(5000);
 }
 
+const QString MusicLib::ALL_FILTER {QString("--all--")};
+
 QJsonObject MusicLib::musicLib() const
 {
     return lib_;
@@ -160,7 +162,7 @@ void MusicLib::setGenreFilter(const QString &val)
 {
     qDebug() << "MusicLib::setGenreFilter(" << val << ")";
 
-    if (val == "all") {
+    if (val == ALL_FILTER) {
         genreFilter_ = "";
     }
     else {
@@ -178,7 +180,7 @@ QString MusicLib::artistFilter() const
 
 void MusicLib::setArtistFilter(const QString &val)
 {
-    if (val == "all") {
+    if (val == ALL_FILTER) {
         artistFilter_ = "";
     }
     else {
@@ -198,7 +200,7 @@ void MusicLib::setAlbumFilter(const QString &val)
 {
     qDebug() << "setAlbumFilter(" << val << ")";
 
-    if (val == "all") {
+    if (val == ALL_FILTER) {
         albumFilter_ = "";
     }
     else {
@@ -228,8 +230,6 @@ QStringList MusicLib::getList(const QString &what) const
     qDebug() << "QStringList MusicLib::getList(" << what << ")";
     Q_ASSERT(what == "genre" || what == "artist" || what == "album");
     QStringList retVal;
-    // Add the field to display all.
-    retVal << "##--All--##";
     QJsonObject tmplib = displayLib();
     QJsonObject::const_iterator itr;
 
@@ -261,6 +261,7 @@ void MusicLib::setGenreList()
     qDebug() << "MusicLib::genreList()";
     genreList_ = tmp;
     genreList_.sort();
+    genreList_.prepend(ALL_FILTER);
     emit genreListChanged();
 }
 
@@ -277,6 +278,7 @@ void MusicLib::setArtistList()
 
     artistList_ = tmp;
     artistList_.sort();
+    artistList_.prepend(ALL_FILTER);
     emit artistListChanged();
 }
 
@@ -294,6 +296,7 @@ void MusicLib::setAlbumList()
 
     albumList_ = tmp;
     albumList_.sort();
+    albumList_.prepend(ALL_FILTER);
     emit albumListChanged();
 }
 

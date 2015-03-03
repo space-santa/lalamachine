@@ -69,6 +69,8 @@ public:
     MusicLib(QQuickItem *parent = 0);
     ~MusicLib();
 
+    static const QString ALL_FILTER;
+
     QJsonObject musicLib() const;
 
     QJsonObject displayLib() const;
