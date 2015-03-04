@@ -68,7 +68,6 @@ Rectangle {
             for (var i = 0; i < playlist_model.count; ++i) {
                 lenght += playlist_model.get(i).length
             }
-            console.log(lenght)
             return lenght
         } else {
             return 0
