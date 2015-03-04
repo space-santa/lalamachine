@@ -7,6 +7,7 @@ import "qrc:/functions.js" as Functions
 
 Rectangle {
     property int rowPlaying: -1
+    property int currentId: -1
     property url nowPlayingSource
     property bool repeatAll: false
     property alias openPlaylistVisible: open_playlist_dialog.visible
@@ -82,20 +83,14 @@ Rectangle {
         playRow(playlist_view.currentRow)
     }
 
-    // This function is broken because a track can be added multiple times to
-    // the playlist.
-    // FIXME: Fix that!
     function updateNowPlayingRow() {
-        var row = -1
         for (var i = 0; i < playlist_model.count; ++i) {
-            if (Functions.checkMrl(nowPlayingSource) == Functions.checkMrl(
-                        playlist_model.get(i)["mrl"])) {
+            if (currentId == playlist_model.get(i).id) {
                 console.log("true")
-                row = i
+                rowPlaying = i
+                return
             }
         }
-
-        rowPlaying = row
     }
 
     function writePlaylist(name) {
@@ -129,19 +124,29 @@ Rectangle {
             return
         }
 
-        playlist_model.append(meta.metaData(path))
+        playlist_model.append(setId(meta.metaData(path)))
 
         updateNowPlayingRow()
     }
 
     function addLib(json) {
         for (var i in json) {
-            playlist_model.append(json[i])
+            playlist_model.append(setId(json[i]))
         }
+    }
+
+    // returns the provided JSON with an added id field to help find the correct
+    // entry in the list later, after sorting and adding more stuff.
+    // This is necessary because the mrl can't be the unique id, since a track
+    // can be added multiple times.
+    function setId(json) {
+        json['id'] = playlist_model.count
+        return json
     }
 
     function playRow(row) {
         rowPlaying = row
+        currentId = playlist_model.get(row).id
         play(playlist_model.get(row)["mrl"])
         playlist_view.currentRow = rowPlaying
     }
