@@ -26,10 +26,8 @@ function getSafeValue(value) {
 // TODO: why is it necessary to check the mrl?
 function checkMrl(mrl) {
     mrl = mrl.toString()
-    console.log("checkMrl pre", mrl)
     if (mrl.indexOf("file://") != "0") {
         mrl = "file://" + mrl
     }
-    console.log("checkMrl post", mrl)
     return mrl
 }
