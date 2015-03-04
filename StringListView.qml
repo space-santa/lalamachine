@@ -7,6 +7,8 @@ Rectangle {
     id: container
     color: "transparent"
 
+    property bool allowSort: true
+
     property string roleString: ""
     property var stringList: []
 
@@ -31,6 +33,10 @@ Rectangle {
     }
 
     function sort(how) {
+        if (!container.allowSort) {
+            return
+        }
+
         var sorter
         if (how === 0) {
             sorter = contentAsc
@@ -82,7 +88,7 @@ Rectangle {
 
         onModelChanged: list_view.resizeColumnsToContents()
 
-        sortIndicatorVisible: true
+        sortIndicatorVisible: container.allowSort
         onSortIndicatorColumnChanged: {
             sort(sortIndicatorOrder)
         }

@@ -38,6 +38,7 @@ Rectangle {
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             width: parent.width / 3
+            allowSort: false
             roleString: "genre"
             stringList: lib.genreList
         }
@@ -48,6 +49,7 @@ Rectangle {
             anchors.left: genreList.right
             width: parent.width / 3
             height: parent.height
+            allowSort: false
             roleString: "artist"
             stringList: lib.artistList
         }
@@ -57,6 +59,7 @@ Rectangle {
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             width: parent.width / 3
+            allowSort: false
             roleString: "album"
             stringList: lib.albumList
         }
