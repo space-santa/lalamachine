@@ -190,6 +190,12 @@ Rectangle {
     // swap those values. This would always be true if we have the equal
     // in there.
     function sort(what, how) {
+        if (playlist_model.count > 1000) {
+            // Hacky ugly hacky hack to mitigate the bad performance of this.
+            // FIXME: make the playlist model a c++ abstractlistmodel.
+            return
+        }
+
         var sorter
         if (what === 0) {
             if (how === 0) {
