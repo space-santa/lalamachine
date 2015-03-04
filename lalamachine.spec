@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.3.0
+Version: 0.4.0
 Release: 1
 License: GPLv3
 Summary: A music player that is awesome.
@@ -64,6 +64,14 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Wed Mar 04 2015 r-mean
+  0.4.0-1: Release 0.4
+  * Limiting the size of the playlist for sorting.
+  * The filter lists are alphabetically sorted and can no longer be sorted
+    manually.
+  * Fixed a bug that would highlight the wrong track when the same track is in
+    in the list more than once. (UUID for each playlist_model entry)
+
 * Sun Mar 01 2015 r-mean
   0.3.0-1: Added a rhythmbox like music library.
 
