@@ -1,8 +1,10 @@
 #include <QString>
 #include <QtTest>
 #include <QCoreApplication>
+#include <QStringList>
 
 #include "../../timeconverter.h"
+#include "../../systeminteractor.h"
 
 class LalatestTest : public QObject
 {
@@ -16,6 +18,7 @@ private Q_SLOTS:
     void cleanupTestCase();
     void testCase1();
     void timeTest();
+    void systemInteractor();
 };
 
 LalatestTest::LalatestTest()
@@ -60,7 +63,20 @@ void LalatestTest::timeTest() {
     // 12 days, 22 hours, thirtyone minutes and 23 seconds
     testString = "12:22:31:23";
     tc.setSeconds(12 *24 * 3600 + 22 * 3600 + 31 * 60 + 23);
-    Q_ASSERT(tc.toString() == testString);
+    QVERIFY(tc.toString() == testString);
+}
+
+void LalatestTest::systemInteractor()
+{
+    SystemInteractor sysInt;
+    // That'll work as expected.
+    QVERIFY(sysInt.exec("echo hello") == QString("hello"));
+    // Since gugulala25341 doesn't exist it will return an empty string.
+    QVERIFY(sysInt.exec("gugulala25341") == QString(""));
+    // This will return true since echo can successfully be started detached.
+    QVERIFY(sysInt.startDetached(QString("echo"), QStringList()));
+    // Now it will be false since we can't successfully run nonexisting stuff.
+    QVERIFY(!sysInt.startDetached(QString("gugulala25341"), QStringList()));
 }
 
 QTEST_MAIN(LalatestTest)
