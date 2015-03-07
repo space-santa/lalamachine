@@ -13,7 +13,9 @@ SOURCES += main.cpp \
     m3uinout.cpp \
     config.cpp \
     timeconverter.cpp \
-    musiclib.cpp
+    musiclib.cpp \
+    cdwriter.cpp \
+    systeminteractor.cpp
 
 RESOURCES += qml.qrc
 
@@ -28,7 +30,9 @@ HEADERS += \
     m3uinout.h \
     config.h \
     timeconverter.h \
-    musiclib.h
+    musiclib.h \
+    cdwriter.h \
+    systeminteractor.h
 
 OTHER_FILES += \
     README.md \
