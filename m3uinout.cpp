@@ -68,3 +68,9 @@ QString M3uInOut::m3uPath(const QString &name) const
 {
     return Config::PLAYLISTDIR + "/" + name + ".m3u";
 }
+
+void M3uInOut::deletePlaylist(const QString &name) const
+{
+    Q_ASSERT(QStringList(getPlaylistNames()).contains(name));
+    QFile::remove(m3uPath(name));
+}
