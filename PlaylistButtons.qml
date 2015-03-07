@@ -10,6 +10,7 @@ Column {
     signal moveDown
     signal moveBottom
     signal clearList
+    signal deleteList
     signal burnList
 
     ImageButton {
@@ -54,6 +55,12 @@ Column {
         width: 50
         source: "qrc:/images/images/go-bottom.png"
         onClicked: moveBottom()
+    }
+    ImageButton {
+        id: delete_btn
+        width: 50
+        source: "qrc:/images/images/delete.png"
+        onClicked: deleteList()
     }
     ImageButton {
         id: clear_btn
