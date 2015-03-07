@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.2
+import QtQuick.Dialogs 1.2
 
 import Lala 1.0
 
@@ -11,6 +12,7 @@ Rectangle {
     property url nowPlayingSource
     property bool repeatAll: false
     property alias openPlaylistVisible: open_playlist_dialog.visible
+    property alias deletePlaylistVisible: delete_playlist_dialog.visible
     property alias savePlaylistVisible: save_playlist_dialog.visible
     property alias totalPlaytimeString: tc.timestring
 
@@ -51,6 +53,24 @@ Rectangle {
 
         onAccepted: {
             readPlaylist(selection)
+        }
+    }
+
+    OpenPlaylistDialog {
+        id: delete_playlist_dialog
+        standardButtons: StandardButton.Ok | StandardButton.Cancel
+
+        onVisibleChanged: {
+            // visibleChanged is always emitted twice, presumably because of
+            // the alias.
+            delete_playlist_dialog.clearList()
+            if (visible) {
+                delete_playlist_dialog.addList(m3u_inout.getPlaylistNames())
+            }
+        }
+
+        onAccepted: {
+            m3u_inout.deletePlaylist(selection)
         }
     }
 
