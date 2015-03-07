@@ -10,6 +10,7 @@ Column {
     signal moveDown
     signal moveBottom
     signal clearList
+    signal burnList
 
     ImageButton {
         id: open_btn
@@ -22,6 +23,13 @@ Column {
         width: 50
         source: "qrc:/images/images/save.png"
         onClicked: saveList()
+    }
+    ImageButton {
+        id: burn_btn
+        width: 50
+        // FIXME: Fallback if not running KDE.
+        source: "file:///usr/share/icons/default.kde4/64x64/apps/k3b.png"
+        onClicked: burnList()
     }
     ImageButton {
         id: top_btn
