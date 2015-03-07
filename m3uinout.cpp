@@ -56,7 +56,9 @@ QStringList M3uInOut::getPlaylistNames() const
     QFileInfoList entries = d.entryInfoList();
 
     for (int i = 0; i < entries.length(); ++i) {
-        names.append(entries[i].baseName());
+        if (entries[i].baseName() != "cs1m090") {
+            names.append(entries[i].baseName());
+        }
     }
 
     return names;

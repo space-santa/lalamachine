@@ -16,20 +16,20 @@ ApplicationWindow {
     title: qsTr("lalamachine")
 
     Component.onCompleted: {
-        playlist.readPlaylist("misc")
+        playlist.readPlaylist("cs1m090")
         volume_control.value = config.volume
         console.log("Volume on load", config.volume)
     }
 
     onClosing: {
-        playlist.writePlaylist("misc")
+        playlist.writePlaylist("cs1m090")
         config.volume = volume_control.value
         config.saveConfig()
     }
 
     function burnList() {
-        playlist.writePlaylist("misc")
-        burn.burnList(playlist.getPlaylistPath("misc"))
+        playlist.writePlaylist("cs1m090")
+        burn.burnList(playlist.getPlaylistPath("cs1m090"))
     }
 
     KeyEvents {

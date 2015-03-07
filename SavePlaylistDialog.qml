@@ -30,6 +30,7 @@ Dialog {
         TextField {
             id: name_field
             width: parent.width
+            validator: RegExpValidator { regExp: /^(?!cs1m090$).*/ }
         }
     }
 }
