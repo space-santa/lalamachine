@@ -32,5 +32,6 @@
         <file>images/random.png</file>
         <file>images/repeat1.png</file>
         <file>images/repeatAll.png</file>
+        <file>images/delete.png</file>
     </qresource>
 </RCC>
