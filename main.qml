@@ -4,9 +4,12 @@ import QtMultimedia 5.0
 import QtQuick.Dialogs 1.2
 import QtQuick.Window 2.2
 
+import Lala 1.0
+
 import "qrc:/functions.js" as Functions
 
 ApplicationWindow {
+    id: master
     visible: true
     width: Screen.width
     height: Screen.height
@@ -22,6 +25,11 @@ ApplicationWindow {
         playlist.writePlaylist("misc")
         config.volume = volume_control.value
         config.saveConfig()
+    }
+
+    function burnList() {
+        playlist.writePlaylist("misc")
+        burn.burnList(playlist.getPlaylistPath("misc"))
     }
 
     KeyEvents {
@@ -71,6 +79,10 @@ ApplicationWindow {
         id: config
     }
 
+    CdWriter {
+        id: burn
+    }
+
     MediaPlayer {
         id: playMusic
         volume: volume_control.value
@@ -111,6 +123,7 @@ ApplicationWindow {
                 onMoveDown: playlist.moveDown()
                 onMoveBottom: playlist.moveBottom()
                 onClearList: playlist.clearList()
+                onBurnList: master.burnList()
             }
 
             Playlist {
