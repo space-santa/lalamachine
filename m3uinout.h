@@ -13,13 +13,13 @@ public:
                                    const QStringList files) const;
     Q_INVOKABLE QStringList readPlaylist(const QString &name) const;
     Q_INVOKABLE QStringList getPlaylistNames() const;
+    Q_INVOKABLE QString m3uPath(const QString &name) const;
 
 signals:
 
 public slots:
 
 private:
-    QString m3uPath(const QString &name) const;
 };
 
 #endif // M3UINOUT_H
