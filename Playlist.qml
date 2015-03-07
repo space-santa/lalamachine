@@ -62,6 +62,10 @@ Rectangle {
         }
     }
 
+    function getPlaylistPath(name) {
+        return m3u_inout.m3uPath(name)
+    }
+
     function totalPlaytime() {
         if (tc.enabled) {
             var lenght = 0
