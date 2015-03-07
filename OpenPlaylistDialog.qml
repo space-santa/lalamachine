@@ -9,12 +9,14 @@ Dialog {
     visible: false
     standardButtons: StandardButton.Open | StandardButton.Cancel
 
-    property string selection: namelist_model.get(namelist_view.currentRow).listname
+    property string selection: {
+        namelist_model.get(namelist_view.currentRow) ?
+                    namelist_model.get(namelist_view.currentRow).listname : ""
+    }
 
     onSelectionChanged: console.log(selection)
 
     onAccepted: {
-        selection = namelist_model.get(namelist_view.currentRow).listname
         close()
     }
     onRejected: {
