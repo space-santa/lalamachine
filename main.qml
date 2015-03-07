@@ -123,6 +123,7 @@ ApplicationWindow {
                 onMoveDown: playlist.moveDown()
                 onMoveBottom: playlist.moveBottom()
                 onClearList: playlist.clearList()
+                onDeleteList: playlist.deletePlaylistVisible = true
                 onBurnList: master.burnList()
             }
 
