@@ -23,11 +23,17 @@ SOURCES += tst_lalatesttest.cpp \
     ../../config.cpp \
     ../../m3uinout.cpp \
     ../../metadataprovider.cpp \
-    ../../timeconverter.cpp
+    ../../timeconverter.cpp \
+    ../../cdwriter.cpp \
+    ../../musiclib.cpp \
+    ../../systeminteractor.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
     ../../config.h \
     ../../m3uinout.h \
     ../../metadataprovider.h \
-    ../../timeconverter.h
+    ../../timeconverter.h \
+    ../../cdwriter.h \
+    ../../musiclib.h \
+    ../../systeminteractor.h
