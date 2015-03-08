@@ -10,5 +10,5 @@ StartupNotify=true
 Terminal=false
 TerminalOptions=
 Type=Application
-Categories=Qt;AudioVideo;Player;Multimedia;Music;Audio Player
-MimeType=audio/*
+Categories=Qt;AudioVideo;Player;Multimedia;Music;Audio Player;
+MimeType=audio/*;
