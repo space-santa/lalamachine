@@ -28,6 +28,7 @@ BuildRequires: libqt5-qtbase-devel libqt5-qtmultimedia-devel libtag-devel
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %description
+Lalamachine is sort of a rhythmbox clone.
 
 %prep
 %setup -q
