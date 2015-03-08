@@ -10,6 +10,7 @@ Rectangle {
     property int rowPlaying: -1
     property int currentId: -1
     property url nowPlayingSource
+    property string nowPlayingTitle: ""
     property bool repeatAll: false
     property alias openPlaylistVisible: open_playlist_dialog.visible
     property alias deletePlaylistVisible: delete_playlist_dialog.visible
@@ -24,6 +25,7 @@ Rectangle {
     onRowPlayingChanged: {
         playlist_view.selection.clear()
         playlist_view.selection.select(rowPlaying)
+        nowPlayingTitle = playlist_model.get(rowPlaying).title
     }
 
     Metadata {

@@ -13,7 +13,7 @@ ApplicationWindow {
     visible: true
     width: Screen.width
     height: Screen.height
-    title: qsTr("lalamachine")
+    title: getWindowTitle()
 
     Component.onCompleted: {
         playlist.readPlaylist("cs1m090")
@@ -25,6 +25,19 @@ ApplicationWindow {
         playlist.writePlaylist("cs1m090")
         config.volume = volume_control.value
         config.saveConfig()
+    }
+
+    function getWindowTitle() {
+        var title = ""
+
+        if (playlist.nowPlayingTitle != "") {
+            title += playlist.nowPlayingTitle
+            title += " | "
+        }
+
+        title += "lalamachine"
+
+        return title
     }
 
     function burnList() {
