@@ -55,10 +55,10 @@ fi
 rm -rf $RPM_BUILD_ROOT
 
 %files
+%defattr(-,root,root)
 %dir /opt/rmean
 %dir /opt/rmean/bin
 %dir /opt/rmean/icons
-%defattr(-,root,root)
 /opt/rmean/bin/lalamachine
 /opt/rmean/icons/lalamachine.png
 /usr/share/applications/lalamachine.desktop
