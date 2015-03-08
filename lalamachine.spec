@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.4.0
+Version: 0.5.0
 Release: 1
 License: GPLv3
 Summary: A music player that is awesome.
@@ -64,6 +64,12 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sun Mar 08 2015 r-mean
+  0.5.0-1: Release 0.5
+  * The window tile now contains the title of the currently playing track.
+  * Playlists can now be deleted.
+  * Playlists can now be burned as audio cd with K3b.
+
 * Wed Mar 04 2015 r-mean
   0.4.0-1: Release 0.4
   * Limiting the size of the playlist for sorting.
