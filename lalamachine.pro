@@ -39,3 +39,6 @@ OTHER_FILES += \
     images/license-icons.txt \
     lalamachine.desktop \
     lalamachine.spec
+
+DISTFILES += \
+    LICENSE
