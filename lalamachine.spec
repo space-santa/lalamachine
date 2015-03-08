@@ -19,7 +19,7 @@ Name: lalamachine
 Version: 0.5.0
 Release: 1
 License: GPL-3.0+
-Summary: A music player that is awesome.
+Summary: A music player that is awesome
 Url: https://bitbucket.org/r-mean/lalamachine
 Group: Applications/Multimedia
 Source: %_sourcedir/%{name}-%{version}.tar.gz
