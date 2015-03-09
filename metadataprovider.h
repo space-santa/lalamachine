@@ -31,8 +31,6 @@ public:
 
     Q_INVOKABLE QJsonObject metaData(const QUrl &path) const;
 
-    Q_INVOKABLE QString secToMinSec(int sec) const;
-
 signals:
 
 public slots:
