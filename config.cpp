@@ -110,6 +110,10 @@ void Config::saveJsonFile(const QString &path, const QJsonObject &obj)
         return;
     }
 
-    saveFile.write(d.toJson());
+    // If we want the utf8 encoding to be correctly written to the file,
+    // we cannot write the JSON document directly. We must write an encoded
+    // QString into the file.
+    QTextStream out(&saveFile);
+    out << QString::fromUtf8(d.toJson());
     qDebug() << "Config::dataSet";
 }
