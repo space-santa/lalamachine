@@ -45,19 +45,19 @@ QJsonObject MetaDataProvider::metaData(const QUrl &path) const
     if (!f.isNull() && f.tag()) {
         TagLib::Tag *tag = f.tag();
         tmpmap.insert("title",
-                      QString::fromUtf8(tag->title().toCString()));
+                      QString::fromUtf8(tag->title().toCString(true)));
         tmpmap.insert("artist",
-                      QString::fromUtf8(tag->artist().toCString()));
+                      QString::fromUtf8(tag->artist().toCString(true)));
         tmpmap.insert("album",
-                      QString::fromUtf8(tag->album().toCString()));
+                      QString::fromUtf8(tag->album().toCString(true)));
         tmpmap.insert("year",
                       QString::number(tag->year()));
         tmpmap.insert("comment",
-                      QString::fromUtf8(tag->comment().toCString()));
+                      QString::fromUtf8(tag->comment().toCString(true)));
         tmpmap.insert("track",
                       QString::number(tag->track()));
         tmpmap.insert("genre",
-                      QString::fromUtf8(tag->genre().toCString()));
+                      QString::fromUtf8(tag->genre().toCString(true)));
         tmpmap.insert("path", line);
         tmpmap.insert("mrl", path);
         tmpmap.insert("length", f.audioProperties()->length());
