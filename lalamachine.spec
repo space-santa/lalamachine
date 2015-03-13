@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.5.0
+Version: 0.6.0
 Release: 1
 License: GPL-3.0+
 Summary: A music player that is awesome
@@ -65,6 +65,13 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat Mar 14 2015 r-mean
+  0.6.0-1: Release 0.6
+  * Fixed a bug that would play the wrong next track if the playlist was
+    reordered.
+  * Fixed a bug that would not save the musiclib in UTF8.
+  * The misc playlist is no longer visible/selectable in the playlistlist.
+
 * Sun Mar 08 2015 r-mean
   0.5.0-1: Release 0.5
   * The window tile now contains the title of the currently playing track.
