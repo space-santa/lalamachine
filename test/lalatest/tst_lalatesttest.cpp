@@ -25,6 +25,7 @@ private Q_SLOTS:
     void testCase1();
     void timeTest();
     void systemInteractor();
+    void config();
     void m3uInOut();
 };
 
@@ -106,6 +107,21 @@ void LalatestTest::systemInteractor()
     QVERIFY(sysInt.startDetached(QString("echo"), QStringList()));
     // Now it will be false since we can't successfully run nonexisting stuff.
     QVERIFY(!sysInt.startDetached(QString("gugulala25341"), QStringList()));
+}
+
+void LalatestTest::config()
+{
+    backupFile(Config::CONFIGPATH);
+    Config cfg;
+    double oldvol = cfg.volume();
+    double newvol = 0.37;
+    cfg.setVolume(newvol);
+    cfg.saveConfig();
+    Config cfg2;
+    QVERIFY(cfg2.volume() == newvol);
+    restoreBackup(Config::CONFIGPATH);
+    Config cfg3;
+    QVERIFY(cfg3.volume() == oldvol);
 }
 
 void LalatestTest::m3uInOut()
