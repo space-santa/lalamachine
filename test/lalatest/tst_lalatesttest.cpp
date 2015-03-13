@@ -15,6 +15,10 @@ class LalatestTest : public QObject
 public:
     LalatestTest();
 
+    QString backupFileName(QString path);
+    void backupFile(QString path);
+    void restoreBackup(QString path);
+
 private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
@@ -26,6 +30,27 @@ private Q_SLOTS:
 
 LalatestTest::LalatestTest()
 {
+}
+
+QString LalatestTest::backupFileName(QString path)
+{
+    return path + ".backup";
+}
+
+void LalatestTest::backupFile(QString path)
+{
+    if (QFile::exists(backupFileName(path))) {
+        QFile::remove(backupFileName(path));
+    }
+    QFile::copy(path, backupFileName(path));
+}
+
+void LalatestTest::restoreBackup(QString path)
+{
+    if (QFile::exists(path)) {
+        QFile::remove(path);
+    }
+    QFile::rename(backupFileName(path), path);
 }
 
 void LalatestTest::initTestCase()
