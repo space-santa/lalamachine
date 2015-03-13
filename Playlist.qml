@@ -127,6 +127,7 @@ Rectangle {
         playRow(playlist_view.currentRow)
     }
 
+    // FIXME: There should be a way to bind the property to this function.
     function updateNowPlayingRow() {
         for (var i = 0; i < playlist_model.count; ++i) {
             if (currentId == playlist_model.get(i).id) {
@@ -365,6 +366,9 @@ Rectangle {
 
     ListModel {
         id: playlist_model
+        onRowsMoved: {
+            updateNowPlayingRow()
+        }
     }
 
     TableView {
