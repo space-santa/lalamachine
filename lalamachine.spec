@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.6.0
+Version: 0.7.0
 Release: 1
 License: GPL-3.0+
 Summary: A music player that is awesome
@@ -65,6 +65,13 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sun Mar 15 2015 r-mean
+  0.7.0-1: Release 0.7
+  * The library can now be rescanned.
+  * The library path is now configurable.
+  * Fixed a bug that would not update the artist and album list after the
+    library has changed.
+
 * Sat Mar 14 2015 r-mean
   0.6.0-1: Release 0.6
   * Fixed a bug that would play the wrong next track if the playlist was
