@@ -30,6 +30,10 @@ Rectangle {
 
     signal addTrack(string path)
 
+    function rescan() {
+        lib.rescan()
+    }
+
     MusicLib {
         id: lib
         libPath: "/home/rmean/musiclib"
