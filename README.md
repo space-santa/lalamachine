@@ -1,4 +1,20 @@
-There is now a readme. So read me. Yes, I mean you. READ. ME.
+# lalamachine
+
+## Intro
+
+lalamachine is a rhythmbox clone. I like rhythmbox a lot, but it is missing
+certain features, like sorting playlists. On the other hand it has so many
+features I never use. It is also the only Gnome application I use.
+
+## Dependencies
+
+lalamachine is a Qt5 application and uses QtMultimedia to play music.
+The only other (direct) dependency is taglib.
+Since QtMultimedia uses GStreamer as backend you probably want to install
+GStreamer codecs.
+
+
+## License
 
 Copyright 2015 Armin Zirkel
 
