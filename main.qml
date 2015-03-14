@@ -46,6 +46,22 @@ ApplicationWindow {
         config.saveConfig()
     }
 
+    menuBar: MenuBar {
+        Menu {
+            title: "MusicLib"
+            MenuItem {
+                text: "Rescan"
+                onTriggered: {
+                    if (!libview.scanInProgress) {
+                        libview.rescan()
+                    }
+                }
+            }
+            MenuSeparator {
+            }
+        }
+    }
+
     function getWindowTitle() {
         var title = ""
 
