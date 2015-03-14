@@ -155,7 +155,7 @@ private:
 
     QJsonObject lib_ {};
     bool scanning_ {false};
-    QJsonObject displayLib_;
+    QJsonObject displayLib_ {};
     QString genreFilter_ {""};
     QString artistFilter_ {""};
     QString albumFilter_ {""};
