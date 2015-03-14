@@ -29,6 +29,11 @@ class Config : public QQuickItem
 
     Q_PROPERTY(double volume READ volume WRITE setVolume NOTIFY volumeChanged)
 
+    Q_PROPERTY(QString libPath
+               READ libPath
+               WRITE setLibPath
+               NOTIFY libPathChanged)
+
 public:
     explicit Config(QQuickItem *parent = 0);
 
@@ -43,11 +48,15 @@ public:
     void setVolume(double val);
     double volume();
 
+    void setLibPath(const QString &path);
+    QString libPath() const;
+
     static QJsonObject loadJsonFile(const QString &path);
     static void saveJsonFile(const QString &path, const QJsonObject &obj);
 
 signals:
     void volumeChanged();
+    void libPathChanged();
 
 public slots:
 

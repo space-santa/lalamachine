@@ -75,6 +75,37 @@ double Config::volume()
     return retval;
 }
 
+void Config::setLibPath(const QString &path)
+{
+    QString actualPath = QUrl(path).path();
+    Q_ASSERT(QDir(actualPath).exists());
+    config_.insert("libPath", actualPath);
+    // We want to save the file right after setting the path because we want
+    // config.json to match musiclib.json as soon as it changes.
+    saveConfig();
+    emit libPathChanged();
+}
+
+QString Config::libPath() const
+{
+    QString retval("");
+    QJsonValue v = config_.value("libPath");
+
+    if (v.isString()) {
+        retval = v.toString();
+
+        if (!QDir(retval).exists()) {
+            retval = "";
+            qCritical() << "libPath doesn't exist!";
+        }
+    }
+    else {
+        qWarning("No proper libPath defined in config.json");
+    }
+
+    return retval;
+}
+
 QJsonObject Config::loadJsonFile(const QString &path)
 {
     // Reading the JSON
