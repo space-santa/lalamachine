@@ -4,7 +4,8 @@
 
 lalamachine is a rhythmbox clone. I like rhythmbox a lot, but it is missing
 certain features. On the other hand it has so many
-features I never use. It is also the only Gnome application I use.
+features I never use. It is also the only Gnome application I use which adds dependencies to my system.  
+And since I enjoy software development I decided to write lalamachine.
 
 ## Dependencies
 
@@ -29,9 +30,19 @@ sudo make install
 The software will be installed in /opt/rmean/bin for now.  
 This will change to /usr/bin eventually, at latest for version 1.0
 
+To remove lalamachine,
+
+
+```
+#!bash
+
+sudo make uninstall
+```
+
+
 ## Package
 
-I build package for openSUSE 13.2 and tumbleweed with the openSUSE build service.  
+I build packages for openSUSE 13.2 and Tumbleweed with the openSUSE build service.  
 The download repositories are here:
 
 * [openSUSE13.2](http://download.opensuse.org/repositories/home:/rmean/openSUSE_13.2/)
@@ -39,7 +50,7 @@ The download repositories are here:
 
 ## Contribute
 
-I would appreciate every help. If you'd like to contribute to lalamachine,
+I would appreciate any help. If you'd like to contribute to lalamachine,
 
 * Test. Either by using the app or by adding to the qt unit test in ./test/lalatest
 * Create packages for other distributions.
