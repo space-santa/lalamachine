@@ -16,7 +16,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 import QtQuick 2.0
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
@@ -43,8 +42,8 @@ Rectangle {
         albumFilter: albumList.selection
 
         onDisplayLibChanged: {
-            bottomShelve.clearList()
-            bottomShelve.addLib(displayLib)
+            titles.clearList()
+            titles.addLib(displayLib)
         }
     }
 
@@ -90,17 +89,47 @@ Rectangle {
         }
     }
 
-    Playlist {
+    Rectangle {
         id: bottomShelve
         anchors.top: topShelve.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-
         color: "transparent"
 
-        provideTotalTime: false
+        Playlist {
+            id: titles
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: scan_notifier.top
 
-        onPlay: addTrack(path)
+            color: "transparent"
+
+            provideTotalTime: false
+
+            onPlay: addTrack(path)
+        }
+
+        Rectangle {
+            id: scan_notifier
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            height: lib.scanning ? 50 : 0
+            color: "#4d4b4b"
+
+            Text {
+                anchors.fill: parent
+
+                visible: lib.scanning
+
+                text: "Scan in progress..."
+                color: "white"
+                font.pointSize: 16
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+            }
+        }
     }
 }
