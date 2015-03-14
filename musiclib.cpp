@@ -280,6 +280,17 @@ QStringList MusicLib::albumList() const
     return albumList_;
 }
 
+void MusicLib::rescan()
+{
+    qDebug() << "emitting rescan" << libPath();
+
+    if (!scannerThread_.isRunning()) {
+        scannerThread_.start();
+    }
+
+    emit startScan(libPath());
+}
+
 QStringList MusicLib::getList(const QString &what) const
 {
     qDebug() << "QStringList MusicLib::getList(" << what << ")";

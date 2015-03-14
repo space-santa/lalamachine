@@ -122,6 +122,8 @@ public:
     QStringList artistList() const;
     QStringList albumList() const;
 
+    Q_INVOKABLE void rescan();
+
 public slots:
     void scanFinished(const QJsonObject &lib);
 
