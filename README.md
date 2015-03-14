@@ -3,15 +3,49 @@
 ## Intro
 
 lalamachine is a rhythmbox clone. I like rhythmbox a lot, but it is missing
-certain features, like sorting playlists. On the other hand it has so many
+certain features. On the other hand it has so many
 features I never use. It is also the only Gnome application I use.
 
 ## Dependencies
 
 lalamachine is a Qt5 application and uses QtMultimedia to play music.
-The only other (direct) dependency is taglib.
+The only other (direct) dependency is taglib.  
 Since QtMultimedia uses GStreamer as backend you probably want to install
 GStreamer codecs.
+
+## Build it
+
+Using the qmake of Qt5, the build and install process is very straightforward:
+
+
+```
+#!bash
+
+qmake
+make
+sudo make install
+```
+
+The software will be installed in /opt/rmean/bin for now.  
+This will change to /usr/bin eventually, at latest for version 1.0
+
+## Package
+
+I build package for openSUSE 13.2 and tumbleweed with the openSUSE build service.  
+The download repositories are here:
+
+* [openSUSE13.2](http://download.opensuse.org/repositories/home:/rmean/openSUSE_13.2/)
+* [Tumbleweed](http://download.opensuse.org/repositories/home:/rmean/openSUSE_Tumbleweed/)
+
+## Contribute
+
+I would appreciate every help. If you'd like to contribute to lalamachine,
+
+* Test. Either by using the app or by adding to the qt unit test in ./test/lalatest
+* Create packages for other distributions.
+* Add to the wiki.
+* Write code and send me a pull request. There is also a list of issues that wants to be resolved.
+* Let me know how you like the app and what functionality is missing.
 
 
 ## License
