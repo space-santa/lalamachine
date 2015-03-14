@@ -35,6 +35,11 @@ MusicLibScanner::MusicLibScanner(QObject *parent) :
 
 void MusicLibScanner::scanLib(const QString &path)
 {
+    if (path == "" || !QDir(path).exists()) {
+        qCritical("I can't scan a non-existing folder.");
+        return;
+    }
+
     qDebug() << "Start scan";
     emit scanStarted();
     QJsonObject lib;
