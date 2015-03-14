@@ -84,18 +84,43 @@ MusicLib::MusicLib(QQuickItem *parent)
     // Therefor it is vital that the scanner_ is a raw pointer, or double free
     // happens.
     scanner_->moveToThread(&scannerThread_);
-    connect(&scannerThread_, &QThread::finished, scanner_, &QObject::deleteLater);
-    connect(this, &MusicLib::startScan, scanner_, &MusicLibScanner::scanLib);
-    connect(scanner_, &MusicLibScanner::scanComplete, this,
-            &MusicLib::scanFinished);
-    connect(this, &MusicLib::musicLibChanged, this, &MusicLib::setDisplayLib);
-    connect(this, &MusicLib::genreFilterChanged, this, &MusicLib::setDisplayLib);
-    connect(this, &MusicLib::artistFilterChanged, this, &MusicLib::setDisplayLib);
-    connect(this, &MusicLib::albumFilterChanged, this, &MusicLib::setDisplayLib);
-    connect(this, &MusicLib::musicLibChanged, this, &MusicLib::setGenreList);
-    connect(this, &MusicLib::genreFilterChanged, this, &MusicLib::setArtistList);
-    connect(this, &MusicLib::genreFilterChanged, this, &MusicLib::setAlbumList);
-    connect(this, &MusicLib::artistFilterChanged, this, &MusicLib::setAlbumList);
+
+    connect(&scannerThread_, &QThread::finished,
+            scanner_, &QObject::deleteLater);
+
+    connect(this, &MusicLib::startScan,
+            scanner_, &MusicLibScanner::scanLib);
+
+    connect(scanner_, &MusicLibScanner::scanComplete,
+            this, &MusicLib::scanFinished);
+
+    connect(scanner_, &MusicLibScanner::scanStarted,
+            this, &MusicLib::scanStarted);
+
+    connect(this, &MusicLib::musicLibChanged,
+            this, &MusicLib::setDisplayLib);
+
+    connect(this, &MusicLib::genreFilterChanged,
+            this, &MusicLib::setDisplayLib);
+
+    connect(this, &MusicLib::artistFilterChanged,
+            this, &MusicLib::setDisplayLib);
+
+    connect(this, &MusicLib::albumFilterChanged,
+            this, &MusicLib::setDisplayLib);
+
+    connect(this, &MusicLib::musicLibChanged,
+            this, &MusicLib::setGenreList);
+
+    connect(this, &MusicLib::genreFilterChanged,
+            this, &MusicLib::setArtistList);
+
+    connect(this, &MusicLib::genreFilterChanged,
+            this, &MusicLib::setAlbumList);
+
+    connect(this, &MusicLib::artistFilterChanged,
+            this, &MusicLib::setAlbumList);
+
     readLibFile();
 
     if (lib_.isEmpty()) {
