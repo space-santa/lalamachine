@@ -1,3 +1,4 @@
+
 /*
 Copyright 2015 Armin Zirkel
 
@@ -16,22 +17,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 import QtQuick 2.0
 import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.2
 
 Dialog {
+    id: master
     width: 400
     height: 600
 
     visible: false
     standardButtons: StandardButton.Open | StandardButton.Cancel
 
-    property string selection: {
-        namelist_model.get(namelist_view.currentRow) ?
-                    namelist_model.get(namelist_view.currentRow).listname : ""
-    }
+    property string selection: ""
 
     onSelectionChanged: console.log(selection)
 
@@ -85,6 +83,8 @@ Dialog {
             onCurrentRowChanged: {
                 selection.clear()
                 selection.select(currentRow)
+                master.selection = namelist_model.get(
+                            namelist_view.currentRow).listname
             }
             TableViewColumn {
                 role: "listname"
