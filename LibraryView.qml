@@ -26,6 +26,8 @@ import Lala 1.0
 Rectangle {
     color: "transparent"
 
+    property bool scanInProgress: lib.scanning
+
     signal addTrack(string path)
 
     MusicLib {
