@@ -115,6 +115,12 @@ MusicLib::MusicLib(QQuickItem *parent)
     connect(this, &MusicLib::musicLibChanged,
             this, &MusicLib::setGenreList);
 
+    connect(this, &MusicLib::musicLibChanged,
+            this, &MusicLib::setArtistList);
+
+    connect(this, &MusicLib::musicLibChanged,
+            this, &MusicLib::setAlbumList);
+
     connect(this, &MusicLib::genreFilterChanged,
             this, &MusicLib::setArtistList);
 
