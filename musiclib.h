@@ -65,10 +65,12 @@ class MusicLib : public QQuickItem
                READ genreFilter
                WRITE setGenreFilter
                NOTIFY genreFilterChanged)
+
     Q_PROPERTY(QString artistFilter
                READ artistFilter
                WRITE setArtistFilter
                NOTIFY artistFilterChanged)
+
     Q_PROPERTY(QString albumFilter
                READ albumFilter
                WRITE setAlbumFilter
@@ -77,9 +79,11 @@ class MusicLib : public QQuickItem
     Q_PROPERTY(QStringList genreList
                READ genreList
                NOTIFY genreListChanged)
+
     Q_PROPERTY(QStringList artistList
                READ artistList
                NOTIFY artistListChanged)
+
     Q_PROPERTY(QStringList albumList
                READ albumList
                NOTIFY albumListChanged)
