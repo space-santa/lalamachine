@@ -37,6 +37,7 @@ public slots:
     void scanLib(const QString &path);
 
 signals:
+    void scanStarted();
     void scanComplete(const QJsonObject &lib);
 
 private:
@@ -177,6 +178,8 @@ private slots:
     void setGenreList();
     void setArtistList();
     void setAlbumList();
+
+    void scanStarted();
 };
 
 #endif // MUSICLIB_H

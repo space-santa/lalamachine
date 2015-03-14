@@ -35,6 +35,8 @@ MusicLibScanner::MusicLibScanner(QObject *parent) :
 
 void MusicLibScanner::scanLib(const QString &path)
 {
+    qDebug() << "Start scan";
+    emit scanStarted();
     QJsonObject lib;
     MetaDataProvider meta;
     QDir rootDir(path);
@@ -55,6 +57,7 @@ void MusicLibScanner::scanLib(const QString &path)
         }
     }
 
+    qDebug() << "End scan";
     emit scanComplete(lib);
 }
 
@@ -366,11 +369,17 @@ void MusicLib::setAlbumList()
     emit albumListChanged();
 }
 
+void MusicLib::scanStarted()
+{
+    setScanning(true);
+}
+
 void MusicLib::scanFinished(const QJsonObject &lib)
 {
     lib_ = lib;
     emit musicLibChanged();
     writeLibFile();
+    setScanning(false);
 }
 
 bool MusicLib::checkVal(const QString &check, const QString &val) const
