@@ -143,6 +143,17 @@ QJsonObject MusicLib::musicLib() const
     return lib_;
 }
 
+bool MusicLib::scanning() const
+{
+    return scanning_;
+}
+
+void MusicLib::setScanning(bool val)
+{
+    scanning_ = val;
+    emit scanningChanged();
+}
+
 QJsonObject MusicLib::displayLib() const
 {
     return displayLib_;

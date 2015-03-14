@@ -52,6 +52,11 @@ class MusicLib : public QQuickItem
                READ musicLib
                NOTIFY musicLibChanged)
 
+    Q_PROPERTY(bool scanning
+               READ scanning
+               WRITE setScanning
+               NOTIFY scanningChanged)
+
     Q_PROPERTY(QJsonObject displayLib
                READ displayLib
                NOTIFY displayLibChanged)
@@ -96,6 +101,9 @@ public:
 
     QJsonObject musicLib() const;
 
+    bool scanning() const;
+    void setScanning(bool val);
+
     QJsonObject displayLib() const;
 
     QString libPath() const;
@@ -121,6 +129,8 @@ signals:
     void startScan(const QString &path);
     void musicLibChanged();
 
+    void scanningChanged();
+
     void displayLibChanged();
 
     void libPathChanged();
@@ -141,6 +151,7 @@ private:
     QThread scannerThread_;
 
     QJsonObject lib_;
+    bool scanning_ {false};
     QJsonObject displayLib_;
     QString genreFilter_ {""};
     QString artistFilter_ {""};
