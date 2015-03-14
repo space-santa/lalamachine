@@ -16,7 +16,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtMultimedia 5.0
@@ -103,7 +102,7 @@ ApplicationWindow {
             }
         }
         onDeleteTrack: playlist.deleteCurrentTrack()
-        onStartPlaying:playlist.playCurrentTrack()
+        onStartPlaying: playlist.playCurrentTrack()
     }
 
     Rectangle {
@@ -148,7 +147,7 @@ ApplicationWindow {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        width: parent.width/2
+        width: parent.width / 2
         color: "transparent"
 
         Rectangle {
