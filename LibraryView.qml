@@ -26,6 +26,7 @@ Rectangle {
     color: "transparent"
 
     property bool scanInProgress: lib.scanning
+    property alias library: lib.libPath
 
     signal addTrack(string path)
 
@@ -35,7 +36,6 @@ Rectangle {
 
     MusicLib {
         id: lib
-        libPath: "/home/rmean/musiclib"
 
         genreFilter: genreList.selection
         artistFilter: artistList.selection

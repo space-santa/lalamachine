@@ -271,6 +271,7 @@ ApplicationWindow {
         LibraryView {
             id: libview
             anchors.fill: parent
+            library: config.libPath
 
             onAddTrack: playlist.add(path)
         }
