@@ -151,9 +151,9 @@ private:
     // If this is then not a raw pointer a double free happens, because
     // the thread and this is trying to destroy the scanner.
     MusicLibScanner *scanner_ {new MusicLibScanner()};
-    QThread scannerThread_;
+    QThread scannerThread_ {};
 
-    QJsonObject lib_;
+    QJsonObject lib_ {};
     bool scanning_ {false};
     QJsonObject displayLib_;
     QString genreFilter_ {""};
