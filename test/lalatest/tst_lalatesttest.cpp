@@ -119,7 +119,19 @@ void LalatestTest::config()
     cfg.saveConfig();
     Config cfg2;
     QVERIFY(cfg2.volume() == newvol);
+
+    // Testing a path.
+    // setLibPath automatically saves the json file.
+    cfg.setLibPath("/tmp");
+    cfg2.loadConfig();
+    QVERIFY(cfg2.libPath() == cfg.libPath());
+    // A QUrl must also work.
+    cfg.setLibPath("file:///tmp");
+    cfg2.loadConfig();
+    QVERIFY(cfg2.libPath() == cfg.libPath());
+
     restoreBackup(Config::CONFIGPATH);
+    // This is to check if the restoreBackup worked.
     Config cfg3;
     QVERIFY(cfg3.volume() == oldvol);
 }
