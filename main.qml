@@ -270,6 +270,7 @@ ApplicationWindow {
         color: "transparent"
 
         LibraryView {
+            id: libview
             anchors.fill: parent
 
             onAddTrack: playlist.add(path)
