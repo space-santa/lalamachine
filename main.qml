@@ -58,6 +58,12 @@ ApplicationWindow {
             }
             MenuSeparator {
             }
+            MenuItem {
+                text: "Set library"
+                onTriggered: {
+                    lib_dialog.visible = true
+                }
+            }
         }
     }
 
@@ -291,6 +297,23 @@ ApplicationWindow {
         }
         onRejected: {
             console.log("Canceled")
+            visible = false
+        }
+    }
+
+    FileDialog {
+        id: lib_dialog
+        visible: false
+        title: "Please set your library"
+        selectMultiple: false
+        selectExisting: true
+        selectFolder: true
+
+        onAccepted: {
+            config.libPath = lib_dialog.folder
+            visible = false
+        }
+        onRejected: {
             visible = false
         }
     }
