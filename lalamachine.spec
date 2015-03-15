@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.7.0
+Version: 0.8.0
 Release: 1
 License: GPL-3.0+
 Summary: A music player that is awesome
@@ -65,6 +65,12 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sun Mar 15 2015 r-mean
+  0.8.0-1: Release 0.8
+  * Sorting a playlist is now significantly faster. The whole library can now
+    be sorted.
+  * Each table displays now how many entries it has.
+
 * Sun Mar 15 2015 r-mean
   0.7.0-1: Release 0.7
   * The library can now be rescanned.
