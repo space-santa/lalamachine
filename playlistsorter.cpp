@@ -29,6 +29,15 @@ bool masterSort(QVariant i,
     }
     if (what == PlaylistSorter::TRACK) {
         sortString = "track";
+        int si = vmap1.value(sortString).toInt();
+        int sj = vmap2.value(sortString).toInt();
+
+        if (how == PlaylistSorter::ASCENDING) {
+            return si < sj;
+        }
+        else {
+            return si > sj;
+        }
     }
     if (what == PlaylistSorter::GENRE) {
         sortString = "genre";
