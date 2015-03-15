@@ -1,3 +1,4 @@
+
 /*
 Copyright 2015 Armin Zirkel
 
@@ -16,7 +17,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 import QtQuick 2.0
 import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.2
@@ -103,6 +103,10 @@ Rectangle {
         }
     }
 
+    PlaylistSorter {
+        id: listsorter
+    }
+
     function getPlaylistPath(name) {
         return m3u_inout.m3uPath(name)
     }
@@ -180,6 +184,13 @@ Rectangle {
         }
     }
 
+    function replaceJson(json) {
+        playlist_model.clear()
+        for (var i in json) {
+            playlist_model.append(json[i])
+        }
+    }
+
     // returns the provided JSON with an added id field to help find the correct
     // entry in the list later, after sorting and adding more stuff.
     // This is necessary because the mrl can't be the unique id, since a track
@@ -222,6 +233,15 @@ Rectangle {
         }
     }
 
+    function modelToArray(model) {
+        var retval = []
+        for (var i = 0; i < model.count; ++i) {
+            retval[i] = model.get(i)
+        }
+
+        return retval
+    }
+
     // what can be one of the keys
     //   0 = track
     //   1 = title
@@ -236,116 +256,43 @@ Rectangle {
     // swap those values. This would always be true if we have the equal
     // in there.
     function sort(what, how) {
-        if (playlist_model.count > 1000) {
-            // Hacky ugly hacky hack to mitigate the bad performance of this.
-            // FIXME: make the playlist model a c++ abstractlistmodel.
-            return
-        }
+        var startdate = Date.now()
 
-        var sorter
+        var sortwhat
+        var sorthow
+
         if (what === 0) {
-            if (how === 0) {
-                sorter = trackAsc
-            } else {
-                sorter = trackDes
-            }
-        } else if (what === 1) {
-            if (how === 0) {
-                sorter = titleAsc
-            } else {
-                sorter = titleDes
-            }
-        } else if (what === 2) {
-            if (how === 0) {
-                sorter = commentAsc
-            } else {
-                sorter = commentDes
-            }
-        } else if (what === 3) {
-            if (how === 0) {
-                sorter = lengthAsc
-            } else {
-                sorter = lengthDes
-            }
-        } else if (what === 4) {
-            if (how === 0) {
-                sorter = genreAsc
-            } else {
-                sorter = genreDes
-            }
-        } else if (what === 5) {
-            if (how === 0) {
-                sorter = artistAsc
-            } else {
-                sorter = artistDes
-            }
-        } else {
-            console.error("sort criterion is wrong")
-            return
+            sortwhat = PlaylistSorter.TRACK
+        }
+        if (what === 1) {
+            sortwhat = PlaylistSorter.TITLE
+        }
+        if (what === 2) {
+            sortwhat = PlaylistSorter.COMMENT
+        }
+        if (what === 3) {
+            sortwhat = PlaylistSorter.LENGTH
+        }
+        if (what === 4) {
+            sortwhat = PlaylistSorter.GENRE
+        }
+        if (what === 5) {
+            sortwhat = PlaylistSorter.ARTIST
         }
 
-        for (var i = 0; i < playlist_model.count; ++i) {
-            if (i < 1) {
-                continue
-            }
-            if (i === 1) {
-                // if 0 is not < 1 move 0 to 1
-                if (sorter(1, 0)) {
-                    playlist_model.move(0, 1, 1)
-                }
-                continue
-            }
-            if (sorter(i, i - 1)) {
-                playlist_model.move(i - 1, i, 1)
-                i -= 2
-            }
+        if (how === 0) {
+            sorthow = PlaylistSorter.ASCENDING
+        } else {
+            sorthow = PlaylistSorter.DESCENDING
         }
+
+        replaceJson(listsorter.sort(modelToArray(playlist_model),
+                                    sortwhat, sorthow))
 
         updateNowPlayingRow()
-    }
+        var enddate = Date.now()
 
-    // returns true if at i < j
-    function trackAsc(i, j) {
-        return parseInt(playlist_model.get(i).track) < parseInt(
-                    playlist_model.get(j).track)
-    }
-    function titleAsc(i, j) {
-        return playlist_model.get(i).title < playlist_model.get(j).title
-    }
-    function commentAsc(i, j) {
-        return playlist_model.get(i).comment < playlist_model.get(j).comment
-    }
-    function lengthAsc(i, j) {
-        return playlist_model.get(i).length < playlist_model.get(j).length
-    }
-    function genreAsc(i, j) {
-        return playlist_model.get(i).genre < playlist_model.get(j).genre
-    }
-    function artistAsc(i, j) {
-        return playlist_model.get(i).artist < playlist_model.get(j).artist
-    }
-    // returns true if at i > j
-    // I implemented the descending functions. Just negating the
-    // ascending functions doesn't work. That would contain the equal.
-    // Having equal doesn't work.
-    function trackDes(i, j) {
-        return parseInt(playlist_model.get(i).track) > parseInt(
-                    playlist_model.get(j).track)
-    }
-    function titleDes(i, j) {
-        return playlist_model.get(i).title > playlist_model.get(j).title
-    }
-    function commentDes(i, j) {
-        return playlist_model.get(i).comment > playlist_model.get(j).comment
-    }
-    function lengthDes(i, j) {
-        return playlist_model.get(i).length > playlist_model.get(j).length
-    }
-    function genreDes(i, j) {
-        return playlist_model.get(i).genre > playlist_model.get(j).genre
-    }
-    function artistDes(i, j) {
-        return playlist_model.get(i).artist > playlist_model.get(j).artist
+        console.log("TOTAL TIME IN MS", enddate - startdate)
     }
 
     function moveTop() {
