@@ -97,18 +97,49 @@ Rectangle {
         anchors.bottom: parent.bottom
         color: "transparent"
 
-        Playlist {
-            id: titles
+        Rectangle {
+            id: tiles_container
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: scan_notifier.top
 
-            color: "transparent"
+            Playlist {
+                id: titles
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: titles_info.top
 
-            provideTotalTime: false
+                color: "transparent"
 
-            onPlay: addTrack(path)
+                provideTotalTime: false
+
+                onPlay: addTrack(path)
+            }
+
+            Rectangle {
+                id: titles_info
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                height: 20
+                color: "#4d4b4b"
+
+                Text {
+                    anchors.fill: parent
+
+                    visible: true
+
+                    text: titles.count + " Tracks"
+                    color: "#ffffff"
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    font.pointSize: 12
+                    styleColor: "#000000"
+                    style: Text.Outline
+                }
+            }
         }
 
         Rectangle {

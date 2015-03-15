@@ -213,7 +213,7 @@ ApplicationWindow {
                 color: "#ffffff"
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignLeft
-                text: "Total length = " + playlist.totalPlaytimeString
+                text: playlist.count + " Tracks, Total length = " + playlist.totalPlaytimeString
                 font.pointSize: 12
                 styleColor: "#000000"
                 style: Text.Outline
