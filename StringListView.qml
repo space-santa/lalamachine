@@ -96,10 +96,10 @@ Rectangle {
 
         TableView {
             id: list_view
-            anchors.top: parent.top
+            anchors.top: info.bottom
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.bottom: info.top
+            anchors.bottom: parent.bottom
             model: list_model
             onCurrentRowChanged: {
                 selection.clear()
@@ -126,7 +126,7 @@ Rectangle {
             id: info
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.bottom: parent.bottom
+            anchors.top: parent.top
             height: 20
             color: "#4d4b4b"
 
