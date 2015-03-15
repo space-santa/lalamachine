@@ -103,6 +103,7 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: scan_notifier.top
+            color: "transparent"
 
             Playlist {
                 id: titles
@@ -124,7 +125,7 @@ Rectangle {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 height: 20
-                color: "#4d4b4b"
+                color: "transparent"
 
                 Text {
                     anchors.fill: parent
@@ -148,7 +149,7 @@ Rectangle {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             height: lib.scanning ? 50 : 0
-            color: "#4d4b4b"
+            color: "transparent"
 
             Text {
                 anchors.fill: parent

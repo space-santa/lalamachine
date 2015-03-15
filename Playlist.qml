@@ -26,6 +26,8 @@ import Lala 1.0
 import "qrc:/functions.js" as Functions
 
 Rectangle {
+    color: "transparent"
+
     property int count: playlist_model.count
     property int rowPlaying: -1
     property int currentId: -1

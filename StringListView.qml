@@ -93,6 +93,7 @@ Rectangle {
 
     Rectangle {
         anchors.fill: parent
+        color: "transparent"
 
         TableView {
             id: list_view
@@ -128,7 +129,7 @@ Rectangle {
             anchors.right: parent.right
             anchors.top: parent.top
             height: 20
-            color: "#4d4b4b"
+            color: "transparent"
 
             Text {
                 anchors.fill: parent
