@@ -52,6 +52,17 @@ bool masterSort(QVariant i,
     QString si = vmap1.value(sortString).toString();
     QString sj = vmap2.value(sortString).toString();
 
+    if (what == PlaylistSorter::COMMENT) {
+        QRegExp rex("^\\d(A|B).*");
+        if (rex.exactMatch(si)) {
+            si.prepend("0");
+        }
+
+        if (rex.exactMatch(sj)) {
+            sj.prepend("0");
+        }
+    }
+
     if (how == PlaylistSorter::ASCENDING) {
         return si < sj;
     } else {
