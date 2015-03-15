@@ -1,3 +1,4 @@
+
 /*
 Copyright 2015 Armin Zirkel
 
@@ -16,7 +17,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 import QtQuick 2.0
 import QtQuick.Controls 1.2
 
@@ -91,28 +91,59 @@ Rectangle {
         id: list_model
     }
 
-    TableView {
-        id: list_view
+    Rectangle {
         anchors.fill: parent
-        model: list_model
-        onCurrentRowChanged: {
-            selection.clear()
-            selection.select(currentRow)
-        }
-        TableViewColumn {
-            role: "content"
-            title: container.roleString
-            width: container.width
+
+        TableView {
+            id: list_view
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: info.top
+            model: list_model
+            onCurrentRowChanged: {
+                selection.clear()
+                selection.select(currentRow)
+            }
+            TableViewColumn {
+                role: "content"
+                title: container.roleString
+                width: container.width
+            }
+
+            onModelChanged: list_view.resizeColumnsToContents()
+
+            sortIndicatorVisible: container.allowSort
+            onSortIndicatorColumnChanged: {
+                sort(sortIndicatorOrder)
+            }
+            onSortIndicatorOrderChanged: {
+                sort(sortIndicatorOrder)
+            }
         }
 
-        onModelChanged: list_view.resizeColumnsToContents()
+        Rectangle {
+            id: info
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            height: 20
+            color: "#4d4b4b"
 
-        sortIndicatorVisible: container.allowSort
-        onSortIndicatorColumnChanged: {
-            sort(sortIndicatorOrder)
-        }
-        onSortIndicatorOrderChanged: {
-            sort(sortIndicatorOrder)
+            Text {
+                anchors.fill: parent
+
+                visible: true
+
+                // Since --all-- is counted, count minus 1.
+                text: roleString + " count: " + (list_model.count - 1)
+                color: "#ffffff"
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                font.pointSize: 12
+                styleColor: "#000000"
+                style: Text.Outline
+            }
         }
     }
 }
