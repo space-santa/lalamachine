@@ -3,7 +3,7 @@
 ## Intro
 
 lalamachine is a rhythmbox clone. I like rhythmbox a lot, but it is missing
-certain features. On the other hand it has so many
+certain features. E.g. I store the key of a track in camelot notation in the comment and I want to sort playlists or libraries by key. On the other hand rhythmbox has so many
 features I never use. It is also the only Gnome application I use which adds dependencies to my system.  
 And since I enjoy software development I decided to write lalamachine.
 
