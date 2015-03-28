@@ -36,9 +36,6 @@ Rectangle {
     property url nowPlayingSource
     property string nowPlayingTitle: ""
     property bool repeatAll: false
-    property alias openPlaylistVisible: open_playlist_dialog.visible
-    property alias deletePlaylistVisible: delete_playlist_dialog.visible
-    property alias savePlaylistVisible: save_playlist_dialog.visible
     property alias totalPlaytimeString: tc.timestring
 
     property alias provideTotalTime: tc.enabled
@@ -65,39 +62,12 @@ Rectangle {
         seconds: totalPlaytime()
     }
 
-    OpenPlaylistDialog {
-        id: open_playlist_dialog
-
-        onVisibleChanged: {
-            // visibleChanged is always emitted twice, presumably because of
-            // the alias.
-            open_playlist_dialog.clearList()
-            if (visible) {
-                open_playlist_dialog.addList(m3u_inout.getPlaylistNames())
-            }
-        }
-
-        onAccepted: {
-            readPlaylist(selection)
-        }
+    function showSaveDialog() {
+        save_playlist_dialog.visible = true
     }
 
-    OpenPlaylistDialog {
-        id: delete_playlist_dialog
-        standardButtons: StandardButton.Ok | StandardButton.Cancel
-
-        onVisibleChanged: {
-            // visibleChanged is always emitted twice, presumably because of
-            // the alias.
-            delete_playlist_dialog.clearList()
-            if (visible) {
-                delete_playlist_dialog.addList(m3u_inout.getPlaylistNames())
-            }
-        }
-
-        onAccepted: {
-            m3u_inout.deletePlaylist(selection)
-        }
+    function deletePlaylist(listname) {
+        m3u.deletePlaylist(listname)
     }
 
     SavePlaylistDialog {
