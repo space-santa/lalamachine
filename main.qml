@@ -33,14 +33,16 @@ ApplicationWindow {
     height: Screen.height
     title: getWindowTitle()
 
+    readonly property string miscPlaylistName: "cs1m090"
+
     Component.onCompleted: {
-        playlist.readPlaylist("cs1m090")
+        playlist.readPlaylist(miscPlaylistName)
         volume_control.value = config.volume
         console.log("Volume on load", config.volume)
     }
 
     onClosing: {
-        playlist.writePlaylist("cs1m090")
+        playlist.writePlaylist(miscPlaylistName)
         config.volume = volume_control.value
         config.saveConfig()
     }
