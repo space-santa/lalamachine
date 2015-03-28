@@ -197,7 +197,7 @@ ApplicationWindow {
             PlaylistButtons {
                 id: playlist_buttons
                 anchors.left: parent.left
-                anchors.bottom: parent.bottom
+                anchors.top: parent.top
 
                 onSaveList: playlist.showSaveDialog()
                 onMoveTop: playlist.moveTop()
