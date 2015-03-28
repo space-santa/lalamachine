@@ -33,23 +33,10 @@ Column {
     signal burnList
 
     ImageButton {
-        id: open_btn
-        width: 50
-        source: "qrc:/images/images/open.png"
-        onClicked: openList()
-    }
-    ImageButton {
         id: save_btn
         width: 50
         source: "qrc:/images/images/save.png"
         onClicked: saveList()
-    }
-    ImageButton {
-        id: burn_btn
-        width: 50
-        // FIXME: Fallback if not running KDE.
-        source: "file:///usr/share/icons/default.kde4/64x64/apps/k3b.png"
-        onClicked: burnList()
     }
     ImageButton {
         id: top_btn
@@ -74,12 +61,6 @@ Column {
         width: 50
         source: "qrc:/images/images/go-bottom.png"
         onClicked: moveBottom()
-    }
-    ImageButton {
-        id: delete_btn
-        width: 50
-        source: "qrc:/images/images/delete.png"
-        onClicked: deleteList()
     }
     ImageButton {
         id: clear_btn
