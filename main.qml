@@ -184,6 +184,7 @@ ApplicationWindow {
 
             Playlist {
                 id: playlist
+                isLibrary: false
                 anchors.left: playlist_buttons.right
                 anchors.right: parent.right
                 anchors.top: parent.top
