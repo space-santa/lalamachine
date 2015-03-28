@@ -250,6 +250,8 @@ ApplicationWindow {
             onPlay: {
                 if (playMusic.hasAudio) {
                     playMusic.play()
+                } else {
+                    playlist.playNext()
                 }
             }
 
