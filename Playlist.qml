@@ -326,10 +326,8 @@ Rectangle {
         id: playlist_view
         anchors.fill: parent
         model: playlist_model
-        onCurrentRowChanged: {
-            selection.clear()
-            selection.select(currentRow)
-        }
+        selectionMode: SelectionMode.ContiguousSelection
+
         TableViewColumn {
             role: "track"
             title: "track"
