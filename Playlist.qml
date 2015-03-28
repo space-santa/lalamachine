@@ -158,6 +158,22 @@ Rectangle {
         }
     }
 
+    function addSelectionToPlaylist(listname) {
+        // We are not going to add to ourselve.
+        if (!isLibrary && listname === miscPlaylistName) {
+            return
+        }
+
+        playlist_view.selection.forEach(function (rowIndex) {
+            if (listname === miscPlaylistName) {
+                play(playlist_model.get(rowIndex).path)
+            } else {
+                m3u_inout.addToPlaylist(playlist_model[rowIndex].path, listname)
+            }
+            console.log(rowIndex)
+        })
+    }
+
     function writePlaylist(name) {
         var list = []
 
