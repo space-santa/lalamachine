@@ -35,6 +35,8 @@ ApplicationWindow {
 
     readonly property string miscPlaylistName: "cs1m090"
 
+    property M3uInOut m3u: m3u
+
     Component.onCompleted: {
         playlist.readPlaylist(miscPlaylistName)
         volume_control.value = config.volume
@@ -85,6 +87,10 @@ ApplicationWindow {
     function burnList() {
         playlist.writePlaylist("cs1m090")
         burn.burnList(playlist.getPlaylistPath("cs1m090"))
+    }
+
+    M3uInOut {
+        id: m3u
     }
 
     KeyEvents {
