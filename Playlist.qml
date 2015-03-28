@@ -27,6 +27,8 @@ import "qrc:/functions.js" as Functions
 Rectangle {
     color: "transparent"
 
+    property bool isLibrary: false
+
     property int count: playlist_model.count
     property int rowPlaying: -1
     property int currentId: -1
