@@ -69,6 +69,28 @@ ApplicationWindow {
                 }
             }
         }
+        Menu {
+            title: "Playlist"
+            PlaylistMenu {
+                title: "Open"
+                iconSource: "qrc:/images/images/open.png"
+                onSelected: playlist.readPlaylist(listname)
+            }
+            MenuSeparator {
+            }
+            PlaylistMenu {
+                title: "Delete"
+                iconSource: "qrc:/images/images/delete.png"
+                onSelected: playlist.deletePlaylist(listname)
+            }
+            MenuSeparator {
+            }
+            MenuItem {
+                text: "Burn CD"
+                iconSource: "file:///usr/share/icons/default.kde4/64x64/apps/k3b.png"
+                onTriggered: burnList()
+            }
+        }
     }
 
     function getWindowTitle() {
@@ -177,15 +199,12 @@ ApplicationWindow {
                 anchors.left: parent.left
                 anchors.bottom: parent.bottom
 
-                onOpenList: playlist.openPlaylistVisible = true
-                onSaveList: playlist.savePlaylistVisible = true
+                onSaveList: playlist.showSaveDialog()
                 onMoveTop: playlist.moveTop()
                 onMoveUp: playlist.moveUp()
                 onMoveDown: playlist.moveDown()
                 onMoveBottom: playlist.moveBottom()
                 onClearList: playlist.clearList()
-                onDeleteList: playlist.deletePlaylistVisible = true
-                onBurnList: master.burnList()
             }
 
             Playlist {
