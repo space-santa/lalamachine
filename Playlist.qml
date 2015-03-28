@@ -343,6 +343,17 @@ Rectangle {
                             playlist_model.count - 1, 1)
     }
 
+    RightClickMenu {
+        id: rcm
+
+        playlistnames: m3u_inout.playlistNames
+
+        onAddToPlaylist: {
+            addSelectionToPlaylist(listname)
+            playlist_view.selection.clear()
+        }
+    }
+
     ListModel {
         id: playlist_model
         onRowsMoved: {
@@ -405,6 +416,32 @@ Rectangle {
         onSortIndicatorOrderChanged: {
             console.log(sortIndicatorOrder)
             sort(sortIndicatorColumn, sortIndicatorOrder)
+        }
+
+        rowDelegate: Item {
+            Rectangle {
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    verticalCenter: parent.verticalCenter
+                }
+                height: parent.height
+                color: styleData.selected ? 'darkslategrey' : "transparent"
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.RightButton
+                    onClicked: {
+                        if (mouse.button == Qt.RightButton) {
+                            console.log("Right-Click", styleData.row)
+                            if (playlist_view.selection.count < 2) {
+                                playlist_view.selection.clear()
+                                playlist_view.selection.select(styleData.row)
+                            }
+                        }
+                        rcm.popup()
+                    }
+                }
+            }
         }
     }
 }
