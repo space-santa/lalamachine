@@ -128,7 +128,19 @@ Rectangle {
     }
 
     function deleteCurrentTrack() {
-        playlist_model.remove(playlist_view.currentRow)
+        if (isLibrary) {
+            return
+        }
+
+        var indices = []
+
+        playlist_view.selection.forEach(function (rowIndex) {
+            indices.push(rowIndex)
+        })
+
+        for (var i = indices.length - 1; i >= 0; --i) {
+            playlist_model.remove(indices[i])
+        }
     }
 
     function playCurrentTrack() {
