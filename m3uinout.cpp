@@ -27,14 +27,34 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 M3uInOut::M3uInOut(QQuickItem *parent) :
     QQuickItem(parent)
 {
+    setPlaylistNames(getPlaylistNames());
     QDir dir(Config::PLAYLISTDIR);
     dir.mkpath(Config::PLAYLISTDIR);
+
+    watcher_.addPath(Config::PLAYLISTDIR);
+    connect(&watcher_, &QFileSystemWatcher::directoryChanged,
+            this, &M3uInOut::handleDirChange);
 }
 
-void M3uInOut::writePlaylist(const QString &name,
-                             const QStringList files)
+// This requires explanation.
+// Originally I had the playlistNames property just READ getPlaylistNames()
+// without a write method. I emitted playlistNamesChanged in writePlaylist()
+// and deletePlaylist. The signal emission in deletePlaylist would reliably
+// segfault. I then added WRITE setPlaylistNames to the property and only
+// emitted the signal there. Same endresult, writePlaylist fine, deletePlaylist
+// segfault. So now I listen to directory changes and emit the signal then.
+// No more segfaults.
+void M3uInOut::handleDirChange()
+{
+    setPlaylistNames(getPlaylistNames());
+    watcher_.addPath(Config::PLAYLISTDIR);
+}
+
+void M3uInOut::writePlaylist(const QString &name, QStringList files) const
 {
     QFile file(m3uPath(name));
+
+    files.replaceInStrings("file://", "");
 
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QTextStream out(&file);
@@ -46,7 +66,6 @@ void M3uInOut::writePlaylist(const QString &name,
                 out << "\n";
             }
         }
-        emit playlistNamesChanged();
     }
 }
 
@@ -91,11 +110,11 @@ QString M3uInOut::m3uPath(const QString &name) const
 
 void M3uInOut::deletePlaylist(const QString &name) const
 {
-    Q_ASSERT(QStringList(getPlaylistNames()).contains(name));
+    Q_ASSERT(QStringList(playlistNames()).contains(name));
     QFile::remove(m3uPath(name));
 }
 
-void M3uInOut::addToPlaylist(QString trackpath, const QString &list)
+void M3uInOut::addToPlaylist(QString trackpath, const QString &list) const
 {
     auto tmplist = readPlaylist(list);
 
@@ -106,4 +125,15 @@ void M3uInOut::addToPlaylist(QString trackpath, const QString &list)
     tmplist << trackpath;
 
     writePlaylist(list, tmplist);
+}
+
+void M3uInOut::setPlaylistNames(const QStringList &list)
+{
+    playlistNames_ = list;
+    emit playlistNamesChanged();
+}
+
+QStringList M3uInOut::playlistNames() const
+{
+    return playlistNames_;
 }

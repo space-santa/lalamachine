@@ -21,32 +21,39 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #define M3UINOUT_H
 
 #include <QQuickItem>
+#include <QFileSystemWatcher>
 
 class M3uInOut : public QQuickItem
 {
     Q_OBJECT
 
     Q_PROPERTY(QStringList playlistNames
-               READ getPlaylistNames
+               READ playlistNames
+               WRITE setPlaylistNames
                NOTIFY playlistNamesChanged)
+
 public:
     explicit M3uInOut(QQuickItem *parent = 0);
 
-    Q_INVOKABLE void writePlaylist(const QString &name,
-                                   const QStringList files);
+    Q_INVOKABLE void writePlaylist(const QString &name, QStringList files) const;
     Q_INVOKABLE QStringList readPlaylist(const QString &name) const;
-    Q_INVOKABLE QStringList getPlaylistNames() const;
+    QStringList getPlaylistNames() const;
     Q_INVOKABLE QString m3uPath(const QString &name) const;
     Q_INVOKABLE void deletePlaylist(const QString &name) const;
-    Q_INVOKABLE void addToPlaylist(QString trackpath,
-                                   const QString &list);
+    Q_INVOKABLE void addToPlaylist(QString trackpath, const QString &list) const;
+
+    void setPlaylistNames(const QStringList & list);
+    QStringList playlistNames() const;
 
 signals:
     void playlistNamesChanged();
 
-public slots:
+private slots:
+    void handleDirChange();
 
 private:
+    QStringList playlistNames_ {};
+    QFileSystemWatcher watcher_ {};
 };
 
 #endif // M3UINOUT_H
