@@ -317,7 +317,6 @@ Rectangle {
         id: rcm
 
         isLibrary: playlist_container.isLibrary
-        playlistnames: m3u_inout.playlistNames
 
         onAddToPlaylist: {
             addSelectionToPlaylist(listname)
