@@ -25,6 +25,7 @@ import Lala 1.0
 import "qrc:/functions.js" as Functions
 
 Rectangle {
+    id: playlist_container
     color: "transparent"
 
     property bool isLibrary: false
@@ -346,12 +347,15 @@ Rectangle {
     RightClickMenu {
         id: rcm
 
+        isLibrary: playlist_container.isLibrary
         playlistnames: m3u_inout.playlistNames
 
         onAddToPlaylist: {
             addSelectionToPlaylist(listname)
             playlist_view.selection.clear()
         }
+
+        onDeleteSelection: deleteCurrentTrack()
     }
 
     ListModel {

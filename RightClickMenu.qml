@@ -5,9 +5,11 @@ Menu {
     id: rcm
     title: "track"
 
+    property bool isLibrary: false
     property var playlistnames: []
 
     signal addToPlaylist(string listname)
+    signal deleteSelection
 
     onAddToPlaylist: {
         console.log("ZZZ", listname)
@@ -53,6 +55,16 @@ Menu {
     Menu {
         id: playlist_menu
         title: "Add to playlist"
+    }
+
+    MenuSeparator {}
+
+    MenuItem {
+        text: "delete"
+
+        visible: !rcm.isLibrary
+
+        onTriggered: deleteSelection()
     }
 }
 
