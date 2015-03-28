@@ -1,4 +1,3 @@
-
 /*
 Copyright 2015 Armin Zirkel
 
