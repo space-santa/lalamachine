@@ -53,10 +53,6 @@ Rectangle {
         id: meta
     }
 
-    M3uInOut {
-        id: m3u_inout
-    }
-
     TimeConverter {
         id: tc
         seconds: totalPlaytime()
@@ -83,7 +79,7 @@ Rectangle {
     }
 
     function getPlaylistPath(name) {
-        return m3u_inout.m3uPath(name)
+        return m3u.m3uPath(name)
     }
 
     function totalPlaytime() {
@@ -139,7 +135,8 @@ Rectangle {
             if (listname === miscPlaylistName) {
                 play(playlist_model.get(rowIndex).path)
             } else {
-                m3u_inout.addToPlaylist(playlist_model[rowIndex].path, listname)
+                m3u.addToPlaylist(playlist_model.get(rowIndex).path,
+                                        listname)
             }
             console.log(rowIndex)
         })
@@ -152,12 +149,12 @@ Rectangle {
             list[i] = playlist_model.get(i)["path"]
         }
 
-        m3u_inout.writePlaylist(name, list)
+        m3u.writePlaylist(name, list)
     }
 
     function readPlaylist(name) {
         clearList()
-        addList(m3u_inout.readPlaylist(name))
+        addList(m3u.readPlaylist(name))
     }
 
     function clearList() {
