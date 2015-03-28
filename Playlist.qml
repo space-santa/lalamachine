@@ -105,6 +105,8 @@ Rectangle {
             indices.push(rowIndex)
         })
 
+        playlist_view.selection.clear()
+
         for (var i = indices.length - 1; i >= 0; --i) {
             playlist_model.remove(indices[i])
         }
