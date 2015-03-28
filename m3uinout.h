@@ -25,17 +25,22 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 class M3uInOut : public QQuickItem
 {
     Q_OBJECT
+
+    Q_PROPERTY(QStringList playlistNames
+               READ getPlaylistNames
+               NOTIFY playlistNamesChanged)
 public:
     explicit M3uInOut(QQuickItem *parent = 0);
 
     Q_INVOKABLE void writePlaylist(const QString &name,
-                                   const QStringList files) const;
+                                   const QStringList files);
     Q_INVOKABLE QStringList readPlaylist(const QString &name) const;
     Q_INVOKABLE QStringList getPlaylistNames() const;
     Q_INVOKABLE QString m3uPath(const QString &name) const;
     Q_INVOKABLE void deletePlaylist(const QString &name) const;
 
 signals:
+    void playlistNamesChanged();
 
 public slots:
 

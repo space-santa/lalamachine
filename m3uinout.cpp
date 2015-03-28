@@ -32,7 +32,7 @@ M3uInOut::M3uInOut(QQuickItem *parent) :
 }
 
 void M3uInOut::writePlaylist(const QString &name,
-                             const QStringList files) const
+                             const QStringList files)
 {
     QFile file(m3uPath(name));
 
@@ -46,6 +46,7 @@ void M3uInOut::writePlaylist(const QString &name,
                 out << "\n";
             }
         }
+        emit playlistNamesChanged();
     }
 }
 
