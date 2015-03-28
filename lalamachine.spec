@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.8.0
+Version: 0.9.0
 Release: 1
 License: GPL-3.0+
 Summary: A music player that is awesome
@@ -65,6 +65,13 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sun Mar 29 2015 r-mean
+  0.9.0-1: Release 0.9
+  * If a comment starts with a camelot key it is sorted from 1-12.
+  * Track numbers are now sorted correctly again.
+  * Added a right click menu to add or remove tracks from playlists.
+  * Moved playlist open, delete and burn into the menu bar of the main window.
+
 * Sun Mar 15 2015 r-mean
   0.8.0-1: Release 0.8
   * Sorting a playlist is now significantly faster. The whole library can now
