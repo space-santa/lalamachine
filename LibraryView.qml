@@ -107,6 +107,7 @@ Rectangle {
 
             Playlist {
                 id: titles
+                isLibrary: true
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
