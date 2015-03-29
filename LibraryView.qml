@@ -41,6 +41,9 @@ Rectangle {
         artistFilter: artistList.selection
         albumFilter: albumList.selection
 
+        what: titles.sortwhat
+        sortAsc: titles.sortAsc
+
         onDisplayLibChanged: {
             titles.clearList()
             titles.addLib(displayLib)
