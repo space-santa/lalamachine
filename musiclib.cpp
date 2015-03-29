@@ -119,7 +119,13 @@ void MusicLibScanner::addTrackToDB(QString album,
                      track,
                      year));
 
-    //qDebug() << scanDb_->exec(query).lastError();
+    QSqlError err = scanDb_->exec(query).lastError();
+
+    if (err.type() > 0) {
+        qDebug() << "\n-----------\n"
+                 << err.text() << "\n"
+                 << mrl << "\n" << query << "\n----------\n";
+    }
 }
 
 bool MusicLibScanner::suffixCheck(const QString &val) const
@@ -213,6 +219,21 @@ MusicLib::~MusicLib()
     db_.close();
 }
 
+const QMap<MusicLib::SortWhat, QString> MusicLib::SORT_MAP = initSortMap();
+
+QMap<MusicLib::SortWhat, QString> MusicLib::initSortMap()
+{
+    QMap<SortWhat, QString> tmp;
+    tmp.insert(MusicLib::ARTIST, "artist");
+    tmp.insert(MusicLib::GENRE, "genre");
+    tmp.insert(MusicLib::TRACK, "track");
+    tmp.insert(MusicLib::TITLE, "title");
+    tmp.insert(MusicLib::COMMENT, "comment");
+    tmp.insert(MusicLib::LENGTH, "length");
+
+    return tmp;
+}
+
 const QString MusicLib::ALL_FILTER {QString("--all--")};
 
 QJsonObject MusicLib::musicLib() const
@@ -231,7 +252,7 @@ void MusicLib::setScanning(bool val)
     emit scanningChanged();
 }
 
-QJsonObject MusicLib::displayLib() const
+QJsonArray MusicLib::displayLib() const
 {
     return displayLib_;
 }
@@ -254,19 +275,25 @@ void MusicLib::debugSignal()
 
 void MusicLib::setDisplayLib()
 {
-    QJsonObject retVal;
-    QJsonObject::const_iterator itr;
+    QJsonArray retVal;
 
-    for (itr = lib_.constBegin(); itr != lib_.constEnd(); ++itr) {
-        if (itr.value().isObject()) {
-            QJsonObject tmp = itr.value().toObject();
+    QSqlQuery result = db_.exec(getSortQueryString());
 
-            if (checkVal(genreFilter(), tmp.value("genre").toString()) &&
-                checkVal(artistFilter(), tmp.value("artist").toString()) &&
-                checkVal(albumFilter(), tmp.value("album").toString())) {
-                retVal.insert(itr.key(), tmp);
-            }
-        }
+    while (result.next()) {
+        QJsonObject tmp;
+        tmp.insert("album", result.value("album").toString());
+        tmp.insert("artist", result.value("artist").toString());
+        tmp.insert("genre", result.value("genre").toString());
+        tmp.insert("comment", result.value("comment").toString());
+        tmp.insert("track", result.value("track").toInt());
+        tmp.insert("title", result.value("title").toString());
+        tmp.insert("mrl", result.value("mrl").toString());
+        tmp.insert("path", result.value("path").toString());
+        tmp.insert("length", result.value("length").toInt());
+        tmp.insert("lengthString", result.value("lengthString").toString());
+        tmp.insert("year", result.value("year").toInt());
+
+        retVal.append(tmp);
     }
 
     displayLib_ = retVal;
@@ -342,6 +369,30 @@ void MusicLib::setAlbumFilter(const QString &val)
     emit albumFilterChanged();
 }
 
+bool MusicLib::sortAsc() const
+{
+    return sortAsc_;
+}
+
+void MusicLib::setSortAsc(bool val)
+{
+    sortAsc_ = val;
+    emit sortAscChanged();
+    setDisplayLib();
+}
+
+MusicLib::SortWhat MusicLib::what() const
+{
+    return what_;
+}
+
+void MusicLib::setWhat(MusicLib::SortWhat val)
+{
+    what_ = val;
+    emit whatChanged();
+    setDisplayLib();
+}
+
 QStringList MusicLib::genreList() const
 {
     return genreList_;
@@ -370,7 +421,8 @@ void MusicLib::rescan()
 
 QString MusicLib::escapeString(QString str)
 {
-    return str.replace("\'", "\'\'").replace(",", "\'+\',\'+\'");
+    //return str.replace("\'", "\'\'").replace(",", "\'+\',\'+\'");
+    return str.replace("\'", "\'\'");//.replace(",", "\\,");
 }
 
 QStringList MusicLib::getList(const QString &what) const
@@ -378,12 +430,11 @@ QStringList MusicLib::getList(const QString &what) const
     qDebug() << "QStringList MusicLib::getList(" << what << ")";
     Q_ASSERT(what == "genre" || what == "artist" || what == "album");
     QStringList retVal;
-    QJsonObject tmplib = displayLib();
-    QJsonObject::const_iterator itr;
+    QJsonArray tmplib = displayLib();
 
-    for (itr = tmplib.constBegin(); itr != tmplib.constEnd(); ++itr) {
-        if (itr.value().isObject()) {
-            QJsonObject tmpo = itr.value().toObject();
+    for (int i = 0; i < tmplib.count(); ++i) {
+        if (tmplib[i].isObject()) {
+            QJsonObject tmpo = tmplib[i].toObject();
             QString tmps = tmpo.value(what).toString();
 
             if (!retVal.contains(tmps) && tmps.simplified() != "") {
@@ -393,6 +444,70 @@ QStringList MusicLib::getList(const QString &what) const
     }
 
     return retVal;
+}
+
+QString MusicLib::getSortQueryString() const
+{
+    QString query("SELECT * FROM musiclib");
+
+    int count = 0;
+
+    if (genreFilter() != "") {
+        ++count;
+    }
+
+    if (artistFilter() != "") {
+        ++count;
+    }
+
+    if (albumFilter() != "") {
+        ++count;
+    }
+
+    if (count > 0) {
+        query.append(" WHERE ");
+    }
+
+    if (genreFilter() != "") {
+        query.append("genre = '");
+        query.append(escapeString(genreFilter()));
+        query.append("' ");
+    }
+
+    if (artistFilter() != "") {
+        if (count > 1) {
+            query.append(" AND ");
+        }
+
+        query.append("artist = '");
+        query.append(escapeString(artistFilter()));
+        query.append("'");
+    }
+
+    if (albumFilter() != "") {
+        if (count > 1) {
+            query.append(" AND ");
+        }
+
+        query.append("album = '");
+        query.append(escapeString(albumFilter()));
+        query.append("'");
+    }
+
+    query.append(" ORDER BY ");
+    query.append(SORT_MAP.value(what()));
+    query.append(" ");
+
+    if (sortAsc()) {
+        query.append("ASC");
+    }
+    else {
+        query.append("DESC");
+    }
+
+    qDebug() << query;
+
+    return query;
 }
 
 void MusicLib::ensureAllTables()

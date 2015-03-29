@@ -22,6 +22,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QThread>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QString>
 #include <QQuickItem>
 #include <QMutex>
@@ -74,7 +75,7 @@ class MusicLib : public QQuickItem
                WRITE setScanning
                NOTIFY scanningChanged)
 
-    Q_PROPERTY(QJsonObject displayLib
+    Q_PROPERTY(QJsonArray displayLib
                READ displayLib
                NOTIFY displayLibChanged)
 
@@ -110,18 +111,33 @@ class MusicLib : public QQuickItem
                READ albumList
                NOTIFY albumListChanged)
 
+    Q_PROPERTY(bool sortAsc READ sortAsc WRITE setSortAsc NOTIFY sortAscChanged)
+    Q_PROPERTY(SortWhat what READ what WRITE setWhat NOTIFY whatChanged)
+
 public:
+    enum SortWhat {
+        TRACK,
+        TITLE,
+        COMMENT,
+        LENGTH,
+        GENRE,
+        ARTIST
+    };
+    Q_ENUMS(SortWhat)
+
     MusicLib(QQuickItem *parent = 0);
     ~MusicLib();
 
     static const QString ALL_FILTER;
+    static const QMap<SortWhat, QString> SORT_MAP;
+    static QMap<SortWhat, QString> initSortMap();
 
     QJsonObject musicLib() const;
 
     bool scanning() const;
     void setScanning(bool val);
 
-    QJsonObject displayLib() const;
+    QJsonArray displayLib() const;
 
     QString libPath() const;
     void setLibPath(const QString &path);
@@ -134,6 +150,12 @@ public:
 
     QString albumFilter() const;
     void setAlbumFilter(const QString &val);
+
+    bool sortAsc() const;
+    void setSortAsc(bool val);
+
+    SortWhat what() const;
+    void setWhat(SortWhat val);
 
     QStringList genreList() const;
     QStringList artistList() const;
@@ -163,6 +185,9 @@ signals:
     void artistListChanged();
     void albumListChanged();
 
+    void sortAscChanged();
+    void whatChanged();
+
 private:
     // scanner_ MUST be a raw pointer. When this is moved to a new thread, that
     // QThread becomes the parent. When the parent dies so does the child.
@@ -173,8 +198,10 @@ private:
 
     QSqlDatabase db_;
     QJsonObject lib_ {};
+    bool sortAsc_ {true};
     bool scanning_ {false};
-    QJsonObject displayLib_ {};
+    SortWhat what_ {SortWhat::ARTIST};
+    QJsonArray displayLib_ {};
     QString genreFilter_ {""};
     QString artistFilter_ {""};
     QString albumFilter_ {""};
@@ -186,6 +213,8 @@ private:
     bool checkVal(const QString &check, const QString &val) const;
 
     QStringList getList(const QString &what) const;
+
+    QString getSortQueryString() const;
 
     void ensureAllTables();
 
