@@ -29,7 +29,9 @@ class MetaDataProvider : public QQuickItem
 public:
     explicit MetaDataProvider(QQuickItem *parent = 0);
 
-    Q_INVOKABLE QJsonObject metaData(const QUrl &path) const;
+    QVector<QString> metaData(const QUrl &path) const;
+
+    Q_INVOKABLE QJsonObject metaDataAsJson(const QUrl &path) const;
 
 signals:
 

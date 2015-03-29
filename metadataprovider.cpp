@@ -35,37 +35,50 @@ MetaDataProvider::MetaDataProvider(QQuickItem *parent) :
 {
 }
 
-QJsonObject MetaDataProvider::metaData(const QUrl &path) const
+QVector<QString> MetaDataProvider::metaData(const QUrl &path) const
 {
     QString line(path.path());
     TagLib::FileRef f(line.toLocal8Bit().data());
-    QVariantMap tmpmap;
+    QVector<QString> retval(11);
     TimeConverter tc;
 
     if (!f.isNull() && f.tag()) {
         TagLib::Tag *tag = f.tag();
-        tmpmap.insert("title",
-                      QString::fromUtf8(tag->title().toCString(true)));
-        tmpmap.insert("artist",
-                      QString::fromUtf8(tag->artist().toCString(true)));
-        tmpmap.insert("album",
-                      QString::fromUtf8(tag->album().toCString(true)));
-        tmpmap.insert("year",
-                      QString::number(tag->year()));
-        tmpmap.insert("comment",
-                      QString::fromUtf8(tag->comment().toCString(true)));
-        tmpmap.insert("track",
-                      QString::number(tag->track()));
-        tmpmap.insert("genre",
-                      QString::fromUtf8(tag->genre().toCString(true)));
-        tmpmap.insert("path", line);
-        tmpmap.insert("mrl", path);
-        tmpmap.insert("length", f.audioProperties()->length());
+        retval[0] = QString::fromUtf8(tag->album().toCString(true));
+        retval[1] = QString::fromUtf8(tag->artist().toCString(true));
+        retval[2] = QString::fromUtf8(tag->comment().toCString(true));
+        retval[3] = QString::fromUtf8(tag->genre().toCString(true));
+        retval[4] = QString::number(f.audioProperties()->length());
         // Clearing the timeconverter and get the time as displayable string.
         tc.clear();
         tc.setSeconds(f.audioProperties()->length());
-        tmpmap.insert("lengthString", tc.toString());
+        retval[5] = tc.toString();
+        retval[6] = path.toString();
+        retval[7] = line;
+        retval[8] = QString::fromUtf8(tag->title().toCString(true));
+        retval[9] = QString::number(tag->track());
+        retval[10] = QString::number(tag->year());
     }
 
-    return QJsonObject::fromVariantMap(tmpmap);
+    return retval;
+}
+
+QJsonObject MetaDataProvider::metaDataAsJson(const QUrl &path) const
+{
+    auto tmp = metaData(path);
+    QString line(path.path());
+    QVariantMap retval;
+    retval.insert("album", tmp.at(0));
+    retval.insert("artist", tmp.at(1));
+    retval.insert("comment", tmp.at(2));
+    retval.insert("genre", tmp.at(3));
+    retval.insert("length", tmp.at(4).toInt());
+    retval.insert("lengthString", tmp.at(5));
+    retval.insert("mrl", tmp.at(6));
+    retval.insert("path", tmp.at(7));
+    retval.insert("title", tmp.at(8));
+    retval.insert("track", tmp.at(9).toInt());
+    retval.insert("year", tmp.at(10).toInt());
+
+    return QJsonObject::fromVariantMap(retval);
 }
