@@ -24,6 +24,9 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDirIterator>
 #include <QJsonObject>
 #include <QUrl>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QElapsedTimer>
 
 #include "metadataprovider.h"
 #include "config.h"
@@ -33,8 +36,16 @@ MusicLibScanner::MusicLibScanner(QObject *parent) :
 {
 }
 
+void MusicLibScanner::setDb(QSqlDatabase *db)
+{
+    scanDb_ = db;
+}
+
 void MusicLibScanner::scanLib(const QString &path)
 {
+    QElapsedTimer timer;
+    timer.start();
+
     if (path == "" || !QDir(path).exists()) {
         qCritical("I can't scan a non-existing folder.");
         return;
@@ -42,7 +53,7 @@ void MusicLibScanner::scanLib(const QString &path)
 
     qDebug() << "Start scan";
     emit scanStarted();
-    QJsonObject lib;
+    QVector<QString> lib(11);
     MetaDataProvider meta;
     QDir rootDir(path);
     QMutexLocker locker(&mutex_);
@@ -57,13 +68,58 @@ void MusicLibScanner::scanLib(const QString &path)
             QString line = it.next();
 
             if (suffixCheck(line)) {
-                lib.insert(line, meta.metaData(QUrl(line)));
+                lib = meta.metaData(QUrl(line));
+                addTrackToDB(lib.at(0),
+                             lib.at(1),
+                             lib.at(2),
+                             lib.at(3),
+                             lib.at(4),
+                             lib.at(5),
+                             lib.at(6),
+                             lib.at(7),
+                             lib.at(8),
+                             lib.at(9),
+                             lib.at(10));
             }
         }
     }
 
-    qDebug() << "End scan";
-    emit scanComplete(lib);
+    qDebug() << "End scan" << timer.elapsed();
+    emit scanComplete();
+}
+
+void MusicLibScanner::addTrackToDB(QString album,
+                                   QString artist,
+                                   QString comment,
+                                   QString genre,
+                                   QString length,
+                                   QString lengthString,
+                                   QString mrl,
+                                   QString path,
+                                   QString title,
+                                   QString track,
+                                   QString year)
+{
+    QString query("INSERT into `musiclib` ");
+    QString str1;
+    query.append("(`album`, `artist`, `comment`, `genre`, `length`, ");
+    query.append("`lengthString`, `mrl`, `path`, `title`, `track`, `year`) ");
+    query.append("VALUES (");
+    query.append(QString("'%1', '%2', '%3', ").arg(
+                     MusicLib::escapeString(album),
+                     MusicLib::escapeString(artist),
+                     MusicLib::escapeString(comment)));
+    query.append(QString("'%1', %2, '%3', '%4', '%5', '%6', %7, %8)").arg(
+                     MusicLib::escapeString(genre),
+                     length,
+                     lengthString,
+                     MusicLib::escapeString(mrl),
+                     MusicLib::escapeString(path),
+                     MusicLib::escapeString(title),
+                     track,
+                     year));
+
+    //qDebug() << scanDb_->exec(query).lastError();
 }
 
 bool MusicLibScanner::suffixCheck(const QString &val) const
@@ -92,6 +148,12 @@ MusicLib::MusicLib(QQuickItem *parent)
     // Therefor it is vital that the scanner_ is a raw pointer, or double free
     // happens.
     scanner_->moveToThread(&scannerThread_);
+
+    db_ = QSqlDatabase::addDatabase("QSQLITE");
+    db_.setDatabaseName(Config::MUSICLIBDB);
+    db_.open();
+    ensureAllTables();
+    scanner_->setDb(&db_);
 
     connect(&scannerThread_, &QThread::finished,
             scanner_, &QObject::deleteLater);
@@ -148,6 +210,7 @@ MusicLib::~MusicLib()
 {
     scannerThread_.quit();
     scannerThread_.wait(5000);
+    db_.close();
 }
 
 const QString MusicLib::ALL_FILTER {QString("--all--")};
@@ -305,6 +368,11 @@ void MusicLib::rescan()
     emit startScan(libPath());
 }
 
+QString MusicLib::escapeString(QString str)
+{
+    return str.replace("\'", "\'\'").replace(",", "\'+\',\'+\'");
+}
+
 QStringList MusicLib::getList(const QString &what) const
 {
     qDebug() << "QStringList MusicLib::getList(" << what << ")";
@@ -325,6 +393,30 @@ QStringList MusicLib::getList(const QString &what) const
     }
 
     return retVal;
+}
+
+void MusicLib::ensureAllTables()
+{
+    auto tables = db_.tables();
+
+    if (!tables.contains("musiclib")) {
+        QString qs("CREATE TABLE `musiclib` ");
+        qs.append("(\n");
+        //qs.append("`ID` INTEGER NOT NULL AUTOINCREMENT,\n");
+        qs.append("`album` TEXT,\n");
+        qs.append("`artist` TEXT,\n");
+        qs.append("`comment` TEXT,\n");
+        qs.append("`genre` TEXT,\n");
+        qs.append("`length` int NOT NULL,\n");
+        qs.append("`lengthString` TEXT NOT NULL,\n");
+        qs.append("`mrl` TEXT NOT NULL PRIMARY KEY,\n");
+        qs.append("`path` TEXT NOT NULL,\n");
+        qs.append("`title` TEXT NOT NULL,\n");
+        qs.append("`track` int,\n");
+        qs.append("`year` int\n");
+        qs.append(")");
+        qDebug() << db_.exec(qs).lastError();
+    }
 }
 
 void MusicLib::setGenreList()
@@ -385,9 +477,9 @@ void MusicLib::scanStarted()
     setScanning(true);
 }
 
-void MusicLib::scanFinished(const QJsonObject &lib)
+void MusicLib::scanFinished()
 {
-    lib_ = lib;
+    //lib_ = lib;
     emit musicLibChanged();
     writeLibFile();
     setScanning(false);

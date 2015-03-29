@@ -25,6 +25,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QString>
 #include <QQuickItem>
 #include <QMutex>
+#include <QSqlDatabase>
 
 class MusicLibScanner : public QObject
 {
@@ -33,16 +34,31 @@ class MusicLibScanner : public QObject
 public:
     MusicLibScanner(QObject *parent = 0);
 
+    void setDb(QSqlDatabase *db);
+
 public slots:
     void scanLib(const QString &path);
 
 signals:
     void scanStarted();
-    void scanComplete(const QJsonObject &lib);
+    void scanComplete();
 
 private:
     QMutex mutex_;
     bool suffixCheck(const QString &val) const;
+    QSqlDatabase *scanDb_;
+
+    void addTrackToDB(QString album,
+                      QString artist,
+                      QString comment,
+                      QString genre,
+                      QString length,
+                      QString lengthString,
+                      QString mrl,
+                      QString path,
+                      QString title,
+                      QString track,
+                      QString year);
 };
 
 class MusicLib : public QQuickItem
@@ -125,8 +141,10 @@ public:
 
     Q_INVOKABLE void rescan();
 
+    static QString escapeString(QString str);
+
 public slots:
-    void scanFinished(const QJsonObject &lib);
+    void scanFinished();
 
 signals:
     void startScan(const QString &path);
@@ -153,6 +171,7 @@ private:
     MusicLibScanner *scanner_ {new MusicLibScanner()};
     QThread scannerThread_ {};
 
+    QSqlDatabase db_;
     QJsonObject lib_ {};
     bool scanning_ {false};
     QJsonObject displayLib_ {};
@@ -167,6 +186,8 @@ private:
     bool checkVal(const QString &check, const QString &val) const;
 
     QStringList getList(const QString &what) const;
+
+    void ensureAllTables();
 
 private slots:
     void readLibFile();
