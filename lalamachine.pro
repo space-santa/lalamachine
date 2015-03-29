@@ -2,7 +2,7 @@ TEMPLATE = app
 
 CONFIG += c++11
 
-QT += qml quick widgets
+QT += qml quick widgets sql
 
 INCLUDEPATH += /usr/include/taglib
 
