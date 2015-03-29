@@ -175,7 +175,7 @@ Rectangle {
             return
         }
 
-        playlist_model.append(setId(meta.metaData(path)))
+        playlist_model.append(setId(meta.metaDataAsJson(path)))
 
         updateNowPlayingRow()
     }
