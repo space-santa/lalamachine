@@ -38,6 +38,9 @@ Rectangle {
     property bool repeatAll: false
     property alias totalPlaytimeString: tc.timestring
 
+    property var sortwhat: MusicLib.ARTIST
+    property bool sortAsc: true
+
     property alias provideTotalTime: tc.enabled
 
     signal play(string path)
@@ -137,8 +140,7 @@ Rectangle {
             if (listname === miscPlaylistName) {
                 play(playlist_model.get(rowIndex).path)
             } else {
-                m3u.addToPlaylist(playlist_model.get(rowIndex).path,
-                                        listname)
+                m3u.addToPlaylist(playlist_model.get(rowIndex).path, listname)
             }
             console.log(rowIndex)
         })
@@ -260,36 +262,39 @@ Rectangle {
     function sort(what, how) {
         var startdate = Date.now()
 
-        var sortwhat
         var sorthow
 
         if (what === 0) {
-            sortwhat = PlaylistSorter.TRACK
+            sortwhat = MusicLib.TRACK
         }
         if (what === 1) {
-            sortwhat = PlaylistSorter.TITLE
+            sortwhat = MusicLib.TITLE
         }
         if (what === 2) {
-            sortwhat = PlaylistSorter.COMMENT
+            sortwhat = MusicLib.COMMENT
         }
         if (what === 3) {
-            sortwhat = PlaylistSorter.LENGTH
+            sortwhat = MusicLib.LENGTH
         }
         if (what === 4) {
-            sortwhat = PlaylistSorter.GENRE
+            sortwhat = MusicLib.GENRE
         }
         if (what === 5) {
-            sortwhat = PlaylistSorter.ARTIST
+            sortwhat = MusicLib.ARTIST
         }
 
         if (how === 0) {
+            sortAsc = true
             sorthow = PlaylistSorter.ASCENDING
         } else {
+            sortAsc = false
             sorthow = PlaylistSorter.DESCENDING
         }
 
-        replaceJson(listsorter.sort(modelToArray(playlist_model),
-                                    sortwhat, sorthow))
+        if (!isLibrary) {
+            replaceJson(listsorter.sort(modelToArray(playlist_model),
+                                        sortwhat, sorthow))
+        }
 
         updateNowPlayingRow()
         var enddate = Date.now()
