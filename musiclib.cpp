@@ -319,8 +319,6 @@ QString MusicLib::genreFilter() const
 
 void MusicLib::setGenreFilter(const QString &val)
 {
-    qDebug() << "MusicLib::setGenreFilter(" << val << ")";
-
     if (val == ALL_FILTER) {
         genreFilter_ = "";
     }
@@ -357,8 +355,6 @@ QString MusicLib::albumFilter() const
 
 void MusicLib::setAlbumFilter(const QString &val)
 {
-    qDebug() << "setAlbumFilter(" << val << ")";
-
     if (val == ALL_FILTER) {
         albumFilter_ = "";
     }
@@ -441,7 +437,6 @@ QStringList MusicLib::getList(const QString &what) const
     }
 
     while (result.next()) {
-        qDebug() << result.value(what);
         QString tmp = result.value(what).toString();
 
         if (tmp != "") {
@@ -449,7 +444,6 @@ QStringList MusicLib::getList(const QString &what) const
         }
     }
 
-    qDebug() << retval;
     return retval;
 }
 
@@ -511,8 +505,6 @@ QString MusicLib::getSortQueryString() const
     else {
         query.append("DESC");
     }
-
-    qDebug() << query;
 
     return query;
 }
@@ -611,7 +603,6 @@ void MusicLib::setGenreList()
         tmp = getList("genre");
     }
 
-    qDebug() << "MusicLib::genreList()";
     genreList_ = tmp;
     genreList_.sort();
     genreList_.prepend(ALL_FILTER);
@@ -638,7 +629,6 @@ void MusicLib::setArtistList()
 void MusicLib::setAlbumList()
 {
     QStringList tmp;
-    qDebug() << "MusicLib::albumList()";
 
     if (albumFilter() != "") {
         tmp << albumFilter();
