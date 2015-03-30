@@ -215,6 +215,9 @@ private:
     QStringList getList(const QString &what) const;
 
     QString getSortQueryString() const;
+    QString getGenreListQuery() const;
+    QString getArtistListQuery() const;
+    QString getAlbumListQuery() const;
 
     void ensureAllTables();
 

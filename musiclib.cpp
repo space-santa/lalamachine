@@ -427,23 +427,30 @@ QString MusicLib::escapeString(QString str)
 
 QStringList MusicLib::getList(const QString &what) const
 {
-    qDebug() << "QStringList MusicLib::getList(" << what << ")";
-    Q_ASSERT(what == "genre" || what == "artist" || what == "album");
-    QStringList retVal;
-    QJsonArray tmplib = displayLib();
+    QStringList retval;
+    QSqlQuery result;
 
-    for (int i = 0; i < tmplib.count(); ++i) {
-        if (tmplib[i].isObject()) {
-            QJsonObject tmpo = tmplib[i].toObject();
-            QString tmps = tmpo.value(what).toString();
+    if (what == "genre") {
+        result = db_.exec(getGenreListQuery());
+    } else if (what == "artist") {
+        result = db_.exec(getArtistListQuery());
+    } else if (what == "album") {
+        result = db_.exec(getAlbumListQuery());
+    } else {
+        qFatal("No valid filter!");
+    }
 
-            if (!retVal.contains(tmps) && tmps.simplified() != "") {
-                retVal << tmps;
-            }
+    while (result.next()) {
+        qDebug() << result.value(what);
+        QString tmp = result.value(what).toString();
+
+        if (tmp != "") {
+            retval << tmp;
         }
     }
 
-    return retVal;
+    qDebug() << retval;
+    return retval;
 }
 
 QString MusicLib::getSortQueryString() const
@@ -510,6 +517,65 @@ QString MusicLib::getSortQueryString() const
     return query;
 }
 
+QString MusicLib::getGenreListQuery() const
+{
+    return QString("SELECT DISTINCT genre FROM musiclib ORDER BY genre ASC");
+}
+
+QString MusicLib::getArtistListQuery() const
+{
+    QString query("SELECT DISTINCT artist FROM musiclib");
+
+    if (genreFilter() != "") {
+        query.append(" WHERE genre = '");
+        query.append(escapeString(genreFilter()));
+        query.append("' ");
+    }
+
+    query.append(" ORDER BY artist ASC");
+
+    return query;
+}
+
+QString MusicLib::getAlbumListQuery() const
+{
+    QString query("SELECT DISTINCT album FROM musiclib");
+
+    int count = 0;
+
+    if (genreFilter() != "") {
+        ++count;
+    }
+
+    if (artistFilter() != "") {
+        ++count;
+    }
+
+    if (count > 0) {
+        query.append(" WHERE ");
+    }
+
+    if (genreFilter() != "") {
+        query.append("genre = '");
+        query.append(escapeString(genreFilter()));
+        query.append("' ");
+    }
+
+    if (artistFilter() != "") {
+        if (count > 1) {
+            query.append(" AND ");
+        }
+
+        query.append("artist = '");
+        query.append(escapeString(artistFilter()));
+        query.append("' ");
+    }
+
+    query.append(" ORDER BY album ASC");
+
+    return query;
+}
+
 void MusicLib::ensureAllTables()
 {
     auto tables = db_.tables();
@@ -542,7 +608,7 @@ void MusicLib::setGenreList()
         tmp << genreFilter();
     }
     else {
-        tmp = getList(QString("genre"));
+        tmp = getList("genre");
     }
 
     qDebug() << "MusicLib::genreList()";
@@ -560,7 +626,7 @@ void MusicLib::setArtistList()
         tmp << artistFilter();
     }
     else {
-        tmp = getList(QString("artist"));
+        tmp = getList("artist");
     }
 
     artistList_ = tmp;
@@ -578,7 +644,7 @@ void MusicLib::setAlbumList()
         tmp << albumFilter();
     }
     else {
-        tmp = getList(QString("album"));
+        tmp = getList("album");
     }
 
     albumList_ = tmp;
