@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.9.0
+Version: 0.10.0
 Release: 1
 License: GPL-3.0+
 Summary: A music player that is awesome
@@ -65,6 +65,10 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Wed Apr 01 2015 r-mean
+  0.10.0-1: Release 0.10
+  * The musiclib is now a sqlite database.
+
 * Sun Mar 29 2015 r-mean
   0.9.0-1: Release 0.9
   * If a comment starts with a camelot key it is sorted from 1-12.
