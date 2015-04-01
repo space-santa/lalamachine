@@ -191,7 +191,6 @@ private:
     QThread scannerThread_ {};
 
     QSqlDatabase db_;
-    QJsonObject lib_ {};
     bool sortAsc_ {true};
     bool scanning_ {false};
     SortWhat what_ {SortWhat::ARTIST};
