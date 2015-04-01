@@ -149,7 +149,6 @@ bool MusicLibScanner::suffixCheck(const QString &val) const
 MusicLib::MusicLib(QQuickItem *parent)
     : QQuickItem(parent)
 {
-    readLibFile();
     // This moveToThread is making the thread the parent of the scanner_.
     // Therefor it is vital that the scanner_ is a raw pointer, or double free
     // happens.
@@ -203,12 +202,6 @@ MusicLib::MusicLib(QQuickItem *parent)
     connect(this, &MusicLib::artistFilterChanged,
             this, &MusicLib::setAlbumList);
 
-    readLibFile();
-
-    if (lib_.isEmpty()) {
-        scannerThread_.start();
-    }
-
     setGenreList();
 }
 
@@ -236,11 +229,6 @@ QMap<MusicLib::SortWhat, QString> MusicLib::initSortMap()
 
 const QString MusicLib::ALL_FILTER {QString("--all--")};
 
-QJsonObject MusicLib::musicLib() const
-{
-    return lib_;
-}
-
 bool MusicLib::scanning() const
 {
     return scanning_;
@@ -255,17 +243,6 @@ void MusicLib::setScanning(bool val)
 QJsonArray MusicLib::displayLib() const
 {
     return displayLib_;
-}
-
-void MusicLib::readLibFile()
-{
-    lib_ = Config::loadJsonFile(Config::MUSICLIBPATH);
-    emit musicLibChanged();
-}
-
-void MusicLib::writeLibFile()
-{
-    Config::saveJsonFile(Config::MUSICLIBPATH, lib_);
 }
 
 void MusicLib::debugSignal()
@@ -650,9 +627,7 @@ void MusicLib::scanStarted()
 
 void MusicLib::scanFinished()
 {
-    //lib_ = lib;
     emit musicLibChanged();
-    writeLibFile();
     setScanning(false);
 }
 

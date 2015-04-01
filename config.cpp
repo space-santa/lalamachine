@@ -33,7 +33,6 @@ const QString Config::LALADIR = QStandardPaths::writableLocation(
                                     QStandardPaths::GenericConfigLocation) + "/lalamachine";
 const QString Config::CONFIGPATH = Config::LALADIR + "/config.json";
 const QString Config::PLAYLISTDIR = Config::LALADIR + "/playlists";
-const QString Config::MUSICLIBPATH = Config::LALADIR + "/musiclib.json";
 const QString Config::MUSICLIBDB = Config::LALADIR + "/musiclib.sq3";
 
 Config::Config(QQuickItem *parent) :

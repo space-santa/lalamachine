@@ -66,10 +66,6 @@ class MusicLib : public QQuickItem
 {
     Q_OBJECT
 
-    Q_PROPERTY(QJsonObject musicLib
-               READ musicLib
-               NOTIFY musicLibChanged)
-
     Q_PROPERTY(bool scanning
                READ scanning
                WRITE setScanning
@@ -131,8 +127,6 @@ public:
     static const QString ALL_FILTER;
     static const QMap<SortWhat, QString> SORT_MAP;
     static QMap<SortWhat, QString> initSortMap();
-
-    QJsonObject musicLib() const;
 
     bool scanning() const;
     void setScanning(bool val);
@@ -222,9 +216,6 @@ private:
     void ensureAllTables();
 
 private slots:
-    void readLibFile();
-    void writeLibFile();
-
     void debugSignal();
 
     void setDisplayLib();
