@@ -36,5 +36,8 @@
         <file>images/repeat1.png</file>
         <file>images/repeatAll.png</file>
         <file>images/delete.png</file>
+        <file>images/info.png</file>
+        <file>images/bug.png</file>
+        <file>images/help.png</file>
     </qresource>
 </RCC>

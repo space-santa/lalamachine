@@ -98,17 +98,17 @@ ApplicationWindow {
 
             MenuItem {
                 text: "Help"
-                iconSource: "file:///usr/share/icons/default.kde4/64x64/categories/system-help.png"
+                iconSource: "qrc:/images/images/help.png"
             }
 
             MenuItem {
                 text: "Report Bug"
-                iconSource: "file:///usr/share/icons/default.kde4/64x64/status/script-error.png"
+                iconSource: "qrc:/images/images/bug.png"
             }
 
             MenuItem {
                 text: "About lalamachine"
-                iconSource: "file:///usr/share/icons/default.kde4/64x64/status/dialog-information.png"
+                iconSource: "qrc:/images/images/info.png"
                 onTriggered: infos.visible = true
             }
         }
