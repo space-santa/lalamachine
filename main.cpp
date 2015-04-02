@@ -29,12 +29,15 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "musiclib.h"
 #include "cdwriter.h"
 #include "playlistsorter.h"
+#include "sysinfo.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     // Setting the app-icon.
     app.setWindowIcon(QIcon(QPixmap(":/images/images/lalamachine.png")));
+    app.setApplicationVersion("0.10");
+    app.setApplicationName("lalamachine");
 
     qmlRegisterType<MetaDataProvider>("Lala", 1, 0, "Metadata");
     qmlRegisterType<M3uInOut>("Lala", 1, 0, "M3uInOut");
@@ -43,6 +46,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<MusicLib>("Lala", 1, 0, "MusicLib");
     qmlRegisterType<CdWriter>("Lala", 1, 0, "CdWriter");
     qmlRegisterType<PlaylistSorter>("Lala", 1, 0, "PlaylistSorter");
+    qmlRegisterType<SysInfo>("Lala", 1, 0, "SysInfo");
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

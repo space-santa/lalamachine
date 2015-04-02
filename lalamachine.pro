@@ -16,7 +16,8 @@ SOURCES += main.cpp \
     musiclib.cpp \
     cdwriter.cpp \
     systeminteractor.cpp \
-    playlistsorter.cpp
+    playlistsorter.cpp \
+    sysinfo.cpp
 
 RESOURCES += qml.qrc
 
@@ -34,7 +35,8 @@ HEADERS += \
     musiclib.h \
     cdwriter.h \
     systeminteractor.h \
-    playlistsorter.h
+    playlistsorter.h \
+    sysinfo.h
 
 OTHER_FILES += \
     README.md \
