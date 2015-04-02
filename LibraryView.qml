@@ -120,7 +120,7 @@ Rectangle {
 
                 provideTotalTime: false
 
-                onPlay: addTrack(path)
+                onPlay: lalaplayer.playTrack(path)
             }
 
             Rectangle {
