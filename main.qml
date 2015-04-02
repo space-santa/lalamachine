@@ -37,6 +37,8 @@ ApplicationWindow {
 
     property M3uInOut m3u: m3u
 
+    property MediaPlayer lalaplayer: playMusic
+
     Component.onCompleted: {
         playlist.readPlaylist(miscPlaylistName)
         volume_control.value = config.volume
@@ -176,6 +178,14 @@ ApplicationWindow {
                 playlist.playNext()
             }
         }
+
+        function playTrack(path) {
+            // Since the addition of the library it is necessary to
+            // make sure an mrl is actually an mrl.
+            // FIXME: Find out why!
+            playMusic.source = Functions.checkMrl(path)
+            playMusic.play()
+        }
     }
 
     Rectangle {
@@ -224,11 +234,7 @@ ApplicationWindow {
                 }
 
                 onPlay: {
-                    // Since the addition of the library it is necessary to
-                    // make sure an mrl is actually an mrl.
-                    // FIXME: Find out why!
-                    playMusic.source = Functions.checkMrl(path)
-                    playMusic.play()
+                    playMusic.playTrack(path)
                 }
             }
 
