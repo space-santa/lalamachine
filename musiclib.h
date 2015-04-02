@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MUSICLIBSCANNER_H
-#define MUSICLIBSCANNER_H
+#ifndef MUSICLIB_H
+#define MUSICLIB_H
 
 #include <QThread>
 #include <QJsonObject>
@@ -28,42 +28,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMutex>
 #include <QSqlDatabase>
 
-class MusicLibScanner : public QObject
-{
-    Q_OBJECT
-
-public:
-    MusicLibScanner(QObject *parent = 0);
-
-    void setDb(QSqlDatabase *db);
-
-    QSharedPointer<QMutex> mutex() const;
-    void setMutex(const QSharedPointer<QMutex> &mutex);
-
-public slots:
-    void scanLib(const QString &path);
-
-signals:
-    void scanStarted();
-    void scanComplete();
-
-private:
-    QSharedPointer<QMutex> mutex_;
-    bool suffixCheck(const QString &val) const;
-    QSqlDatabase *scanDb_;
-
-    void addTrackToDB(QString album,
-                      QString artist,
-                      QString comment,
-                      QString genre,
-                      QString length,
-                      QString lengthString,
-                      QString mrl,
-                      QString path,
-                      QString title,
-                      QString track,
-                      QString year);
-};
+#include "musiclibscanner.h"
 
 class MusicLib : public QQuickItem
 {
