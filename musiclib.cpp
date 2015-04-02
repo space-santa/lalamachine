@@ -56,7 +56,6 @@ void MusicLibScanner::scanLib(const QString &path)
     QVector<QString> lib(11);
     MetaDataProvider meta;
     QDir rootDir(path);
-    QMutexLocker locker(&mutex_);
 
     if (!rootDir.exists()) {
         qDebug() << "Dir not found.";
@@ -87,6 +86,16 @@ void MusicLibScanner::scanLib(const QString &path)
     qDebug() << "End scan" << timer.elapsed();
     emit scanComplete();
 }
+QSharedPointer<QMutex> MusicLibScanner::mutex() const
+{
+    return mutex_;
+}
+
+void MusicLibScanner::setMutex(const QSharedPointer<QMutex> &mutex)
+{
+    mutex_ = mutex;
+}
+
 
 void MusicLibScanner::addTrackToDB(QString album,
                                    QString artist,
@@ -119,6 +128,7 @@ void MusicLibScanner::addTrackToDB(QString album,
                      track,
                      year));
 
+    QMutexLocker locker(mutex_.data());
     QSqlError err = scanDb_->exec(query).lastError();
 
     if (err.type() > 0) {
@@ -159,6 +169,7 @@ MusicLib::MusicLib(QQuickItem *parent)
     db_.open();
     ensureAllTables();
     scanner_->setDb(&db_);
+    scanner_->setMutex(mutex_);
 
     connect(&scannerThread_, &QThread::finished,
             scanner_, &QObject::deleteLater);
@@ -254,6 +265,7 @@ void MusicLib::setDisplayLib()
 {
     QJsonArray retVal;
 
+    QMutexLocker locker(mutex_.data());
     QSqlQuery result = db_.exec(getSortQueryString());
 
     while (result.next()) {
@@ -403,6 +415,7 @@ QStringList MusicLib::getList(const QString &what) const
     QStringList retval;
     QSqlQuery result;
 
+    QMutexLocker locker(mutex_.data());
     if (what == "genre") {
         result = db_.exec(getGenreListQuery());
     } else if (what == "artist") {
@@ -565,6 +578,8 @@ void MusicLib::ensureAllTables()
         qs.append("`track` int,\n");
         qs.append("`year` int\n");
         qs.append(")");
+
+        QMutexLocker locker(mutex_.data());
         qDebug() << db_.exec(qs).lastError();
     }
 }

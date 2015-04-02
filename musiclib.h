@@ -37,6 +37,9 @@ public:
 
     void setDb(QSqlDatabase *db);
 
+    QSharedPointer<QMutex> mutex() const;
+    void setMutex(const QSharedPointer<QMutex> &mutex);
+
 public slots:
     void scanLib(const QString &path);
 
@@ -45,7 +48,7 @@ signals:
     void scanComplete();
 
 private:
-    QMutex mutex_;
+    QSharedPointer<QMutex> mutex_;
     bool suffixCheck(const QString &val) const;
     QSqlDatabase *scanDb_;
 
@@ -190,6 +193,7 @@ private:
     MusicLibScanner *scanner_ {new MusicLibScanner()};
     QThread scannerThread_ {};
 
+    QSharedPointer<QMutex> mutex_ {new QMutex()};
     QSqlDatabase db_;
     bool sortAsc_ {true};
     bool scanning_ {false};
