@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.10.0
+Version: 0.10.1
 Release: 1
 License: GPL-3.0+
 Summary: A music player that is awesome
@@ -65,6 +65,13 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Fri Apr 03 2015 r-mean
+  0.10.1-1: Release 0.10.1
+  * Fixed bug that could crash the application while scanning the database.
+  * Added Info dialog.
+  * Double clicking a library track is now playing it instead o adding it to
+    the current playlist.
+
 * Wed Apr 01 2015 r-mean
   0.10.0-1: Release 0.10
   * The musiclib is now a sqlite database.
