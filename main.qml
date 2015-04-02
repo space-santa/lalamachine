@@ -93,6 +93,32 @@ ApplicationWindow {
                 onTriggered: burnList()
             }
         }
+        Menu {
+            title: "Info"
+
+            MenuItem {
+                text: "Help"
+                iconSource: "file:///usr/share/icons/default.kde4/64x64/categories/system-help.png"
+            }
+
+            MenuItem {
+                text: "Report Bug"
+                iconSource: "file:///usr/share/icons/default.kde4/64x64/status/script-error.png"
+            }
+
+            MenuItem {
+                text: "About lalamachine"
+                iconSource: "file:///usr/share/icons/default.kde4/64x64/status/dialog-information.png"
+                onTriggered: infos.visible = true
+            }
+        }
+    }
+
+    InfoDialog {
+        id: infos
+        visible: false
+
+        onAccepted: visible = false
     }
 
     function getWindowTitle() {

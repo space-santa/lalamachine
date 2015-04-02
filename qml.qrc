@@ -15,6 +15,8 @@
         <file>StringListView.qml</file>
         <file>RightClickMenu.qml</file>
         <file>PlaylistMenu.qml</file>
+        <file>InfoDialog.qml</file>
+        <file>KeyValueText.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/eject.png</file>
