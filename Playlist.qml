@@ -123,6 +123,10 @@ Rectangle {
         for (var i = indices.length - 1; i >= 0; --i) {
             playlist_model.remove(indices[i])
         }
+
+        if (playlistIsNamed()) {
+            writePlaylist(currentName)
+        }
     }
 
     function playCurrentTrack() {
@@ -191,6 +195,10 @@ Rectangle {
         playlist_model.append(setId(meta.metaDataAsJson(path)))
 
         updateNowPlayingRow()
+
+        if (playlistIsNamed()) {
+            writePlaylist(currentName)
+        }
     }
 
     function addLib(json) {
