@@ -23,8 +23,8 @@ Summary: A music player that is awesome
 Url: https://bitbucket.org/r-mean/lalamachine
 Group: Applications/Multimedia
 Source: %_sourcedir/%{name}-%{version}.tar.gz
-Requires: libqt5-qtquickcontrols libQt5Multimedia5 taglib
-BuildRequires: libqt5-qtbase-devel libqt5-qtmultimedia-devel libtag-devel
+Requires: libqt5-qtquickcontrols >= 5.4.1, libQt5Multimedia5 >= 5.4.1, taglib
+BuildRequires: libqt5-qtbase-devel >= 5.4.1, libqt5-qtmultimedia-devel >= 5.4.1, libtag-devel
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %description
