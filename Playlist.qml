@@ -30,6 +30,8 @@ Rectangle {
 
     property bool isLibrary: false
 
+    property string currentName
+
     property int count: playlist_model.count
     property int rowPlaying: -1
     property int currentId: -1
@@ -45,6 +47,10 @@ Rectangle {
 
     signal play(string path)
     signal stop
+
+    onCurrentNameChanged: {
+        readPlaylist(currentName)
+    }
 
     onRowPlayingChanged: {
         playlist_view.selection.clear()
@@ -162,6 +168,7 @@ Rectangle {
     }
 
     function clearList() {
+        currentName = ""
         playlist_model.clear()
         updateNowPlayingRow()
     }
