@@ -49,7 +49,9 @@ Rectangle {
     signal stop
 
     onCurrentNameChanged: {
-        readPlaylist(currentName)
+        if (currentName != "") {
+            readPlaylist(currentName)
+        }
     }
 
     onRowPlayingChanged: {
