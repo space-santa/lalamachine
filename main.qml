@@ -35,6 +35,7 @@ ApplicationWindow {
 
     property string miscPlaylistName: "cs1m090"
     property string currentPlaylist: playlist.currentName
+    property Playlist mainPlaylist: playlist
 
     property M3uInOut m3u: m3u
 
