@@ -38,7 +38,7 @@ Rectangle {
     property bool repeatAll: false
     property alias totalPlaytimeString: tc.timestring
 
-    property var sortwhat: MusicLib.ARTIST
+    property int sortwhat: MusicLib.ARTIST
     property bool sortAsc: true
 
     property alias provideTotalTime: tc.enabled
