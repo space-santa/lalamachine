@@ -242,7 +242,7 @@ ApplicationWindow {
                 onMoveUp: playlist.moveUp()
                 onMoveDown: playlist.moveDown()
                 onMoveBottom: playlist.moveBottom()
-                onClearList: playlist.clearList()
+                onClearList: playlist.clearList(true)
             }
 
             Playlist {

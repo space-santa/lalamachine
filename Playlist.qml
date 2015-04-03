@@ -159,7 +159,7 @@ Rectangle {
         }
 
         if (listname === "") {
-            mainPlaylist.clearList()
+            mainPlaylist.clearList(true)
             listname = miscPlaylistName
         }
 
@@ -184,12 +184,14 @@ Rectangle {
     }
 
     function readPlaylist(name) {
-        clearList()
+        clearList(false)
         addList(m3u.readPlaylist(name))
     }
 
-    function clearList() {
-        currentName = ""
+    function clearList(newlist) {
+        if (newlist) {
+            currentName = ""
+        }
         playlist_model.clear()
         updateNowPlayingRow()
     }
