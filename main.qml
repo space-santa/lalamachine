@@ -33,7 +33,8 @@ ApplicationWindow {
     height: Screen.height
     title: getWindowTitle()
 
-    readonly property string miscPlaylistName: "cs1m090"
+    property string miscPlaylistName: "cs1m090"
+    property string currentPlaylist: playlist.currentName
 
     property M3uInOut m3u: m3u
 
