@@ -15,6 +15,13 @@ Menu {
     MenuItem {
         text: "Add to current playlist"
         onTriggered: addToPlaylist(miscPlaylistName)
+        visible: isLibrary
+    }
+
+    MenuItem {
+        text: "Add to new playlist"
+        onTriggered: addToPlaylist("")
+        visible: isLibrary
     }
 
     PlaylistMenu {
