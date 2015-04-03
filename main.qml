@@ -274,10 +274,25 @@ ApplicationWindow {
                 color: "#ffffff"
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignLeft
-                text: playlist.count + " Tracks, Total length = " + playlist.totalPlaytimeString
+                text: buildText()
                 font.pointSize: 12
                 styleColor: "#000000"
                 style: Text.Outline
+
+                function buildText() {
+                    var retval = ""
+                    if (playlist.currentName === ""
+                            || playlist.currentName === miscPlaylistName) {
+                        retval += "new list" + " -- "
+                    } else {
+                        retval += playlist.currentName + " -- "
+                    }
+
+                    retval += playlist.count + " Tracks, Total length = "
+                            + playlist.totalPlaytimeString
+
+                    return retval
+                }
             }
         }
 
