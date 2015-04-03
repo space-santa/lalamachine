@@ -41,7 +41,7 @@ ApplicationWindow {
     property MediaPlayer lalaplayer: playMusic
 
     Component.onCompleted: {
-        playlist.readPlaylist(miscPlaylistName)
+        playlist.currentName = miscPlaylistName
         volume_control.value = config.volume
         console.log("Volume on load", config.volume)
     }
@@ -77,7 +77,7 @@ ApplicationWindow {
             PlaylistMenu {
                 title: "Open"
                 iconSource: "qrc:/images/images/open.png"
-                onSelected: playlist.readPlaylist(listname)
+                onSelected: playlist.currentName = listname
             }
             MenuSeparator {
             }
