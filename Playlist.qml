@@ -67,6 +67,10 @@ Rectangle {
         seconds: totalPlaytime()
     }
 
+    function playlistIsNamed() {
+        return !(currentName === miscPlaylistName || currentName === "")
+    }
+
     function showSaveDialog() {
         save_playlist_dialog.visible = true
     }
