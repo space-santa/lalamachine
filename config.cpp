@@ -106,6 +106,24 @@ QString Config::libPath() const
     return retval;
 }
 
+void Config::setLastPlaylist(const QString &name)
+{
+    config_.insert("lastPlaylist", name);
+    emit lastPlaylistChanged();
+}
+
+QString Config::lastPlaylist() const
+{
+    QString retval("");
+    QJsonValue v =  config_.value("lastPlaylist");
+
+    if (v.isString()) {
+        retval = v.toString();
+    }
+
+    return retval;
+}
+
 QJsonObject Config::loadJsonFile(const QString &path)
 {
     // Reading the JSON

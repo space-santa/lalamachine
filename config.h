@@ -34,6 +34,11 @@ class Config : public QQuickItem
                WRITE setLibPath
                NOTIFY libPathChanged)
 
+    Q_PROPERTY(QString lastPlaylist
+               READ lastPlaylist
+               WRITE setLastPlaylist
+               NOTIFY lastPlaylistChanged)
+
 public:
     explicit Config(QQuickItem *parent = 0);
 
@@ -51,12 +56,16 @@ public:
     void setLibPath(const QString &path);
     QString libPath() const;
 
+    void setLastPlaylist(const QString &name);
+    QString lastPlaylist() const;
+
     static QJsonObject loadJsonFile(const QString &path);
     static void saveJsonFile(const QString &path, const QJsonObject &obj);
 
 signals:
     void volumeChanged();
     void libPathChanged();
+    void lastPlaylistChanged();
 
 public slots:
 
