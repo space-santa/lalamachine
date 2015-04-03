@@ -149,6 +149,19 @@ Rectangle {
         if (!isLibrary && listname === miscPlaylistName) {
             return
         }
+        // FIXME: We are not going to delete ourselve.
+        // The problem is that once the list is cleared, the logic below
+        // doesn't make sense because we need the listmodel to get the
+        // information. Should be fixed in the future, but right now that is
+        // not important enough for me to put real effort in it.
+        if (!isLibrary && listname === "") {
+            return
+        }
+
+        if (listname === "") {
+            mainPlaylist.clearList()
+            listname = miscPlaylistName
+        }
 
         playlist_view.selection.forEach(function (rowIndex) {
             if (listname === miscPlaylistName) {
