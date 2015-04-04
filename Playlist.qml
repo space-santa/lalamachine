@@ -89,6 +89,7 @@ Rectangle {
         onAccepted: {
             writePlaylist(save_playlist_dialog.playlistName)
             save_playlist_dialog.visible = false
+            currentName = save_playlist_dialog.playlistName
         }
     }
 
