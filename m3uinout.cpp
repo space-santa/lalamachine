@@ -52,6 +52,11 @@ void M3uInOut::handleDirChange()
 
 void M3uInOut::writePlaylist(const QString &name, QStringList files) const
 {
+    // Just no. Makes no sense. Don't.
+    if (name.isEmpty()) {
+        return;
+    }
+
     QFile file(m3uPath(name));
 
     files.replaceInStrings("file://", "");
