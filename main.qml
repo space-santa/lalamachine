@@ -42,7 +42,7 @@ ApplicationWindow {
     property MediaPlayer lalaplayer: playMusic
 
     Component.onCompleted: {
-        playlist.currentName = miscPlaylistName
+        playlist.currentName = config.lastPlaylist
         volume_control.value = config.volume
         console.log("Volume on load", config.volume)
     }
@@ -50,6 +50,12 @@ ApplicationWindow {
     onClosing: {
         playlist.writePlaylist(miscPlaylistName)
         config.volume = volume_control.value
+        // I am deliberatly not checking for a named playlist here.
+        if (currentPlaylist === "") {
+            config.lastPlaylist = miscPlaylistName
+        } else {
+            config.lastPlaylist = currentPlaylist
+        }
         config.saveConfig()
     }
 
