@@ -478,16 +478,7 @@ void MusicLib::ensureAllTables()
 
 void MusicLib::setGenreList()
 {
-    QStringList tmp;
-
-    if (genreFilter() != "") {
-        tmp << genreFilter();
-    }
-    else {
-        tmp = getList("genre");
-    }
-
-    genreList_ = tmp;
+    genreList_ = getList("genre");
     genreList_.sort();
     genreList_.prepend(ALL_FILTER);
     emit genreListChanged();
@@ -495,16 +486,7 @@ void MusicLib::setGenreList()
 
 void MusicLib::setArtistList()
 {
-    QStringList tmp;
-
-    if (artistFilter() != "") {
-        tmp << artistFilter();
-    }
-    else {
-        tmp = getList("artist");
-    }
-
-    artistList_ = tmp;
+    artistList_ = getList("artist");
     artistList_.sort();
     artistList_.prepend(ALL_FILTER);
     emit artistListChanged();
@@ -512,16 +494,7 @@ void MusicLib::setArtistList()
 
 void MusicLib::setAlbumList()
 {
-    QStringList tmp;
-
-    if (albumFilter() != "") {
-        tmp << albumFilter();
-    }
-    else {
-        tmp = getList("album");
-    }
-
-    albumList_ = tmp;
+    albumList_ = getList("album");
     albumList_.sort();
     albumList_.prepend(ALL_FILTER);
     emit albumListChanged();
