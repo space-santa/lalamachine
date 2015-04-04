@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.10.1
+Version: 0.11.0
 Release: 1
 License: GPL-3.0+
 Summary: A music player that is awesome
@@ -65,6 +65,14 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat Apr 04 2015 r-mean
+  0.11.0-1: Release 0.10.1
+  * Playlists now have a name will loaded.
+  * Changing a playlist will automatically save the changes.
+  * The app remembers which playlist was loaded between sessions.
+  * Playlists can now be named (save as) in the menu.
+  * Removed the save button from the button bar.
+
 * Fri Apr 03 2015 r-mean
   0.10.1-1: Release 0.10.1
   * Fixed bug that could crash the application while scanning the database.
