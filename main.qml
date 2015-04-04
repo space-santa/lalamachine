@@ -247,9 +247,8 @@ ApplicationWindow {
             PlaylistButtons {
                 id: playlist_buttons
                 anchors.left: parent.left
-                anchors.top: parent.top
+                anchors.verticalCenter: playlist.verticalCenter
 
-                onSaveList: playlist.showSaveDialog()
                 onMoveTop: playlist.moveTop()
                 onMoveUp: playlist.moveUp()
                 onMoveDown: playlist.moveDown()
