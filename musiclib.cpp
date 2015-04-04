@@ -131,6 +131,11 @@ QJsonArray MusicLib::displayLib() const
     return displayLib_;
 }
 
+int MusicLib::totalLength() const
+{
+    return totalLength_;
+}
+
 void MusicLib::debugSignal()
 {
     qDebug() << "DEBUGGING SIGNAL";
@@ -143,8 +148,14 @@ void MusicLib::setDisplayLib()
     QMutexLocker locker(mutex_.data());
     QSqlQuery result = db_.exec(getSortQueryString());
 
+    int totalLength = 0;
+
     while (result.next()) {
         QJsonObject tmp;
+
+        int len = result.value("length").toInt();
+        totalLength += len;
+
         tmp.insert("album", result.value("album").toString());
         tmp.insert("artist", result.value("artist").toString());
         tmp.insert("genre", result.value("genre").toString());
@@ -153,7 +164,7 @@ void MusicLib::setDisplayLib()
         tmp.insert("title", result.value("title").toString());
         tmp.insert("mrl", result.value("mrl").toString());
         tmp.insert("path", result.value("path").toString());
-        tmp.insert("length", result.value("length").toInt());
+        tmp.insert("length", len);
         tmp.insert("lengthString", result.value("lengthString").toString());
         tmp.insert("year", result.value("year").toInt());
 
@@ -162,6 +173,8 @@ void MusicLib::setDisplayLib()
 
     displayLib_ = retVal;
     emit displayLibChanged();
+    totalLength_ = totalLength;
+    emit totalLengthChanged();
 }
 
 QString MusicLib::libPath() const
@@ -291,13 +304,17 @@ QStringList MusicLib::getList(const QString &what) const
     QSqlQuery result;
 
     QMutexLocker locker(mutex_.data());
+
     if (what == "genre") {
         result = db_.exec(getGenreListQuery());
-    } else if (what == "artist") {
+    }
+    else if (what == "artist") {
         result = db_.exec(getArtistListQuery());
-    } else if (what == "album") {
+    }
+    else if (what == "album") {
         result = db_.exec(getAlbumListQuery());
-    } else {
+    }
+    else {
         qFatal("No valid filter!");
     }
 

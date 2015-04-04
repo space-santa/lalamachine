@@ -43,6 +43,10 @@ class MusicLib : public QQuickItem
                READ displayLib
                NOTIFY displayLibChanged)
 
+    Q_PROPERTY(int totalLength
+               READ totalLength
+               NOTIFY totalLengthChanged)
+
     Q_PROPERTY(QString libPath
                READ libPath
                WRITE setLibPath
@@ -100,6 +104,7 @@ public:
     void setScanning(bool val);
 
     QJsonArray displayLib() const;
+    int totalLength() const;
 
     QString libPath() const;
     void setLibPath(const QString &path);
@@ -137,6 +142,7 @@ signals:
     void scanningChanged();
 
     void displayLibChanged();
+    void totalLengthChanged();
 
     void libPathChanged();
     void genreFilterChanged();
@@ -164,6 +170,7 @@ private:
     bool scanning_ {false};
     SortWhat what_ {SortWhat::ARTIST};
     QJsonArray displayLib_ {};
+    int totalLength_ {0};
     QString genreFilter_ {""};
     QString artistFilter_ {""};
     QString albumFilter_ {""};
