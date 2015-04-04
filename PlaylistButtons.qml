@@ -33,12 +33,6 @@ Column {
     signal burnList
 
     ImageButton {
-        id: save_btn
-        width: 50
-        source: "qrc:/images/images/save.png"
-        onClicked: saveList()
-    }
-    ImageButton {
         id: top_btn
         width: 50
         source: "qrc:/images/images/go-top.png"
