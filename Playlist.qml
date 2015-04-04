@@ -43,8 +43,6 @@ Rectangle {
     property int sortwhat: MusicLib.ARTIST
     property bool sortAsc: true
 
-    property alias provideTotalTime: tc.enabled
-
     signal play(string path)
     signal stop
 
@@ -102,14 +100,14 @@ Rectangle {
     }
 
     function totalPlaytime() {
-        if (tc.enabled) {
+        if (isLibrary) {
+            return lib.totalLength
+        } else {
             var lenght = 0
             for (var i = 0; i < playlist_model.count; ++i) {
                 lenght += playlist_model.get(i).length
             }
             return lenght
-        } else {
-            return 0
         }
     }
 

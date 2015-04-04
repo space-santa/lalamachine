@@ -118,8 +118,6 @@ Rectangle {
 
                 color: "transparent"
 
-                provideTotalTime: false
-
                 onPlay: lalaplayer.playTrack(path)
             }
 
@@ -136,7 +134,7 @@ Rectangle {
 
                     visible: true
 
-                    text: titles.count + " Tracks"
+                    text: titles.count + " Tracks, Total length: " + titles.totalPlaytimeString
                     color: "#ffffff"
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
