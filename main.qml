@@ -86,6 +86,12 @@ ApplicationWindow {
                 iconSource: "qrc:/images/images/open.png"
                 onSelected: playlist.currentName = listname
             }
+            MenuItem {
+                text: "save as"
+                iconSource: "qrc:/images/images/save.png"
+                onTriggered:playlist.showSaveDialog()
+            }
+
             MenuSeparator {
             }
             PlaylistMenu {
