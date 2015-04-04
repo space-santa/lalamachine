@@ -79,6 +79,9 @@ Rectangle {
 
     function deletePlaylist(listname) {
         m3u.deletePlaylist(listname)
+        if (listname === currentName) {
+            clearList(true)
+        }
     }
 
     SavePlaylistDialog {
