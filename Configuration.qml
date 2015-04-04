@@ -23,6 +23,7 @@ import Lala 1.0
 Item {
     property alias volume: json.volume
     property alias libPath: json.libPath
+    property alias lastPlaylist: json.lastPlaylist
 
     function saveConfig() {
         json.saveConfig()
