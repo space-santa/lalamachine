@@ -56,7 +56,11 @@ QString TimeConverter::toString()
 
     if (days_ > 0) {
         retVal.append(QString::number(days_));
-        retVal.append(":");
+        if (days_ == 1) {
+            retVal.append(" day, ");
+        } else {
+            retVal.append(" days, ");
+        }
     }
 
     if (days_ > 0 || hours_ > 0) {
