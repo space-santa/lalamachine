@@ -22,15 +22,11 @@ import QtQuick 2.0
 Column {
     height: childrenRect.height
     width: childrenRect.width
-    signal openList
-    signal saveList
     signal moveTop
     signal moveUp
     signal moveDown
     signal moveBottom
     signal clearList
-    signal deleteList
-    signal burnList
 
     ImageButton {
         id: top_btn
