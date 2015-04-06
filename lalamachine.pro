@@ -18,7 +18,10 @@ SOURCES += main.cpp \
     systeminteractor.cpp \
     playlistsorter.cpp \
     sysinfo.cpp \
-    musiclibscanner.cpp
+    musiclibscanner.cpp \
+    autoplaylistobject.cpp \
+    lalatypes.cpp \
+    autoplaylistmanager.cpp
 
 RESOURCES += qml.qrc
 
@@ -38,7 +41,10 @@ HEADERS += \
     systeminteractor.h \
     playlistsorter.h \
     sysinfo.h \
-    musiclibscanner.h
+    musiclibscanner.h \
+    autoplaylistobject.h \
+    lalatypes.h \
+    autoplaylistmanager.h
 
 OTHER_FILES += \
     README.md \
