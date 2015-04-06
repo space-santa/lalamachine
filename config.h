@@ -45,6 +45,7 @@ public:
     static const QString LALADIR;
     static const QString CONFIGPATH;
     static const QString PLAYLISTDIR;
+    static const QString AUTOPLAYLISTDIR;
     static const QString MUSICLIBDB;
 
     Q_INVOKABLE void saveConfig();
