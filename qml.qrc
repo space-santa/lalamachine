@@ -39,5 +39,9 @@
         <file>images/info.png</file>
         <file>images/bug.png</file>
         <file>images/help.png</file>
+        <file>images/edit.png</file>
+        <file>images/new.png</file>
+        <file>images/settings.png</file>
+        <file>images/burn.png</file>
     </qresource>
 </RCC>
