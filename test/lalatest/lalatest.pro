@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += testlib qml quick widgets
+QT       += testlib qml quick widgets sql
 
 CONFIG += c++11
 
@@ -26,7 +26,10 @@ SOURCES += tst_lalatesttest.cpp \
     ../../timeconverter.cpp \
     ../../cdwriter.cpp \
     ../../musiclib.cpp \
-    ../../systeminteractor.cpp
+    ../../systeminteractor.cpp \
+    ../../autoplaylistobject.cpp \
+    ../../lalatypes.cpp \
+    ../../musiclibscanner.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
@@ -36,4 +39,7 @@ HEADERS += \
     ../../timeconverter.h \
     ../../cdwriter.h \
     ../../musiclib.h \
-    ../../systeminteractor.h
+    ../../systeminteractor.h \
+    ../../autoplaylistobject.h \
+    ../../lalatypes.h \
+    ../../musiclibscanner.h

@@ -7,6 +7,8 @@
 #include "../../systeminteractor.h"
 #include "../../m3uinout.h"
 #include "../../config.h"
+#include "../../autoplaylistobject.h"
+#include "../../lalatypes.h"
 
 class LalatestTest : public QObject
 {
@@ -26,7 +28,8 @@ private Q_SLOTS:
     void timeTest();
     void systemInteractor();
     void config();
-    void m3uInOut();
+    //void m3uInOut();
+    void autoPlaylistObject();
 };
 
 LalatestTest::LalatestTest()
@@ -83,15 +86,15 @@ void LalatestTest::timeTest()
     tc.setSeconds(3600);
     QVERIFY(tc.toString() == testString);
     // one day
-    testString = "1:00:00:00";
+    testString = "1 day, 00:00:00";
     tc.setSeconds(24 * 3600);
     QVERIFY(tc.toString() == testString);
     // one day, one minute and 23 seconds
-    testString = "1:00:01:23";
+    testString = "1 day, 00:01:23";
     tc.setSeconds(24 * 3600 + 60 + 23);
     QVERIFY(tc.toString() == testString);
     // 12 days, 22 hours, thirtyone minutes and 23 seconds
-    testString = "12:22:31:23";
+    testString = "12 days, 22:31:23";
     tc.setSeconds(12 * 24 * 3600 + 22 * 3600 + 31 * 60 + 23);
     QVERIFY(tc.toString() == testString);
 }
@@ -136,29 +139,48 @@ void LalatestTest::config()
     QVERIFY(cfg3.volume() == oldvol);
 }
 
-void LalatestTest::m3uInOut()
+//void LalatestTest::m3uInOut()
+//{
+//    M3uInOut m3;
+//    QString laladir(Config::PLAYLISTDIR);
+//    QString name("testlist456723");
+//    QStringList testlist(QStringList() << "lala.mp3"
+//                         << "gugu.mp3" << "dada.mp3"
+//                         << "pupu.mp3");
+//    QStringList returnList;
+
+//    for (int i = 0; i < testlist.length(); ++i) {
+//        returnList << "file://" + testlist[i];
+//    }
+
+//    QVERIFY(m3.m3uPath(name) == QString(laladir + "/" + name + ".m3u"));
+//    m3.writePlaylist(name, testlist);
+//    QVERIFY(m3.getPlaylistNames().contains(name));
+//    QVERIFY(m3.readPlaylist(name) == returnList);
+//    m3.deletePlaylist(name);
+//    QVERIFY(!m3.getPlaylistNames().contains(name));
+//    // A nonexisting playlistname will return an empty list.
+//    QVERIFY(m3.readPlaylist("strangeunlikelyplaylistnamethatdoesntexist")
+//            == QStringList());
+//}
+
+void LalatestTest::autoPlaylistObject()
 {
-    M3uInOut m3;
-    QString laladir(Config::PLAYLISTDIR);
-    QString name("testlist456723");
-    QStringList testlist(QStringList() << "lala.mp3"
-                         << "gugu.mp3" << "dada.mp3"
-                         << "pupu.mp3");
-    QStringList returnList;
+    LalaTypes::Tag tag = LalaTypes::GENRE;
+    LalaTypes::Operator op = LalaTypes::CONTAINS;
+    QString val = "House";
+    AutoPlaylistObject apo(tag, op, val);
+    Q_ASSERT(apo.tag() == tag);
+    Q_ASSERT(apo.op() == op);
+    Q_ASSERT(apo.val() == val);
 
-    for (int i = 0; i < testlist.length(); ++i) {
-        returnList << "file://" + testlist[i];
-    }
+    QJsonObject obj = apo.toJson();
 
-    QVERIFY(m3.m3uPath(name) == QString(laladir + "/" + name + ".m3u"));
-    m3.writePlaylist(name, testlist);
-    QVERIFY(m3.getPlaylistNames().contains(name));
-    QVERIFY(m3.readPlaylist(name) == returnList);
-    m3.deletePlaylist(name);
-    QVERIFY(!m3.getPlaylistNames().contains(name));
-    // A nonexisting playlistname will return an empty list.
-    QVERIFY(m3.readPlaylist("strangeunlikelyplaylistnamethatdoesntexist")
-            == QStringList());
+    AutoPlaylistObject apo2(obj);
+    Q_ASSERT(apo.tag() == apo2.tag());
+    Q_ASSERT(apo.op() == apo2.op());
+    Q_ASSERT(apo.val() == apo2.val());
+
 }
 
 QTEST_MAIN(LalatestTest)
