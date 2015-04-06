@@ -295,7 +295,7 @@ void MusicLib::rescan()
 QString MusicLib::escapeString(QString str)
 {
     //return str.replace("\'", "\'\'").replace(",", "\'+\',\'+\'");
-    return str.replace("\'", "\'\'");//.replace(",", "\\,");
+    return str.replace("\'", "\'\'");
 }
 
 QStringList MusicLib::getList(const QString &what) const
