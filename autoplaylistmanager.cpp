@@ -37,7 +37,7 @@ QJsonArray AutoPlaylistManager::getAutoPlaylist(const QString name) const
 }
 
 void AutoPlaylistManager::saveAutoPlaylist(const QString &name,
-        const QJsonArray &args) const
+        const QJsonArray &args)
 {
     QList<AutoPlaylistObject> list;
 
@@ -46,6 +46,14 @@ void AutoPlaylistManager::saveAutoPlaylist(const QString &name,
     }
 
     saveAutoPlaylist(name, list);
+    emit autoPlaylistNamesChanged();
+}
+
+void AutoPlaylistManager::deleteAutoPlaylist(const QString &name)
+{
+    Q_ASSERT(QStringList(getAutoPlaylistNames()).contains(name));
+    QFile::remove(getPath(name));
+    emit autoPlaylistNamesChanged();
 }
 
 void AutoPlaylistManager::saveAutoPlaylist(const QString &name,

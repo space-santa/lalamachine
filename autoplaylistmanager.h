@@ -11,6 +11,10 @@
 class AutoPlaylistManager : public QObject
 {
     Q_OBJECT
+
+    Q_PROPERTY(QStringList autoPlaylistNames
+               READ getAutoPlaylistNames
+               NOTIFY autoPlaylistNamesChanged)
 public:
     explicit AutoPlaylistManager(QObject *parent = 0);
     ~AutoPlaylistManager();
@@ -18,9 +22,11 @@ public:
     QStringList getAutoPlaylistNames();
 
     QJsonArray getAutoPlaylist(const QString name) const;
-    void saveAutoPlaylist(const QString &name, const QJsonArray &args) const;
+    void saveAutoPlaylist(const QString &name, const QJsonArray &args);
+    void deleteAutoPlaylist(const QString &name);
 
 signals:
+    void autoPlaylistNamesChanged();
 
 public slots:
 private:
