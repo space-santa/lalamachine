@@ -333,21 +333,7 @@ QString MusicLib::getSortQueryString() const
 {
     QString query("SELECT * FROM musiclib");
 
-    int count = 0;
-
-    if (genreFilter() != "") {
-        ++count;
-    }
-
-    if (artistFilter() != "") {
-        ++count;
-    }
-
-    if (albumFilter() != "") {
-        ++count;
-    }
-
-    if (count > 0) {
+    if (genreFilter() != "" || artistFilter() != "" || albumFilter() != "") {
         query.append(" WHERE ");
     }
 
@@ -358,7 +344,7 @@ QString MusicLib::getSortQueryString() const
     }
 
     if (artistFilter() != "") {
-        if (count > 1) {
+        if (genreFilter() != "") {
             query.append(" AND ");
         }
 
@@ -368,7 +354,7 @@ QString MusicLib::getSortQueryString() const
     }
 
     if (albumFilter() != "") {
-        if (count > 1) {
+        if (genreFilter() != "" || artistFilter() != "") {
             query.append(" AND ");
         }
 
