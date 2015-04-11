@@ -104,7 +104,7 @@ ApplicationWindow {
             }
             MenuItem {
                 text: "Burn CD"
-                iconSource: "file:///usr/share/icons/default.kde4/64x64/apps/k3b.png"
+                iconSource: "qrc:/images/images/burn.png"
                 onTriggered: burnList()
             }
         }
