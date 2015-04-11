@@ -29,8 +29,9 @@ import "qrc:/functions.js" as Functions
 ApplicationWindow {
     id: master
     visible: true
-    width: Screen.width
-    height: Screen.height
+    visibility: "Maximized"
+    width: Screen.width / 2
+    height: Screen.height / 2
     title: getWindowTitle()
 
     property string miscPlaylistName: "cs1m090"
