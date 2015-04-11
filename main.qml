@@ -109,6 +109,35 @@ ApplicationWindow {
             }
         }
         Menu {
+            title: "Automatic Playlists"
+
+            PlaylistMenu {
+                title: "Open"
+                iconSource: "qrc:/images/images/open.png"
+                playlistnames: auto_playlist_manager.autoPlaylistNames
+
+            }
+
+            PlaylistMenu {
+                title: "Edit"
+                iconSource: "qrc:/images/images/edit.png"
+                playlistnames: auto_playlist_manager.autoPlaylistNames
+
+            }
+            MenuItem {
+                text: "Create"
+                iconSource: "qrc:/images/images/new.png"
+                onTriggered: apd.visible = true
+            }
+            PlaylistMenu {
+                title: "Delete"
+                iconSource: "qrc:/images/images/delete.png"
+                playlistnames: auto_playlist_manager.autoPlaylistNames
+
+            }
+        }
+
+        Menu {
             title: "Info"
 
             MenuItem {
