@@ -158,6 +158,17 @@ ApplicationWindow {
         }
     }
 
+    AutoPlaylistManager {
+        id: auto_playlist_manager
+    }
+
+    AutoPlaylistDialog {
+        id: apd
+        visible: false
+
+        onAccepted: visible = false
+    }
+
     InfoDialog {
         id: infos
         visible: false
