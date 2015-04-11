@@ -17,6 +17,8 @@
         <file>PlaylistMenu.qml</file>
         <file>InfoDialog.qml</file>
         <file>KeyValueText.qml</file>
+        <file>AutoPlaylistObject.qml</file>
+        <file>AutoPlaylistDialog.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/eject.png</file>
