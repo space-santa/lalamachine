@@ -92,7 +92,7 @@ ApplicationWindow {
             MenuItem {
                 text: "save as"
                 iconSource: "qrc:/images/images/save.png"
-                onTriggered:playlist.showSaveDialog()
+                onTriggered: playlist.showSaveDialog()
             }
 
             MenuSeparator {
@@ -117,14 +117,12 @@ ApplicationWindow {
                 title: "Open"
                 iconSource: "qrc:/images/images/open.png"
                 playlistnames: auto_playlist_manager.autoPlaylistNames
-
             }
 
             PlaylistMenu {
                 title: "Edit"
                 iconSource: "qrc:/images/images/edit.png"
                 playlistnames: auto_playlist_manager.autoPlaylistNames
-
             }
             MenuItem {
                 text: "Create"
@@ -135,7 +133,6 @@ ApplicationWindow {
                 title: "Delete"
                 iconSource: "qrc:/images/images/delete.png"
                 playlistnames: auto_playlist_manager.autoPlaylistNames
-
             }
         }
 
