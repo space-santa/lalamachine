@@ -26,7 +26,7 @@ Dialog {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 width: 50
-                source: "qrc:/images/images/tab_new.png"
+                source: "qrc:/images/images/list-add.png"
 
                 onClicked: {
                     apo2.visible = true
@@ -55,7 +55,7 @@ Dialog {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 width: 50
-                source: "qrc:/images/images/tab_new.png"
+                source: "qrc:/images/images/list-add.png"
 
                 onClicked: {
                     apo3.visible = true
@@ -69,7 +69,7 @@ Dialog {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 width: 50
-                source: "qrc:/images/images/tab_remove.png"
+                source: "qrc:/images/images/list-remove.png"
 
                 onClicked: {
                     buttons1.visible = true
@@ -98,7 +98,7 @@ Dialog {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 width: 50
-                source: "qrc:/images/images/tab_remove.png"
+                source: "qrc:/images/images/list-remove.png"
 
                 onClicked: {
                     apo3.visible = false
