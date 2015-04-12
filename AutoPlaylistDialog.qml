@@ -9,11 +9,48 @@ Dialog {
     height: 300
     standardButtons: StandardButton.Ok | StandardButton.Cancel
 
+    function setApo1(andor, where, how, value) {
+        apo1.andorText = andor
+        apo1.whereText = where
+        apo1.howText = how
+        apo1.valueText = value
+    }
+    function setApo2(andor, where, how, value) {
+        apo2.andorText = andor
+        apo2.whereText = where
+        apo2.howText = how
+        apo2.valueText = value
+    }
+    function setApo3(andor, where, how, value) {
+        apo3.andorText = andor
+        apo3.whereText = where
+        apo3.howText = how
+        apo3.valueText = value
+    }
+
+    function clearAll() {
+        apo1.init()
+        apo2.init()
+        apo3.init()
+    }
+
+    onRejected: {
+        clearAll()
+        close()
+    }
+
     ColumnLayout {
         anchors.fill: parent
         AutoPlaylistObject {
+            id: apo1
             width: parent.width
             height: 50
+
+            onVisibleChanged: {
+                if (!visible) {
+                    apo1.init()
+                }
+            }
         }
 
         Item {
@@ -42,6 +79,12 @@ Dialog {
             height: 50
 
             visible: false
+
+            onVisibleChanged: {
+                if (!visible) {
+                    apo2.init()
+                }
+            }
         }
 
         Item {
@@ -85,6 +128,12 @@ Dialog {
             height: 50
 
             visible: false
+
+            onVisibleChanged: {
+                if (!visible) {
+                    apo3.init()
+                }
+            }
         }
 
         Item {
