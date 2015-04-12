@@ -9,10 +9,30 @@ GridLayout {
     flow: GridLayout.TopToBottom
     rows: 2
 
+    property alias andorText: andorbox.currentText
+    property alias whereText: wherebox.currentText
+    property alias howText: howbox.currentText
+    property alias valueText: value_field.text
+
+    function init() {
+        andorbox.currentIndex = 0
+        wherebox.currentIndex = 0
+        howbox.currentIndex = 0
+        value_field.text = ""
+    }
+
+    function set(andor, where, how, value) {
+        andorbox.currentText = andor
+        wherebox.currentText = where
+        howbox.currentText = how
+        value_field.text = value
+    }
+
     Text {
         text: "How to apply?"
     }
     ComboBox {
+        id: andorbox
         model: ["and", "or"]
     }
 
@@ -20,6 +40,7 @@ GridLayout {
         text: "Where?"
     }
     ComboBox {
+        id: wherebox
         model: ["Genre", "Artist", "Album", "Comment", "Title"]
     }
 
@@ -27,6 +48,7 @@ GridLayout {
         text: "How?"
     }
     ComboBox {
+        id: howbox
         model: ["contains", "contains not", "is", "is not"]
     }
 
@@ -37,4 +59,3 @@ GridLayout {
         id: value_field
     }
 }
-
