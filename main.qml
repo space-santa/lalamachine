@@ -65,6 +65,7 @@ ApplicationWindow {
             title: "MusicLib"
             MenuItem {
                 text: "Rescan"
+                iconSource: "qrc:/images/images/refresh.png"
                 onTriggered: {
                     if (!libview.scanInProgress) {
                         libview.rescan()
@@ -75,6 +76,7 @@ ApplicationWindow {
             }
             MenuItem {
                 text: "Set library"
+                iconSource: "qrc:/images/images/preferences.png"
                 onTriggered: {
                     lib_dialog.visible = true
                 }
