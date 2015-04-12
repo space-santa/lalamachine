@@ -47,5 +47,9 @@
         <file>images/burn.png</file>
         <file>images/tab_new.png</file>
         <file>images/tab_remove.png</file>
+        <file>images/list-add.png</file>
+        <file>images/list-remove.png</file>
+        <file>images/refresh.png</file>
+        <file>images/preferences.png</file>
     </qresource>
 </RCC>
