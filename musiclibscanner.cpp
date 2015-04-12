@@ -111,9 +111,9 @@ void MusicLibScanner::addTrackToDB(QString album,
     QSqlError err = scanDb_->exec(query).lastError();
 
     if (err.type() > 0) {
-        qDebug() << "\n-----------\n"
-                 << err.text() << "\n"
-                 << mrl << "\n" << query << "\n----------\n";
+//        qDebug() << "\n-----------\n"
+//                 << err.text() << "\n"
+//                 << mrl << "\n" << query << "\n----------\n";
     }
 }
 
