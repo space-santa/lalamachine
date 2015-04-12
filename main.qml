@@ -127,7 +127,10 @@ ApplicationWindow {
             MenuItem {
                 text: "Create"
                 iconSource: "qrc:/images/images/new.png"
-                onTriggered: apd.visible = true
+                onTriggered: {
+                    apd.open()
+                    apd.clearAll()
+                }
             }
             PlaylistMenu {
                 title: "Delete"
