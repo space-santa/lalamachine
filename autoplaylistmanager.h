@@ -12,9 +12,11 @@ class AutoPlaylistManager : public QObject
 {
     Q_OBJECT
 
+    // clang-format off
     Q_PROPERTY(QStringList autoPlaylistNames
                READ getAutoPlaylistNames
                NOTIFY autoPlaylistNamesChanged)
+    // clang-format on
 public:
     explicit AutoPlaylistManager(QObject *parent = 0);
     ~AutoPlaylistManager();
@@ -36,4 +38,4 @@ private:
     QString getPath(const QString &name) const;
 };
 
-#endif // AUTOPLAYLISTMANAGER_H
+#endif  // AUTOPLAYLISTMANAGER_H

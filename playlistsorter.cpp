@@ -19,7 +19,7 @@ bool masterSort(QVariant i,
     QVariantMap vmap1 = i.value<QVariantMap>();
     QVariantMap vmap2 = j.value<QVariantMap>();
 
-    QString sortString {};
+    QString sortString{};
 
     if (what == PlaylistSorter::ARTIST) {
         sortString = "artist";
@@ -36,8 +36,7 @@ bool masterSort(QVariant i,
 
         if (how == PlaylistSorter::ASCENDING) {
             return si < sj;
-        }
-        else {
+        } else {
             return si > sj;
         }
     }
@@ -70,8 +69,7 @@ bool masterSort(QVariant i,
 
     if (how == PlaylistSorter::ASCENDING) {
         return si < sj;
-    }
-    else {
+    } else {
         return si > sj;
     }
 }
@@ -118,7 +116,10 @@ bool commentAscending(QVariant i, QVariant j)
 }
 bool commentDescending(QVariant i, QVariant j)
 {
-    return masterSort(i, j, PlaylistSorter::COMMENT, PlaylistSorter::DESCENDING);
+    return masterSort(i,
+                      j,
+                      PlaylistSorter::COMMENT,
+                      PlaylistSorter::DESCENDING);
 }
 
 bool lengthAscending(QVariant i, QVariant j)
@@ -147,8 +148,7 @@ QJsonArray PlaylistSorter::sort(QJsonArray list,
     if (what == PlaylistSorter::ARTIST) {
         if (how == PlaylistSorter::ASCENDING) {
             std::sort(varl.begin(), varl.end(), artistAscending);
-        }
-        else {
+        } else {
             std::sort(varl.begin(), varl.end(), artistDescending);
         }
     }
@@ -156,8 +156,7 @@ QJsonArray PlaylistSorter::sort(QJsonArray list,
     if (what == PlaylistSorter::TITLE) {
         if (how == PlaylistSorter::ASCENDING) {
             std::sort(varl.begin(), varl.end(), titleAscending);
-        }
-        else {
+        } else {
             std::sort(varl.begin(), varl.end(), titleDescending);
         }
     }
@@ -165,8 +164,7 @@ QJsonArray PlaylistSorter::sort(QJsonArray list,
     if (what == PlaylistSorter::TRACK) {
         if (how == PlaylistSorter::ASCENDING) {
             std::sort(varl.begin(), varl.end(), trackAscending);
-        }
-        else {
+        } else {
             std::sort(varl.begin(), varl.end(), trackDescending);
         }
     }
@@ -174,8 +172,7 @@ QJsonArray PlaylistSorter::sort(QJsonArray list,
     if (what == PlaylistSorter::GENRE) {
         if (how == PlaylistSorter::ASCENDING) {
             std::sort(varl.begin(), varl.end(), genreAscending);
-        }
-        else {
+        } else {
             std::sort(varl.begin(), varl.end(), genreDescending);
         }
     }
@@ -183,8 +180,7 @@ QJsonArray PlaylistSorter::sort(QJsonArray list,
     if (what == PlaylistSorter::COMMENT) {
         if (how == PlaylistSorter::ASCENDING) {
             std::sort(varl.begin(), varl.end(), commentAscending);
-        }
-        else {
+        } else {
             std::sort(varl.begin(), varl.end(), commentDescending);
         }
     }
@@ -192,12 +188,10 @@ QJsonArray PlaylistSorter::sort(QJsonArray list,
     if (what == PlaylistSorter::LENGTH) {
         if (how == PlaylistSorter::ASCENDING) {
             std::sort(varl.begin(), varl.end(), lengthAscending);
-        }
-        else {
+        } else {
             std::sort(varl.begin(), varl.end(), lengthDescending);
         }
     }
 
     return QJsonArray::fromVariantList(varl);
 }
-

@@ -31,8 +31,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #include "musiclibscanner.h"
 
-MusicLib::MusicLib(QQuickItem *parent)
-    : QQuickItem(parent)
+MusicLib::MusicLib(QQuickItem *parent) : QQuickItem(parent)
 {
     // This moveToThread is making the thread the parent of the scanner_.
     // Therefor it is vital that the scanner_ is a raw pointer, or double free
@@ -46,47 +45,57 @@ MusicLib::MusicLib(QQuickItem *parent)
     scanner_->setDb(&db_);
     scanner_->setMutex(mutex_);
 
-    connect(&scannerThread_, &QThread::finished,
-            scanner_, &QObject::deleteLater);
+    connect(&scannerThread_,
+            &QThread::finished,
+            scanner_,
+            &QObject::deleteLater);
 
-    connect(this, &MusicLib::startScan,
-            scanner_, &MusicLibScanner::scanLib);
+    connect(this, &MusicLib::startScan, scanner_, &MusicLibScanner::scanLib);
 
-    connect(scanner_, &MusicLibScanner::scanComplete,
-            this, &MusicLib::scanFinished);
+    connect(scanner_,
+            &MusicLibScanner::scanComplete,
+            this,
+            &MusicLib::scanFinished);
 
-    connect(scanner_, &MusicLibScanner::scanStarted,
-            this, &MusicLib::scanStarted);
+    connect(scanner_,
+            &MusicLibScanner::scanStarted,
+            this,
+            &MusicLib::scanStarted);
 
-    connect(this, &MusicLib::musicLibChanged,
-            this, &MusicLib::setDisplayLib);
+    connect(this, &MusicLib::musicLibChanged, this, &MusicLib::setDisplayLib);
 
-    connect(this, &MusicLib::genreFilterChanged,
-            this, &MusicLib::setDisplayLib);
+    connect(this,
+            &MusicLib::genreFilterChanged,
+            this,
+            &MusicLib::setDisplayLib);
 
-    connect(this, &MusicLib::artistFilterChanged,
-            this, &MusicLib::setDisplayLib);
+    connect(this,
+            &MusicLib::artistFilterChanged,
+            this,
+            &MusicLib::setDisplayLib);
 
-    connect(this, &MusicLib::albumFilterChanged,
-            this, &MusicLib::setDisplayLib);
+    connect(this,
+            &MusicLib::albumFilterChanged,
+            this,
+            &MusicLib::setDisplayLib);
 
-    connect(this, &MusicLib::musicLibChanged,
-            this, &MusicLib::setGenreList);
+    connect(this, &MusicLib::musicLibChanged, this, &MusicLib::setGenreList);
 
-    connect(this, &MusicLib::musicLibChanged,
-            this, &MusicLib::setArtistList);
+    connect(this, &MusicLib::musicLibChanged, this, &MusicLib::setArtistList);
 
-    connect(this, &MusicLib::musicLibChanged,
-            this, &MusicLib::setAlbumList);
+    connect(this, &MusicLib::musicLibChanged, this, &MusicLib::setAlbumList);
 
-    connect(this, &MusicLib::genreFilterChanged,
-            this, &MusicLib::setArtistList);
+    connect(this,
+            &MusicLib::genreFilterChanged,
+            this,
+            &MusicLib::setArtistList);
 
-    connect(this, &MusicLib::genreFilterChanged,
-            this, &MusicLib::setAlbumList);
+    connect(this, &MusicLib::genreFilterChanged, this, &MusicLib::setAlbumList);
 
-    connect(this, &MusicLib::artistFilterChanged,
-            this, &MusicLib::setAlbumList);
+    connect(this,
+            &MusicLib::artistFilterChanged,
+            this,
+            &MusicLib::setAlbumList);
 
     setGenreList();
 }
@@ -113,7 +122,7 @@ QMap<MusicLib::SortWhat, QString> MusicLib::initSortMap()
     return tmp;
 }
 
-const QString MusicLib::ALL_FILTER {QString("--all--")};
+const QString MusicLib::ALL_FILTER{QString("--all--")};
 
 bool MusicLib::scanning() const
 {
@@ -198,8 +207,7 @@ void MusicLib::setGenreFilter(const QString &val)
 {
     if (val == ALL_FILTER) {
         genreFilter_ = "";
-    }
-    else {
+    } else {
         genreFilter_ = val;
     }
 
@@ -216,8 +224,7 @@ void MusicLib::setArtistFilter(const QString &val)
 {
     if (val == ALL_FILTER) {
         artistFilter_ = "";
-    }
-    else {
+    } else {
         artistFilter_ = val;
     }
 
@@ -234,8 +241,7 @@ void MusicLib::setAlbumFilter(const QString &val)
 {
     if (val == ALL_FILTER) {
         albumFilter_ = "";
-    }
-    else {
+    } else {
         albumFilter_ = val;
     }
 
@@ -292,9 +298,34 @@ void MusicLib::rescan()
     emit startScan(libPath());
 }
 
+QJsonArray MusicLib::autoPlaylist(const QList<AutoPlaylistObject> &args)
+{
+    // SELECT * FROM musiclib WHERE Tag Op Val
+    QString query("SELECT * FROM musiclib WHERE ");
+
+    int count = 0;
+
+    for (auto itr = args.begin(); itr != args.end(); ++itr) {
+        if (count > 0) {
+            query.append(LalaTypes::ANDOR_MAP.value((*itr).andor()));
+            query.append(" ");
+        }
+
+        query.append(LalaTypes::TAG_MAP.value((*itr).tag()));
+        query.append(" ");
+        query.append(LalaTypes::OP_MAP.value((*itr).op()));
+        query.append(" '");
+        query.append(escapeString((*itr).val()));
+    }
+
+    qDebug() << query;
+
+    return QJsonArray();
+}
+
 QString MusicLib::escapeString(QString str)
 {
-    //return str.replace("\'", "\'\'").replace(",", "\'+\',\'+\'");
+    // return str.replace("\'", "\'\'").replace(",", "\'+\',\'+\'");
     return str.replace("\'", "\'\'");
 }
 
@@ -307,14 +338,11 @@ QStringList MusicLib::getList(const QString &what) const
 
     if (what == "genre") {
         result = db_.exec(getGenreListQuery());
-    }
-    else if (what == "artist") {
+    } else if (what == "artist") {
         result = db_.exec(getArtistListQuery());
-    }
-    else if (what == "album") {
+    } else if (what == "album") {
         result = db_.exec(getAlbumListQuery());
-    }
-    else {
+    } else {
         qFatal("No valid filter!");
     }
 
@@ -369,11 +397,11 @@ QString MusicLib::getSortQueryString() const
 
     if (sortAsc()) {
         query.append("ASC");
-    }
-    else {
+    } else {
         query.append("DESC");
     }
 
+    qDebug() << "ZZZ" << query;
     return query;
 }
 
@@ -443,7 +471,7 @@ void MusicLib::ensureAllTables()
     if (!tables.contains("musiclib")) {
         QString qs("CREATE TABLE `musiclib` ");
         qs.append("(\n");
-        //qs.append("`ID` INTEGER NOT NULL AUTOINCREMENT,\n");
+        // qs.append("`ID` INTEGER NOT NULL AUTOINCREMENT,\n");
         qs.append("`album` TEXT,\n");
         qs.append("`artist` TEXT,\n");
         qs.append("`comment` TEXT,\n");

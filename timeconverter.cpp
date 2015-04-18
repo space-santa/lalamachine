@@ -21,12 +21,12 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QString>
 
-TimeConverter::TimeConverter(QQuickItem *parent) :
-    QQuickItem(parent)
+TimeConverter::TimeConverter(QQuickItem *parent) : QQuickItem(parent)
 {
 }
 
-void TimeConverter::setSeconds(int sec) {
+void TimeConverter::setSeconds(int sec)
+{
     totalSec_ = sec;
     // Integer division to get the days.
     days_ = sec / dayInSec;
@@ -48,6 +48,16 @@ void TimeConverter::setSeconds(int sec) {
     Q_ASSERT(hours_ >= 0);
     emit secondsChanged();
     emit timestringChanged();
+}
+
+int TimeConverter::seconds()
+{
+    return totalSec_;
+}
+
+QString TimeConverter::timestring()
+{
+    return toString();
 }
 
 QString TimeConverter::toString()

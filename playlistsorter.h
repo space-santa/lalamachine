@@ -9,35 +9,24 @@ class PlaylistSorter : public QQuickItem
 {
     Q_OBJECT
 public:
-    enum SortWhat {
-        TRACK,
-        TITLE,
-        COMMENT,
-        LENGTH,
-        GENRE,
-        ARTIST
-    };
+    enum SortWhat { TRACK, TITLE, COMMENT, LENGTH, GENRE, ARTIST };
     Q_ENUMS(SortWhat)
 
-    enum SortHow {
-        ASCENDING,
-        DESCENDING
-    };
+    enum SortHow { ASCENDING, DESCENDING };
     Q_ENUMS(SortHow)
 
     PlaylistSorter();
     ~PlaylistSorter();
 
-    Q_INVOKABLE QJsonArray sort(QJsonArray list,
-                                 SortWhat what,
-                                 SortHow how) const;
+    Q_INVOKABLE QJsonArray
+    sort(QJsonArray list, SortWhat what, SortHow how) const;
 
 signals:
 
 public slots:
 
 private:
-    //bool titleAscending(QJsonValue i, QJsonValue j);
+    // bool titleAscending(QJsonValue i, QJsonValue j);
 };
 
-#endif // PLAYLISTSORTER_H
+#endif  // PLAYLISTSORTER_H

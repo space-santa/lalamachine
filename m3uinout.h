@@ -27,22 +27,26 @@ class M3uInOut : public QQuickItem
 {
     Q_OBJECT
 
+    // clang-format off
     Q_PROPERTY(QStringList playlistNames
                READ playlistNames
                WRITE setPlaylistNames
                NOTIFY playlistNamesChanged)
+    // clang-format on
 
 public:
     explicit M3uInOut(QQuickItem *parent = 0);
 
-    Q_INVOKABLE void writePlaylist(const QString &name, QStringList files) const;
+    Q_INVOKABLE void writePlaylist(const QString &name,
+                                   QStringList files) const;
     Q_INVOKABLE QStringList readPlaylist(const QString &name) const;
     QStringList getPlaylistNames() const;
     Q_INVOKABLE QString m3uPath(const QString &name) const;
     Q_INVOKABLE void deletePlaylist(const QString &name) const;
-    Q_INVOKABLE void addToPlaylist(QString trackpath, const QString &list) const;
+    Q_INVOKABLE void addToPlaylist(QString trackpath,
+                                   const QString &list) const;
 
-    void setPlaylistNames(const QStringList & list);
+    void setPlaylistNames(const QStringList &list);
     QStringList playlistNames() const;
 
 signals:
@@ -52,8 +56,8 @@ private slots:
     void handleDirChange();
 
 private:
-    QStringList playlistNames_ {};
-    QFileSystemWatcher watcher_ {};
+    QStringList playlistNames_{};
+    QFileSystemWatcher watcher_{};
 };
 
-#endif // M3UINOUT_H
+#endif  // M3UINOUT_H

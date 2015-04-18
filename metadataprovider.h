@@ -36,7 +36,6 @@ public:
 signals:
 
 public slots:
-
 };
 
-#endif // METADATAPROVIDER_H
+#endif  // METADATAPROVIDER_H

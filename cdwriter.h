@@ -41,9 +41,9 @@ signals:
 public slots:
 
 private:
-    SystemInteractor *sys_ {new SystemInteractor(this)};
+    SystemInteractor *sys_{new SystemInteractor(this)};
 
     QStringList parseM3u(const QString &m3uPath) const;
 };
 
-#endif // CDWRITER_H
+#endif  // CDWRITER_H

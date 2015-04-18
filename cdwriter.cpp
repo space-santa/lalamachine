@@ -28,12 +28,10 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 CdWriter::CdWriter()
 {
-
 }
 
 CdWriter::~CdWriter()
 {
-
 }
 
 bool CdWriter::hasK3b() const
@@ -62,16 +60,13 @@ QStringList CdWriter::parseM3u(const QString &m3uPath) const
 {
     QStringList retVal;
     QFile inputFile(m3uPath);
-    if (inputFile.open(QIODevice::ReadOnly))
-    {
-       QTextStream in(&inputFile);
-       while (!in.atEnd())
-       {
-          retVal << in.readLine();
-       }
-       inputFile.close();
+    if (inputFile.open(QIODevice::ReadOnly)) {
+        QTextStream in(&inputFile);
+        while (!in.atEnd()) {
+            retVal << in.readLine();
+        }
+        inputFile.close();
     }
 
     return retVal;
 }
-

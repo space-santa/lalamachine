@@ -9,12 +9,11 @@ AutoPlaylistObject::AutoPlaylistObject(const QJsonObject &obj)
     fromJson(obj);
 }
 
-AutoPlaylistObject::AutoPlaylistObject(LalaTypes::AndOr andor, LalaTypes::Tag tag,
-                                       LalaTypes::Operator op, QString val) :
-    andor_(andor),
-    tag_(tag),
-    op_(op),
-    val_(val)
+AutoPlaylistObject::AutoPlaylistObject(LalaTypes::AndOr andor,
+                                       LalaTypes::Tag tag,
+                                       LalaTypes::Operator op,
+                                       QString val)
+    : andor_(andor), tag_(tag), op_(op), val_(val)
 {
 }
 
@@ -56,6 +55,3 @@ void AutoPlaylistObject::fromJson(const QJsonObject &obj)
     op_ = LalaTypes::OP_MAP.key(obj.value("operator").toString());
     val_ = obj.value("value").toString();
 }
-
-
-

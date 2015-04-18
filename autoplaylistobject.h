@@ -8,7 +8,6 @@
 class AutoPlaylistObject
 {
 public:
-
     AutoPlaylistObject(const QJsonObject &obj);
     AutoPlaylistObject(LalaTypes::AndOr andor,
                        LalaTypes::Tag tag,
@@ -24,10 +23,10 @@ public:
     void fromJson(const QJsonObject &obj);
 
 private:
-    LalaTypes::AndOr andor_ {};
-    LalaTypes::Tag tag_ {};
-    LalaTypes::Operator op_ {};
-    QString val_ {};
+    LalaTypes::AndOr andor_{};
+    LalaTypes::Tag tag_{};
+    LalaTypes::Operator op_{};
+    QString val_{};
 };
 
-#endif // AUTOPLAYLISTOBJECT_H
+#endif  // AUTOPLAYLISTOBJECT_H

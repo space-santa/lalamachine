@@ -56,7 +56,7 @@ void SystemInteractor::parseOutput()
     }
 
     process_->setReadChannel(QProcess::StandardOutput);
-    QString msgOut {""};
+    QString msgOut{""};
 
     while (process_->canReadLine()) {
         msgOut.append(QString(process_->readLine()).simplified());
@@ -65,4 +65,3 @@ void SystemInteractor::parseOutput()
     qDebug() << "SystemInteractor::parseOutput()" << msgOut;
     returnValue_ = msgOut;
 }
-

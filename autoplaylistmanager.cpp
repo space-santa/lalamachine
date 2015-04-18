@@ -5,12 +5,10 @@
 
 AutoPlaylistManager::AutoPlaylistManager(QObject *parent) : QObject(parent)
 {
-
 }
 
 AutoPlaylistManager::~AutoPlaylistManager()
 {
-
 }
 
 QStringList AutoPlaylistManager::getAutoPlaylistNames()
@@ -37,7 +35,7 @@ QJsonArray AutoPlaylistManager::getAutoPlaylist(const QString name) const
 }
 
 void AutoPlaylistManager::saveAutoPlaylist(const QString &name,
-        const QJsonArray &args)
+                                           const QJsonArray &args)
 {
     QList<AutoPlaylistObject> list;
 
@@ -56,12 +54,12 @@ void AutoPlaylistManager::deleteAutoPlaylist(const QString &name)
     emit autoPlaylistNamesChanged();
 }
 
-void AutoPlaylistManager::saveAutoPlaylist(const QString &name,
-        const QList<AutoPlaylistObject> &args) const
+void AutoPlaylistManager::saveAutoPlaylist(
+    const QString &name, const QList<AutoPlaylistObject> &args) const
 {
     QJsonArray jarr;
 
-    for (auto itr = args.begin(); itr != args.end(); ++ itr) {
+    for (auto itr = args.begin(); itr != args.end(); ++itr) {
         jarr.append((*itr).toJson());
     }
 
@@ -73,7 +71,6 @@ void AutoPlaylistManager::saveAutoPlaylist(const QString &name,
 
 QString AutoPlaylistManager::getPath(const QString &name) const
 {
-    return Config::AUTOPLAYLISTDIR + "/" + name + "." +
-           LalaTypes::AUTOPLAYLISTSUFFIX;
+    return Config::AUTOPLAYLISTDIR + "/" + name + "."
+           + LalaTypes::AUTOPLAYLISTSUFFIX;
 }
-

@@ -34,13 +34,9 @@ public:
     TimeConverter(QQuickItem *parent = 0);
 
     void setSeconds(int sec);
-    int seconds() {
-        return totalSec_;
-    }
+    int seconds();
 
-    QString timestring() {
-        return toString();
-    }
+    QString timestring();
 
     QString toString();
 
@@ -64,4 +60,4 @@ private:
     int days_{0};
 };
 
-#endif // TIMECONVERTER_H
+#endif  // TIMECONVERTER_H

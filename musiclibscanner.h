@@ -43,4 +43,4 @@ private:
                       QString year);
 };
 
-#endif // MUSICLIBSCANNER_H
+#endif  // MUSICLIBSCANNER_H

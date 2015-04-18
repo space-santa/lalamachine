@@ -24,16 +24,17 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config.h"
 
-M3uInOut::M3uInOut(QQuickItem *parent) :
-    QQuickItem(parent)
+M3uInOut::M3uInOut(QQuickItem *parent) : QQuickItem(parent)
 {
     setPlaylistNames(getPlaylistNames());
     QDir dir(Config::PLAYLISTDIR);
     dir.mkpath(Config::PLAYLISTDIR);
 
     watcher_.addPath(Config::PLAYLISTDIR);
-    connect(&watcher_, &QFileSystemWatcher::directoryChanged,
-            this, &M3uInOut::handleDirChange);
+    connect(&watcher_,
+            &QFileSystemWatcher::directoryChanged,
+            this,
+            &M3uInOut::handleDirChange);
 }
 
 // This requires explanation.

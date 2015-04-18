@@ -29,11 +29,13 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSqlDatabase>
 
 #include "musiclibscanner.h"
+#include "autoplaylistobject.h"
 
 class MusicLib : public QQuickItem
 {
     Q_OBJECT
 
+    // clang-format off
     Q_PROPERTY(bool scanning
                READ scanning
                WRITE setScanning
@@ -81,16 +83,10 @@ class MusicLib : public QQuickItem
 
     Q_PROPERTY(bool sortAsc READ sortAsc WRITE setSortAsc NOTIFY sortAscChanged)
     Q_PROPERTY(SortWhat what READ what WRITE setWhat NOTIFY whatChanged)
+    // clang-format on
 
 public:
-    enum SortWhat {
-        TRACK,
-        TITLE,
-        COMMENT,
-        LENGTH,
-        GENRE,
-        ARTIST
-    };
+    enum SortWhat { TRACK, TITLE, COMMENT, LENGTH, GENRE, ARTIST };
     Q_ENUMS(SortWhat)
 
     MusicLib(QQuickItem *parent = 0);
@@ -130,6 +126,8 @@ public:
 
     Q_INVOKABLE void rescan();
 
+    Q_INVOKABLE QJsonArray autoPlaylist(const QList<AutoPlaylistObject> &args);
+
     static QString escapeString(QString str);
 
 public slots:
@@ -161,23 +159,23 @@ private:
     // QThread becomes the parent. When the parent dies so does the child.
     // If this is then not a raw pointer a double free happens, because
     // the thread and this is trying to destroy the scanner.
-    MusicLibScanner *scanner_ {new MusicLibScanner()};
-    QThread scannerThread_ {};
+    MusicLibScanner *scanner_{new MusicLibScanner()};
+    QThread scannerThread_{};
 
-    QSharedPointer<QMutex> mutex_ {new QMutex()};
+    QSharedPointer<QMutex> mutex_{new QMutex()};
     QSqlDatabase db_;
-    bool sortAsc_ {true};
-    bool scanning_ {false};
-    SortWhat what_ {SortWhat::ARTIST};
-    QJsonArray displayLib_ {};
-    int totalLength_ {0};
-    QString genreFilter_ {""};
-    QString artistFilter_ {""};
-    QString albumFilter_ {""};
-    QString libPath_ {""};
-    QStringList genreList_ {};
-    QStringList artistList_ {};
-    QStringList albumList_ {};
+    bool sortAsc_{true};
+    bool scanning_{false};
+    SortWhat what_{SortWhat::ARTIST};
+    QJsonArray displayLib_{};
+    int totalLength_{0};
+    QString genreFilter_{""};
+    QString artistFilter_{""};
+    QString albumFilter_{""};
+    QString libPath_{""};
+    QStringList genreList_{};
+    QStringList artistList_{};
+    QStringList albumList_{};
 
     bool checkVal(const QString &check, const QString &val) const;
 
@@ -201,4 +199,4 @@ private slots:
     void scanStarted();
 };
 
-#endif // MUSICLIB_H
+#endif  // MUSICLIB_H

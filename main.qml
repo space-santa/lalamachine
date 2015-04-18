@@ -168,7 +168,10 @@ ApplicationWindow {
         id: apd
         visible: false
 
-        onAccepted: visible = false
+        onAccepted: {
+            console.log(collectValues())
+            apd.close()
+        }
     }
 
     InfoDialog {

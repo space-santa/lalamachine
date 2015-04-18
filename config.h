@@ -27,6 +27,7 @@ class Config : public QQuickItem
 {
     Q_OBJECT
 
+    // clang-format off
     Q_PROPERTY(double volume READ volume WRITE setVolume NOTIFY volumeChanged)
 
     Q_PROPERTY(QString libPath
@@ -38,6 +39,7 @@ class Config : public QQuickItem
                READ lastPlaylist
                WRITE setLastPlaylist
                NOTIFY lastPlaylistChanged)
+    // clang-format on
 
 public:
     explicit Config(QQuickItem *parent = 0);
@@ -72,7 +74,6 @@ public slots:
 
 private:
     QJsonObject config_;
-
 };
 
-#endif // CONFIG_H
+#endif  // CONFIG_H

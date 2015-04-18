@@ -9,6 +9,40 @@ Dialog {
     height: 300
     standardButtons: StandardButton.Ok | StandardButton.Cancel
 
+    property var values
+
+    function collectValues() {
+        var retval = {
+            name: name_field.text,
+            apo1: {
+                andor: apo1.andorText,
+                where: apo1.whereText,
+                how: apo1.howText,
+                value: apo1.valueText
+            }
+        }
+
+        if (apo2.visible) {
+            retval.apo2 = {
+                andor: apo2.andorText,
+                where: apo2.whereText,
+                how: apo2.howText,
+                value: apo2.valueText
+            }
+        }
+
+        if (apo3.visible) {
+            retval.apo3 = {
+                andor: apo3.andorText,
+                where: apo3.whereText,
+                how: apo3.howText,
+                value: apo3.valueText
+            }
+        }
+
+        return retval
+    }
+
     function setApo1(andor, where, how, value) {
         apo1.andorText = andor
         apo1.whereText = where
@@ -41,6 +75,20 @@ Dialog {
 
     ColumnLayout {
         anchors.fill: parent
+
+        Layout.fillWidth: true
+
+        Layout.maximumWidth: width
+
+        TextField {
+            id: name_field
+
+            width: parent.width
+            height: 50
+
+            placeholderText: "playlist name"
+        }
+
         AutoPlaylistObject {
             id: apo1
             width: parent.width

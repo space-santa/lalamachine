@@ -4,12 +4,10 @@
 
 LalaTypes::LalaTypes(QObject *parent) : QObject(parent)
 {
-
 }
 
 LalaTypes::~LalaTypes()
 {
-
 }
 
 const QMap<LalaTypes::Tag, QString> LalaTypes::TAG_MAP = initTagMap();

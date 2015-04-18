@@ -29,15 +29,15 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStandardPaths>
 #include <QDir>
 
-const QString Config::LALADIR = QStandardPaths::writableLocation(
-                                    QStandardPaths::GenericConfigLocation) + "/lalamachine";
+const QString Config::LALADIR
+    = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation)
+      + "/lalamachine";
 const QString Config::CONFIGPATH = Config::LALADIR + "/config.json";
 const QString Config::AUTOPLAYLISTDIR = Config::LALADIR + "/autoplaylists";
 const QString Config::PLAYLISTDIR = Config::LALADIR + "/playlists";
 const QString Config::MUSICLIBDB = Config::LALADIR + "/musiclib.sq3";
 
-Config::Config(QQuickItem *parent) :
-    QQuickItem(parent)
+Config::Config(QQuickItem *parent) : QQuickItem(parent)
 {
     QDir dir(Config::LALADIR);
     dir.mkpath(Config::LALADIR);
@@ -67,8 +67,7 @@ double Config::volume()
 
     if (v.isDouble()) {
         retval = v.toDouble();
-    }
-    else {
+    } else {
         qWarning("No proper volume defined in config.json");
     }
 
@@ -99,8 +98,7 @@ QString Config::libPath() const
             retval = "";
             qCritical() << "libPath doesn't exist!";
         }
-    }
-    else {
+    } else {
         qWarning("No proper libPath defined in config.json");
     }
 
@@ -116,7 +114,7 @@ void Config::setLastPlaylist(const QString &name)
 QString Config::lastPlaylist() const
 {
     QString retval("");
-    QJsonValue v =  config_.value("lastPlaylist");
+    QJsonValue v = config_.value("lastPlaylist");
 
     if (v.isString()) {
         retval = v.toString();
@@ -143,8 +141,7 @@ QJsonObject Config::loadJsonFile(const QString &path)
     if (!d.isObject() || d.isEmpty() || d.isNull()) {
         qWarning("Invalid config file.");
         return QJsonObject();
-    }
-    else {
+    } else {
         return d.object();
     }
 }

@@ -24,4 +24,4 @@ signals:
 public slots:
 };
 
-#endif // SYSINFO_H
+#endif  // SYSINFO_H

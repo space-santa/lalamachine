@@ -11,33 +11,39 @@ SysInfo::SysInfo(QObject *parent) : QObject(parent)
 
 SysInfo::~SysInfo()
 {
-
 }
 
-QString SysInfo::appVersion() {
+QString SysInfo::appVersion()
+{
     return QCoreApplication::applicationVersion();
 }
 
-QString SysInfo::appName() {
+QString SysInfo::appName()
+{
     return QCoreApplication::applicationName();
 }
 
-QString SysInfo::currentCpu() {
+QString SysInfo::currentCpu()
+{
     return QSysInfo::currentCpuArchitecture();
 }
 
-QString SysInfo::kernelType() {
+QString SysInfo::kernelType()
+{
     return QSysInfo::kernelType();
 }
 
-QString SysInfo::kernelVersion() {
+QString SysInfo::kernelVersion()
+{
     return QSysInfo::kernelVersion();
 }
 
-QString SysInfo::prettyProductName() {
+QString SysInfo::prettyProductName()
+{
     return QSysInfo::prettyProductName();
 }
 
-QString SysInfo::lalaDir() {
+QString SysInfo::lalaDir()
+{
     return Config::LALADIR;
 }

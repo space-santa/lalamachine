@@ -9,9 +9,7 @@
 #include "metadataprovider.h"
 #include "musiclib.h"
 
-
-MusicLibScanner::MusicLibScanner(QObject *parent) :
-    QObject(parent)
+MusicLibScanner::MusicLibScanner(QObject *parent) : QObject(parent)
 {
 }
 
@@ -38,8 +36,7 @@ void MusicLibScanner::scanLib(const QString &path)
 
     if (!rootDir.exists()) {
         qDebug() << "Dir not found.";
-    }
-    else {
+    } else {
         QDirIterator it(rootDir, QDirIterator::Subdirectories);
 
         while (it.hasNext()) {
@@ -75,7 +72,6 @@ void MusicLibScanner::setMutex(const QSharedPointer<QMutex> &mutex)
     mutex_ = mutex;
 }
 
-
 void MusicLibScanner::addTrackToDB(QString album,
                                    QString artist,
                                    QString comment,
@@ -93,27 +89,27 @@ void MusicLibScanner::addTrackToDB(QString album,
     query.append("(`album`, `artist`, `comment`, `genre`, `length`, ");
     query.append("`lengthString`, `mrl`, `path`, `title`, `track`, `year`) ");
     query.append("VALUES (");
-    query.append(QString("'%1', '%2', '%3', ").arg(
-                     MusicLib::escapeString(album),
-                     MusicLib::escapeString(artist),
-                     MusicLib::escapeString(comment)));
-    query.append(QString("'%1', %2, '%3', '%4', '%5', '%6', %7, %8)").arg(
-                     MusicLib::escapeString(genre),
-                     length,
-                     lengthString,
-                     MusicLib::escapeString(mrl),
-                     MusicLib::escapeString(path),
-                     MusicLib::escapeString(title),
-                     track,
-                     year));
+    query.append(QString("'%1', '%2', '%3', ")
+                     .arg(MusicLib::escapeString(album),
+                          MusicLib::escapeString(artist),
+                          MusicLib::escapeString(comment)));
+    query.append(QString("'%1', %2, '%3', '%4', '%5', '%6', %7, %8)")
+                     .arg(MusicLib::escapeString(genre),
+                          length,
+                          lengthString,
+                          MusicLib::escapeString(mrl),
+                          MusicLib::escapeString(path),
+                          MusicLib::escapeString(title),
+                          track,
+                          year));
 
     QMutexLocker locker(mutex_.data());
     QSqlError err = scanDb_->exec(query).lastError();
 
     if (err.type() > 0) {
-//        qDebug() << "\n-----------\n"
-//                 << err.text() << "\n"
-//                 << mrl << "\n" << query << "\n----------\n";
+        //        qDebug() << "\n-----------\n"
+        //                 << err.text() << "\n"
+        //                 << mrl << "\n" << query << "\n----------\n";
     }
 }
 
