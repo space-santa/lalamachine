@@ -64,6 +64,7 @@ public:
 
     static QJsonObject loadJsonFile(const QString &path);
     static void saveJsonFile(const QString &path, const QJsonObject &obj);
+    static void ensureDir(const QString &path);
 
 signals:
     void volumeChanged();

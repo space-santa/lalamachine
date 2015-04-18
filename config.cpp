@@ -152,6 +152,8 @@ void Config::saveJsonFile(const QString &path, const QJsonObject &obj)
     QFile saveFile(path);
     qDebug() << "Config::setData";
 
+    ensureDir(path);
+
     if (!saveFile.open(QIODevice::WriteOnly)) {
         qWarning("Couldn't open config file.");
         return;
@@ -163,4 +165,14 @@ void Config::saveJsonFile(const QString &path, const QJsonObject &obj)
     QTextStream out(&saveFile);
     out << QString::fromUtf8(d.toJson());
     qDebug() << "Config::dataSet";
+}
+
+void Config::ensureDir(const QString &path)
+{
+    QFileInfo fi(path);
+    QDir dir(fi.absoluteDir());
+
+    if (!dir.exists()) {
+        dir.mkpath(fi.absolutePath());
+    }
 }
