@@ -297,6 +297,8 @@ QJsonArray MusicLib::autoPlaylist(const QJsonArray &json)
         query.append(" '");
         query.append(escapeString((*itr).val()));
         query.append("'");
+
+        ++count;
     }
 
     qDebug() << query;
