@@ -293,10 +293,18 @@ QJsonArray MusicLib::autoPlaylist(const QJsonArray &json)
 
         query.append(LalaTypes::TAG_MAP.value((*itr).tag()));
         query.append(" ");
+
+        QString tmp("");
+
+        if ((*itr).op() == LalaTypes::CONTAINS
+            || (*itr).op() == LalaTypes::CONTAINS_NOT) {
+            tmp = " '%%1%'";
+        } else {
+            tmp = " '%1'";
+        }
+
         query.append(LalaTypes::OP_MAP.value((*itr).op()));
-        query.append(" '");
-        query.append(escapeString((*itr).val()));
-        query.append("'");
+        query.append(tmp.arg(escapeString((*itr).val())));
 
         ++count;
     }
