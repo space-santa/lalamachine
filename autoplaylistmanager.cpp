@@ -5,26 +5,43 @@
 
 AutoPlaylistManager::AutoPlaylistManager(QObject *parent) : QObject(parent)
 {
+    setAutoPlaylistNames(getPlaylistNames());
+    Config::ensureDir(getPath("dummy"));
+
+    watcher_.addPath(Config::AUTOPLAYLISTDIR);
+    connect(&watcher_,
+            &QFileSystemWatcher::directoryChanged,
+            this,
+            &AutoPlaylistManager::handleDirChange);
 }
 
 AutoPlaylistManager::~AutoPlaylistManager()
 {
 }
 
-QStringList AutoPlaylistManager::getAutoPlaylistNames()
+// This requires explanation.
+// Originally I had the playlistNames property just READ getPlaylistNames()
+// without a write method. I emitted playlistNamesChanged in writePlaylist()
+// and deletePlaylist. The signal emission in deletePlaylist would reliably
+// segfault. I then added WRITE setPlaylistNames to the property and only
+// emitted the signal there. Same endresult, writePlaylist fine, deletePlaylist
+// segfault. So now I listen to directory changes and emit the signal then.
+// No more segfaults.
+void AutoPlaylistManager::handleDirChange()
 {
-    QDir d(Config::AUTOPLAYLISTDIR);
-    QStringList filters;
-    filters << QString("*.") + LalaTypes::AUTOPLAYLISTSUFFIX;
-    d.setNameFilters(filters);
-    QStringList names;
-    QFileInfoList entries = d.entryInfoList();
+    setAutoPlaylistNames(getPlaylistNames());
+    watcher_.addPath(Config::AUTOPLAYLISTDIR);
+}
 
-    for (int i = 0; i < entries.length(); ++i) {
-        names.append(entries[i].baseName());
-    }
+QStringList AutoPlaylistManager::autoPlaylistNames()
+{
+    return autoPlaylistNames_;
+}
 
-    return names;
+void AutoPlaylistManager::setAutoPlaylistNames(const QStringList &names)
+{
+    autoPlaylistNames_ = names;
+    emit autoPlaylistNamesChanged();
 }
 
 QJsonArray AutoPlaylistManager::getAutoPlaylist(const QString name) const
@@ -44,14 +61,12 @@ void AutoPlaylistManager::saveAutoPlaylist(const QString &name,
     }
 
     saveAutoPlaylist(name, list);
-    emit autoPlaylistNamesChanged();
 }
 
 void AutoPlaylistManager::deleteAutoPlaylist(const QString &name)
 {
-    Q_ASSERT(QStringList(getAutoPlaylistNames()).contains(name));
+    Q_ASSERT(QStringList(autoPlaylistNames()).contains(name));
     QFile::remove(getPath(name));
-    emit autoPlaylistNamesChanged();
 }
 
 void AutoPlaylistManager::saveAutoPlaylist(
@@ -72,5 +87,21 @@ void AutoPlaylistManager::saveAutoPlaylist(
 QString AutoPlaylistManager::getPath(const QString &name) const
 {
     return Config::AUTOPLAYLISTDIR + "/" + name + "."
-           + LalaTypes::AUTOPLAYLISTSUFFIX;
+            + LalaTypes::AUTOPLAYLISTSUFFIX;
+}
+
+QStringList AutoPlaylistManager::getPlaylistNames() const
+{
+    QDir d(Config::AUTOPLAYLISTDIR);
+    QStringList filters;
+    filters << QString("*.") + LalaTypes::AUTOPLAYLISTSUFFIX;
+    d.setNameFilters(filters);
+    QStringList names;
+    QFileInfoList entries = d.entryInfoList();
+
+    for (int i = 0; i < entries.length(); ++i) {
+        names.append(entries[i].baseName());
+    }
+
+    return names;
 }
