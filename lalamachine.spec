@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.12.0
+Version: 0.13.0
 Release: 1
 License: GPL-3.0+
 Summary: A music player that is awesome
@@ -28,14 +28,14 @@ BuildRequires: libqt5-qtbase-devel >= 5.4.1, libqt5-qtmultimedia-devel >= 5.4.1 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %description
-Lalamachine is sort of a rhythmbox clone.
+Lalamachine is a music player.
 
 %prep
 %setup -q
 
 %build
-qmake-qt5 "target.path=%{buildroot}/opt/rmean/bin" \
-      "icon.path=%{buildroot}/opt/rmean/icons" \
+qmake-qt5 "target.path=%{buildroot}/usr/local/bin" \
+      "icon.path=%{buildroot}/usr/share/icons/hicolor/64x64/apps" \
       "desktop.path=%{buildroot}/usr/share/applications" \
       lalamachine.pro
 make %{?_smp_mflags}
@@ -43,25 +43,13 @@ make %{?_smp_mflags}
 %install
 make install
 
-%post
-rm -f /usr/local/bin/lalamachine
-ln -s /opt/rmean/bin/lalamachine /usr/local/bin/lalamachine
-
-%preun
-if [$1 -lt 1]; then
-    rm -f /usr/local/bin/lalamachine
-fi
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%dir /opt/rmean
-%dir /opt/rmean/bin
-%dir /opt/rmean/icons
-/opt/rmean/bin/lalamachine
-/opt/rmean/icons/lalamachine.png
+/usr/local/bin/lalamachine
+/usr/share/icons/hicolor/64x64/apps/lalamachine.png
 /usr/share/applications/lalamachine.desktop
 
 %changelog
@@ -72,7 +60,7 @@ rm -rf $RPM_BUILD_ROOT
 
 * Sat Apr 04 2015 r-mean
   0.11.0-1: Release 0.11.1
-  * Playlists now have a name will loaded.
+  * Playlists now have a name when loaded.
   * Changing a playlist will automatically save the changes.
   * The app remembers which playlist was loaded between sessions.
   * Playlists can now be named (save as) in the menu.

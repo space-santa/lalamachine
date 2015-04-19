@@ -1,7 +1,7 @@
 [Desktop Entry]
 Comment=
 Exec=lalamachine
-Icon=/opt/rmean/icons/lalamachine.png
+Icon=lalamachine.png
 Name=lalamachine
 GenericName=Audio Player
 NoDisplay=false
