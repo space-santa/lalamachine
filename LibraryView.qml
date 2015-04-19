@@ -27,6 +27,7 @@ Rectangle {
 
     property bool scanInProgress: lib.scanning
     property alias library: lib.libPath
+    property alias musicLib: lib
 
     signal addTrack(string path)
 
