@@ -171,7 +171,13 @@ ApplicationWindow {
         visible: false
 
         onAccepted: {
-            console.log(collectValues())
+            if (!canQuit()) {
+                return
+            }
+
+            var name = apd.apName
+            var values = collectValues()
+            auto_playlist_manager.saveAutoPlaylist(name, values)
             apd.close()
         }
     }
