@@ -6,7 +6,7 @@ import QtQuick.Controls 1.2
 Dialog {
     id: container
     width: 600
-    height: 300
+    height: 400
     standardButtons: StandardButton.Ok | StandardButton.Cancel
 
     property var values
@@ -65,6 +65,8 @@ Dialog {
         apo1.init()
         apo2.init()
         apo3.init()
+        apo2.visible = false
+        apo3.visible = false
     }
 
     function canQuit() {
@@ -76,26 +78,32 @@ Dialog {
         close()
     }
 
-    ColumnLayout {
+    Rectangle {
         anchors.fill: parent
-
-        Layout.fillWidth: true
-
-        Layout.maximumWidth: width
+        color: "transparent"
 
         TextField {
             id: name_field
 
-            width: parent.width
-            height: 50
+            anchors.top: parent.top
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.margins: 5
+
+            width: parent.width / 2
+            height: 35
 
             placeholderText: "playlist name"
         }
 
         AutoPlaylistObject {
             id: apo1
+
+            anchors.top: name_field.bottom
+            anchors.left: parent.left
+            anchors.margins: 5
+
             width: parent.width
-            height: 50
+            height: 75
 
             onVisibleChanged: {
                 if (!visible) {
@@ -106,7 +114,12 @@ Dialog {
 
         Item {
             id: buttons1
-            height: 50
+
+            anchors.top: apo1.bottom
+            anchors.left: parent.left
+            anchors.margins: 5
+
+            height: apo2.visible ? 0 : 50
             width: parent.width
             ImageButton {
                 id: add_button1
@@ -126,8 +139,13 @@ Dialog {
 
         AutoPlaylistObject {
             id: apo2
+
+            anchors.top: buttons1.bottom
+            anchors.left: parent.left
+            anchors.margins: 5
+
             width: parent.width
-            height: 50
+            height: 75
 
             visible: false
 
@@ -140,7 +158,12 @@ Dialog {
 
         Item {
             id: buttons2
-            height: 50
+
+            anchors.top: apo2.bottom
+            anchors.left: parent.left
+            anchors.margins: 5
+
+            height: apo3.visible ? 0 : 50
             width: parent.width
             visible: false
             ImageButton {
@@ -175,8 +198,13 @@ Dialog {
 
         AutoPlaylistObject {
             id: apo3
+
+            anchors.top: buttons2.bottom
+            anchors.left: parent.left
+            anchors.margins: 5
+
             width: parent.width
-            height: 50
+            height: 75
 
             visible: false
 
@@ -189,6 +217,11 @@ Dialog {
 
         Item {
             id: buttons3
+
+            anchors.top: apo3.bottom
+            anchors.left: parent.left
+            anchors.margins: 5
+
             height: 50
             width: parent.width
             visible: false
