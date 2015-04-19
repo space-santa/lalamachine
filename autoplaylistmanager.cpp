@@ -69,6 +69,17 @@ void AutoPlaylistManager::deleteAutoPlaylist(const QString &name)
     QFile::remove(getPath(name));
 }
 
+QList<AutoPlaylistObject> AutoPlaylistManager::jsonToApo(const QJsonArray &args)
+{
+    QList<AutoPlaylistObject> list;
+
+    for (int i = 0; i < args.count(); ++i) {
+        list.append(AutoPlaylistObject(args[i].toObject()));
+    }
+
+    return list;
+}
+
 void AutoPlaylistManager::saveAutoPlaylist(
     const QString &name, const QList<AutoPlaylistObject> &args) const
 {
