@@ -117,6 +117,14 @@ ApplicationWindow {
                 title: "Open"
                 iconSource: "qrc:/images/images/open.png"
                 playlistnames: auto_playlist_manager.autoPlaylistNames
+
+                onSelected: {
+                    playlist.clearList()
+                    playlist.currentName = ""
+                    playlist.addLib(libview.musicLib.autoPlaylist(
+                                        auto_playlist_manager.getAutoPlaylist(
+                                            listname)))
+                }
             }
 
             PlaylistMenu {
