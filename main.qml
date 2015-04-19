@@ -136,6 +136,8 @@ ApplicationWindow {
                 title: "Delete"
                 iconSource: "qrc:/images/images/delete.png"
                 playlistnames: auto_playlist_manager.autoPlaylistNames
+
+                onSelected: auto_playlist_manager.deleteAutoPlaylist(listname)
             }
         }
 
