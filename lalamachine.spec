@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.13.0
+Version: 0.13.1
 Release: 1
 License: GPL-3.0+
 Summary: A music player that is awesome
@@ -34,7 +34,7 @@ Lalamachine is a music player.
 %setup -q
 
 %build
-qmake-qt5 "target.path=%{buildroot}/usr/local/bin" \
+qmake-qt5 "target.path=%{buildroot}/usr/bin" \
       "icon.path=%{buildroot}/usr/share/icons/hicolor/64x64/apps" \
       "desktop.path=%{buildroot}/usr/share/applications" \
       lalamachine.pro
@@ -48,7 +48,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-/usr/local/bin/lalamachine
+/usr/bin/lalamachine
 /usr/share/icons/hicolor/64x64/apps/lalamachine.png
 /usr/share/applications/lalamachine.desktop
 
