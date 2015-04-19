@@ -293,6 +293,7 @@ QJsonArray MusicLib::autoPlaylist(const QJsonArray &json)
 
         query.append(LalaTypes::TAG_MAP.value((*itr).tag()));
         query.append(" ");
+        query.append(LalaTypes::OP_MAP.value((*itr).op()));
 
         QString tmp("");
 
@@ -303,7 +304,6 @@ QJsonArray MusicLib::autoPlaylist(const QJsonArray &json)
             tmp = " '%1'";
         }
 
-        query.append(LalaTypes::OP_MAP.value((*itr).op()));
         query.append(tmp.arg(escapeString((*itr).val())));
 
         ++count;
