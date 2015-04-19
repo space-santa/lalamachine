@@ -10,32 +10,31 @@ Dialog {
     standardButtons: StandardButton.Ok | StandardButton.Cancel
 
     property var values
+    property alias apName: name_field.text
 
     function collectValues() {
-        var retval = {
-            name: name_field.text,
-            apo1: {
-                andor: apo1.andorText,
-                where: apo1.whereText,
-                how: apo1.howText,
-                value: apo1.valueText
-            }
+        var retval = []
+        retval[0] = {
+            andor: apo1.andorText,
+            tag: apo1.whereText,
+            operator: apo1.howText,
+            value: apo1.valueText
         }
 
         if (apo2.visible) {
-            retval.apo2 = {
+            retval[1] = {
                 andor: apo2.andorText,
-                where: apo2.whereText,
-                how: apo2.howText,
+                tag: apo2.whereText,
+                operator: apo2.howText,
                 value: apo2.valueText
             }
         }
 
         if (apo3.visible) {
-            retval.apo3 = {
+            retval[2] = {
                 andor: apo3.andorText,
-                where: apo3.whereText,
-                how: apo3.howText,
+                tag: apo3.whereText,
+                operator: apo3.howText,
                 value: apo3.valueText
             }
         }
