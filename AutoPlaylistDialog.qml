@@ -67,6 +67,10 @@ Dialog {
         apo3.init()
     }
 
+    function canQuit() {
+        return (name_field.text !== "" && apo1.valueText !== "")
+    }
+
     onRejected: {
         clearAll()
         close()
