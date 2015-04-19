@@ -50,8 +50,8 @@ QJsonObject AutoPlaylistObject::toJson() const
 
 void AutoPlaylistObject::fromJson(const QJsonObject &obj)
 {
-    andor_ = LalaTypes::ANDOR_MAP.key(obj.value("andor").toString());
-    tag_ = LalaTypes::TAG_MAP.key(obj.value("tag").toString());
-    op_ = LalaTypes::OP_MAP.key(obj.value("operator").toString());
+    andor_ = LalaTypes::ANDOR_MAP.key(obj.value("andor").toString().toUpper());
+    tag_ = LalaTypes::TAG_MAP.key(obj.value("tag").toString().toLower());
+    op_ = LalaTypes::OP_MAP.key(obj.value("operator").toString().toUpper());
     val_ = obj.value("value").toString();
 }
