@@ -26,10 +26,12 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QUrl>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QPair>
 
 #include "metadataprovider.h"
 #include "config.h"
 #include "musiclibscanner.h"
+#include "autoplaylistmanager.h"
 
 MusicLib::MusicLib(QQuickItem *parent) : QQuickItem(parent)
 {
@@ -152,37 +154,14 @@ void MusicLib::debugSignal()
 
 void MusicLib::setDisplayLib()
 {
-    QJsonArray retVal;
-
     QMutexLocker locker(mutex_.data());
     QSqlQuery result = db_.exec(getSortQueryString());
 
-    int totalLength = 0;
+    auto tmp = queryToJson(result);
 
-    while (result.next()) {
-        QJsonObject tmp;
-
-        int len = result.value("length").toInt();
-        totalLength += len;
-
-        tmp.insert("album", result.value("album").toString());
-        tmp.insert("artist", result.value("artist").toString());
-        tmp.insert("genre", result.value("genre").toString());
-        tmp.insert("comment", result.value("comment").toString());
-        tmp.insert("track", result.value("track").toInt());
-        tmp.insert("title", result.value("title").toString());
-        tmp.insert("mrl", result.value("mrl").toString());
-        tmp.insert("path", result.value("path").toString());
-        tmp.insert("length", len);
-        tmp.insert("lengthString", result.value("lengthString").toString());
-        tmp.insert("year", result.value("year").toInt());
-
-        retVal.append(tmp);
-    }
-
-    displayLib_ = retVal;
+    displayLib_ = tmp.second;
     emit displayLibChanged();
-    totalLength_ = totalLength;
+    totalLength_ = tmp.first;
     emit totalLengthChanged();
 }
 
@@ -492,6 +471,36 @@ void MusicLib::ensureAllTables()
         QMutexLocker locker(mutex_.data());
         qDebug() << db_.exec(qs).lastError();
     }
+}
+
+QPair<int, QJsonArray> MusicLib::queryToJson(QSqlQuery result) const
+{
+    QJsonArray retVal;
+
+    int totalLength = 0;
+
+    while (result.next()) {
+        QJsonObject tmp;
+
+        int len = result.value("length").toInt();
+        totalLength += len;
+
+        tmp.insert("album", result.value("album").toString());
+        tmp.insert("artist", result.value("artist").toString());
+        tmp.insert("genre", result.value("genre").toString());
+        tmp.insert("comment", result.value("comment").toString());
+        tmp.insert("track", result.value("track").toInt());
+        tmp.insert("title", result.value("title").toString());
+        tmp.insert("mrl", result.value("mrl").toString());
+        tmp.insert("path", result.value("path").toString());
+        tmp.insert("length", len);
+        tmp.insert("lengthString", result.value("lengthString").toString());
+        tmp.insert("year", result.value("year").toInt());
+
+        retVal.append(tmp);
+    }
+
+    return QPair<int, QJsonArray>(totalLength, retVal);
 }
 
 void MusicLib::setGenreList()

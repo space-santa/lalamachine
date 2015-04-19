@@ -188,6 +188,8 @@ private:
 
     void ensureAllTables();
 
+    QPair<int, QJsonArray> queryToJson(QSqlQuery result) const;
+
 private slots:
     void debugSignal();
 
