@@ -119,11 +119,7 @@ ApplicationWindow {
                 playlistnames: auto_playlist_manager.autoPlaylistNames
 
                 onSelected: {
-                    playlist.clearList()
-                    playlist.currentName = ""
-                    playlist.addLib(libview.musicLib.autoPlaylist(
-                                        auto_playlist_manager.getAutoPlaylist(
-                                            listname)))
+                    playlist.addAutoPlaylist(listname)
                 }
             }
 
@@ -187,6 +183,7 @@ ApplicationWindow {
             var values = collectValues()
             auto_playlist_manager.saveAutoPlaylist(name, values)
             apd.close()
+            playlist.addAutoPlaylist(name)
         }
     }
 
@@ -336,6 +333,14 @@ ApplicationWindow {
 
                 onPlay: {
                     playMusic.playTrack(path)
+                }
+
+                function addAutoPlaylist(listname) {
+                    playlist.clearList()
+                    playlist.currentName = ""
+                    playlist.addLib(libview.musicLib.autoPlaylist(
+                                        auto_playlist_manager.getAutoPlaylist(
+                                            listname)))
                 }
             }
 
