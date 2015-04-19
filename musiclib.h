@@ -126,7 +126,7 @@ public:
 
     Q_INVOKABLE void rescan();
 
-    Q_INVOKABLE QJsonArray autoPlaylist(const QList<AutoPlaylistObject> &args);
+    Q_INVOKABLE QJsonArray autoPlaylist(const QJsonArray &json);
 
     static QString escapeString(QString str);
 

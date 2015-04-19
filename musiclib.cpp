@@ -298,8 +298,9 @@ void MusicLib::rescan()
     emit startScan(libPath());
 }
 
-QJsonArray MusicLib::autoPlaylist(const QList<AutoPlaylistObject> &args)
+QJsonArray MusicLib::autoPlaylist(const QJsonArray &json)
 {
+    auto args = AutoPlaylistManager::jsonToApo(json);
     // SELECT * FROM musiclib WHERE Tag Op Val
     QString query("SELECT * FROM musiclib WHERE ");
 
@@ -316,11 +317,14 @@ QJsonArray MusicLib::autoPlaylist(const QList<AutoPlaylistObject> &args)
         query.append(LalaTypes::OP_MAP.value((*itr).op()));
         query.append(" '");
         query.append(escapeString((*itr).val()));
+        query.append("'");
     }
 
     qDebug() << query;
+    QMutexLocker locker(mutex_.data());
+    auto result = db_.exec(query);
 
-    return QJsonArray();
+    return queryToJson(result).second;
 }
 
 QString MusicLib::escapeString(QString str)
