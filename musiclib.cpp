@@ -287,6 +287,7 @@ QJsonArray MusicLib::autoPlaylist(const QJsonArray &json)
 
     for (auto itr = args.begin(); itr != args.end(); ++itr) {
         if (count > 0) {
+            query.append(" ");
             query.append(LalaTypes::ANDOR_MAP.value((*itr).andor()));
             query.append(" ");
         }
