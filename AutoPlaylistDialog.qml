@@ -43,22 +43,15 @@ Dialog {
     }
 
     function setApo1(andor, where, how, value) {
-        apo1.andorText = andor
-        apo1.whereText = where
-        apo1.howText = how
-        apo1.valueText = value
+        apo1.set(andor, where, how, value)
     }
     function setApo2(andor, where, how, value) {
-        apo2.andorText = andor
-        apo2.whereText = where
-        apo2.howText = how
-        apo2.valueText = value
+        apo2.set(andor, where, how, value)
+        apo2.visible = true
     }
     function setApo3(andor, where, how, value) {
-        apo3.andorText = andor
-        apo3.whereText = where
-        apo3.howText = how
-        apo3.valueText = value
+        apo3.set(andor, where, how, value)
+        apo3.visible = true
     }
 
     function clearAll() {
