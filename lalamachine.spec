@@ -54,6 +54,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Sun Apr 19 2015 r-mean
+  0.13.1-1: Release 0.13.1
+  * Using standard installation paths now.
+
+* Sun Apr 19 2015 r-mean
   0.12.0-1: Release 0.12.1
   * Automatic Playlists.
   * The total playtime is always calculated, also for the library.
