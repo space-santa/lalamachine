@@ -114,6 +114,9 @@ Dialog {
 
             height: apo2.visible ? 0 : 50
             width: parent.width
+
+            visible: apo2.visible ? false : true
+
             ImageButton {
                 id: add_button1
                 anchors.left: parent.left
@@ -124,8 +127,6 @@ Dialog {
 
                 onClicked: {
                     apo2.visible = true
-                    buttons2.visible = true
-                    buttons1.visible = false
                 }
             }
         }
@@ -158,7 +159,12 @@ Dialog {
 
             height: apo3.visible ? 0 : 50
             width: parent.width
-            visible: false
+            visible: setVisible()
+
+            function setVisible() {
+                return apo2.visible && !apo3.visible
+            }
+
             ImageButton {
                 id: add_button2
                 anchors.left: parent.left
@@ -169,8 +175,6 @@ Dialog {
 
                 onClicked: {
                     apo3.visible = true
-                    buttons3.visible = true
-                    buttons2.visible = false
                 }
             }
             ImageButton {
@@ -184,7 +188,6 @@ Dialog {
                 onClicked: {
                     buttons1.visible = true
                     apo2.visible = false
-                    buttons2.visible = false
                 }
             }
         }
@@ -217,7 +220,7 @@ Dialog {
 
             height: 50
             width: parent.width
-            visible: false
+            visible: apo3.visible ? true : false
             ImageButton {
                 id: del_button3
                 anchors.left: parent.left
@@ -228,8 +231,6 @@ Dialog {
 
                 onClicked: {
                     apo3.visible = false
-                    buttons3.visible = false
-                    buttons2.visible = true
                 }
             }
         }
