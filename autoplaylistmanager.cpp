@@ -63,6 +63,11 @@ void AutoPlaylistManager::saveAutoPlaylist(const QString &name,
     saveAutoPlaylist(name, list);
 }
 
+QJsonArray AutoPlaylistManager::loadAutoPlaylist(const QString &name) const
+{
+    return Config::loadJsonFile(getPath(name)).value(name).toArray();
+}
+
 void AutoPlaylistManager::deleteAutoPlaylist(const QString &name)
 {
     Q_ASSERT(QStringList(autoPlaylistNames()).contains(name));

@@ -29,6 +29,7 @@ public:
     Q_INVOKABLE QJsonArray getAutoPlaylist(const QString name) const;
     Q_INVOKABLE void saveAutoPlaylist(const QString &name,
                                       const QJsonArray &args);
+    Q_INVOKABLE QJsonArray loadAutoPlaylist(const QString &name) const;
     Q_INVOKABLE void deleteAutoPlaylist(const QString &name);
 
     static QList<AutoPlaylistObject> jsonToApo(const QJsonArray &args);
