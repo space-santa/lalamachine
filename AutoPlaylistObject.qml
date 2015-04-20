@@ -24,6 +24,44 @@ Item {
         value_field.text = value
     }
 
+    function translate(what) {
+        if (what === "AND") {
+            return "and"
+        }
+        if (what === "OR") {
+            return "or"
+        }
+
+        if (what === "LIKE") {
+            return "contains"
+        }
+        if (what === "NOT LIKE") {
+            return "contains not"
+        }
+        if (what === "IS") {
+            return "is"
+        }
+        if (what === "IS NOT") {
+            return "is not"
+        }
+
+        if (what === "genre") {
+            return "Genre"
+        }
+        if (what === "artist") {
+            return "Artist"
+        }
+        if (what === "album") {
+            return "Album"
+        }
+        if (what === "comment") {
+            return "Comment"
+        }
+        if (what === "title") {
+            return "Title"
+        }
+    }
+
     Item {
         id: grid
         anchors.top: parent.top
