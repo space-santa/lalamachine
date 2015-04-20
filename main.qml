@@ -127,6 +127,27 @@ ApplicationWindow {
                 title: "Edit"
                 iconSource: "qrc:/images/images/edit.png"
                 playlistnames: auto_playlist_manager.autoPlaylistNames
+
+                onSelected: {
+                    apd.clearAll()
+                    var arr = auto_playlist_manager.loadAutoPlaylist(listname)
+
+                    apd.setApo1(arr[0].andor, arr[0].tag, arr[0].operator,
+                                arr[0].value)
+
+                    if (arr[1]) {
+                        apd.setApo2(arr[1].andor, arr[1].tag, arr[1].operator,
+                                    arr[1].value)
+                    }
+
+                    if (arr[2]) {
+                        apd.setApo3(arr[2].andor, arr[2].tag, arr[2].operator,
+                                    arr[2].value)
+                    }
+
+                    apd.apName = listname
+                    apd.open()
+                }
             }
             MenuItem {
                 text: "Create"
