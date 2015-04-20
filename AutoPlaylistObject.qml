@@ -18,9 +18,9 @@ Item {
     }
 
     function set(andor, where, how, value) {
-        andorbox.currentText = andor
-        wherebox.currentText = where
-        howbox.currentText = how
+        andorbox.currentIndex = andorbox.find(translate(andor))
+        wherebox.currentIndex = wherebox.find(translate(where))
+        howbox.currentIndex = howbox.find(translate(how))
         value_field.text = value
     }
 
