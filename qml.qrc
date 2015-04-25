@@ -19,6 +19,7 @@
         <file>KeyValueText.qml</file>
         <file>AutoPlaylistObject.qml</file>
         <file>AutoPlaylistDialog.qml</file>
+        <file>MultiStateButton.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/eject.png</file>
@@ -51,5 +52,6 @@
         <file>images/list-remove.png</file>
         <file>images/refresh.png</file>
         <file>images/preferences.png</file>
+        <file>images/repeat_random.png</file>
     </qresource>
 </RCC>
