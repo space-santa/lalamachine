@@ -293,8 +293,8 @@ ApplicationWindow {
         volume: volume_control.value
 
         onStopped: {
-            if (Functions.millisToSec(position) === Functions.millisToSec(
-                        duration)) {
+            if (Functions.millisToSec(position) > (Functions.millisToSec(
+                                                       duration) - 1)) {
                 playlist.playNext()
             }
         }
