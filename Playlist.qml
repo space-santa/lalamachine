@@ -38,6 +38,7 @@ Rectangle {
     property url nowPlayingSource
     property string nowPlayingTitle: ""
     property bool repeatAll: false
+    property bool random: false
     property alias totalPlaytimeString: tc.timestring
 
     property int sortwhat: MusicLib.ARTIST
@@ -251,8 +252,20 @@ Rectangle {
         return rowPlaying < playlist_model.count - 1
     }
 
+    function getRandomNext() {
+        var rand = rowPlaying
+        while (rand === rowPlaying) {
+            rand = Functions.randomInt(0, playlist_model.count - 1)
+        }
+        return rand
+    }
+
     function playNext() {
-        if (hasNext()) {
+        // Random has to be checked first because hasNext catches almost all.
+        if (random) {
+            console.log("playNext random")
+            playRow(getRandomNext())
+        } else if (hasNext()) {
             console.log("playNext has next")
             playRow(rowPlaying + 1)
         } else if (repeatAll) {
