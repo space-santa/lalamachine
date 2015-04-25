@@ -141,7 +141,6 @@ Rectangle {
     function updateNowPlayingRow() {
         for (var i = 0; i < playlist_model.count; ++i) {
             if (currentId == playlist_model.get(i).id) {
-                console.log("true")
                 rowPlaying = i
                 return
             }
@@ -173,7 +172,6 @@ Rectangle {
             } else {
                 m3u.addToPlaylist(playlist_model.get(rowIndex).path, listname)
             }
-            console.log(rowIndex)
         })
     }
 
@@ -258,7 +256,7 @@ Rectangle {
             console.log("playNext has next")
             playRow(rowPlaying + 1)
         } else if (repeatAll) {
-            console.log("playNext repeat")
+            console.log("playNext repeat all")
             playRow(0)
         } else {
             console.log("playlist finished")
