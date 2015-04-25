@@ -299,6 +299,8 @@ ApplicationWindow {
             }
         }
 
+        loops: now_playing_container.repeatOne ? MediaPlayer.Infinite : 1
+
         function playTrack(path) {
             // Since the addition of the library it is necessary to
             // make sure an mrl is actually an mrl.
