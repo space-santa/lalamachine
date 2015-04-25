@@ -346,7 +346,8 @@ ApplicationWindow {
                 anchors.top: parent.top
                 anchors.bottom: playlist_text.top
 
-                repeatAll: now_playing_container.repeat
+                repeatAll: now_playing_container.repeatAll
+                random: now_playing_container.random
 
                 nowPlayingSource: playMusic.source
 
