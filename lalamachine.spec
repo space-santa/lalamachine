@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
+%dir /usr/share/icons/
+%dir /usr/share/icons/hicolor/64x64/
+%dir /usr/share/icons/hicolor/64x64/apps/
 /usr/bin/lalamachine
 /usr/share/icons/hicolor/64x64/apps/lalamachine.png
 /usr/share/applications/lalamachine.desktop
