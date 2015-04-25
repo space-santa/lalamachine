@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.13.1
+Version: 0.13.2
 Release: 1
 License: GPL-3.0+
 Summary: A music player that is awesome
@@ -53,6 +53,12 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat Apr 25 2015 r-mean
+  0.13.2-1: Release 0.13.2
+  * One track can now be repeated.
+  * Random tracks can be played.
+  * Auto-playlists can be edited.
+
 * Sun Apr 19 2015 r-mean
   0.13.1-1: Release 0.13.1
   * Using standard installation paths now.
