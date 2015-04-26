@@ -109,6 +109,11 @@ ApplicationWindow {
                 iconSource: "qrc:/images/images/burn.png"
                 onTriggered: burnList()
             }
+            MenuItem {
+                text: "Export Files"
+                iconSource: "qrc:/images/images/export.png"
+                onTriggered: export_dialog.open()
+            }
         }
         Menu {
             title: "Automatic Playlists"
@@ -496,6 +501,23 @@ ApplicationWindow {
         }
         onRejected: {
             visible = false
+        }
+    }
+
+    FileDialog {
+        id: export_dialog
+        visible: false
+        title: "Please set target folder"
+        selectMultiple: false
+        selectExisting: false
+        selectFolder: true
+
+        onAccepted: {
+            playlist.exportPlaylist(export_dialog.folder)
+            close()
+        }
+        onRejected: {
+            close()
         }
     }
 }
