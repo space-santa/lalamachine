@@ -19,6 +19,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 import QtQuick 2.0
 import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.2
+import QtQuick.Window 2.2
 
 import Lala 1.0
 
@@ -66,6 +67,44 @@ Rectangle {
     TimeConverter {
         id: tc
         seconds: totalPlaytime()
+    }
+
+    FileExporter {
+        id: file_ex
+
+        onStarted: progress_window.show()
+        onFinished: progress_window.close()
+
+        onUpdateProgress: {
+            progress_bar.value = val
+        }
+    }
+
+    Window {
+        id: progress_window
+        width: 300
+        height: 100
+        title: "Exporting..."
+        visible: false
+
+        ProgressBar {
+            id: progress_bar
+            width: 250
+            height: 50
+            anchors.centerIn: parent
+            minimumValue: 0
+            maximumValue: 100
+
+            Text {
+                color: "white"
+                anchors.centerIn: parent
+                text: "Exporting..."
+                font.pointSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                style: Text.Outline
+            }
+        }
     }
 
     function playlistIsNamed() {
@@ -176,14 +215,22 @@ Rectangle {
         })
     }
 
-    function writePlaylist(name) {
+    function getPathList() {
         var list = []
 
         for (var i = 0; i < playlist_model.count; ++i) {
             list[i] = playlist_model.get(i)["path"]
         }
 
-        m3u.writePlaylist(name, list)
+        return list
+    }
+
+    function exportPlaylist(path) {
+        file_ex.exportPlaylist(path, getPathList())
+    }
+
+    function writePlaylist(name) {
+        m3u.writePlaylist(name, getPathList())
     }
 
     function readPlaylist(name) {
