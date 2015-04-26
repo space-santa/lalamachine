@@ -32,6 +32,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "sysinfo.h"
 #include "lalatypes.h"
 #include "autoplaylistmanager.h"
+#include "fileexporter.h"
 
 int main(int argc, char *argv[])
 {
@@ -51,6 +52,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<SysInfo>("Lala", 1, 0, "SysInfo");
     qmlRegisterType<LalaTypes>("Lala", 1, 0, "LalaTypes");
     qmlRegisterType<AutoPlaylistManager>("Lala", 1, 0, "AutoPlaylistManager");
+    qmlRegisterType<FileExporter>("Lala", 1, 0, "FileExporter");
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
