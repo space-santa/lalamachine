@@ -53,5 +53,6 @@
         <file>images/refresh.png</file>
         <file>images/preferences.png</file>
         <file>images/repeat_random.png</file>
+        <file>images/export.png</file>
     </qresource>
 </RCC>
