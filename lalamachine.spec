@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.13.2
+Version: 0.14.0
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,10 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sun Apr 26 2015 r-mean
+  0.14.0-1: Release 0.14
+  * Can export the files of a playlist to a folder..
+
 * Sat Apr 25 2015 r-mean
   0.13.2-1: Release 0.13.2
   * One track can now be repeated.
