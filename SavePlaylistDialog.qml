@@ -16,7 +16,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 import QtQuick 2.0
 import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.2
@@ -49,7 +48,9 @@ Dialog {
         TextField {
             id: name_field
             width: parent.width
-            validator: RegExpValidator { regExp: /^(?!cs1m090$).*/ }
+            validator: RegExpValidator {
+                regExp: /^(?!cs1m090$).*/
+            }
         }
     }
 }

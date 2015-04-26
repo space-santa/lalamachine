@@ -4,13 +4,13 @@
 
 lalamachine is a rhythmbox clone. I like rhythmbox a lot, but it is missing
 certain features. E.g. I store the key of a track in camelot notation in the comment and I want to sort playlists or libraries by key. On the other hand rhythmbox has so many
-features I never use. It is also the only Gnome application I use which adds dependencies to my system.  
+features I never use. It is also the only Gnome application I use which adds dependencies to my system.
 And since I enjoy software development I decided to write lalamachine.
 
 ## Dependencies
 
 lalamachine is a Qt5 application and uses QtMultimedia to play music.
-The only other (direct) dependency is taglib.  
+The only other (direct) dependency is taglib.
 Since QtMultimedia uses GStreamer as backend you probably want to install
 GStreamer codecs.
 
@@ -27,8 +27,7 @@ make
 sudo make install
 ```
 
-The software will be installed in /opt/rmean/bin for now.  
-This will change to /usr/bin eventually, at latest for version 1.0
+The software will be installed in /usr/bin.
 
 To remove lalamachine,
 
@@ -42,7 +41,7 @@ sudo make uninstall
 
 ## Package
 
-I build packages for openSUSE 13.2 and Tumbleweed with the openSUSE build service.  
+I build packages for openSUSE 13.2 and Tumbleweed with the openSUSE build service.
 The download repositories are here:
 
 * [openSUSE13.2](http://download.opensuse.org/repositories/home:/rmean/openSUSE_13.2/)
