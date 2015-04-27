@@ -395,6 +395,8 @@ QString MusicLib::getSortQueryString() const
         query.append("DESC");
     }
 
+    query.append(", artist, album, track");
+
     qDebug() << "ZZZ" << query;
     return query;
 }
