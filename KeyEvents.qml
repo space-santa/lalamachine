@@ -1,3 +1,4 @@
+
 /*
 Copyright 2015 Armin Zirkel
 
@@ -16,7 +17,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 import QtQuick 2.0
 
 Item {
@@ -30,9 +30,36 @@ Item {
     signal deleteTrack
     signal startPlaying
 
+    property bool keepFocus: true
+
+    onKeepFocusChanged: focus_timer.restart()
+
     // This is to always get the focus back. Otherwise e.g. the playlist View
     // will keep the focus.
-    onFocusChanged: focus = true
+    // This must change because I need to be able to type into the filter
+    // text input fields which requires focus.
+    // The textinputs will emit a signal to get focus.
+    // Once they are done focus gets back. How todetermine when they are done?
+    onFocusChanged: {
+        if (keepFocus) {
+            focus = true
+        }
+    }
+
+    Timer {
+        id: focus_timer
+        repeat: false
+        running: false
+        interval: 2000
+        onTriggered: {
+            keepFocus = true
+            focus = true
+        }
+    }
+
+    function restartTimer() {
+        focus_timer.restart()
+    }
 
     Keys.onUpPressed: {
         volumeUp()
