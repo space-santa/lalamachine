@@ -37,7 +37,7 @@ ApplicationWindow {
     property string miscPlaylistName: "cs1m090"
     property string currentPlaylist: playlist.currentName
     property Playlist mainPlaylist: playlist
-
+    property KeyEvents keyEvents: key_events
     property M3uInOut m3u: m3u
 
     property MediaPlayer lalaplayer: playMusic
