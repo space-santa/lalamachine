@@ -126,7 +126,7 @@ Rectangle {
             id: info
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.top: parent.top
+            anchors.top: filter_box.bottom
             height: 20
             color: "transparent"
 
@@ -143,6 +143,49 @@ Rectangle {
                 font.pointSize: 12
                 styleColor: "#000000"
                 style: Text.Outline
+            }
+        }
+
+        Item {
+            id: filter_box
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            height: 20
+
+            TextField {
+                id: filter_text
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.right: clear_button.left
+
+                placeholderText: "Filter..."
+
+                onTextChanged: key_events.restartTimer()
+
+                MouseArea {
+                    id: input_grabber
+                    anchors.fill: parent
+                    enabled: key_events.keepFocus
+
+                    onClicked: {
+                        key_events.keepFocus = false
+                        filter_text.forceActiveFocus()
+                    }
+                }
+            }
+
+            ImageButton {
+                id: clear_button
+                width: height
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+
+                source: "qrc:/images/images/edit-clear.png"
+
+                onClicked: filter_text.text = ""
             }
         }
     }
