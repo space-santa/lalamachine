@@ -45,6 +45,7 @@ Rectangle {
         genrePartialFilter: genreList.filterText
         artistPartialFilter: artistList.filterText
         albumPartialFilter: albumList.filterText
+        titlePartialFilter: filter_text.text
 
         what: titles.sortwhat
         sortAsc: titles.sortAsc
@@ -119,11 +120,56 @@ Rectangle {
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
-                anchors.bottom: titles_info.top
+                anchors.bottom: titles_filter_box.top
 
                 color: "transparent"
 
                 onPlay: lalaplayer.playTrack(path)
+            }
+
+            Item {
+                id: titles_filter_box
+                anchors.bottom: titles_info.top
+                anchors.left: titles.left
+                height: 20
+                width: 250
+
+                TextField {
+                    id: filter_text
+                    anchors.left: parent.left
+                    anchors.leftMargin: 5
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    anchors.right: clear_button.left
+
+                    placeholderText: "Filter..."
+
+                    onTextChanged: key_events.restartTimer()
+
+                    MouseArea {
+                        id: input_grabber
+                        anchors.fill: parent
+                        enabled: key_events.keepFocus
+
+                        onClicked: {
+                            key_events.keepFocus = false
+                            filter_text.forceActiveFocus()
+                        }
+                    }
+                }
+
+                ImageButton {
+                    id: clear_button
+                    width: height
+                    anchors.right: parent.right
+                    anchors.rightMargin: 5
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+
+                    source: "qrc:/images/images/edit-clear.png"
+
+                    onClicked: filter_text.text = ""
+                }
             }
 
             Rectangle {
