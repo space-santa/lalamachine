@@ -32,6 +32,8 @@ Rectangle {
 
     property string selection: getSelection()
 
+    property alias filterText: filter_text.text
+
     onStringListChanged: {
         list_model.clear()
 
