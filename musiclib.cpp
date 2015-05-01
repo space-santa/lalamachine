@@ -72,6 +72,46 @@ MusicLib::MusicLib(QQuickItem *parent) : QQuickItem(parent)
             &MusicLib::setDisplayLib);
 
     connect(this,
+            &MusicLib::genrePartialFilterChanged,
+            this,
+            &MusicLib::setDisplayLib);
+
+    connect(this,
+            &MusicLib::genrePartialFilterChanged,
+            this,
+            &MusicLib::setGenreList);
+
+    connect(this,
+            &MusicLib::genrePartialFilterChanged,
+            this,
+            &MusicLib::setArtistList);
+
+    connect(this,
+            &MusicLib::artistPartialFilterChanged,
+            this,
+            &MusicLib::setDisplayLib);
+
+    connect(this,
+            &MusicLib::artistPartialFilterChanged,
+            this,
+            &MusicLib::setArtistList);
+
+    connect(this,
+            &MusicLib::artistPartialFilterChanged,
+            this,
+            &MusicLib::setAlbumList);
+
+    connect(this,
+            &MusicLib::albumPartialFilterChanged,
+            this,
+            &MusicLib::setDisplayLib);
+
+    connect(this,
+            &MusicLib::albumPartialFilterChanged,
+            this,
+            &MusicLib::setAlbumList);
+
+    connect(this,
             &MusicLib::artistFilterChanged,
             this,
             &MusicLib::setDisplayLib);
@@ -351,6 +391,7 @@ QStringList MusicLib::getList(const QString &what) const
     return retval;
 }
 
+// FIXME: This must be adapted to the new partial filters.
 QString MusicLib::getSortQueryString() const
 {
     QString query("SELECT * FROM musiclib");
@@ -403,17 +444,57 @@ QString MusicLib::getSortQueryString() const
 
 QString MusicLib::getGenreListQuery() const
 {
-    return QString("SELECT DISTINCT genre FROM musiclib ORDER BY genre ASC");
+    QString query("SELECT DISTINCT genre FROM musiclib %1 ORDER BY genre ASC");
+
+    if (!genrePartialFilter().isEmpty()) {
+        query = query.arg("WHERE genre LIKE '%%1%'").arg(genrePartialFilter());
+    } else {
+        query = query.arg("");
+    }
+
+    return query;
 }
 
 QString MusicLib::getArtistListQuery() const
 {
-    QString query("SELECT DISTINCT artist FROM musiclib");
+    QString query("SELECT DISTINCT artist FROM musiclib %1 %2 %3 %4 %5 %6");
 
-    if (genreFilter() != "") {
-        query.append(" WHERE genre = '");
-        query.append(escapeString(genreFilter()));
-        query.append("' ");
+    if (!genreFilter().isEmpty() || !genrePartialFilter().isEmpty()
+        || !artistPartialFilter().isEmpty()) {
+        query = query.arg("WHERE");
+    } else {
+        query = query.arg("");
+    }
+
+    if (!genreFilter().isEmpty()) {
+        query = query.arg("genre = '%1'").arg(genreFilter());
+    } else {
+        query = query.arg("");
+    }
+
+    if (!genreFilter().isEmpty() && !genrePartialFilter().isEmpty()) {
+        query = query.arg("AND");
+    } else {
+        query = query.arg("");
+    }
+
+    if (!genrePartialFilter().isEmpty()) {
+        query = query.arg("genre LIKE '%%1%'").arg(genrePartialFilter());
+    } else {
+        query = query.arg("");
+    }
+
+    if ((!genreFilter().isEmpty() || !genrePartialFilter().isEmpty())
+        && (!artistPartialFilter().isEmpty())) {
+        query = query.arg("AND");
+    } else {
+        query = query.arg("");
+    }
+
+    if (!artistPartialFilter().isEmpty()) {
+        query = query.arg("artist LIKE '%%1%'").arg(artistPartialFilter());
+    } else {
+        query = query.arg("");
     }
 
     query.append(" ORDER BY artist ASC");
@@ -423,36 +504,73 @@ QString MusicLib::getArtistListQuery() const
 
 QString MusicLib::getAlbumListQuery() const
 {
-    QString query("SELECT DISTINCT album FROM musiclib");
+    QString query(
+        "SELECT DISTINCT album FROM musiclib %1 %2 %3 %4 %5 %6 %7 %8 %9 %10");
 
-    int count = 0;
-
-    if (genreFilter() != "") {
-        ++count;
+    if (!genreFilter().isEmpty() || !genrePartialFilter().isEmpty()
+        || !artistPartialFilter().isEmpty() || !artistFilter().isEmpty()
+        || !albumPartialFilter().isEmpty()) {
+        query = query.arg("WHERE");
+    } else {
+        query = query.arg("");
     }
 
-    if (artistFilter() != "") {
-        ++count;
+    if (!genreFilter().isEmpty()) {
+        query = query.arg("genre = '%1'").arg(genreFilter());
+    } else {
+        query = query.arg("");
     }
 
-    if (count > 0) {
-        query.append(" WHERE ");
+    if (!genreFilter().isEmpty() && !genrePartialFilter().isEmpty()) {
+        query = query.arg("AND");
+    } else {
+        query = query.arg("");
     }
 
-    if (genreFilter() != "") {
-        query.append("genre = '");
-        query.append(escapeString(genreFilter()));
-        query.append("' ");
+    if (!genrePartialFilter().isEmpty()) {
+        query = query.arg("genre LIKE '%%1%'").arg(genrePartialFilter());
+    } else {
+        query = query.arg("");
     }
 
-    if (artistFilter() != "") {
-        if (count > 1) {
-            query.append(" AND ");
-        }
+    if ((!genreFilter().isEmpty() || !genrePartialFilter().isEmpty())
+        && (!artistPartialFilter().isEmpty())) {
+        query = query.arg("AND");
+    } else {
+        query = query.arg("");
+    }
 
-        query.append("artist = '");
-        query.append(escapeString(artistFilter()));
-        query.append("' ");
+    if (!artistPartialFilter().isEmpty()) {
+        query = query.arg("artist LIKE '%%1%'").arg(artistPartialFilter());
+    } else {
+        query = query.arg("");
+    }
+
+    if ((!genreFilter().isEmpty() || !genrePartialFilter().isEmpty()
+         || !artistPartialFilter().isEmpty()) && (!artistFilter().isEmpty())) {
+        query = query.arg("AND");
+    } else {
+        query = query.arg("");
+    }
+
+    if (!artistFilter().isEmpty()) {
+        query = query.arg("artist = '%1'").arg(artistFilter());
+    } else {
+        query = query.arg("");
+    }
+
+    if ((!genreFilter().isEmpty() || !genrePartialFilter().isEmpty()
+         || !artistPartialFilter().isEmpty() || !artistFilter().isEmpty())
+        && (!albumPartialFilter().isEmpty())) {
+        query = query.arg("AND");
+    } else {
+        query = query.arg("");
+    }
+
+    if (!albumPartialFilter().isEmpty()) {
+        query = query.arg("album LIKE '%%1%'").arg(albumPartialFilter());
+    } else {
+        query = query.arg("");
     }
 
     query.append(" ORDER BY album ASC");
@@ -549,6 +667,36 @@ void MusicLib::scanFinished()
 {
     emit musicLibChanged();
     setScanning(false);
+}
+
+QString MusicLib::albumPartialFilter() const
+{
+    return albumPartialFilter_;
+}
+void MusicLib::setAlbumPartialFilter(const QString &albumPartialFilter)
+{
+    albumPartialFilter_ = albumPartialFilter;
+    emit albumPartialFilterChanged();
+}
+
+QString MusicLib::artistPartialFilter() const
+{
+    return artistPartialFilter_;
+}
+void MusicLib::setArtistPartialFilter(const QString &artistPartialFilter)
+{
+    artistPartialFilter_ = artistPartialFilter;
+    emit artistPartialFilterChanged();
+}
+
+QString MusicLib::genrePartialFilter() const
+{
+    return genrePartialFilter_;
+}
+void MusicLib::setGenrePartialFilter(const QString &genrePartialFilter)
+{
+    genrePartialFilter_ = genrePartialFilter;
+    emit genrePartialFilterChanged();
 }
 
 bool MusicLib::checkVal(const QString &check, const QString &val) const

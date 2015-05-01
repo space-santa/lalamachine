@@ -83,6 +83,21 @@ class MusicLib : public QQuickItem
 
     Q_PROPERTY(bool sortAsc READ sortAsc WRITE setSortAsc NOTIFY sortAscChanged)
     Q_PROPERTY(SortWhat what READ what WRITE setWhat NOTIFY whatChanged)
+
+    Q_PROPERTY(QString genrePartialFilter
+               READ genrePartialFilter
+               WRITE setGenrePartialFilter
+               NOTIFY genrePartialFilterChanged)
+
+    Q_PROPERTY(QString artistPartialFilter
+               READ artistPartialFilter
+               WRITE setArtistPartialFilter
+               NOTIFY artistPartialFilterChanged)
+
+    Q_PROPERTY(QString albumPartialFilter
+               READ albumPartialFilter
+               WRITE setAlbumPartialFilter
+               NOTIFY albumPartialFilterChanged)
     // clang-format on
 
 public:
@@ -130,6 +145,15 @@ public:
 
     static QString escapeString(QString str);
 
+    QString genrePartialFilter() const;
+    void setGenrePartialFilter(const QString &genrePartialFilter);
+
+    QString artistPartialFilter() const;
+    void setArtistPartialFilter(const QString &artistPartialFilter);
+
+    QString albumPartialFilter() const;
+    void setAlbumPartialFilter(const QString &albumPartialFilter);
+
 public slots:
     void scanFinished();
 
@@ -154,6 +178,10 @@ signals:
     void sortAscChanged();
     void whatChanged();
 
+    void genrePartialFilterChanged();
+    void artistPartialFilterChanged();
+    void albumPartialFilterChanged();
+
 private:
     // scanner_ MUST be a raw pointer. When this is moved to a new thread, that
     // QThread becomes the parent. When the parent dies so does the child.
@@ -176,6 +204,9 @@ private:
     QStringList genreList_{};
     QStringList artistList_{};
     QStringList albumList_{};
+    QString genrePartialFilter_{""};
+    QString artistPartialFilter_{""};
+    QString albumPartialFilter_{""};
 
     bool checkVal(const QString &check, const QString &val) const;
 
