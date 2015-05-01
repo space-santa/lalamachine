@@ -42,6 +42,10 @@ Rectangle {
         artistFilter: artistList.selection
         albumFilter: albumList.selection
 
+        genrePartialFilter: genreList.filterText
+        artistPartialFilter: artistList.filterText
+        albumPartialFilter: albumList.filterText
+
         what: titles.sortwhat
         sortAsc: titles.sortAsc
 
