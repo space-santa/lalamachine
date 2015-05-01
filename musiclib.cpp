@@ -460,43 +460,24 @@ QString MusicLib::getGenreListQuery() const
 
 QString MusicLib::getArtistListQuery() const
 {
-    QString query("SELECT DISTINCT artist FROM musiclib %1 %2 %3 %4 %5 %6");
-
-    if (!genreFilter().isEmpty() || !genrePartialFilter().isEmpty()
-        || !artistPartialFilter().isEmpty()) {
-        query = query.arg("WHERE");
-    } else {
-        query = query.arg("");
-    }
+    QString query(
+        "SELECT DISTINCT artist FROM musiclib WHERE artist NOT NULL %1 %2 %3");
 
     if (!genreFilter().isEmpty()) {
-        query = query.arg("genre = '%1'").arg(escapeString(genreFilter()));
-    } else {
-        query = query.arg("");
-    }
-
-    if (!genreFilter().isEmpty() && !genrePartialFilter().isEmpty()) {
-        query = query.arg("AND");
+        query = query.arg("AND genre = '%1'").arg(escapeString(genreFilter()));
     } else {
         query = query.arg("");
     }
 
     if (!genrePartialFilter().isEmpty()) {
-        query = query.arg("genre LIKE '%%1%'")
+        query = query.arg("AND genre LIKE '%%1%'")
                     .arg(escapeString(genrePartialFilter()));
     } else {
         query = query.arg("");
     }
 
-    if ((!genreFilter().isEmpty() || !genrePartialFilter().isEmpty())
-        && (!artistPartialFilter().isEmpty())) {
-        query = query.arg("AND");
-    } else {
-        query = query.arg("");
-    }
-
     if (!artistPartialFilter().isEmpty()) {
-        query = query.arg("artist LIKE '%%1%'")
+        query = query.arg("AND artist LIKE '%%1%'")
                     .arg(escapeString(artistPartialFilter()));
     } else {
         query = query.arg("");
@@ -510,70 +491,39 @@ QString MusicLib::getArtistListQuery() const
 QString MusicLib::getAlbumListQuery() const
 {
     QString query(
-        "SELECT DISTINCT album FROM musiclib %1 %2 %3 %4 %5 %6 %7 %8 %9 %10");
-
-    if (!genreFilter().isEmpty() || !genrePartialFilter().isEmpty()
-        || !artistPartialFilter().isEmpty() || !artistFilter().isEmpty()
-        || !albumPartialFilter().isEmpty()) {
-        query = query.arg("WHERE");
-    } else {
-        query = query.arg("");
-    }
+        "SELECT DISTINCT album FROM musiclib WHERE album NOT NULL "
+        "%1 %2 %3 %4 %5");
 
     if (!genreFilter().isEmpty()) {
-        query = query.arg("genre = '%1'").arg(genreFilter());
-    } else {
-        query = query.arg("");
-    }
-
-    if (!genreFilter().isEmpty() && !genrePartialFilter().isEmpty()) {
-        query = query.arg("AND");
+        query = query.arg("AND genre = '%1'").arg(genreFilter());
     } else {
         query = query.arg("");
     }
 
     if (!genrePartialFilter().isEmpty()) {
-        query = query.arg("genre LIKE '%%1%'").arg(escapeString(genrePartialFilter()));
-    } else {
-        query = query.arg("");
-    }
-
-    if ((!genreFilter().isEmpty() || !genrePartialFilter().isEmpty())
-        && (!artistPartialFilter().isEmpty())) {
-        query = query.arg("AND");
+        query = query.arg("AND genre LIKE '%%1%'")
+                    .arg(escapeString(genrePartialFilter()));
     } else {
         query = query.arg("");
     }
 
     if (!artistPartialFilter().isEmpty()) {
-        query = query.arg("artist LIKE '%%1%'").arg(escapeString(artistPartialFilter()));
-    } else {
-        query = query.arg("");
-    }
-
-    if ((!genreFilter().isEmpty() || !genrePartialFilter().isEmpty()
-         || !artistPartialFilter().isEmpty()) && (!artistFilter().isEmpty())) {
-        query = query.arg("AND");
+        query = query.arg("AND artist LIKE '%%1%'")
+                    .arg(escapeString(artistPartialFilter()));
     } else {
         query = query.arg("");
     }
 
     if (!artistFilter().isEmpty()) {
-        query = query.arg("artist = '%1'").arg(escapeString(artistFilter()));
-    } else {
-        query = query.arg("");
-    }
-
-    if ((!genreFilter().isEmpty() || !genrePartialFilter().isEmpty()
-         || !artistPartialFilter().isEmpty() || !artistFilter().isEmpty())
-        && (!albumPartialFilter().isEmpty())) {
-        query = query.arg("AND");
+        query
+            = query.arg("AND artist = '%1'").arg(escapeString(artistFilter()));
     } else {
         query = query.arg("");
     }
 
     if (!albumPartialFilter().isEmpty()) {
-        query = query.arg("album LIKE '%%1%'").arg(escapeString(albumPartialFilter()));
+        query = query.arg("AND album LIKE '%%1%'")
+                    .arg(escapeString(albumPartialFilter()));
     } else {
         query = query.arg("");
     }
