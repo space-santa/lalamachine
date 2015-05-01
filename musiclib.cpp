@@ -401,8 +401,8 @@ QString MusicLib::getSortQueryString() const
         query.append("' ");
     }
     if (!genrePartialFilter().isEmpty()) {
-        query.append("AND genre LIKE '%");
-        query.append(escapeString(genrePartialFilter()));
+        query.append("AND UPPER(genre) LIKE '%");
+        query.append(escapeString(genrePartialFilter().toUpper()));
         query.append("%' ");
     }
 
@@ -412,8 +412,8 @@ QString MusicLib::getSortQueryString() const
         query.append("'");
     }
     if (!artistPartialFilter().isEmpty()) {
-        query.append("AND artist LIKE '%");
-        query.append(escapeString(artistPartialFilter()));
+        query.append("AND UPPER(artist) LIKE '%");
+        query.append(escapeString(artistPartialFilter().toUpper()));
         query.append("%' ");
     }
 
@@ -423,8 +423,8 @@ QString MusicLib::getSortQueryString() const
         query.append("'");
     }
     if (!albumPartialFilter().isEmpty()) {
-        query.append("AND album LIKE '%");
-        query.append(escapeString(albumPartialFilter()));
+        query.append("AND UPPER(album) LIKE '%");
+        query.append(escapeString(albumPartialFilter().toUpper()));
         query.append("%' ");
     }
 
@@ -449,8 +449,8 @@ QString MusicLib::getGenreListQuery() const
     QString query("SELECT DISTINCT genre FROM musiclib %1 ORDER BY genre ASC");
 
     if (!genrePartialFilter().isEmpty()) {
-        query = query.arg("WHERE genre LIKE '%%1%'")
-                    .arg(escapeString(genrePartialFilter()));
+        query = query.arg("WHERE UPPER(genre) LIKE '%%1%'")
+                    .arg(escapeString(genrePartialFilter().toUpper()));
     } else {
         query = query.arg("");
     }
@@ -470,15 +470,15 @@ QString MusicLib::getArtistListQuery() const
     }
 
     if (!genrePartialFilter().isEmpty()) {
-        query = query.arg("AND genre LIKE '%%1%'")
-                    .arg(escapeString(genrePartialFilter()));
+        query = query.arg("AND UPPER(genre) LIKE '%%1%'")
+                    .arg(escapeString(genrePartialFilter().toUpper()));
     } else {
         query = query.arg("");
     }
 
     if (!artistPartialFilter().isEmpty()) {
-        query = query.arg("AND artist LIKE '%%1%'")
-                    .arg(escapeString(artistPartialFilter()));
+        query = query.arg("AND UPPER(artist) LIKE '%%1%'")
+                    .arg(escapeString(artistPartialFilter().toUpper()));
     } else {
         query = query.arg("");
     }
@@ -501,15 +501,15 @@ QString MusicLib::getAlbumListQuery() const
     }
 
     if (!genrePartialFilter().isEmpty()) {
-        query = query.arg("AND genre LIKE '%%1%'")
-                    .arg(escapeString(genrePartialFilter()));
+        query = query.arg("AND UPPER(genre) LIKE '%%1%'")
+                    .arg(escapeString(genrePartialFilter().toUpper()));
     } else {
         query = query.arg("");
     }
 
     if (!artistPartialFilter().isEmpty()) {
-        query = query.arg("AND artist LIKE '%%1%'")
-                    .arg(escapeString(artistPartialFilter()));
+        query = query.arg("AND UPPER(artist) LIKE '%%1%'")
+                    .arg(escapeString(artistPartialFilter().toUpper()));
     } else {
         query = query.arg("");
     }
@@ -522,8 +522,8 @@ QString MusicLib::getAlbumListQuery() const
     }
 
     if (!albumPartialFilter().isEmpty()) {
-        query = query.arg("AND album LIKE '%%1%'")
-                    .arg(escapeString(albumPartialFilter()));
+        query = query.arg("AND UPPER(album) LIKE '%%1%'")
+                    .arg(escapeString(albumPartialFilter().toUpper()));
     } else {
         query = query.arg("");
     }
