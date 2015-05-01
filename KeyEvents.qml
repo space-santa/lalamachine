@@ -50,7 +50,7 @@ Item {
         id: focus_timer
         repeat: false
         running: false
-        interval: 2000
+        interval: 5000
         onTriggered: {
             keepFocus = true
             focus = true
