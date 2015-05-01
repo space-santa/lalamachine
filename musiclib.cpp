@@ -112,6 +112,11 @@ MusicLib::MusicLib(QQuickItem *parent) : QQuickItem(parent)
             &MusicLib::setAlbumList);
 
     connect(this,
+            &MusicLib::titlePartialFilterChanged,
+            this,
+            &MusicLib::setDisplayLib);
+
+    connect(this,
             &MusicLib::artistFilterChanged,
             this,
             &MusicLib::setDisplayLib);
@@ -428,6 +433,12 @@ QString MusicLib::getSortQueryString() const
         query.append("%' ");
     }
 
+    if (!titlePartialFilter().isEmpty()) {
+        query.append("AND UPPER(title) LIKE '%");
+        query.append(escapeString(titlePartialFilter().toUpper()));
+        query.append("%' ");
+    }
+
     query.append(" ORDER BY ");
     query.append(SORT_MAP.value(what()));
     query.append(" ");
@@ -622,6 +633,16 @@ void MusicLib::scanFinished()
 {
     emit musicLibChanged();
     setScanning(false);
+}
+
+QString MusicLib::titlePartialFilter() const
+{
+    return titlePartialFilter_;
+}
+void MusicLib::setTitlePartialFilter(const QString &titlePartialFilter)
+{
+    titlePartialFilter_ = titlePartialFilter;
+    emit titlePartialFilterChanged();
 }
 
 QString MusicLib::albumPartialFilter() const

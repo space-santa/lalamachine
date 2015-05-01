@@ -98,6 +98,11 @@ class MusicLib : public QQuickItem
                READ albumPartialFilter
                WRITE setAlbumPartialFilter
                NOTIFY albumPartialFilterChanged)
+
+    Q_PROPERTY(QString titlePartialFilter
+               READ titlePartialFilter
+               WRITE setTitlePartialFilter
+               NOTIFY titlePartialFilterChanged)
     // clang-format on
 
 public:
@@ -154,6 +159,9 @@ public:
     QString albumPartialFilter() const;
     void setAlbumPartialFilter(const QString &albumPartialFilter);
 
+    QString titlePartialFilter() const;
+    void setTitlePartialFilter(const QString &titlePartialFilter);
+
 public slots:
     void scanFinished();
 
@@ -181,6 +189,7 @@ signals:
     void genrePartialFilterChanged();
     void artistPartialFilterChanged();
     void albumPartialFilterChanged();
+    void titlePartialFilterChanged();
 
 private:
     // scanner_ MUST be a raw pointer. When this is moved to a new thread, that
@@ -207,6 +216,7 @@ private:
     QString genrePartialFilter_{""};
     QString artistPartialFilter_{""};
     QString albumPartialFilter_{""};
+    QString titlePartialFilter_{""};
 
     bool checkVal(const QString &check, const QString &val) const;
 
