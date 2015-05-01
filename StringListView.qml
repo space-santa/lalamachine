@@ -158,6 +158,7 @@ Rectangle {
             TextField {
                 id: filter_text
                 anchors.left: parent.left
+                anchors.leftMargin: 5
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 anchors.right: clear_button.left
@@ -182,6 +183,7 @@ Rectangle {
                 id: clear_button
                 width: height
                 anchors.right: parent.right
+                anchors.rightMargin: 5
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
 
