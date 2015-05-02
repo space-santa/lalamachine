@@ -42,9 +42,6 @@ Rectangle {
         artistFilter: artistList.selection
         albumFilter: albumList.selection
 
-        genrePartialFilter: genreList.filterText
-        artistPartialFilter: artistList.filterText
-        albumPartialFilter: albumList.filterText
         titlePartialFilter: filter_text.text
 
         what: titles.sortwhat
@@ -114,24 +111,11 @@ Rectangle {
             anchors.bottom: scan_notifier.top
             color: "transparent"
 
-            Playlist {
-                id: titles
-                isLibrary: true
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: titles_filter_box.top
-
-                color: "transparent"
-
-                onPlay: lalaplayer.playTrack(path)
-            }
-
             Item {
                 id: titles_filter_box
-                anchors.bottom: titles_info.top
-                anchors.left: titles.left
-                height: 20
+                anchors.top: parent.top
+                anchors.horizontalCenter: titles.horizontalCenter
+                height: 25
                 width: 250
 
                 TextField {
@@ -170,6 +154,19 @@ Rectangle {
 
                     onClicked: filter_text.text = ""
                 }
+            }
+
+            Playlist {
+                id: titles
+                isLibrary: true
+                anchors.top: titles_filter_box.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: titles_info.top
+
+                color: "transparent"
+
+                onPlay: lalaplayer.playTrack(path)
             }
 
             Rectangle {
