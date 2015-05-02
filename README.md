@@ -44,8 +44,8 @@ sudo make uninstall
 I build packages for openSUSE 13.2 and Tumbleweed with the openSUSE build service.
 The download repositories are here:
 
-* [openSUSE13.2](http://download.opensuse.org/repositories/home:/rmean/openSUSE_13.2/)
-* [Tumbleweed](http://download.opensuse.org/repositories/home:/rmean/openSUSE_Tumbleweed/)
+* [openSUSE13.2](http://download.opensuse.org/repositories/home%3A/rmean/openSUSE_13.2)
+* [Tumbleweed](http://download.opensuse.org/repositories/home%3A/rmean/openSUSE_Tumbleweed)
 
 ## Contribute
 
