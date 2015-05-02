@@ -146,10 +146,7 @@ QMap<MusicLib::SortWhat, QString> MusicLib::initSortMap()
 
 const QString MusicLib::ALL_FILTER{QString("--all--")};
 
-bool MusicLib::scanning() const
-{
-    return scanning_;
-}
+bool MusicLib::scanning() const { return scanning_; }
 
 void MusicLib::setScanning(bool val)
 {
@@ -157,20 +154,11 @@ void MusicLib::setScanning(bool val)
     emit scanningChanged();
 }
 
-QJsonArray MusicLib::displayLib() const
-{
-    return displayLib_;
-}
+QJsonArray MusicLib::displayLib() const { return displayLib_; }
 
-int MusicLib::totalLength() const
-{
-    return totalLength_;
-}
+int MusicLib::totalLength() const { return totalLength_; }
 
-void MusicLib::debugSignal()
-{
-    qDebug() << "DEBUGGING SIGNAL";
-}
+void MusicLib::debugSignal() { qDebug() << "DEBUGGING SIGNAL"; }
 
 void MusicLib::setDisplayLib()
 {
@@ -185,10 +173,7 @@ void MusicLib::setDisplayLib()
     emit totalLengthChanged();
 }
 
-QString MusicLib::libPath() const
-{
-    return libPath_;
-}
+QString MusicLib::libPath() const { return libPath_; }
 
 void MusicLib::setLibPath(const QString &path)
 {
@@ -200,10 +185,7 @@ void MusicLib::setLibPath(const QString &path)
     firstRun_ = false;
 }
 
-QString MusicLib::genreFilter() const
-{
-    return genreFilter_;
-}
+QString MusicLib::genreFilter() const { return genreFilter_; }
 
 void MusicLib::setGenreFilter(const QString &val)
 {
@@ -220,10 +202,7 @@ void MusicLib::setGenreFilter(const QString &val)
     emit genreFilterChanged();
 }
 
-QString MusicLib::artistFilter() const
-{
-    return artistFilter_;
-}
+QString MusicLib::artistFilter() const { return artistFilter_; }
 
 void MusicLib::setArtistFilter(const QString &val)
 {
@@ -239,10 +218,7 @@ void MusicLib::setArtistFilter(const QString &val)
     emit artistFilterChanged();
 }
 
-QString MusicLib::albumFilter() const
-{
-    return albumFilter_;
-}
+QString MusicLib::albumFilter() const { return albumFilter_; }
 
 void MusicLib::setAlbumFilter(const QString &val)
 {
@@ -257,10 +233,7 @@ void MusicLib::setAlbumFilter(const QString &val)
     emit albumFilterChanged();
 }
 
-bool MusicLib::sortAsc() const
-{
-    return sortAsc_;
-}
+bool MusicLib::sortAsc() const { return sortAsc_; }
 
 void MusicLib::setSortAsc(bool val)
 {
@@ -269,10 +242,7 @@ void MusicLib::setSortAsc(bool val)
     setDisplayLib();
 }
 
-MusicLib::SortWhat MusicLib::what() const
-{
-    return what_;
-}
+MusicLib::SortWhat MusicLib::what() const { return what_; }
 
 void MusicLib::setWhat(MusicLib::SortWhat val)
 {
@@ -281,20 +251,11 @@ void MusicLib::setWhat(MusicLib::SortWhat val)
     setDisplayLib();
 }
 
-QStringList MusicLib::genreList() const
-{
-    return genreList_;
-}
+QStringList MusicLib::genreList() const { return genreList_; }
 
-QStringList MusicLib::artistList() const
-{
-    return artistList_;
-}
+QStringList MusicLib::artistList() const { return artistList_; }
 
-QStringList MusicLib::albumList() const
-{
-    return albumList_;
-}
+QStringList MusicLib::albumList() const { return albumList_; }
 
 void MusicLib::rescan()
 {
@@ -463,8 +424,7 @@ QString MusicLib::getArtistListQuery() const
 
 QString MusicLib::getAlbumListQuery() const
 {
-    QString query(
-        "SELECT DISTINCT album FROM musiclib WHERE album NOT NULL ");
+    QString query("SELECT DISTINCT album FROM musiclib WHERE album NOT NULL ");
 
     if (!titlePartialFilter().isEmpty()) {
         query.append("AND UPPER(album) LIKE '%");
@@ -569,10 +529,7 @@ void MusicLib::setAlbumList()
     emit albumListChanged();
 }
 
-void MusicLib::scanStarted()
-{
-    setScanning(true);
-}
+void MusicLib::scanStarted() { setScanning(true); }
 
 void MusicLib::scanFinished()
 {
@@ -580,10 +537,7 @@ void MusicLib::scanFinished()
     setScanning(false);
 }
 
-QString MusicLib::titlePartialFilter() const
-{
-    return titlePartialFilter_;
-}
+QString MusicLib::titlePartialFilter() const { return titlePartialFilter_; }
 void MusicLib::setTitlePartialFilter(const QString &titlePartialFilter)
 {
     titlePartialFilter_ = titlePartialFilter;
