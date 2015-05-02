@@ -84,21 +84,6 @@ class MusicLib : public QQuickItem
     Q_PROPERTY(bool sortAsc READ sortAsc WRITE setSortAsc NOTIFY sortAscChanged)
     Q_PROPERTY(SortWhat what READ what WRITE setWhat NOTIFY whatChanged)
 
-    Q_PROPERTY(QString genrePartialFilter
-               READ genrePartialFilter
-               WRITE setGenrePartialFilter
-               NOTIFY genrePartialFilterChanged)
-
-    Q_PROPERTY(QString artistPartialFilter
-               READ artistPartialFilter
-               WRITE setArtistPartialFilter
-               NOTIFY artistPartialFilterChanged)
-
-    Q_PROPERTY(QString albumPartialFilter
-               READ albumPartialFilter
-               WRITE setAlbumPartialFilter
-               NOTIFY albumPartialFilterChanged)
-
     Q_PROPERTY(QString titlePartialFilter
                READ titlePartialFilter
                WRITE setTitlePartialFilter
@@ -150,15 +135,6 @@ public:
 
     static QString escapeString(QString str);
 
-    QString genrePartialFilter() const;
-    void setGenrePartialFilter(const QString &genrePartialFilter);
-
-    QString artistPartialFilter() const;
-    void setArtistPartialFilter(const QString &artistPartialFilter);
-
-    QString albumPartialFilter() const;
-    void setAlbumPartialFilter(const QString &albumPartialFilter);
-
     QString titlePartialFilter() const;
     void setTitlePartialFilter(const QString &titlePartialFilter);
 
@@ -186,9 +162,6 @@ signals:
     void sortAscChanged();
     void whatChanged();
 
-    void genrePartialFilterChanged();
-    void artistPartialFilterChanged();
-    void albumPartialFilterChanged();
     void titlePartialFilterChanged();
 
 private:
@@ -213,9 +186,6 @@ private:
     QStringList genreList_{};
     QStringList artistList_{};
     QStringList albumList_{};
-    QString genrePartialFilter_{""};
-    QString artistPartialFilter_{""};
-    QString albumPartialFilter_{""};
     QString titlePartialFilter_{""};
 
     bool checkVal(const QString &check, const QString &val) const;
