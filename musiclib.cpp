@@ -194,7 +194,10 @@ void MusicLib::setLibPath(const QString &path)
 {
     libPath_ = path;
     emit libPathChanged();
-    // rescan();
+
+    if (!firstRun_) rescan();
+
+    firstRun_ = false;
 }
 
 QString MusicLib::genreFilter() const

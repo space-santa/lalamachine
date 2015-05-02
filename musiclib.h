@@ -187,6 +187,7 @@ private:
     QStringList artistList_{};
     QStringList albumList_{};
     QString titlePartialFilter_{""};
+    bool firstRun_{true};
 
     bool checkVal(const QString &check, const QString &val) const;
 
