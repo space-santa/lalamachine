@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.14.0
+Version: 0.15.0
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,12 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat May 02 2015 r-mean
+  0.15.0-1: Release 0.15
+  * The titles in the library view are now better sorted.
+  * Added a filter box which is filtering genre/artist/album and titles while
+    typing in it.
+
 * Sun Apr 26 2015 r-mean
   0.14.0-1: Release 0.14
   * Can export the files of a playlist to a folder..
