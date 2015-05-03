@@ -21,6 +21,29 @@ Item {
         }
     }
 
+    function getJson() {
+        var retval = []
+        for (var i = 0; i < model.count; ++i) {
+            retval.push({
+                            key: model[i].key,
+                            value: model[i].value
+                        })
+        }
+        return retval
+    }
+
+    function moveUp() {
+        model.move(view.currentRow, view.currentRow - 1, 1)
+    }
+
+    function moveDown() {
+        model.move(view.currentRow, view.currentRow + 1, 1)
+    }
+
+    function setSelectionEnabled(val) {
+        model.setProperty(view.currentRow, "value", val)
+    }
+
     ListModel {
         id: model
     }
