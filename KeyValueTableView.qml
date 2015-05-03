@@ -60,5 +60,21 @@ Item {
             id: value_column
             role: "value"
         }
+
+        rowDelegate: TableViewDelegate {
+            onRightClick: rcm.popup()
+        }
+    }
+
+    Menu {
+        id: rcm
+        MenuItem {
+            text: "enable"
+            onTriggered: setSelectionEnabled(true)
+        }
+        MenuItem {
+            text: "disable"
+            onTriggered: setSelectionEnabled(false)
+        }
     }
 }
