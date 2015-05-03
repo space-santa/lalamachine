@@ -20,6 +20,8 @@
         <file>AutoPlaylistObject.qml</file>
         <file>AutoPlaylistDialog.qml</file>
         <file>MultiStateButton.qml</file>
+        <file>SettingsDialog.qml</file>
+        <file>KeyValueTableView.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/eject.png</file>
