@@ -22,6 +22,7 @@
         <file>MultiStateButton.qml</file>
         <file>SettingsDialog.qml</file>
         <file>KeyValueTableView.qml</file>
+        <file>TableViewDelegate.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/eject.png</file>
