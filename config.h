@@ -70,6 +70,7 @@ signals:
     void volumeChanged();
     void libPathChanged();
     void lastPlaylistChanged();
+    // QJsonArray playlistColumnOrder_;
 
 public slots:
 
