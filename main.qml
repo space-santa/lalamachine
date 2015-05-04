@@ -81,6 +81,13 @@ ApplicationWindow {
                     lib_dialog.visible = true
                 }
             }
+            MenuItem {
+                text: "Settings"
+                iconSource: "qrc:/images/images/preferences.png"
+                onTriggered: {
+                    settings_dialog.open()
+                }
+            }
         }
         Menu {
             title: "Playlist"
@@ -218,6 +225,11 @@ ApplicationWindow {
         visible: false
 
         onAccepted: visible = false
+    }
+
+    SettingsDialog {
+        id: settings_dialog
+        visible: false
     }
 
     function getWindowTitle() {
