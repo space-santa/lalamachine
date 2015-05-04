@@ -53,6 +53,7 @@ Item {
 
     TableView {
         id: view
+        anchors.fill: parent
 
         model: model
 
