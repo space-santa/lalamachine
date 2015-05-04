@@ -6,6 +6,8 @@ Item {
     property alias keyTitle: key_column.title
     property alias valueTitle: value_column.title
 
+    signal rightClick
+
     // The list will contain the JsonArray.
     // Each JSON objct must have a "key" and a "value".
     property var list
@@ -71,20 +73,7 @@ Item {
 
         rowDelegate: TableViewDelegate {
             target: view
-            onRightClick: rcm.popup()
-        }
-    }
-
-    // FIXME: This RCM is too specific to be here.
-    Menu {
-        id: rcm
-        MenuItem {
-            text: "enable"
-            onTriggered: setSelectionEnabled(true)
-        }
-        MenuItem {
-            text: "disable"
-            onTriggered: setSelectionEnabled(false)
+            onRightClick: container.rightClick()
         }
     }
 }
