@@ -358,6 +358,11 @@ Rectangle {
     function sort(what, how) {
         var startdate = Date.now()
 
+        // FIXME: This must be independent of the position.
+        // Something like
+        //     SEARCH FOR CHILD OF TABLE AT what
+        //     GET ROLE
+        //     DO MAGIC...
         var sorthow
 
         if (what === 0) {
@@ -440,6 +445,7 @@ Rectangle {
         model: playlist_model
         selectionMode: SelectionMode.ContiguousSelection
 
+        // FIXME: Make this arrangement according to some settings.
         TableViewColumn {
             role: "track"
             title: "track"
