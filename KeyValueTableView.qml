@@ -20,10 +20,7 @@ Item {
         model.clear()
 
         for (var i = 0; i < list.length; ++i) {
-            model.append({
-                             key: list[i].key,
-                             value: list[i].value
-                         })
+            model.append(list[i])
         }
     }
 
