@@ -54,6 +54,8 @@ Item {
     TableView {
         id: view
 
+        model: model
+
         TableViewColumn {
             id: key_column
             role: "key"
