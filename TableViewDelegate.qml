@@ -1,8 +1,8 @@
 import QtQuick 2.0
-
-
+import QtQuick.Controls 1.2
 
 Item {
+    property TableView target
     signal rightClick
     Rectangle {
         anchors {
@@ -18,9 +18,9 @@ Item {
             onClicked: {
                 if (mouse.button == Qt.RightButton) {
                     console.log("Right-Click", styleData.row)
-                    if (playlist_view.selection.count < 2) {
-                        playlist_view.selection.clear()
-                        playlist_view.selection.select(styleData.row)
+                    if (target.selection.count < 2) {
+                        target.selection.clear()
+                        target.selection.select(styleData.row)
                     }
                 }
                 rightClick()
