@@ -62,6 +62,7 @@ Item {
         }
 
         rowDelegate: TableViewDelegate {
+            target: view
             onRightClick: rcm.popup()
         }
     }
