@@ -4,8 +4,8 @@ import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 
 Dialog {
-    width: 100
-    height: 62
+    width: 500
+    height: 400
 
     KeyValueTableView {
         id: playlist_columns
