@@ -11,6 +11,12 @@ Item {
     property var list
 
     onListChanged: {
+        updateList()
+    }
+
+    Component.onCompleted: updateList()
+
+    function updateList() {
         model.clear()
 
         for (var i = 0; i < list.length; ++i) {
