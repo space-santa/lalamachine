@@ -39,10 +39,14 @@ Item {
 
     function moveUp() {
         model.move(view.currentRow, view.currentRow - 1, 1)
+        view.selection.clear()
+        view.selection.select(view.currentRow - 1)
     }
 
     function moveDown() {
         model.move(view.currentRow, view.currentRow + 1, 1)
+        view.selection.clear()
+        view.selection.select(view.currentRow + 1)
     }
 
     function setSelectionEnabled(val) {
