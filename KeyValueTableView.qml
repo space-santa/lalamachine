@@ -73,6 +73,7 @@ Item {
         }
     }
 
+    // FIXME: This RCM is too specific to be here.
     Menu {
         id: rcm
         MenuItem {
