@@ -9,8 +9,8 @@ Dialog {
 
     KeyValueTableView {
         id: playlist_columns
-        height: 400
-        width: 450
+        height: 200
+        width: 200
         keyTitle: "Tag"
         valueTitle: "visible"
 
