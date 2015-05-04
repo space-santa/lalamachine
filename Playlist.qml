@@ -491,30 +491,9 @@ Rectangle {
             sort(sortIndicatorColumn, sortIndicatorOrder)
         }
 
-        rowDelegate: Item {
-            Rectangle {
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    verticalCenter: parent.verticalCenter
-                }
-                height: parent.height
-                color: styleData.selected ? 'darkslategrey' : "transparent"
-                MouseArea {
-                    anchors.fill: parent
-                    acceptedButtons: Qt.RightButton
-                    onClicked: {
-                        if (mouse.button == Qt.RightButton) {
-                            console.log("Right-Click", styleData.row)
-                            if (playlist_view.selection.count < 2) {
-                                playlist_view.selection.clear()
-                                playlist_view.selection.select(styleData.row)
-                            }
-                        }
-                        rcm.popup()
-                    }
-                }
-            }
+        rowDelegate: TableViewDelegate {
+            target: playlist_view
+            onRightClick: rcm.popup()
         }
     }
 }
