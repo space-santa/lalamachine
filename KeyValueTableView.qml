@@ -59,11 +59,13 @@ Item {
 
         TableViewColumn {
             id: key_column
+            width: (container.width - 2) / 2
             role: "key"
         }
 
         TableViewColumn {
             id: value_column
+            width: (container.width - 2) / 2
             role: "value"
         }
 
