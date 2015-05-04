@@ -2,7 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.2
 
 Item {
-    id: name
+    id: container
     property alias keyTitle: key_column.title
     property alias valueTitle: value_column.title
 
