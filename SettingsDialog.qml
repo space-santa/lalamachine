@@ -27,7 +27,19 @@ Dialog {
             keyTitle: "Tag"
             valueTitle: "visible"
 
-            list: [{
+            list: getList()
+
+            function getList() {
+                if (config.playlistColumns
+                        && config.playlistColumns.length > 0) {
+                    console.log("ZZZ length", config.playlistColumns.length)
+                    return config.playlistColumns
+                } else {
+                    return defaultList
+                }
+            }
+
+            property var defaultList: [{
                     key: "track",
                     value: "true"
                 }, {
