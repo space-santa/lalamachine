@@ -7,6 +7,12 @@ Dialog {
     width: 500
     height: 400
 
+    onAccepted: {
+        config.playlistColumns = playlist_columns.getJson()
+
+        config.saveConfig()
+    }
+
     Item {
         id: columns_edit
         height: 200
