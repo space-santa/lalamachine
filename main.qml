@@ -39,6 +39,7 @@ ApplicationWindow {
     property Playlist mainPlaylist: playlist
     property KeyEvents keyEvents: key_events
     property M3uInOut m3u: m3u
+    property Configuration config: config
 
     property MediaPlayer lalaplayer: playMusic
 
