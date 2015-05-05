@@ -22,6 +22,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QQuickItem>
 #include <QJsonObject>
+#include <QJsonArray>
 
 class Config : public QQuickItem
 {
@@ -39,6 +40,11 @@ class Config : public QQuickItem
                READ lastPlaylist
                WRITE setLastPlaylist
                NOTIFY lastPlaylistChanged)
+
+    Q_PROPERTY(QJsonArray playlistColumns
+               READ playlistColumns
+               WRITE setPlaylistColumns
+               NOTIFY playlistColumnsChanged)
     // clang-format on
 
 public:
@@ -56,6 +62,9 @@ public:
     void setVolume(double val);
     double volume();
 
+    void setPlaylistColumns(const QJsonArray &list);
+    QJsonArray playlistColumns() const;
+
     void setLibPath(const QString &path);
     QString libPath() const;
 
@@ -70,7 +79,7 @@ signals:
     void volumeChanged();
     void libPathChanged();
     void lastPlaylistChanged();
-    // QJsonArray playlistColumnOrder_;
+    void playlistColumnsChanged();
 
 public slots:
 

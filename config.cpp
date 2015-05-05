@@ -25,6 +25,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QJsonArray>
 #include <QDebug>
 #include <QStandardPaths>
 #include <QDir>
@@ -72,6 +73,27 @@ double Config::volume()
     }
 
     qDebug() << "Volume loaded" << retval;
+    return retval;
+}
+
+void Config::setPlaylistColumns(const QJsonArray &list)
+{
+    config_.insert("playlistColumns", list);
+    emit playlistColumnsChanged();
+}
+
+QJsonArray Config::playlistColumns() const
+{
+    QJsonArray retval;
+    QJsonValue v = config_.value("playlistColumns");
+
+    if (v.isArray()) {
+        retval = v.toArray();
+    } else {
+        qWarning("No playlist columns defined.");
+    }
+
+    qDebug() << "playlistColumns loaded" << retval;
     return retval;
 }
 
