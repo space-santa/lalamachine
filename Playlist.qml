@@ -439,8 +439,72 @@ Rectangle {
         anchors.fill: parent
         model: playlist_model
         selectionMode: SelectionMode.ContiguousSelection
+        property var playlistColumns: config.playlistColumns
 
-        // FIXME: Make this arrangement according to some settings.
+        onPlaylistColumnsChanged: setColumns()
+
+        function setColumns() {
+            for (var i = columnCount; i >= 0; --i) {
+                removeColumn(i)
+            }
+
+            for (var i = 0; i < playlistColumns.length; ++i) {
+                if (playlistColumns[i].value === "true") {
+                    var o = Qt.createQmlObject(buildColumnString(
+                                                   playlistColumns[i].key),
+                                               playlist_view, "DynO")
+                    playlist_view.addColumn(o)
+                }
+            }
+        }
+
+        function buildColumnString(tag) {
+            var width = 150
+            var title = tag
+
+            if (tag === "track") {
+                width = 50
+            }
+            if (tag === "title") {
+                width = 200
+            }
+            if (tag === "comment") {
+                width = 100
+            }
+            if (tag === "lengthString") {
+                width = 100
+                title = "length"
+            }
+            if (tag === "genre") {
+                width = 150
+            }
+            if (tag === "artist") {
+                width = 150
+            }
+            if (tag === "album") {
+                width = 150
+            }
+            if (tag === "year") {
+                width = 100
+            }
+
+            return columnString(tag, title, width)
+        }
+
+        function columnString(role, title, width) {
+            var retval = "import QtQuick 2.0;\n"
+            retval += "import QtQuick.Controls 1.2;\n"
+            retval += "TableViewColumn {\n"
+            retval += "role: \"" + role + "\";\n"
+            retval += "title: \"" + title + "\";\n"
+            retval += "width: " + width + "\n"
+            retval += "}"
+
+            return retval
+        }
+
+        // Leaving the default columns in here for now because on first start,
+        // the config.json doesn't exist, hence no playlistColumns.
         TableViewColumn {
             role: "track"
             title: "track"
