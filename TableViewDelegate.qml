@@ -22,8 +22,8 @@ Item {
                         target.selection.clear()
                         target.selection.select(styleData.row)
                     }
+                    rightClick()
                 }
-                rightClick()
             }
         }
     }
