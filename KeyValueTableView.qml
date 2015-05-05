@@ -21,18 +21,24 @@ Item {
     function updateList() {
         model.clear()
 
-        for (var i = 0; i < list.length; ++i) {
-            model.append(list[i])
+        if (list) {
+            for (var i = 0; i < list.length; ++i) {
+                model.append(list[i])
+            }
         }
     }
 
     function getJson() {
         var retval = []
-        for (var i = 0; i < model.count; ++i) {
-            retval.push({
-                            key: model[i].key,
-                            value: model[i].value
-                        })
+        if (model && model.count > 0) {
+            for (var i = 0; i < model.count; ++i) {
+                if (model.get(i)) {
+                    retval.push({
+                                    key: model.get(i).key,
+                                    value: model.get(i).value
+                                })
+                }
+            }
         }
         return retval
     }
@@ -50,7 +56,10 @@ Item {
     }
 
     function setSelectionEnabled(val) {
-        model.setProperty(view.currentRow, "value", val)
+        console.log("ZZZ current row", view.currentRow)
+        if (view.currentRow > -1) {
+            model.setProperty(view.currentRow, "value", val)
+        }
     }
 
     ListModel {
