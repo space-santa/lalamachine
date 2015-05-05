@@ -16,7 +16,7 @@ Dialog {
     Item {
         id: columns_edit
         height: 200
-        width:220
+        width: 220
 
         KeyValueTableView {
             id: playlist_columns
