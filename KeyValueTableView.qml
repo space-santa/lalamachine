@@ -74,6 +74,7 @@ Item {
     TableView {
         id: view
         anchors.fill: parent
+        selectionMode: SelectionMode.ContiguousSelection
 
         model: model
 
