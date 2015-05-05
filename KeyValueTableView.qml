@@ -9,7 +9,7 @@ Item {
     signal rightClick
 
     // The list will contain the JsonArray.
-    // Each JSON objct must have a "key" and a "value".
+    // Each JSON object must have a "key" and a "value".
     property var list
 
     onListChanged: {
