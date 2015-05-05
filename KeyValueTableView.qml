@@ -56,10 +56,15 @@ Item {
     }
 
     function setSelectionEnabled(val) {
-        console.log("ZZZ current row", view.currentRow)
-        if (view.currentRow > -1) {
-            model.setProperty(view.currentRow, "value", val)
-        }
+        // DANGER! WARNING! DRAGONS RIGHT HERE!
+        // currentRow doesn't work on right click because the delegate is
+        // setting the selection. That does not affect the currentRow. Hence we
+        // have to go through the selections. But that has the
+        // (actually desired) side effect that multiple things can be changed
+        // at once.
+        view.selection.forEach(function (rowIndex) {
+            model.setProperty(rowIndex, "value", val)
+        })
     }
 
     ListModel {
