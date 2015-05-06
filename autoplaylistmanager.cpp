@@ -34,9 +34,7 @@ AutoPlaylistManager::AutoPlaylistManager(QObject *parent) : QObject(parent)
             &AutoPlaylistManager::handleDirChange);
 }
 
-AutoPlaylistManager::~AutoPlaylistManager()
-{
-}
+AutoPlaylistManager::~AutoPlaylistManager() {}
 
 // This requires explanation.
 // Originally I had the playlistNames property just READ getPlaylistNames()

@@ -36,25 +36,13 @@ AutoPlaylistObject::AutoPlaylistObject(LalaTypes::AndOr andor,
 {
 }
 
-LalaTypes::AndOr AutoPlaylistObject::andor() const
-{
-    return andor_;
-}
+LalaTypes::AndOr AutoPlaylistObject::andor() const { return andor_; }
 
-LalaTypes::Tag AutoPlaylistObject::tag() const
-{
-    return tag_;
-}
+LalaTypes::Tag AutoPlaylistObject::tag() const { return tag_; }
 
-LalaTypes::Operator AutoPlaylistObject::op() const
-{
-    return op_;
-}
+LalaTypes::Operator AutoPlaylistObject::op() const { return op_; }
 
-QString AutoPlaylistObject::val() const
-{
-    return val_;
-}
+QString AutoPlaylistObject::val() const { return val_; }
 
 QJsonObject AutoPlaylistObject::toJson() const
 {

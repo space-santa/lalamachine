@@ -21,9 +21,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QString>
 
-TimeConverter::TimeConverter(QQuickItem *parent) : QQuickItem(parent)
-{
-}
+TimeConverter::TimeConverter(QQuickItem *parent) : QQuickItem(parent) {}
 
 void TimeConverter::setSeconds(int sec)
 {
@@ -50,15 +48,9 @@ void TimeConverter::setSeconds(int sec)
     emit timestringChanged();
 }
 
-int TimeConverter::seconds()
-{
-    return totalSec_;
-}
+int TimeConverter::seconds() { return totalSec_; }
 
-QString TimeConverter::timestring()
-{
-    return toString();
-}
+QString TimeConverter::timestring() { return toString(); }
 
 QString TimeConverter::toString()
 {

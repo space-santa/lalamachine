@@ -26,13 +26,9 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFile>
 #include <QTextStream>
 
-CdWriter::CdWriter()
-{
-}
+CdWriter::CdWriter() {}
 
-CdWriter::~CdWriter()
-{
-}
+CdWriter::~CdWriter() {}
 
 bool CdWriter::hasK3b() const
 {

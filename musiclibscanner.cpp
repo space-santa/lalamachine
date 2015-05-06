@@ -28,14 +28,9 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "metadataprovider.h"
 #include "musiclib.h"
 
-MusicLibScanner::MusicLibScanner(QObject *parent) : QObject(parent)
-{
-}
+MusicLibScanner::MusicLibScanner(QObject *parent) : QObject(parent) {}
 
-void MusicLibScanner::setDb(QSqlDatabase *db)
-{
-    scanDb_ = db;
-}
+void MusicLibScanner::setDb(QSqlDatabase *db) { scanDb_ = db; }
 
 void MusicLibScanner::scanLib(const QString &path)
 {
@@ -81,10 +76,7 @@ void MusicLibScanner::scanLib(const QString &path)
     qDebug() << "End scan" << timer.elapsed();
     emit scanComplete();
 }
-QSharedPointer<QMutex> MusicLibScanner::mutex() const
-{
-    return mutex_;
-}
+QSharedPointer<QMutex> MusicLibScanner::mutex() const { return mutex_; }
 
 void MusicLibScanner::setMutex(const QSharedPointer<QMutex> &mutex)
 {

@@ -150,13 +150,9 @@ bool lengthDescending(QVariant i, QVariant j)
     return masterSort(i, j, PlaylistSorter::LENGTH, PlaylistSorter::DESCENDING);
 }
 
-PlaylistSorter::PlaylistSorter()
-{
-}
+PlaylistSorter::PlaylistSorter() {}
 
-PlaylistSorter::~PlaylistSorter()
-{
-}
+PlaylistSorter::~PlaylistSorter() {}
 
 QJsonArray PlaylistSorter::sort(QJsonArray list,
                                 PlaylistSorter::SortWhat what,

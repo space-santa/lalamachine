@@ -45,15 +45,9 @@ Config::Config(QQuickItem *parent) : QQuickItem(parent)
     loadConfig();
 }
 
-void Config::saveConfig()
-{
-    saveJsonFile(Config::CONFIGPATH, config_);
-}
+void Config::saveConfig() { saveJsonFile(Config::CONFIGPATH, config_); }
 
-void Config::loadConfig()
-{
-    config_ = loadJsonFile(Config::CONFIGPATH);
-}
+void Config::loadConfig() { config_ = loadJsonFile(Config::CONFIGPATH); }
 
 void Config::setVolume(double val)
 {

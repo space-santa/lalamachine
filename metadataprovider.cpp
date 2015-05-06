@@ -30,9 +30,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "timeconverter.h"
 
-MetaDataProvider::MetaDataProvider(QQuickItem *parent) : QQuickItem(parent)
-{
-}
+MetaDataProvider::MetaDataProvider(QQuickItem *parent) : QQuickItem(parent) {}
 
 QVector<QString> MetaDataProvider::metaData(const QUrl &path) const
 {

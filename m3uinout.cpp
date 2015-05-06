@@ -139,7 +139,4 @@ void M3uInOut::setPlaylistNames(const QStringList &list)
     emit playlistNamesChanged();
 }
 
-QStringList M3uInOut::playlistNames() const
-{
-    return playlistNames_;
-}
+QStringList M3uInOut::playlistNames() const { return playlistNames_; }

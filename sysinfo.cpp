@@ -24,45 +24,20 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <config.h>
 
-SysInfo::SysInfo(QObject *parent) : QObject(parent)
-{
-}
+SysInfo::SysInfo(QObject *parent) : QObject(parent) {}
 
-SysInfo::~SysInfo()
-{
-}
+SysInfo::~SysInfo() {}
 
-QString SysInfo::appVersion()
-{
-    return QCoreApplication::applicationVersion();
-}
+QString SysInfo::appVersion() { return QCoreApplication::applicationVersion(); }
 
-QString SysInfo::appName()
-{
-    return QCoreApplication::applicationName();
-}
+QString SysInfo::appName() { return QCoreApplication::applicationName(); }
 
-QString SysInfo::currentCpu()
-{
-    return QSysInfo::currentCpuArchitecture();
-}
+QString SysInfo::currentCpu() { return QSysInfo::currentCpuArchitecture(); }
 
-QString SysInfo::kernelType()
-{
-    return QSysInfo::kernelType();
-}
+QString SysInfo::kernelType() { return QSysInfo::kernelType(); }
 
-QString SysInfo::kernelVersion()
-{
-    return QSysInfo::kernelVersion();
-}
+QString SysInfo::kernelVersion() { return QSysInfo::kernelVersion(); }
 
-QString SysInfo::prettyProductName()
-{
-    return QSysInfo::prettyProductName();
-}
+QString SysInfo::prettyProductName() { return QSysInfo::prettyProductName(); }
 
-QString SysInfo::lalaDir()
-{
-    return Config::LALADIR;
-}
+QString SysInfo::lalaDir() { return Config::LALADIR; }
