@@ -177,7 +177,8 @@ Rectangle {
         playRow(playlist_view.currentRow)
     }
 
-    // FIXME: There should be a way to bind the property to this function.
+    // We can't bind the property to this function because the property will
+    // also be set in function playRow(row)
     function updateNowPlayingRow() {
         for (var i = 0; i < playlist_model.count; ++i) {
             if (currentId == playlist_model.get(i).id) {
