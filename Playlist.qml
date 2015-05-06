@@ -190,6 +190,7 @@ Rectangle {
 
     function addSelectionToPlaylist(listname) {
         // We are not going to add to ourselve.
+        // FIXME: Does the check for miscPlaylistName still make sense?
         if (!isLibrary && listname === miscPlaylistName) {
             return
         }
