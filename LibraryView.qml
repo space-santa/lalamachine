@@ -153,8 +153,10 @@ Rectangle {
                     source: "qrc:/images/images/edit-clear.png"
 
                     onClicked: {
+                        var ts = Date.now()
+                        lib.resetFilterAndSort()
                         filter_text.text = ""
-                        lib.resetSort()
+                        console.log("Reset filter duration:", Date.now() - ts)
                     }
                 }
             }
