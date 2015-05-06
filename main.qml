@@ -324,7 +324,6 @@ ApplicationWindow {
         function playTrack(path) {
             // Since the addition of the library it is necessary to
             // make sure an mrl is actually an mrl.
-            // FIXME: Find out why!
             playMusic.source = Functions.checkMrl(path)
             playMusic.play()
         }
