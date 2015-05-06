@@ -200,7 +200,10 @@ void MusicLib::setGenreFilter(const QString &val)
         genreFilter_ = val;
     }
 
-    setArtistFilter("");
+    // Not using the setter because I only want to setDisplayLib once.
+    // If the setter for artistFilter is used, it will trigger it again.
+    artistFilter_ = "";
+    albumFilter_ = "";
     emit genreFilterChanged();
 }
 
@@ -216,7 +219,8 @@ void MusicLib::setArtistFilter(const QString &val)
         artistFilter_ = val;
     }
 
-    setAlbumFilter("");
+    // See comment in setGenreFilter()
+    albumFilter_ = "";
     emit artistFilterChanged();
 }
 
@@ -312,8 +316,11 @@ QJsonArray MusicLib::autoPlaylist(const QJsonArray &json)
 
 void MusicLib::resetSort()
 {
-    setSortAsc(true);
-    setWhat(MusicLib::ARTIST);
+    // Not using the setter functions because I only want to setDisplayLib once.
+    // Otherwise it will takt twice as long for this to return.
+    sortAsc_ = true;
+    what_ = MusicLib::ARTIST;
+    setDisplayLib();
 }
 
 QString MusicLib::escapeString(QString str)
