@@ -82,13 +82,6 @@ ApplicationWindow {
                     lib_dialog.visible = true
                 }
             }
-            MenuItem {
-                text: "Settings"
-                iconSource: "qrc:/images/images/preferences.png"
-                onTriggered: {
-                    settings_dialog.open()
-                }
-            }
         }
         Menu {
             title: "Playlist"
@@ -121,6 +114,15 @@ ApplicationWindow {
                 text: "Export Files"
                 iconSource: "qrc:/images/images/export.png"
                 onTriggered: export_dialog.open()
+            }
+            MenuSeparator {
+            }
+            MenuItem {
+                text: "Settings"
+                iconSource: "qrc:/images/images/preferences.png"
+                onTriggered: {
+                    settings_dialog.open()
+                }
             }
         }
         Menu {
