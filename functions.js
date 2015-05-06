@@ -16,9 +16,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-.pragma library
-
 function millisToSec(millis) {
     return Math.round(millis / 1000)
 }
@@ -35,7 +32,7 @@ function secToMinSec(sec) {
 }
 
 function getSafeValue(value) {
-    if (typeof(value) === "undefined") {
+    if (typeof (value) === "undefined") {
         return ""
     } else {
         return value
@@ -53,5 +50,5 @@ function checkMrl(mrl) {
 
 // Random number within range min <= num <= max.
 function randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min
 }

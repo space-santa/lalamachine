@@ -16,7 +16,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 import QtQuick 2.0
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.2
@@ -37,8 +36,7 @@ Button {
     style: ButtonStyle {
         background: Rectangle {
             anchors.fill: parent
-            color: checkable ? (checked ? colourDown : colourUp)
-                             : (control.pressed ? colourDown : colourUp)
+            color: checkable ? (checked ? colourDown : colourUp) : (control.pressed ? colourDown : colourUp)
         }
     }
 }
