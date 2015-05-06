@@ -314,12 +314,13 @@ QJsonArray MusicLib::autoPlaylist(const QJsonArray &json)
     return queryToJson(result).second;
 }
 
-void MusicLib::resetSort()
+void MusicLib::resetFilterAndSort()
 {
     // Not using the setter functions because I only want to setDisplayLib once.
-    // Otherwise it will takt twice as long for this to return.
+    // Otherwise it will take twice as long for this to return.
     sortAsc_ = true;
     what_ = MusicLib::ARTIST;
+    titlePartialFilter_ = "";
     setDisplayLib();
 }
 

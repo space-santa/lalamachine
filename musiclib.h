@@ -132,7 +132,7 @@ public:
     Q_INVOKABLE void rescan();
 
     Q_INVOKABLE QJsonArray autoPlaylist(const QJsonArray &json);
-    Q_INVOKABLE void resetSort();
+    Q_INVOKABLE void resetFilterAndSort();
 
     static QString escapeString(QString str);
 
