@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.15.0
+Version: 0.16.0
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,11 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Wed May 06 2015 r-mean
+  0.16.0-1: Release 0.16
+  * The columns of the playlist are now configurable.
+  * Resetting the filterbox now also resets the sorting.
+
 * Sat May 02 2015 r-mean
   0.15.0-1: Release 0.15
   * The titles in the library view are now better sorted.

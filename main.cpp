@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     // Setting the app-icon.
     app.setWindowIcon(QIcon(QPixmap(":/images/images/lalamachine.png")));
-    app.setApplicationVersion("0.15");
+    app.setApplicationVersion("0.16");
     app.setApplicationName("lalamachine");
 
     qmlRegisterType<MetaDataProvider>("Lala", 1, 0, "Metadata");
