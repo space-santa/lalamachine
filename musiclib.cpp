@@ -308,6 +308,12 @@ QJsonArray MusicLib::autoPlaylist(const QJsonArray &json)
     return queryToJson(result).second;
 }
 
+void MusicLib::resetSort()
+{
+    setSortAsc(true);
+    setWhat(MusicLib::ARTIST);
+}
+
 QString MusicLib::escapeString(QString str)
 {
     // return str.replace("\'", "\'\'").replace(",", "\'+\',\'+\'");
