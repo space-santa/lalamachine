@@ -471,9 +471,9 @@ Rectangle {
             if (tag === "comment") {
                 width = 100
             }
-            if (tag === "lengthString") {
-                width = 100
-                title = "length"
+            if (tag === "length") {
+                width = 80
+                tag = "lengthString"
             }
             if (tag === "genre") {
                 width = 150
