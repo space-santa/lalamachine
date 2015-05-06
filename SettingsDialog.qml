@@ -22,8 +22,10 @@ import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 
 Dialog {
-    width: 500
-    height: 400
+    width: 250
+    height: 300
+
+    title: "Settings"
 
     onAccepted: {
         config.playlistColumns = playlist_columns.getJson()
