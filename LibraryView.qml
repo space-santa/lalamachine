@@ -152,7 +152,10 @@ Rectangle {
 
                     source: "qrc:/images/images/edit-clear.png"
 
-                    onClicked: filter_text.text = ""
+                    onClicked: {
+                        filter_text.text = ""
+                        lib.resetSort()
+                    }
                 }
             }
 
