@@ -188,17 +188,22 @@ Rectangle {
         }
     }
 
+    // This function is adding the selection to the playlist.
+    // This works from the playlist itself and from the library.
+    // The library has options to add to a new playlist or the current one.
+    // The main playlist can add stuff to a named playlist, even if to itself
+    // if it is named.
     function addSelectionToPlaylist(listname) {
-        // We are not going to add to ourselve.
-        // FIXME: Does the check for miscPlaylistName still make sense?
+        // The main playlist (!isLibrary) can only add stuff to a named list.
+        // This is by design, so we return here if it is an unnamed list
+        // (miscPlaylistName).
         if (!isLibrary && listname === miscPlaylistName) {
             return
         }
-        // FIXME: We are not going to delete ourselve.
-        // The problem is that once the list is cleared, the logic below
-        // doesn't make sense because we need the listmodel to get the
-        // information. Should be fixed in the future, but right now that is
-        // not important enough for me to put real effort in it.
+        // The main playlist has no option to add stuff to a new list ("").
+        // That is what the clear list button is for. It is debatable if that
+        // could be considered a bug / missing functionality, but I am happy
+        // with that behaviour.
         if (!isLibrary && listname === "") {
             return
         }
