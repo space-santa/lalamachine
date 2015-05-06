@@ -162,6 +162,8 @@ void MusicLib::debugSignal() { qDebug() << "DEBUGGING SIGNAL"; }
 
 void MusicLib::setDisplayLib()
 {
+    qDebug() << "MusicLib::setDisplayLib()";
+
     QMutexLocker locker(mutex_.data());
     QSqlQuery result = db_.exec(getSortQueryString());
 
