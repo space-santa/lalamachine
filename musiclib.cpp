@@ -154,8 +154,6 @@ void MusicLib::debugSignal() { qDebug() << "DEBUGGING SIGNAL"; }
 
 void MusicLib::setDisplayLib()
 {
-    if (not canSetDisplayLib()) return;
-
     qDebug() << "MusicLib::setDisplayLib()";
 
     QString query = getSortQueryString();
@@ -564,18 +562,6 @@ void MusicLib::scanFinished()
     emit musicLibChanged();
     setScanning(false);
 }
-
-bool MusicLib::canSetDisplayLib() const
-{
-    return canSetDisplayLib_;
-}
-
-void MusicLib::setCanSetDisplayLib(bool canSetDisplayLib)
-{
-    canSetDisplayLib_ = canSetDisplayLib;
-    emit canSetDisplayLibChanged();
-}
-
 
 QString MusicLib::titlePartialFilter() const { return titlePartialFilter_; }
 void MusicLib::setTitlePartialFilter(const QString &titlePartialFilter)
