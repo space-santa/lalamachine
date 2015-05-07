@@ -191,6 +191,9 @@ QString MusicLib::genreFilter() const { return genreFilter_; }
 
 void MusicLib::setGenreFilter(const QString &val)
 {
+    // WARNING: We can't return here if genreFilter_ == val because artist and
+    // album filter all depend on each other.
+
     // NOT using setTitlePartialFilter to not emit titlePartialfilterChanged.
     // If that signal would be emitted, everything would be reset.
     titlePartialFilter_ = "";
