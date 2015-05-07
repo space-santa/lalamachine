@@ -42,6 +42,8 @@ Rectangle {
         }
     }
 
+    Component.onCompleted: reset()
+
     function reset() {
         list_view.selection.select(0)
     }
