@@ -154,6 +154,8 @@ void MusicLib::debugSignal() { qDebug() << "DEBUGGING SIGNAL"; }
 
 void MusicLib::setDisplayLib()
 {
+    if (not canSetDisplayLib()) return;
+
     qDebug() << "MusicLib::setDisplayLib()";
 
     QMutexLocker locker(mutex_.data());
@@ -551,6 +553,18 @@ void MusicLib::scanFinished()
     emit musicLibChanged();
     setScanning(false);
 }
+
+bool MusicLib::canSetDisplayLib() const
+{
+    return canSetDisplayLib_;
+}
+
+void MusicLib::setCanSetDisplayLib(bool canSetDisplayLib)
+{
+    canSetDisplayLib_ = canSetDisplayLib;
+    emit canSetDisplayLibChanged();
+}
+
 
 QString MusicLib::titlePartialFilter() const { return titlePartialFilter_; }
 void MusicLib::setTitlePartialFilter(const QString &titlePartialFilter)
