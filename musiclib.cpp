@@ -67,11 +67,6 @@ MusicLib::MusicLib(QQuickItem *parent) : QQuickItem(parent)
     connect(this, &MusicLib::musicLibChanged, this, &MusicLib::setDisplayLib);
 
     connect(this,
-            &MusicLib::genreFilterChanged,
-            this,
-            &MusicLib::setDisplayLib);
-
-    connect(this,
             &MusicLib::titlePartialFilterChanged,
             this,
             &MusicLib::setDisplayLib);
@@ -91,11 +86,8 @@ MusicLib::MusicLib(QQuickItem *parent) : QQuickItem(parent)
             this,
             &MusicLib::setAlbumList);
 
-    connect(this,
-            &MusicLib::artistFilterChanged,
-            this,
-            &MusicLib::setDisplayLib);
-
+    // Since setting the genre or artist filter always sets the album filter,
+    // we only setDisplayLib here.
     connect(this,
             &MusicLib::albumFilterChanged,
             this,
@@ -205,8 +197,7 @@ void MusicLib::setGenreFilter(const QString &val)
 
     // Not using the setter because I only want to setDisplayLib once.
     // If the setter for artistFilter is used, it will trigger it again.
-    artistFilter_ = "";
-    albumFilter_ = "";
+    setArtistFilter("");
     emit genreFilterChanged();
 }
 
@@ -223,7 +214,7 @@ void MusicLib::setArtistFilter(const QString &val)
     }
 
     // See comment in setGenreFilter()
-    albumFilter_ = "";
+    setAlbumFilter("");
     emit artistFilterChanged();
 }
 
