@@ -572,13 +572,6 @@ void MusicLib::setCanSetDisplayLib(bool canSetDisplayLib)
 QString MusicLib::titlePartialFilter() const { return titlePartialFilter_; }
 void MusicLib::setTitlePartialFilter(const QString &titlePartialFilter)
 {
-    // If there is no change we don't want to emit the changed signal because
-    // we don't want to setDisplayLib if there is no change.
-    if (titlePartialFilter_ == titlePartialFilter) {
-        qDebug() << "No change, returning...";
-        return;
-    }
-
     titlePartialFilter_ = titlePartialFilter;
     emit titlePartialFilterChanged();
 }
