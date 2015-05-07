@@ -321,8 +321,11 @@ void MusicLib::resetFilterAndSort()
     // Otherwise it will take twice as long for this to return.
     sortAsc_ = true;
     what_ = MusicLib::ARTIST;
-    titlePartialFilter_ = "";
-    setDisplayLib();
+
+    genreFilter_ = "";
+    artistFilter_ = "";
+    albumFilter_ = "";
+    setTitlePartialFilter("");
 }
 
 QString MusicLib::escapeString(QString str)
