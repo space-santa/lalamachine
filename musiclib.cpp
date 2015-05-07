@@ -246,6 +246,9 @@ bool MusicLib::sortAsc() const { return sortAsc_; }
 
 void MusicLib::setSortAsc(bool val)
 {
+    if (sortAsc_ == val) return;
+    // Only do things when there was an actual change.
+    // We only want to setDisplayLib if necessary.
     sortAsc_ = val;
     emit sortAscChanged();
     setDisplayLib();
@@ -255,6 +258,8 @@ MusicLib::SortWhat MusicLib::what() const { return what_; }
 
 void MusicLib::setWhat(MusicLib::SortWhat val)
 {
+    if (what_ == val) return;
+    // See comment in MusicLib::setSortAsc
     what_ = val;
     emit whatChanged();
     setDisplayLib();
