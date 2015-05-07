@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.16.0
+Version: 0.17.0
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,14 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Wed May 06 2015 r-mean
+  0.17.0-1: Release 0.17
+  * There is now a splash screen altough the app loads too fast to see it.
+  * Increased the speed with which the library view is updated.
+    This especially matters when clearing the filter box.
+  * In the filter lists, the all filter is now highlighted when appropriate.
+  * When moving a track in the playlist up/down it stays highlighted/selected.
+
 * Wed May 06 2015 r-mean
   0.16.0-1: Release 0.16
   * The columns of the playlist are now configurable.
