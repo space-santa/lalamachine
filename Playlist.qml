@@ -405,8 +405,6 @@ Rectangle {
         console.log("TOTAL TIME IN MS", enddate - startdate)
     }
 
-    // FIXME: Check if this works properly with pla next/previous or play
-    // if it was paused/stopped.
     function moveTop() {
         playlist_model.move(playlist_view.currentRow, 0, 1)
         playlist_view.selection.clear()
