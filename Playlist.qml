@@ -405,8 +405,12 @@ Rectangle {
         console.log("TOTAL TIME IN MS", enddate - startdate)
     }
 
+    // FIXME: Check if this works properly with pla next/previous or play
+    // if it was paused/stopped.
     function moveTop() {
         playlist_model.move(playlist_view.currentRow, 0, 1)
+        playlist_view.selection.clear()
+        playlist_view.selection.select(0)
     }
     function moveUp() {
         playlist_model.move(playlist_view.currentRow,
@@ -423,6 +427,8 @@ Rectangle {
     function moveBottom() {
         playlist_model.move(playlist_view.currentRow,
                             playlist_model.count - 1, 1)
+        playlist_view.selection.clear()
+        playlist_view.selection.select(playlist_model.count - 1)
     }
 
     RightClickMenu {
