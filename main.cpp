@@ -21,6 +21,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QQmlApplicationEngine>
 #include <QPixmap>
 #include <QIcon>
+#include <QSplashScreen>
 
 #include "metadataprovider.h"
 #include "m3uinout.h"
@@ -33,6 +34,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "lalatypes.h"
 #include "autoplaylistmanager.h"
 #include "fileexporter.h"
+#include "engineloader.h"
 
 int main(int argc, char *argv[])
 {
@@ -41,6 +43,10 @@ int main(int argc, char *argv[])
     app.setWindowIcon(QIcon(QPixmap(":/images/images/lalamachine.png")));
     app.setApplicationVersion("0.16");
     app.setApplicationName("lalamachine");
+
+    QPixmap logo(":/images/images/logo/logo.png");
+    QSplashScreen splash(logo);
+    splash.show();
 
     qmlRegisterType<MetaDataProvider>("Lala", 1, 0, "Metadata");
     qmlRegisterType<M3uInOut>("Lala", 1, 0, "M3uInOut");
@@ -54,8 +60,9 @@ int main(int argc, char *argv[])
     qmlRegisterType<AutoPlaylistManager>("Lala", 1, 0, "AutoPlaylistManager");
     qmlRegisterType<FileExporter>("Lala", 1, 0, "FileExporter");
 
-    QQmlApplicationEngine engine;
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    EngineLoader loader;
+    loader.load();
+    splash.close();
 
     return app.exec();
 }
