@@ -154,7 +154,15 @@ Rectangle {
 
                     onClicked: {
                         var ts = Date.now()
+                        // We don't want to setDisplayLib here...
+                        lib.canSetDisplayLib = false
                         lib.resetFilterAndSort()
+                        genreList.reset()
+                        artistList.reset()
+                        albumList.reset()
+                        lib.canSetDisplayLib = true
+                        // because when setting the filter_text.text will also
+                        // setDisplayLib.
                         filter_text.text = ""
                         console.log("Reset filter duration:", Date.now() - ts)
                     }
