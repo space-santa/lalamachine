@@ -158,8 +158,16 @@ void MusicLib::setDisplayLib()
 
     qDebug() << "MusicLib::setDisplayLib()";
 
+    QString query = getSortQueryString();
+    if (query == lastDisplayLibQuery_) {
+        qDebug() << "query didn't change, nothing to do.";
+        return;
+    }
+
+    lastDisplayLibQuery_ = query;
+
     QMutexLocker locker(mutex_.data());
-    QSqlQuery result = db_.exec(getSortQueryString());
+    QSqlQuery result = db_.exec(query);
 
     auto tmp = queryToJson(result);
 

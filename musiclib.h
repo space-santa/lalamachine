@@ -199,6 +199,7 @@ private:
     QString titlePartialFilter_{""};
     bool firstRun_{true};
     bool canSetDisplayLib_{true};
+    QString lastDisplayLibQuery_{""};
 
     bool checkVal(const QString &check, const QString &val) const;
 
