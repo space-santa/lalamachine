@@ -42,6 +42,10 @@ Rectangle {
         }
     }
 
+    function reset() {
+        list_view.selection.select(0)
+    }
+
     function getSelection() {
         if (list_model.get(list_view.currentRow)) {
             return list_model.get(list_view.currentRow).content
