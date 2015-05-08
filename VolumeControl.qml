@@ -54,11 +54,27 @@ Rectangle {
             height: iconSize()
             width: height
             source: "qrc:/images/images/lalamachine.png"
+            visible: !mute_icon.visible
 
             function iconSize() {
                 // The icon should still be visible if volume is 0.
                 return parent.height * (0.25 + 0.75 * volume_slider.value)
             }
+        }
+        Image {
+            id: mute_icon
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            height: vol_icon.height
+            width: height
+            source: "qrc:/images/images/no.png"
+            visible: playMusic.muted
+        }
+
+        MouseArea {
+            id: muter
+            anchors.fill: parent
+            onClicked: playMusic.muted = !playMusic.muted
         }
     }
 
