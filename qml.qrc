@@ -58,5 +58,6 @@
         <file>images/repeat_random.png</file>
         <file>images/export.png</file>
         <file>images/logo/logo.png</file>
+        <file>images/no.png</file>
     </qresource>
 </RCC>
