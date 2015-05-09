@@ -184,18 +184,24 @@ ApplicationWindow {
         Menu {
             title: "Info"
 
-            MenuItem {
-                text: "Help"
+            Menu {
+                title: "Help"
                 iconSource: "qrc:/images/images/help.png"
-                onTriggered: Qt.openUrlExternally(
-                                 "https://bitbucket.org/r-mean/lalamachine/wiki/Home")
+                MenuItem {
+                    text: "Open the lalamachine wiki in your browser."
+                    onTriggered: Qt.openUrlExternally(
+                                     "https://bitbucket.org/r-mean/lalamachine/wiki/Home")
+                }
             }
 
-            MenuItem {
-                text: "Report Bug"
+            Menu {
+                title: "Report Bug"
                 iconSource: "qrc:/images/images/bug.png"
-                onTriggered: Qt.openUrlExternally(
-                                 "https://bitbucket.org/r-mean/lalamachine/issues/new")
+                MenuItem {
+                    text: "Create a new lalamachine issue in your browser."
+                    onTriggered: Qt.openUrlExternally(
+                                     "https://bitbucket.org/r-mean/lalamachine/issues/new")
+                }
             }
 
             MenuItem {
