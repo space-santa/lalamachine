@@ -187,11 +187,15 @@ ApplicationWindow {
             MenuItem {
                 text: "Help"
                 iconSource: "qrc:/images/images/help.png"
+                onTriggered: Qt.openUrlExternally(
+                                 "https://bitbucket.org/r-mean/lalamachine/wiki/Home")
             }
 
             MenuItem {
                 text: "Report Bug"
                 iconSource: "qrc:/images/images/bug.png"
+                onTriggered: Qt.openUrlExternally(
+                                 "https://bitbucket.org/r-mean/lalamachine/issues/new")
             }
 
             MenuItem {
