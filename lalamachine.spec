@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.17.0
+Version: 0.18.0
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,7 +57,13 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
-* Wed May 06 2015 r-mean
+* Sat May 09 2015 r-mean
+  0.18.0-1: Release 0.18
+  * The Help and Report Bug menu items now open the appropriate bitbucket-url
+    in a browser.
+  * Clicking the speaker image in the volume control now mutes/unmutes.
+
+* Fri May 08 2015 r-mean
   0.17.0-1: Release 0.17
   * There is now a splash screen altough the app loads too fast to see it.
   * Increased the speed with which the library view is updated.
