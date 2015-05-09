@@ -7,6 +7,8 @@ certain features. E.g. I store the key of a track in camelot notation in the com
 features I never use. It is also the only Gnome application I use which adds dependencies to my system.
 And since I enjoy software development I decided to write lalamachine.
 
+[User documentation can be found in the wiki.](https://bitbucket.org/r-mean/lalamachine/wiki/How%20Playlists%20Work)
+
 ## Dependencies
 
 lalamachine is a Qt5 application and uses QtMultimedia to play music.
