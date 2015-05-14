@@ -463,7 +463,7 @@ Rectangle {
                 removeColumn(i)
             }
 
-            for (var i = 0; i < playlistColumns.length; ++i) {
+            for (i = 0; i < playlistColumns.length; ++i) {
                 if (playlistColumns[i].value === "true") {
                     var o = Qt.createQmlObject(buildColumnString(
                                                    playlistColumns[i].key),
