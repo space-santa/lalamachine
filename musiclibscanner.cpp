@@ -92,13 +92,13 @@ void MusicLibScanner::addTrackToDB(QString album,
                                    QString artist,
                                    QString comment,
                                    QString genre,
-                                   QString length,
-                                   QString lengthString,
+                                   const QString &length,
+                                   const QString &lengthString,
                                    QString mrl,
                                    QString path,
                                    QString title,
-                                   QString track,
-                                   QString year)
+                                   const QString &track,
+                                   const QString &year)
 {
     QString query("INSERT into `musiclib` ");
     query.append("(`album`, `artist`, `comment`, `genre`, `length`, ");

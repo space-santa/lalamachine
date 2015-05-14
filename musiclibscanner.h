@@ -59,13 +59,13 @@ private:
                       QString artist,
                       QString comment,
                       QString genre,
-                      QString length,
-                      QString lengthString,
+                      const QString &length,
+                      const QString &lengthString,
                       QString mrl,
                       QString path,
                       QString title,
-                      QString track,
-                      QString year);
+                      const QString &track,
+                      const QString &year);
 };
 
 #endif  // MUSICLIBSCANNER_H
