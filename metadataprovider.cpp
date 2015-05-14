@@ -39,6 +39,8 @@ QVector<QString> MetaDataProvider::metaData(const QUrl &path) const
     QVector<QString> retval(11);
     TimeConverter tc;
 
+    // FIXME: If a tag is corrupt/generates a warning, fix it.
+    // This should probably be configurable.
     if (!f.isNull() && f.tag()) {
         TagLib::Tag *tag = f.tag();
         retval[0] = QString::fromUtf8(tag->album().toCString(true));
