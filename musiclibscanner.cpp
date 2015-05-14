@@ -37,6 +37,8 @@ void MusicLibScanner::scanLib(const QString &path)
     QElapsedTimer timer;
     timer.start();
 
+    counterThreshold_ = 10;
+
     if (path == "" || !QDir(path).exists()) {
         qCritical("I can't scan a non-existing folder.");
         return;
@@ -153,12 +155,10 @@ int MusicLibScanner::addCounter() const { return addCounter_; }
 
 void MusicLibScanner::setAddCounter()
 {
-    // FIXME: that counter should probably increase proportional to the size
-    // of the library. The main idea is to have some things to play while
-    // waiting for the lib scan.
-    if (addCounter_ < 50) {
+    if (addCounter_ < counterThreshold_) {
         ++addCounter_;
     } else {
         addCounter_ = 0;
+        counterThreshold_ += 10;
     }
 }
