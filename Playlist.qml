@@ -456,6 +456,7 @@ Rectangle {
         selectionMode: SelectionMode.ContiguousSelection
         property var playlistColumns: config.playlistColumns
 
+        Component.onCompleted: setColumns()
         onPlaylistColumnsChanged: setColumns()
 
         function setColumns() {
