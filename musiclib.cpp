@@ -282,6 +282,8 @@ void MusicLib::rescan()
         scannerThread_.start();
     }
 
+    clearMusicLib();
+
     emit startScan(libPath());
 }
 
@@ -503,6 +505,13 @@ void MusicLib::ensureAllTables()
         QMutexLocker locker(mutex_.data());
         qDebug() << db_.exec(qs).lastError();
     }
+}
+
+void MusicLib::clearMusicLib()
+{
+    QString query("DELETE FROM musiclib");
+    QMutexLocker locker(mutex_.data());
+    qDebug() << db_.exec(query).lastError();
 }
 
 QPair<int, QJsonArray> MusicLib::queryToJson(QSqlQuery result) const

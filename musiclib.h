@@ -201,6 +201,7 @@ private:
     QString getAlbumListQuery() const;
 
     void ensureAllTables();
+    void clearMusicLib();
 
     QPair<int, QJsonArray> queryToJson(QSqlQuery result) const;
 
