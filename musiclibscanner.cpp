@@ -60,9 +60,7 @@ void MusicLibScanner::scanLib(const QString &path)
             QString line = it.next();
 
             if (suffixCheck(line)) {
-                metaTimer.restart();
                 lib = meta.metaData(QUrl(line));
-                qDebug() << "meta finished" << metaTimer.elapsed();
                 metaTimer.restart();
                 addTrackToDB(lib.at(0),
                              lib.at(1),
