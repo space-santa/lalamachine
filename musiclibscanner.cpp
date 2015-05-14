@@ -119,7 +119,11 @@ void MusicLibScanner::addTrackToDB(QString album,
                           year));
 
     QMutexLocker locker(mutex_.data());
+
+    QElapsedTimer timer;
+    timer.start();
     QSqlError err = scanDb_->exec(query).lastError();
+    qDebug() << "dbase query took" << timer.elapsed();
 
     if (err.type() > 0) {
         //        qDebug() << "\n-----------\n"
