@@ -27,6 +27,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QPair>
+#include <QElapsedTimer>
 
 #include "metadataprovider.h"
 #include "config.h"
@@ -154,6 +155,8 @@ void MusicLib::debugSignal() { qDebug() << "DEBUGGING SIGNAL"; }
 
 void MusicLib::setDisplayLib()
 {
+    QElapsedTimer timer;
+    timer.start();
     qDebug() << "MusicLib::setDisplayLib()";
 
     QString query = getSortQueryString();
@@ -173,6 +176,7 @@ void MusicLib::setDisplayLib()
     emit displayLibChanged();
     totalLength_ = tmp.first;
     emit totalLengthChanged();
+    qDebug() << "displayLib set" << timer.elapsed();
 }
 
 QString MusicLib::libPath() const { return libPath_; }
