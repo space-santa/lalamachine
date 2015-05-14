@@ -65,6 +65,11 @@ MusicLib::MusicLib(QQuickItem *parent) : QQuickItem(parent)
             this,
             &MusicLib::scanStarted);
 
+    connect(scanner_,
+            &MusicLibScanner::trackAdded,
+            this,
+            &MusicLib::scanUpdate);
+
     connect(this, &MusicLib::musicLibChanged, this, &MusicLib::setDisplayLib);
 
     connect(this,
@@ -569,6 +574,22 @@ void MusicLib::setAlbumList()
 }
 
 void MusicLib::scanStarted() { setScanning(true); }
+
+void MusicLib::scanUpdate()
+{
+    lastDisplayLibQuery_ = "";
+    setDisplayLib();
+    setGenreList();
+    setArtistList();
+    setAlbumList();
+
+    // FIXME: I need a way to update the lists without changing the selection.
+    // Probably the setDisplayLib query must run in a separate thread and
+    // add line by line to the display lib.
+    // Perhaps the same is true for the other lists.
+    // Or, since this shouldn't happen too often, I don't care about it.
+    // I come back to this when I rescan the library daily.
+}
 
 void MusicLib::scanFinished()
 {

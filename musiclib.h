@@ -214,6 +214,8 @@ private slots:
     void setAlbumList();
 
     void scanStarted();
+
+    void scanUpdate();
 };
 
 #endif  // MUSICLIB_H
