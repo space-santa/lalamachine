@@ -43,11 +43,16 @@ public slots:
 signals:
     void scanStarted();
     void scanComplete();
+    void trackAdded();
 
 private:
     QSharedPointer<QMutex> mutex_;
     bool suffixCheck(const QString &val) const;
     QSqlDatabase *scanDb_;
+    int addCounter_;
+
+    int addCounter() const;
+    void setAddCounter();
 
     void addTrackToDB(QString album,
                       QString artist,

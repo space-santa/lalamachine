@@ -127,6 +127,11 @@ void MusicLibScanner::addTrackToDB(QString album,
         //                 << err.text() << "\n"
         //                 << mrl << "\n" << query << "\n----------\n";
     }
+
+    setAddCounter();
+    if (addCounter() == 0) {
+        emit trackAdded();
+    }
 }
 
 bool MusicLibScanner::suffixCheck(const QString &val) const
@@ -144,4 +149,17 @@ bool MusicLibScanner::suffixCheck(const QString &val) const
     }
 
     return false;
+}
+int MusicLibScanner::addCounter() const { return addCounter_; }
+
+void MusicLibScanner::setAddCounter()
+{
+    // FIXME: that counter should probably increase proportional to the size
+    // of the library. The main idea is to have some things to play while
+    // waiting for the lib scan.
+    if (addCounter_ < 50) {
+        ++addCounter_;
+    } else {
+        addCounter_ = 0;
+    }
 }
