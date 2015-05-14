@@ -53,11 +53,15 @@ void MusicLibScanner::scanLib(const QString &path)
     } else {
         QDirIterator it(rootDir, QDirIterator::Subdirectories);
 
+        QElapsedTimer metaTimer;
         while (it.hasNext()) {
             QString line = it.next();
 
             if (suffixCheck(line)) {
+                metaTimer.restart();
                 lib = meta.metaData(QUrl(line));
+                qDebug() << "meta finished" << metaTimer.elapsed();
+                metaTimer.restart();
                 addTrackToDB(lib.at(0),
                              lib.at(1),
                              lib.at(2),
@@ -69,6 +73,7 @@ void MusicLibScanner::scanLib(const QString &path)
                              lib.at(8),
                              lib.at(9),
                              lib.at(10));
+                qDebug() << "track added" << metaTimer.elapsed();
             }
         }
     }
