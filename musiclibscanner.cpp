@@ -126,8 +126,9 @@ void MusicLibScanner::addTrackToDB(QString album,
     qDebug() << "dbase query took" << timer.elapsed();
 
     if (err.type() > 0) {
-        qDebug() << "\n-----------\n" << err.text() << "\n" << mrl << "\n"
-                 << query << "\n----------\n";
+        qDebug() << "\nSQL error -----------\nSQL error while adding track\n"
+                 << "SQL error " << err.text() << "\nSQL error " << mrl
+                 << "\nSQL error " << query << "\nSQL error ----------\n";
     }
 
     setAddCounter();
