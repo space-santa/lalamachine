@@ -25,7 +25,7 @@ Dialog {
     id: container
     title: "Automatic Playlist"
     width: 600
-    height: 400
+    height: 270
     standardButtons: StandardButton.Ok | StandardButton.Cancel
 
     property var values
@@ -111,11 +111,13 @@ Dialog {
             id: apo1
 
             anchors.top: name_field.bottom
+            anchors.topMargin: 10
             anchors.left: parent.left
-            anchors.margins: 5
 
             width: parent.width
-            height: 75
+            height: 40
+
+            showAndOr: false
 
             onVisibleChanged: {
                 if (!visible) {
@@ -129,7 +131,6 @@ Dialog {
 
             anchors.top: apo1.bottom
             anchors.left: parent.left
-            anchors.margins: 5
 
             height: apo2.visible ? 0 : 50
             width: parent.width
@@ -155,10 +156,9 @@ Dialog {
 
             anchors.top: buttons1.bottom
             anchors.left: parent.left
-            anchors.margins: 5
 
             width: parent.width
-            height: 75
+            height: 40
 
             visible: false
 
@@ -174,7 +174,6 @@ Dialog {
 
             anchors.top: apo2.bottom
             anchors.left: parent.left
-            anchors.margins: 5
 
             height: apo3.visible ? 0 : 50
             width: parent.width
@@ -216,10 +215,9 @@ Dialog {
 
             anchors.top: buttons2.bottom
             anchors.left: parent.left
-            anchors.margins: 5
 
             width: parent.width
-            height: 75
+            height: 40
 
             visible: false
 
@@ -235,7 +233,6 @@ Dialog {
 
             anchors.top: apo3.bottom
             anchors.left: parent.left
-            anchors.margins: 5
 
             height: 50
             width: parent.width
