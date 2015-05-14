@@ -34,7 +34,8 @@ Dialog {
     function collectValues() {
         var retval = []
         retval[0] = {
-            andor: apo1.andorText,
+            // The first line is always "and".
+            andor: "and",
             tag: apo1.whereText,
             operator: apo1.howText,
             value: apo1.valueText
