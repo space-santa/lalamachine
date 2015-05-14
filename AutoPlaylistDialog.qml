@@ -23,6 +23,7 @@ import QtQuick.Controls 1.2
 
 Dialog {
     id: container
+    title: "Automatic Playlist"
     width: 600
     height: 400
     standardButtons: StandardButton.Ok | StandardButton.Cancel
