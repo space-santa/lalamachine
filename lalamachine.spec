@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.18.0
+Version: 0.19.0
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,13 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Fri May 15 2015 r-mean
+  0.19.0-1: Release 0.19
+  * Deleting the old musiclib before doing a rescan.
+  * Frequently updating the displaylibs while scanning the lib.
+  * Updated the auto playlist dialog.
+  * Fixed a bug that would not show the correct columns in the playlists.
+
 * Sat May 09 2015 r-mean
   0.18.0-1: Release 0.18
   * The Help and Report Bug menu items now open the appropriate bitbucket-url
