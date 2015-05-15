@@ -325,6 +325,7 @@ QJsonArray MusicLib::autoPlaylist(const QJsonArray &json)
         ++count;
     }
 
+    query.append(" ORDER BY artist, album, track");
     qDebug() << query;
     QMutexLocker locker(mutex_.data());
     auto result = db_.exec(query);
