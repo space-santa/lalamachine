@@ -23,6 +23,7 @@
         <file>SettingsDialog.qml</file>
         <file>KeyValueTableView.qml</file>
         <file>TableViewDelegate.qml</file>
+        <file>TrackMissingDialog.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/eject.png</file>

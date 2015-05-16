@@ -337,6 +337,17 @@ ApplicationWindow {
             playMusic.source = Functions.checkMrl(path)
             playMusic.play()
         }
+
+        onError: {
+            miss_dialog.text = errorString
+            miss_dialog.text += "\nYou might want to delete that track"
+            miss_dialog.text += "\nfrom the playlist and/or rescan you library."
+            miss_dialog.open()
+        }
+    }
+
+    TrackMissingDialog {
+        id: miss_dialog
     }
 
     Rectangle {
