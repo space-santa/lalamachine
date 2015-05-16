@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.19.0
+Version: 0.20.0
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,11 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat May 16 2015 r-mean
+  0.20.0-1: Release 0.20
+  * Showing an info dialog when the player has an error.
+  * Auto playlists are now sortet like the library by default.
+
 * Fri May 15 2015 r-mean
   0.19.0-1: Release 0.19
   * Deleting the old musiclib before doing a rescan.
