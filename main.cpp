@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
     app.setWindowIcon(QIcon(QPixmap(":/images/images/lalamachine.png")));
     app.setApplicationVersion("0.20");
     app.setApplicationName("lalamachine");
+    app.setOrganizationName("rmean");
 
     QPixmap logo(":/images/images/logo/logo.png");
     QSplashScreen splash(logo);
