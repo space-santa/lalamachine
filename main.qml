@@ -35,6 +35,9 @@ ApplicationWindow {
     height: Screen.height / 2
     title: getWindowTitle()
 
+    minimumHeight: 500
+    minimumWidth: 1005
+
     property string miscPlaylistName: "cs1m090"
     property string currentPlaylist: playlist.currentName
     property Playlist mainPlaylist: playlist
