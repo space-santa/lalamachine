@@ -21,6 +21,7 @@ import QtQuick.Controls 1.2
 import QtMultimedia 5.0
 import QtQuick.Dialogs 1.2
 import QtQuick.Window 2.2
+import Qt.labs.settings 1.0
 
 import Lala 1.0
 
@@ -47,6 +48,13 @@ ApplicationWindow {
         playlist.currentName = config.lastPlaylist
         volume_control.value = config.volume
         console.log("Volume on load", config.volume)
+    }
+
+    Settings {
+        property alias x: master.x
+        property alias y: master.y
+        property alias width: master.width
+        property alias height: master.height
     }
 
     onClosing: {
