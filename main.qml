@@ -30,7 +30,7 @@ import "qrc:/functions.js" as Functions
 ApplicationWindow {
     id: master
     visible: true
-    visibility: "Maximized"
+
     width: Screen.width / 2
     height: Screen.height / 2
     title: getWindowTitle()
