@@ -32,6 +32,8 @@ Rectangle {
 
     property string selection: getSelection()
 
+    signal rightClick
+
     onStringListChanged: {
         list_model.clear()
 
@@ -125,6 +127,14 @@ Rectangle {
             }
             onSortIndicatorOrderChanged: {
                 sort(sortIndicatorOrder)
+            }
+
+            rowDelegate: TableViewDelegate {
+                target: list_view
+                onRightClick: {
+                    container.rightClick()
+                    list_view.currentRow = row
+                }
             }
         }
 
