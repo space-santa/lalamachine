@@ -133,6 +133,7 @@ public:
 
     Q_INVOKABLE QJsonArray autoPlaylist(const QJsonArray &json);
     Q_INVOKABLE void resetFilterAndSort();
+    Q_INVOKABLE QJsonArray getAlbumTracks(const QString &album);
 
     static QString escapeString(QString str);
 

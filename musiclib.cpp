@@ -346,6 +346,16 @@ void MusicLib::resetFilterAndSort()
     setTitlePartialFilter("");
 }
 
+QJsonArray MusicLib::getAlbumTracks(const QString &album)
+{
+    QString query("SELECT * FROM musiclib WHERE album = '%1' ORDER BY track");
+
+    QMutexLocker locker(mutex_.data());
+    QSqlQuery result = db_.exec(query.arg(album));
+
+    return queryToJson(result).second;
+}
+
 QString MusicLib::escapeString(QString str)
 {
     // return str.replace("\'", "\'\'").replace(",", "\'+\',\'+\'");
