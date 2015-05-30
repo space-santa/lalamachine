@@ -38,9 +38,9 @@ Rectangle {
     MusicLib {
         id: lib
 
-        genreFilter: genreList.selection
-        artistFilter: artistList.selection
-        albumFilter: albumList.selection
+        genreFilter: genre_list.selection
+        artistFilter: artist_list.selection
+        albumFilter: album_list.selection
 
         titlePartialFilter: filter_text.text
 
@@ -63,7 +63,7 @@ Rectangle {
         color: "transparent"
 
         StringListView {
-            id: genreList
+            id: genre_list
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: parent.left
@@ -73,10 +73,10 @@ Rectangle {
             stringList: lib.genreList
         }
         StringListView {
-            id: artistList
+            id: artist_list
             anchors.top: parent.top
             anchors.bottom: parent.bottom
-            anchors.left: genreList.right
+            anchors.left: genre_list.right
             width: parent.width / 3
             height: parent.height
             allowSort: false
@@ -84,7 +84,7 @@ Rectangle {
             stringList: lib.artistList
         }
         StringListView {
-            id: albumList
+            id: album_list
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right
@@ -184,9 +184,9 @@ Rectangle {
                         var ts = Date.now()
                         lib.resetFilterAndSort()
 
-                        genreList.reset()
-                        artistList.reset()
-                        albumList.reset()
+                        genre_list.reset()
+                        artist_list.reset()
+                        album_list.reset()
 
                         filter_text.text = ""
                         console.log("Reset filter duration:", Date.now() - ts)
