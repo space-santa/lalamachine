@@ -21,7 +21,7 @@ import QtQuick.Controls 1.2
 
 Item {
     property TableView target
-    signal rightClick
+    signal rightClick(int row)
     Rectangle {
         anchors {
             left: parent.left
@@ -40,7 +40,7 @@ Item {
                         target.selection.clear()
                         target.selection.select(styleData.row)
                     }
-                    rightClick()
+                    rightClick(styleData.row)
                 }
             }
         }
