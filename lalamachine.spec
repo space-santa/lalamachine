@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.20.0
+Version: 0.99.0
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,11 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat May 30 2015 r-mean
+  0.99.0-1: Release 0.99
+  * Right click in the album list can add that album to a playlist.
+  * The window size and position is remembered between sessions.
+
 * Sat May 16 2015 r-mean
   0.20.0-1: Release 0.20
   * Showing an info dialog when the player has an error.
