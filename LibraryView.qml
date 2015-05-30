@@ -92,6 +92,34 @@ Rectangle {
             allowSort: false
             roleString: "album"
             stringList: lib.albumList
+
+            onRightClick: {
+                rcm.popup()
+            }
+        }
+
+        RightClickMenu {
+            id: rcm
+
+            isLibrary: true
+
+            onAddToPlaylist: {
+                if (listname === "") {
+                    mainPlaylist.clearList()
+                    listname = miscPlaylistName
+                }
+
+                var albumList = musicLib.getAlbumTracks(album_list.selection)
+
+                for (var i = 0; i < albumList.length; ++i) {
+                    if (listname === miscPlaylistName
+                            || listname === currentPlaylist) {
+                        mainPlaylist.add(albumList[i].path)
+                    } else {
+                        m3u.addToPlaylist(albumList[i].path, listname)
+                    }
+                }
+            }
         }
     }
 
