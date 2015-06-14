@@ -43,7 +43,7 @@ AutoPlaylistManager::~AutoPlaylistManager() {}
 // segfault. I then added WRITE setPlaylistNames to the property and only
 // emitted the signal there. Same endresult, writePlaylist fine, deletePlaylist
 // segfault. So now I listen to directory changes and emit the signal then.
-// No more segfaults.
+// No more segfaults. FIXME: That.
 void AutoPlaylistManager::handleDirChange()
 {
     setAutoPlaylistNames(getPlaylistNames());
