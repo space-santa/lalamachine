@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.99.0
+Version: 0.99.1
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,11 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sun Jun 14 2015 r-mean
+  0.99.1-1: Release 0.99.1
+  * Fixed a bug that would overwrite a named playlist when adding an album to a
+    new playlist.
+
 * Sat May 30 2015 r-mean
   0.99.0-1: Release 0.99
   * Right click in the album list can add that album to a playlist.
