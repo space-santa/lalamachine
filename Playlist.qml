@@ -245,6 +245,9 @@ Rectangle {
         addList(m3u.readPlaylist(name))
     }
 
+    // FIXME: This is an awfully designed function that lead to Issue #104.
+    // It is not obvious that it must be given a parameter to totally clear the
+    // list as in also the name.
     function clearList(newlist) {
         if (newlist) {
             currentName = ""

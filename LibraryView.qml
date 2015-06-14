@@ -105,7 +105,9 @@ Rectangle {
 
             onAddToPlaylist: {
                 if (listname === "") {
-                    mainPlaylist.clearList()
+                    // FIXME: clearPlaylist needs the argument 'true' to also
+                    // clear the playlist name.
+                    mainPlaylist.clearList(true)
                     listname = miscPlaylistName
                 }
 
