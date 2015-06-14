@@ -27,9 +27,6 @@ class SysInfo : public QObject
 {
     Q_OBJECT
 public:
-    explicit SysInfo(QObject *parent = 0);
-    ~SysInfo();
-
     Q_INVOKABLE QString appVersion();
     Q_INVOKABLE QString appName();
     Q_INVOKABLE QString currentCpu();

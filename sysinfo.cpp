@@ -24,10 +24,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <config.h>
 
-SysInfo::SysInfo(QObject *parent) : QObject(parent) {}
-
-SysInfo::~SysInfo() {}
-
 QString SysInfo::appVersion() { return QCoreApplication::applicationVersion(); }
 
 QString SysInfo::appName() { return QCoreApplication::applicationName(); }
