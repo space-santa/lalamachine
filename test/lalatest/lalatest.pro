@@ -19,7 +19,7 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 
-SOURCES += tst_lalatesttest.cpp \
+SOURCES += \
     ../../config.cpp \
     ../../m3uinout.cpp \
     ../../metadataprovider.cpp \
@@ -28,8 +28,11 @@ SOURCES += tst_lalatesttest.cpp \
     ../../musiclib.cpp \
     ../../systeminteractor.cpp \
     ../../autoplaylistobject.cpp \
+    ../../autoplaylistmanager.cpp \
     ../../lalatypes.cpp \
-    ../../musiclibscanner.cpp
+    ../../musiclibscanner.cpp \
+    main.cpp \
+    lalatest.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
@@ -41,5 +44,7 @@ HEADERS += \
     ../../musiclib.h \
     ../../systeminteractor.h \
     ../../autoplaylistobject.h \
+    ../../autoplaylistmanager.h \
     ../../lalatypes.h \
-    ../../musiclibscanner.h
+    ../../musiclibscanner.h \
+    lalatest.h

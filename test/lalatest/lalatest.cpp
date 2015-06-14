@@ -1,7 +1,9 @@
+#include "lalatest.h"
+
 #include <QString>
-#include <QtTest>
-#include <QCoreApplication>
+#include <QFile>
 #include <QStringList>
+#include <QtTest>
 
 #include "../../timeconverter.h"
 #include "../../systeminteractor.h"
@@ -10,38 +12,12 @@
 #include "../../autoplaylistobject.h"
 #include "../../lalatypes.h"
 
-class LalatestTest : public QObject
-{
-    Q_OBJECT
-
-public:
-    LalatestTest();
-
-    QString backupFileName(QString path);
-    void backupFile(QString path);
-    void restoreBackup(QString path);
-
-private Q_SLOTS:
-    void initTestCase();
-    void cleanupTestCase();
-    void testCase1();
-    void timeTest();
-    void systemInteractor();
-    void config();
-    //void m3uInOut();
-    void autoPlaylistObject();
-};
-
-LalatestTest::LalatestTest()
-{
-}
-
-QString LalatestTest::backupFileName(QString path)
+QString LalaTest::backupFileName(QString path)
 {
     return path + ".backup";
 }
 
-void LalatestTest::backupFile(QString path)
+void LalaTest::backupFile(QString path)
 {
     if (QFile::exists(backupFileName(path))) {
         QFile::remove(backupFileName(path));
@@ -49,7 +25,7 @@ void LalatestTest::backupFile(QString path)
     QFile::copy(path, backupFileName(path));
 }
 
-void LalatestTest::restoreBackup(QString path)
+void LalaTest::restoreBackup(QString path)
 {
     if (QFile::exists(path)) {
         QFile::remove(path);
@@ -57,20 +33,20 @@ void LalatestTest::restoreBackup(QString path)
     QFile::rename(backupFileName(path), path);
 }
 
-void LalatestTest::initTestCase()
+void LalaTest::initTestCase()
 {
 }
 
-void LalatestTest::cleanupTestCase()
+void LalaTest::cleanupTestCase()
 {
 }
 
-void LalatestTest::testCase1()
+void LalaTest::testCase1()
 {
     QVERIFY2(true, "Failure");
 }
 
-void LalatestTest::timeTest()
+void LalaTest::timeTest()
 {
     QString testString("");
     TimeConverter tc;
@@ -99,7 +75,7 @@ void LalatestTest::timeTest()
     QVERIFY(tc.toString() == testString);
 }
 
-void LalatestTest::systemInteractor()
+void LalaTest::systemInteractor()
 {
     SystemInteractor sysInt;
     // That'll work as expected.
@@ -112,7 +88,7 @@ void LalatestTest::systemInteractor()
     QVERIFY(!sysInt.startDetached(QString("gugulala25341"), QStringList()));
 }
 
-void LalatestTest::config()
+void LalaTest::config()
 {
     backupFile(Config::CONFIGPATH);
     Config cfg;
@@ -139,7 +115,7 @@ void LalatestTest::config()
     QVERIFY(cfg3.volume() == oldvol);
 }
 
-//void LalatestTest::m3uInOut()
+//void LalaTest::m3uInOut()
 //{
 //    M3uInOut m3;
 //    QString laladir(Config::PLAYLISTDIR);
@@ -164,12 +140,14 @@ void LalatestTest::config()
 //            == QStringList());
 //}
 
-void LalatestTest::autoPlaylistObject()
+void LalaTest::autoPlaylistObject()
 {
+    LalaTypes::AndOr andor = LalaTypes::AND;
     LalaTypes::Tag tag = LalaTypes::GENRE;
     LalaTypes::Operator op = LalaTypes::CONTAINS;
     QString val = "House";
-    AutoPlaylistObject apo(tag, op, val);
+    AutoPlaylistObject apo(andor, tag, op, val);
+    Q_ASSERT(apo.andor() == andor);
     Q_ASSERT(apo.tag() == tag);
     Q_ASSERT(apo.op() == op);
     Q_ASSERT(apo.val() == val);
@@ -177,12 +155,10 @@ void LalatestTest::autoPlaylistObject()
     QJsonObject obj = apo.toJson();
 
     AutoPlaylistObject apo2(obj);
+    Q_ASSERT(apo.andor() == apo2.andor());
     Q_ASSERT(apo.tag() == apo2.tag());
     Q_ASSERT(apo.op() == apo2.op());
     Q_ASSERT(apo.val() == apo2.val());
 
 }
 
-QTEST_MAIN(LalatestTest)
-
-#include "tst_lalatesttest.moc"
