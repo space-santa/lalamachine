@@ -59,6 +59,9 @@ void MusicLibScanner::scanLib(const QString &path)
         while (it.hasNext()) {
             QString line = it.next();
 
+            // FIXME: This takes about forever because each dbase access takes
+            // time. Would it be better to always add 20 or so tracks at once?
+            // Like accumulating a vector of vectors and when its full, add it.
             if (suffixCheck(line)) {
                 lib = meta.metaData(QUrl(line));
                 metaTimer.restart();

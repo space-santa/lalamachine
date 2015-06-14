@@ -22,6 +22,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QObject>
 
+// FIXME: Do I really need this and if so, does it have to be a class?
 class LalaTypes : public QObject
 {
     Q_OBJECT
