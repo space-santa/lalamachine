@@ -64,6 +64,9 @@ ApplicationWindow {
         playlist.writePlaylist(miscPlaylistName)
         config.volume = volume_control.value
         // I am deliberatly not checking for a named playlist here.
+        // If the currentPlaylist is not empty but the miscPlaylistName it still
+        // as expected because then the lastPlaylist is set to the
+        // miscPlaylistName in the else branch.
         if (currentPlaylist === "") {
             config.lastPlaylist = miscPlaylistName
         } else {
