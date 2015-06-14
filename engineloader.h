@@ -7,17 +7,11 @@
 class EngineLoader : public QObject
 {
     Q_OBJECT
-public:
-    explicit EngineLoader(QObject *parent = 0);
-    ~EngineLoader();
-
-signals:
-
 public slots:
-    void load();
+    void load() { engine_.load(QUrl(QStringLiteral("qrc:/main.qml"))); }
 
 private:
     QQmlApplicationEngine engine_;
 };
 
-#endif // ENGINELOADER_H
+#endif  // ENGINELOADER_H

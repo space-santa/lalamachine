@@ -22,8 +22,7 @@ SOURCES += main.cpp \
     autoplaylistobject.cpp \
     lalatypes.cpp \
     autoplaylistmanager.cpp \
-    fileexporter.cpp \
-    engineloader.cpp
+    fileexporter.cpp
 
 RESOURCES += qml.qrc
 
