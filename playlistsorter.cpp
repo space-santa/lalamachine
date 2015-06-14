@@ -28,6 +28,12 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config.h"
 
+// The sort functions are not members of PlaylistSorter because their purpose
+// is to be used as argument in std::sort. Nothing else. They would need to be
+// static member functions to allow that.
+
+namespace SortFunctions
+{
 bool masterSort(QVariant i,
                 QVariant j,
                 PlaylistSorter::SortWhat what,
@@ -150,10 +156,7 @@ bool lengthDescending(QVariant i, QVariant j)
 {
     return masterSort(i, j, PlaylistSorter::LENGTH, PlaylistSorter::DESCENDING);
 }
-
-PlaylistSorter::PlaylistSorter() {}
-
-PlaylistSorter::~PlaylistSorter() {}
+}  // namespace SortFunctions
 
 QJsonArray PlaylistSorter::sort(QJsonArray list,
                                 PlaylistSorter::SortWhat what,
@@ -163,49 +166,57 @@ QJsonArray PlaylistSorter::sort(QJsonArray list,
 
     if (what == PlaylistSorter::ARTIST) {
         if (how == PlaylistSorter::ASCENDING) {
-            std::sort(varl.begin(), varl.end(), artistAscending);
+            std::sort(varl.begin(), varl.end(), SortFunctions::artistAscending);
         } else {
-            std::sort(varl.begin(), varl.end(), artistDescending);
+            std::sort(varl.begin(),
+                      varl.end(),
+                      SortFunctions::artistDescending);
         }
     }
 
     if (what == PlaylistSorter::TITLE) {
         if (how == PlaylistSorter::ASCENDING) {
-            std::sort(varl.begin(), varl.end(), titleAscending);
+            std::sort(varl.begin(), varl.end(), SortFunctions::titleAscending);
         } else {
-            std::sort(varl.begin(), varl.end(), titleDescending);
+            std::sort(varl.begin(), varl.end(), SortFunctions::titleDescending);
         }
     }
 
     if (what == PlaylistSorter::TRACK) {
         if (how == PlaylistSorter::ASCENDING) {
-            std::sort(varl.begin(), varl.end(), trackAscending);
+            std::sort(varl.begin(), varl.end(), SortFunctions::trackAscending);
         } else {
-            std::sort(varl.begin(), varl.end(), trackDescending);
+            std::sort(varl.begin(), varl.end(), SortFunctions::trackDescending);
         }
     }
 
     if (what == PlaylistSorter::GENRE) {
         if (how == PlaylistSorter::ASCENDING) {
-            std::sort(varl.begin(), varl.end(), genreAscending);
+            std::sort(varl.begin(), varl.end(), SortFunctions::genreAscending);
         } else {
-            std::sort(varl.begin(), varl.end(), genreDescending);
+            std::sort(varl.begin(), varl.end(), SortFunctions::genreDescending);
         }
     }
 
     if (what == PlaylistSorter::COMMENT) {
         if (how == PlaylistSorter::ASCENDING) {
-            std::sort(varl.begin(), varl.end(), commentAscending);
+            std::sort(varl.begin(),
+                      varl.end(),
+                      SortFunctions::commentAscending);
         } else {
-            std::sort(varl.begin(), varl.end(), commentDescending);
+            std::sort(varl.begin(),
+                      varl.end(),
+                      SortFunctions::commentDescending);
         }
     }
 
     if (what == PlaylistSorter::LENGTH) {
         if (how == PlaylistSorter::ASCENDING) {
-            std::sort(varl.begin(), varl.end(), lengthAscending);
+            std::sort(varl.begin(), varl.end(), SortFunctions::lengthAscending);
         } else {
-            std::sort(varl.begin(), varl.end(), lengthDescending);
+            std::sort(varl.begin(),
+                      varl.end(),
+                      SortFunctions::lengthDescending);
         }
     }
 

@@ -34,18 +34,8 @@ public:
     enum SortHow { ASCENDING, DESCENDING };
     Q_ENUMS(SortHow)
 
-    PlaylistSorter();
-    ~PlaylistSorter();
-
     Q_INVOKABLE QJsonArray
     sort(QJsonArray list, SortWhat what, SortHow how) const;
-
-signals:
-
-public slots:
-
-private:
-    // bool titleAscending(QJsonValue i, QJsonValue j);
 };
 
 #endif  // PLAYLISTSORTER_H
