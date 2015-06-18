@@ -25,8 +25,10 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMutexLocker>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QRegularExpression>
 #include "metadataprovider.h"
 #include "musiclib.h"
+#include "tags.h"
 
 MusicLibScanner::MusicLibScanner(QObject *parent) : QObject(parent) {}
 
@@ -44,7 +46,7 @@ void MusicLibScanner::scanLib(const QString &path)
 
     qDebug() << "Start scan";
     emit scanStarted();
-    QVector<QString> lib(11);
+    Tags lib;
     MetaDataProvider meta;
     QDir rootDir(path);
 
@@ -54,30 +56,33 @@ void MusicLibScanner::scanLib(const QString &path)
         QDirIterator it(rootDir, QDirIterator::Subdirectories);
 
         QElapsedTimer metaTimer;
+
+        // We begin a transaction here.
+        scanDb_->transaction();
+
         while (it.hasNext()) {
             QString line = it.next();
 
-            // FIXME: This takes about forever because each dbase access takes
-            // time. Would it be better to always add 20 or 100 or so tracks at
-            // once? Like accumulating a vector of vectors and when its full,
-            // add it whith one big query.
             if (suffixCheck(line)) {
                 lib = meta.metaData(QUrl(line));
                 metaTimer.restart();
-                addTrackToDB(lib.at(0),
-                             lib.at(1),
-                             lib.at(2),
-                             lib.at(3),
-                             lib.at(4),
-                             lib.at(5),
-                             lib.at(6),
-                             lib.at(7),
-                             lib.at(8),
-                             lib.at(9),
-                             lib.at(10));
-                qDebug() << "track added" << metaTimer.elapsed();
+
+                // This is to mitigate another problem. We assume that all files
+                // with the correct sufix are good. Problem is that they might
+                // not be.
+                // For testing, my current lib has 4583 tracks, 1 without title
+                // all have a length.
+                if (not lib.isValid()) continue;
+
+                // Adding all queries to the transaction.
+                scanDb_->exec(getTrackQuery(lib) + ";\n");
+                qDebug() << "Query added" << metaTimer.elapsed();
             }
         }
+        QMutexLocker locker(mutex_.data());
+        // Now commit everything at once. Last time I checked this took
+        // 189893 ms (for comparison, the old approach takes ~698612ms (=*3.67))
+        scanDb_->commit();
     }
 
     qDebug() << "End scan" << timer.elapsed();
@@ -90,49 +95,44 @@ void MusicLibScanner::setMutex(const QSharedPointer<QMutex> &mutex)
     mutex_ = mutex;
 }
 
-void MusicLibScanner::addTrackToDB(QString album,
-                                   QString artist,
-                                   QString comment,
-                                   QString genre,
-                                   const QString &length,
-                                   const QString &lengthString,
-                                   QString mrl,
-                                   QString path,
-                                   QString title,
-                                   const QString &track,
-                                   const QString &year)
+QString MusicLibScanner::getTrackQuery(Tags track)
 {
     QString query("INSERT into `musiclib` ");
     query.append("(`album`, `artist`, `comment`, `genre`, `length`, ");
-    query.append("`lengthString`, `mrl`, `path`, `title`, `track`, `year`) ");
-    query.append("VALUES (");
-    query.append(QString("'%1', '%2', '%3', ")
-                     .arg(MusicLib::escapeString(album),
-                          MusicLib::escapeString(artist),
-                          MusicLib::escapeString(comment)));
-    query.append(QString("'%1', %2, '%3', '%4', '%5', '%6', %7, %8)")
-                     .arg(MusicLib::escapeString(genre),
-                          length,
-                          lengthString,
-                          MusicLib::escapeString(mrl),
-                          MusicLib::escapeString(path),
-                          MusicLib::escapeString(title),
-                          track,
-                          year));
+    query.append("`lengthString`, `mrl`, `path`, `title`, `track`, `year`) VALUES ");
+
+    QString valuesA("('%1', '%2', '%3', '%4', '%5', '%6', ");
+    QString valuesB("'%1', '%2', '%3', '%4', '%5')");
+    query.append(valuesA.arg(MusicLib::escapeString(track.album_))
+                     .arg(MusicLib::escapeString(track.artist_))
+                     .arg(MusicLib::escapeString(track.comment_))
+                     .arg(MusicLib::escapeString(track.genre_))
+                     .arg(MusicLib::escapeString(track.length_))
+                     .arg(MusicLib::escapeString(track.lengthString_)));
+    query.append(valuesB.arg(MusicLib::escapeString(track.mrl_))
+                     .arg(MusicLib::escapeString(track.path_))
+                     .arg(MusicLib::escapeString(track.title_))
+                     .arg(MusicLib::escapeString(track.track_))
+                     .arg(MusicLib::escapeString(track.year_)));
+
+    return query;
+}
+
+void MusicLibScanner::addTracksToDB(QString query)
+{
+    QString tmp("BEGIN;\n%1;\nCOMMIT;");
 
     QMutexLocker locker(mutex_.data());
 
     QElapsedTimer timer;
     timer.start();
-    QSqlError err = scanDb_->exec(query).lastError();
+    QSqlError err = scanDb_->exec(tmp.arg(query)).lastError();
     qDebug() << "dbase query took" << timer.elapsed();
 
     if (err.type() > 0) {
         qDebug() << "SQL error -----------\n"
                  << "SQL error while adding track\n"
                  << "SQL error " << err.text() << "\n"
-                 << "SQL error " << mrl << "\n"
-                 << "SQL error " << query << "\n"
                  << "SQL error ----------\n";
     }
 

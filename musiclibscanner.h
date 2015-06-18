@@ -25,6 +25,8 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMutex>
 #include <QSharedPointer>
 
+#include "tags.h"
+
 class MusicLibScanner : public QObject
 {
     Q_OBJECT
@@ -61,6 +63,8 @@ private:
                       QString title,
                       const QString &track,
                       const QString &year);
+    void addTracksToDB(QString query);
+    QString getTrackQuery(Tags track);
 };
 
 #endif  // MUSICLIBSCANNER_H
