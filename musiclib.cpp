@@ -165,6 +165,11 @@ void MusicLib::setDisplayLib()
     qDebug() << "MusicLib::setDisplayLib()";
 
     QString query = getSortQueryString();
+
+    // WARNING: This can cause a problem after a library scan.
+    // The LibraryView might not be properly updated once the scan finishes
+    // because the query == last query. I am setting lastDisplayLibQuery_ = "-1"
+    // in MusicLib::scanFinished() to work around this.
     if (query == lastDisplayLibQuery_) {
         qDebug() << "query didn't change, nothing to do.";
         return;
@@ -604,6 +609,9 @@ void MusicLib::scanUpdate()
 
 void MusicLib::scanFinished()
 {
+    // Setting the query to something invalid to have the check in setDisplayLib
+    // do the right thing and display stuff as expected.
+    lastDisplayLibQuery_ = "-1";
     emit musicLibChanged();
     setScanning(false);
 }
