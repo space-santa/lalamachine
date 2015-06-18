@@ -23,13 +23,15 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QQuickItem>
 #include <QJsonObject>
 
+#include "tags.h"
+
 class MetaDataProvider : public QQuickItem
 {
     Q_OBJECT
 public:
     explicit MetaDataProvider(QQuickItem *parent = 0);
 
-    QVector<QString> metaData(const QUrl &path) const;
+    Tags metaData(const QUrl &path) const;
 
     Q_INVOKABLE QJsonObject metaDataAsJson(const QUrl &path) const;
 

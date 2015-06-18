@@ -29,55 +29,34 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "fileref.h"
 
 #include "timeconverter.h"
+#include "tags.h"
 
 MetaDataProvider::MetaDataProvider(QQuickItem *parent) : QQuickItem(parent) {}
 
 // FIXME: Is a vector really the proper return value?
 // If so, I think I should add an enum to lalatypes mapping field to integer.
-QVector<QString> MetaDataProvider::metaData(const QUrl &path) const
+Tags MetaDataProvider::metaData(const QUrl &path) const
 {
     QString line(path.path());
     TagLib::FileRef f(line.toLocal8Bit().data());
-    QVector<QString> retval(11);
     TimeConverter tc;
 
     if (!f.isNull() && f.tag()) {
         TagLib::Tag *tag = f.tag();
-        retval[0] = QString::fromUtf8(tag->album().toCString(true));
-        retval[1] = QString::fromUtf8(tag->artist().toCString(true));
-        retval[2] = QString::fromUtf8(tag->comment().toCString(true));
-        retval[3] = QString::fromUtf8(tag->genre().toCString(true));
-        retval[4] = QString::number(f.audioProperties()->length());
         // Clearing the timeconverter and get the time as displayable string.
         tc.clear();
         tc.setSeconds(f.audioProperties()->length());
-        retval[5] = tc.toString();
-        retval[6] = path.toString();
-        retval[7] = line;
-        retval[8] = QString::fromUtf8(tag->title().toCString(true));
-        retval[9] = QString::number(tag->track());
-        retval[10] = QString::number(tag->year());
+        return Tags(tag,
+                    path,
+                    line,
+                    f.audioProperties()->length(),
+                    tc.toString());
     }
 
-    return retval;
+    return Tags();
 }
 
 QJsonObject MetaDataProvider::metaDataAsJson(const QUrl &path) const
 {
-    auto tmp = metaData(path);
-    QString line(path.path());
-    QVariantMap retval;
-    retval.insert("album", tmp.at(0));
-    retval.insert("artist", tmp.at(1));
-    retval.insert("comment", tmp.at(2));
-    retval.insert("genre", tmp.at(3));
-    retval.insert("length", tmp.at(4).toInt());
-    retval.insert("lengthString", tmp.at(5));
-    retval.insert("mrl", tmp.at(6));
-    retval.insert("path", tmp.at(7));
-    retval.insert("title", tmp.at(8));
-    retval.insert("track", tmp.at(9).toInt());
-    retval.insert("year", tmp.at(10).toInt());
-
-    return QJsonObject::fromVariantMap(retval);
+    return metaData(path).toJson();
 }
