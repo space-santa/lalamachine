@@ -37,8 +37,6 @@ void MusicLibScanner::scanLib(const QString &path)
     QElapsedTimer timer;
     timer.start();
 
-    counterThreshold_ = 10;
-
     if (path == "" || !QDir(path).exists()) {
         qCritical("I can't scan a non-existing folder.");
         return;
@@ -138,10 +136,7 @@ void MusicLibScanner::addTrackToDB(QString album,
                  << "SQL error ----------\n";
     }
 
-    setAddCounter();
-    if (addCounter() == 0) {
-        emit trackAdded();
-    }
+    emit trackAdded();
 }
 
 bool MusicLibScanner::suffixCheck(const QString &val) const
@@ -159,15 +154,4 @@ bool MusicLibScanner::suffixCheck(const QString &val) const
     }
 
     return false;
-}
-int MusicLibScanner::addCounter() const { return addCounter_; }
-
-void MusicLibScanner::setAddCounter()
-{
-    if (addCounter_ < counterThreshold_) {
-        ++addCounter_;
-    } else {
-        addCounter_ = 0;
-        counterThreshold_ += 10;
-    }
 }

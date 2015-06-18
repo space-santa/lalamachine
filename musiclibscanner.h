@@ -49,11 +49,6 @@ private:
     QSharedPointer<QMutex> mutex_;
     bool suffixCheck(const QString &val) const;
     QSqlDatabase *scanDb_;
-    int addCounter_{0};
-    int counterThreshold_{10};
-
-    int addCounter() const;
-    void setAddCounter();
 
     void addTrackToDB(QString album,
                       QString artist,
