@@ -189,7 +189,7 @@ private:
     QStringList artistList_{};
     QStringList albumList_{};
     QString titlePartialFilter_{""};
-    bool firstRun_{true};
+    bool appStart_{true};
     QString lastDisplayLibQuery_{""};
 
     bool checkVal(const QString &check, const QString &val) const;
