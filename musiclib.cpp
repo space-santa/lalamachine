@@ -594,7 +594,8 @@ void MusicLib::scanUpdate()
     setArtistList();
     setAlbumList();
 
-    // FIXME 1.x: I need a way to update the lists without changing the selection.
+    // FIXME 1.x: I need a way to update the lists without changing the
+    // selection.
     // Probably the setDisplayLib query must run in a separate thread and
     // add line by line to the display lib.
     // Perhaps the same is true for the other lists.
