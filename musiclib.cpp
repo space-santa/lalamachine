@@ -160,10 +160,6 @@ void MusicLib::debugSignal() { qDebug() << "DEBUGGING SIGNAL"; }
 
 void MusicLib::setDisplayLib()
 {
-    QElapsedTimer timer;
-    timer.start();
-    qDebug() << "MusicLib::setDisplayLib()";
-
     QString query = getSortQueryString();
 
     // WARNING: This can cause a problem after a library scan.
@@ -186,7 +182,6 @@ void MusicLib::setDisplayLib()
     emit displayLibChanged();
     totalLength_ = tmp.first;
     emit totalLengthChanged();
-    qDebug() << "displayLib set" << timer.elapsed();
 }
 
 QString MusicLib::libPath() const { return libPath_; }
