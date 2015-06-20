@@ -46,7 +46,6 @@ bool masterSort(QVariant i,
 
     QString sortString{};
 
-    // FIXME: The translation type to string should probably move to lalatypes.
     if (what == PlaylistSorter::ARTIST) {
         sortString = "artist";
     }
