@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     // Setting the app-icon.
     app.setWindowIcon(QIcon(QPixmap(":/images/images/lalamachine.png")));
-    app.setApplicationVersion("0.99.2");
+    app.setApplicationVersion("1.0");
     app.setApplicationName("lalamachine");
     app.setOrganizationName("rmean");
 

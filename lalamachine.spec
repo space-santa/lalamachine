@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.99.2
+Version: 1.0
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,11 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat Jun 20 2015 r-mean
+  1.0-1: Release 1.0
+  * Code cleanup.
+  * Shift/ctrl + left click now selects multiple tracks as expected.
+
 * Sat Jun 20 2015 r-mean
   0.99.2-1: Release 0.99.2
   * Library scan is now significantly faster.
