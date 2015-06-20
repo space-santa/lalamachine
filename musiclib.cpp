@@ -28,6 +28,9 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSqlError>
 #include <QPair>
 #include <QElapsedTimer>
+#include <QFuture>
+#include <QFutureWatcher>
+#include <QtConcurrent>
 
 #include "metadataprovider.h"
 #include "config.h"
@@ -117,6 +120,11 @@ MusicLib::MusicLib(QQuickItem *parent) : QQuickItem(parent)
             this,
             &MusicLib::setAlbumList);
 
+    connect(&watcher_,
+            &QFutureWatcher<QSqlQuery>::finished,
+            this,
+            &MusicLib::onDisplayFutureFinished);
+
     setGenreList();
 }
 
@@ -173,11 +181,19 @@ void MusicLib::setDisplayLib()
 
     lastDisplayLibQuery_ = query;
 
+    auto future = QtConcurrent::run(this, &MusicLib::runSetDisplayQuery, query);
+    watcher_.setFuture(future);
+}
+
+QSqlQuery MusicLib::runSetDisplayQuery(const QString &query)
+{
     QMutexLocker locker(mutex_.data());
-    QSqlQuery result = db_.exec(query);
+    return db_.exec(query);
+}
 
-    auto tmp = queryToJson(result);
-
+void MusicLib::onDisplayFutureFinished()
+{
+    auto tmp = queryToJson(watcher_.result());
     displayLib_ = tmp.second;
     emit displayLibChanged();
     totalLength_ = tmp.first;

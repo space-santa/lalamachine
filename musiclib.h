@@ -27,6 +27,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QQuickItem>
 #include <QMutex>
 #include <QSqlDatabase>
+#include <QFutureWatcher>
 
 #include "musiclibscanner.h"
 #include "autoplaylistobject.h"
@@ -192,6 +193,8 @@ private:
     bool appStart_{true};
     QString lastDisplayLibQuery_{""};
 
+    QFutureWatcher<QSqlQuery> watcher_;
+
     bool checkVal(const QString &check, const QString &val) const;
 
     QStringList getList(const QString &what) const;
@@ -206,6 +209,8 @@ private:
 
     QPair<int, QJsonArray> queryToJson(QSqlQuery result) const;
 
+    QSqlQuery runSetDisplayQuery(const QString &query);
+
 private slots:
     void debugSignal();
 
@@ -217,6 +222,7 @@ private slots:
     void scanStarted();
 
     void scanUpdate();
+    void onDisplayFutureFinished();
 };
 
 #endif  // MUSICLIB_H
