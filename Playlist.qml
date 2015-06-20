@@ -460,7 +460,7 @@ Rectangle {
         id: playlist_view
         anchors.fill: parent
         model: playlist_model
-        selectionMode: SelectionMode.ContiguousSelection
+        selectionMode: SelectionMode.ExtendedSelection
         property var playlistColumns: config.playlistColumns
 
         Component.onCompleted: setColumns()
