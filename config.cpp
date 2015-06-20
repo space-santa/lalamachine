@@ -57,7 +57,9 @@ void Config::setVolume(double val)
 
 double Config::volume()
 {
-    double retval = 0;
+    // I initialize the volume with 0.4. I turns out to be confusing for users
+    // that on first start the app starts silent (as in volume = 0).
+    double retval = 0.4;
     QJsonValue v = config_.value("volume");
 
     if (v.isDouble()) {
