@@ -33,8 +33,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 MetaDataProvider::MetaDataProvider(QQuickItem *parent) : QQuickItem(parent) {}
 
-// FIXME: Is a vector really the proper return value?
-// If so, I think I should add an enum to lalatypes mapping field to integer.
 Tags MetaDataProvider::metaData(const QUrl &path) const
 {
     QString line(path.path());
