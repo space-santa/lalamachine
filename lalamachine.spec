@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 0.99.1
+Version: 0.99.2
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,12 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat Jun 20 2015 r-mean
+  0.99.2-1: Release 0.99.2
+  * Library scan is now significantly faster.
+  * If on startup there is no config.json, the volume is 0.4.
+  * Resetting the filter no longer blocks the UI.
+
 * Sun Jun 14 2015 r-mean
   0.99.1-1: Release 0.99.1
   * Fixed a bug that would overwrite a named playlist when adding an album to a
