@@ -101,12 +101,12 @@ ImageButton {
         onClicked: {
             if (none) {
                 none = false
-                repeatOne = true
-            } else if (repeatOne) {
-                repeatOne = false
                 repeatAll = true
             } else if (repeatAll) {
                 repeatAll = false
+                repeatOne = true
+            } else if (repeatOne) {
+                repeatOne = false
                 random = true
             } else {
                 random = false
