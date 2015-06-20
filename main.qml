@@ -389,7 +389,7 @@ ApplicationWindow {
                 onMoveUp: playlist.moveUp()
                 onMoveDown: playlist.moveDown()
                 onMoveBottom: playlist.moveBottom()
-                onClearList: playlist.clearList(true)
+                onClearList: playlist.createNewList()
             }
 
             Playlist {
@@ -414,8 +414,7 @@ ApplicationWindow {
                 }
 
                 function addAutoPlaylist(listname) {
-                    playlist.clearList()
-                    playlist.currentName = ""
+                    playlist.createNewList()
                     playlist.addLib(libview.musicLib.autoPlaylist(
                                         auto_playlist_manager.getAutoPlaylist(
                                             listname)))

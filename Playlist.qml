@@ -118,7 +118,7 @@ Rectangle {
     function deletePlaylist(listname) {
         m3u.deletePlaylist(listname)
         if (listname === currentName) {
-            clearList(true)
+            createNewList()
         }
     }
 
@@ -209,7 +209,7 @@ Rectangle {
         }
 
         if (listname === "") {
-            mainPlaylist.clearList(true)
+            mainPlaylist.createNewList()
             listname = miscPlaylistName
         }
 
@@ -241,13 +241,17 @@ Rectangle {
     }
 
     function readPlaylist(name) {
-        clearList(false)
+        // We use this function here because we want to keep the currentName.
+        emptyCurrentList()
         addList(m3u.readPlaylist(name))
     }
 
-    // FIXME: This is an awfully designed function that lead to Issue #104.
-    // It is not obvious that it must be given a parameter to totally clear the
-    // list as in also the name.
+    function createNewList() {
+        clearList(true)
+    }
+    function emptyCurrentList() {
+        clearList(false)
+    }
     function clearList(newlist) {
         if (newlist) {
             currentName = ""

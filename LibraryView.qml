@@ -48,7 +48,7 @@ Rectangle {
         sortAsc: titles.sortAsc
 
         onDisplayLibChanged: {
-            titles.clearList()
+            titles.emptyCurrentList()
             titles.addLib(displayLib)
         }
     }
@@ -107,7 +107,7 @@ Rectangle {
                 if (listname === "") {
                     // FIXME: clearPlaylist needs the argument 'true' to also
                     // clear the playlist name.
-                    mainPlaylist.clearList(true)
+                    mainPlaylist.createNewList()
                     listname = miscPlaylistName
                 }
 
