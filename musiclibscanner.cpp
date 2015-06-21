@@ -29,10 +29,13 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "metadataprovider.h"
 #include "musiclib.h"
 #include "tags.h"
+#include "config.h"
 
-MusicLibScanner::MusicLibScanner(QObject *parent) : QObject(parent) {}
-
-void MusicLibScanner::setDb(QSqlDatabase *db) { scanDb_ = db; }
+MusicLibScanner::MusicLibScanner(QObject *parent) : QObject(parent)
+{
+    scanDb_ = QSqlDatabase::addDatabase("QSQLITE", "scanner");
+    scanDb_.setDatabaseName(Config::MUSICLIBDB);
+}
 
 void MusicLibScanner::scanLib(const QString &path)
 {
@@ -41,6 +44,12 @@ void MusicLibScanner::scanLib(const QString &path)
 
     if (path == "" || !QDir(path).exists()) {
         qCritical("I can't scan a non-existing folder.");
+        return;
+    }
+
+    ;
+    if (not scanDb_.open()) {
+        qDebug() << "Can't open dbase..." << scanDb_.lastError().type();
         return;
     }
 
@@ -58,7 +67,7 @@ void MusicLibScanner::scanLib(const QString &path)
         QElapsedTimer metaTimer;
 
         // We begin a transaction here.
-        scanDb_->transaction();
+        scanDb_.transaction();
 
         while (it.hasNext()) {
             QString line = it.next();
@@ -78,20 +87,14 @@ void MusicLibScanner::scanLib(const QString &path)
                 qDebug() << "Query added" << metaTimer.elapsed();
             }
         }
-        QMutexLocker locker(mutex_.data());
         // Now commit everything at once. Last time I checked this took
         // 189893 ms (for comparison, the old approach takes ~698612ms (=*3.67))
-        scanDb_->commit();
+        scanDb_.commit();
     }
 
     qDebug() << "End scan" << timer.elapsed();
     emit scanComplete();
-}
-QSharedPointer<QMutex> MusicLibScanner::mutex() const { return mutex_; }
-
-void MusicLibScanner::setMutex(const QSharedPointer<QMutex> &mutex)
-{
-    mutex_ = mutex;
+    scanDb_.close();
 }
 
 QString MusicLibScanner::getTrackQuery(Tags track)

@@ -48,8 +48,6 @@ MusicLib::MusicLib(QQuickItem *parent) : QQuickItem(parent)
     db_.setDatabaseName(Config::MUSICLIBDB);
     db_.open();
     ensureAllTables();
-    scanner_->setDb(&db_);
-    scanner_->setMutex(mutex_);
 
     connect(&scannerThread_,
             &QThread::finished,

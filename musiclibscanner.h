@@ -22,8 +22,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QObject>
 #include <QSqlDatabase>
-#include <QMutex>
-#include <QSharedPointer>
 
 #include "tags.h"
 
@@ -34,11 +32,6 @@ class MusicLibScanner : public QObject
 public:
     MusicLibScanner(QObject *parent = 0);
 
-    void setDb(QSqlDatabase *db);
-
-    QSharedPointer<QMutex> mutex() const;
-    void setMutex(const QSharedPointer<QMutex> &mutex);
-
 public slots:
     void scanLib(const QString &path);
 
@@ -48,7 +41,6 @@ signals:
     void trackAdded();
 
 private:
-    QSharedPointer<QMutex> mutex_;
     bool suffixCheck(const QString &val) const;
     QSqlDatabase scanDb_;
     QString getTrackQuery(Tags track);
