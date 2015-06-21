@@ -623,6 +623,7 @@ void MusicLib::scanFinished()
 {
     // Setting the query to something invalid to have the check in setDisplayLib
     // do the right thing and display stuff as expected.
+    // FIXME: Having to do that makes me feel dirty. Is the concept sound?
     lastDisplayLibQuery_ = "-1";
     emit musicLibChanged();
     setScanning(false);
