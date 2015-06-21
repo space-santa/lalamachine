@@ -117,27 +117,6 @@ QString MusicLibScanner::getTrackQuery(Tags track)
     return query;
 }
 
-void MusicLibScanner::addTracksToDB(QString query)
-{
-    QString tmp("BEGIN;\n%1;\nCOMMIT;");
-
-    QMutexLocker locker(mutex_.data());
-
-    QElapsedTimer timer;
-    timer.start();
-    QSqlError err = scanDb_->exec(tmp.arg(query)).lastError();
-    qDebug() << "dbase query took" << timer.elapsed();
-
-    if (err.type() > 0) {
-        qDebug() << "SQL error -----------\n"
-                 << "SQL error while adding track\n"
-                 << "SQL error " << err.text() << "\n"
-                 << "SQL error ----------\n";
-    }
-
-    emit trackAdded();
-}
-
 bool MusicLibScanner::suffixCheck(const QString &val) const
 {
     if (val.endsWith(".mp3")) {

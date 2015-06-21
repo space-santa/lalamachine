@@ -50,20 +50,7 @@ signals:
 private:
     QSharedPointer<QMutex> mutex_;
     bool suffixCheck(const QString &val) const;
-    QSqlDatabase *scanDb_;
-
-    void addTrackToDB(QString album,
-                      QString artist,
-                      QString comment,
-                      QString genre,
-                      const QString &length,
-                      const QString &lengthString,
-                      QString mrl,
-                      QString path,
-                      QString title,
-                      const QString &track,
-                      const QString &year);
-    void addTracksToDB(QString query);
+    QSqlDatabase scanDb_;
     QString getTrackQuery(Tags track);
 };
 
