@@ -46,7 +46,7 @@ void MusicLibScanner::scanLib(const QString &path)
 
     qDebug() << "Start scan";
     emit scanStarted();
-    Tags lib;
+    Tags tmp;
     MetaDataProvider meta;
     QDir rootDir(path);
 
@@ -64,18 +64,17 @@ void MusicLibScanner::scanLib(const QString &path)
             QString line = it.next();
 
             if (suffixCheck(line)) {
-                lib = meta.metaData(QUrl(line));
+                tmp = meta.metaData(QUrl(line));
                 metaTimer.restart();
 
                 // This is to mitigate another problem. We assume that all files
                 // with the correct sufix are good. Problem is that they might
                 // not be.
-                // For testing, my current lib has 4583 tracks, 1 without title
-                // all have a length.
-                if (not lib.isValid()) continue;
+                // For testing, my current lib has 4586 legal tracks.
+                if (not tmp.isValid()) continue;
 
                 // Adding all queries to the transaction.
-                scanDb_->exec(getTrackQuery(lib) + ";\n");
+                scanDb_.exec(getTrackQuery(tmp) + ";\n");
                 qDebug() << "Query added" << metaTimer.elapsed();
             }
         }
