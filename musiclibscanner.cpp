@@ -29,10 +29,13 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "metadataprovider.h"
 #include "musiclib.h"
 #include "tags.h"
+#include "config.h"
 
-MusicLibScanner::MusicLibScanner(QObject *parent) : QObject(parent) {}
-
-void MusicLibScanner::setDb(QSqlDatabase *db) { scanDb_ = db; }
+MusicLibScanner::MusicLibScanner(QObject *parent) : QObject(parent)
+{
+    scanDb_ = QSqlDatabase::addDatabase("QSQLITE", "scanner");
+    scanDb_.setDatabaseName(Config::MUSICLIBDB);
+}
 
 void MusicLibScanner::scanLib(const QString &path)
 {
@@ -44,9 +47,15 @@ void MusicLibScanner::scanLib(const QString &path)
         return;
     }
 
+    ;
+    if (not scanDb_.open()) {
+        qDebug() << "Can't open dbase..." << scanDb_.lastError().type();
+        return;
+    }
+
     qDebug() << "Start scan";
     emit scanStarted();
-    Tags lib;
+    Tags tmp;
     MetaDataProvider meta;
     QDir rootDir(path);
 
@@ -58,41 +67,34 @@ void MusicLibScanner::scanLib(const QString &path)
         QElapsedTimer metaTimer;
 
         // We begin a transaction here.
-        scanDb_->transaction();
+        scanDb_.transaction();
 
         while (it.hasNext()) {
             QString line = it.next();
 
             if (suffixCheck(line)) {
-                lib = meta.metaData(QUrl(line));
+                tmp = meta.metaData(QUrl(line));
                 metaTimer.restart();
 
                 // This is to mitigate another problem. We assume that all files
                 // with the correct sufix are good. Problem is that they might
                 // not be.
-                // For testing, my current lib has 4583 tracks, 1 without title
-                // all have a length.
-                if (not lib.isValid()) continue;
+                // For testing, my current lib has 4586 legal tracks.
+                if (not tmp.isValid()) continue;
 
                 // Adding all queries to the transaction.
-                scanDb_->exec(getTrackQuery(lib) + ";\n");
+                scanDb_.exec(getTrackQuery(tmp) + ";\n");
                 qDebug() << "Query added" << metaTimer.elapsed();
             }
         }
-        QMutexLocker locker(mutex_.data());
         // Now commit everything at once. Last time I checked this took
         // 189893 ms (for comparison, the old approach takes ~698612ms (=*3.67))
-        scanDb_->commit();
+        scanDb_.commit();
     }
 
     qDebug() << "End scan" << timer.elapsed();
     emit scanComplete();
-}
-QSharedPointer<QMutex> MusicLibScanner::mutex() const { return mutex_; }
-
-void MusicLibScanner::setMutex(const QSharedPointer<QMutex> &mutex)
-{
-    mutex_ = mutex;
+    scanDb_.close();
 }
 
 QString MusicLibScanner::getTrackQuery(Tags track)
@@ -116,27 +118,6 @@ QString MusicLibScanner::getTrackQuery(Tags track)
                      .arg(MusicLib::escapeString(track.year_)));
 
     return query;
-}
-
-void MusicLibScanner::addTracksToDB(QString query)
-{
-    QString tmp("BEGIN;\n%1;\nCOMMIT;");
-
-    QMutexLocker locker(mutex_.data());
-
-    QElapsedTimer timer;
-    timer.start();
-    QSqlError err = scanDb_->exec(tmp.arg(query)).lastError();
-    qDebug() << "dbase query took" << timer.elapsed();
-
-    if (err.type() > 0) {
-        qDebug() << "SQL error -----------\n"
-                 << "SQL error while adding track\n"
-                 << "SQL error " << err.text() << "\n"
-                 << "SQL error ----------\n";
-    }
-
-    emit trackAdded();
 }
 
 bool MusicLibScanner::suffixCheck(const QString &val) const
