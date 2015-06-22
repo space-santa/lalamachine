@@ -24,6 +24,8 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QJsonObject>
 #include "lalatypes.h"
 
+// This is one component of an autoplaylist consisting of the tag (e.g. genre),
+// the operator (e.g. contains) and how it works with other components (and/or).
 class AutoPlaylistObject
 {
 public:
