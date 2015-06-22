@@ -23,7 +23,8 @@ SOURCES += main.cpp \
     lalatypes.cpp \
     autoplaylistmanager.cpp \
     fileexporter.cpp \
-    tags.cpp
+    tags.cpp \
+    autoplaylist.cpp
 
 RESOURCES += qml.qrc
 
@@ -49,7 +50,8 @@ HEADERS += \
     autoplaylistmanager.h \
     fileexporter.h \
     engineloader.h \
-    tags.h
+    tags.h \
+    autoplaylist.h
 
 OTHER_FILES += \
     README.md \
