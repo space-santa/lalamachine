@@ -11,6 +11,7 @@
 // It contains a list of AutoPlaylistObjects and can save/load the list.
 class AutoPlaylist : public QObject
 {
+    friend class TestAutoPlaylist;
     Q_OBJECT
 
 public:
