@@ -22,6 +22,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QJsonObject>
 #include <QMap>
 #include "lalatypes.h"
+#include "musiclib.h"
 
 AutoPlaylistObject::AutoPlaylistObject(const QJsonObject &obj)
 {
@@ -61,4 +62,24 @@ void AutoPlaylistObject::fromJson(const QJsonObject &obj)
     tag_ = LalaTypes::TAG_MAP.key(obj.value("tag").toString().toLower());
     op_ = LalaTypes::OP_MAP.key(obj.value("operator").toString().toUpper());
     val_ = obj.value("value").toString();
+}
+
+QString AutoPlaylistObject::toQuery(bool isFirst) const
+{
+    QString query(" ");
+    if (not isFirst) {
+        query.append(LalaTypes::ANDOR_MAP.value(andor()) + " ");
+    }
+    query.append(LalaTypes::TAG_MAP.value(tag()) + " ");
+    query.append(LalaTypes::OP_MAP.value(op()) + " ");
+    QString tmp("");
+
+    if (op() == LalaTypes::CONTAINS || op() == LalaTypes::CONTAINS_NOT) {
+        tmp = " '%%1%'";
+    } else {
+        tmp = " '%1'";
+    }
+    query.append(tmp.arg(MusicLib::escapeString(val())));
+
+    return query;
 }

@@ -42,6 +42,7 @@ public:
 
     QJsonObject toJson() const;
     void fromJson(const QJsonObject &obj);
+    QString toQuery(bool isFirst) const;
 
 private:
     LalaTypes::AndOr andor_{};
