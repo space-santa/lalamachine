@@ -1,6 +1,7 @@
 #include "autoplaylist.h"
 
-AutoPlaylist::AutoPlaylist(QObject *parent) : QObject(parent)
+AutoPlaylist::AutoPlaylist(const QString &name, QObject *parent)
+    : QObject(parent), name_(name)
 {
 
 }

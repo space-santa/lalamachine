@@ -14,7 +14,7 @@ class AutoPlaylist : public QObject
     Q_OBJECT
 
 public:
-    explicit AutoPlaylist(QObject *parent = 0);
+    explicit AutoPlaylist(const QString &name, QObject *parent = 0);
     ~AutoPlaylist();
 
     void load();
