@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += testlib qml quick widgets sql
+QT       += testlib qml quick widgets sql concurrent
 
 CONFIG += c++11
 
@@ -29,10 +29,13 @@ SOURCES += \
     ../../systeminteractor.cpp \
     ../../autoplaylistobject.cpp \
     ../../autoplaylistmanager.cpp \
+    ../../autoplaylist.cpp \
     ../../lalatypes.cpp \
     ../../musiclibscanner.cpp \
     main.cpp \
-    lalatest.cpp
+    lalatest.cpp \
+    testautoplaylist.cpp \
+    ../../tags.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
@@ -45,6 +48,9 @@ HEADERS += \
     ../../systeminteractor.h \
     ../../autoplaylistobject.h \
     ../../autoplaylistmanager.h \
+    ../../autoplaylist.h \
     ../../lalatypes.h \
     ../../musiclibscanner.h \
-    lalatest.h
+    lalatest.h \
+    testautoplaylist.h \
+    ../../tags.h
