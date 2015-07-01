@@ -306,6 +306,8 @@ void MusicLib::rescan()
     emit startScan(libPath());
 }
 
+// FIXME: This must go into the AutoPlaylist object.
+// Each object can deliver its own tracks.
 QJsonArray MusicLib::autoPlaylist(const QJsonArray &json)
 {
     auto args = AutoPlaylistManager::jsonToApo(json);
