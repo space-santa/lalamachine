@@ -138,6 +138,8 @@ public:
 
     static QString escapeString(QString str);
 
+    static QPair<int, QJsonArray> queryResultToJson(QSqlQuery result);
+
     QString titlePartialFilter() const;
     void setTitlePartialFilter(const QString &titlePartialFilter);
 
@@ -206,8 +208,6 @@ private:
 
     void ensureAllTables();
     void clearMusicLib();
-
-    QPair<int, QJsonArray> queryToJson(QSqlQuery result) const;
 
     QSqlQuery runSetDisplayQuery(const QString &query);
 
