@@ -33,8 +33,6 @@ class AutoPlaylist : public QObject
     friend class TestAutoPlaylist;
     Q_OBJECT
 
-    Q_PROPERTY(QJsonObject list READ list WRITE setList NOTIFY listChanged)
-
 public:
     explicit AutoPlaylist(const QString &name, QObject *parent = 0);
     ~AutoPlaylist();
