@@ -24,71 +24,56 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 AutoPlaylistManager::AutoPlaylistManager(QObject *parent) : QObject(parent)
 {
-    setAutoPlaylistNames(getPlaylistNames());
     Config::ensureDir(getPath("dummy"));
 
-    watcher_.addPath(Config::AUTOPLAYLISTDIR);
-    connect(&watcher_,
-            &QFileSystemWatcher::directoryChanged,
-            this,
-            &AutoPlaylistManager::handleDirChange);
+    loadPlaylists();
 }
 
 AutoPlaylistManager::~AutoPlaylistManager() {}
 
-// This requires explanation.
-// Originally I had the playlistNames property just READ getPlaylistNames()
-// without a write method. I emitted playlistNamesChanged in writePlaylist()
-// and deletePlaylist. The signal emission in deletePlaylist would reliably
-// segfault. I then added WRITE setPlaylistNames to the property and only
-// emitted the signal there. Same endresult, writePlaylist fine, deletePlaylist
-// segfault. So now I listen to directory changes and emit the signal then.
-// No more segfaults. FIXME: That.
-void AutoPlaylistManager::handleDirChange()
+QString AutoPlaylistManager::currentList() const { return currentList_; }
+
+void AutoPlaylistManager::setCurrentList(const QString &val)
 {
-    setAutoPlaylistNames(getPlaylistNames());
-    watcher_.addPath(Config::AUTOPLAYLISTDIR);
+    // The name must have been selected from this list, so sanity check.
+    Q_ASSERT(autoPlaylistNames().contains(val));
+    currentList_ = val;
+    emit currentListChanged();
 }
 
 QStringList AutoPlaylistManager::autoPlaylistNames()
 {
-    return autoPlaylistNames_;
+    return playlists_.keys();
 }
 
-void AutoPlaylistManager::setAutoPlaylistNames(const QStringList &names)
+QJsonArray AutoPlaylistManager::getTracks(const QString name) const
 {
-    autoPlaylistNames_ = names;
-    emit autoPlaylistNamesChanged();
+    return playlists_.value(name)->trackList();
 }
 
 QJsonArray AutoPlaylistManager::getAutoPlaylist(const QString name) const
 {
-    QJsonArray retval;
-    retval = Config::loadJsonFile(getPath(name)).value(name).toArray();
-    return retval;
+    qDebug() << "list for" << name << playlists_.value(name)->toJson();
+    return playlists_.value(name)->toJson();
 }
 
 void AutoPlaylistManager::saveAutoPlaylist(const QString &name,
                                            const QJsonArray &args)
 {
-    QList<AutoPlaylistObject> list;
-
-    for (int i = 0; i < args.count(); ++i) {
-        list.append(AutoPlaylistObject(args[i].toObject()));
-    }
-
-    saveAutoPlaylist(name, list);
-}
-
-QJsonArray AutoPlaylistManager::loadAutoPlaylist(const QString &name) const
-{
-    return Config::loadJsonFile(getPath(name)).value(name).toArray();
+    AutoPlaylist *tmp = new AutoPlaylist(name, this);
+    tmp->fromJson(args);
+    tmp->save();
+    playlists_.insert(name, tmp);
+    emit autoPlaylistNamesChanged();
 }
 
 void AutoPlaylistManager::deleteAutoPlaylist(const QString &name)
 {
     Q_ASSERT(QStringList(autoPlaylistNames()).contains(name));
-    QFile::remove(getPath(name));
+    playlists_.value(name)->deleteList();
+    playlists_.value(name)->~AutoPlaylist();
+    playlists_.remove(name);
+    emit autoPlaylistNamesChanged();
 }
 
 QList<AutoPlaylistObject> AutoPlaylistManager::jsonToApo(const QJsonArray &args)
@@ -102,25 +87,20 @@ QList<AutoPlaylistObject> AutoPlaylistManager::jsonToApo(const QJsonArray &args)
     return list;
 }
 
-void AutoPlaylistManager::saveAutoPlaylist(
-    const QString &name, const QList<AutoPlaylistObject> &args) const
-{
-    QJsonArray jarr;
-
-    for (auto itr = args.begin(); itr != args.end(); ++itr) {
-        jarr.append((*itr).toJson());
-    }
-
-    QJsonObject obj;
-    obj.insert(name, jarr);
-
-    Config::saveJsonFile(getPath(name), obj);
-}
-
 QString AutoPlaylistManager::getPath(const QString &name) const
 {
     return Config::AUTOPLAYLISTDIR + "/" + name + "."
            + LalaTypes::AUTOPLAYLISTSUFFIX;
+}
+
+void AutoPlaylistManager::loadPlaylists()
+{
+    auto list = getPlaylistNames();
+    for (auto itr = list.constBegin(); itr != list.constEnd(); ++itr) {
+        AutoPlaylist *tmp = new AutoPlaylist((*itr), this);
+        playlists_.insert((*itr), tmp);
+    }
+    emit autoPlaylistNamesChanged();
 }
 
 QStringList AutoPlaylistManager::getPlaylistNames() const

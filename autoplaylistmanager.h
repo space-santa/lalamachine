@@ -25,50 +25,55 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QFileSystemWatcher>
+#include <QMap>
 #include "config.h"
 #include "autoplaylistobject.h"
+#include "autoplaylist.h"
 
 class AutoPlaylistManager : public QObject
 {
     Q_OBJECT
 
     // clang-format off
+    Q_PROPERTY(QString currentList
+               READ currentList
+               WRITE setCurrentList
+               NOTIFY currentListChanged)
     Q_PROPERTY(QStringList autoPlaylistNames
                READ autoPlaylistNames
-               WRITE setAutoPlaylistNames
                NOTIFY autoPlaylistNamesChanged)
     // clang-format on
 public:
     explicit AutoPlaylistManager(QObject *parent = 0);
     ~AutoPlaylistManager();
 
+    QString currentList() const;
+    void setCurrentList(const QString &val);
+
     QStringList autoPlaylistNames();
     void setAutoPlaylistNames(const QStringList &names);
 
+    Q_INVOKABLE QJsonArray getTracks(const QString name) const;
     Q_INVOKABLE QJsonArray getAutoPlaylist(const QString name) const;
     Q_INVOKABLE void saveAutoPlaylist(const QString &name,
                                       const QJsonArray &args);
-    Q_INVOKABLE QJsonArray loadAutoPlaylist(const QString &name) const;
     Q_INVOKABLE void deleteAutoPlaylist(const QString &name);
 
     static QList<AutoPlaylistObject> jsonToApo(const QJsonArray &args);
 
 signals:
+    void currentListChanged();
     void autoPlaylistNamesChanged();
 
-public slots:
-
-private slots:
-    void handleDirChange();
-
 private:
-    QStringList autoPlaylistNames_{};
-    QFileSystemWatcher watcher_{};
+    QString currentList_{""};
+    QMap<QString, AutoPlaylist *> playlists_;
     void saveAutoPlaylist(const QString &name,
                           const QList<AutoPlaylistObject> &args) const;
 
     QString getPath(const QString &name) const;
     QStringList getPlaylistNames() const;
+    void loadPlaylists();
 };
 
 #endif  // AUTOPLAYLISTMANAGER_H
