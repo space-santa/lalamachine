@@ -23,6 +23,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QList>
 #include <QJsonArray>
+#include <QSqlDatabase>
 
 #include "autoplaylistobject.h"
 
@@ -37,20 +38,23 @@ public:
     explicit AutoPlaylist(const QString &name, QObject *parent = 0);
     ~AutoPlaylist();
 
+    QString name();
+
     void load();
     void save();
+    void deleteList();
 
     void addApo(const AutoPlaylistObject &apo);
     void clear();
 
-    QJsonObject list();
-    void setList(const QJsonObject &list);
+    QJsonArray trackList();
 
-    // The list of traccks for the player.
-    QJsonArray tracklist();
+    void fromJson(const QJsonArray &arr);
+    // The JSON representation of this autoplaylist (e.g. for saving).
+    QJsonArray toJson() const;
 
 signals:
-    void listChanged();
+    void trackListChanged();
 
 public slots:
 
@@ -58,10 +62,10 @@ private:
     QString name_;
     QList<AutoPlaylistObject> apos_;
 
-    // The JSON representation of this autoplaylist (e.g. for saving).
-    QJsonArray toJson();
+    QSqlDatabase db_;
 
-    QString toQuery();
+    QString toQuery() const;
+    QString getPath(const QString &name) const;
 };
 
-#endif // AUTOPLAYLIST_H
+#endif  // AUTOPLAYLIST_H
