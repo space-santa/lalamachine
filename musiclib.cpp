@@ -548,7 +548,7 @@ void MusicLib::clearMusicLib()
 
 QPair<int, QJsonArray> MusicLib::queryResultToJson(QSqlQuery result)
 {
-    QJsonArray retVal;
+    QJsonArray retval;
 
     int totalLength = 0;
 
@@ -570,10 +570,10 @@ QPair<int, QJsonArray> MusicLib::queryResultToJson(QSqlQuery result)
         tmp.insert("lengthString", result.value("lengthString").toString());
         tmp.insert("year", result.value("year").toInt());
 
-        retVal.append(tmp);
+        retval.append(tmp);
     }
 
-    return QPair<int, QJsonArray>(totalLength, retVal);
+    return QPair<int, QJsonArray>(totalLength, retval);
 }
 
 void MusicLib::setGenreList()
