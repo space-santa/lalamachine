@@ -28,7 +28,26 @@ Menu {
 
     signal selected(string listname)
 
-    onPlaylistnamesChanged: populatePlaylistMenu()
+    onPlaylistnamesChanged: decoupler.restart()
+    // This timer is necessary to make the current model not segfault.
+    // the problem is that a trigger of a menu item in the delete menu will
+    // cause the playlist to disappear, which will trigger the menu rebuild
+    // because the playlist names changed. The problem is that at that time the
+    // signal chain still carries the original emitting object (the menu item)
+    // as the sender, because signals always have sender information.
+    // But since the first thing that happens is to destroy all menu items to
+    // rebuild the menu, the original sender no longer exists.
+    // Now the segfault: At some point the sender is dereferenced,
+    // but is has already been cleared. Intoducing a timer to decouple the
+    // original sender from the receiver.
+    // And yes, this should be considered a hack.
+    Timer {
+        id: decoupler
+        interval: 100
+        repeat: false
+        running: false
+        onTriggered: populatePlaylistMenu()
+    }
 
     Component.onCompleted: {
         populatePlaylistMenu()
