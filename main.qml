@@ -159,7 +159,7 @@ ApplicationWindow {
 
                 onSelected: {
                     apd.clearAll()
-                    var arr = auto_playlist_manager.loadAutoPlaylist(listname)
+                    var arr = auto_playlist_manager.getAutoPlaylist(listname)
 
                     apd.setApo1(arr[0].andor, arr[0].tag, arr[0].operator,
                                 arr[0].value)
@@ -415,9 +415,7 @@ ApplicationWindow {
 
                 function addAutoPlaylist(listname) {
                     playlist.createNewList()
-                    playlist.addLib(libview.musicLib.autoPlaylist(
-                                        auto_playlist_manager.getAutoPlaylist(
-                                            listname)))
+                    playlist.addLib(auto_playlist_manager.getTracks(listname))
                 }
             }
 

@@ -191,7 +191,7 @@ QSqlQuery MusicLib::runSetDisplayQuery(const QString &query)
 
 void MusicLib::onDisplayFutureFinished()
 {
-    auto tmp = queryToJson(watcher_.result());
+    auto tmp = queryResultToJson(watcher_.result());
     displayLib_ = tmp.second;
     emit displayLibChanged();
     totalLength_ = tmp.first;
@@ -306,6 +306,8 @@ void MusicLib::rescan()
     emit startScan(libPath());
 }
 
+// FIXME: This must go into the AutoPlaylist object.
+// Each object can deliver its own tracks.
 QJsonArray MusicLib::autoPlaylist(const QJsonArray &json)
 {
     auto args = AutoPlaylistManager::jsonToApo(json);
@@ -344,7 +346,7 @@ QJsonArray MusicLib::autoPlaylist(const QJsonArray &json)
     QMutexLocker locker(mutex_.data());
     auto result = db_.exec(query);
 
-    return queryToJson(result).second;
+    return queryResultToJson(result).second;
 }
 
 void MusicLib::resetFilterAndSort()
@@ -367,7 +369,7 @@ QJsonArray MusicLib::getAlbumTracks(const QString &album)
     QMutexLocker locker(mutex_.data());
     QSqlQuery result = db_.exec(query.arg(album));
 
-    return queryToJson(result).second;
+    return queryResultToJson(result).second;
 }
 
 QString MusicLib::escapeString(QString str)
@@ -544,9 +546,9 @@ void MusicLib::clearMusicLib()
     qDebug() << db_.exec(query).lastError();
 }
 
-QPair<int, QJsonArray> MusicLib::queryToJson(QSqlQuery result) const
+QPair<int, QJsonArray> MusicLib::queryResultToJson(QSqlQuery result)
 {
-    QJsonArray retVal;
+    QJsonArray retval;
 
     int totalLength = 0;
 
@@ -568,10 +570,10 @@ QPair<int, QJsonArray> MusicLib::queryToJson(QSqlQuery result) const
         tmp.insert("lengthString", result.value("lengthString").toString());
         tmp.insert("year", result.value("year").toInt());
 
-        retVal.append(tmp);
+        retval.append(tmp);
     }
 
-    return QPair<int, QJsonArray>(totalLength, retVal);
+    return QPair<int, QJsonArray>(totalLength, retval);
 }
 
 void MusicLib::setGenreList()

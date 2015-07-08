@@ -86,7 +86,8 @@ void FileExportWorker::doExport(QString destdir, const QStringList &paths)
         QString newpath(destdir);
         newpath.append("/");
         newpath.append(newFileName(i, paths.count(), paths[i]));
-        QFile::copy(paths[i], newpath);
+        auto source = paths[i];
+        QFile::copy(source.replace("file://", ""), newpath);
 
         // emitting i + 1 for two reasons.
         // 1. to make it work, paths.count is 1 bigger than the last i
