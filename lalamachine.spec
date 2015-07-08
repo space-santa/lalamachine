@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 1.0.1
+Version: 1.0.2
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,10 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Thu Jul 09 2015 r-mean
+  1.0.2-1: Release 1.0.2
+  * Fixed a bug that could cause the app to crash when a playlist is deleted.
+
 * Tue Jun 23 2015 r-mean
   1.0.1-1: Release 1.0.1
   * Musiclib scanning now uses a separate dbase connection.
