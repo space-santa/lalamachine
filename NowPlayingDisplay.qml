@@ -37,6 +37,10 @@ Rectangle {
 
     signal seek(var pos)
 
+    // If the value would be bound to position/duration it would be screwed
+    // once the mousewheel is used.
+    onPositionChanged: progress_timer.value = position / duration
+
     MultiStateButton {
         id: repeat_btn
         width: 50
@@ -52,11 +56,19 @@ Rectangle {
         anchors.right: parent.right
         anchors.leftMargin: 20
         anchors.rightMargin: 20
-        value: position / duration
         enabled: hasAudio
 
-        onPressedChanged: {
-            if (!pressed) {
+        // If this returns true the value has been changed manually.
+        // Or, expressed differently, if the value has been changed by the
+        // normal playing progress, both values wouldn't differ more than that.
+        // In fact they are the same, but I use this epsilon approach because
+        // I don't trust JavaScripts check for equal.
+        function changeRange() {
+            return Math.abs(value - (position/duration)) > 0.002
+        }
+
+        onValueChanged: {
+            if (changeRange()) {
                 seek(value * duration)
             }
         }
