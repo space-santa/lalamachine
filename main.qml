@@ -316,6 +316,13 @@ ApplicationWindow {
     }
 
     Action {
+        id: play_selected_action
+        shortcut: "ctrl+return"
+        tooltip: "Shortcut: " + shortcut
+        onTriggered: playlist.playCurrentTrack()
+    }
+
+    Action {
         id: play_pause_action
         shortcut: "ctrl+space"
         tooltip: "Shortcut: " + shortcut
