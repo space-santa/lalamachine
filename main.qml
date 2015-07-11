@@ -352,6 +352,8 @@ ApplicationWindow {
             playMusic.play()
         }
 
+        property bool isPlaying: playMusic.playbackState === MediaPlayer.PlayingState
+
         onError: {
             miss_dialog.text = errorString
             miss_dialog.text += "\nYou might want to delete that track"
