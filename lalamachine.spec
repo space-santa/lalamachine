@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 1.0.3
+Version: 1.0.4
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,11 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat Jul 11 2015 r-mean
+  1.0.4-1: Release 1.0.4
+  * Improved the user experience with keyboard shortcuts.
+    E.g. the keyboard shortcuts still work while the filtertext has focus.
+
 * Thu Jul 09 2015 r-mean
   1.0.3-1: Release 1.0.3
   * Fixed a bug that would screw up the track progress slider update when used
