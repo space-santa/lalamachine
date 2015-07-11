@@ -24,18 +24,15 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QJsonObject>
 #include <QJsonArray>
 
+#include "musiclib.h"
+
 class PlaylistSorter : public QQuickItem
 {
     Q_OBJECT
 public:
-    enum SortWhat { TRACK, TITLE, COMMENT, LENGTH, GENRE, ARTIST };
-    Q_ENUMS(SortWhat)
-
-    enum SortHow { ASCENDING, DESCENDING };
-    Q_ENUMS(SortHow)
-
-    Q_INVOKABLE QJsonArray
-    sort(QJsonArray list, SortWhat what, SortHow how) const;
+    // I have to use int here instead of the actual enum type because QML.
+    // If I use MusicLib::SortWhat, qml complains about unknown parameter type.
+    Q_INVOKABLE QJsonArray sort(QJsonArray list, int what, int how) const;
 };
 
 #endif  // PLAYLISTSORTER_H

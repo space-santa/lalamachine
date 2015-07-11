@@ -27,6 +27,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <algorithm>
 
 #include "config.h"
+#include "musiclib.h"
 
 // The sort functions are not members of PlaylistSorter because their purpose
 // is to be used as argument in std::sort. Nothing else. They would need to be
@@ -36,8 +37,8 @@ namespace SortFunctions
 {
 bool masterSort(QVariant i,
                 QVariant j,
-                PlaylistSorter::SortWhat what,
-                PlaylistSorter::SortHow how)
+                MusicLib::SortWhat what,
+                MusicLib::SortHow how)
 {
     Q_ASSERT(i.canConvert<QVariantMap>());
     Q_ASSERT(j.canConvert<QVariantMap>());
@@ -46,42 +47,46 @@ bool masterSort(QVariant i,
 
     QString sortString{};
 
-    if (what == PlaylistSorter::ARTIST) {
+    if (what == MusicLib::ALBUM) {
+        sortString = "album";
+    }
+
+    if (what == MusicLib::ARTIST) {
         sortString = "artist";
     }
 
-    if (what == PlaylistSorter::TITLE) {
+    if (what == MusicLib::TITLE) {
         sortString = "title";
     }
 
-    if (what == PlaylistSorter::TRACK) {
+    if (what == MusicLib::TRACK) {
         sortString = "track";
         int si = vmap1.value(sortString).toInt();
         int sj = vmap2.value(sortString).toInt();
 
-        if (how == PlaylistSorter::ASCENDING) {
+        if (how == MusicLib::ASCENDING) {
             return si < sj;
         } else {
             return si > sj;
         }
     }
 
-    if (what == PlaylistSorter::GENRE) {
+    if (what == MusicLib::GENRE) {
         sortString = "genre";
     }
 
-    if (what == PlaylistSorter::COMMENT) {
+    if (what == MusicLib::COMMENT) {
         sortString = "comment";
     }
 
-    if (what == PlaylistSorter::LENGTH) {
+    if (what == MusicLib::LENGTH) {
         sortString = "length";
     }
 
     QString si = vmap1.value(sortString).toString();
     QString sj = vmap2.value(sortString).toString();
 
-    if (what == PlaylistSorter::COMMENT) {
+    if (what == MusicLib::COMMENT) {
         QRegExp rex("^\\d(A|B).*");
         if (rex.exactMatch(si)) {
             si.prepend("0");
@@ -92,79 +97,91 @@ bool masterSort(QVariant i,
         }
     }
 
-    if (how == PlaylistSorter::ASCENDING) {
+    if (how == MusicLib::ASCENDING) {
         return si < sj;
     } else {
         return si > sj;
     }
 }
 
+bool albumAscending(QVariant i, QVariant j)
+{
+    return masterSort(i, j, MusicLib::ALBUM, MusicLib::ASCENDING);
+}
+bool albumDescending(QVariant i, QVariant j)
+{
+    return masterSort(i, j, MusicLib::ALBUM, MusicLib::DESCENDING);
+}
+
 bool artistAscending(QVariant i, QVariant j)
 {
-    return masterSort(i, j, PlaylistSorter::ARTIST, PlaylistSorter::ASCENDING);
+    return masterSort(i, j, MusicLib::ARTIST, MusicLib::ASCENDING);
 }
 bool artistDescending(QVariant i, QVariant j)
 {
-    return masterSort(i, j, PlaylistSorter::ARTIST, PlaylistSorter::DESCENDING);
+    return masterSort(i, j, MusicLib::ARTIST, MusicLib::DESCENDING);
 }
 
 bool titleAscending(QVariant i, QVariant j)
 {
-    return masterSort(i, j, PlaylistSorter::TITLE, PlaylistSorter::ASCENDING);
+    return masterSort(i, j, MusicLib::TITLE, MusicLib::ASCENDING);
 }
 bool titleDescending(QVariant i, QVariant j)
 {
-    return masterSort(i, j, PlaylistSorter::TITLE, PlaylistSorter::DESCENDING);
+    return masterSort(i, j, MusicLib::TITLE, MusicLib::DESCENDING);
 }
 
 bool trackAscending(QVariant i, QVariant j)
 {
-    return masterSort(i, j, PlaylistSorter::TRACK, PlaylistSorter::ASCENDING);
+    return masterSort(i, j, MusicLib::TRACK, MusicLib::ASCENDING);
 }
 bool trackDescending(QVariant i, QVariant j)
 {
-    return masterSort(i, j, PlaylistSorter::TRACK, PlaylistSorter::DESCENDING);
+    return masterSort(i, j, MusicLib::TRACK, MusicLib::DESCENDING);
 }
 
 bool genreAscending(QVariant i, QVariant j)
 {
-    return masterSort(i, j, PlaylistSorter::GENRE, PlaylistSorter::ASCENDING);
+    return masterSort(i, j, MusicLib::GENRE, MusicLib::ASCENDING);
 }
 bool genreDescending(QVariant i, QVariant j)
 {
-    return masterSort(i, j, PlaylistSorter::GENRE, PlaylistSorter::DESCENDING);
+    return masterSort(i, j, MusicLib::GENRE, MusicLib::DESCENDING);
 }
 
 bool commentAscending(QVariant i, QVariant j)
 {
-    return masterSort(i, j, PlaylistSorter::COMMENT, PlaylistSorter::ASCENDING);
+    return masterSort(i, j, MusicLib::COMMENT, MusicLib::ASCENDING);
 }
 bool commentDescending(QVariant i, QVariant j)
 {
-    return masterSort(i,
-                      j,
-                      PlaylistSorter::COMMENT,
-                      PlaylistSorter::DESCENDING);
+    return masterSort(i, j, MusicLib::COMMENT, MusicLib::DESCENDING);
 }
 
 bool lengthAscending(QVariant i, QVariant j)
 {
-    return masterSort(i, j, PlaylistSorter::LENGTH, PlaylistSorter::ASCENDING);
+    return masterSort(i, j, MusicLib::LENGTH, MusicLib::ASCENDING);
 }
 bool lengthDescending(QVariant i, QVariant j)
 {
-    return masterSort(i, j, PlaylistSorter::LENGTH, PlaylistSorter::DESCENDING);
+    return masterSort(i, j, MusicLib::LENGTH, MusicLib::DESCENDING);
 }
 }  // namespace SortFunctions
 
-QJsonArray PlaylistSorter::sort(QJsonArray list,
-                                PlaylistSorter::SortWhat what,
-                                PlaylistSorter::SortHow how) const
+QJsonArray PlaylistSorter::sort(QJsonArray list, int what, int how) const
 {
     QVariantList varl = list.toVariantList();
 
-    if (what == PlaylistSorter::ARTIST) {
-        if (how == PlaylistSorter::ASCENDING) {
+    if (what == MusicLib::ALBUM) {
+        if (how == MusicLib::ASCENDING) {
+            std::sort(varl.begin(), varl.end(), SortFunctions::albumAscending);
+        } else {
+            std::sort(varl.begin(), varl.end(), SortFunctions::albumDescending);
+        }
+    }
+
+    if (what == MusicLib::ARTIST) {
+        if (how == MusicLib::ASCENDING) {
             std::sort(varl.begin(), varl.end(), SortFunctions::artistAscending);
         } else {
             std::sort(varl.begin(),
@@ -173,32 +190,32 @@ QJsonArray PlaylistSorter::sort(QJsonArray list,
         }
     }
 
-    if (what == PlaylistSorter::TITLE) {
-        if (how == PlaylistSorter::ASCENDING) {
+    if (what == MusicLib::TITLE) {
+        if (how == MusicLib::ASCENDING) {
             std::sort(varl.begin(), varl.end(), SortFunctions::titleAscending);
         } else {
             std::sort(varl.begin(), varl.end(), SortFunctions::titleDescending);
         }
     }
 
-    if (what == PlaylistSorter::TRACK) {
-        if (how == PlaylistSorter::ASCENDING) {
+    if (what == MusicLib::TRACK) {
+        if (how == MusicLib::ASCENDING) {
             std::sort(varl.begin(), varl.end(), SortFunctions::trackAscending);
         } else {
             std::sort(varl.begin(), varl.end(), SortFunctions::trackDescending);
         }
     }
 
-    if (what == PlaylistSorter::GENRE) {
-        if (how == PlaylistSorter::ASCENDING) {
+    if (what == MusicLib::GENRE) {
+        if (how == MusicLib::ASCENDING) {
             std::sort(varl.begin(), varl.end(), SortFunctions::genreAscending);
         } else {
             std::sort(varl.begin(), varl.end(), SortFunctions::genreDescending);
         }
     }
 
-    if (what == PlaylistSorter::COMMENT) {
-        if (how == PlaylistSorter::ASCENDING) {
+    if (what == MusicLib::COMMENT) {
+        if (how == MusicLib::ASCENDING) {
             std::sort(varl.begin(),
                       varl.end(),
                       SortFunctions::commentAscending);
@@ -209,8 +226,8 @@ QJsonArray PlaylistSorter::sort(QJsonArray list,
         }
     }
 
-    if (what == PlaylistSorter::LENGTH) {
-        if (how == PlaylistSorter::ASCENDING) {
+    if (what == MusicLib::LENGTH) {
+        if (how == MusicLib::ASCENDING) {
             std::sort(varl.begin(), varl.end(), SortFunctions::lengthAscending);
         } else {
             std::sort(varl.begin(),
