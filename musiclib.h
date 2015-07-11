@@ -92,7 +92,7 @@ class MusicLib : public QQuickItem
     // clang-format on
 
 public:
-    enum SortWhat { TRACK, TITLE, COMMENT, LENGTH, GENRE, ARTIST };
+    enum SortWhat { TRACK, TITLE, COMMENT, LENGTH, GENRE, ARTIST, ALBUM };
     Q_ENUMS(SortWhat)
 
     MusicLib(QQuickItem *parent = 0);

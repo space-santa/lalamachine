@@ -138,6 +138,7 @@ const QMap<MusicLib::SortWhat, QString> MusicLib::SORT_MAP = initSortMap();
 QMap<MusicLib::SortWhat, QString> MusicLib::initSortMap()
 {
     QMap<SortWhat, QString> tmp;
+    tmp.insert(MusicLib::ALBUM, "album");
     tmp.insert(MusicLib::ARTIST, "artist");
     tmp.insert(MusicLib::GENRE, "genre");
     tmp.insert(MusicLib::TRACK, "track");
