@@ -157,17 +157,6 @@ Rectangle {
                     placeholderText: "Filter..."
 
                     onTextChanged: key_events.restartTimer()
-
-                    MouseArea {
-                        id: input_grabber
-                        anchors.fill: parent
-                        enabled: key_events.keepFocus
-
-                        onClicked: {
-                            key_events.keepFocus = false
-                            filter_text.forceActiveFocus()
-                        }
-                    }
                 }
 
                 ImageButton {
