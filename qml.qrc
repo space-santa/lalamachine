@@ -10,7 +10,6 @@
         <file>VolumeControl.qml</file>
         <file>NowPlayingDisplay.qml</file>
         <file>Configuration.qml</file>
-        <file>KeyEvents.qml</file>
         <file>LibraryView.qml</file>
         <file>StringListView.qml</file>
         <file>RightClickMenu.qml</file>
