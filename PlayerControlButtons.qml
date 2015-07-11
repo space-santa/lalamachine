@@ -24,39 +24,27 @@ Row {
     width: childrenRect.width
     height: childrenRect.height
 
-    signal playPrevious
-    signal play
-    signal pause
-    signal open
-    signal playNext
-
     ImageButton {
         id: back_btn
+        action: back_action
         source: "qrc:/images/images/back.png"
-        onClicked: playPrevious()
     }
 
     ImageButton {
         id: play_btn
-        source: "qrc:/images/images/play.png"
-        onClicked: play()
-    }
-
-    ImageButton {
-        id: pause_btn
-        source: "qrc:/images/images/pause.png"
-        onClicked: pause()
+        action: play_pause_action
+        source: playMusic.isPlaying ? "qrc:/images/images/pause.png" : "qrc:/images/images/play.png"
     }
 
     ImageButton {
         id: open_btn
+        action: open_action
         source: "qrc:/images/images/eject.png"
-        onClicked: open()
     }
 
     ImageButton {
         id: next_btn
+        action: forward_action
         source: "qrc:/images/images/forward.png"
-        onClicked: playNext()
     }
 }
