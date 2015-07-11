@@ -395,10 +395,10 @@ Rectangle {
 
         if (how === 0) {
             sortAsc = true
-            sorthow = PlaylistSorter.ASCENDING
+            sorthow = MusicLib.ASCENDING
         } else {
             sortAsc = false
-            sorthow = PlaylistSorter.DESCENDING
+            sorthow = MusicLib.DESCENDING
         }
 
         if (!isLibrary) {
