@@ -41,7 +41,6 @@ ApplicationWindow {
     property string miscPlaylistName: "cs1m090"
     property string currentPlaylist: playlist.currentName
     property Playlist mainPlaylist: playlist
-    property KeyEvents keyEvents: key_events
     property M3uInOut m3u: m3u
     property Configuration config: config
 
@@ -281,30 +280,63 @@ ApplicationWindow {
         id: m3u
     }
 
-    KeyEvents {
-        id: key_events
-        anchors.fill: parent
+    Action {
+        id: del_action
+        shortcut: StandardKey.Delete
+        tooltip: "Shortcut: " + shortcut
+        onTriggered: playlist.deleteCurrentTrack()
+    }
 
-        onVolumeUp: volume_control.volumeUp()
-        onVolumeDown: volume_control.volumeDown()
-        onForward: playlist.playNext()
-        onBack: playlist.playPrevious()
-        onPause: {
-            if (playMusic.playbackState === MediaPlayer.PlayingState) {
+    Action {
+        id: vol_up_action
+        shortcut: "ctrl+up"
+        tooltip: "Shortcut: " + shortcut
+        onTriggered: volume_control.volumeUp()
+    }
+
+    Action {
+        id: vol_down_action
+        shortcut: "ctrl+down"
+        tooltip: "Shortcut: " + shortcut
+        onTriggered: volume_control.volumeDown()
+    }
+
+    Action {
+        id: forward_action
+        shortcut: StandardKey.Forward
+        tooltip: "Shortcut: " + shortcut
+        onTriggered: playlist.playNext()
+    }
+
+    Action {
+        id: back_action
+        shortcut: StandardKey.Back
+        tooltip: "Shortcut: " + shortcut
+        onTriggered: playlist.playPrevious()
+    }
+
+    Action {
+        id: play_pause_action
+        shortcut: "ctrl+space"
+        tooltip: "Shortcut: " + shortcut
+        onTriggered: {
+            if (playMusic.isPlaying) {
                 playMusic.pause()
-                return
-            }
-            if (playMusic.playbackState === MediaPlayer.PausedState) {
-                playMusic.play()
-                return
-            }
-            if (playMusic.playbackState === MediaPlayer.StoppedState) {
-                playlist.playCurrentTrack()
-                return
+            } else {
+                if (playMusic.hasAudio) {
+                    playMusic.play()
+                } else {
+                    playlist.playNext()
+                }
             }
         }
-        onDeleteTrack: playlist.deleteCurrentTrack()
-        onStartPlaying: playlist.playCurrentTrack()
+    }
+
+    Action {
+        id: open_action
+        shortcut: StandardKey.Open
+        tooltip: "Shortcut: " + shortcut
+        onTriggered: fileDialog.visible = true
     }
 
     Rectangle {
@@ -473,23 +505,6 @@ ApplicationWindow {
             id: btn_row
             anchors.left: parent.left
             anchors.bottom: parent.bottom
-
-            onPlayPrevious: playlist.playPrevious()
-
-            onPlay: {
-                if (playMusic.hasAudio) {
-                    playMusic.play()
-                } else {
-                    playlist.playNext()
-                }
-            }
-
-            onPause: playMusic.pause()
-            onOpen: {
-                console.log("open clicked")
-                fileDialog.visible = true
-            }
-            onPlayNext: playlist.playNext()
         }
 
         VolumeControl {
