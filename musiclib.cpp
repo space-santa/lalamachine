@@ -307,49 +307,6 @@ void MusicLib::rescan()
     emit startScan(libPath());
 }
 
-// FIXME: This must go into the AutoPlaylist object.
-// Each object can deliver its own tracks.
-QJsonArray MusicLib::autoPlaylist(const QJsonArray &json)
-{
-    auto args = AutoPlaylistManager::jsonToApo(json);
-    // SELECT * FROM musiclib WHERE Tag Op Val
-    QString query("SELECT * FROM musiclib WHERE ");
-
-    int count = 0;
-
-    for (auto itr = args.begin(); itr != args.end(); ++itr) {
-        if (count > 0) {
-            query.append(" ");
-            query.append(LalaTypes::ANDOR_MAP.value((*itr).andor()));
-            query.append(" ");
-        }
-
-        query.append(LalaTypes::TAG_MAP.value((*itr).tag()));
-        query.append(" ");
-        query.append(LalaTypes::OP_MAP.value((*itr).op()));
-
-        QString tmp("");
-
-        if ((*itr).op() == LalaTypes::CONTAINS
-            || (*itr).op() == LalaTypes::CONTAINS_NOT) {
-            tmp = " '%%1%'";
-        } else {
-            tmp = " '%1'";
-        }
-
-        query.append(tmp.arg(escapeString((*itr).val())));
-
-        ++count;
-    }
-
-    query.append(" ORDER BY artist, album, track");
-    qDebug() << query;
-    QMutexLocker locker(mutex_.data());
-    auto result = db_.exec(query);
-
-    return queryResultToJson(result).second;
-}
-
 void MusicLib::resetFilterAndSort()
 {
     // Not using the setter functions because I only want to setDisplayLib once.
