@@ -94,6 +94,8 @@ class MusicLib : public QQuickItem
 public:
     enum SortWhat { TRACK, TITLE, COMMENT, LENGTH, GENRE, ARTIST, ALBUM };
     Q_ENUMS(SortWhat)
+    enum SortHow { ASCENDING, DESCENDING };
+    Q_ENUMS(SortHow)
 
     MusicLib(QQuickItem *parent = 0);
     ~MusicLib();
