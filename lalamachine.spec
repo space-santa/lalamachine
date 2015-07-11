@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 1.0.4
+Version: 1.0.5
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,11 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sun Jul 12 2015 r-mean
+  1.0.5-1: Release 1.0.5
+  * Added action/shortcut ctrl+enter to play currently highlighted track.
+  * Playlists can now also be sorted by album.
+
 * Sat Jul 11 2015 r-mean
   1.0.4-1: Release 1.0.4
   * Improved the user experience with keyboard shortcuts.
