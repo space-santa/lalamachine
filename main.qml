@@ -47,7 +47,7 @@ ApplicationWindow {
     property MediaPlayer lalaplayer: playMusic
 
     Component.onCompleted: {
-        playlist.currentName = config.lastPlaylist
+        playlist.setCurrentPlaylist(config.lastPlaylist)
         volume_control.value = config.volume
         console.log("Volume on load", config.volume)
     }
@@ -62,6 +62,10 @@ ApplicationWindow {
     onClosing: {
         playlist.writePlaylist(miscPlaylistName)
         config.volume = volume_control.value
+
+        // If the current list has a name we want to remember latest changes.
+        playlist.writeCurrentListIfNamed()
+
         // I am deliberatly not checking for a named playlist here.
         // If the currentPlaylist is not empty but the miscPlaylistName it still
         // as expected because then the lastPlaylist is set to the
@@ -101,7 +105,7 @@ ApplicationWindow {
             PlaylistMenu {
                 title: "Open"
                 iconSource: "qrc:/images/images/open.png"
-                onSelected: playlist.currentName = listname
+                onSelected: playlist.setCurrentPlaylist(listname)
             }
             MenuItem {
                 text: "save as"

@@ -48,6 +48,19 @@ Rectangle {
     signal play(string path)
     signal stop
 
+    // This setter is necessary to make sure that latest changes to the list are
+    // remebered when a new playlist is loaded.
+    function setCurrentPlaylist(name) {
+        writeCurrentListIfNamed()
+        currentName = name
+    }
+
+    function writeCurrentListIfNamed() {
+        if (playlistIsNamed()) {
+            writePlaylist(currentPlaylist)
+        }
+    }
+
     onCurrentNameChanged: {
         if (currentName != "") {
             readPlaylist(currentName)
@@ -127,7 +140,7 @@ Rectangle {
         onAccepted: {
             writePlaylist(save_playlist_dialog.playlistName)
             save_playlist_dialog.visible = false
-            currentName = save_playlist_dialog.playlistName
+            setCurrentPlaylist(save_playlist_dialog.playlistName)
         }
     }
 
@@ -254,7 +267,7 @@ Rectangle {
     }
     function clearList(newlist) {
         if (newlist) {
-            currentName = ""
+            setCurrentPlaylist("")
         }
         playlist_model.clear()
         updateNowPlayingRow()
