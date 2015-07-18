@@ -22,8 +22,10 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QFile>
 #include <QFileInfo>
+#include <QDir>
 #include <QString>
 #include <QDebug>
+#include <QDateTime>
 
 FileExporter::FileExporter(QObject *parent) : QObject(parent)
 {
@@ -47,6 +49,14 @@ FileExporter::~FileExporter()
 
 void FileExporter::exportPlaylist(QString destdir, const QStringList &paths)
 {
+    // Firstly, make it a proper path, not a url.
+    destdir.replace("file://", "");
+
+    // If the directory exists, create a new one. Else the content is mixed.
+    if (QFileInfo::exists(destdir)) {
+        destdir.append("-"
+                       + QDateTime::currentDateTime().toString(Qt::ISODate));
+    }
     emit go(destdir, paths);
     emit started();
 }
@@ -79,8 +89,7 @@ QString FileExportWorker::newFileName(int pos,
 
 void FileExportWorker::doExport(QString destdir, const QStringList &paths)
 {
-    destdir.replace("file://", "");
-    Config::ensureDir(destdir);
+    Config::ensureDir(destdir + "/");
 
     for (int i = 0; i < paths.count(); ++i) {
         QString newpath(destdir);
