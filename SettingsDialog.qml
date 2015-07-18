@@ -53,6 +53,7 @@ Dialog {
                 if (config.playlistColumns
                         && config.playlistColumns.length > 0) {
                     console.log("ZZZ length", config.playlistColumns.length)
+
                     return config.playlistColumns
                 } else {
                     return defaultList
@@ -82,6 +83,9 @@ Dialog {
                     value: "true"
                 }, {
                     key: "year",
+                    value: "true"
+                }, {
+                    key: "dateAdded",
                     value: "true"
                 }]
 
