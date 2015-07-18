@@ -155,8 +155,6 @@ Rectangle {
                     anchors.right: clear_button.left
 
                     placeholderText: "Filter..."
-
-                    onTextChanged: key_events.restartTimer()
                 }
 
                 ImageButton {
