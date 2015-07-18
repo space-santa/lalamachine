@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 1.0.8
+Version: 1.0.9
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,11 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sun Jul 19 2015 r-mean
+  1.0.9-1: Release 1.0.9
+  * Fixed a bug that would not preserve the dateAdded tag for tracks with a
+    singlequote in their mrl.
+
 * Sat Jul 18 2015 r-mean
   1.0.8-1: Release 1.0.8
   * Added custom tag 'dateAdded'. Lists can be sorted by that.
