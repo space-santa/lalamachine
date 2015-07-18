@@ -26,6 +26,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QRegularExpression>
+#include <QDateTime>
 #include "metadataprovider.h"
 #include "musiclib.h"
 #include "tags.h"
@@ -66,6 +67,7 @@ void MusicLibScanner::scanLib(const QString &path)
 
         QElapsedTimer metaTimer;
 
+        QString date = QDateTime::currentDateTime().toString("yyyy-MM-dd");
         // We begin a transaction here.
         scanDb_.transaction();
 
@@ -83,7 +85,7 @@ void MusicLibScanner::scanLib(const QString &path)
                 if (not tmp.isValid()) continue;
 
                 // Adding all queries to the transaction.
-                scanDb_.exec(getTrackQuery(tmp) + ";\n");
+                qDebug() << scanDb_.exec(getTrackQuery(tmp, date) + ";\n").lastError();
                 qDebug() << "Query added" << metaTimer.elapsed();
             }
         }
@@ -97,14 +99,17 @@ void MusicLibScanner::scanLib(const QString &path)
     scanDb_.close();
 }
 
-QString MusicLibScanner::getTrackQuery(Tags track)
+QString MusicLibScanner::getTrackQuery(Tags track, const QString date)
 {
-    QString query("INSERT into `musiclib` ");
-    query.append("(`album`, `artist`, `comment`, `genre`, `length`, ");
-    query.append("`lengthString`, `mrl`, `path`, `title`, `track`, `year`) VALUES ");
+    QString query(
+        "INSERT into `musiclib` "
+        "(`album`, `artist`, `comment`, `genre`, `length`, "
+        "`lengthString`, `mrl`, `path`, `title`, `track`, `"
+        "year`, `dateAdded`) "
+        "VALUES ");
 
     QString valuesA("('%1', '%2', '%3', '%4', '%5', '%6', ");
-    QString valuesB("'%1', '%2', '%3', '%4', '%5')");
+    QString valuesB("'%1', '%2', '%3', '%4', '%5', '%6')");
     query.append(valuesA.arg(MusicLib::escapeString(track.album_))
                      .arg(MusicLib::escapeString(track.artist_))
                      .arg(MusicLib::escapeString(track.comment_))
@@ -115,7 +120,8 @@ QString MusicLibScanner::getTrackQuery(Tags track)
                      .arg(MusicLib::escapeString(track.path_))
                      .arg(MusicLib::escapeString(track.title_))
                      .arg(MusicLib::escapeString(track.track_))
-                     .arg(MusicLib::escapeString(track.year_)));
+                     .arg(MusicLib::escapeString(track.year_))
+                     .arg(MusicLib::escapeString(date)));
 
     return query;
 }

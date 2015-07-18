@@ -41,6 +41,7 @@ QMap<LalaTypes::Tag, QString> LalaTypes::initTagMap()
     tmp.insert(LalaTypes::MRL, "mrl");
     tmp.insert(LalaTypes::PATH, "path");
     tmp.insert(LalaTypes::YEAR, "year");
+    tmp.insert(LalaTypes::DATEADDED, "dateAdded");
 
     return tmp;
 }

@@ -63,7 +63,7 @@ public:
     double volume();
 
     void setPlaylistColumns(const QJsonArray &list);
-    QJsonArray playlistColumns() const;
+    QJsonArray playlistColumns();
 
     void setLibPath(const QString &path);
     QString libPath() const;

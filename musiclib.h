@@ -92,7 +92,16 @@ class MusicLib : public QQuickItem
     // clang-format on
 
 public:
-    enum SortWhat { TRACK, TITLE, COMMENT, LENGTH, GENRE, ARTIST, ALBUM };
+    enum SortWhat {
+        TRACK,
+        TITLE,
+        COMMENT,
+        LENGTH,
+        GENRE,
+        ARTIST,
+        ALBUM,
+        DATEADDED
+    };
     Q_ENUMS(SortWhat)
     enum SortHow { ASCENDING, DESCENDING };
     Q_ENUMS(SortHow)
@@ -136,6 +145,8 @@ public:
 
     Q_INVOKABLE void resetFilterAndSort();
     Q_INVOKABLE QJsonArray getAlbumTracks(const QString &album);
+
+    Q_INVOKABLE QString getDateAddedByMrl(const QString &mrl) const;
 
     static QString escapeString(QString str);
 
@@ -212,6 +223,11 @@ private:
 
     QSqlQuery runSetDisplayQuery(const QString &query);
 
+    void updateTable();
+
+    void createLibTable(const QString &name);
+    void copyLibToTmp();
+    void restoreMetaData();
 private slots:
     void debugSignal();
 
