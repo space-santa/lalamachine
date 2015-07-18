@@ -561,16 +561,17 @@ void MusicLib::restoreMetaData()
     db_.transaction();
     while (records.next()) {
         QString mrl = records.value("mrl").toString();
-        auto tmprec = db_.exec(
-            QString("SELECT dateAdded FROM tmplib WHERE mrl='%1'").arg(mrl));
+        auto tmprec
+            = db_.exec(QString("SELECT dateAdded FROM tmplib WHERE mrl='%1'")
+                           .arg(escapeString(mrl)));
 
         tmprec.first();
         QString tmpdate = tmprec.value("dateAdded").toString();
 
-        if(tmpdate.isEmpty()) continue;
+        if (tmpdate.isEmpty()) continue;
 
         QString query("UPDATE musiclib SET dateAdded='%1' WHERE mrl='%2'");
-        db_.exec(query.arg(tmpdate).arg(mrl));
+        db_.exec(query.arg(tmpdate).arg(escapeString(mrl))).lastError();
     }
     db_.commit();
     qDebug() << db_.exec("DROP TABLE tmplib").lastError();
