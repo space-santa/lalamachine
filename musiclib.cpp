@@ -590,6 +590,7 @@ QPair<int, QJsonArray> MusicLib::queryResultToJson(QSqlQuery result)
         tmp.insert("length", len);
         tmp.insert("lengthString", result.value("lengthString").toString());
         tmp.insert("year", result.value("year").toInt());
+        tmp.insert("dateAdded", result.value("dateAdded").toString());
 
         retval.append(tmp);
     }
