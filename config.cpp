@@ -78,7 +78,7 @@ void Config::setPlaylistColumns(const QJsonArray &list)
     emit playlistColumnsChanged();
 }
 
-QJsonArray Config::playlistColumns() const
+QJsonArray Config::playlistColumns()
 {
     QJsonArray retval;
     QJsonValue v = config_.value("playlistColumns");
@@ -87,6 +87,23 @@ QJsonArray Config::playlistColumns() const
         retval = v.toArray();
     } else {
         qWarning("No playlist columns defined.");
+    }
+
+    bool hasDate = false;
+    for (int i = 0; i < retval.count(); ++i) {
+        if (retval[i].toObject().value("key") == "dateAdded") {
+            hasDate = true;
+            break;
+        }
+    }
+
+    if (not hasDate) {
+        QJsonObject o;
+        o.insert("key", "dateAdded");
+        o.insert("value", "true");
+        retval.append(o);
+        // Don't want to emit the signal, so not using the setter.
+        config_.insert("playlistColumns", retval);
     }
 
     qDebug() << "playlistColumns loaded" << retval;
