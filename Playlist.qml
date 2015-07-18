@@ -284,7 +284,11 @@ Rectangle {
             return
         }
 
-        playlist_model.append(setId(meta.metaDataAsJson(path)))
+        var tmp = setId(meta.metaDataAsJson(path))
+        tmp["dateAdded"] = musicLib.getDateAddedByMrl(tmp.mrl)
+        console.log(JSON.stringify(tmp))
+
+        playlist_model.append(tmp)
 
         updateNowPlayingRow()
 
@@ -405,6 +409,9 @@ Rectangle {
         if (what === "year") {
             sortwhat = MusicLib.YEAR
         }
+        if (what === "dateAdded") {
+            sortwhat = MusicLib.DATEADDED
+        }
 
         if (how === 0) {
             sortAsc = true
@@ -521,7 +528,10 @@ Rectangle {
                 width = 150
             }
             if (tag === "year") {
-                width = 100
+                width = 70
+            }
+            if (tag === "dateAdded") {
+                width = 125
             }
 
             return columnString(tag, title, width)
