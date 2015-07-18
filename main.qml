@@ -38,6 +38,7 @@ ApplicationWindow {
     minimumHeight: 500
     minimumWidth: 1005
 
+    property alias musicLib: libview.musicLib
     property string miscPlaylistName: "cs1m090"
     property string currentPlaylist: playlist.currentName
     property Playlist mainPlaylist: playlist
