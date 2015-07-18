@@ -22,7 +22,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QFile>
 #include <QFileInfo>
-#include <QDir>
 #include <QString>
 #include <QDebug>
 #include <QDateTime>
