@@ -37,7 +37,8 @@ public:
         LENGTHSTRING,
         MRL,
         PATH,
-        YEAR
+        YEAR,
+        DATEADDED
     };
     Q_ENUMS(Tag)
 
