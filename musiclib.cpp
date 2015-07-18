@@ -319,6 +319,14 @@ QJsonArray MusicLib::getAlbumTracks(const QString &album)
     return queryResultToJson(result).second;
 }
 
+QString MusicLib::getDateAddedByMrl(const QString &mrl) const
+{
+    QString query("SELECT dateAdded FROM musiclib WHERE mrl='%1'");
+    auto result = db_.exec(query.arg(mrl));
+    result.first();
+    return result.value("dateAdded").toString();
+}
+
 QString MusicLib::escapeString(QString str)
 {
     // return str.replace("\'", "\'\'").replace(",", "\'+\',\'+\'");

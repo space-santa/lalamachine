@@ -146,6 +146,8 @@ public:
     Q_INVOKABLE void resetFilterAndSort();
     Q_INVOKABLE QJsonArray getAlbumTracks(const QString &album);
 
+    Q_INVOKABLE QString getDateAddedByMrl(const QString &mrl) const;
+
     static QString escapeString(QString str);
 
     static QPair<int, QJsonArray> queryResultToJson(QSqlQuery result);
