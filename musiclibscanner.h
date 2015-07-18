@@ -43,7 +43,7 @@ signals:
 private:
     bool suffixCheck(const QString &val) const;
     QSqlDatabase scanDb_;
-    QString getTrackQuery(Tags track);
+    QString getTrackQuery(Tags track, const QString date);
 };
 
 #endif  // MUSICLIBSCANNER_H
