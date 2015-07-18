@@ -25,6 +25,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QJsonObject>
 #include <QUrl>
 #include <QSqlQuery>
+#include <QSqlRecord>
 #include <QSqlError>
 #include <QPair>
 #include <QElapsedTimer>
@@ -47,7 +48,7 @@ MusicLib::MusicLib(QQuickItem *parent) : QQuickItem(parent)
     db_ = QSqlDatabase::addDatabase("QSQLITE");
     db_.setDatabaseName(Config::MUSICLIBDB);
     db_.open();
-    ensureAllTables();
+    updateTable();
 
     connect(&scannerThread_,
             &QThread::finished,
@@ -294,19 +295,6 @@ QStringList MusicLib::artistList() const { return artistList_; }
 
 QStringList MusicLib::albumList() const { return albumList_; }
 
-void MusicLib::rescan()
-{
-    qDebug() << "emitting rescan" << libPath();
-
-    if (!scannerThread_.isRunning()) {
-        scannerThread_.start();
-    }
-
-    clearMusicLib();
-
-    emit startScan(libPath());
-}
-
 void MusicLib::resetFilterAndSort()
 {
     // Not using the setter functions because I only want to setDisplayLib once.
@@ -471,12 +459,38 @@ QString MusicLib::getAlbumListQuery() const
     return query;
 }
 
-void MusicLib::ensureAllTables()
+void MusicLib::updateTable()
 {
     auto tables = db_.tables();
 
-    if (!tables.contains("musiclib")) {
-        QString qs("CREATE TABLE `musiclib` ");
+    if (not tables.contains("musiclib")) {
+        ensureAllTables();
+        return;
+    }
+
+    QString query("PRAGMA table_info(musiclib)");
+    QMutexLocker locker(mutex_.data());
+    auto record = db_.exec(query);
+
+    QStringList tmplist;
+    while (record.next()) {
+        tmplist << record.value("name").toString();
+    }
+
+    if (tmplist.contains("dateAdded")) return;
+
+    qDebug() << db_.exec("ALTER TABLE musiclib ADD COLUMN dateAdded TEXT")
+                    .lastError();
+}
+
+void MusicLib::ensureAllTables() { createLibTable("musiclib"); }
+
+void MusicLib::createLibTable(const QString &name)
+{
+    auto tables = db_.tables();
+
+    if (!tables.contains(name)) {
+        QString qs("CREATE TABLE `%1` ");
         qs.append("(\n");
         // qs.append("`ID` INTEGER NOT NULL AUTOINCREMENT,\n");
         qs.append("`album` TEXT,\n");
@@ -489,12 +503,21 @@ void MusicLib::ensureAllTables()
         qs.append("`path` TEXT NOT NULL,\n");
         qs.append("`title` TEXT NOT NULL,\n");
         qs.append("`track` int,\n");
-        qs.append("`year` int\n");
+        qs.append("`year` int,\n");
+        qs.append("`dateAdded` TEXT\n");
         qs.append(")");
 
         QMutexLocker locker(mutex_.data());
-        qDebug() << db_.exec(qs).lastError();
+        qDebug() << db_.exec(qs.arg(name)).lastError();
     }
+}
+
+void MusicLib::copyLibToTmp()
+{
+    createLibTable("tmplib");
+    QString query("insert into tmplib SELECT * from musiclib");
+    QMutexLocker locker(mutex_.data());
+    qDebug() << db_.exec(query).lastError();
 }
 
 void MusicLib::clearMusicLib()
@@ -502,6 +525,46 @@ void MusicLib::clearMusicLib()
     QString query("DELETE FROM musiclib");
     QMutexLocker locker(mutex_.data());
     qDebug() << db_.exec(query).lastError();
+}
+
+void MusicLib::rescan()
+{
+    qDebug() << "emitting rescan" << libPath();
+
+    if (!scannerThread_.isRunning()) {
+        scannerThread_.start();
+    }
+    copyLibToTmp();
+    clearMusicLib();
+
+    emit startScan(libPath());
+}
+
+void MusicLib::restoreMetaData()
+{
+    auto tables = db_.tables();
+    if (not tables.contains("musiclib") or not tables.contains("tmplib")) {
+        return;
+    }
+
+    auto records = db_.exec("SELECT * FROM musiclib");
+
+    db_.transaction();
+    while (records.next()) {
+        QString mrl = records.value("mrl").toString();
+        auto tmprec = db_.exec(
+            QString("SELECT dateAdded FROM tmplib WHERE mrl='%1'").arg(mrl));
+
+        tmprec.first();
+        QString tmpdate = tmprec.value("dateAdded").toString();
+
+        if(tmpdate.isEmpty()) continue;
+
+        QString query("UPDATE musiclib SET dateAdded='%1' WHERE mrl='%2'");
+        db_.exec(query.arg(tmpdate).arg(mrl));
+    }
+    db_.commit();
+    qDebug() << db_.exec("DROP TABLE tmplib").lastError();
 }
 
 QPair<int, QJsonArray> MusicLib::queryResultToJson(QSqlQuery result)
@@ -583,6 +646,7 @@ void MusicLib::scanFinished()
     // do the right thing and display stuff as expected.
     // FIXME: Having to do that makes me feel dirty. Is the concept sound?
     lastDisplayLibQuery_ = "-1";
+    restoreMetaData();
     emit musicLibChanged();
     setScanning(false);
 }

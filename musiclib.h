@@ -212,6 +212,11 @@ private:
 
     QSqlQuery runSetDisplayQuery(const QString &query);
 
+    void updateTable();
+
+    void createLibTable(const QString &name);
+    void copyLibToTmp();
+    void restoreMetaData();
 private slots:
     void debugSignal();
 
