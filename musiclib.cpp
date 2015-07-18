@@ -146,6 +146,7 @@ QMap<MusicLib::SortWhat, QString> MusicLib::initSortMap()
     tmp.insert(MusicLib::TITLE, "title");
     tmp.insert(MusicLib::COMMENT, "comment");
     tmp.insert(MusicLib::LENGTH, "length");
+    tmp.insert(MusicLib::DATEADDED, "dateAdded");
 
     return tmp;
 }
