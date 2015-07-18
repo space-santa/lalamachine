@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 1.0.7
+Version: 1.0.8
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,10 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat Jul 18 2015 r-mean
+  1.0.8-1: Release 1.0.8
+  * Added custom tag 'dateAdded'. Lists can be sorted by that.
+
 * Sat Jul 18 2015 r-mean
   1.0.7-1: Release 1.0.7
   * Exporting a playlist now creates a folder named after the playlist.
