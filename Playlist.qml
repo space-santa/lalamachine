@@ -432,30 +432,6 @@ Rectangle {
         console.log("TOTAL TIME IN MS", enddate - startdate)
     }
 
-    function moveTop() {
-        playlist_model.move(playlist_view.currentRow, 0, 1)
-        playlist_view.selection.clear()
-        playlist_view.selection.select(0)
-    }
-    function moveUp() {
-        playlist_model.move(playlist_view.currentRow,
-                            playlist_view.currentRow - 1, 1)
-        playlist_view.selection.clear()
-        playlist_view.selection.select(playlist_view.currentRow - 1)
-    }
-    function moveDown() {
-        playlist_model.move(playlist_view.currentRow,
-                            playlist_view.currentRow + 1, 1)
-        playlist_view.selection.clear()
-        playlist_view.selection.select(playlist_view.currentRow + 1)
-    }
-    function moveBottom() {
-        playlist_model.move(playlist_view.currentRow,
-                            playlist_model.count - 1, 1)
-        playlist_view.selection.clear()
-        playlist_view.selection.select(playlist_model.count - 1)
-    }
-
     RightClickMenu {
         id: rcm
 
@@ -482,9 +458,91 @@ Rectangle {
         model: playlist_model
         selectionMode: SelectionMode.ExtendedSelection
         property var playlistColumns: config.playlistColumns
+        property int mouseY
 
         Component.onCompleted: setColumns()
         onPlaylistColumnsChanged: setColumns()
+
+        // Since we are handling left clicks in the delegate we are effectively
+        // disabling ctrl-click/shift-click here.
+        // Hence a naive attempt to implement that functionality manually.
+        // When clicked into the table, we force active focus to get key events.
+        // Hitting ctrl/shift with focus sets the appropriat flag to true.
+        // Releasing the key sets its flag to false.
+        // Hitting e.g. shift while still holding ctrl will set ctrl to false.
+        // That is the highlander principle. There can only be one.
+        property bool ctrlPressed: false
+        property bool shiftPressed: false
+
+        // The lastSelection property is required for shift-click action.
+        // We need to now the range to select.
+        property int lastSelection: -1
+
+        onActiveFocusChanged: {
+            if (!focus) {
+                ctrlPressed = false
+                shiftPressed = false
+            }
+        }
+
+        Keys.onPressed: {
+            if (event.key === Qt.Key_Control) {
+                shiftPressed = false
+                ctrlPressed = true
+            }
+            if (event.key === Qt.Key_Shift) {
+                ctrlPressed = false
+                shiftPressed = true
+            }
+        }
+
+        Keys.onReleased: {
+            if (event.key === Qt.Key_Control) {
+                ctrlPressed = false
+            }
+            if (event.key === Qt.Key_Shift) {
+                shiftPressed = false
+            }
+        }
+
+        onMouseYChanged: {
+            // Since the library can't play tracks in order,
+            // moving them around doesn't make sense.
+            if (isLibrary) {
+                return
+            }
+            // If ctrl or shift is pressed it's not dragging, it's selecting.
+            if (ctrlPressed || shiftPressed) {
+                return
+            }
+
+            // The +25 is the header height.
+            // FIXME: Get the proper header height.
+            var effY = mouseY + 25
+            var newRow = rowAt(100, effY)
+
+            playlist_model.move(currentRow, newRow, 1)
+            // Update the currentRow so the next drag n move works.
+            currentRow = newRow
+            // Update the selected row to follow the drag.
+            selection.clear()
+            selection.select(currentRow)
+        }
+
+        onClicked: {
+            forceActiveFocus()
+            currentRow = row
+            if (!ctrlPressed) {
+                selection.clear()
+            }
+
+            if (shiftPressed) {
+                selection.select(lastSelection, row)
+            } else {
+                selection.select(row)
+                lastSelection = row
+            }
+        }
 
         function setColumns() {
             for (var i = columnCount; i >= 0; --i) {
@@ -587,11 +645,6 @@ Rectangle {
             updateNowPlayingRow()
         }
 
-        onDoubleClicked: {
-            stop()
-            playRow(row)
-        }
-
         sortIndicatorVisible: true
         onSortIndicatorColumnChanged: {
             console.log(sortIndicatorColumn)
@@ -605,6 +658,13 @@ Rectangle {
         rowDelegate: TableViewDelegate {
             target: playlist_view
             onRightClick: rcm.popup()
+
+            onDoubleClicked: {
+                stop()
+                playRow(row)
+            }
+
+            onMouseYChanged: playlist_view.mouseY = baseY + y
         }
     }
 }

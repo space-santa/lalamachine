@@ -56,4 +56,12 @@ Menu {
         visible: !rcm.isLibrary
         onTriggered: deleteSelection()
     }
+
+    MenuSeparator {
+    }
+
+    MenuItem {
+        visible: !rcm.isLibrary
+        action: new_list_action
+    }
 }

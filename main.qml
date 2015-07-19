@@ -328,6 +328,14 @@ ApplicationWindow {
     }
 
     Action {
+        id: new_list_action
+        text: "new playlist"
+        shortcut: StandardKey.New
+        tooltip: "Shortcut: " + shortcut
+        onTriggered: playlist.clearList(true)
+    }
+
+    Action {
         id: play_pause_action
         shortcut: "ctrl+space"
         tooltip: "Shortcut: " + shortcut
@@ -426,22 +434,10 @@ ApplicationWindow {
             anchors.bottom: now_playing_container.top
             color: "transparent"
 
-            PlaylistButtons {
-                id: playlist_buttons
-                anchors.left: parent.left
-                anchors.verticalCenter: playlist.verticalCenter
-
-                onMoveTop: playlist.moveTop()
-                onMoveUp: playlist.moveUp()
-                onMoveDown: playlist.moveDown()
-                onMoveBottom: playlist.moveBottom()
-                onClearList: playlist.createNewList()
-            }
-
             Playlist {
                 id: playlist
                 isLibrary: false
-                anchors.left: playlist_buttons.right
+                anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.top: parent.top
                 anchors.bottom: playlist_text.top
@@ -467,7 +463,7 @@ ApplicationWindow {
 
             Text {
                 id: playlist_text
-                anchors.left: playlist_buttons.right
+                anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 height: 30

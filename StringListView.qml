@@ -129,6 +129,10 @@ Rectangle {
                 sort(sortIndicatorOrder)
             }
 
+            onClicked: {
+                currentRow = row
+            }
+
             rowDelegate: TableViewDelegate {
                 target: list_view
                 onRightClick: {
