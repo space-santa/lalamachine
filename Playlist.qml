@@ -531,6 +531,12 @@ Rectangle {
         }
 
         onMouseYChanged: {
+            // Since the library can't play tracks in order,
+            // moving them around doesn't make sense.
+            if (isLibrary) {
+                return
+            }
+
             // The +25 is the header height.
             // FIXME: Get the proper header height.
             var effY = mouseY + 25
