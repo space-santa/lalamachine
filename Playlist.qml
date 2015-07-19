@@ -432,30 +432,6 @@ Rectangle {
         console.log("TOTAL TIME IN MS", enddate - startdate)
     }
 
-    function moveTop() {
-        playlist_model.move(playlist_view.currentRow, 0, 1)
-        playlist_view.selection.clear()
-        playlist_view.selection.select(0)
-    }
-    function moveUp() {
-        playlist_model.move(playlist_view.currentRow,
-                            playlist_view.currentRow - 1, 1)
-        playlist_view.selection.clear()
-        playlist_view.selection.select(playlist_view.currentRow - 1)
-    }
-    function moveDown() {
-        playlist_model.move(playlist_view.currentRow,
-                            playlist_view.currentRow + 1, 1)
-        playlist_view.selection.clear()
-        playlist_view.selection.select(playlist_view.currentRow + 1)
-    }
-    function moveBottom() {
-        playlist_model.move(playlist_view.currentRow,
-                            playlist_model.count - 1, 1)
-        playlist_view.selection.clear()
-        playlist_view.selection.select(playlist_model.count - 1)
-    }
-
     RightClickMenu {
         id: rcm
 

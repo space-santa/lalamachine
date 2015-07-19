@@ -431,10 +431,6 @@ ApplicationWindow {
                 anchors.left: parent.left
                 anchors.verticalCenter: playlist.verticalCenter
 
-                onMoveTop: playlist.moveTop()
-                onMoveUp: playlist.moveUp()
-                onMoveDown: playlist.moveDown()
-                onMoveBottom: playlist.moveBottom()
                 onClearList: playlist.createNewList()
             }
 
