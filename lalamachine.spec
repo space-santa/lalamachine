@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 1.0.9
+Version: 1.0.10
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,13 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sun Jul 19 2015 r-mean
+  1.0.10-1: Release 1.0.10
+  * Tracks in a playlist can now be moved with mouse drag'n'move.
+  * Creating a new playlist has now a shortcut (ctrl+n)
+    and a right click menu item.
+  * The playlist button bar is now redundant.
+
 * Sun Jul 19 2015 r-mean
   1.0.9-1: Release 1.0.9
   * Fixed a bug that would not preserve the dateAdded tag for tracks with a
