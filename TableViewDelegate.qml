@@ -64,8 +64,12 @@ Item {
             onReleased: container.released()
 
             onMouseYChanged: {
-                container.mouseYChanged(mouseY,
-                                        styleData.row * container.height)
+                // WARNING: Only do this for the left button. Else opening
+                // the right click menu might move tracks around.
+                if (pressedButtons === Qt.LeftButton) {
+                    container.mouseYChanged(mouseY,
+                                            styleData.row * container.height)
+                }
             }
         }
     }
