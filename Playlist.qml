@@ -526,7 +526,6 @@ Rectangle {
         }
 
         onClicked: {
-            console.log("CLICKED", row)
             forceActiveFocus()
             currentRow = row
             if (!ctrlPressed) {
