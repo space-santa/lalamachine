@@ -20,8 +20,15 @@ import QtQuick 2.0
 import QtQuick.Controls 1.2
 
 Item {
+    id: container
     property TableView target
     signal rightClick(int row)
+    signal pressed(int row)
+    signal released
+    signal leftClicked(int row)
+    signal doubleClicked(int row)
+    signal mouseYChanged(int y, int baseY)
+
     Rectangle {
         anchors {
             left: parent.left
@@ -32,7 +39,7 @@ Item {
         color: styleData.selected ? 'darkslategrey' : "transparent"
         MouseArea {
             anchors.fill: parent
-            acceptedButtons: Qt.RightButton
+            acceptedButtons: Qt.RightButton | Qt.LeftButton
             onClicked: {
                 if (mouse.button == Qt.RightButton) {
                     console.log("Right-Click", styleData.row)
@@ -42,6 +49,23 @@ Item {
                     }
                     rightClick(styleData.row)
                 }
+            }
+
+            onDoubleClicked: container.doubleClicked(styleData.row)
+
+            onPressed: {
+                if (mouse.button == Qt.LeftButton) {
+                    target["clicked"](styleData.row)
+                    container.pressed(styleData.row)
+                    container.leftClicked(styleData.row)
+                }
+            }
+
+            onReleased: container.released()
+
+            onMouseYChanged: {
+                container.mouseYChanged(mouseY,
+                                        styleData.row * container.height)
             }
         }
     }

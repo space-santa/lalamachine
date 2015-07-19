@@ -482,9 +482,72 @@ Rectangle {
         model: playlist_model
         selectionMode: SelectionMode.ExtendedSelection
         property var playlistColumns: config.playlistColumns
+        property bool drag: false
+        property int mouseY
 
         Component.onCompleted: setColumns()
         onPlaylistColumnsChanged: setColumns()
+
+        // Since we are handling left clicks in the delegate we are effectively
+        // disabling ctrl-click/shift-click here.
+        // Hence a naive attempt to implement that functionality manually.
+        // When clicked into the table, we force active focus to get key events.
+        // Hitting ctrl/shift with focus sets the appropriat flag to true.
+        // Releasing the key sets its flag to false.
+        // Hitting e.g. shift while still holding ctrl will set ctrl to false.
+        // That is the highlander principle. There can only be one.
+        property bool ctrlPressed: false
+        property bool shiftPressed: false
+
+        // The lastSelection property is required for shift-click action.
+        // We need to now the range to select.
+        property int lastSelection: -1
+
+        onActiveFocusChanged: {
+            if (!focus) {
+                ctrlPressed = false
+                shiftPressed = false
+            }
+        }
+
+        Keys.onPressed: {
+            if (event.key === Qt.Key_Control) {
+                shiftPressed = false
+                ctrlPressed = true
+            }
+            if (event.key === Qt.Key_Shift) {
+                ctrlPressed = false
+                shiftPressed = true
+            }
+        }
+
+        Keys.onReleased: {
+            if (event.key === Qt.Key_Control) {
+                ctrlPressed = false
+            }
+            if (event.key === Qt.Key_Shift) {
+                shiftPressed = false
+            }
+        }
+
+        onMouseYChanged: {
+            console.log(mouseY)
+        }
+
+        onClicked: {
+            console.log("CLICKED", row)
+            forceActiveFocus()
+            if (!ctrlPressed) {
+                selection.clear()
+            }
+
+            if (shiftPressed) {
+                selection.select(lastSelection, row)
+            } else {
+                selection.select(row)
+                lastSelection = row
+            }
+        }
 
         function setColumns() {
             for (var i = columnCount; i >= 0; --i) {
@@ -587,11 +650,6 @@ Rectangle {
             updateNowPlayingRow()
         }
 
-        onDoubleClicked: {
-            stop()
-            playRow(row)
-        }
-
         sortIndicatorVisible: true
         onSortIndicatorColumnChanged: {
             console.log(sortIndicatorColumn)
@@ -605,6 +663,22 @@ Rectangle {
         rowDelegate: TableViewDelegate {
             target: playlist_view
             onRightClick: rcm.popup()
+
+            onPressed: {
+                console.log("PRESSED row", row)
+                playlist_view.drag = true
+            }
+            onReleased: {
+                console.log("RELEASED")
+                playlist_view.drag = false
+            }
+
+            onDoubleClicked: {
+                stop()
+                playRow(row)
+            }
+
+            onMouseYChanged: playlist_view.mouseY = baseY + y
         }
     }
 }
