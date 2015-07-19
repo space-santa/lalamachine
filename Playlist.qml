@@ -458,7 +458,6 @@ Rectangle {
         model: playlist_model
         selectionMode: SelectionMode.ExtendedSelection
         property var playlistColumns: config.playlistColumns
-        property bool drag: false
         property int mouseY
 
         Component.onCompleted: setColumns()
@@ -656,15 +655,6 @@ Rectangle {
         rowDelegate: TableViewDelegate {
             target: playlist_view
             onRightClick: rcm.popup()
-
-            onPressed: {
-                console.log("PRESSED row", row)
-                playlist_view.drag = true
-            }
-            onReleased: {
-                console.log("RELEASED")
-                playlist_view.drag = false
-            }
 
             onDoubleClicked: {
                 stop()
