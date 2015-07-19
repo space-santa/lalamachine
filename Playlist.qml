@@ -531,7 +531,17 @@ Rectangle {
         }
 
         onMouseYChanged: {
-            console.log(mouseY)
+            // The +25 is the header height.
+            // FIXME: Get the proper header height.
+            var effY = mouseY + 25
+            var newRow = rowAt(100, effY)
+
+            playlist_model.move(currentRow, newRow, 1)
+            // Update the currentRow so the next drag n move works.
+            currentRow = newRow
+            // Update the selected row to follow the drag.
+            selection.clear()
+            selection.select(currentRow)
         }
 
         onClicked: {
