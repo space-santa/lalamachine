@@ -4,7 +4,6 @@
         <file>ImageButton.qml</file>
         <file>functions.js</file>
         <file>Playlist.qml</file>
-        <file>PlaylistButtons.qml</file>
         <file>PlayerControlButtons.qml</file>
         <file>SavePlaylistDialog.qml</file>
         <file>VolumeControl.qml</file>
