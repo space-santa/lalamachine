@@ -511,6 +511,10 @@ Rectangle {
             if (isLibrary) {
                 return
             }
+            // If ctrl or shift is pressed it's not dragging, it's selecting.
+            if (ctrlPressed || shiftPressed) {
+                return
+            }
 
             // The +25 is the header height.
             // FIXME: Get the proper header height.
