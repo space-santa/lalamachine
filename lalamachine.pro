@@ -24,7 +24,9 @@ SOURCES += main.cpp \
     autoplaylistmanager.cpp \
     fileexporter.cpp \
     tags.cpp \
-    autoplaylist.cpp
+    autoplaylist.cpp \
+    playlistmodel.cpp \
+    track.cpp
 
 RESOURCES += qml.qrc
 
@@ -51,7 +53,9 @@ HEADERS += \
     fileexporter.h \
     engineloader.h \
     tags.h \
-    autoplaylist.h
+    autoplaylist.h \
+    playlistmodel.h \
+    track.h
 
 OTHER_FILES += \
     README.md \
