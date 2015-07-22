@@ -26,7 +26,6 @@ public:
     void fromJson(const QJsonObject &json);
     QJsonObject toJson() const;
 
-private:
     QString track_;
     QString title_;
     QString comment_;
