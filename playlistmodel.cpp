@@ -1,4 +1,5 @@
 #include "playlistmodel.h"
+#include <QDebug>
 
 PlaylistModel::PlaylistModel(QObject *parent) : QAbstractListModel(parent) {}
 
@@ -15,7 +16,7 @@ QHash<int, QByteArray> PlaylistModel::roleNames() const
     roles[ALBUM] = "album";
     roles[LENGTH] = "length";
     roles[YEAR] = "year";
-    roles[DATEADDED] = "date added";
+    roles[DATEADDED] = "dateAdded";
     roles[ID] = "id";
     return roles;
 }
@@ -31,14 +32,44 @@ int PlaylistModel::rowCount(const QModelIndex &parent) const
 
 Qt::ItemFlags PlaylistModel::flags(const QModelIndex &index) const
 {
+    Q_UNUSED(index)
     return Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsEnabled;
 }
 
 QVariant PlaylistModel::data(const QModelIndex &index, int role) const
 {
-    Q_UNUSED(index)
-    Q_UNUSED(role)
-    return QVariant();
+    Track track = list_[index.row()];
+    switch (role) {
+        case TRACK:
+            return QVariant(track.track_);
+            break;
+        case TITLE:
+            return QVariant(track.title_);
+            break;
+        case COMMENT:
+            return QVariant(track.comment_);
+            break;
+        case GENRE:
+            return QVariant(track.genre_);
+            break;
+        case ARTIST:
+            return QVariant(track.artist_);
+            break;
+        case ALBUM:
+            return QVariant(track.album_);
+            break;
+        case LENGTH:
+            return QVariant(track.length_);
+            break;
+        case YEAR:
+            return QVariant(track.year_);
+            break;
+        case DATEADDED:
+            return QVariant(track.dateAdded_);
+            break;
+        default:
+            return QVariant();
+    }
 }
 
 bool PlaylistModel::setData(const QModelIndex &index,
@@ -48,17 +79,17 @@ bool PlaylistModel::setData(const QModelIndex &index,
     Q_UNUSED(index)
     Q_UNUSED(value)
     Q_UNUSED(role)
-    emit QAbstractListModel::dataChanged(index, index);
+    emit dataChanged(index, index);
     return false;
 }
 
 void PlaylistModel::append(Track track)
 {
-    emit QAbstractListModel::beginInsertRows(createIndex(list_.count(), 0),
-                                             list_.count(),
-                                             list_.count() + 1);
+    emit beginInsertRows(createIndex(list_.count(), 0),
+                         list_.count(),
+                         list_.count() + 1);
     list_.append(track);
-    emit QAbstractListModel::endInsertRows();
+    emit endInsertRows();
 }
 
 int PlaylistModel::count() const { return rowCount(); }
@@ -67,27 +98,25 @@ void PlaylistModel::move(int from, int to) { list_.move(from, to); }
 
 void PlaylistModel::remove(int row)
 {
-    emit QAbstractListModel::beginRemoveRows(QModelIndex(), row, row);
+    emit beginRemoveRows(QModelIndex(), row, row);
     list_.removeAt(row);
-    emit QAbstractListModel::endRemoveRows();
+    emit endRemoveRows();
 }
 
 QJsonObject PlaylistModel::get(int row) { return list_.at(row).toJson(); }
 
 void PlaylistModel::clear()
 {
-    emit QAbstractListModel::beginRemoveRows(QModelIndex(),
-                                             0,
-                                             list_.count() - 1);
+    emit beginRemoveRows(QModelIndex(), 0, list_.count() - 1);
     list_ = QList<Track>();
-    emit QAbstractListModel::endRemoveRows();
+    emit endRemoveRows();
 }
 
 void PlaylistModel::append(const QJsonObject &json)
 {
-    emit QAbstractListModel::beginInsertRows(createIndex(list_.count(), 0),
-                                             list_.count(),
-                                             list_.count() + 1);
+    emit beginInsertRows(createIndex(list_.count(), 0),
+                         list_.count(),
+                         list_.count() + 1);
     list_.append(Track(json));
-    emit QAbstractListModel::endInsertRows();
+    emit endInsertRows();
 }
