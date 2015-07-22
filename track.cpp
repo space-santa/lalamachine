@@ -40,13 +40,13 @@ void Track::fromJson(const QJsonObject &json)
     artist_ = json.value("artist").toString();
     genre_ = json.value("genre").toString();
     comment_ = json.value("comment").toString();
-    track_ = json.value("track").toString();
+    track_ = QString::number(json.value("track").toInt());
     title_ = json.value("title").toString();
     mrl_ = json.value("mrl").toString();
     path_ = json.value("path").toString();
-    length_ = json.value("length").toString();
+    length_ = QString::number(json.value("length").toInt());
     lengthString_ = json.value("lengthString").toString();
-    year_ = json.value("year").toString();
+    year_ = QString::number(json.value("year").toInt());
     dateAdded_ = json.value("dateAdded").toString();
     id_ = json.value("id").toString();
 }
