@@ -545,7 +545,7 @@ Rectangle {
         }
 
         function setColumns() {
-            for (var i = columnCount; i >= 0; --i) {
+            for (var i = columnCount - 1; i >= 0; --i) {
                 removeColumn(i)
             }
 
