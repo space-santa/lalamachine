@@ -35,6 +35,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "autoplaylistmanager.h"
 #include "fileexporter.h"
 #include "engineloader.h"
+#include "playlistmodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -60,6 +61,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<LalaTypes>("Lala", 1, 0, "LalaTypes");
     qmlRegisterType<AutoPlaylistManager>("Lala", 1, 0, "AutoPlaylistManager");
     qmlRegisterType<FileExporter>("Lala", 1, 0, "FileExporter");
+    qmlRegisterType<PlaylistModel>("Lala", 1, 0, "PlaylistModel");
 
     EngineLoader loader;
     loader.load();
