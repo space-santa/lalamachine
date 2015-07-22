@@ -33,7 +33,7 @@ Rectangle {
 
     property string currentName
 
-    property int count: playlist_model.count
+    property int count: playlist_model.count()
     property int rowPlaying: -1
     property int currentId: -1
     property url nowPlayingSource
@@ -445,7 +445,14 @@ Rectangle {
         onDeleteSelection: deleteCurrentTrack()
     }
 
-    ListModel {
+//    ListModel {
+//        id: playlist_model
+//        onRowsMoved: {
+//            updateNowPlayingRow()
+//        }
+//    }
+
+    PlaylistModel {
         id: playlist_model
         onRowsMoved: {
             updateNowPlayingRow()
