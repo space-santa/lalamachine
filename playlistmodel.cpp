@@ -36,6 +36,8 @@ Qt::ItemFlags PlaylistModel::flags(const QModelIndex &index) const
 
 QVariant PlaylistModel::data(const QModelIndex &index, int role) const
 {
+    if (index.row() < 0 or index.row() >= list_.count()) return QVariant();
+
     Track track = list_[index.row()];
     switch (role) {
         case TrackRole:
