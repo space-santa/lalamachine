@@ -45,15 +45,6 @@ public:
     Q_INVOKABLE void clear();
     Q_INVOKABLE void append(const QJsonObject &json);
 
-signals:
-    void beginInsertRows(const QModelIndex &parent, int first, int last);
-    void endInsertRows();
-    void beginRemoveRows(const QModelIndex &parent, int first, int last);
-    void endRemoveRows();
-    void dataChanged(const QModelIndex &topLeft,
-                     const QModelIndex &bottomRight,
-                     const QVector<int> &roles = QVector<int>());
-
 private:
     QList<Track> list_;
 };
