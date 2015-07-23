@@ -92,7 +92,7 @@ void PlaylistModel::append(Track track)
     track.id_ = list_.length();
     // NOTE: This has to have an empty QModelIndex as first argument.
     // Because reasons, that's why.
-    emit beginInsertRows(QModelIndex(), list_.count(), list_.count() + 1);
+    emit beginInsertRows(QModelIndex(), rowCount(), rowCount());
     list_.append(track);
     emit endInsertRows();
     qDebug() << "ZZZ ROW COUNT" << rowCount();
