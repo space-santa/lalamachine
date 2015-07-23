@@ -112,9 +112,5 @@ void PlaylistModel::clear()
 
 void PlaylistModel::append(const QJsonObject &json)
 {
-    emit beginInsertRows(createIndex(list_.count(), 0),
-                         list_.count(),
-                         list_.count() + 1);
-    list_.append(Track(json));
-    emit endInsertRows();
+    append(Track(json));
 }
