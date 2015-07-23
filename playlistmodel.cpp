@@ -25,6 +25,7 @@ QHash<int, QByteArray> PlaylistModel::roleNames() const
 int PlaylistModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
+    qDebug() << "ZZZ ROW COUNT" << list_.length();
     return list_.length();
 }
 
