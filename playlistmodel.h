@@ -11,19 +11,19 @@ class PlaylistModel : public QAbstractListModel
     Q_OBJECT
 public:
     enum PlaylistRoles {
-        TRACK = Qt::UserRole + 1,
-        TITLE,
-        COMMENT,
-        GENRE,
-        ARTIST,
-        ALBUM,
-        LENGTH,
-        LENGTHSTRING,
-        MRL,
-        PATH,
-        YEAR,
-        DATEADDED,
-        ID
+        TrackRole,
+        TitleRole,
+        CommentRole,
+        GenreRole,
+        ArtistRole,
+        AlbumRole,
+        LengthRole,
+        LengthStringRole,
+        MrlRole,
+        PathRole,
+        YearRole,
+        DateAddedRole,
+        IdRole
     };
 
     explicit PlaylistModel(QObject *parent = 0);

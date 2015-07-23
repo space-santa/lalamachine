@@ -6,16 +6,16 @@ PlaylistModel::PlaylistModel(QObject *parent) : QAbstractListModel(parent) {}
 QHash<int, QByteArray> PlaylistModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
-    roles[TRACK] = "track";
-    roles[TITLE] = "title";
-    roles[COMMENT] = "comment";
-    roles[GENRE] = "genre";
-    roles[ARTIST] = "artist";
-    roles[ALBUM] = "album";
-    roles[LENGTH] = "length";
-    roles[YEAR] = "year";
-    roles[DATEADDED] = "dateAdded";
-    roles[ID] = "id";
+    roles[TrackRole] = "track";
+    roles[TitleRole] = "title";
+    roles[CommentRole] = "comment";
+    roles[GenreRole] = "genre";
+    roles[ArtistRole] = "artist";
+    roles[AlbumRole] = "album";
+    roles[LengthRole] = "lengthString";
+    roles[YearRole] = "year";
+    roles[DateAddedRole] = "dateAdded";
+    roles[IdRole] = "id";
     return roles;
 }
 
@@ -38,31 +38,31 @@ QVariant PlaylistModel::data(const QModelIndex &index, int role) const
 {
     Track track = list_[index.row()];
     switch (role) {
-        case TRACK:
+        case TrackRole:
             return QVariant(track.track_);
             break;
-        case TITLE:
+        case TitleRole:
             return QVariant(track.title_);
             break;
-        case COMMENT:
+        case CommentRole:
             return QVariant(track.comment_);
             break;
-        case GENRE:
+        case GenreRole:
             return QVariant(track.genre_);
             break;
-        case ARTIST:
+        case ArtistRole:
             return QVariant(track.artist_);
             break;
-        case ALBUM:
+        case AlbumRole:
             return QVariant(track.album_);
             break;
-        case LENGTH:
+        case LengthRole:
             return QVariant(track.length_);
             break;
-        case YEAR:
+        case YearRole:
             return QVariant(track.year_);
             break;
-        case DATEADDED:
+        case DateAddedRole:
             return QVariant(track.dateAdded_);
             break;
         default:
