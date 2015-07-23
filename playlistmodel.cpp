@@ -65,6 +65,9 @@ QVariant PlaylistModel::data(const QModelIndex &index, int role) const
         case DateAddedRole:
             return QVariant(track.dateAdded_);
             break;
+        case IdRole:
+            return QVariant(track.id_);
+            break;
         default:
             return QVariant();
     }
