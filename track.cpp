@@ -16,7 +16,7 @@ Track::Track(const QString &track,
              const QString &year,
              const QString &dateAdded,
              const QString &id)
-    : track_(track),
+    : track_(track.toInt()),
       title_(title),
       comment_(comment),
       genre_(genre),
@@ -24,11 +24,11 @@ Track::Track(const QString &track,
       album_(album),
       mrl_(mrl),
       path_(path),
-      length_(length),
+      length_(length.toInt()),
       lengthString_(lengthString),
-      year_(year),
+      year_(year.toInt()),
       dateAdded_(dateAdded),
-      id_(id)
+      id_(id.toInt())
 {
 }
 
@@ -40,15 +40,15 @@ void Track::fromJson(const QJsonObject &json)
     artist_ = json.value("artist").toString();
     genre_ = json.value("genre").toString();
     comment_ = json.value("comment").toString();
-    track_ = QString::number(json.value("track").toInt());
+    track_ = json.value("track").toInt();
     title_ = json.value("title").toString();
     mrl_ = json.value("mrl").toString();
     path_ = json.value("path").toString();
-    length_ = QString::number(json.value("length").toInt());
+    length_ = json.value("length").toInt();
     lengthString_ = json.value("lengthString").toString();
-    year_ = QString::number(json.value("year").toInt());
+    year_ = json.value("year").toInt();
     dateAdded_ = json.value("dateAdded").toString();
-    id_ = json.value("id").toString();
+    id_ = json.value("id").toInt();
 }
 
 QJsonObject Track::toJson() const

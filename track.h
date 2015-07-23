@@ -26,7 +26,7 @@ public:
     void fromJson(const QJsonObject &json);
     QJsonObject toJson() const;
 
-    QString track_;
+    int track_;
     QString title_;
     QString comment_;
     QString genre_;
@@ -34,11 +34,11 @@ public:
     QString album_;
     QString mrl_;
     QString path_;
-    QString length_;
+    int length_;
     QString lengthString_;
-    QString year_;
+    int year_;
     QString dateAdded_;
-    QString id_;
+    int id_;
 };
 
 #endif  // TRACK_H
