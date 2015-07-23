@@ -85,6 +85,7 @@ bool PlaylistModel::setData(const QModelIndex &index,
 void PlaylistModel::append(Track track)
 {
     if (track.mrl_.isEmpty()) return;
+    track.id_ = list_.length();
     // NOTE: This has to have an empty QModelIndex as first argument.
     // Because reasons, that's why.
     emit beginInsertRows(QModelIndex(), list_.count(), list_.count() + 1);
