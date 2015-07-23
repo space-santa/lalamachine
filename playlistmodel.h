@@ -37,8 +37,6 @@ public:
                  int role = Qt::EditRole);
     Qt::ItemFlags flags(const QModelIndex &index) const;
 
-    void append(Track track);
-
     Q_INVOKABLE int count() const;
     Q_INVOKABLE void move(int from, int to);
     Q_INVOKABLE void remove(int row);
@@ -48,6 +46,8 @@ public:
 
 private:
     QList<Track> list_;
+
+    void append(Track track);
 };
 
 #endif  // PLAYLISTMODEL_H
