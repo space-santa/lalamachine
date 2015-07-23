@@ -3,8 +3,6 @@
 
 PlaylistModel::PlaylistModel(QObject *parent) : QAbstractListModel(parent) {}
 
-PlaylistModel::~PlaylistModel() {}
-
 QHash<int, QByteArray> PlaylistModel::roleNames() const
 {
     QHash<int, QByteArray> roles;

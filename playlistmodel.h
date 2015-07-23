@@ -27,7 +27,6 @@ public:
     };
 
     explicit PlaylistModel(QObject *parent = 0);
-    ~PlaylistModel();
 
     QHash<int, QByteArray> roleNames() const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
