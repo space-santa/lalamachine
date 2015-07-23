@@ -25,7 +25,6 @@ QHash<int, QByteArray> PlaylistModel::roleNames() const
 int PlaylistModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    qDebug() << "ZZZ ROW COUNT" << list_.length();
     return list_.length();
 }
 
@@ -91,6 +90,7 @@ void PlaylistModel::append(Track track)
     emit beginInsertRows(QModelIndex(), list_.count(), list_.count() + 1);
     list_.append(track);
     emit endInsertRows();
+    qDebug() << "ZZZ ROW COUNT" << rowCount();
 }
 
 int PlaylistModel::count() const { return rowCount(); }
