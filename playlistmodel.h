@@ -2,6 +2,7 @@
 #define PLAYLISTMODEL_H
 
 #include <QObject>
+#include <QVariant>
 #include <QAbstractListModel>
 
 #include "track.h"
