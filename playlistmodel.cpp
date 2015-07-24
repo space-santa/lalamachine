@@ -94,7 +94,7 @@ void PlaylistModel::append(Track track)
     // Because reasons, that's why.
     emit beginInsertRows(QModelIndex(), rowCount(), rowCount());
     list_.append(track);
-    emit endInsertRows();
+    endInsertRows();
     qDebug() << "ZZZ ROW COUNT" << rowCount();
 }
 
@@ -104,18 +104,18 @@ void PlaylistModel::move(int from, int to) { list_.move(from, to); }
 
 void PlaylistModel::remove(int row)
 {
-    emit beginRemoveRows(QModelIndex(), row, row);
+    beginRemoveRows(QModelIndex(), row, row);
     list_.removeAt(row);
-    emit endRemoveRows();
+    endRemoveRows();
 }
 
 QJsonObject PlaylistModel::get(int row) { return list_.at(row).toJson(); }
 
 void PlaylistModel::clear()
 {
-    emit beginRemoveRows(QModelIndex(), 0, list_.count() - 1);
+    beginRemoveRows(QModelIndex(), 0, list_.count() - 1);
     list_ = QList<Track>();
-    emit endRemoveRows();
+    endRemoveRows();
 }
 
 void PlaylistModel::append(const QJsonObject &json) { append(Track(json)); }
