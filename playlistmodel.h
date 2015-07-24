@@ -44,10 +44,22 @@ public:
     Q_INVOKABLE void clear();
     Q_INVOKABLE void append(const QJsonObject &json);
 
+    Q_INVOKABLE void sort(int col, Qt::SortOrder order = Qt::AscendingOrder);
+
 private:
     QList<Track> list_;
 
     void append(Track track);
+    static bool sortTrackAsc(Track t1, Track t2);
+    static bool sortTrackDesc(Track t1, Track t2);
+    static bool sortTitleAsc(Track t1, Track t2);
+    static bool sortTitleDesc(Track t1, Track t2);
+    static bool sortGenreAsc(Track t1, Track t2);
+    static bool sortGenreDesc(Track t1, Track t2);
+    static bool sortArtistAsc(Track t1, Track t2);
+    static bool sortArtistDesc(Track t1, Track t2);
+    static bool sortAlbumAsc(Track t1, Track t2);
+    static bool sortAlbumDesc(Track t1, Track t2);
 };
 
 #endif  // PLAYLISTMODEL_H

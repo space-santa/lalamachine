@@ -128,3 +128,97 @@ void PlaylistModel::clear()
 }
 
 void PlaylistModel::append(const QJsonObject &json) { append(Track(json)); }
+
+void PlaylistModel::sort(int col, Qt::SortOrder order)
+{
+    // FIXME: The column most likely doesn't match the role because columns can
+    // be arbitrarily ordered.
+    auto func = &PlaylistModel::sortTrackAsc;
+    switch (col) {
+        case TrackRole:
+            if (order == Qt::AscendingOrder) {
+                func = &PlaylistModel::sortTrackAsc;
+            } else {
+                func = &PlaylistModel::sortTrackDesc;
+            }
+            break;
+        case TitleRole:
+            if (order == Qt::AscendingOrder) {
+                func = &PlaylistModel::sortTitleAsc;
+            } else {
+                func = &PlaylistModel::sortTitleDesc;
+            }
+            break;
+        case GenreRole:
+            if (order == Qt::AscendingOrder) {
+                func = &PlaylistModel::sortGenreAsc;
+            } else {
+                func = &PlaylistModel::sortGenreDesc;
+            }
+            break;
+        case ArtistRole:
+            if (order == Qt::AscendingOrder) {
+                func = &PlaylistModel::sortArtistAsc;
+            } else {
+                func = &PlaylistModel::sortArtistDesc;
+            }
+            break;
+        case AlbumRole:
+            if (order == Qt::AscendingOrder) {
+                func = &PlaylistModel::sortAlbumAsc;
+            } else {
+                func = &PlaylistModel::sortAlbumDesc;
+            }
+            break;
+    }
+    std::sort(list_.begin(), list_.end(), func);
+
+    emit dataChanged(createIndex(0, 0), createIndex(rowCount(), 0));
+    Q_UNUSED(col)
+    Q_UNUSED(order)
+}
+
+bool PlaylistModel::sortTrackAsc(Track t1, Track t2)
+{
+    return t1.track_ < t2.track_;
+}
+bool PlaylistModel::sortTrackDesc(Track t1, Track t2)
+{
+    return t1.track_ > t2.track_;
+}
+
+bool PlaylistModel::sortTitleAsc(Track t1, Track t2)
+{
+    return t1.title_ < t2.title_;
+}
+bool PlaylistModel::sortTitleDesc(Track t1, Track t2)
+{
+    return t1.title_ > t2.title_;
+}
+
+bool PlaylistModel::sortGenreAsc(Track t1, Track t2)
+{
+    return t1.genre_ < t2.genre_;
+}
+bool PlaylistModel::sortGenreDesc(Track t1, Track t2)
+{
+    return t1.genre_ > t2.genre_;
+}
+
+bool PlaylistModel::sortArtistAsc(Track t1, Track t2)
+{
+    return t1.artist_ < t2.artist_;
+}
+bool PlaylistModel::sortArtistDesc(Track t1, Track t2)
+{
+    return t1.artist_ > t2.artist_;
+}
+
+bool PlaylistModel::sortAlbumAsc(Track t1, Track t2)
+{
+    return t1.album_ < t2.album_;
+}
+bool PlaylistModel::sortAlbumDesc(Track t1, Track t2)
+{
+    return t1.album_ > t2.album_;
+}
