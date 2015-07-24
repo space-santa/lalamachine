@@ -380,6 +380,8 @@ Rectangle {
     // swap those values. This would always be true if we have the equal
     // in there.
     function sort(col, how) {
+        // FIXME: This function should probably be used to get the proper role
+        // of a column to use the models sort function.
         var startdate = Date.now()
 
         var sorthow
