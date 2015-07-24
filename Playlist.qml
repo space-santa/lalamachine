@@ -655,11 +655,11 @@ Rectangle {
         sortIndicatorVisible: true
         onSortIndicatorColumnChanged: {
             console.log(sortIndicatorColumn)
-            sort(sortIndicatorColumn, sortIndicatorOrder)
+            playlist_model.sort(sortIndicatorColumn, sortIndicatorOrder)
         }
         onSortIndicatorOrderChanged: {
             console.log(sortIndicatorOrder)
-            sort(sortIndicatorColumn, sortIndicatorOrder)
+            playlist_model.sort(sortIndicatorColumn, sortIndicatorOrder)
         }
 
         rowDelegate: TableViewDelegate {
