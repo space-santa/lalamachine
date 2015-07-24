@@ -100,7 +100,16 @@ void PlaylistModel::append(Track track)
 
 int PlaylistModel::count() const { return rowCount(); }
 
-void PlaylistModel::move(int from, int to) { list_.move(from, to); }
+void PlaylistModel::move(int from, int to)
+{
+    if (from == to) return;
+
+    qDebug() << "MOVING ROW from" << from << "to" << to;
+    list_.swap(from, to);
+
+    // Not using beginMoveRows/endMoveRows here because it would crash the app.
+    emit dataChanged(createIndex(0, 0), createIndex(rowCount(), 0));
+}
 
 void PlaylistModel::remove(int row)
 {
