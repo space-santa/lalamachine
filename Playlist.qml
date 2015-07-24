@@ -238,7 +238,7 @@ Rectangle {
     function getPathList() {
         var list = []
 
-        for (var i = 0; i < playlist_model.count; ++i) {
+        for (var i = 0; i < playlist_model.count(); ++i) {
             list[i] = playlist_model.get(i)["path"]
         }
 
