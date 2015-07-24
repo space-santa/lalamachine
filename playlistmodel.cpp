@@ -82,7 +82,7 @@ bool PlaylistModel::setData(const QModelIndex &index,
     Q_UNUSED(index)
     Q_UNUSED(value)
     Q_UNUSED(role)
-    emit dataChanged(index, index);
+    emit dataChanged(createIndex(0, 0), createIndex(rowCount(), 0));
     return false;
 }
 
