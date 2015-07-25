@@ -60,6 +60,14 @@ private:
     static bool sortArtistDesc(Track t1, Track t2);
     static bool sortAlbumAsc(Track t1, Track t2);
     static bool sortAlbumDesc(Track t1, Track t2);
+    static bool sortCommentAsc(Track t1, Track t2);
+    static bool sortCommentDesc(Track t1, Track t2);
+    static bool sortLengthStringAsc(Track t1, Track t2);
+    static bool sortLengthStringDesc(Track t1, Track t2);
+    static bool sortYearAsc(Track t1, Track t2);
+    static bool sortYearDesc(Track t1, Track t2);
+    static bool sortDateAddedAsc(Track t1, Track t2);
+    static bool sortDateAddedDesc(Track t1, Track t2);
 };
 
 #endif  // PLAYLISTMODEL_H

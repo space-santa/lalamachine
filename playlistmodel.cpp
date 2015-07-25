@@ -170,12 +170,38 @@ void PlaylistModel::sort(int col, Qt::SortOrder order)
                 func = &PlaylistModel::sortAlbumDesc;
             }
             break;
+        case CommentRole:
+            if (order == Qt::AscendingOrder) {
+                func = &PlaylistModel::sortCommentAsc;
+            } else {
+                func = &PlaylistModel::sortCommentDesc;
+            }
+            break;
+        case LengthStringRole:
+            if (order == Qt::AscendingOrder) {
+                func = &PlaylistModel::sortLengthStringAsc;
+            } else {
+                func = &PlaylistModel::sortLengthStringDesc;
+            }
+            break;
+        case YearRole:
+            if (order == Qt::AscendingOrder) {
+                func = &PlaylistModel::sortYearAsc;
+            } else {
+                func = &PlaylistModel::sortYearDesc;
+            }
+            break;
+        case DateAddedRole:
+            if (order == Qt::AscendingOrder) {
+                func = &PlaylistModel::sortDateAddedAsc;
+            } else {
+                func = &PlaylistModel::sortDateAddedDesc;
+            }
+            break;
     }
     std::sort(list_.begin(), list_.end(), func);
 
     emit dataChanged(createIndex(0, 0), createIndex(rowCount(), 0));
-    Q_UNUSED(col)
-    Q_UNUSED(order)
 }
 
 bool PlaylistModel::sortTrackAsc(Track t1, Track t2)
@@ -221,4 +247,40 @@ bool PlaylistModel::sortAlbumAsc(Track t1, Track t2)
 bool PlaylistModel::sortAlbumDesc(Track t1, Track t2)
 {
     return t1.album_ > t2.album_;
+}
+
+bool PlaylistModel::sortCommentAsc(Track t1, Track t2)
+{
+    return t1.comment_ < t2.comment_;
+}
+bool PlaylistModel::sortCommentDesc(Track t1, Track t2)
+{
+    return t1.comment_ > t2.comment_;
+}
+
+bool PlaylistModel::sortLengthStringAsc(Track t1, Track t2)
+{
+    return t1.lengthString_ < t2.lengthString_;
+}
+bool PlaylistModel::sortLengthStringDesc(Track t1, Track t2)
+{
+    return t1.lengthString_ > t2.lengthString_;
+}
+
+bool PlaylistModel::sortYearAsc(Track t1, Track t2)
+{
+    return t1.year_ < t2.year_;
+}
+bool PlaylistModel::sortYearDesc(Track t1, Track t2)
+{
+    return t1.year_ > t2.year_;
+}
+
+bool PlaylistModel::sortDateAddedAsc(Track t1, Track t2)
+{
+    return t1.dateAdded_ < t2.dateAdded_;
+}
+bool PlaylistModel::sortDateAddedDesc(Track t1, Track t2)
+{
+    return t1.dateAdded_ > t2.dateAdded_;
 }
