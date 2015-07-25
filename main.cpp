@@ -29,7 +29,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "timeconverter.h"
 #include "musiclib.h"
 #include "cdwriter.h"
-#include "playlistsorter.h"
 #include "sysinfo.h"
 #include "lalatypes.h"
 #include "autoplaylistmanager.h"
@@ -56,7 +55,6 @@ int main(int argc, char *argv[])
     qmlRegisterType<TimeConverter>("Lala", 1, 0, "TimeConverter");
     qmlRegisterType<MusicLib>("Lala", 1, 0, "MusicLib");
     qmlRegisterType<CdWriter>("Lala", 1, 0, "CdWriter");
-    qmlRegisterType<PlaylistSorter>("Lala", 1, 0, "PlaylistSorter");
     qmlRegisterType<SysInfo>("Lala", 1, 0, "SysInfo");
     qmlRegisterType<LalaTypes>("Lala", 1, 0, "LalaTypes");
     qmlRegisterType<AutoPlaylistManager>("Lala", 1, 0, "AutoPlaylistManager");

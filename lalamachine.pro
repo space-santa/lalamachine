@@ -16,7 +16,6 @@ SOURCES += main.cpp \
     musiclib.cpp \
     cdwriter.cpp \
     systeminteractor.cpp \
-    playlistsorter.cpp \
     sysinfo.cpp \
     musiclibscanner.cpp \
     autoplaylistobject.cpp \
@@ -44,7 +43,6 @@ HEADERS += \
     musiclib.h \
     cdwriter.h \
     systeminteractor.h \
-    playlistsorter.h \
     sysinfo.h \
     musiclibscanner.h \
     autoplaylistobject.h \
