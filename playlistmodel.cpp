@@ -13,7 +13,8 @@ QHash<int, QByteArray> PlaylistModel::roleNames() const
     roles[GenreRole] = "genre";
     roles[ArtistRole] = "artist";
     roles[AlbumRole] = "album";
-    roles[LengthRole] = "lengthString";
+    roles[LengthRole] = "length";
+    roles[LengthStringRole] = "lengthString";
     roles[YearRole] = "year";
     roles[DateAddedRole] = "dateAdded";
     roles[IdRole] = "id";
