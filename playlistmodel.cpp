@@ -177,11 +177,11 @@ void PlaylistModel::sortRole(int role, Qt::SortOrder order)
                 func = &PlaylistModel::sortCommentDesc;
             }
             break;
-        case LengthStringRole:
+        case LengthRole:
             if (order == Qt::AscendingOrder) {
-                func = &PlaylistModel::sortLengthStringAsc;
+                func = &PlaylistModel::sortLengthAsc;
             } else {
-                func = &PlaylistModel::sortLengthStringDesc;
+                func = &PlaylistModel::sortLengthDesc;
             }
             break;
         case YearRole:
@@ -268,11 +268,11 @@ bool PlaylistModel::sortCommentDesc(Track t1, Track t2)
     return what > 0;
 }
 
-bool PlaylistModel::sortLengthStringAsc(Track t1, Track t2)
+bool PlaylistModel::sortLengthAsc(Track t1, Track t2)
 {
     return t1.lengthString_ < t2.lengthString_;
 }
-bool PlaylistModel::sortLengthStringDesc(Track t1, Track t2)
+bool PlaylistModel::sortLengthDesc(Track t1, Track t2)
 {
     return t1.lengthString_ > t2.lengthString_;
 }
