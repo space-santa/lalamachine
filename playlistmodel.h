@@ -44,7 +44,7 @@ public:
     Q_INVOKABLE void clear();
     Q_INVOKABLE void append(const QJsonObject &json);
 
-    Q_INVOKABLE void sort(int col, Qt::SortOrder order = Qt::AscendingOrder);
+    Q_INVOKABLE void sort(int role, Qt::SortOrder order = Qt::AscendingOrder);
 
 private:
     QList<Track> list_;
