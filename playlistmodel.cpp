@@ -60,6 +60,9 @@ QVariant PlaylistModel::data(const QModelIndex &index, int role) const
         case AlbumRole:
             return QVariant(track.album_);
             break;
+        case LengthStringRole:
+            return QVariant(track.lengthString_);
+            break;
         case LengthRole:
             return QVariant(track.length_);
             break;
