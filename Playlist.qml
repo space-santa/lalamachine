@@ -417,13 +417,6 @@ Rectangle {
         onDeleteSelection: deleteCurrentTrack()
     }
 
-//    ListModel {
-//        id: playlist_model
-//        onRowsMoved: {
-//            updateNowPlayingRow()
-//        }
-//    }
-
     PlaylistModel {
         id: playlist_model
         onRowsMoved: {
