@@ -52,8 +52,6 @@ Dialog {
             function getList() {
                 if (config.playlistColumns
                         && config.playlistColumns.length > 0) {
-                    console.log("ZZZ length", config.playlistColumns.length)
-
                     return config.playlistColumns
                 } else {
                     return defaultList
