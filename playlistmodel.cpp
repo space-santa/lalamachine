@@ -215,47 +215,57 @@ bool PlaylistModel::sortTrackDesc(Track t1, Track t2)
 
 bool PlaylistModel::sortTitleAsc(Track t1, Track t2)
 {
-    return t1.title_ < t2.title_;
+    int what = QString::localeAwareCompare(t1.title_, t2.title_);
+    return what < 0;
 }
 bool PlaylistModel::sortTitleDesc(Track t1, Track t2)
 {
-    return t1.title_ > t2.title_;
+    int what = QString::localeAwareCompare(t1.title_, t2.title_);
+    return what > 0;
 }
 
 bool PlaylistModel::sortGenreAsc(Track t1, Track t2)
 {
-    return t1.genre_ < t2.genre_;
+    int what = QString::localeAwareCompare(t1.genre_, t2.genre_);
+    return what < 0;
 }
 bool PlaylistModel::sortGenreDesc(Track t1, Track t2)
 {
-    return t1.genre_ > t2.genre_;
+    int what = QString::localeAwareCompare(t1.genre_, t2.genre_);
+    return what > 0;
 }
 
 bool PlaylistModel::sortArtistAsc(Track t1, Track t2)
 {
-    return t1.artist_ < t2.artist_;
+    int what = QString::localeAwareCompare(t1.artist_, t2.artist_);
+    return what < 0;
 }
 bool PlaylistModel::sortArtistDesc(Track t1, Track t2)
 {
-    return t1.artist_ > t2.artist_;
+    int what = QString::localeAwareCompare(t1.artist_, t2.artist_);
+    return what > 0;
 }
 
 bool PlaylistModel::sortAlbumAsc(Track t1, Track t2)
 {
-    return t1.album_ < t2.album_;
+    int what = QString::localeAwareCompare(t1.album_, t2.album_);
+    return what < 0;
 }
 bool PlaylistModel::sortAlbumDesc(Track t1, Track t2)
 {
-    return t1.album_ > t2.album_;
+    int what = QString::localeAwareCompare(t1.album_, t2.album_);
+    return what > 0;
 }
 
 bool PlaylistModel::sortCommentAsc(Track t1, Track t2)
 {
-    return t1.comment_ < t2.comment_;
+    int what = QString::localeAwareCompare(t1.comment_, t2.comment_);
+    return what < 0;
 }
 bool PlaylistModel::sortCommentDesc(Track t1, Track t2)
 {
-    return t1.comment_ > t2.comment_;
+    int what = QString::localeAwareCompare(t1.comment_, t2.comment_);
+    return what > 0;
 }
 
 bool PlaylistModel::sortLengthStringAsc(Track t1, Track t2)
