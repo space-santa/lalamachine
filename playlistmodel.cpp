@@ -100,7 +100,6 @@ void PlaylistModel::append(Track track)
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     list_.append(track);
     endInsertRows();
-    qDebug() << "ZZZ ROW COUNT" << rowCount();
 }
 
 int PlaylistModel::count() const { return rowCount(); }
