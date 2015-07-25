@@ -569,6 +569,7 @@ Rectangle {
             }
             if (tag === "dateAdded") {
                 width = 125
+                title = "Date added"
             }
 
             return columnString(tag, title, width)
