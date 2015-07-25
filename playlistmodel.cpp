@@ -1,5 +1,6 @@
 #include "playlistmodel.h"
 #include <QDebug>
+#include <QRegularExpression>
 
 PlaylistModel::PlaylistModel(QObject *parent) : QAbstractListModel(parent) {}
 
@@ -261,13 +262,25 @@ bool PlaylistModel::sortAlbumDesc(Track t1, Track t2)
 
 bool PlaylistModel::sortCommentAsc(Track t1, Track t2)
 {
-    int what = QString::localeAwareCompare(t1.comment_, t2.comment_);
-    return what < 0;
+    return compareComment(t1.comment_, t2.comment_) < 0;
 }
 bool PlaylistModel::sortCommentDesc(Track t1, Track t2)
 {
-    int what = QString::localeAwareCompare(t1.comment_, t2.comment_);
-    return what > 0;
+    return compareComment(t1.comment_, t2.comment_) > 0;
+}
+int PlaylistModel::compareComment(QString c1, QString c2)
+{
+    // Check if the comment starts with a single digit camelot key (e.g. 5B).
+    // If so, add a 0 to correctly compare with 10A or 12B.
+    QRegularExpression rex("^\\d(A|B).*$");
+    if (c1.contains(rex)) {
+        c1.prepend("0");
+    }
+
+    if (c2.contains(rex)) {
+        c2.prepend("0");
+    }
+    return QString::localeAwareCompare(c1, c2);
 }
 
 bool PlaylistModel::sortLengthAsc(Track t1, Track t2)

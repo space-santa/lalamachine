@@ -63,6 +63,8 @@ private:
     static bool sortAlbumDesc(Track t1, Track t2);
     static bool sortCommentAsc(Track t1, Track t2);
     static bool sortCommentDesc(Track t1, Track t2);
+    static int compareComment(QString c1, QString c2);
+
     static bool sortLengthAsc(Track t1, Track t2);
     static bool sortLengthDesc(Track t1, Track t2);
     static bool sortYearAsc(Track t1, Track t2);
