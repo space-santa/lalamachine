@@ -26,6 +26,7 @@ public:
         DateAddedRole,
         IdRole
     };
+    Q_ENUMS(PlaylistRoles)
 
     explicit PlaylistModel(QObject *parent = 0);
 
