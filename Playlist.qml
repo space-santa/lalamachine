@@ -419,9 +419,8 @@ Rectangle {
 
     PlaylistModel {
         id: playlist_model
-        onRowsMoved: {
-            updateNowPlayingRow()
-        }
+
+        onDataChanged: updateNowPlayingRow()
     }
 
     TableView {
