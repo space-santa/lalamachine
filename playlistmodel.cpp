@@ -103,6 +103,8 @@ int PlaylistModel::count() const { return rowCount(); }
 void PlaylistModel::move(int from, int to)
 {
     if (from == to) return;
+    if (from < 0 or from > list_.count()) return;
+    if (to < 0 or to > list_.count()) return;
 
     qDebug() << "MOVING ROW from" << from << "to" << to;
     list_.swap(from, to);
