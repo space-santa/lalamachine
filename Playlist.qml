@@ -153,7 +153,7 @@ Rectangle {
             return lib.totalLength
         } else {
             var lenght = 0
-            for (var i = 0; i < playlist_model.count; ++i) {
+            for (var i = 0; i < playlist_model.count(); ++i) {
                 lenght += playlist_model.get(i).length
             }
             return lenght
@@ -189,7 +189,7 @@ Rectangle {
     // We can't bind the property to this function because the property will
     // also be set in function playRow(row)
     function updateNowPlayingRow() {
-        for (var i = 0; i < playlist_model.count; ++i) {
+        for (var i = 0; i < playlist_model.count(); ++i) {
             if (currentId == playlist_model.get(i).id) {
                 rowPlaying = i
                 return
@@ -311,7 +311,7 @@ Rectangle {
     // This is necessary because the mrl can't be the unique id, since a track
     // can be added multiple times.
     function setId(json) {
-        json['id'] = playlist_model.count
+        json['id'] = playlist_model.count()
         return json
     }
 
@@ -323,13 +323,13 @@ Rectangle {
     }
 
     function hasNext() {
-        return rowPlaying < playlist_model.count - 1
+        return rowPlaying < playlist_model.count() - 1
     }
 
     function getRandomNext() {
         var rand = rowPlaying
         while (rand === rowPlaying) {
-            rand = Functions.randomInt(0, playlist_model.count - 1)
+            rand = Functions.randomInt(0, playlist_model.count() - 1)
         }
         return rand
     }
@@ -362,7 +362,7 @@ Rectangle {
 
     function modelToArray(model) {
         var retval = []
-        for (var i = 0; i < model.count; ++i) {
+        for (var i = 0; i < model.count(); ++i) {
             retval[i] = model.get(i)
         }
 
