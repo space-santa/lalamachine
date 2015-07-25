@@ -144,10 +144,6 @@ Rectangle {
         }
     }
 
-    PlaylistSorter {
-        id: listsorter
-    }
-
     function getPlaylistPath(name) {
         return m3u.m3uPath(name)
     }
@@ -374,64 +370,38 @@ Rectangle {
     }
 
     // how is ascending (=0) or descending (=1)
-    // WARNING! DANGER! Just negating the ascending function doesn't work.
-    // Then it would try to sort equal which leads to an infinite loop.
-    // We would check that something is not smaller than the other and then
-    // swap those values. This would always be true if we have the equal
-    // in there.
     function sort(col, how) {
-        // FIXME: This function should probably be used to get the proper role
-        // of a column to use the models sort function.
-        var startdate = Date.now()
-
-        var sorthow
         var what = playlist_view.getColumn(col).role
 
         if (what === "track") {
-            sortwhat = MusicLib.TRACK
+            sortwhat = PlaylistModel.TrackRole
         }
         if (what === "title") {
-            sortwhat = MusicLib.TITLE
+            sortwhat = PlaylistModel.TitleRole
         }
         if (what === "comment") {
-            sortwhat = MusicLib.COMMENT
+            sortwhat = PlaylistModel.CommentRole
         }
         if (what === "lengthString") {
-            sortwhat = MusicLib.LENGTH
+            sortwhat = PlaylistModel.LengthRole
         }
         if (what === "genre") {
-            sortwhat = MusicLib.GENRE
+            sortwhat = PlaylistModel.GenreRole
         }
         if (what === "artist") {
-            sortwhat = MusicLib.ARTIST
+            sortwhat = PlaylistModel.ArtistRole
         }
         if (what === "album") {
-            sortwhat = MusicLib.ALBUM
+            sortwhat = PlaylistModel.AlbumRole
         }
         if (what === "year") {
-            sortwhat = MusicLib.YEAR
+            sortwhat = PlaylistModel.YearRole
         }
         if (what === "dateAdded") {
-            sortwhat = MusicLib.DATEADDED
+            sortwhat = PlaylistModel.DateAddedRole
         }
 
-        if (how === 0) {
-            sortAsc = true
-            sorthow = MusicLib.ASCENDING
-        } else {
-            sortAsc = false
-            sorthow = MusicLib.DESCENDING
-        }
-
-        if (!isLibrary) {
-            replaceJson(listsorter.sort(modelToArray(playlist_model),
-                                        sortwhat, sorthow))
-        }
-
-        updateNowPlayingRow()
-        var enddate = Date.now()
-
-        console.log("TOTAL TIME IN MS", enddate - startdate)
+        playlist_model.sortRole(sortwhat, how)
     }
 
     RightClickMenu {
@@ -657,11 +627,11 @@ Rectangle {
         sortIndicatorVisible: true
         onSortIndicatorColumnChanged: {
             console.log(sortIndicatorColumn)
-            playlist_model.sort(sortIndicatorColumn, sortIndicatorOrder)
+            sort(sortIndicatorColumn, sortIndicatorOrder)
         }
         onSortIndicatorOrderChanged: {
             console.log(sortIndicatorOrder)
-            playlist_model.sort(sortIndicatorColumn, sortIndicatorOrder)
+            sort(sortIndicatorColumn, sortIndicatorOrder)
         }
 
         rowDelegate: TableViewDelegate {
