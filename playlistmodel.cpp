@@ -135,10 +135,9 @@ void PlaylistModel::clear()
 
 void PlaylistModel::append(const QJsonObject &json) { append(Track(json)); }
 
+
 void PlaylistModel::sortRole(int role, Qt::SortOrder order)
 {
-    // FIXME: The column most likely doesn't match the role because columns can
-    // be arbitrarily ordered.
     auto func = &PlaylistModel::sortTrackAsc;
     switch (role) {
         case TrackRole:
