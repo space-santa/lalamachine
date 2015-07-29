@@ -100,9 +100,8 @@ void PlaylistModel::append(Track track)
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     list_.append(track);
     endInsertRows();
+    emit countChanged();
 }
-
-int PlaylistModel::count() const { return rowCount(); }
 
 void PlaylistModel::move(int from, int to)
 {
@@ -122,6 +121,7 @@ void PlaylistModel::remove(int row)
     beginRemoveRows(QModelIndex(), row, row);
     list_.removeAt(row);
     endRemoveRows();
+    emit countChanged();
 }
 
 QJsonObject PlaylistModel::get(int row) { return list_.at(row).toJson(); }
@@ -131,6 +131,7 @@ void PlaylistModel::clear()
     beginRemoveRows(QModelIndex(), 0, list_.count() - 1);
     list_ = QList<Track>();
     endRemoveRows();
+    emit countChanged();
 }
 
 void PlaylistModel::append(const QJsonObject &json) { append(Track(json)); }

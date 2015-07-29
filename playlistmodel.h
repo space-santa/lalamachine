@@ -10,6 +10,7 @@
 class PlaylistModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
 public:
     enum PlaylistRoles {
         TrackRole,
@@ -38,7 +39,6 @@ public:
                  int role = Qt::EditRole);
     Qt::ItemFlags flags(const QModelIndex &index) const;
 
-    Q_INVOKABLE int count() const;
     Q_INVOKABLE void move(int from, int to);
     Q_INVOKABLE void remove(int row);
     Q_INVOKABLE QJsonObject get(int row);
@@ -46,6 +46,9 @@ public:
     Q_INVOKABLE void append(const QJsonObject &json);
 
     Q_INVOKABLE void sortRole(int role, Qt::SortOrder order = Qt::AscendingOrder);
+
+signals:
+    void countChanged();
 
 private:
     QList<Track> list_;
