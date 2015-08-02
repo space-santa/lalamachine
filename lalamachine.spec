@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 1.1
+Version: 1.1.1
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,12 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sun Aug 02 2015 r-mean
+  1.1.1-1: Release 1.1.1
+  * Fixed sorting the length.
+  * Minor formatting changes to text.
+  * Changed the text colour of the selected row to be visible on dark bg.
+
 * Sun Aug 02 2015 r-mean
   1.1-1: Release 1.1
   * Each track now has a tag "date added". This is only inside lalamachine and
