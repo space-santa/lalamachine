@@ -46,7 +46,7 @@ public:
     Q_INVOKABLE void clear();
     Q_INVOKABLE void append(const QJsonObject &json);
 
-    Q_INVOKABLE void sortRole(int role,
+    Q_INVOKABLE void sortRole(const QString &role,
                               Qt::SortOrder order = Qt::AscendingOrder);
 signals:
     void countChanged();

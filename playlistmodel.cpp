@@ -146,10 +146,10 @@ void PlaylistModel::clear()
 
 void PlaylistModel::append(const QJsonObject &json) { append(Track(json)); }
 
-void PlaylistModel::sortRole(int role, Qt::SortOrder order)
+void PlaylistModel::sortRole(const QString &role, Qt::SortOrder order)
 {
     auto func = &PlaylistModel::sortTrackAsc;
-    switch (role) {
+    switch (roleNames().key(role.toUtf8())) {
         case TrackRole:
             if (order == Qt::AscendingOrder) {
                 func = &PlaylistModel::sortTrackAsc;
