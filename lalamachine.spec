@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 1.0.10
+Version: 1.1
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,13 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sun Aug 02 2015 r-mean
+  1.1-1: Release 1.1
+  * Each track now has a tag "date added". This is only inside lalamachine and
+    is not an actual tag that is written to the file.
+  * Fixed a bug that made sorting not work properly.
+  * Playlists are now exported into a new folder.
+
 * Sun Jul 19 2015 r-mean
   1.0.10-1: Release 1.0.10
   * Tracks in a playlist can now be moved with mouse drag'n'move.
