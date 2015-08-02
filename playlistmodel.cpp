@@ -4,22 +4,6 @@
 
 PlaylistModel::PlaylistModel(QObject *parent) : QAbstractListModel(parent)
 {
-    connect(this,
-            &PlaylistModel::genreFilterChanged,
-            this,
-            &PlaylistModel::filterChanged);
-    connect(this,
-            &PlaylistModel::artistFilterChanged,
-            this,
-            &PlaylistModel::filterChanged);
-    connect(this,
-            &PlaylistModel::albumFilterChanged,
-            this,
-            &PlaylistModel::filterChanged);
-    connect(this,
-            &PlaylistModel::filterChanged,
-            this,
-            &PlaylistModel::onFilterChanged);
 }
 
 QHash<int, QByteArray> PlaylistModel::roleNames() const
@@ -45,7 +29,7 @@ QHash<int, QByteArray> PlaylistModel::roleNames() const
 int PlaylistModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    return displayList_.count();
+    return list_.count();
 }
 
 Qt::ItemFlags PlaylistModel::flags(const QModelIndex &index) const
@@ -61,7 +45,7 @@ QVariant PlaylistModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    Track track = displayList_[index.row()];
+    Track track = list_[index.row()];
     switch (role) {
         case TrackRole:
             return QVariant(track.track_);
@@ -131,7 +115,7 @@ void PlaylistModel::move(int from, int to)
     if (to < 0 or to > rowCount()) return;
 
     qDebug() << "MOVING ROW from" << from << "to" << to;
-    displayList_.swap(from, to);
+    list_.swap(from, to);
 
     // Not using beginMoveRows/endMoveRows here because it would crash the app.
     emit dataChanged(createIndex(0, 0), createIndex(rowCount(), 0));
@@ -140,7 +124,7 @@ void PlaylistModel::move(int from, int to)
 void PlaylistModel::remove(int row)
 {
     beginRemoveRows(QModelIndex(), row, row);
-    displayList_.removeAt(row);
+    list_.removeAt(row);
     endRemoveRows();
     emit countChanged();
 }
@@ -148,14 +132,14 @@ void PlaylistModel::remove(int row)
 QJsonObject PlaylistModel::get(int row)
 {
     if (row < 0 or row >= rowCount()) return QJsonObject();
-    return displayList_.at(row).toJson();
+    return list_.at(row).toJson();
 }
 
 void PlaylistModel::clear()
 {
     beginRemoveRows(QModelIndex(), 0, list_.count() - 1);
     list_ = QList<Track>();
-    displayList_ = list_;
+    list_ = list_;
     endRemoveRows();
     emit countChanged();
 }
@@ -230,66 +214,9 @@ void PlaylistModel::sortRole(int role, Qt::SortOrder order)
             }
             break;
     }
-    std::sort(displayList_.begin(), displayList_.end(), func);
+    std::sort(list_.begin(), list_.end(), func);
 
     //onFilterChanged();
-    emit dataChanged(createIndex(0, 0), createIndex(rowCount(), 0));
-}
-
-void PlaylistModel::resetFilter() {
-    emit filterChanged();
-}
-
-QString PlaylistModel::genreFilter() const { return genreFilter_; }
-void PlaylistModel::setGenreFilter(const QString &genreFilter)
-{
-    genreFilter_ = genreFilter;
-    emit genreFilterChanged();
-}
-
-QString PlaylistModel::artistFilter() const { return artistFilter_; }
-void PlaylistModel::setArtistFilter(const QString &artistFilter)
-{
-    artistFilter_ = artistFilter;
-    emit artistFilterChanged();
-}
-
-QString PlaylistModel::albumFilter() const { return albumFilter_; }
-void PlaylistModel::setAlbumFilter(const QString &albumFilter)
-{
-    albumFilter_ = albumFilter;
-    emit albumFilterChanged();
-}
-
-void PlaylistModel::onFilterChanged()
-{
-    displayList_ = list_;
-
-    for (int i = displayList_.count() - 1; i >= 0; --i) {
-        if (not(genreFilter_.isEmpty()
-                or displayList_[i].genre_.contains(genreFilter_,
-                                                    Qt::CaseInsensitive))) {
-            //displayList_.removeAt(i);
-            remove(i);
-            continue;
-        }
-        if (not(artistFilter_.isEmpty()
-                or displayList_[i].artist_.contains(artistFilter_,
-                                                     Qt::CaseInsensitive))) {
-            //displayList_.removeAt(i);
-            remove(i);
-            continue;
-        }
-        if (not(albumFilter_.isEmpty()
-                or displayList_[i].album_.contains(albumFilter_,
-                                                    Qt::CaseInsensitive))) {
-            //displayList_.removeAt(i);
-            remove(i);
-            continue;
-        }
-    }
-
-    emit countChanged();
     emit dataChanged(createIndex(0, 0), createIndex(rowCount(), 0));
 }
 

@@ -12,13 +12,6 @@ class PlaylistModel : public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
 
-    Q_PROPERTY(QString genreFilter READ genreFilter WRITE setGenreFilter NOTIFY
-                   genreFilterChanged)
-    Q_PROPERTY(QString artistFilter READ artistFilter WRITE setArtistFilter
-                   NOTIFY artistFilterChanged)
-    Q_PROPERTY(QString albumFilter READ albumFilter WRITE setAlbumFilter NOTIFY
-                   albumFilterChanged)
-
 public:
     enum PlaylistRoles {
         TrackRole,
@@ -55,30 +48,11 @@ public:
 
     Q_INVOKABLE void sortRole(int role,
                               Qt::SortOrder order = Qt::AscendingOrder);
-
-    Q_INVOKABLE void resetFilter();
-
-    QString genreFilter() const;
-    void setGenreFilter(const QString &genreFilter);
-
-    QString artistFilter() const;
-    void setArtistFilter(const QString &artistFilter);
-
-    QString albumFilter() const;
-    void setAlbumFilter(const QString &albumFilter);
 signals:
     void countChanged();
-    void genreFilterChanged();
-    void artistFilterChanged();
-    void albumFilterChanged();
-    void filterChanged();
-
-private slots:
-    void onFilterChanged();
 
 private:
     QList<Track> list_;
-    QList<Track> displayList_;
 
     QString genreFilter_;
     QString artistFilter_;

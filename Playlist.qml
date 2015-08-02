@@ -41,7 +41,6 @@ Rectangle {
     property bool repeatAll: false
     property bool random: false
     property alias totalPlaytimeString: tc.timestring
-    property alias playlistModel: playlist_model
 
     property int sortwhat: MusicLib.ARTIST
     property bool sortAsc: true
@@ -274,7 +273,6 @@ Rectangle {
         for (var i = 0; i < list.length; ++i) {
             add(list[i].toString())
         }
-        playlist_model.resetFilter();
     }
 
     function add(path) {
@@ -299,7 +297,6 @@ Rectangle {
         for (var i in json) {
             playlist_model.append(setId(json[i]))
         }
-        playlist_model.resetFilter();
     }
 
     function replaceJson(json) {
