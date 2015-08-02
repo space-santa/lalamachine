@@ -144,10 +144,6 @@ Rectangle {
         }
     }
 
-    PlaylistSorter {
-        id: listsorter
-    }
-
     function getPlaylistPath(name) {
         return m3u.m3uPath(name)
     }
@@ -373,65 +369,6 @@ Rectangle {
         return retval
     }
 
-    // how is ascending (=0) or descending (=1)
-    // WARNING! DANGER! Just negating the ascending function doesn't work.
-    // Then it would try to sort equal which leads to an infinite loop.
-    // We would check that something is not smaller than the other and then
-    // swap those values. This would always be true if we have the equal
-    // in there.
-    function sort(col, how) {
-        var startdate = Date.now()
-
-        var sorthow
-        var what = playlist_view.getColumn(col).role
-
-        if (what === "track") {
-            sortwhat = MusicLib.TRACK
-        }
-        if (what === "title") {
-            sortwhat = MusicLib.TITLE
-        }
-        if (what === "comment") {
-            sortwhat = MusicLib.COMMENT
-        }
-        if (what === "lengthString") {
-            sortwhat = MusicLib.LENGTH
-        }
-        if (what === "genre") {
-            sortwhat = MusicLib.GENRE
-        }
-        if (what === "artist") {
-            sortwhat = MusicLib.ARTIST
-        }
-        if (what === "album") {
-            sortwhat = MusicLib.ALBUM
-        }
-        if (what === "year") {
-            sortwhat = MusicLib.YEAR
-        }
-        if (what === "dateAdded") {
-            sortwhat = MusicLib.DATEADDED
-        }
-
-        if (how === 0) {
-            sortAsc = true
-            sorthow = MusicLib.ASCENDING
-        } else {
-            sortAsc = false
-            sorthow = MusicLib.DESCENDING
-        }
-
-        if (!isLibrary) {
-            replaceJson(listsorter.sort(modelToArray(playlist_model),
-                                        sortwhat, sorthow))
-        }
-
-        updateNowPlayingRow()
-        var enddate = Date.now()
-
-        console.log("TOTAL TIME IN MS", enddate - startdate)
-    }
-
     RightClickMenu {
         id: rcm
 
@@ -445,11 +382,10 @@ Rectangle {
         onDeleteSelection: deleteCurrentTrack()
     }
 
-    ListModel {
+    PlaylistModel {
         id: playlist_model
-        onRowsMoved: {
-            updateNowPlayingRow()
-        }
+
+        onDataChanged: updateNowPlayingRow()
     }
 
     TableView {
@@ -545,7 +481,7 @@ Rectangle {
         }
 
         function setColumns() {
-            for (var i = columnCount; i >= 0; --i) {
+            for (var i = columnCount - 1; i >= 0; --i) {
                 removeColumn(i)
             }
 
@@ -590,6 +526,7 @@ Rectangle {
             }
             if (tag === "dateAdded") {
                 width = 125
+                title = "Date added"
             }
 
             return columnString(tag, title, width)
@@ -645,14 +582,20 @@ Rectangle {
             updateNowPlayingRow()
         }
 
+        function getColumnRole(col) {
+            return getColumn(col).role
+        }
+
         sortIndicatorVisible: true
         onSortIndicatorColumnChanged: {
-            console.log(sortIndicatorColumn)
-            sort(sortIndicatorColumn, sortIndicatorOrder)
+            console.log(getColumnRole(sortIndicatorColumn))
+            playlist_model.sortRole(getColumnRole(sortIndicatorColumn),
+                                    sortIndicatorOrder)
         }
         onSortIndicatorOrderChanged: {
-            console.log(sortIndicatorOrder)
-            sort(sortIndicatorColumn, sortIndicatorOrder)
+            console.log(getColumnRole(sortIndicatorColumn))
+            playlist_model.sortRole(getColumnRole(sortIndicatorColumn),
+                                    sortIndicatorOrder)
         }
 
         rowDelegate: TableViewDelegate {

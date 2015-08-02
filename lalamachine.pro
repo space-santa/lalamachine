@@ -16,7 +16,6 @@ SOURCES += main.cpp \
     musiclib.cpp \
     cdwriter.cpp \
     systeminteractor.cpp \
-    playlistsorter.cpp \
     sysinfo.cpp \
     musiclibscanner.cpp \
     autoplaylistobject.cpp \
@@ -24,7 +23,9 @@ SOURCES += main.cpp \
     autoplaylistmanager.cpp \
     fileexporter.cpp \
     tags.cpp \
-    autoplaylist.cpp
+    autoplaylist.cpp \
+    playlistmodel.cpp \
+    track.cpp
 
 RESOURCES += qml.qrc
 
@@ -42,7 +43,6 @@ HEADERS += \
     musiclib.h \
     cdwriter.h \
     systeminteractor.h \
-    playlistsorter.h \
     sysinfo.h \
     musiclibscanner.h \
     autoplaylistobject.h \
@@ -51,7 +51,9 @@ HEADERS += \
     fileexporter.h \
     engineloader.h \
     tags.h \
-    autoplaylist.h
+    autoplaylist.h \
+    playlistmodel.h \
+    track.h
 
 OTHER_FILES += \
     README.md \
