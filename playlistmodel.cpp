@@ -222,8 +222,6 @@ void PlaylistModel::sortRole(const QString &role, Qt::SortOrder order)
             break;
     }
     std::sort(list_.begin(), list_.end(), func);
-
-    //onFilterChanged();
     emit dataChanged(createIndex(0, 0), createIndex(rowCount(), 0));
 }
 
