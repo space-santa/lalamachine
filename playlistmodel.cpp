@@ -199,6 +199,15 @@ void PlaylistModel::sortRole(const QString &role, Qt::SortOrder order)
                 func = &PlaylistModel::sortLengthDesc;
             }
             break;
+        // The length is displayed with the lengthStringRole, but we want to
+        // sort it by the actual integer value.
+        case LengthStringRole:
+            if (order == Qt::AscendingOrder) {
+                func = &PlaylistModel::sortLengthAsc;
+            } else {
+                func = &PlaylistModel::sortLengthDesc;
+            }
+            break;
         case YearRole:
             if (order == Qt::AscendingOrder) {
                 func = &PlaylistModel::sortYearAsc;
