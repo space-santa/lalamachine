@@ -369,41 +369,6 @@ Rectangle {
         return retval
     }
 
-    // how is ascending (=0) or descending (=1)
-    function sort(col, how) {
-        var what = playlist_view.getColumn(col).role
-
-        if (what === "track") {
-            sortwhat = PlaylistModel.TrackRole
-        }
-        if (what === "title") {
-            sortwhat = PlaylistModel.TitleRole
-        }
-        if (what === "comment") {
-            sortwhat = PlaylistModel.CommentRole
-        }
-        if (what === "lengthString") {
-            sortwhat = PlaylistModel.LengthRole
-        }
-        if (what === "genre") {
-            sortwhat = PlaylistModel.GenreRole
-        }
-        if (what === "artist") {
-            sortwhat = PlaylistModel.ArtistRole
-        }
-        if (what === "album") {
-            sortwhat = PlaylistModel.AlbumRole
-        }
-        if (what === "year") {
-            sortwhat = PlaylistModel.YearRole
-        }
-        if (what === "dateAdded") {
-            sortwhat = PlaylistModel.DateAddedRole
-        }
-
-        playlist_model.sortRole(sortwhat, how)
-    }
-
     RightClickMenu {
         id: rcm
 
@@ -617,14 +582,20 @@ Rectangle {
             updateNowPlayingRow()
         }
 
+        function getColumnRole(col) {
+            return getColumn(col).role
+        }
+
         sortIndicatorVisible: true
         onSortIndicatorColumnChanged: {
-            console.log(sortIndicatorColumn)
-            sort(sortIndicatorColumn, sortIndicatorOrder)
+            console.log(getColumnRole(sortIndicatorColumn))
+            playlist_model.sortRole(getColumnRole(sortIndicatorColumn),
+                                    sortIndicatorOrder)
         }
         onSortIndicatorOrderChanged: {
-            console.log(sortIndicatorOrder)
-            sort(sortIndicatorColumn, sortIndicatorOrder)
+            console.log(getColumnRole(sortIndicatorColumn))
+            playlist_model.sortRole(getColumnRole(sortIndicatorColumn),
+                                    sortIndicatorOrder)
         }
 
         rowDelegate: TableViewDelegate {
