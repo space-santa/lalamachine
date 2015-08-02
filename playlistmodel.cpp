@@ -45,7 +45,7 @@ QHash<int, QByteArray> PlaylistModel::roleNames() const
 int PlaylistModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    return filteredList_.count();
+    return displayList_.count();
 }
 
 Qt::ItemFlags PlaylistModel::flags(const QModelIndex &index) const
@@ -56,9 +56,12 @@ Qt::ItemFlags PlaylistModel::flags(const QModelIndex &index) const
 
 QVariant PlaylistModel::data(const QModelIndex &index, int role) const
 {
-    if (index.row() < 0 or index.row() >= rowCount()) return QVariant();
+    if (index.row() < 0 or index.row() >= rowCount()) {
+        qDebug() << index.row();
+        return QVariant();
+    }
 
-    Track track = filteredList_[index.row()];
+    Track track = displayList_[index.row()];
     switch (role) {
         case TrackRole:
             return QVariant(track.track_);
@@ -124,11 +127,11 @@ void PlaylistModel::append(Track track)
 void PlaylistModel::move(int from, int to)
 {
     if (from == to) return;
-    if (from < 0 or from > list_.count()) return;
-    if (to < 0 or to > list_.count()) return;
+    if (from < 0 or from > rowCount()) return;
+    if (to < 0 or to > rowCount()) return;
 
     qDebug() << "MOVING ROW from" << from << "to" << to;
-    list_.swap(from, to);
+    displayList_.swap(from, to);
 
     // Not using beginMoveRows/endMoveRows here because it would crash the app.
     emit dataChanged(createIndex(0, 0), createIndex(rowCount(), 0));
@@ -137,17 +140,22 @@ void PlaylistModel::move(int from, int to)
 void PlaylistModel::remove(int row)
 {
     beginRemoveRows(QModelIndex(), row, row);
-    list_.removeAt(row);
+    displayList_.removeAt(row);
     endRemoveRows();
     emit countChanged();
 }
 
-QJsonObject PlaylistModel::get(int row) { return list_.at(row).toJson(); }
+QJsonObject PlaylistModel::get(int row)
+{
+    if (row < 0 or row >= rowCount()) return QJsonObject();
+    return displayList_.at(row).toJson();
+}
 
 void PlaylistModel::clear()
 {
     beginRemoveRows(QModelIndex(), 0, list_.count() - 1);
     list_ = QList<Track>();
+    displayList_ = list_;
     endRemoveRows();
     emit countChanged();
 }
@@ -222,9 +230,14 @@ void PlaylistModel::sortRole(int role, Qt::SortOrder order)
             }
             break;
     }
-    std::sort(list_.begin(), list_.end(), func);
+    std::sort(displayList_.begin(), displayList_.end(), func);
 
+    //onFilterChanged();
     emit dataChanged(createIndex(0, 0), createIndex(rowCount(), 0));
+}
+
+void PlaylistModel::resetFilter() {
+    emit filterChanged();
 }
 
 QString PlaylistModel::genreFilter() const { return genreFilter_; }
@@ -250,28 +263,34 @@ void PlaylistModel::setAlbumFilter(const QString &albumFilter)
 
 void PlaylistModel::onFilterChanged()
 {
-    filteredList_ = list_;
+    displayList_ = list_;
 
-    for (int i = filteredList_.count() - 1; i >= 0; --i) {
+    for (int i = displayList_.count() - 1; i >= 0; --i) {
         if (not(genreFilter_.isEmpty()
-                or filteredList_[i].genre_.contains(genreFilter_,
+                or displayList_[i].genre_.contains(genreFilter_,
                                                     Qt::CaseInsensitive))) {
-            filteredList_.removeAt(i);
+            //displayList_.removeAt(i);
+            remove(i);
             continue;
         }
         if (not(artistFilter_.isEmpty()
-                or filteredList_[i].artist_.contains(artistFilter_,
+                or displayList_[i].artist_.contains(artistFilter_,
                                                      Qt::CaseInsensitive))) {
-            filteredList_.removeAt(i);
+            //displayList_.removeAt(i);
+            remove(i);
             continue;
         }
         if (not(albumFilter_.isEmpty()
-                or filteredList_[i].album_.contains(albumFilter_,
+                or displayList_[i].album_.contains(albumFilter_,
                                                     Qt::CaseInsensitive))) {
-            filteredList_.removeAt(i);
+            //displayList_.removeAt(i);
+            remove(i);
             continue;
         }
     }
+
+    emit countChanged();
+    emit dataChanged(createIndex(0, 0), createIndex(rowCount(), 0));
 }
 
 bool PlaylistModel::sortTrackAsc(Track t1, Track t2)

@@ -56,6 +56,8 @@ public:
     Q_INVOKABLE void sortRole(int role,
                               Qt::SortOrder order = Qt::AscendingOrder);
 
+    Q_INVOKABLE void resetFilter();
+
     QString genreFilter() const;
     void setGenreFilter(const QString &genreFilter);
 
@@ -64,7 +66,6 @@ public:
 
     QString albumFilter() const;
     void setAlbumFilter(const QString &albumFilter);
-
 signals:
     void countChanged();
     void genreFilterChanged();
@@ -77,7 +78,7 @@ private slots:
 
 private:
     QList<Track> list_;
-    QList<Track> filteredList_;
+    QList<Track> displayList_;
 
     QString genreFilter_;
     QString artistFilter_;
