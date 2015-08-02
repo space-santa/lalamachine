@@ -89,6 +89,7 @@ Rectangle {
                   progress_timer.value * duration) + " / " + Functions.millisToMinSec(
                   duration)
         font.pointSize: 12
+        font.family: "Helvetica"
         styleColor: "#000000"
         style: Text.Outline
 

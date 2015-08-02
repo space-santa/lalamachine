@@ -464,6 +464,7 @@ ApplicationWindow {
             Text {
                 id: playlist_text
                 anchors.left: parent.left
+                anchors.leftMargin: 10
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 height: 30
@@ -472,6 +473,7 @@ ApplicationWindow {
                 horizontalAlignment: Text.AlignLeft
                 text: buildText()
                 font.pointSize: 12
+                font.family: "Helvetica"
                 styleColor: "#000000"
                 style: Text.Outline
 

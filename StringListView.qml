@@ -164,6 +164,7 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
                 font.pointSize: 12
+                font.family: "Helvetica"
                 styleColor: "#000000"
                 style: Text.Outline
             }
