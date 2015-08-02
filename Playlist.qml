@@ -609,5 +609,8 @@ Rectangle {
 
             onMouseYChanged: playlist_view.mouseY = baseY + y
         }
+
+        itemDelegate: ItemDelegate {
+        }
     }
 }
