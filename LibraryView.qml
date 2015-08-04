@@ -19,6 +19,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 import QtQuick 2.0
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
+import Qt.labs.settings 1.0
 
 import Lala 1.0
 
@@ -53,190 +54,203 @@ Rectangle {
         }
     }
 
-    Rectangle {
-        id: topShelve
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: parent.height / 2
-
-        color: "transparent"
-
-        StringListView {
-            id: genre_list
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            width: parent.width / 3
-            allowSort: false
-            roleString: "genre"
-            stringList: lib.genreList
-        }
-        StringListView {
-            id: artist_list
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: genre_list.right
-            width: parent.width / 3
-            height: parent.height
-            allowSort: false
-            roleString: "artist"
-            stringList: lib.artistList
-        }
-        StringListView {
-            id: album_list
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            width: parent.width / 3
-            allowSort: false
-            roleString: "album"
-            stringList: lib.albumList
-
-            onRightClick: {
-                rcm.popup()
-            }
-        }
-
-        RightClickMenu {
-            id: rcm
-
-            isLibrary: true
-
-            onAddToPlaylist: {
-                if (listname === "") {
-                    mainPlaylist.createNewList()
-                    listname = miscPlaylistName
-                }
-
-                var albumList = musicLib.getAlbumTracks(album_list.selection)
-
-                for (var i = 0; i < albumList.length; ++i) {
-                    if (listname === miscPlaylistName
-                            || listname === currentPlaylist) {
-                        mainPlaylist.add(albumList[i].path)
-                    } else {
-                        m3u.addToPlaylist(albumList[i].path, listname)
-                    }
-                }
-            }
-        }
+    Settings {
+        property alias libraryTopShelveHeight: topShelve.height
     }
 
-    Rectangle {
-        id: bottomShelve
-        anchors.top: topShelve.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        color: "transparent"
+    SplitView {
+        anchors.fill: parent
+        orientation: Qt.Vertical
 
         Rectangle {
-            id: tiles_container
+            id: topShelve
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.bottom: scan_notifier.top
+            height: 250
+
+            Layout.minimumHeight: 150
+
             color: "transparent"
 
-            Item {
-                id: titles_filter_box
+            StringListView {
+                id: genre_list
                 anchors.top: parent.top
-                anchors.horizontalCenter: titles.horizontalCenter
-                height: 25
-                width: 250
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                width: parent.width / 3
+                allowSort: false
+                roleString: "genre"
+                stringList: lib.genreList
+            }
+            StringListView {
+                id: artist_list
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.left: genre_list.right
+                width: parent.width / 3
+                height: parent.height
+                allowSort: false
+                roleString: "artist"
+                stringList: lib.artistList
+            }
+            StringListView {
+                id: album_list
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.right: parent.right
+                width: parent.width / 3
+                allowSort: false
+                roleString: "album"
+                stringList: lib.albumList
 
-                TextField {
-                    id: filter_text
-                    anchors.left: parent.left
-                    anchors.leftMargin: 5
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    anchors.right: clear_button.left
-
-                    placeholderText: "Filter..."
-                }
-
-                ImageButton {
-                    id: clear_button
-                    width: height
-                    anchors.right: parent.right
-                    anchors.rightMargin: 5
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-
-                    source: "qrc:/images/images/edit-clear.png"
-
-                    onClicked: {
-                        var ts = Date.now()
-                        lib.resetFilterAndSort()
-
-                        genre_list.reset()
-                        artist_list.reset()
-                        album_list.reset()
-
-                        filter_text.text = ""
-                        console.log("Reset filter duration:", Date.now() - ts)
-                    }
+                onRightClick: {
+                    rcm.popup()
                 }
             }
 
-            Playlist {
-                id: titles
+            RightClickMenu {
+                id: rcm
+
                 isLibrary: true
-                anchors.top: titles_filter_box.bottom
+
+                onAddToPlaylist: {
+                    if (listname === "") {
+                        mainPlaylist.createNewList()
+                        listname = miscPlaylistName
+                    }
+
+                    var albumList = musicLib.getAlbumTracks(
+                                album_list.selection)
+
+                    for (var i = 0; i < albumList.length; ++i) {
+                        if (listname === miscPlaylistName
+                                || listname === currentPlaylist) {
+                            mainPlaylist.add(albumList[i].path)
+                        } else {
+                            m3u.addToPlaylist(albumList[i].path, listname)
+                        }
+                    }
+                }
+            }
+        }
+
+        Rectangle {
+            id: bottomShelve
+            anchors.top: topShelve.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            color: "transparent"
+
+            Rectangle {
+                id: tiles_container
+                anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
-                anchors.bottom: titles_info.top
-
+                anchors.bottom: scan_notifier.top
                 color: "transparent"
 
-                onPlay: lalaplayer.playTrack(path)
+                Item {
+                    id: titles_filter_box
+                    anchors.top: parent.top
+                    anchors.horizontalCenter: titles.horizontalCenter
+                    height: 25
+                    width: 250
+
+                    TextField {
+                        id: filter_text
+                        anchors.left: parent.left
+                        anchors.leftMargin: 5
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.right: clear_button.left
+
+                        placeholderText: "Filter..."
+                    }
+
+                    ImageButton {
+                        id: clear_button
+                        width: height
+                        anchors.right: parent.right
+                        anchors.rightMargin: 5
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+
+                        source: "qrc:/images/images/edit-clear.png"
+
+                        onClicked: {
+                            var ts = Date.now()
+                            lib.resetFilterAndSort()
+
+                            genre_list.reset()
+                            artist_list.reset()
+                            album_list.reset()
+
+                            filter_text.text = ""
+                            console.log("Reset filter duration:",
+                                        Date.now() - ts)
+                        }
+                    }
+                }
+
+                Playlist {
+                    id: titles
+                    isLibrary: true
+                    anchors.top: titles_filter_box.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.bottom: titles_info.top
+
+                    color: "transparent"
+
+                    onPlay: lalaplayer.playTrack(path)
+                }
+
+                Rectangle {
+                    id: titles_info
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    height: 20
+                    color: "transparent"
+
+                    Text {
+                        anchors.fill: parent
+
+                        visible: true
+
+                        text: titles.count + " Tracks, Total length: " + titles.totalPlaytimeString
+                        color: "#ffffff"
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pointSize: 12
+                        font.family: "Helvetica"
+                        styleColor: "#000000"
+                        style: Text.Outline
+                    }
+                }
             }
 
             Rectangle {
-                id: titles_info
+                id: scan_notifier
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
-                height: 20
+                height: lib.scanning ? 50 : 0
                 color: "transparent"
 
                 Text {
                     anchors.fill: parent
 
-                    visible: true
+                    visible: lib.scanning
 
-                    text: titles.count + " Tracks, Total length: " + titles.totalPlaytimeString
-                    color: "#ffffff"
+                    text: "Scan in progress..."
+                    color: "white"
+                    font.pointSize: 16
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
-                    font.pointSize: 12
-                    font.family: "Helvetica"
-                    styleColor: "#000000"
-                    style: Text.Outline
                 }
-            }
-        }
-
-        Rectangle {
-            id: scan_notifier
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            height: lib.scanning ? 50 : 0
-            color: "transparent"
-
-            Text {
-                anchors.fill: parent
-
-                visible: lib.scanning
-
-                text: "Scan in progress..."
-                color: "white"
-                font.pointSize: 16
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
             }
         }
     }
