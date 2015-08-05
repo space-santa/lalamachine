@@ -51,13 +51,23 @@ ApplicationWindow {
         playlist.setCurrentPlaylist(config.lastPlaylist)
         volume_control.value = config.volume
         console.log("Volume on load", config.volume)
+
+        if (settings.showPlaylist) {
+            show_list_action.trigger()
+        } else {
+            show_musiclib_action.trigger()
+        }
     }
 
     Settings {
+        id: settings
+
         property alias x: master.x
         property alias y: master.y
         property alias width: master.width
         property alias height: master.height
+
+        property bool showPlaylist: show_list.checked
     }
 
     onClosing: {
