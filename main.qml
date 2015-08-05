@@ -36,7 +36,7 @@ ApplicationWindow {
     title: getWindowTitle()
 
     minimumHeight: 500
-    minimumWidth: 1005
+    minimumWidth: 500
 
     property alias musicLib: libview.musicLib
     property string miscPlaylistName: "cs1m090"
@@ -359,23 +359,6 @@ ApplicationWindow {
         onTriggered: fileDialog.visible = true
     }
 
-    Rectangle {
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        gradient: Gradient {
-            GradientStop {
-                position: 0.49
-                color: "#000000"
-            }
-            GradientStop {
-                position: 1.00
-                color: "#717171"
-            }
-        }
-    }
-
     Configuration {
         id: config
     }
@@ -418,127 +401,206 @@ ApplicationWindow {
         id: miss_dialog
     }
 
-    Rectangle {
-        id: left_shelve
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        width: parent.width / 2
-        color: "transparent"
+    ExclusiveGroup {
+        id: tab_group
 
-        Rectangle {
-            id: playlist_container
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.bottom: now_playing_container.top
-            color: "transparent"
-
-            Playlist {
-                id: playlist
-                isLibrary: false
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.bottom: playlist_text.top
-
-                repeatAll: now_playing_container.repeatAll
-                random: now_playing_container.random
-
-                nowPlayingSource: playMusic.source
-
-                onStop: {
-                    playMusic.stop()
-                }
-
-                onPlay: {
-                    playMusic.playTrack(path)
-                }
-
-                function addAutoPlaylist(listname) {
-                    playlist.createNewList()
-                    playlist.addLib(auto_playlist_manager.getTracks(listname))
-                }
-            }
-
-            Text {
-                id: playlist_text
-                anchors.left: parent.left
-                anchors.leftMargin: 10
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                height: 30
-                color: "#ffffff"
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignLeft
-                text: buildText()
-                font.pointSize: 12
-                font.family: "Helvetica"
-                styleColor: "#000000"
-                style: Text.Outline
-
-                function buildText() {
-                    var retval = ""
-                    if (playlist.currentName === ""
-                            || playlist.currentName === miscPlaylistName) {
-                        retval += "new list" + " -- "
-                    } else {
-                        retval += playlist.currentName + " -- "
-                    }
-
-                    retval += playlist.count + " Tracks, Total length = "
-                            + playlist.totalPlaytimeString
-
-                    return retval
-                }
+        Action {
+            id: show_list_action
+            checkable: true
+            shortcut: "ctrl+h"
+            text: "Playlist"
+            tooltip: "Shortcut: " + shortcut
+            onTriggered: {
+                left_shelve.z = 3
+                right_shelve.z = 1
             }
         }
 
-        NowPlayingDisplay {
-            id: now_playing_container
-            anchors.bottom: btn_row.top
-            anchors.right: parent.right
-            width: playlist.width
-
-            title: Functions.getSafeValue(playMusic.metaData.title)
-            albumArtist: Functions.getSafeValue(playMusic.metaData.albumArtist)
-            duration: playMusic.duration
-            position: playMusic.position
-            hasAudio: playMusic.hasAudio
-
-            onSeek: {
-                playMusic.seek(pos)
+        Action {
+            id: show_musiclib_action
+            checkable: true
+            shortcut: "ctrl+l"
+            tooltip: "Shortcut: " + shortcut
+            text: "Library"
+            onTriggered: {
+                left_shelve.z = 1
+                right_shelve.z = 3
             }
-        }
-
-        PlayerControlButtons {
-            id: btn_row
-            anchors.left: parent.left
-            anchors.bottom: parent.bottom
-        }
-
-        VolumeControl {
-            id: volume_control
-            anchors.bottom: parent.bottom
-            anchors.left: btn_row.right
-            anchors.right: parent.right
         }
     }
 
-    Rectangle {
-        id: right_shelve
-        anchors.left: left_shelve.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        color: "transparent"
+    Item {
+        id: tab_container
+        anchors.fill: parent
 
-        LibraryView {
-            id: libview
+        Item {
+            id: tab_bar
+            z: 5
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 35
+
+            Button {
+                id: show_list
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.bottom: parent.bottom
+                width: parent.width / 2
+                action: show_list_action
+            }
+
+            Button {
+                id: show_musiclib
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.right: parent.right
+                anchors.left: show_list.right
+                action: show_musiclib_action
+            }
+        }
+
+        Rectangle {
+            z: 2
             anchors.fill: parent
-            library: config.libPath
+            gradient: Gradient {
+                GradientStop {
+                    position: 0.49
+                    color: "#000000"
+                }
+                GradientStop {
+                    position: 1.00
+                    color: "#717171"
+                }
+            }
+        }
 
-            onAddTrack: playlist.add(path)
+        Rectangle {
+            id: left_shelve
+            z: 3
+            anchors.left: parent.left
+            anchors.top: tab_bar.bottom
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            color: "transparent"
+
+            Rectangle {
+                id: playlist_container
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.bottom: now_playing_container.top
+                color: "transparent"
+
+                Playlist {
+                    id: playlist
+                    isLibrary: false
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    anchors.bottom: playlist_text.top
+
+                    repeatAll: now_playing_container.repeatAll
+                    random: now_playing_container.random
+
+                    nowPlayingSource: playMusic.source
+
+                    onStop: {
+                        playMusic.stop()
+                    }
+
+                    onPlay: {
+                        playMusic.playTrack(path)
+                    }
+
+                    function addAutoPlaylist(listname) {
+                        playlist.createNewList()
+                        playlist.addLib(auto_playlist_manager.getTracks(
+                                            listname))
+                    }
+                }
+
+                Text {
+                    id: playlist_text
+                    anchors.left: parent.left
+                    anchors.leftMargin: 10
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    height: 30
+                    color: "#ffffff"
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignLeft
+                    text: buildText()
+                    font.pointSize: 12
+                    font.family: "Helvetica"
+                    styleColor: "#000000"
+                    style: Text.Outline
+
+                    function buildText() {
+                        var retval = ""
+                        if (playlist.currentName === ""
+                                || playlist.currentName === miscPlaylistName) {
+                            retval += "new list" + " -- "
+                        } else {
+                            retval += playlist.currentName + " -- "
+                        }
+
+                        retval += playlist.count + " Tracks, Total length = "
+                                + playlist.totalPlaytimeString
+
+                        return retval
+                    }
+                }
+            }
+
+            NowPlayingDisplay {
+                id: now_playing_container
+                anchors.bottom: btn_row.top
+                anchors.right: parent.right
+                width: playlist.width
+
+                title: Functions.getSafeValue(playMusic.metaData.title)
+                albumArtist: Functions.getSafeValue(
+                                 playMusic.metaData.albumArtist)
+                duration: playMusic.duration
+                position: playMusic.position
+                hasAudio: playMusic.hasAudio
+
+                onSeek: {
+                    playMusic.seek(pos)
+                }
+            }
+
+            PlayerControlButtons {
+                id: btn_row
+                anchors.left: parent.left
+                anchors.bottom: parent.bottom
+            }
+
+            VolumeControl {
+                id: volume_control
+                anchors.bottom: parent.bottom
+                anchors.left: btn_row.right
+                anchors.right: parent.right
+            }
+        }
+
+        Rectangle {
+            id: right_shelve
+            z: 1
+            anchors.left: parent.left
+            anchors.top: tab_bar.bottom
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            color: "transparent"
+
+            LibraryView {
+                id: libview
+                anchors.fill: parent
+                library: config.libPath
+
+                onAddTrack: playlist.add(path)
+            }
         }
     }
 
