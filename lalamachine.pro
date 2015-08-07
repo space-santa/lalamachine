@@ -25,7 +25,9 @@ SOURCES += main.cpp \
     tags.cpp \
     autoplaylist.cpp \
     playlistmodel.cpp \
-    track.cpp
+    track.cpp \
+    engineloader.cpp \
+    lalatray.cpp
 
 RESOURCES += qml.qrc
 
@@ -53,7 +55,8 @@ HEADERS += \
     tags.h \
     autoplaylist.h \
     playlistmodel.h \
-    track.h
+    track.h \
+    lalatray.h
 
 OTHER_FILES += \
     README.md \

@@ -35,6 +35,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "fileexporter.h"
 #include "engineloader.h"
 #include "playlistmodel.h"
+#include "lalatray.h"
 
 int main(int argc, char *argv[])
 {
@@ -63,8 +64,12 @@ int main(int argc, char *argv[])
 
     // INFO: Because we use an ApplicationWindow we cannot use a QQuickView.
     EngineLoader loader;
+
     loader.load();
     splash.close();
+
+    LalaTray tray(loader.rootWin());
+    tray.show();
 
     return app.exec();
 }
