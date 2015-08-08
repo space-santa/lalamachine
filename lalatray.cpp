@@ -10,6 +10,8 @@ LalaTray::LalaTray(QObject *root, QObject *parent)
 {
     setIcon(QIcon(QPixmap(":/images/images/lalamachine.png")));
     connect(this, &LalaTray::activated, this, &LalaTray::onActivated);
+    // This is to also quit the app when the main window is closed.
+    connect(rootWin_, SIGNAL(quit()), this, SIGNAL(quit()));
     setContextMenu(trayIconMenu());
 }
 

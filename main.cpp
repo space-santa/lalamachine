@@ -68,11 +68,7 @@ int main(int argc, char *argv[])
     loader.load();
     splash.close();
 
-    // This is for quitting the app from the main window.
-    QObject::connect(loader.rootWin(), SIGNAL(quit()), &app, (SLOT(quit())));
-
     LalaTray tray(loader.rootWin());
-    // This is for quitting the app by right clicking on the tray icon.
     QObject::connect(&tray, &LalaTray::quit, &app, &QApplication::quit);
     tray.show();
 
