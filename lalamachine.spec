@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 1.1.1
+Version: 1.2
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,13 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat Aug 08 2015 r-mean
+  1.2-1: Release 1.2
+  * Fixed a bug that would move tracks when clicking in the playlist.
+  * Playlist and musivlib are now in tabs and no longer visible at once.
+  * The app has now a system tray icon.
+  * The xontainers of the musiclib tracklist and filter are now resizable.
+
 * Sun Aug 02 2015 r-mean
   1.1.1-1: Release 1.1.1
   * Fixed sorting the length.
