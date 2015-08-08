@@ -19,6 +19,7 @@ public slots:
 private slots:
     void onActivated(ActivationReason reason);
 private:
+    // The object rootWin_ points to is owned by the qml engine. DO NOT DELETE.
     QObject *rootWin_;
 
     QMenu *trayIconMenu();
