@@ -16,6 +16,8 @@ signals:
 
 public slots:
 
+private slots:
+    void onActivated(ActivationReason reason);
 private:
     QObject *rootWin_;
 

@@ -13,19 +13,20 @@ LalaTray::LalaTray(QObject *root, QObject *parent)
     setContextMenu(trayIconMenu());
 }
 
-void LalaTray::onActivated()
+void LalaTray::onActivated(ActivationReason reason)
 {
     if (rootWin_ == nullptr) {
         qCritical() << "GOT NO WINDOW";
         return;
     }
 
-    qDebug() << rootWin_->property("visible");
-
-    if (rootWin_->property("visible").toBool() == true) {
-        rootWin_->setProperty("visible", false);
-    } else {
-        rootWin_->setProperty("visible", true);
+    // Apparently 'trigger' translates to left-click.
+    if (reason == ActivationReason::Trigger) {
+        if (rootWin_->property("visible").toBool() == true) {
+            rootWin_->setProperty("visible", false);
+        } else {
+            rootWin_->setProperty("visible", true);
+        }
     }
 }
 
