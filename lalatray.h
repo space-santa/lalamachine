@@ -12,14 +12,14 @@ public:
     explicit LalaTray(QObject *root, QObject *parent = 0);
 
 signals:
+    void quit();
 
 public slots:
 
 private:
     QObject *rootWin_;
 
-private slots:
-    void onActivated();
+    QMenu *trayIconMenu();
 };
 
 #endif  // LALATRAY_H
