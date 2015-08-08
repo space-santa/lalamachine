@@ -414,6 +414,10 @@ Rectangle {
         // We need to now the range to select.
         property int lastSelection: -1
 
+        // We need a flag to determine if the mouse button is currently pressed.
+        // If it is not pressed, we can't have a drag action.
+        property bool leftPressed: false
+
         onActiveFocusChanged: {
             if (!focus) {
                 ctrlPressed = false
@@ -449,6 +453,11 @@ Rectangle {
             }
             // If ctrl or shift is pressed it's not dragging, it's selecting.
             if (ctrlPressed || shiftPressed) {
+                return
+            }
+
+            // If the mouse button is not pressed, no drag.
+            if (!leftPressed) {
                 return
             }
 
@@ -606,6 +615,9 @@ Rectangle {
                 stop()
                 playRow(row)
             }
+
+            onPressed: playlist_view.leftPressed = true
+            onReleased: playlist_view.leftPressed = false
 
             onMouseYChanged: playlist_view.mouseY = baseY + y
         }

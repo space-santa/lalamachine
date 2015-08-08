@@ -55,21 +55,40 @@ Item {
 
             onPressed: {
                 if (mouse.button == Qt.LeftButton) {
-                    target["clicked"](styleData.row)
+                    // For drag and click to work properly we need to first
+                    // set the state to released when clicking into a row.
+                    // This is to be sure that no drag is happening until we
+                    // finished the preparations.
+                    container.released()
+                    // Next we set the mouseY position to start with. This must
+                    // happen before we set the pressed flag to aboid accidental
+                    // 'jumping' which could happen if the pressed flag is set
+                    // and a new mouseY is set. The view could assume that a
+                    // drag happend because the Y coordinate changed.
+                    emitMouseYChanged()
+                    // All preps are finished, set the pressed flag.
                     container.pressed(styleData.row)
+
+                    target["clicked"](styleData.row)
                     container.leftClicked(styleData.row)
                 }
             }
 
+            // We also want to emit the released signal when it actually
+            // happens.
             onReleased: container.released()
 
             onMouseYChanged: {
                 // WARNING: Only do this for the left button. Else opening
                 // the right click menu might move tracks around.
                 if (pressedButtons === Qt.LeftButton) {
+                    emitMouseYChanged()
+                }
+            }
+
+            function emitMouseYChanged() {
                     container.mouseYChanged(mouseY,
                                             styleData.row * container.height)
-                }
             }
         }
     }
