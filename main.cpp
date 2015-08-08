@@ -22,6 +22,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPixmap>
 #include <QIcon>
 #include <QSplashScreen>
+#include <QCommandLineParser>
 
 #include "metadataprovider.h"
 #include "m3uinout.h"
@@ -45,6 +46,18 @@ int main(int argc, char *argv[])
     app.setApplicationVersion("1.2");
     app.setApplicationName("lalamachine");
     app.setOrganizationName("rmean");
+
+    QCommandLineParser parser;
+    parser.setApplicationDescription("The most awesome lalamachine.");
+    parser.addHelpOption();
+    parser.addVersionOption();
+
+    // Boolean option to start in kiosk mode. (--kiosk)
+    QCommandLineOption kioskMode("kiosk", "Start in kiosk-mode.");
+    parser.addOption(kioskMode);
+
+    parser.process(app);
+    bool kiosk = parser.isSet(kioskMode);
 
     QPixmap logo(":/images/images/logo/logo.png");
     QSplashScreen splash(logo);
@@ -71,6 +84,11 @@ int main(int argc, char *argv[])
     LalaTray tray(loader.rootWin());
     QObject::connect(&tray, &LalaTray::quit, &app, &QApplication::quit);
     tray.show();
+
+    if (kiosk) {
+            QMetaObject::invokeMethod(loader.rootWin(), "showFullScreen");
+            loader.rootWin()->setProperty("kioskMode", true);
+    }
 
     return app.exec();
 }
