@@ -73,6 +73,18 @@ ApplicationWindow {
         property bool showPlaylist: show_list.checked
     }
 
+    onWindowStateChanged: {
+        if (windowState == Qt.WindowMinimized) {
+            hide()
+        }
+    }
+
+    onVisibleChanged: {
+        if (visible) {
+            show()
+        }
+    }
+
     onClosing: {
         playlist.writePlaylist(miscPlaylistName)
         config.volume = volume_control.value
