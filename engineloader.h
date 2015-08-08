@@ -3,14 +3,12 @@
 
 #include <QObject>
 #include <QQmlApplicationEngine>
-#include <QSystemTrayIcon>
 
 class EngineLoader : public QObject
 {
     Q_OBJECT
 public:
     explicit EngineLoader(QObject *parent = 0);
-
     QObject *rootWin();
 
 public slots:

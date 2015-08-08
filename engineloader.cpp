@@ -11,6 +11,5 @@ void EngineLoader::load()
 QObject *EngineLoader::rootWin()
 {
     if (engine_.rootObjects().isEmpty()) return nullptr;
-
     return engine_.rootObjects().first();
 }
