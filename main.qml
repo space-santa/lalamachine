@@ -47,6 +47,9 @@ ApplicationWindow {
 
     property MediaPlayer lalaplayer: playMusic
 
+    // Adding this signal to have something in C++ to connect to.
+    signal quit
+
     Component.onCompleted: {
         playlist.setCurrentPlaylist(config.lastPlaylist)
         volume_control.value = config.volume
@@ -70,6 +73,12 @@ ApplicationWindow {
         property bool showPlaylist: show_list.checked
     }
 
+    onWindowStateChanged: {
+        if (windowState == Qt.WindowMinimized) {
+            hide()
+        }
+    }
+
     onClosing: {
         playlist.writePlaylist(miscPlaylistName)
         config.volume = volume_control.value
@@ -87,6 +96,16 @@ ApplicationWindow {
             config.lastPlaylist = currentPlaylist
         }
         config.saveConfig()
+
+        // Now we are done, quit the app.
+        quit_action.trigger()
+    }
+
+    Action {
+        id: quit_action
+        shortcut: "ctrl+q"
+        tooltip: "Shortcut: " + shortcut
+        onTriggered: master.quit()
     }
 
     menuBar: MenuBar {
