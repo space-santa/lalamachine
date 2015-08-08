@@ -25,9 +25,9 @@ void LalaTray::onActivated(ActivationReason reason)
     // Apparently 'trigger' translates to left-click.
     if (reason == ActivationReason::Trigger) {
         if (rootWin_->property("visible").toBool() == true) {
-            rootWin_->setProperty("visible", false);
+            QMetaObject::invokeMethod(rootWin_, "hide");
         } else {
-            rootWin_->setProperty("visible", true);
+            QMetaObject::invokeMethod(rootWin_, "show");
         }
     }
 }

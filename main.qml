@@ -79,12 +79,6 @@ ApplicationWindow {
         }
     }
 
-    onVisibleChanged: {
-        if (visible) {
-            show()
-        }
-    }
-
     onClosing: {
         playlist.writePlaylist(miscPlaylistName)
         config.volume = volume_control.value
