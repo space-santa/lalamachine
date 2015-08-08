@@ -69,6 +69,16 @@ int main(int argc, char *argv[])
     splash.close();
 
     LalaTray tray(loader.rootWin());
+    // To be completely honest, there are two reasons why we need this way to
+    // quit the app.
+    // The main reason is because I actually like this behaviour.
+    // Minimize the main window keeps the app in the window bar. Closing the
+    // main window doesn't quit the app but makes it run with only the
+    // tray icon.
+    // The other reason is because I couldn't figure out an easy way to quit the
+    // app when closing the main window. (Altough I admittedly didn't put any
+    // real effort into it because, as stated above, I like this behaiour.)
+    QObject::connect(&tray, &LalaTray::quit, &app, &QApplication::quit);
     tray.show();
 
     return app.exec();
