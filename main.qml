@@ -45,6 +45,8 @@ ApplicationWindow {
     property M3uInOut m3u: m3u
     property Configuration config: config
 
+    property bool kioskMode: false
+
     property MediaPlayer lalaplayer: playMusic
 
     // Adding this signal to have something in C++ to connect to.
@@ -109,6 +111,11 @@ ApplicationWindow {
     }
 
     menuBar: MenuBar {
+        id: menu_bar
+        __contentItem.height: master.kioskMode ? 0 : 25
+        __contentItem.transform: Scale {
+            yScale: master.kioskMode ? 0 : 1
+        }
         Menu {
             title: "MusicLib"
             MenuItem {
@@ -468,7 +475,7 @@ ApplicationWindow {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            height: 35
+            height: master.kioskMode ? 75 : 35
 
             Button {
                 id: show_list
