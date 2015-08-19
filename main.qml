@@ -55,8 +55,34 @@ ApplicationWindow {
     onNowPlayingChanged: newTitlePlaying(nowPlaying)
     signal newTitlePlaying(string title)
 
+    // Need another signal to tell lalatray if it is playing or paused.
+    signal isPlaying(bool stat)
+    onPlayingStatusChanged: isPlaying(playingStatus)
+    property bool playingStatus: getPlayingStatus()
+    function getPlayingStatus() {
+            if (playMusic.isPlaying) {
+                return true
+            } else {
+                return false
+            }
+    }
+
     // Adding this signal to have something in C++ to connect to.
     signal quit
+
+    // Next some signals to be triggered from lalatray.
+    signal playNext
+    onPlayNext: {
+        forward_action.trigger()
+    }
+    signal playPrevious
+    onPlayPrevious: {
+        back_action.trigger()
+    }
+    signal playPause
+    onPlayPause: {
+        play_pause_action.trigger()
+    }
 
     Component.onCompleted: {
         playlist.setCurrentPlaylist(config.lastPlaylist)
