@@ -49,6 +49,12 @@ ApplicationWindow {
 
     property MediaPlayer lalaplayer: playMusic
 
+    // The nowPlaying signal chain is used to get the currently playing title
+    // into the tooltip of lalatray.
+    property alias nowPlaying: playlist.nowPlayingTitle
+    onNowPlayingChanged: newTitlePlaying(nowPlaying)
+    signal newTitlePlaying(string title)
+
     // Adding this signal to have something in C++ to connect to.
     signal quit
 

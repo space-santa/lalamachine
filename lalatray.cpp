@@ -12,6 +12,10 @@ LalaTray::LalaTray(QObject *root, QObject *parent)
     connect(this, &LalaTray::activated, this, &LalaTray::onActivated);
     // This is to also quit the app when the main window is closed.
     connect(rootWin_, SIGNAL(quit()), this, SIGNAL(quit()));
+    connect(rootWin_,
+            SIGNAL(newTitlePlaying(QString)),
+            this,
+            SLOT(onNewTitlePlaying(QString)));
     setContextMenu(trayIconMenu());
 }
 
@@ -31,6 +35,8 @@ void LalaTray::onActivated(ActivationReason reason)
         }
     }
 }
+
+void LalaTray::onNewTitlePlaying(const QString &title) { setToolTip(title); }
 
 QMenu *LalaTray::trayIconMenu()
 {
