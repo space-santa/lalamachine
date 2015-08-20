@@ -49,6 +49,10 @@ ApplicationWindow {
 
     property MediaPlayer lalaplayer: playMusic
 
+    property alias volume: volume_control.value
+    signal setVolume(int val)
+    onVolumeChanged: setVolume(volume * 100)
+
     // The nowPlaying signal chain is used to get the currently playing title
     // into the tooltip of lalatray.
     property alias nowPlaying: playlist.nowPlayingTitle
