@@ -23,6 +23,7 @@ private slots:
     void onActivated(ActivationReason reason);
     void onNewTitlePlaying(const QString &title);
     void onPlayingStatusChanged(bool stat);
+    void onSetVolume(int val);
 
 private:
     // The object rootWin_ points to is owned by the qml engine. DO NOT DELETE.

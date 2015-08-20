@@ -18,6 +18,7 @@ LalaTray::LalaTray(QObject *root, QObject *parent)
     setContextMenu(trayIconMenu());
 
     connect(rootWin_, SIGNAL(isPlaying(bool)), this, SLOT(onPlayingStatusChanged(bool)));
+    connect(rootWin_, SIGNAL(setVolume(int)), this, SLOT(onSetVolume(int)));
     connect(this, SIGNAL(volumeUp()), rootWin_, SIGNAL(volumeUp()));
     connect(this, SIGNAL(volumeDown()), rootWin_, SIGNAL(volumeDown()));
 }
@@ -50,6 +51,12 @@ void LalaTray::onPlayingStatusChanged(bool stat)
         playPauseAction_->setText("Play");
         playPauseAction_->setIcon(QIcon(":/images/images/play.png"));
     }
+}
+
+void LalaTray::onSetVolume(int val)
+{
+   qDebug() << "Volume set to"  << val;
+   showMessage("Volume " + QString::number(val) + "%", toolTip(), QSystemTrayIcon::NoIcon, 400);
 }
 
 QMenu *LalaTray::trayIconMenu()
