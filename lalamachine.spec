@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 1.2
+Version: 1.3
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,18 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat Aug 08 2015 r-mean
+  1.3-1: Release 1.3
+  * Kiosk mode.
+  * Mousewheel on LalaTray changes the volume and shows message with value.
+  * Hovering over LalaTray shows a tooltip with the currently playhing title.
+  * The LalaTray context menu can now play/pause, next and previous.
+    Also the quitAction got an icon.
+  * If the GUI is visible but behind another window, clicking on LalaTray
+    bring the GUI to the front.
+  * Fixed a bug that made it impossible to set the volume to 100% using
+    the volume up shortcut.
+
 * Sat Aug 08 2015 r-mean
   1.2-1: Release 1.2
   * Fixed a bug that would move tracks when clicking in the playlist.
