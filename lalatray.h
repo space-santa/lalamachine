@@ -14,6 +14,8 @@ public:
 
 signals:
     void quit();
+    void volumeUp();
+    void volumeDown();
 
 public slots:
 
@@ -30,6 +32,8 @@ private:
 
     // This action must be a member beause we need to change its text and icon.
     QAction *playPauseAction_;
+
+    bool event(QEvent *event);
 };
 
 #endif  // LALATRAY_H

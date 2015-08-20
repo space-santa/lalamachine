@@ -84,6 +84,11 @@ ApplicationWindow {
         play_pause_action.trigger()
     }
 
+    signal volumeUp()
+    onVolumeUp: vol_up_action.trigger()
+    signal volumeDown()
+    onVolumeDown: vol_down_action.trigger()
+
     Component.onCompleted: {
         playlist.setCurrentPlaylist(config.lastPlaylist)
         volume_control.value = config.volume

@@ -18,6 +18,8 @@ LalaTray::LalaTray(QObject *root, QObject *parent)
     setContextMenu(trayIconMenu());
 
     connect(rootWin_, SIGNAL(isPlaying(bool)), this, SLOT(onPlayingStatusChanged(bool)));
+    connect(this, SIGNAL(volumeUp()), rootWin_, SIGNAL(volumeUp()));
+    connect(this, SIGNAL(volumeDown()), rootWin_, SIGNAL(volumeDown()));
 }
 
 void LalaTray::onActivated(ActivationReason reason)
@@ -73,4 +75,18 @@ QMenu *LalaTray::trayIconMenu()
     retval->addAction(playPauseAction_);
     retval->addAction(quitAction);
     return retval;
+}
+
+bool LalaTray::event(QEvent *event)
+{
+    if (event->type() == QEvent::Wheel) {
+        QWheelEvent *tmp = (QWheelEvent *) event;
+        if (tmp->angleDelta().y() > 0) {
+            emit volumeUp();
+        } else {
+            emit volumeDown();
+        }
+    }
+
+    return true;
 }
