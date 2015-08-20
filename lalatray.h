@@ -9,7 +9,6 @@ class LalaTray : public QSystemTrayIcon
 {
     Q_OBJECT
 public:
-
     explicit LalaTray(QObject *root, QObject *parent = 0);
 
 signals:

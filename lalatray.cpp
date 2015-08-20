@@ -17,7 +17,10 @@ LalaTray::LalaTray(QObject *root, QObject *parent)
             SLOT(onNewTitlePlaying(QString)));
     setContextMenu(trayIconMenu());
 
-    connect(rootWin_, SIGNAL(isPlaying(bool)), this, SLOT(onPlayingStatusChanged(bool)));
+    connect(rootWin_,
+            SIGNAL(isPlaying(bool)),
+            this,
+            SLOT(onPlayingStatusChanged(bool)));
     connect(rootWin_, SIGNAL(setVolume(int)), this, SLOT(onSetVolume(int)));
     connect(this, SIGNAL(volumeUp()), rootWin_, SIGNAL(volumeUp()));
     connect(this, SIGNAL(volumeDown()), rootWin_, SIGNAL(volumeDown()));
@@ -55,7 +58,10 @@ void LalaTray::onPlayingStatusChanged(bool stat)
 
 void LalaTray::onSetVolume(int val)
 {
-   showMessage("Volume " + QString::number(val) + "%", toolTip(), QSystemTrayIcon::NoIcon, 400);
+    showMessage("Volume " + QString::number(val) + "%",
+                toolTip(),
+                QSystemTrayIcon::NoIcon,
+                400);
 }
 
 QMenu *LalaTray::trayIconMenu()
@@ -70,7 +76,10 @@ QMenu *LalaTray::trayIconMenu()
 
     playPauseAction_ = new QAction(QObject::tr("Play / Pause"), this);
     onPlayingStatusChanged(false);
-    connect(playPauseAction_, SIGNAL(triggered()), rootWin_, SIGNAL(playPause()));
+    connect(playPauseAction_,
+            SIGNAL(triggered()),
+            rootWin_,
+            SIGNAL(playPause()));
 
     QAction *quitAction = new QAction(QObject::tr("&Quit"), this);
     connect(quitAction, &QAction::triggered, this, &LalaTray::quit);
@@ -86,7 +95,7 @@ QMenu *LalaTray::trayIconMenu()
 bool LalaTray::event(QEvent *event)
 {
     if (event->type() == QEvent::Wheel) {
-        QWheelEvent *tmp = (QWheelEvent *) event;
+        QWheelEvent *tmp = (QWheelEvent *)event;
         if (tmp->angleDelta().y() > 0) {
             emit volumeUp();
         } else {
