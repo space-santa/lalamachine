@@ -61,7 +61,7 @@ void LalaTray::onSetVolume(int val)
     showMessage("Volume " + QString::number(val) + "%",
                 toolTip(),
                 QSystemTrayIcon::NoIcon,
-                400);
+                500);
 }
 
 QMenu *LalaTray::trayIconMenu()
