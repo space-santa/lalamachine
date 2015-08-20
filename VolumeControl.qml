@@ -24,19 +24,23 @@ Rectangle {
     color: "transparent"
 
     function volumeUp() {
-        if (volume_slider.value < 0.9) {
-            volume_slider.value += 0.1
+        var tmpvol = value
+        if (tmpvol < 0.9) {
+            tmpvol += 0.1
         } else {
-            volume_slider.value = 1
+            tmpvol = 1
         }
+        value = Math.round(tmpvol * 10) / 10
     }
 
     function volumeDown() {
-        if (volume_slider.value > 0.1) {
-            volume_slider.value -= 0.1
+        var tmpvol = value
+        if (tmpvol > 0.1) {
+            tmpvol -= 0.1
         } else {
-            volume_slider.value = 0
+            tmpvol = 0
         }
+        value = Math.round(tmpvol * 10) / 10
     }
 
     Rectangle {
