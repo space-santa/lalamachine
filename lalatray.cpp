@@ -58,10 +58,13 @@ void LalaTray::onPlayingStatusChanged(bool stat)
 
 void LalaTray::onSetVolume(int val)
 {
-    showMessage("Volume " + QString::number(val) + "%",
-                toolTip(),
-                QSystemTrayIcon::NoIcon,
-                500);
+    if (showVolumeMessage_) {
+        showMessage("Volume " + QString::number(val) + "%",
+                    toolTip(),
+                    QSystemTrayIcon::NoIcon,
+                    500);
+    }
+    showVolumeMessage_ = false;
 }
 
 QMenu *LalaTray::trayIconMenu()
@@ -95,6 +98,7 @@ QMenu *LalaTray::trayIconMenu()
 bool LalaTray::event(QEvent *event)
 {
     if (event->type() == QEvent::Wheel) {
+        showVolumeMessage_ = true;
         QWheelEvent *tmp = (QWheelEvent *)event;
         if (tmp->angleDelta().y() > 0) {
             emit volumeUp();

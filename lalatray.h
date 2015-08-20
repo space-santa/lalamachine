@@ -27,8 +27,10 @@ private slots:
 private:
     // The object rootWin_ points to is owned by the qml engine. DO NOT DELETE.
     QObject *rootWin_;
-
     QMenu *trayIconMenu();
+    // We only want to show the volume message if we change the volume here.
+    // Don't show the message if the GUI changes the volume.
+    bool showVolumeMessage_{false};
 
     // This action must be a member beause we need to change its text and icon.
     QAction *playPauseAction_;
