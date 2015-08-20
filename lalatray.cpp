@@ -55,7 +55,6 @@ void LalaTray::onPlayingStatusChanged(bool stat)
 
 void LalaTray::onSetVolume(int val)
 {
-   qDebug() << "Volume set to"  << val;
    showMessage("Volume " + QString::number(val) + "%", toolTip(), QSystemTrayIcon::NoIcon, 400);
 }
 
