@@ -59,5 +59,6 @@
         <file>images/export.png</file>
         <file>images/logo/logo.png</file>
         <file>images/no.png</file>
+        <file>images/quit.png</file>
     </qresource>
 </RCC>

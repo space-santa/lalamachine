@@ -89,6 +89,7 @@ QMenu *LalaTray::trayIconMenu()
             SIGNAL(playPause()));
 
     QAction *quitAction = new QAction(QObject::tr("&Quit"), this);
+    quitAction->setIcon(QIcon(":/images/images/quit.png"));
     connect(quitAction, &QAction::triggered, this, &LalaTray::quit);
 
     QMenu *retval = new QMenu();
