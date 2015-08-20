@@ -39,7 +39,6 @@ void LalaTray::onActivated(ActivationReason reason)
             if (rootWin_->property("active").toBool() == true) {
             QMetaObject::invokeMethod(rootWin_, "hide");
             } else {
-                QMetaObject::invokeMethod(rootWin_, "raise");
                 QMetaObject::invokeMethod(rootWin_, "requestActivate");
             }
         } else {
