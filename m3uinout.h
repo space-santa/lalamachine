@@ -56,8 +56,8 @@ private slots:
     void handleDirChange();
 
 private:
-    QStringList playlistNames_{};
-    QFileSystemWatcher watcher_{};
+    QStringList playlistNames_;
+    QFileSystemWatcher watcher_;
 };
 
 #endif  // M3UINOUT_H

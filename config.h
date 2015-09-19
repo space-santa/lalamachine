@@ -20,11 +20,11 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include <QQuickItem>
+#include <QObject>
 #include <QJsonObject>
 #include <QJsonArray>
 
-class Config : public QQuickItem
+class Config : public QObject
 {
     Q_OBJECT
 
@@ -48,7 +48,7 @@ class Config : public QQuickItem
     // clang-format on
 
 public:
-    explicit Config(QQuickItem *parent = 0);
+    explicit Config(QObject *parent = 0);
 
     static const QString LALADIR;
     static const QString CONFIGPATH;

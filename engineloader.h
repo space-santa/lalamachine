@@ -16,7 +16,7 @@ public slots:
 
 private:
     QQmlApplicationEngine engine_;
-    QObject *rootWin_{nullptr};
+    QObject *rootWin_;
 };
 
 #endif  // ENGINELOADER_H

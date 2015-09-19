@@ -5,7 +5,7 @@
 #include <QApplication>
 
 LalaTray::LalaTray(QObject *root, QObject *parent)
-    : QSystemTrayIcon(parent), rootWin_(root)
+    : QSystemTrayIcon(parent), rootWin_(root), showVolumeMessage_(false)
 {
     setIcon(QIcon(QPixmap(":/images/images/lalamachine.png")));
     connect(this, &LalaTray::activated, this, &LalaTray::onActivated);
@@ -28,13 +28,13 @@ LalaTray::LalaTray(QObject *root, QObject *parent)
 
 void LalaTray::onActivated(ActivationReason reason)
 {
-    if (rootWin_ == nullptr) {
+    if (rootWin_ == Q_NULLPTR) {
         qCritical() << "GOT NO WINDOW";
         return;
     }
 
     // Apparently 'trigger' translates to left-click.
-    if (reason == ActivationReason::Trigger) {
+    if (reason == QSystemTrayIcon::Trigger) {
         if (rootWin_->property("visible").toBool() == true) {
             if (rootWin_->property("active").toBool() == true) {
             QMetaObject::invokeMethod(rootWin_, "hide");

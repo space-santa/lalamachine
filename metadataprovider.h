@@ -20,16 +20,16 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef METADATAPROVIDER_H
 #define METADATAPROVIDER_H
 
-#include <QQuickItem>
+#include <QObject>
 #include <QJsonObject>
 
 #include "tags.h"
 
-class MetaDataProvider : public QQuickItem
+class MetaDataProvider : public QObject
 {
     Q_OBJECT
 public:
-    explicit MetaDataProvider(QQuickItem *parent = 0);
+    explicit MetaDataProvider(QObject *parent = 0);
 
     Tags metaData(const QUrl &path) const;
 

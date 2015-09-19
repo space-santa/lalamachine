@@ -21,7 +21,10 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QString>
 
-TimeConverter::TimeConverter(QQuickItem *parent) : QQuickItem(parent) {}
+TimeConverter::TimeConverter(QObject *parent)
+    : QObject(parent), totalSec_(0), sec_(0), mins_(0), hours_(0), days_(0)
+{
+}
 
 void TimeConverter::setSeconds(int sec)
 {

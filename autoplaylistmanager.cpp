@@ -21,6 +21,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QFileInfoList>
 #include <QDir>
+#include <QDebug>
 
 AutoPlaylistManager::AutoPlaylistManager(QObject *parent) : QObject(parent)
 {
@@ -95,8 +96,8 @@ QString AutoPlaylistManager::getPath(const QString &name) const
 
 void AutoPlaylistManager::loadPlaylists()
 {
-    auto list = getPlaylistNames();
-    for (auto itr = list.constBegin(); itr != list.constEnd(); ++itr) {
+    QStringList list = getPlaylistNames();
+    for (QStringList::const_iterator itr = list.constBegin(); itr != list.constEnd(); ++itr) {
         AutoPlaylist *tmp = new AutoPlaylist((*itr), this);
         playlists_.insert((*itr), tmp);
     }

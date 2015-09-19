@@ -20,10 +20,10 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef TIMECONVERTER_H
 #define TIMECONVERTER_H
 
-#include <QQuickItem>
+#include <QObject>
 #include <QString>
 
-class TimeConverter : public QQuickItem
+class TimeConverter : public QObject
 {
     Q_OBJECT
 
@@ -31,7 +31,7 @@ class TimeConverter : public QQuickItem
     Q_PROPERTY(QString timestring READ timestring NOTIFY timestringChanged)
 
 public:
-    TimeConverter(QQuickItem *parent = 0);
+    TimeConverter(QObject *parent = 0);
 
     void setSeconds(int sec);
     int seconds();
@@ -53,11 +53,11 @@ signals:
     void timestringChanged();
 
 private:
-    int totalSec_{0};
-    int sec_{0};
-    int mins_{0};
-    int hours_{0};
-    int days_{0};
+    int totalSec_;
+    int sec_;
+    int mins_;
+    int hours_;
+    int days_;
 };
 
 #endif  // TIMECONVERTER_H

@@ -22,6 +22,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QFile>
 
 #include "config.h"
 #include "musiclib.h"
@@ -45,7 +46,7 @@ void AutoPlaylist::save()
 
     QJsonArray jarr;
 
-    for (auto itr = apos_.begin(); itr != apos_.end(); ++itr) {
+    for (QList<AutoPlaylistObject>::iterator itr = apos_.begin(); itr != apos_.end(); ++itr) {
         jarr.append((*itr).toJson());
     }
 
@@ -81,7 +82,7 @@ void AutoPlaylist::fromJson(const QJsonArray &arr)
 QJsonArray AutoPlaylist::toJson() const
 {
     QJsonArray arr;
-    for (auto itr = apos_.constBegin(); itr != apos_.constEnd(); ++itr) {
+    for (QList<AutoPlaylistObject>::const_iterator itr = apos_.constBegin(); itr != apos_.constEnd(); ++itr) {
         arr.append((*itr).toJson());
     }
 
@@ -107,7 +108,7 @@ QJsonArray AutoPlaylist::trackList()
 {
     db_.open();
     // Processing the QSqlResult imediately before closing the dbase.
-    auto result = MusicLib::queryResultToJson(db_.exec(toQuery())).second;
+    QJsonArray result = MusicLib::queryResultToJson(db_.exec(toQuery())).second;
     // WARNING: The dbase must not be closed before the QSqlResult that db.exec
     // returns is processed.
     db_.close();
@@ -118,7 +119,7 @@ QString AutoPlaylist::toQuery() const
 {
     QString query("SELECT * FROM musiclib WHERE ");
     bool first = true;
-    for (auto itr = apos_.constBegin(); itr != apos_.constEnd(); ++itr) {
+    for (QList<AutoPlaylistObject>::const_iterator itr = apos_.constBegin(); itr != apos_.constEnd(); ++itr) {
         query.append((*itr).toQuery(first));
         first = false;
     }

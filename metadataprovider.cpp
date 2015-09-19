@@ -31,7 +31,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "timeconverter.h"
 #include "tags.h"
 
-MetaDataProvider::MetaDataProvider(QQuickItem *parent) : QQuickItem(parent) {}
+MetaDataProvider::MetaDataProvider(QObject *parent) : QObject(parent) {}
 
 Tags MetaDataProvider::metaData(const QUrl &path) const
 {

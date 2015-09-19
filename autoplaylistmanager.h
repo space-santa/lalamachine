@@ -66,7 +66,7 @@ signals:
     void autoPlaylistNamesChanged();
 
 private:
-    QString currentList_{""};
+    QString currentList_;
     QMap<QString, AutoPlaylist *> playlists_;
     void saveAutoPlaylist(const QString &name,
                           const QList<AutoPlaylistObject> &args) const;

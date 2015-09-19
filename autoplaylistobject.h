@@ -45,10 +45,10 @@ public:
     QString toQuery(bool isFirst) const;
 
 private:
-    LalaTypes::AndOr andor_{};
-    LalaTypes::Tag tag_{};
-    LalaTypes::Operator op_{};
-    QString val_{};
+    LalaTypes::AndOr andor_;
+    LalaTypes::Tag tag_;
+    LalaTypes::Operator op_;
+    QString val_;
 };
 
 #endif  // AUTOPLAYLISTOBJECT_H

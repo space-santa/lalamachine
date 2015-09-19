@@ -41,7 +41,7 @@ signals:
 public slots:
 
 private:
-    SystemInteractor *sys_{new SystemInteractor(this)};
+    SystemInteractor *sys_;
 
     QStringList parseM3u(const QString &m3uPath) const;
 };

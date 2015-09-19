@@ -38,8 +38,9 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "musiclibscanner.h"
 #include "autoplaylistmanager.h"
 
-MusicLib::MusicLib(QQuickItem *parent) : QQuickItem(parent)
+MusicLib::MusicLib(QObject *parent) : QObject(parent)
 {
+    init();
     // This moveToThread is making the thread the parent of the scanner_.
     // Therefor it is vital that the scanner_ is a raw pointer, or double free
     // happens.
@@ -134,6 +135,26 @@ MusicLib::~MusicLib()
     db_.close();
 }
 
+void MusicLib::init()
+{
+    scanner_ = new MusicLibScanner();
+    mutex_ = QSharedPointer<QMutex>(new QMutex());
+    sortAsc_ = true;
+    scanning_ = false;
+    what_ = ARTIST;
+    totalLength_ = 0;
+    genreFilter_ = "";
+    artistFilter_ = "";
+    albumFilter_ = "";
+    libPath_ = "";
+    genreList_.clear();
+    artistList_.clear();
+    albumList_.clear();
+    titlePartialFilter_ = "";
+    appStart_ = true;
+    lastDisplayLibQuery_ = "";
+}
+
 const QMap<MusicLib::SortWhat, QString> MusicLib::SORT_MAP = initSortMap();
 
 QMap<MusicLib::SortWhat, QString> MusicLib::initSortMap()
@@ -151,7 +172,7 @@ QMap<MusicLib::SortWhat, QString> MusicLib::initSortMap()
     return tmp;
 }
 
-const QString MusicLib::ALL_FILTER{QString("--all--")};
+const QString MusicLib::ALL_FILTER = QString("--all--");
 
 bool MusicLib::scanning() const { return scanning_; }
 
@@ -182,7 +203,7 @@ void MusicLib::setDisplayLib()
 
     lastDisplayLibQuery_ = query;
 
-    auto future = QtConcurrent::run(this, &MusicLib::runSetDisplayQuery, query);
+    QFuture<QSqlQuery> future = QtConcurrent::run(this, &MusicLib::runSetDisplayQuery, query);
     watcher_.setFuture(future);
 }
 
@@ -194,7 +215,7 @@ QSqlQuery MusicLib::runSetDisplayQuery(const QString &query)
 
 void MusicLib::onDisplayFutureFinished()
 {
-    auto tmp = queryResultToJson(watcher_.result());
+    QPair<int, QJsonArray> tmp = queryResultToJson(watcher_.result());
     displayLib_ = tmp.second;
     emit displayLibChanged();
     totalLength_ = tmp.first;
@@ -322,7 +343,7 @@ QJsonArray MusicLib::getAlbumTracks(const QString &album)
 QString MusicLib::getDateAddedByMrl(const QString &mrl) const
 {
     QString query("SELECT dateAdded FROM musiclib WHERE mrl='%1'");
-    auto result = db_.exec(query.arg(mrl));
+    QSqlQuery result = db_.exec(query.arg(mrl));
     result.first();
     return result.value("dateAdded").toString();
 }
@@ -470,7 +491,7 @@ QString MusicLib::getAlbumListQuery() const
 
 void MusicLib::updateTable()
 {
-    auto tables = db_.tables();
+    QStringList tables = db_.tables();
 
     if (not tables.contains("musiclib")) {
         ensureAllTables();
@@ -479,7 +500,7 @@ void MusicLib::updateTable()
 
     QString query("PRAGMA table_info(musiclib)");
     QMutexLocker locker(mutex_.data());
-    auto record = db_.exec(query);
+    QSqlQuery record = db_.exec(query);
 
     QStringList tmplist;
     while (record.next()) {
@@ -496,7 +517,7 @@ void MusicLib::ensureAllTables() { createLibTable("musiclib"); }
 
 void MusicLib::createLibTable(const QString &name)
 {
-    auto tables = db_.tables();
+    QStringList tables = db_.tables();
 
     if (!tables.contains(name)) {
         QString qs("CREATE TABLE `%1` ");
@@ -551,17 +572,17 @@ void MusicLib::rescan()
 
 void MusicLib::restoreMetaData()
 {
-    auto tables = db_.tables();
+    QStringList tables = db_.tables();
     if (not tables.contains("musiclib") or not tables.contains("tmplib")) {
         return;
     }
 
-    auto records = db_.exec("SELECT * FROM musiclib");
+    QSqlQuery records = db_.exec("SELECT * FROM musiclib");
 
     db_.transaction();
     while (records.next()) {
         QString mrl = records.value("mrl").toString();
-        auto tmprec
+        QSqlQuery tmprec
             = db_.exec(QString("SELECT dateAdded FROM tmplib WHERE mrl='%1'")
                            .arg(escapeString(mrl)));
 

@@ -29,6 +29,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDebug>
 #include <QStandardPaths>
 #include <QDir>
+#include <QUrl>
 
 const QString Config::LALADIR
     = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation)
@@ -38,7 +39,7 @@ const QString Config::AUTOPLAYLISTDIR = Config::LALADIR + "/autoplaylists";
 const QString Config::PLAYLISTDIR = Config::LALADIR + "/playlists";
 const QString Config::MUSICLIBDB = Config::LALADIR + "/musiclib.sq3";
 
-Config::Config(QQuickItem *parent) : QQuickItem(parent)
+Config::Config(QObject *parent) : QObject(parent)
 {
     QDir dir(Config::LALADIR);
     dir.mkpath(Config::LALADIR);

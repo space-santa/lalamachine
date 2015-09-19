@@ -122,7 +122,7 @@ void M3uInOut::deletePlaylist(const QString &name) const
 
 void M3uInOut::addToPlaylist(QString trackpath, const QString &list) const
 {
-    auto tmplist = readPlaylist(list);
+    QStringList tmplist = readPlaylist(list);
 
     if (trackpath.startsWith("file://")) {
         trackpath.remove(0, 7);

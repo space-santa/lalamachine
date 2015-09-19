@@ -24,15 +24,15 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QString>
-#include <QQuickItem>
+#include <QObject>
 #include <QMutex>
+#include <QSharedPointer>
 #include <QSqlDatabase>
 #include <QFutureWatcher>
 
 #include "musiclibscanner.h"
-#include "autoplaylistobject.h"
 
-class MusicLib : public QQuickItem
+class MusicLib : public QObject
 {
     Q_OBJECT
 
@@ -106,7 +106,7 @@ public:
     enum SortHow { ASCENDING, DESCENDING };
     Q_ENUMS(SortHow)
 
-    MusicLib(QQuickItem *parent = 0);
+    MusicLib(QObject *parent = 0);
     ~MusicLib();
 
     static const QString ALL_FILTER;
@@ -186,26 +186,26 @@ private:
     // QThread becomes the parent. When the parent dies so does the child.
     // If this is then not a raw pointer a double free happens, because
     // the thread and this is trying to destroy the scanner.
-    MusicLibScanner *scanner_{new MusicLibScanner()};
-    QThread scannerThread_{};
+    MusicLibScanner *scanner_;
+    QThread scannerThread_;
 
-    QSharedPointer<QMutex> mutex_{new QMutex()};
+    QSharedPointer<QMutex> mutex_;
     QSqlDatabase db_;
-    bool sortAsc_{true};
-    bool scanning_{false};
-    SortWhat what_{SortWhat::ARTIST};
-    QJsonArray displayLib_{};
-    int totalLength_{0};
-    QString genreFilter_{""};
-    QString artistFilter_{""};
-    QString albumFilter_{""};
-    QString libPath_{""};
-    QStringList genreList_{};
-    QStringList artistList_{};
-    QStringList albumList_{};
-    QString titlePartialFilter_{""};
-    bool appStart_{true};
-    QString lastDisplayLibQuery_{""};
+    bool sortAsc_;
+    bool scanning_;
+    SortWhat what_;
+    QJsonArray displayLib_;
+    int totalLength_;
+    QString genreFilter_;
+    QString artistFilter_;
+    QString albumFilter_;
+    QString libPath_;
+    QStringList genreList_;
+    QStringList artistList_;
+    QStringList albumList_;
+    QString titlePartialFilter_;
+    bool appStart_;
+    QString lastDisplayLibQuery_;
 
     QFutureWatcher<QSqlQuery> watcher_;
 
@@ -228,6 +228,7 @@ private:
     void createLibTable(const QString &name);
     void copyLibToTmp();
     void restoreMetaData();
+    void init();
 private slots:
     void debugSignal();
 

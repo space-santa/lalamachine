@@ -21,7 +21,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QDebug>
 
-SystemInteractor::SystemInteractor(QObject *parent) : QObject(parent) {}
+SystemInteractor::SystemInteractor(QObject *parent) : QObject(parent), process_(new QProcess(this)) {}
 
 SystemInteractor::~SystemInteractor() {}
 
@@ -52,7 +52,7 @@ void SystemInteractor::parseOutput()
     }
 
     process_->setReadChannel(QProcess::StandardOutput);
-    QString msgOut{""};
+    QString msgOut("");
 
     while (process_->canReadLine()) {
         msgOut.append(QString(process_->readLine()).simplified());

@@ -42,8 +42,8 @@ private slots:
     void parseOutput();
 
 private:
-    QProcess *process_{new QProcess(this)};
-    QString returnValue_{""};
+    QProcess *process_;
+    QString returnValue_;
 };
 
 #endif  // SYSTEMINTERACTOR_H
