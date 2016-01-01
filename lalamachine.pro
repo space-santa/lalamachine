@@ -2,6 +2,8 @@ TEMPLATE = app
 
 QT += qml quick widgets sql concurrent
 
+CONFIG += C++11
+
 INCLUDEPATH += /usr/include/taglib
 
 LIBS += -ltag
