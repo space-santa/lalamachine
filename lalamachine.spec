@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 1.3
+Version: 1.3.1
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,10 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat Aug 08 2015 r-mean
+  1.3.1-1: Release 1.3.1
+  * Fixed segfault on openSUSE 42.1.
+
 * Sat Aug 08 2015 r-mean
   1.3-1: Release 1.3
   * Kiosk mode.
