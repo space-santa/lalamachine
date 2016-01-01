@@ -683,7 +683,6 @@ ApplicationWindow {
 
     FileDialog {
         id: fileDialog
-        visible: false
         title: "Please choose a file"
         selectMultiple: true
         nameFilters: ["Audio files (*.mp3 *.m4a *.ogg *.wav)"]
@@ -701,7 +700,6 @@ ApplicationWindow {
 
     FileDialog {
         id: lib_dialog
-        visible: false
         title: "Please set your library"
         selectMultiple: false
         selectExisting: true
@@ -718,7 +716,6 @@ ApplicationWindow {
 
     FileDialog {
         id: export_dialog
-        visible: false
         title: "Please set target folder"
         selectMultiple: false
         selectExisting: false
