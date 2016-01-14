@@ -23,6 +23,7 @@
         <file>TableViewDelegate.qml</file>
         <file>TrackMissingDialog.qml</file>
         <file>ItemDelegate.qml</file>
+        <file>PlayerControls.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/eject.png</file>
