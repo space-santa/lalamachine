@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 1.3.1
+Version: 1.3.2
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,11 +57,15 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
-* Sat Aug 08 2015 r-mean
+* Fri Jan 15 2016 r-mean
+  1.3.2-1: Release 1.3.2
+  * Player controls are now also visible in library view.
+
+* Sat Jan 01 2016 r-mean
   1.3.1-1: Release 1.3.1
   * Fixed segfault on openSUSE 42.1.
 
-* Sat Aug 08 2015 r-mean
+* Sat Aug 20 2015 r-mean
   1.3-1: Release 1.3
   * Kiosk mode.
   * Mousewheel on LalaTray changes the volume and shows message with value.
