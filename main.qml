@@ -49,7 +49,7 @@ ApplicationWindow {
 
     property MediaPlayer lalaplayer: playMusic
 
-    property alias volume: volume_control.value
+    property alias volume: player_controls.volume
     signal setVolume(int val)
     onVolumeChanged: setVolume(volume * 100)
 
@@ -58,22 +58,19 @@ ApplicationWindow {
     property alias nowPlaying: playlist.nowPlayingTitle
     onNowPlayingChanged: newTitlePlaying(nowPlaying)
     signal newTitlePlaying(string title)
-
     // Need another signal to tell lalatray if it is playing or paused.
     signal isPlaying(bool stat)
     onPlayingStatusChanged: isPlaying(playingStatus)
     property bool playingStatus: getPlayingStatus()
     function getPlayingStatus() {
-            if (playMusic.isPlaying) {
-                return true
-            } else {
-                return false
-            }
+        if (playMusic.isPlaying) {
+            return true
+        } else {
+            return false
+        }
     }
-
     // Adding this signal to have something in C++ to connect to.
     signal quit
-
     // Next some signals to be triggered from lalatray.
     signal playNext
     onPlayNext: {
@@ -88,14 +85,14 @@ ApplicationWindow {
         play_pause_action.trigger()
     }
 
-    signal volumeUp()
+    signal volumeUp
     onVolumeUp: vol_up_action.trigger()
-    signal volumeDown()
+    signal volumeDown
     onVolumeDown: vol_down_action.trigger()
 
     Component.onCompleted: {
         playlist.setCurrentPlaylist(config.lastPlaylist)
-        volume_control.value = config.volume
+        master.volume = config.volume
         console.log("Volume on load", config.volume)
 
         if (settings.showPlaylist) {
@@ -124,7 +121,7 @@ ApplicationWindow {
 
     onClosing: {
         playlist.writePlaylist(miscPlaylistName)
-        config.volume = volume_control.value
+        config.volume = master.volume
 
         // If the current list has a name we want to remember latest changes.
         playlist.writeCurrentListIfNamed()
@@ -446,7 +443,7 @@ ApplicationWindow {
 
     MediaPlayer {
         id: playMusic
-        volume: volume_control.value
+        volume: master.volume
 
         onStopped: {
             if (Functions.millisToSec(position) > (Functions.millisToSec(
@@ -455,7 +452,7 @@ ApplicationWindow {
             }
         }
 
-        loops: now_playing_container.repeatOne ? MediaPlayer.Infinite : 1
+        loops: player_controls.repeatOne ? MediaPlayer.Infinite : 1
 
         function playTrack(path) {
             // Since the addition of the library it is necessary to
@@ -508,7 +505,10 @@ ApplicationWindow {
 
     Item {
         id: tab_container
-        anchors.fill: parent
+        anchors.top: parent.top
+        anchors.bottom: player_controls.top
+        anchors.right: parent.right
+        anchors.left: parent.left
 
         Item {
             id: tab_bar
@@ -538,17 +538,26 @@ ApplicationWindow {
         }
 
         Rectangle {
-            z: 2
-            anchors.fill: parent
+            id: shield
+            color: "black"
+
             gradient: Gradient {
                 GradientStop {
-                    position: 0.49
+                    position: 0.00
                     color: "#000000"
                 }
                 GradientStop {
                     position: 1.00
-                    color: "#717171"
+                    color: "#333333"
                 }
+            }
+
+            anchors.fill: parent
+            z: 2
+
+            MouseArea {
+                id: catchall
+                anchors.fill: parent
             }
         }
 
@@ -563,10 +572,7 @@ ApplicationWindow {
 
             Rectangle {
                 id: playlist_container
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.bottom: now_playing_container.top
+                anchors.fill: parent
                 color: "transparent"
 
                 Playlist {
@@ -577,8 +583,8 @@ ApplicationWindow {
                     anchors.top: parent.top
                     anchors.bottom: playlist_text.top
 
-                    repeatAll: now_playing_container.repeatAll
-                    random: now_playing_container.random
+                    repeatAll: player_controls.repeatAll
+                    random: player_controls.random
 
                     nowPlayingSource: playMusic.source
 
@@ -629,37 +635,6 @@ ApplicationWindow {
                     }
                 }
             }
-
-            NowPlayingDisplay {
-                id: now_playing_container
-                anchors.bottom: btn_row.top
-                anchors.right: parent.right
-                width: playlist.width
-
-                title: Functions.getSafeValue(playMusic.metaData.title)
-                albumArtist: Functions.getSafeValue(
-                                 playMusic.metaData.albumArtist)
-                duration: playMusic.duration
-                position: playMusic.position
-                hasAudio: playMusic.hasAudio
-
-                onSeek: {
-                    playMusic.seek(pos)
-                }
-            }
-
-            PlayerControlButtons {
-                id: btn_row
-                anchors.left: parent.left
-                anchors.bottom: parent.bottom
-            }
-
-            VolumeControl {
-                id: volume_control
-                anchors.bottom: parent.bottom
-                anchors.left: btn_row.right
-                anchors.right: parent.right
-            }
         }
 
         Rectangle {
@@ -677,6 +652,34 @@ ApplicationWindow {
                 library: config.libPath
 
                 onAddTrack: playlist.add(path)
+            }
+        }
+    }
+
+    PlayerControls {
+        id: player_controls
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        anchors.left: parent.left
+
+        rawTitle: lalaplayer.metaData.title
+        rawAlbumArtist: lalaplayer.metaData.albumArtist
+        duration: lalaplayer.duration
+        position: lalaplayer.position
+        hasAudio: lalaplayer.hasAudio
+
+        onSeek: {
+            lalaplayer.seek(pos)
+        }
+
+        gradient: Gradient {
+            GradientStop {
+                position: 0
+                color: "#333333"
+            }
+            GradientStop {
+                position: 1.00
+                color: "#717171"
             }
         }
     }
