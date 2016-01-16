@@ -48,6 +48,7 @@ I build packages for openSUSE 13.2 and Tumbleweed with the openSUSE build servic
 The download repositories are here:
 
 * [openSUSE13.2](http://download.opensuse.org/repositories/home%3A/rmean/openSUSE_13.2)
+* [Leap 42.1](http://download.opensuse.org/repositories/home%3A/rmean/openSUSE_Leap_42.1)
 * [Tumbleweed](http://download.opensuse.org/repositories/home%3A/rmean/openSUSE_Tumbleweed)
 
 ## Contribute
