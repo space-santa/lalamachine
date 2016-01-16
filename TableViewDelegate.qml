@@ -27,7 +27,13 @@ Item {
     signal released
     signal leftClicked(int row)
     signal doubleClicked(int row)
-    signal mouseYChanged(int y, int baseY)
+    // This signal must communicate more than just the y for drag and move to work.
+    // We need the height to determine when y has moved enough to get into a new row.
+    // And we need the row of this as a starting point for future row movement.
+    // This works, because as long as the mouse remains pressed (as long
+    // as the user is dragging and moving) row is the row where the first click was
+    // and y is relative to the first click.
+    signal mouseYChanged(int y, int height, int row)
 
     Rectangle {
         anchors {
@@ -87,8 +93,7 @@ Item {
             }
 
             function emitMouseYChanged() {
-                    container.mouseYChanged(mouseY,
-                                            styleData.row * container.height)
+                    container.mouseYChanged(mouseY, container.height, styleData.row)
             }
         }
     }

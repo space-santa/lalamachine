@@ -394,7 +394,12 @@ Rectangle {
         model: playlist_model
         selectionMode: SelectionMode.ExtendedSelection
         property var playlistColumns: config.playlistColumns
+
+        // These values are required for drag and move. For a explanation,
+        // see TableViewDelegate.qml.
         property int mouseY
+        property int containerHeight
+        property int initialRow
 
         Component.onCompleted: setColumns()
         onPlaylistColumnsChanged: setColumns()
@@ -461,10 +466,12 @@ Rectangle {
                 return
             }
 
-            // The +25 is the header height.
-            // FIXME: Get the proper header height.
-            var effY = mouseY + 25
-            var newRow = rowAt(100, effY)
+            var newRow = initialRow + mouseY / containerHeight
+            console.log("Current Row", currentRow, "New Row", newRow)
+
+            if (newRow < 0) {
+                return
+            }
 
             playlist_model.move(currentRow, newRow, 1)
             // Update the currentRow so the next drag n move works.
@@ -619,7 +626,12 @@ Rectangle {
             onPressed: playlist_view.leftPressed = true
             onReleased: playlist_view.leftPressed = false
 
-            onMouseYChanged: playlist_view.mouseY = baseY + y
+            onMouseYChanged: {
+                //console.log("MOUSE Y CHANGED", y, height, row)
+                playlist_view.mouseY = y
+                playlist_view.containerHeight = height
+                playlist_view.initialRow = row
+            }
         }
 
         itemDelegate: ItemDelegate {
