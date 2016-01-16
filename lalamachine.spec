@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 1.3.2
+Version: 1.3.3
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,10 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat Jan 16 2016 r-mean
+  1.3.3-1: Release 1.3.3
+  * Fixed a bug that made drag and move fail for ling playlists.
+
 * Fri Jan 15 2016 r-mean
   1.3.2-1: Release 1.3.2
   * Player controls are now also visible in library view.
