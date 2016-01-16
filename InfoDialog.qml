@@ -73,7 +73,7 @@ Dialog {
         }
         KeyValueText {
             labelText: "Copyright: "
-            valueText: "2015 Armin Zirkel"
+            valueText: "2015-2016 Armin Zirkel"
             labelWidth: 150
             width: 500
             height: col.childHeight
