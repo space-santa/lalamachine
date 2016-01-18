@@ -33,7 +33,18 @@ ApplicationWindow {
 
     width: Screen.width / 2
     height: Screen.height / 2
-    title: getWindowTitle()
+    title: {
+        var title = ""
+
+        if (playlist.nowPlayingTitle != "") {
+            title += playlist.nowPlayingTitle
+            title += " | "
+        }
+
+        title += "lalamachine"
+
+        return title
+    }
 
     minimumHeight: 500
     minimumWidth: 500
@@ -335,19 +346,6 @@ ApplicationWindow {
     SettingsDialog {
         id: settings_dialog
         visible: false
-    }
-
-    function getWindowTitle() {
-        var title = ""
-
-        if (playlist.nowPlayingTitle != "") {
-            title += playlist.nowPlayingTitle
-            title += " | "
-        }
-
-        title += "lalamachine"
-
-        return title
     }
 
     function burnList() {
