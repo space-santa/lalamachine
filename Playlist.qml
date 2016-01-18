@@ -45,7 +45,7 @@ Rectangle {
     property int sortwhat: MusicLib.ARTIST
     property bool sortAsc: true
 
-    signal play(string path)
+    signal play(string path, string title, string artist)
     signal stop
 
     // This setter is necessary to make sure that latest changes to the list are
@@ -318,7 +318,7 @@ Rectangle {
     function playRow(row) {
         rowPlaying = row
         currentId = playlist_model.get(row).id
-        play(playlist_model.get(row)["mrl"])
+        play(playlist_model.get(row)["mrl"], playlist_model.get(row)["title"], playlist_model.get(row)["artist"])
         playlist_view.currentRow = rowPlaying
     }
 

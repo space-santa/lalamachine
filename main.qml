@@ -442,6 +442,8 @@ ApplicationWindow {
     MediaPlayer {
         id: playMusic
         volume: master.volume
+        property string currentTitle
+        property string currentArtist
 
         onStopped: {
             if (Functions.millisToSec(position) > (Functions.millisToSec(
@@ -452,11 +454,13 @@ ApplicationWindow {
 
         loops: player_controls.repeatOne ? MediaPlayer.Infinite : 1
 
-        function playTrack(path) {
+        function playTrack(path, title, artist) {
             // Since the addition of the library it is necessary to
             // make sure an mrl is actually an mrl.
             playMusic.source = Functions.checkMrl(path)
             playMusic.play()
+            currentTitle = title
+            currentArtist = artist
         }
 
         property bool isPlaying: playMusic.playbackState === MediaPlayer.PlayingState
@@ -591,7 +595,7 @@ ApplicationWindow {
                     }
 
                     onPlay: {
-                        playMusic.playTrack(path)
+                        playMusic.playTrack(path, title, artist)
                     }
 
                     function addAutoPlaylist(listname) {
@@ -660,8 +664,8 @@ ApplicationWindow {
         anchors.right: parent.right
         anchors.left: parent.left
 
-        rawTitle: lalaplayer.metaData.title
-        rawAlbumArtist: lalaplayer.metaData.albumArtist
+        rawTitle: lalaplayer.currentTitle
+        rawAlbumArtist: lalaplayer.currentArtist
         duration: lalaplayer.duration
         position: lalaplayer.position
         hasAudio: lalaplayer.hasAudio

@@ -24,6 +24,7 @@ import Qt.labs.settings 1.0
 import Lala 1.0
 
 Rectangle {
+    id: container
     color: "transparent"
 
     property bool scanInProgress: lib.scanning
@@ -204,7 +205,7 @@ Rectangle {
 
                     color: "transparent"
 
-                    onPlay: lalaplayer.playTrack(path)
+                    onPlay: lalaplayer.playTrack(path, title, artist)
                 }
 
                 Rectangle {
