@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 1.3.3
+Version: 1.4
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,10 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Thu Jan 21 2016 r-mean
+  1.4-1: Release 1.4
+  * Bugfix: Artist no longer displayed in now playing panel.
+
 * Sat Jan 16 2016 r-mean
   1.3.3-1: Release 1.3.3
   * Fixed a bug that made drag and move fail for ling playlists.
