@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QVariant>
 #include <QAbstractListModel>
+#include <QJsonArray>
 
 #include "track.h"
 
@@ -48,6 +49,10 @@ public:
 
     Q_INVOKABLE void sortRole(const QString &role,
                               Qt::SortOrder order = Qt::AscendingOrder);
+
+    Q_INVOKABLE QJsonArray toJson() const;
+    Q_INVOKABLE void fromJson(const QJsonArray &json);
+
 signals:
     void countChanged();
 

@@ -225,6 +225,32 @@ void PlaylistModel::sortRole(const QString &role, Qt::SortOrder order)
     emit dataChanged(createIndex(0, 0), createIndex(rowCount(), 0));
 }
 
+QJsonArray PlaylistModel::toJson() const
+{
+    QJsonArray retval;
+
+    foreach (const Track track, list_) {
+        retval.append(track.toJson());
+    }
+
+    return retval;
+}
+
+void PlaylistModel::fromJson(const QJsonArray &json)
+{
+    clear();
+    beginInsertRows(QModelIndex(), rowCount(), rowCount() + json.count());
+
+    for (int i = 0; i < json.count(); ++i) {
+        Track track(json.at(i).toObject());
+        track.id_ = list_.length();
+        list_.append(track);
+    }
+
+    endInsertRows();
+    emit countChanged();
+}
+
 bool PlaylistModel::sortTrackAsc(Track t1, Track t2)
 {
     return t1.track_ < t2.track_;
