@@ -84,7 +84,7 @@ QStringList M3uInOut::readPlaylist(const QString &name) const
         QTextStream in(&file);
 
         while (!in.atEnd()) {
-            retVal.append("file://" + in.readLine());
+            retVal.append(in.readLine());
         }
     }
 
