@@ -31,9 +31,9 @@ class MetaDataProvider : public QObject
 public:
     explicit MetaDataProvider(QObject *parent = 0);
 
-    Tags metaData(const QUrl &path) const;
+    Tags metaData(const QString &path) const;
 
-    Q_INVOKABLE QJsonObject metaDataAsJson(const QUrl &path) const;
+    Q_INVOKABLE QJsonObject metaDataAsJson(const QString &path) const;
 
 signals:
 

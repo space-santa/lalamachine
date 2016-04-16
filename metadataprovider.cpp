@@ -33,10 +33,9 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 MetaDataProvider::MetaDataProvider(QObject *parent) : QObject(parent) {}
 
-Tags MetaDataProvider::metaData(const QUrl &path) const
+Tags MetaDataProvider::metaData(const QString &path) const
 {
-    QString line(path.path());
-    TagLib::FileRef f(line.toLocal8Bit().data());
+    TagLib::FileRef f(path.toUtf8().data());
     TimeConverter tc;
 
     if (!f.isNull() && f.tag()) {
@@ -46,7 +45,7 @@ Tags MetaDataProvider::metaData(const QUrl &path) const
         tc.setSeconds(f.audioProperties()->length());
         return Tags(tag,
                     path,
-                    line,
+                    path,
                     f.audioProperties()->length(),
                     tc.toString());
     }
@@ -54,7 +53,7 @@ Tags MetaDataProvider::metaData(const QUrl &path) const
     return Tags();
 }
 
-QJsonObject MetaDataProvider::metaDataAsJson(const QUrl &path) const
+QJsonObject MetaDataProvider::metaDataAsJson(const QString &path) const
 {
     return metaData(path).toJson();
 }
