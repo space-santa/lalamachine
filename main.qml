@@ -61,6 +61,7 @@ ApplicationWindow {
     property MediaPlayer lalaplayer: playMusic
 
     property alias volume: player_controls.volume
+
     signal setVolume(int val)
     onVolumeChanged: setVolume(volume * 100)
 
@@ -68,11 +69,14 @@ ApplicationWindow {
     // into the tooltip of lalatray.
     property alias nowPlaying: playlist.nowPlayingTitle
     onNowPlayingChanged: newTitlePlaying(nowPlaying)
+
     signal newTitlePlaying(string title)
-    // Need another signal to tell lalatray if it is playing or paused.
-    signal isPlaying(bool stat)
+    signal // Need another signal to tell lalatray if it is playing or paused.
+    isPlaying(bool stat)
     onPlayingStatusChanged: isPlaying(playingStatus)
+
     property bool playingStatus: getPlayingStatus()
+
     function getPlayingStatus() {
         if (playMusic.isPlaying) {
             return true
@@ -80,13 +84,18 @@ ApplicationWindow {
             return false
         }
     }
+
+    signal
     // Adding this signal to have something in C++ to connect to.
-    signal quit
+    quit
+
+    signal
     // Next some signals to be triggered from lalatray.
-    signal playNext
+    playNext
     onPlayNext: {
         forward_action.trigger()
     }
+
     signal playPrevious
     onPlayPrevious: {
         back_action.trigger()
