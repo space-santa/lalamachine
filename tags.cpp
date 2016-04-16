@@ -46,7 +46,4 @@ QJsonObject Tags::toJson()
 // title. The length is obvious, we can't play something that has no lenght.
 // While technically not necessary I also want the title, because I think
 // a track should have a name.
-bool Tags::isValid()
-{
-    return length_.toInt() > 0 and not title_.isEmpty();
-}
+bool Tags::isValid() { return length_.toInt() > 0 and not title_.isEmpty(); }
