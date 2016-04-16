@@ -270,9 +270,11 @@ Rectangle {
     }
 
     function addList(list) {
+        var d = Date.now()
         for (var i = 0; i < list.length; ++i) {
             add(list[i].toString())
         }
+        console.log("Adding the list took", Date.now() - d, "ms.")
     }
 
     function add(path) {
