@@ -280,8 +280,14 @@ Rectangle {
             return
         }
 
-        var tmp = setId(meta.metaDataAsJson(path))
-        tmp["dateAdded"] = musicLib.getDateAddedByMrl(tmp.mrl)
+        // First check the dbase here.
+        var tmp = musicLib.getMetadataForMrl(path)
+        if (!tmp.title) {
+            // Only get the metadata from taglib if its not in the dbase
+            // because it takes about forever.
+            tmp = setId(meta.metaDataAsJson(path))
+            tmp["dateAdded"] = musicLib.getDateAddedByMrl(tmp.mrl)
+        }
         console.log(JSON.stringify(tmp))
 
         playlist_model.append(tmp)
@@ -318,7 +324,8 @@ Rectangle {
     function playRow(row) {
         rowPlaying = row
         currentId = playlist_model.get(row).id
-        play(playlist_model.get(row)["mrl"], playlist_model.get(row)["title"], playlist_model.get(row)["artist"])
+        play(playlist_model.get(row)["mrl"], playlist_model.get(row)["title"],
+             playlist_model.get(row)["artist"])
         playlist_view.currentRow = rowPlaying
     }
 
