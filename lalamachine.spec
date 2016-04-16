@@ -58,6 +58,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Thu Jan 21 2016 r-mean
+  1.4.1-1: Release 1.4.1
+  * Bugfix: Significantly reduced the loading time of playlists.
+
+* Thu Jan 21 2016 r-mean
   1.4-1: Release 1.4
   * Bugfix: Artist no longer displayed in now playing panel.
 
