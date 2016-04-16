@@ -292,8 +292,8 @@ Rectangle {
             // because it takes about forever.
             tmp = setId(meta.metaDataAsJson(path))
             tmp["dateAdded"] = musicLib.getDateAddedByMrl(tmp.mrl)
+            console.log("INFO: Had to get metadate from taglib for", path)
         }
-        console.log(JSON.stringify(tmp))
 
         playlist_model.append(tmp)
     }
