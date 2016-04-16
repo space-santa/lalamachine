@@ -75,7 +75,7 @@ void MusicLibScanner::scanLib(const QString &path)
             QString line = it.next();
 
             if (suffixCheck(line)) {
-                tmp = meta.metaData(QUrl(line));
+                tmp = meta.metaData(line);
                 metaTimer.restart();
 
                 // This is to mitigate another problem. We assume that all files
