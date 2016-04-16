@@ -11,7 +11,7 @@ class Tags
 public:
     Tags();
     Tags(const TagLib::Tag *tag,
-         const QUrl &path,
+         const QString &path,
          const QString &mrl,
          int length,
          QString lengthString);

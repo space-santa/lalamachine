@@ -6,7 +6,7 @@
 Tags::Tags() {}
 
 Tags::Tags(const TagLib::Tag *tag,
-           const QUrl &path,
+           const QString &path,
            const QString &mrl,
            int length,
            QString lengthString)
@@ -17,7 +17,7 @@ Tags::Tags(const TagLib::Tag *tag,
       length_(QString::number(length)),
       lengthString_(lengthString),
       mrl_(mrl),
-      path_(path.toString()),
+      path_(path),
       title_(QString::fromUtf8(tag->title().toCString(true))),
       track_(QString::number(tag->track())),
       year_(QString::number(tag->year()))
