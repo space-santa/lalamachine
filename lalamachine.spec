@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 1.4
+Version: 1.4.1
 Release: 1
 License: GPL-3.0+
 Summary: A music player
