@@ -125,18 +125,10 @@ Rectangle {
                                 album_list.selection)
 
                     for (var i = 0; i < albumList.length; ++i) {
-                        if (listname === miscPlaylistName
-                                || listname === currentPlaylist) {
-                            mainPlaylist.add(albumList[i].path)
-                        } else {
-                            m3u.addToPlaylist(albumList[i].path, listname)
-                        }
+                        mainPlaylist.add(albumList[i].path)
                     }
 
-                    if (listname === miscPlaylistName
-                            || listname === currentPlaylist) {
-                        mainPlaylist.updateAndSave()
-                    }
+                    mainPlaylist.updateAndSave()
                 }
             }
         }

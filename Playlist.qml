@@ -223,15 +223,10 @@ Rectangle {
         }
 
         playlist_view.selection.forEach(function (rowIndex) {
-            if (listname === miscPlaylistName || listname === currentPlaylist) {
-                mainPlaylist.add(playlist_model.get(rowIndex).path)
-            } else {
-                m3u.addToPlaylist(playlist_model.get(rowIndex).path, listname)
-            }
+            mainPlaylist.add(playlist_model.get(rowIndex).path)
         })
-        if (listname === miscPlaylistName || listname === currentPlaylist) {
-            updateAndSave()
-        }
+
+        updateAndSave()
     }
 
     function getPathList() {

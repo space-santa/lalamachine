@@ -120,19 +120,6 @@ void M3uInOut::deletePlaylist(const QString &name) const
     QFile::remove(m3uPath(name));
 }
 
-void M3uInOut::addToPlaylist(QString trackpath, const QString &list) const
-{
-    QStringList tmplist = readPlaylist(list);
-
-    if (trackpath.startsWith("file://")) {
-        trackpath.remove(0, 7);
-    }
-
-    tmplist << trackpath;
-
-    writePlaylist(list, tmplist);
-}
-
 void M3uInOut::setPlaylistNames(const QStringList &list)
 {
     playlistNames_ = list;

@@ -43,8 +43,6 @@ public:
     QStringList getPlaylistNames() const;
     Q_INVOKABLE QString m3uPath(const QString &name) const;
     Q_INVOKABLE void deletePlaylist(const QString &name) const;
-    Q_INVOKABLE void addToPlaylist(QString trackpath,
-                                   const QString &list) const;
 
     void setPlaylistNames(const QStringList &list);
     QStringList playlistNames() const;
