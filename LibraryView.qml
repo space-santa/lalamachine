@@ -132,6 +132,11 @@ Rectangle {
                             m3u.addToPlaylist(albumList[i].path, listname)
                         }
                     }
+
+                    if (listname === miscPlaylistName
+                            || listname === currentPlaylist) {
+                        mainPlaylist.updateAndSave()
+                    }
                 }
             }
         }

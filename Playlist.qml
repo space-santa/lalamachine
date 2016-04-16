@@ -229,6 +229,9 @@ Rectangle {
                 m3u.addToPlaylist(playlist_model.get(rowIndex).path, listname)
             }
         })
+        if (listname === miscPlaylistName || listname === currentPlaylist) {
+            updateAndSave()
+        }
     }
 
     function getPathList() {
@@ -293,7 +296,9 @@ Rectangle {
         console.log(JSON.stringify(tmp))
 
         playlist_model.append(tmp)
+    }
 
+    function updateAndSave() {
         updateNowPlayingRow()
 
         if (playlistIsNamed()) {

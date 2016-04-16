@@ -662,7 +662,10 @@ ApplicationWindow {
                 anchors.fill: parent
                 library: config.libPath
 
-                onAddTrack: playlist.add(path)
+                onAddTrack: {
+                    playlist.add(path)
+                    playlist.updateAndSave()
+                }
             }
         }
     }
