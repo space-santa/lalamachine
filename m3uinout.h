@@ -22,6 +22,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QQuickItem>
 #include <QFileSystemWatcher>
+#include <QJsonArray>
 
 class M3uInOut : public QQuickItem
 {
@@ -38,8 +39,8 @@ public:
     explicit M3uInOut(QQuickItem *parent = 0);
 
     Q_INVOKABLE void writePlaylist(const QString &name,
-                                   QStringList files) const;
-    Q_INVOKABLE QStringList readPlaylist(const QString &name) const;
+                                   const QJsonArray &json) const;
+    Q_INVOKABLE QJsonArray readPlaylist(const QString &name) const;
     QStringList getPlaylistNames() const;
     Q_INVOKABLE QString m3uPath(const QString &name) const;
     Q_INVOKABLE void deletePlaylist(const QString &name) const;

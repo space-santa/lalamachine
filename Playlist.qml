@@ -244,13 +244,13 @@ Rectangle {
     }
 
     function writePlaylist(name) {
-        m3u.writePlaylist(name, getPathList())
+        m3u.writePlaylist(name, playlist_model.toJson())
     }
 
     function readPlaylist(name) {
         // We use this function here because we want to keep the currentName.
         emptyCurrentList()
-        addList(m3u.readPlaylist(name))
+        addJsonList(m3u.readPlaylist(name))
     }
 
     function createNewList() {
@@ -268,10 +268,20 @@ Rectangle {
     }
 
     function addList(list) {
-        var d = Date.now()
         for (var i = 0; i < list.length; ++i) {
             add(list[i].toString())
         }
+    }
+
+    function addJsonList(json) {
+        var d = Date.now()
+        if (json[0].toString() == "OLDFORMAT") {
+            json.shift()
+            addList(json)
+        } else {
+            playlist_model.fromJson(json)
+        }
+        updateNowPlayingRow()
         console.log("Adding the list took", Date.now() - d, "ms.")
     }
 

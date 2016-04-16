@@ -21,6 +21,8 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QStandardPaths>
 #include <QDir>
+#include <QJsonDocument>
+#include <QJsonArray>
 
 #include "config.h"
 
@@ -51,44 +53,49 @@ void M3uInOut::handleDirChange()
     watcher_.addPath(Config::PLAYLISTDIR);
 }
 
-void M3uInOut::writePlaylist(const QString &name, QStringList files) const
+void M3uInOut::writePlaylist(const QString &name, const QJsonArray &json) const
 {
-    // Just no. Makes no sense. Don't.
-    if (name.isEmpty()) {
+    if (name.isEmpty()) return;
+
+    QFile file(m3uPath(name));
+
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qWarning() << "Couldn't write playlist" << name;
         return;
     }
 
-    QFile file(m3uPath(name));
-
-    files.replaceInStrings("file://", "");
-
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QTextStream out(&file);
-
-        for (int i = 0; i < files.length(); ++i) {
-            out << files[i];
-
-            if (!files[i].endsWith("\n")) {
-                out << "\n";
-            }
-        }
-    }
+    QTextStream out(&file);
+    QJsonDocument doc(json);
+    out << doc.toJson();
 }
 
-QStringList M3uInOut::readPlaylist(const QString &name) const
+QJsonArray M3uInOut::readPlaylist(const QString &name) const
 {
     QFile file(m3uPath(name));
-    QStringList retVal;
+    QJsonArray retval;
 
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "Couldn't read playlist" << name;
+    }
+
+    QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
+
+    if (doc.isArray()) {
+        retval = doc.array();
+    } else {
+        file.close();
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+
         QTextStream in(&file);
 
+        retval.append("OLDFORMAT");
+
         while (!in.atEnd()) {
-            retVal.append(in.readLine());
+            retval.append(in.readLine());
         }
     }
 
-    return retVal;
+    return retval;
 }
 
 QStringList M3uInOut::getPlaylistNames() const
