@@ -94,9 +94,9 @@ void MusicLibScanner::scanLib(const QString &path)
         scanDb_.commit();
     }
 
+    scanDb_.close();
     qDebug() << "End scan" << timer.elapsed();
     emit scanComplete();
-    scanDb_.close();
 }
 
 QString MusicLibScanner::getTrackQuery(Tags track, const QString date)
