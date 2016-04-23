@@ -33,7 +33,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 MetaDataProvider::MetaDataProvider(QObject *parent) : QObject(parent) {}
 
-Tags MetaDataProvider::metaData(const QString &path) const
+Tags MetaDataProvider::metaData(const QString &path)
 {
     TagLib::FileRef f(path.toUtf8().data());
     TimeConverter tc;
