@@ -35,7 +35,9 @@ MetaDataProvider::MetaDataProvider(QObject *parent) : QObject(parent) {}
 
 Tags MetaDataProvider::metaData(const QString &path)
 {
-    TagLib::FileRef f(path.toUtf8().data());
+    TagLib::FileRef f(path.toUtf8().data(),
+                      true,
+                      TagLib::AudioProperties::Accurate);
     TimeConverter tc;
 
     if (!f.isNull() && f.tag()) {
