@@ -70,28 +70,35 @@ void MusicLibScanner::scanLib(const QString &path)
         QString date = QDateTime::currentDateTime().toString("yyyy-MM-dd");
         // We begin a transaction here.
         scanDb_.transaction();
+        QString line;
+        QString error;
 
         while (it.hasNext()) {
-            QString line = it.next();
+            line = it.next();
 
             if (suffixCheck(line)) {
                 tmp = meta.metaData(line);
-                metaTimer.restart();
 
                 // This is to mitigate another problem. We assume that all files
                 // with the correct sufix are good. Problem is that they might
                 // not be.
-                // For testing, my current lib has 4586 legal tracks.
                 if (not tmp.isValid()) continue;
 
                 // Adding all queries to the transaction.
-                qDebug() << scanDb_.exec(getTrackQuery(tmp, date) + ";\n").lastError();
-                qDebug() << "Query added" << metaTimer.elapsed();
+                error = scanDb_.exec(getTrackQuery(tmp, date) + ";\n")
+                            .lastError()
+                            .text()
+                            .trimmed();
+
+                if (!error.isEmpty()) qDebug() << error;
             }
         }
-        // Now commit everything at once. Last time I checked this took
-        // 189893 ms (for comparison, the old approach takes ~698612ms (=*3.67))
+        qDebug() << "pre commit" << timer.elapsed();
+        timer.restart();
+        // Now commit everything at once.
         scanDb_.commit();
+        qDebug() << "post commit" << timer.elapsed();
+        timer.restart();
     }
 
     scanDb_.close();
