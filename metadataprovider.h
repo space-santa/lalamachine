@@ -17,8 +17,7 @@ You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef METADATAPROVIDER_H
-#define METADATAPROVIDER_H
+#pragma once
 
 #include <QObject>
 #include <QJsonObject>
@@ -32,10 +31,4 @@ public:
     explicit MetaDataProvider(QObject *parent = 0);
     static Tags metaData(const QString &path);
     Q_INVOKABLE QJsonObject metaDataAsJson(const QString &path) const;
-
-signals:
-
-public slots:
 };
-
-#endif  // METADATAPROVIDER_H
