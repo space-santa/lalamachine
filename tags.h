@@ -4,7 +4,7 @@
 #include <QString>
 #include <QUrl>
 #include <QJsonObject>
-#include "tag.h"
+#include <tag.h>
 
 class Tags
 {

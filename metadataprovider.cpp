@@ -25,8 +25,8 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QJsonObject>
 #include <QTime>
 
-#include "tag.h"
-#include "fileref.h"
+#include <tag.h>
+#include <fileref.h>
 
 #include "timeconverter.h"
 #include "tags.h"
