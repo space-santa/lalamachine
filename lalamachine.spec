@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 1.4.1
+Version: 1.4.2
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,10 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sun May 29 2016 r-mean
+  1.4.2-1: Release 1.4.2
+  * Bugfix: Fixed path so taglib finds files to scan
+
 * Thu Jan 21 2016 r-mean
   1.4.1-1: Release 1.4.1
   * Bugfix: Significantly reduced the loading time of playlists.
