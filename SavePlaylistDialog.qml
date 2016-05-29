@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import QtQuick.Controls 1.2
+import QtQuick.Controls 1.3
 import QtQuick.Dialogs 1.2
 
 Dialog {
