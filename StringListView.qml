@@ -153,6 +153,7 @@ Rectangle {
                     color: "white"
                     elide: styleData.elideMode
                     text: styleData.value
+                    font.family: "Liberation Sans"
                     font.pointSize: 10
                 }
             }

@@ -660,6 +660,7 @@ Rectangle {
                 elide: styleData.elideMode
                 text: styleData.value
                 font.pointSize: 10
+                font.family: "Liberation Sans"
             }
         }
     }
