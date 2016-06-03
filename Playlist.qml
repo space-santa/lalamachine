@@ -654,6 +654,12 @@ Rectangle {
         }
 
         itemDelegate: ItemDelegate {
+            Text {
+                color: "white"
+                elide: styleData.elideMode
+                text: styleData.value
+                font.pointSize: 10
+            }
         }
     }
 }
