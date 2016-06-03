@@ -109,6 +109,7 @@ Rectangle {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             model: list_model
+            backgroundVisible: false
 
             // I found the horizontal scrollbars annoying for this lists.
             // They take up too much space and don't really give better info
