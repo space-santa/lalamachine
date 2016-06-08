@@ -658,7 +658,7 @@ Rectangle {
             Text {
                 color: "white"
                 elide: styleData.elideMode
-                text: styleData.value
+                text: styleData.value ? styleData.value : ""
                 font.pointSize: 10
                 font.family: "Liberation Sans"
             }
