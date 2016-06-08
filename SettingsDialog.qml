@@ -18,7 +18,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
 import QtQuick.Dialogs 1.2
-import QtQuick.Controls 1.3
+import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 
 Dialog {
@@ -50,8 +50,9 @@ Dialog {
             list: getList()
 
             function getList() {
+                // greater than 1 because the dateAdded is always there
                 if (config.playlistColumns
-                        && config.playlistColumns.length > 0) {
+                        && config.playlistColumns.length > 1) {
                     return config.playlistColumns
                 } else {
                     return defaultList
