@@ -65,8 +65,6 @@ void MusicLibScanner::scanLib(const QString &path)
     } else {
         QDirIterator it(rootDir, QDirIterator::Subdirectories);
 
-        //QElapsedTimer metaTimer;
-
         QString date = QDateTime::currentDateTime().toString("yyyy-MM-dd");
         // We begin a transaction here.
         scanDb_.transaction();

@@ -412,6 +412,7 @@ Rectangle {
         anchors.fill: parent
         model: playlist_model
         selectionMode: SelectionMode.ExtendedSelection
+        backgroundVisible: false
         property var playlistColumns: config.playlistColumns
 
         // These values are required for drag and move. For a explanation,
@@ -654,6 +655,13 @@ Rectangle {
         }
 
         itemDelegate: ItemDelegate {
+            Text {
+                color: "white"
+                elide: styleData.elideMode
+                text: styleData.value
+                font.pointSize: 10
+                font.family: "Liberation Sans"
+            }
         }
     }
 }

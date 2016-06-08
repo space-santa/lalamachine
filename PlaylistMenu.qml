@@ -70,7 +70,7 @@ Menu {
     // the function 'trigger' with argument 'name'
     function generateQbjectString(name, trigger) {
         var msg = "import QtQuick 2.4\n"
-        msg += "import QtQuick.Controls 1.2\n"
+        msg += "import QtQuick.Controls 1.3\n"
         msg += "MenuItem {text: '"
         msg += name
         msg += "';\n onTriggered: selected(text);}"

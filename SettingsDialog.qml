@@ -50,8 +50,9 @@ Dialog {
             list: getList()
 
             function getList() {
+                // greater than 1 because the dateAdded is always there
                 if (config.playlistColumns
-                        && config.playlistColumns.length > 0) {
+                        && config.playlistColumns.length > 1) {
                     return config.playlistColumns
                 } else {
                     return defaultList

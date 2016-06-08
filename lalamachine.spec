@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 1.4.2
+Version: 1.4.3
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,10 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat Jun 04 2016 r-mean
+  1.4.3-1: Release 1.4.3
+  * Bugfix: Fixed the colours of the table views to also work in the dark.
+
 * Sun May 29 2016 r-mean
   1.4.2-1: Release 1.4.2
   * Bugfix: Fixed path so taglib finds files to scan
