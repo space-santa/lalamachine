@@ -69,7 +69,7 @@ Menu {
     // This creates the string for a MenuItem with text 'name' that will call
     // the function 'trigger' with argument 'name'
     function generateQbjectString(name, trigger) {
-        var msg = "import QtQuick 2.4\n"
+        var msg = "import QtQuick 2.0\n"
         msg += "import QtQuick.Controls 1.2\n"
         msg += "MenuItem {text: '"
         msg += name
