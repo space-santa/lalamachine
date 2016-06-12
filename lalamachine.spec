@@ -57,6 +57,13 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sun Jun 12 2016 r-mean
+  1.5-1: Release 1.5
+  * Ported lalamachine to debian 8.
+  * Bugfix: Fixed colours in various places.
+  * Bugfix: Fixed a bug that made it impossible to get anything but the added
+    date on first run.
+
 * Sat Jun 04 2016 r-mean
   1.4.3-1: Release 1.4.3
   * Bugfix: Fixed the colours of the table views to also work in the dark.
