@@ -22,7 +22,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSysInfo>
 #include <QDebug>
 
-#include <config.h>
+#include "config.h"
 
 QString SysInfo::appVersion() { return QCoreApplication::applicationVersion(); }
 
