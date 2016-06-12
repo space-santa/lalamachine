@@ -29,10 +29,6 @@ class SysInfo : public QObject
 public:
     Q_INVOKABLE QString appVersion();
     Q_INVOKABLE QString appName();
-    Q_INVOKABLE QString currentCpu();
-    Q_INVOKABLE QString kernelType();
-    Q_INVOKABLE QString kernelVersion();
-    Q_INVOKABLE QString prettyProductName();
     Q_INVOKABLE QString lalaDir();
 
 signals:

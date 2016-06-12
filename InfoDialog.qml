@@ -58,13 +58,6 @@ Dialog {
             height: col.childHeight
         }
         KeyValueText {
-            labelText: "Your system: "
-            valueText: sysinfo.prettyProductName()
-            labelWidth: 150
-            width: 500
-            height: col.childHeight
-        }
-        KeyValueText {
             labelText: "License: "
             valueText: "GPL v3"
             labelWidth: 150

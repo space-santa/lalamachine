@@ -22,7 +22,8 @@ Rectangle {
     width: 200
     height: 40
 
-    color: "transparent"
+    color: "black"
+    readonly property string textColour: "limegreen"
 
     property int labelWidth: 60
     property alias labelText: label.text
@@ -36,6 +37,8 @@ Rectangle {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
+        color: textColour
+
         verticalAlignment: Qt.AlignVCenter
         horizontalAlignment: Qt.AlignRight
     }
@@ -46,6 +49,8 @@ Rectangle {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.left: label.right
+
+        color: textColour
 
         verticalAlignment: Qt.AlignVCenter
         horizontalAlignment: Qt.AlignLeft

@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import QtQuick.Controls 1.3
+import QtQuick.Controls 1.2
 
 import Lala 1.0
 
@@ -69,8 +69,8 @@ Menu {
     // This creates the string for a MenuItem with text 'name' that will call
     // the function 'trigger' with argument 'name'
     function generateQbjectString(name, trigger) {
-        var msg = "import QtQuick 2.4\n"
-        msg += "import QtQuick.Controls 1.3\n"
+        var msg = "import QtQuick 2.0\n"
+        msg += "import QtQuick.Controls 1.2\n"
         msg += "MenuItem {text: '"
         msg += name
         msg += "';\n onTriggered: selected(text);}"

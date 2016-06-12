@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import QtQuick.Controls 1.3
+import QtQuick.Controls 1.2
 
 import Lala 1.0
 
@@ -114,7 +114,7 @@ Rectangle {
             // I found the horizontal scrollbars annoying for this lists.
             // They take up too much space and don't really give better info
             // when searching through e.g. a list of genres.
-            horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+            //horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
 
             onCurrentRowChanged: {
                 selection.clear()

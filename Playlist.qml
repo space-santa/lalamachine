@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import QtQuick.Controls 1.3
+import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.2
 import QtQuick.Window 2.2
 
@@ -570,7 +570,7 @@ Rectangle {
 
         function columnString(role, title, width) {
             var retval = "import QtQuick 2.0;\n"
-            retval += "import QtQuick.Controls 1.3;\n"
+            retval += "import QtQuick.Controls 1.2;\n"
             retval += "TableViewColumn {\n"
             retval += "role: \"" + role + "\";\n"
             retval += "title: \"" + title + "\";\n"
@@ -658,7 +658,7 @@ Rectangle {
             Text {
                 color: "white"
                 elide: styleData.elideMode
-                text: styleData.value
+                text: styleData.value ? styleData.value : ""
                 font.pointSize: 10
                 font.family: "Liberation Sans"
             }
