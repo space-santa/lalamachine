@@ -203,6 +203,10 @@ ApplicationWindow {
                 onSelected: playlist.setCurrentPlaylist(listname)
             }
             MenuItem {
+                text: "save"
+                action: save_current_list_action
+            }
+            MenuItem {
                 text: "save as"
                 iconSource: "qrc:/images/images/save.png"
                 onTriggered: playlist.showSaveDialog()
@@ -364,6 +368,15 @@ ApplicationWindow {
 
     M3uInOut {
         id: m3u
+    }
+
+    Action {
+        id: save_current_list_action
+        shortcut: StandardKey.save
+        tooltip: "Shortcut: " + shortcut
+        onTriggered: playlist.writeCurrentListIfNamed()
+        enabled: playlist.playlistIsNamed()
+        iconSource: "qrc:/images/images/save.png"
     }
 
     Action {
