@@ -36,8 +36,8 @@ ApplicationWindow {
     title: {
         var title = ""
 
-        if (playlist.nowPlayingTitle != "") {
-            title += playlist.nowPlayingTitle
+        if (lalaplayer.currentTitle != "") {
+            title += lalaplayer.currentTitle
             title += " | "
         }
 
