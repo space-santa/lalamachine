@@ -38,7 +38,7 @@ Menu {
     // But since the first thing that happens is to destroy all menu items to
     // rebuild the menu, the original sender no longer exists.
     // Now the segfault: At some point the sender is dereferenced,
-    // but is has already been cleared. Intoducing a timer to decouple the
+    // but is has already been cleared. Introducing a timer to decouple the
     // original sender from the receiver.
     // And yes, this should be considered a hack.
     Timer {
