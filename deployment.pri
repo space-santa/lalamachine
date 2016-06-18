@@ -1,5 +1,5 @@
 isEmpty(target.path) {
-    target.path = /opt/rmean/bin
+    target.path = /usr/bin
     export(target.path)
 }
 INSTALLS += target
@@ -7,7 +7,7 @@ INSTALLS += target
 icon.files = images/lalamachine.png
 export(icon.files)
 isEmpty(icon.path) {
-    icon.path = /opt/rmean/icons
+    icon.path = /usr/share/icons/hicolor/64x64/apps
     export(icon.path)
 }
 
