@@ -22,6 +22,9 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QCoreApplication>
 
+/*!
+ * \brief The SysInfo class provides the information displayed in the about dialog.
+ */
 class SysInfo : public QObject
 {
     Q_OBJECT

@@ -22,6 +22,9 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QProcess>
 
+/*!
+ * \brief The SystemInteractor class is a convenience class to start processes.
+ */
 class SystemInteractor : public QObject
 {
     Q_OBJECT
