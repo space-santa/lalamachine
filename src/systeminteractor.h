@@ -17,8 +17,7 @@ You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SYSTEMINTERACTOR_H
-#define SYSTEMINTERACTOR_H
+#pragma once
 
 #include <QObject>
 #include <QProcess>
@@ -45,5 +44,3 @@ private:
     QProcess *process_;
     QString returnValue_;
 };
-
-#endif  // SYSTEMINTERACTOR_H
