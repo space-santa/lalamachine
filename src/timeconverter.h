@@ -22,6 +22,14 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QString>
 
+/*!
+ * \brief The TimeConverter class converts seconds to a human readable string.
+ *
+ * Since this is used from QML with property bindings, the conversion can't
+ * just be done with one static function.
+ *
+ * TODO: Make this work with just one static function. This class is overkill.
+ */
 class TimeConverter : public QObject
 {
     Q_OBJECT
