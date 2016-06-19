@@ -1,5 +1,4 @@
-#ifndef TRACK_H
-#define TRACK_H
+#pragma once
 
 #include <QString>
 #include <QJsonObject>
@@ -40,5 +39,3 @@ public:
     QString dateAdded_;
     int id_;
 };
-
-#endif  // TRACK_H
