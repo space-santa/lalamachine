@@ -6,6 +6,8 @@
 #include <QJsonObject>
 #include <tag.h>
 
+// TODO: Make this a child of TagLib::Tag. It just adds toJson()
+// functionality, path and lengthString.
 class Tags
 {
 public:
