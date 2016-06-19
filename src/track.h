@@ -3,6 +3,9 @@
 #include <QString>
 #include <QJsonObject>
 
+/*!
+ * \brief The Track class is used to create entries in the PlaylistModel.
+ */
 class Track
 {
 public:
