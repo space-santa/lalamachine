@@ -17,8 +17,7 @@ You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TIMECONVERTER_H
-#define TIMECONVERTER_H
+#pragma once
 
 #include <QObject>
 #include <QString>
@@ -59,5 +58,3 @@ private:
     int hours_;
     int days_;
 };
-
-#endif  // TIMECONVERTER_H
