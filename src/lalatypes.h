@@ -17,11 +17,15 @@ You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LALATYPES_H
-#define LALATYPES_H
+#pragma once
 
 #include <QObject>
 
+/*!
+ * \brief The LalaTypes class provides common strings and enums.
+ *
+ * It is a QObject with constructor and all because it is used in QML.
+ */
 class LalaTypes : public QObject
 {
     Q_OBJECT
@@ -61,10 +65,4 @@ public:
 
     explicit LalaTypes(QObject *parent = 0);
     ~LalaTypes();
-
-signals:
-
-public slots:
 };
-
-#endif  // LALATYPES_H

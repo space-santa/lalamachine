@@ -24,11 +24,22 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "tags.h"
 
+/*!
+ * \brief The MetaDataProvider class is basically just a wrapper around the
+ * metaData() function. Because it is used from QML it also contains the
+ * function metaDataAsJson().
+ */
 class MetaDataProvider : public QObject
 {
     Q_OBJECT
 public:
     explicit MetaDataProvider(QObject *parent = 0);
     static Tags metaData(const QString &path);
+
+    /*!
+     * \brief metaDataAsJson is a convenience function to be used from QML.
+     * \param path The path to the media file.
+     * \return The result of Tags::toJson()
+     */
     Q_INVOKABLE QJsonObject metaDataAsJson(const QString &path) const;
 };

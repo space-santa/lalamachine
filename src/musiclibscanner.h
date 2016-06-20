@@ -17,14 +17,18 @@ You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MUSICLIBSCANNER_H
-#define MUSICLIBSCANNER_H
+#pragma once
 
 #include <QObject>
 #include <QSqlDatabase>
 
 #include "tags.h"
 
+/*!
+ * \brief The MusicLibScanner class is the worker class that scans the library
+ * in a dedicated thread. After it is moved to its own thread, calling the
+ * scanLib() slot will trigger a scan.
+ */
 class MusicLibScanner : public QObject
 {
     Q_OBJECT
@@ -45,5 +49,3 @@ private:
     QSqlDatabase scanDb_;
     QString getTrackQuery(Tags track, const QString date);
 };
-
-#endif  // MUSICLIBSCANNER_H

@@ -17,12 +17,16 @@ You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FILEEXPORTER_H
-#define FILEEXPORTER_H
+#pragma once
 
 #include <QObject>
 #include <QThread>
 
+/*!
+ * \brief The FileExportWorker class is the worker class to do the export in a
+ * dedicated thread. This is not done in a future because we want to update the
+ * progress bar.
+ */
 class FileExportWorker : public QObject
 {
     Q_OBJECT
@@ -37,6 +41,11 @@ private:
     QString newFileName(int pos, int max, const QString &path) const;
 };
 
+/*!
+ * \brief The FileExporter class copies all files of one playlist into a
+ * folder and renames then to keep the tracks in the order of the playlist
+ * when sorted by name.
+ */
 class FileExporter : public QObject
 {
     Q_OBJECT
@@ -58,5 +67,3 @@ signals:
 private:
     QThread workerThread_;
 };
-
-#endif  // FILEEXPORTER_H

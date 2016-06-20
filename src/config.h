@@ -17,8 +17,7 @@ You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONFIG_H
-#define CONFIG_H
+#pragma once
 
 #include <QObject>
 #include <QJsonObject>
@@ -86,5 +85,3 @@ public slots:
 private:
     QJsonObject config_;
 };
-
-#endif  // CONFIG_H

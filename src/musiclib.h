@@ -17,8 +17,7 @@ You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MUSICLIB_H
-#define MUSICLIB_H
+#pragma once
 
 #include <QThread>
 #include <QJsonObject>
@@ -245,5 +244,3 @@ private slots:
     void scanUpdate();
     void onDisplayFutureFinished();
 };
-
-#endif  // MUSICLIB_H

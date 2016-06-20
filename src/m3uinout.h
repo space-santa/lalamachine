@@ -17,13 +17,19 @@ You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef M3UINOUT_H
-#define M3UINOUT_H
+#pragma once
 
 #include <QQuickItem>
 #include <QFileSystemWatcher>
 #include <QJsonArray>
 
+/*!
+ * \brief The M3uInOut class reads and writes playlists.
+ *
+ * Originally the playlist were just .m3u files, hence the name of this class.
+ * For performance reasons, playlists are now saved as a JSON array of Tag
+ * objects.
+ */
 class M3uInOut : public QQuickItem
 {
     Q_OBJECT
@@ -58,5 +64,3 @@ private:
     QStringList playlistNames_;
     QFileSystemWatcher watcher_;
 };
-
-#endif  // M3UINOUT_H
