@@ -17,8 +17,7 @@ You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef AUTOPLAYLIST_H
-#define AUTOPLAYLIST_H
+#pragma once
 
 #include <QObject>
 #include <QList>
@@ -27,8 +26,10 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "autoplaylistobject.h"
 
-// This class manages one auto playlist.
-// It contains a list of AutoPlaylistObjects and can save/load the list.
+/*!
+ * \brief The AutoPlaylist class combines several AutoPlaylistObject s to
+ * a list and can save and load that list.
+ */
 class AutoPlaylist : public QObject
 {
     friend class TestAutoPlaylist;
@@ -67,5 +68,3 @@ private:
     QString toQuery() const;
     QString getPath(const QString &name) const;
 };
-
-#endif  // AUTOPLAYLIST_H

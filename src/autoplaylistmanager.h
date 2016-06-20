@@ -17,8 +17,7 @@ You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef AUTOPLAYLISTMANAGER_H
-#define AUTOPLAYLISTMANAGER_H
+#pragma once
 
 #include <QObject>
 #include <QStringList>
@@ -30,6 +29,10 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "autoplaylistobject.h"
 #include "autoplaylist.h"
 
+/*!
+ * \brief The AutoPlaylistManager class is the interface between UI and
+ * AutoPlaylists.
+ */
 class AutoPlaylistManager : public QObject
 {
     Q_OBJECT
@@ -55,6 +58,12 @@ public:
 
     Q_INVOKABLE QJsonArray getTracks(const QString name) const;
     Q_INVOKABLE QJsonArray getAutoPlaylist(const QString name) const;
+
+    /*!
+     * \brief saveAutoPlaylist saves an AutoPlaylist
+     * \param name The name of the list.
+     * \param args A JSON array of AutoPlalistObject-JSON-objects.
+     */
     Q_INVOKABLE void saveAutoPlaylist(const QString &name,
                                       const QJsonArray &args);
     Q_INVOKABLE void deleteAutoPlaylist(const QString &name);
@@ -75,5 +84,3 @@ private:
     QStringList getPlaylistNames() const;
     void loadPlaylists();
 };
-
-#endif  // AUTOPLAYLISTMANAGER_H

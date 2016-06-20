@@ -17,15 +17,17 @@ You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef AUTOPLAYLISTOBJECT_H
-#define AUTOPLAYLISTOBJECT_H
+#pragma once
 
 #include <QString>
 #include <QJsonObject>
 #include "lalatypes.h"
 
-// This is one component of an autoplaylist consisting of the tag (e.g. genre),
-// the operator (e.g. contains) and how it works with other components (and/or).
+/*!
+ * \brief The AutoPlaylistObject class is one component of an AutoPlaylist.
+ * It contains the tag (e.g. genre), the operator (e.g. contains) and how it
+ * combines with other AutoPlaylistObjects (and/or).
+ */
 class AutoPlaylistObject
 {
 public:
@@ -50,5 +52,3 @@ private:
     LalaTypes::Operator op_;
     QString val_;
 };
-
-#endif  // AUTOPLAYLISTOBJECT_H

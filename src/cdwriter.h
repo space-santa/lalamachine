@@ -17,13 +17,17 @@ You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CDWRITER_H
-#define CDWRITER_H
+#pragma once
 
 #include <QQuickItem>
 
 #include "systeminteractor.h"
 
+/*!
+ * \brief The CdWriter class uses K3B to create an audio CD from the current
+ * playlist. For this to work, K3B must be in the $PATH and it must be able to
+ * decode the audio files.
+ */
 class CdWriter : public QQuickItem
 {
     Q_OBJECT
@@ -45,5 +49,3 @@ private:
 
     QStringList parseM3u(const QString &m3uPath) const;
 };
-
-#endif  // CDWRITER_H
