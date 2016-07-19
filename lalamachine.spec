@@ -16,7 +16,7 @@
 #
 
 Name: lalamachine
-Version: 1.4.3
+Version: 1.5.1
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -57,6 +57,10 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Wed Jul 20 2016 r-mean
+  1.5.1-1: Release 1.5.1
+  * Bugfix: CD burning works again.
+
 * Sun Jun 12 2016 r-mean
   1.5-1: Release 1.5
   * Ported lalamachine to debian 8.
