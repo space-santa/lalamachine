@@ -1,5 +1,5 @@
 /*
-Copyright 2015 Armin Zirkel
+Copyright 2015-2016 Armin Zirkel
 
 This file is part of lalamachine.
 
