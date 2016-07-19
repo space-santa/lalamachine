@@ -43,7 +43,7 @@ public:
 
     Q_INVOKABLE void move(int from, int to);
     Q_INVOKABLE void remove(int row);
-    Q_INVOKABLE QJsonObject get(int row);
+    Q_INVOKABLE QJsonObject get(int row) const;
     Q_INVOKABLE void clear();
     Q_INVOKABLE void append(const QJsonObject &json);
 
@@ -52,6 +52,7 @@ public:
 
     Q_INVOKABLE QJsonArray toJson() const;
     Q_INVOKABLE void fromJson(const QJsonArray &json);
+    Q_INVOKABLE QStringList pathList() const;
 
 signals:
     void countChanged();

@@ -37,15 +37,8 @@ public:
     ~CdWriter();
 
     bool hasK3b() const;
-
-    Q_INVOKABLE bool burnList(const QString &m3uPath) const;
-
-signals:
-
-public slots:
+    Q_INVOKABLE bool burnList(const QStringList &pathList) const;
 
 private:
     SystemInteractor *sys_;
-
-    QStringList parseM3u(const QString &m3uPath) const;
 };

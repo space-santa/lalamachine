@@ -362,8 +362,7 @@ ApplicationWindow {
     }
 
     function burnList() {
-        playlist.writePlaylist("cs1m090")
-        burn.burnList(playlist.getPlaylistPath("cs1m090"))
+        burn.burnList(playlist.pathList())
     }
 
     M3uInOut {

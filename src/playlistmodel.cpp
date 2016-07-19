@@ -127,7 +127,7 @@ void PlaylistModel::remove(int row)
     emit countChanged();
 }
 
-QJsonObject PlaylistModel::get(int row)
+QJsonObject PlaylistModel::get(int row) const
 {
     if (row < 0 or row >= rowCount()) return QJsonObject();
     return list_.at(row).toJson();
@@ -252,6 +252,17 @@ void PlaylistModel::fromJson(const QJsonArray &json)
 
     endInsertRows();
     emit countChanged();
+}
+
+QStringList PlaylistModel::pathList() const
+{
+    QStringList retval;
+
+    for (int i = 0; i < rowCount(); ++i) {
+        retval << Track(get(i)).path_;
+    }
+
+    return retval;
 }
 
 bool PlaylistModel::sortTrackAsc(Track t1, Track t2)

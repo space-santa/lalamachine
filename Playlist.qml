@@ -388,6 +388,10 @@ Rectangle {
         return retval
     }
 
+    function pathList() {
+        return playlist_model.pathList()
+    }
+
     RightClickMenu {
         id: rcm
 
