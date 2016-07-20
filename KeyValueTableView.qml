@@ -92,7 +92,7 @@ Item {
     TableView {
         id: view
         anchors.fill: parent
-        selectionMode: SelectionMode.ContiguousSelection
+        selectionMode: SelectionMode.SingleSelection
 
         model: model
 
@@ -106,6 +106,12 @@ Item {
             id: value_column
             width: (container.width - 2) / 2
             role: "value"
+        }
+
+        onClicked: {
+            view.selection.clear()
+            view.selection.select(row, row)
+            currentRow = row
         }
 
         rowDelegate: TableViewDelegate {
