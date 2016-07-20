@@ -60,6 +60,7 @@ rm -rf $RPM_BUILD_ROOT
 * Wed Jul 20 2016 r-mean
   1.5.1-1: Release 1.5.1
   * Bugfix: CD burning works again.
+  * Bugfix: Left click in playlist settings works again.
 
 * Sun Jun 12 2016 r-mean
   1.5-1: Release 1.5
