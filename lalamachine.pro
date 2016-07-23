@@ -62,4 +62,5 @@ OTHER_FILES += \
     lalamachine.spec
 
 DISTFILES += \
-    LICENSE
+    LICENSE \
+    changelog

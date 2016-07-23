@@ -1,0 +1,15 @@
+lalamachine (1.5.1-1) UNRELEASED; urgency=medium
+
+  * Bugfix: CD burning works again.
+  * Bugfix: Left click in playlist settings works again.
+
+ -- rmean <armin.zirkel@gmail.com>  Sat, 18 Jun 2016 21:40:45 +1000
+
+lalamachine (1.5-1) UNRELEASED; urgency=medium
+
+  * Ported lalamachine to debian 8.
+  * Bugfix: Fixed colours in various places.
+  * Bugfix: Fixed a bug that made it impossible to get anything but the added
+    date on first run
+
+ -- rmean <armin.zirkel@gmail.com>  Sat, 18 Jun 2016 21:40:45 +1000
