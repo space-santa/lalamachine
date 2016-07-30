@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick widgets sql concurrent
+QT += qml quick widgets sql concurrent multimedia
 
 CONFIG += C++11
 
@@ -27,7 +27,8 @@ SOURCES += src/main.cpp \
     src/playlistmodel.cpp \
     src/track.cpp \
     src/engineloader.cpp \
-    src/lalatray.cpp
+    src/lalatray.cpp \
+    src/theplayer.cpp
 
 RESOURCES += qml.qrc
 
@@ -53,7 +54,8 @@ HEADERS += \
     src/autoplaylist.h \
     src/playlistmodel.h \
     src/track.h \
-    src/lalatray.h
+    src/lalatray.h \
+    src/theplayer.h
 
 OTHER_FILES += \
     README.md \

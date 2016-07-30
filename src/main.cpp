@@ -37,6 +37,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "engineloader.h"
 #include "playlistmodel.h"
 #include "lalatray.h"
+#include "theplayer.h"
 
 int main(int argc, char *argv[])
 {
@@ -74,6 +75,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<AutoPlaylistManager>("Lala", 1, 0, "AutoPlaylistManager");
     qmlRegisterType<FileExporter>("Lala", 1, 0, "FileExporter");
     qmlRegisterType<PlaylistModel>("Lala", 1, 0, "PlaylistModel");
+    qmlRegisterType<ThePlayer>("Lala", 1, 0, "ThePlayer");
 
     // INFO: Because we use an ApplicationWindow we cannot use a QQuickView.
     EngineLoader loader;
