@@ -58,12 +58,16 @@ ApplicationWindow {
 
     property bool kioskMode: false
 
-    property MediaPlayer lalaplayer: playMusic
+    property ThePlayer lalaplayer: playMusic
 
     property alias volume: player_controls.volume
+    onVolumeChanged: {
+        console.log("master.volumeChanged")
+        //lalaplayer.setVolume(volume * 100)
+    }
 
     signal setVolume(int val)
-    onVolumeChanged: setVolume(volume * 100)
+    //onVolumeChanged: setVolume(volume * 100)
 
     // The nowPlaying signal chain is used to get the currently playing title
     // into the tooltip of lalatray.
@@ -85,12 +89,10 @@ ApplicationWindow {
         }
     }
 
-    signal
-    // Adding this signal to have something in C++ to connect to.
+    signal // Adding this signal to have something in C++ to connect to.
     quit
 
-    signal
-    // Next some signals to be triggered from lalatray.
+    signal // Next some signals to be triggered from lalatray.
     playNext
     onPlayNext: {
         forward_action.trigger()
@@ -433,10 +435,10 @@ ApplicationWindow {
         shortcut: "ctrl+space"
         tooltip: "Shortcut: " + shortcut
         onTriggered: {
-            if (playMusic.isPlaying) {
+            if (playMusic.isPlaying()) {
                 playMusic.pause()
             } else {
-                if (playMusic.hasAudio) {
+                if (playMusic.hasAudio()) {
                     playMusic.play()
                 } else {
                     playlist.playNext()
@@ -460,9 +462,15 @@ ApplicationWindow {
         id: burn
     }
 
-    MediaPlayer {
+    ThePlayer {
         id: playMusic
-        volume: master.volume
+        property int volume: master.volume * 100
+
+        onVolumeChanged: {
+            console.log("the volume is", volume)
+            setVolume(volume)
+        }
+
         property string currentTitle
         property string currentArtist
 
@@ -473,18 +481,15 @@ ApplicationWindow {
             }
         }
 
-        loops: player_controls.repeatOne ? MediaPlayer.Infinite : 1
+        loops: player_controls.repeatOne
 
         function playTrack(path, title, artist) {
             // Since the addition of the library it is necessary to
             // make sure an mrl is actually an mrl.
-            playMusic.source = Functions.checkMrl(path)
-            playMusic.play()
+            playMusic.play(Functions.checkMrl(path))
             currentTitle = title
             currentArtist = artist
         }
-
-        property bool isPlaying: playMusic.playbackState === MediaPlayer.PlayingState
 
         onError: {
             miss_dialog.text = errorString
@@ -609,7 +614,7 @@ ApplicationWindow {
                     repeatAll: player_controls.repeatAll
                     random: player_controls.random
 
-                    nowPlayingSource: playMusic.source
+                    nowPlayingSource: playMusic.source()
 
                     onStop: {
                         playMusic.stop()
@@ -692,7 +697,7 @@ ApplicationWindow {
         rawAlbumArtist: lalaplayer.currentArtist
         duration: lalaplayer.duration
         position: lalaplayer.position
-        hasAudio: lalaplayer.hasAudio
+        hasAudio: lalaplayer.hasAudio()
 
         onSeek: {
             lalaplayer.seek(pos)
