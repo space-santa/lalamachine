@@ -2,7 +2,7 @@
 
 ThePlayer::ThePlayer(QObject *parent) : QMediaPlayer(parent)
 {
-
+    connect(this, &QMediaPlayer::stateChanged, this, &ThePlayer::onStateChanged);
 }
 
 void ThePlayer::play()
