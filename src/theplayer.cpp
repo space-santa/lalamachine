@@ -12,7 +12,7 @@ void ThePlayer::play()
 
 void ThePlayer::play(QString mrl)
 {
-    setMedia(QMediaContent(QUrl(mrl)));
+    setMedia(QMediaContent(QUrl::fromLocalFile(mrl)));
     play();
 }
 

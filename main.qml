@@ -486,7 +486,7 @@ ApplicationWindow {
         function playTrack(path, title, artist) {
             // Since the addition of the library it is necessary to
             // make sure an mrl is actually an mrl.
-            playMusic.play(Functions.checkMrl(path))
+            playMusic.play(path)
             currentTitle = title
             currentArtist = artist
         }
