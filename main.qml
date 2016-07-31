@@ -435,7 +435,7 @@ ApplicationWindow {
         shortcut: "ctrl+space"
         tooltip: "Shortcut: " + shortcut
         onTriggered: {
-            if (playMusic.isPlaying()) {
+            if (playMusic.isPlaying) {
                 playMusic.pause()
             } else {
                 if (playMusic.hasAudio()) {

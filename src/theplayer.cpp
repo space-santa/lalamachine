@@ -16,11 +16,6 @@ void ThePlayer::play(QString mrl)
     play();
 }
 
-bool ThePlayer::isPlaying()
-{
-    return state() == QMediaPlayer::PlayingState;
-}
-
 bool ThePlayer::hasAudio()
 {
     return !(mediaStatus() == QMediaPlayer::NoMedia
@@ -41,11 +36,13 @@ QUrl ThePlayer::source()
 
 void ThePlayer::onStateChanged(QMediaPlayer::State state)
 {
+    setIsPlaying(false);
     switch (state) {
         case QMediaPlayer::StoppedState:
             emit stopped();
             break;
     case QMediaPlayer::PlayingState:
+        setIsPlaying(true);
         emit playing();
         break;
     case QMediaPlayer::PausedState:
@@ -61,6 +58,17 @@ void ThePlayer::onStopped()
     if (loops_) {
         play();
     }
+}
+
+bool ThePlayer::isPlaying() const
+{
+    return isPlaying_;
+}
+
+void ThePlayer::setIsPlaying(bool isPlaying)
+{
+    isPlaying_ = isPlaying;
+    emit isPlayingChanged();
 }
 
 bool ThePlayer::loops() const

@@ -33,7 +33,7 @@ Row {
     ImageButton {
         id: play_btn
         action: play_pause_action
-        source: playMusic.isPlaying() ? "qrc:/images/images/pause.png" : "qrc:/images/images/play.png"
+        source: playMusic.isPlaying ? "qrc:/images/images/pause.png" : "qrc:/images/images/play.png"
     }
 
     ImageButton {
