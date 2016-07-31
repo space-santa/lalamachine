@@ -39,15 +39,6 @@ function getSafeValue(value) {
     }
 }
 
-// TODO: why is it necessary to check the mrl?
-function checkMrl(mrl) {
-    mrl = mrl.toString()
-    if (mrl.indexOf("file://") != "0") {
-        mrl = "file://" + mrl
-    }
-    return mrl
-}
-
 // Random number within range min <= num <= max.
 function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
