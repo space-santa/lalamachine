@@ -19,17 +19,17 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config.h"
 
-#include <QFile>
 #include <QByteArray>
-#include <QVariant>
+#include <QDebug>
+#include <QDir>
+#include <QFile>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
-#include <QJsonArray>
-#include <QDebug>
 #include <QStandardPaths>
-#include <QDir>
 #include <QUrl>
+#include <QVariant>
 
 const QString Config::LALADIR
     = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation)
@@ -46,9 +46,15 @@ Config::Config(QObject *parent) : QObject(parent)
     loadConfig();
 }
 
-void Config::saveConfig() { saveJsonFile(Config::CONFIGPATH, config_); }
+void Config::saveConfig()
+{
+    saveJsonFile(Config::CONFIGPATH, config_);
+}
 
-void Config::loadConfig() { config_ = loadJsonFile(Config::CONFIGPATH); }
+void Config::loadConfig()
+{
+    config_ = loadJsonFile(Config::CONFIGPATH);
+}
 
 void Config::setVolume(double val)
 {

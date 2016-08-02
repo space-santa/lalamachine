@@ -2,7 +2,9 @@
 #include <QDebug>
 #include <QRegularExpression>
 
-PlaylistModel::PlaylistModel(QObject *parent) : QAbstractListModel(parent) {}
+PlaylistModel::PlaylistModel(QObject *parent) : QAbstractListModel(parent)
+{
+}
 
 QHash<int, QByteArray> PlaylistModel::roleNames() const
 {
@@ -96,7 +98,10 @@ bool PlaylistModel::setData(const QModelIndex &index,
 
 void PlaylistModel::append(Track track)
 {
-    if (track.mrl_.isEmpty()) return;
+    if (track.mrl_.isEmpty()) {
+        return;
+    }
+
     track.id_ = list_.length();
     // NOTE: This has to have an empty QModelIndex as first argument.
     // Because reasons, that's why.
@@ -108,9 +113,17 @@ void PlaylistModel::append(Track track)
 
 void PlaylistModel::move(int from, int to)
 {
-    if (from == to) return;
-    if (from < 0 or from > rowCount()) return;
-    if (to < 0 or to > rowCount()) return;
+    if (from == to) {
+        return;
+    }
+
+    if (from < 0 or from > rowCount()) {
+        return;
+    }
+
+    if (to < 0 or to > rowCount()) {
+        return;
+    }
 
     qDebug() << "MOVING ROW from" << from << "to" << to;
     list_.swap(from, to);
@@ -129,7 +142,10 @@ void PlaylistModel::remove(int row)
 
 QJsonObject PlaylistModel::get(int row) const
 {
-    if (row < 0 or row >= rowCount()) return QJsonObject();
+    if (row < 0 or row >= rowCount()) {
+        return QJsonObject();
+    }
+
     return list_.at(row).toJson();
 }
 
@@ -142,7 +158,10 @@ void PlaylistModel::clear()
     emit countChanged();
 }
 
-void PlaylistModel::append(const QJsonObject &json) { append(Track(json)); }
+void PlaylistModel::append(const QJsonObject &json)
+{
+    append(Track(json));
+}
 
 void PlaylistModel::sortRole(const QString &role, Qt::SortOrder order)
 {

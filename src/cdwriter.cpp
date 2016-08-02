@@ -21,14 +21,18 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "systeminteractor.h"
 
 #include <QDebug>
+#include <QFile>
 #include <QString>
 #include <QStringList>
-#include <QFile>
 #include <QTextStream>
 
-CdWriter::CdWriter() : sys_(new SystemInteractor(this)) {}
+CdWriter::CdWriter() : sys_(new SystemInteractor(this))
+{
+}
 
-CdWriter::~CdWriter() {}
+CdWriter::~CdWriter()
+{
+}
 
 bool CdWriter::hasK3b() const
 {

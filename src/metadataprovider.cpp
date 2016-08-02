@@ -20,18 +20,20 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "metadataprovider.h"
 
 #include <QDebug>
-#include <QString>
-#include <QVariantMap>
 #include <QJsonObject>
+#include <QString>
 #include <QTime>
+#include <QVariantMap>
 
-#include <tag.h>
 #include <fileref.h>
+#include <tag.h>
 
-#include "timeconverter.h"
 #include "tags.h"
+#include "timeconverter.h"
 
-MetaDataProvider::MetaDataProvider(QObject *parent) : QObject(parent) {}
+MetaDataProvider::MetaDataProvider(QObject *parent) : QObject(parent)
+{
+}
 
 Tags MetaDataProvider::metaData(const QString &path)
 {

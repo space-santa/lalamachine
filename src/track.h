@@ -1,7 +1,7 @@
 #pragma once
 
-#include <QString>
 #include <QJsonObject>
+#include <QString>
 
 /*!
  * \brief The Track class is used to create entries in the PlaylistModel.

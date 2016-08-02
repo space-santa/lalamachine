@@ -2,7 +2,10 @@
 
 ThePlayer::ThePlayer(QObject *parent) : QMediaPlayer(parent)
 {
-    connect(this, &QMediaPlayer::stateChanged, this, &ThePlayer::onStateChanged);
+    connect(this,
+            &QMediaPlayer::stateChanged,
+            this,
+            &ThePlayer::onStateChanged);
 }
 
 void ThePlayer::play()
@@ -25,8 +28,11 @@ bool ThePlayer::hasAudio()
 
 void ThePlayer::seek(qint64 pos)
 {
+    qDebug() << "pre set we are now at" << position();
     qDebug() << "ThePlayer::seek(" << pos << ")" << isSeekable();
     setPosition(pos);
+    qDebug() << "we are now at" << position() << state() << mediaStatus()
+             << isAudioAvailable();
 }
 
 QUrl ThePlayer::source()
@@ -37,19 +43,20 @@ QUrl ThePlayer::source()
 void ThePlayer::onStateChanged(QMediaPlayer::State state)
 {
     setIsPlaying(false);
+
     switch (state) {
         case QMediaPlayer::StoppedState:
             emit stopped();
             break;
-    case QMediaPlayer::PlayingState:
-        setIsPlaying(true);
-        emit playing();
-        break;
-    case QMediaPlayer::PausedState:
-        emit paused();
-        break;
-    default:
-        qWarning() << "This is not supposed to happen";
+        case QMediaPlayer::PlayingState:
+            setIsPlaying(true);
+            emit playing();
+            break;
+        case QMediaPlayer::PausedState:
+            emit paused();
+            break;
+        default:
+            qWarning() << "This is not supposed to happen";
     }
 }
 

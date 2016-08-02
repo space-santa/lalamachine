@@ -1,8 +1,8 @@
 #include "lalatray.h"
 
+#include <QApplication>
 #include <QDebug>
 #include <QMenu>
-#include <QApplication>
 
 LalaTray::LalaTray(QObject *root, QObject *parent)
     : QSystemTrayIcon(parent), rootWin_(root), showVolumeMessage_(false)
@@ -37,7 +37,7 @@ void LalaTray::onActivated(ActivationReason reason)
     if (reason == QSystemTrayIcon::Trigger) {
         if (rootWin_->property("visible").toBool() == true) {
             if (rootWin_->property("active").toBool() == true) {
-            QMetaObject::invokeMethod(rootWin_, "hide");
+                QMetaObject::invokeMethod(rootWin_, "hide");
             } else {
                 QMetaObject::invokeMethod(rootWin_, "requestActivate");
             }
@@ -47,7 +47,10 @@ void LalaTray::onActivated(ActivationReason reason)
     }
 }
 
-void LalaTray::onNewTitlePlaying(const QString &title) { setToolTip(title); }
+void LalaTray::onNewTitlePlaying(const QString &title)
+{
+    setToolTip(title);
+}
 
 void LalaTray::onPlayingStatusChanged(bool stat)
 {

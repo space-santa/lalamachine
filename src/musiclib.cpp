@@ -19,24 +19,24 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "musiclib.h"
 
-#include <QMutexLocker>
 #include <QDir>
 #include <QDirIterator>
-#include <QJsonObject>
-#include <QUrl>
-#include <QSqlQuery>
-#include <QSqlRecord>
-#include <QSqlError>
-#include <QPair>
 #include <QElapsedTimer>
 #include <QFuture>
 #include <QFutureWatcher>
+#include <QJsonObject>
+#include <QMutexLocker>
+#include <QPair>
+#include <QSqlError>
+#include <QSqlQuery>
+#include <QSqlRecord>
+#include <QUrl>
 #include <QtConcurrent>
 
-#include "metadataprovider.h"
-#include "config.h"
-#include "musiclibscanner.h"
 #include "autoplaylistmanager.h"
+#include "config.h"
+#include "metadataprovider.h"
+#include "musiclibscanner.h"
 
 MusicLib::MusicLib(QObject *parent) : QObject(parent)
 {
@@ -174,7 +174,10 @@ QMap<MusicLib::SortWhat, QString> MusicLib::initSortMap()
 
 const QString MusicLib::ALL_FILTER = QString("--all--");
 
-bool MusicLib::scanning() const { return scanning_; }
+bool MusicLib::scanning() const
+{
+    return scanning_;
+}
 
 void MusicLib::setScanning(bool val)
 {
@@ -182,11 +185,20 @@ void MusicLib::setScanning(bool val)
     emit scanningChanged();
 }
 
-QJsonArray MusicLib::displayLib() const { return displayLib_; }
+QJsonArray MusicLib::displayLib() const
+{
+    return displayLib_;
+}
 
-int MusicLib::totalLength() const { return totalLength_; }
+int MusicLib::totalLength() const
+{
+    return totalLength_;
+}
 
-void MusicLib::debugSignal() { qDebug() << "DEBUGGING SIGNAL"; }
+void MusicLib::debugSignal()
+{
+    qDebug() << "DEBUGGING SIGNAL";
+}
 
 void MusicLib::setDisplayLib()
 {
@@ -203,7 +215,8 @@ void MusicLib::setDisplayLib()
 
     lastDisplayLibQuery_ = query;
 
-    QFuture<QSqlQuery> future = QtConcurrent::run(this, &MusicLib::runSetDisplayQuery, query);
+    QFuture<QSqlQuery> future
+        = QtConcurrent::run(this, &MusicLib::runSetDisplayQuery, query);
     watcher_.setFuture(future);
 }
 
@@ -222,19 +235,27 @@ void MusicLib::onDisplayFutureFinished()
     emit totalLengthChanged();
 }
 
-QString MusicLib::libPath() const { return libPath_; }
+QString MusicLib::libPath() const
+{
+    return libPath_;
+}
 
 void MusicLib::setLibPath(const QString &path)
 {
     libPath_ = path;
     emit libPathChanged();
 
-    if (!appStart_) rescan();
+    if (!appStart_) {
+        rescan();
+    }
 
     appStart_ = false;
 }
 
-QString MusicLib::genreFilter() const { return genreFilter_; }
+QString MusicLib::genreFilter() const
+{
+    return genreFilter_;
+}
 
 void MusicLib::setGenreFilter(const QString &val)
 {
@@ -256,7 +277,10 @@ void MusicLib::setGenreFilter(const QString &val)
     emit genreFilterChanged();
 }
 
-QString MusicLib::artistFilter() const { return artistFilter_; }
+QString MusicLib::artistFilter() const
+{
+    return artistFilter_;
+}
 
 void MusicLib::setArtistFilter(const QString &val)
 {
@@ -273,7 +297,10 @@ void MusicLib::setArtistFilter(const QString &val)
     emit artistFilterChanged();
 }
 
-QString MusicLib::albumFilter() const { return albumFilter_; }
+QString MusicLib::albumFilter() const
+{
+    return albumFilter_;
+}
 
 void MusicLib::setAlbumFilter(const QString &val)
 {
@@ -288,11 +315,17 @@ void MusicLib::setAlbumFilter(const QString &val)
     emit albumFilterChanged();
 }
 
-bool MusicLib::sortAsc() const { return sortAsc_; }
+bool MusicLib::sortAsc() const
+{
+    return sortAsc_;
+}
 
 void MusicLib::setSortAsc(bool val)
 {
-    if (sortAsc_ == val) return;
+    if (sortAsc_ == val) {
+        return;
+    }
+
     // Only do things when there was an actual change.
     // We only want to setDisplayLib if necessary.
     sortAsc_ = val;
@@ -300,22 +333,36 @@ void MusicLib::setSortAsc(bool val)
     setDisplayLib();
 }
 
-MusicLib::SortWhat MusicLib::what() const { return what_; }
+MusicLib::SortWhat MusicLib::what() const
+{
+    return what_;
+}
 
 void MusicLib::setWhat(MusicLib::SortWhat val)
 {
-    if (what_ == val) return;
+    if (what_ == val) {
+        return;
+    }
     // See comment in MusicLib::setSortAsc
     what_ = val;
     emit whatChanged();
     setDisplayLib();
 }
 
-QStringList MusicLib::genreList() const { return genreList_; }
+QStringList MusicLib::genreList() const
+{
+    return genreList_;
+}
 
-QStringList MusicLib::artistList() const { return artistList_; }
+QStringList MusicLib::artistList() const
+{
+    return artistList_;
+}
 
-QStringList MusicLib::albumList() const { return albumList_; }
+QStringList MusicLib::albumList() const
+{
+    return albumList_;
+}
 
 void MusicLib::resetFilterAndSort()
 {
@@ -363,7 +410,8 @@ QString MusicLib::escapeString(QString str)
     return str.replace("\'", "\'\'");
 }
 
-QString MusicLib::cleanPath(QString mrl) {
+QString MusicLib::cleanPath(QString mrl)
+{
     return mrl.remove(QRegularExpression("^file://"));
 }
 
@@ -520,13 +568,18 @@ void MusicLib::updateTable()
         tmplist << record.value("name").toString();
     }
 
-    if (tmplist.contains("dateAdded")) return;
+    if (tmplist.contains("dateAdded")) {
+        return;
+    }
 
     qDebug() << db_.exec("ALTER TABLE musiclib ADD COLUMN dateAdded TEXT")
                     .lastError();
 }
 
-void MusicLib::ensureAllTables() { createLibTable("musiclib"); }
+void MusicLib::ensureAllTables()
+{
+    createLibTable("musiclib");
+}
 
 void MusicLib::createLibTable(const QString &name)
 {
@@ -577,6 +630,7 @@ void MusicLib::rescan()
     if (!scannerThread_.isRunning()) {
         scannerThread_.start();
     }
+
     copyLibToTmp();
     clearMusicLib();
 
@@ -602,7 +656,9 @@ void MusicLib::restoreMetaData()
         tmprec.first();
         QString tmpdate = tmprec.value("dateAdded").toString();
 
-        if (tmpdate.isEmpty()) continue;
+        if (tmpdate.isEmpty()) {
+            continue;
+        }
 
         QString query("UPDATE musiclib SET dateAdded='%1' WHERE mrl='%2'");
         db_.exec(query.arg(tmpdate).arg(escapeString(mrl))).lastError();
@@ -666,7 +722,10 @@ void MusicLib::setAlbumList()
     emit albumListChanged();
 }
 
-void MusicLib::scanStarted() { setScanning(true); }
+void MusicLib::scanStarted()
+{
+    setScanning(true);
+}
 
 void MusicLib::scanUpdate()
 {
@@ -696,7 +755,10 @@ void MusicLib::scanFinished()
     setScanning(false);
 }
 
-QString MusicLib::titlePartialFilter() const { return titlePartialFilter_; }
+QString MusicLib::titlePartialFilter() const
+{
+    return titlePartialFilter_;
+}
 void MusicLib::setTitlePartialFilter(const QString &titlePartialFilter)
 {
     titlePartialFilter_ = titlePartialFilter;

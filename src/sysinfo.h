@@ -19,11 +19,12 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include <QObject>
 #include <QCoreApplication>
+#include <QObject>
 
 /*!
- * \brief The SysInfo class provides the information displayed in the about dialog.
+ * \brief The SysInfo class provides the information displayed in the about
+ * dialog.
  */
 class SysInfo : public QObject
 {

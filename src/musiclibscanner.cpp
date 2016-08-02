@@ -19,18 +19,18 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "musiclibscanner.h"
 
-#include <QElapsedTimer>
-#include <QDir>
-#include <QDirIterator>
-#include <QMutexLocker>
-#include <QSqlError>
-#include <QSqlQuery>
-#include <QRegularExpression>
-#include <QDateTime>
+#include "config.h"
 #include "metadataprovider.h"
 #include "musiclib.h"
 #include "tags.h"
-#include "config.h"
+#include <QDateTime>
+#include <QDir>
+#include <QDirIterator>
+#include <QElapsedTimer>
+#include <QMutexLocker>
+#include <QRegularExpression>
+#include <QSqlError>
+#include <QSqlQuery>
 
 MusicLibScanner::MusicLibScanner(QObject *parent) : QObject(parent)
 {
@@ -80,7 +80,9 @@ void MusicLibScanner::scanLib(const QString &path)
                 // This is to mitigate another problem. We assume that all files
                 // with the correct sufix are good. Problem is that they might
                 // not be.
-                if (not tmp.isValid()) continue;
+                if (not tmp.isValid()) {
+                    continue;
+                }
 
                 // Adding all queries to the transaction.
                 error = scanDb_.exec(getTrackQuery(tmp, date) + ";\n")
@@ -88,7 +90,9 @@ void MusicLibScanner::scanLib(const QString &path)
                             .text()
                             .trimmed();
 
-                if (!error.isEmpty()) qDebug() << error;
+                if (!error.isEmpty()) {
+                    qDebug() << error;
+                }
             }
         }
         qDebug() << "pre commit" << timer.elapsed();

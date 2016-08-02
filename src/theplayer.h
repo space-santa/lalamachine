@@ -1,14 +1,15 @@
 #pragma once
 
-#include <QObject>
 #include <QMediaPlayer>
+#include <QObject>
 
 class ThePlayer : public QMediaPlayer
 {
     Q_OBJECT
 
     Q_PROPERTY(bool loops READ loops WRITE setLoops NOTIFY loopsChanged)
-    Q_PROPERTY(bool isPlaying READ isPlaying WRITE setIsPlaying NOTIFY isPlayingChanged)
+    Q_PROPERTY(bool isPlaying READ isPlaying WRITE setIsPlaying NOTIFY
+                   isPlayingChanged)
 public:
     explicit ThePlayer(QObject *parent = 0);
 

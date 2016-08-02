@@ -1,9 +1,9 @@
 #ifndef LALATRAY_H
 #define LALATRAY_H
 
-#include <QSystemTrayIcon>
-#include <QQuickWindow>
 #include <QAction>
+#include <QQuickWindow>
+#include <QSystemTrayIcon>
 
 class LalaTray : public QSystemTrayIcon
 {

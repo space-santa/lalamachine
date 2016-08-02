@@ -19,15 +19,15 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
+#include "autoplaylist.h"
+#include "autoplaylistobject.h"
+#include "config.h"
+#include <QFileSystemWatcher>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QMap>
 #include <QObject>
 #include <QStringList>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QFileSystemWatcher>
-#include <QMap>
-#include "config.h"
-#include "autoplaylistobject.h"
-#include "autoplaylist.h"
 
 /*!
  * \brief The AutoPlaylistManager class is the interface between UI and

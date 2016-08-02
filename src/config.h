@@ -19,9 +19,9 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include <QObject>
-#include <QJsonObject>
 #include <QJsonArray>
+#include <QJsonObject>
+#include <QObject>
 
 class Config : public QObject
 {

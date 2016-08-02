@@ -1,9 +1,9 @@
 #ifndef TAGS_H
 #define TAGS_H
 
+#include <QJsonObject>
 #include <QString>
 #include <QUrl>
-#include <QJsonObject>
 #include <tag.h>
 
 // TODO: Make this a child of TagLib::Tag. It just adds toJson()

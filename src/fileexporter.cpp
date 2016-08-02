@@ -20,11 +20,11 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "fileexporter.h"
 #include "config.h"
 
+#include <QDateTime>
+#include <QDebug>
 #include <QFile>
 #include <QFileInfo>
 #include <QString>
-#include <QDebug>
-#include <QDateTime>
 
 FileExporter::FileExporter(QObject *parent) : QObject(parent)
 {
@@ -76,9 +76,11 @@ QString FileExportWorker::newFileName(int pos,
     QString posstring(QString::number(pos));
     QString maxstring(QString::number(max));
     int diff = maxstring.length() - posstring.length();
+
     for (int i = 0; i < diff; ++i) {
         retval.append("0");
     }
+
     retval.append(posstring);
     retval.append("-");
     retval.append(fi.fileName());

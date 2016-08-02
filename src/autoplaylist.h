@@ -19,9 +19,9 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include <QObject>
-#include <QList>
 #include <QJsonArray>
+#include <QList>
+#include <QObject>
 #include <QSqlDatabase>
 
 #include "autoplaylistobject.h"

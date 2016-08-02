@@ -18,26 +18,26 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <QApplication>
-#include <QQmlApplicationEngine>
-#include <QPixmap>
-#include <QIcon>
-#include <QSplashScreen>
 #include <QCommandLineParser>
+#include <QIcon>
+#include <QPixmap>
+#include <QQmlApplicationEngine>
+#include <QSplashScreen>
 
-#include "metadataprovider.h"
-#include "m3uinout.h"
-#include "config.h"
-#include "timeconverter.h"
-#include "musiclib.h"
-#include "cdwriter.h"
-#include "sysinfo.h"
-#include "lalatypes.h"
 #include "autoplaylistmanager.h"
-#include "fileexporter.h"
+#include "cdwriter.h"
+#include "config.h"
 #include "engineloader.h"
-#include "playlistmodel.h"
+#include "fileexporter.h"
 #include "lalatray.h"
+#include "lalatypes.h"
+#include "m3uinout.h"
+#include "metadataprovider.h"
+#include "musiclib.h"
+#include "playlistmodel.h"
+#include "sysinfo.h"
 #include "theplayer.h"
+#include "timeconverter.h"
 
 int main(int argc, char *argv[])
 {
@@ -88,8 +88,8 @@ int main(int argc, char *argv[])
     tray.show();
 
     if (kiosk) {
-            QMetaObject::invokeMethod(loader.rootWin(), "showFullScreen");
-            loader.rootWin()->setProperty("kioskMode", true);
+        QMetaObject::invokeMethod(loader.rootWin(), "showFullScreen");
+        loader.rootWin()->setProperty("kioskMode", true);
     }
 
     return app.exec();
