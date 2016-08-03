@@ -31,6 +31,7 @@ signals:
     void paused();
     void loopsChanged();
     void isPlayingChanged();
+    void playNext();
 
 private slots:
     void onStateChanged(QMediaPlayer::State state);

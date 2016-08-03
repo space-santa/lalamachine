@@ -474,11 +474,8 @@ ApplicationWindow {
         property string currentTitle
         property string currentArtist
 
-        onStopped: {
-            if (Functions.millisToSec(position) > (Functions.millisToSec(
-                                                       duration) - 1)) {
-                playlist.playNext()
-            }
+        onPlayNext: {
+                    playlist.playNext()
         }
 
         loops: player_controls.repeatOne

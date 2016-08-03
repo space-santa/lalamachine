@@ -6,6 +6,7 @@ ThePlayer::ThePlayer(QObject *parent) : QMediaPlayer(parent)
             &QMediaPlayer::stateChanged,
             this,
             &ThePlayer::onStateChanged);
+    connect(this, &ThePlayer::stopped, this, &ThePlayer::onStopped);
 }
 
 void ThePlayer::play()
@@ -46,13 +47,16 @@ void ThePlayer::onStateChanged(QMediaPlayer::State state)
 
     switch (state) {
         case QMediaPlayer::StoppedState:
+            qDebug() << "--STOPPED--";
             emit stopped();
             break;
         case QMediaPlayer::PlayingState:
+            qDebug() << "--PLAYING--";
             setIsPlaying(true);
             emit playing();
             break;
         case QMediaPlayer::PausedState:
+            qDebug() << "--PAUSED--";
             emit paused();
             break;
         default:
@@ -62,8 +66,11 @@ void ThePlayer::onStateChanged(QMediaPlayer::State state)
 
 void ThePlayer::onStopped()
 {
+    qDebug() << "onStopped, loops_ =" << loops_;
     if (loops_) {
         play();
+    } else {
+        emit playNext();
     }
 }
 
