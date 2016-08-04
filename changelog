@@ -1,3 +1,9 @@
+lalamachine (1.6-1) UNRELEASED; urgency=medium
+
+  * Replaced qml-multimedia with qtmultimedia as backend.
+
+ -- rmean <armin.zirkel@gmail.com>  Fri, 05 Aug 2016 08:40:45 +1000
+
 lalamachine (1.5.1-1) UNRELEASED; urgency=medium
 
   * Bugfix: CD burning works again.
