@@ -1,7 +1,9 @@
 #include "track.h"
 #include "musiclib.h"
 
-Track::Track() {}
+Track::Track()
+{
+}
 
 Track::Track(const QString &track,
              const QString &title,
@@ -32,7 +34,10 @@ Track::Track(const QString &track,
 {
 }
 
-Track::Track(const QJsonObject &json) { fromJson(json); }
+Track::Track(const QJsonObject &json)
+{
+    fromJson(json);
+}
 
 void Track::fromJson(const QJsonObject &json)
 {

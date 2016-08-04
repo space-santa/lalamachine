@@ -21,9 +21,13 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QMap>
 
-LalaTypes::LalaTypes(QObject *parent) : QObject(parent) {}
+LalaTypes::LalaTypes(QObject *parent) : QObject(parent)
+{
+}
 
-LalaTypes::~LalaTypes() {}
+LalaTypes::~LalaTypes()
+{
+}
 
 const QMap<LalaTypes::Tag, QString> LalaTypes::TAG_MAP = initTagMap();
 

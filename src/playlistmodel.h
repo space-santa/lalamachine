@@ -1,10 +1,10 @@
 #ifndef PLAYLISTMODEL_H
 #define PLAYLISTMODEL_H
 
-#include <QObject>
-#include <QVariant>
 #include <QAbstractListModel>
 #include <QJsonArray>
+#include <QObject>
+#include <QVariant>
 
 #include "track.h"
 

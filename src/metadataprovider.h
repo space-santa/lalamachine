@@ -19,8 +19,8 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include <QObject>
 #include <QJsonObject>
+#include <QObject>
 
 #include "tags.h"
 

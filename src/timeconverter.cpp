@@ -51,9 +51,15 @@ void TimeConverter::setSeconds(int sec)
     emit timestringChanged();
 }
 
-int TimeConverter::seconds() { return totalSec_; }
+int TimeConverter::seconds()
+{
+    return totalSec_;
+}
 
-QString TimeConverter::timestring() { return toString(); }
+QString TimeConverter::timestring()
+{
+    return toString();
+}
 
 QString TimeConverter::toString()
 {

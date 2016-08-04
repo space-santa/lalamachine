@@ -19,10 +19,10 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "autoplaylist.h"
 
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlError>
 #include <QFile>
+#include <QSqlDatabase>
+#include <QSqlError>
+#include <QSqlQuery>
 
 #include "config.h"
 #include "musiclib.h"
@@ -36,17 +36,26 @@ AutoPlaylist::AutoPlaylist(const QString &name, QObject *parent)
     load();
 }
 
-AutoPlaylist::~AutoPlaylist() {}
+AutoPlaylist::~AutoPlaylist()
+{
+}
 
-QString AutoPlaylist::name() { return name_; }
+QString AutoPlaylist::name()
+{
+    return name_;
+}
 
 void AutoPlaylist::save()
 {
-    if (name_.isEmpty()) return;
+    if (name_.isEmpty()) {
+        return;
+    }
 
     QJsonArray jarr;
 
-    for (QList<AutoPlaylistObject>::iterator itr = apos_.begin(); itr != apos_.end(); ++itr) {
+    for (QList<AutoPlaylistObject>::iterator itr = apos_.begin();
+         itr != apos_.end();
+         ++itr) {
         jarr.append((*itr).toJson());
     }
 
@@ -58,7 +67,9 @@ void AutoPlaylist::save()
 
 void AutoPlaylist::deleteList()
 {
-    if (name_.isEmpty()) return;
+    if (name_.isEmpty()) {
+        return;
+    }
 
     QFile::remove(getPath(name_));
     name_ = "";
@@ -66,7 +77,9 @@ void AutoPlaylist::deleteList()
 
 void AutoPlaylist::load()
 {
-    if (name_.isEmpty()) return;
+    if (name_.isEmpty()) {
+        return;
+    }
 
     fromJson(Config::loadJsonFile(getPath(name_)).value(name_).toArray());
 }
@@ -82,7 +95,9 @@ void AutoPlaylist::fromJson(const QJsonArray &arr)
 QJsonArray AutoPlaylist::toJson() const
 {
     QJsonArray arr;
-    for (QList<AutoPlaylistObject>::const_iterator itr = apos_.constBegin(); itr != apos_.constEnd(); ++itr) {
+    for (QList<AutoPlaylistObject>::const_iterator itr = apos_.constBegin();
+         itr != apos_.constEnd();
+         ++itr) {
         arr.append((*itr).toJson());
     }
 
@@ -102,7 +117,10 @@ void AutoPlaylist::addApo(const AutoPlaylistObject &apo)
     emit trackListChanged();
 }
 
-void AutoPlaylist::clear() { apos_.clear(); }
+void AutoPlaylist::clear()
+{
+    apos_.clear();
+}
 
 QJsonArray AutoPlaylist::trackList()
 {
@@ -119,7 +137,9 @@ QString AutoPlaylist::toQuery() const
 {
     QString query("SELECT * FROM musiclib WHERE ");
     bool first = true;
-    for (QList<AutoPlaylistObject>::const_iterator itr = apos_.constBegin(); itr != apos_.constEnd(); ++itr) {
+    for (QList<AutoPlaylistObject>::const_iterator itr = apos_.constBegin();
+         itr != apos_.constEnd();
+         ++itr) {
         query.append((*itr).toQuery(first));
         first = false;
     }

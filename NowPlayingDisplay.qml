@@ -56,7 +56,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.leftMargin: 20
         anchors.rightMargin: 20
-        enabled: hasAudio
+        enabled: true
 
         // If this returns true the value has been changed manually.
         // Or, expressed differently, if the value has been changed by the
@@ -69,6 +69,7 @@ Rectangle {
 
         onValueChanged: {
             if (changeRange()) {
+                console.log("seeking for " + value * duration)
                 seek(value * duration)
             }
         }

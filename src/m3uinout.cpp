@@ -19,10 +19,10 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "m3uinout.h"
 
-#include <QStandardPaths>
 #include <QDir>
-#include <QJsonDocument>
 #include <QJsonArray>
+#include <QJsonDocument>
+#include <QStandardPaths>
 
 #include "config.h"
 
@@ -55,7 +55,9 @@ void M3uInOut::handleDirChange()
 
 void M3uInOut::writePlaylist(const QString &name, const QJsonArray &json) const
 {
-    if (name.isEmpty()) return;
+    if (name.isEmpty()) {
+        return;
+    }
 
     QFile file(m3uPath(name));
 
@@ -133,4 +135,7 @@ void M3uInOut::setPlaylistNames(const QStringList &list)
     emit playlistNamesChanged();
 }
 
-QStringList M3uInOut::playlistNames() const { return playlistNames_; }
+QStringList M3uInOut::playlistNames() const
+{
+    return playlistNames_;
+}

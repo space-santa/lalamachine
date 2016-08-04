@@ -21,9 +21,14 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QDebug>
 
-SystemInteractor::SystemInteractor(QObject *parent) : QObject(parent), process_(new QProcess(this)) {}
+SystemInteractor::SystemInteractor(QObject *parent)
+    : QObject(parent), process_(new QProcess(this))
+{
+}
 
-SystemInteractor::~SystemInteractor() {}
+SystemInteractor::~SystemInteractor()
+{
+}
 
 QString SystemInteractor::exec(const QString &cmd)
 {

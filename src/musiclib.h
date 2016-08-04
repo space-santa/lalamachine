@@ -19,15 +19,15 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include <QThread>
-#include <QJsonObject>
+#include <QFutureWatcher>
 #include <QJsonArray>
-#include <QString>
-#include <QObject>
+#include <QJsonObject>
 #include <QMutex>
+#include <QObject>
 #include <QSharedPointer>
 #include <QSqlDatabase>
-#include <QFutureWatcher>
+#include <QString>
+#include <QThread>
 
 #include "musiclibscanner.h"
 

@@ -19,9 +19,9 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include <QQuickItem>
 #include <QFileSystemWatcher>
 #include <QJsonArray>
+#include <QQuickItem>
 
 /*!
  * \brief The M3uInOut class reads and writes playlists.

@@ -19,9 +19,9 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include <QString>
-#include <QJsonObject>
 #include "lalatypes.h"
+#include <QJsonObject>
+#include <QString>
 
 /*!
  * \brief The AutoPlaylistObject class is one component of an AutoPlaylist.
