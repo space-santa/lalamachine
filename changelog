@@ -1,3 +1,9 @@
+lalamachine (1.6.1-1) UNRELEASED; urgency=medium
+
+  * Fixed a bug that broke play next/previous.
+
+ -- rmean <armin.zirkel@gmail.com>  Sat, 06 Aug 2016 18:44:42 +1000
+
 lalamachine (1.6-1) UNRELEASED; urgency=medium
 
   * Replaced qml-multimedia with qtmultimedia as backend.
