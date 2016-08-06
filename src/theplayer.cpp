@@ -66,6 +66,7 @@ void ThePlayer::onStateChanged(QMediaPlayer::State state)
 
 void ThePlayer::onStopped()
 {
+    // We only do something if it stoppes because it is at the end of the track.
     if (position() < duration()) {
         return;
     }
