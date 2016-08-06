@@ -66,6 +66,10 @@ void ThePlayer::onStateChanged(QMediaPlayer::State state)
 
 void ThePlayer::onStopped()
 {
+    if (position() < duration()) {
+        return;
+    }
+
     qDebug() << "onStopped, loops_ =" << loops_;
     if (loops_) {
         play();
