@@ -12,10 +12,8 @@ lalamachine is just another music player. It features:
 
 ## Dependencies
 
-lalamachine is a Qt5 application and uses QtMultimedia to play music.
+lalamachine is a Qt5 application and uses libvlc to play music.
 The only other (direct) dependency is taglib.
-Since QtMultimedia uses GStreamer as backend you probably want to install
-GStreamer codecs.
 
 ## Build it
 
@@ -44,11 +42,7 @@ sudo make uninstall
 
 ## Package
 
-I build packages for Leap 42.1 and Tumbleweed with the openSUSE build service.
-The download repositories are here:
-
-* [Leap 42.1](http://download.opensuse.org/repositories/home%3A/rmean/openSUSE_Leap_42.1)
-* [Tumbleweed](http://download.opensuse.org/repositories/home%3A/rmean/openSUSE_Tumbleweed)
+I build packages for Debian Jessie. I plan to have a repository for that at some point.
 
 ## Contribute
 
@@ -63,7 +57,7 @@ I would appreciate any help. If you'd like to contribute to lalamachine,
 
 ## License
 
-Copyright 2015 Armin Zirkel
+Copyright 2015-2016 Armin Zirkel
 
 Lalamachine is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
