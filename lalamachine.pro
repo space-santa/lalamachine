@@ -1,12 +1,13 @@
 TEMPLATE = app
 
-QT += qml quick widgets sql concurrent multimedia
+QT += qml quick widgets sql concurrent
 
 CONFIG += C++11
 
 INCLUDEPATH += /usr/include/taglib
+INCLUDEPATH += /usr/include/vlc
 
-LIBS += -ltag
+LIBS += -ltag -lvlc
 
 SOURCES += src/main.cpp \
     src/metadataprovider.cpp \
@@ -28,7 +29,8 @@ SOURCES += src/main.cpp \
     src/track.cpp \
     src/engineloader.cpp \
     src/lalatray.cpp \
-    src/theplayer.cpp
+    src/theplayer.cpp \
+    src/theplayeventhandler.cpp
 
 RESOURCES += qml.qrc
 
@@ -55,7 +57,8 @@ HEADERS += \
     src/playlistmodel.h \
     src/track.h \
     src/lalatray.h \
-    src/theplayer.h
+    src/theplayer.h \
+    src/theplayeventhandler.h
 
 OTHER_FILES += \
     README.md \

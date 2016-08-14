@@ -21,6 +21,13 @@ Rectangle {
 
     signal seek(var pos)
 
+    function volumeUp() {
+        volume_control.volumeUp()
+    }
+    function volumeDown() {
+        volume_control.volumeDown()
+    }
+
     Item {
         id: spacer
         anchors.top: parent.top

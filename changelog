@@ -1,3 +1,11 @@
+lalamachine (2.0-1) UNRELEASED; urgency=medium
+
+  * Now using libvlc as backend for way better performance.
+  * This also fixes the seek bug.
+  * Using the mouse-wheel ober the tray icon changes the volume.
+
+ -- rmean <armin.zirkel@gmail.com>  Sun, 14 Aug 2016 19:52:19 +1000
+
 lalamachine (1.6.1-1) UNRELEASED; urgency=medium
 
   * Fixed a bug that broke play next/previous.

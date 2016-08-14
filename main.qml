@@ -391,14 +391,14 @@ ApplicationWindow {
         id: vol_up_action
         shortcut: "ctrl+up"
         tooltip: "Shortcut: " + shortcut
-        onTriggered: volume_control.volumeUp()
+        onTriggered: player_controls.volumeUp()
     }
 
     Action {
         id: vol_down_action
         shortcut: "ctrl+down"
         tooltip: "Shortcut: " + shortcut
-        onTriggered: volume_control.volumeDown()
+        onTriggered: player_controls.volumeDown()
     }
 
     Action {
@@ -439,7 +439,7 @@ ApplicationWindow {
                 playMusic.pause()
             } else {
                 if (playMusic.hasAudio()) {
-                    playMusic.play()
+                    playMusic.pause()
                 } else {
                     playlist.playNext()
                 }
@@ -464,12 +464,7 @@ ApplicationWindow {
 
     ThePlayer {
         id: playMusic
-        property int volume: master.volume * 100
-
-        onVolumeChanged: {
-            console.log("the volume is", volume)
-            setVolume(volume)
-        }
+        volume: master.volume * 100
 
         property string currentTitle
         property string currentArtist
@@ -489,7 +484,7 @@ ApplicationWindow {
         }
 
         onError: {
-            miss_dialog.text = errorString
+            //miss_dialog.text = errorString
             miss_dialog.text += "\nYou might want to delete that track"
             miss_dialog.text += "\nfrom the playlist and/or rescan you library."
             miss_dialog.open()
