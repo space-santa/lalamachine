@@ -1,3 +1,9 @@
+lalamachine (2.1-1) UNRELEASED; urgency=medium
+
+  * Fixed the mute-button.
+
+-- rmean <armin.zirkel@gmail.com>  Mon, 15 Aug 2016 06:32:31 +1000
+
 lalamachine (2.0-1) UNRELEASED; urgency=medium
 
   * Now using libvlc as backend for way better performance.
