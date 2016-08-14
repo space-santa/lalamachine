@@ -1,14 +1,18 @@
-#ifndef THEPLAYEVENTHANDLER_H
-#define THEPLAYEVENTHANDLER_H
+#pragma once
 
 #include <QObject>
 #include <libvlc.h>
 
+/*!
+ * \brief The ThePlayEventHandler class provides callback funtions for libvlc.
+ *
+ * The eventmanager of libvlc needs static callback functions. To make them emit
+ * signals created this singleton.
+ */
 class ThePlayEventHandler : public QObject
 {
     Q_OBJECT
 public:
-
     static ThePlayEventHandler *instance();
 
     static void playEventHandler(const libvlc_event_t *, void *);
@@ -27,7 +31,7 @@ signals:
     void error();
 
 private:
-    explicit ThePlayEventHandler(QObject *parent = 0);
+    explicit ThePlayEventHandler(QObject *parent = 0) : QObject(parent)
+    {
+    }
 };
-
-#endif // THEPLAYEVENTHANDLER_H

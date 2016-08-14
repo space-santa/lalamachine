@@ -36,6 +36,4 @@ void ThePlayEventHandler::errorEventHandler(const libvlc_event_t *, void *)
     emit instance()->error();
 }
 
-ThePlayEventHandler::ThePlayEventHandler(QObject *parent) : QObject(parent)
-{
-}
+
