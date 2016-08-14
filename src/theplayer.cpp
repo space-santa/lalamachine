@@ -175,14 +175,22 @@ int ThePlayer::volume() const
 
 void ThePlayer::setMuted(bool muted)
 {
+    if (muted_ == muted) {
+        return;
+    }
+
     libvlc_audio_set_mute(mp_, muted);
+    muted_ = muted;
     emit mutedChanged();
 }
 
 bool ThePlayer::muted() const
 {
-    qDebug() << libvlc_audio_get_mute(mp_);
-    return libvlc_audio_get_mute(mp_);
+    // There is an issue with using this function to determine the muted state.
+    // It appears that after muting the first time the whole thing is out of
+    // sync, most likely because muting happens async.
+    //return libvlc_audio_get_mute(mp_);
+    return muted_;
 }
 
 bool ThePlayer::loops() const
