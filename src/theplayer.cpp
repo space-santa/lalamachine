@@ -14,6 +14,10 @@ ThePlayer::ThePlayer(QObject *parent)
             this,
             &ThePlayer::playing);
     connect(ThePlayEventHandler::instance(),
+            &ThePlayEventHandler::playing,
+            this,
+            &ThePlayer::isPlayingChanged);
+    connect(ThePlayEventHandler::instance(),
             &ThePlayEventHandler::positionChanged,
             this,
             &ThePlayer::positionChanged);
@@ -22,13 +26,25 @@ ThePlayer::ThePlayer(QObject *parent)
             this,
             &ThePlayer::paused);
     connect(ThePlayEventHandler::instance(),
+            &ThePlayEventHandler::paused,
+            this,
+            &ThePlayer::isPlayingChanged);
+    connect(ThePlayEventHandler::instance(),
             &ThePlayEventHandler::stopped,
             this,
             &ThePlayer::stopped);
     connect(ThePlayEventHandler::instance(),
+            &ThePlayEventHandler::stopped,
+            this,
+            &ThePlayer::isPlayingChanged);
+    connect(ThePlayEventHandler::instance(),
             &ThePlayEventHandler::end,
             this,
             &ThePlayer::atEnd);
+    connect(ThePlayEventHandler::instance(),
+            &ThePlayEventHandler::end,
+            this,
+            &ThePlayer::isPlayingChanged);
     connect(ThePlayEventHandler::instance(),
             &ThePlayEventHandler::error,
             this,
@@ -72,7 +88,6 @@ ThePlayer::~ThePlayer()
 void ThePlayer::play()
 {
     libvlc_media_player_play(mp_);
-    emit isPlayingChanged();
 }
 
 void ThePlayer::play(QString mrl)
@@ -117,13 +132,11 @@ QUrl ThePlayer::source()
 void ThePlayer::pause()
 {
     libvlc_media_player_pause(mp_);
-    emit isPlayingChanged();
 }
 
 void ThePlayer::stop()
 {
     libvlc_media_player_stop(mp_);
-    emit isPlayingChanged();
 }
 
 void ThePlayer::onEndReached()
@@ -189,7 +202,7 @@ bool ThePlayer::muted() const
     // There is an issue with using this function to determine the muted state.
     // It appears that after muting the first time the whole thing is out of
     // sync, most likely because muting happens async.
-    //return libvlc_audio_get_mute(mp_);
+    // return libvlc_audio_get_mute(mp_);
     return muted_;
 }
 
