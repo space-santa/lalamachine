@@ -161,7 +161,7 @@ bool ThePlayer::isPlaying() const
 
 qint64 ThePlayer::duration() const
 {
-    qint64 retval;
+    qint64 retval = 0;
     libvlc_media_t *m = libvlc_media_player_get_media(mp_);
 
     if (m) {
