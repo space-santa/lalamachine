@@ -62,7 +62,9 @@ private slots:
 private:
     bool loops_{false};
     bool muted_{false};
+    int volume_{0};
 
     libvlc_instance_t *inst_;
     libvlc_media_player_t *mp_;
+    void setVlcVolume();
 };

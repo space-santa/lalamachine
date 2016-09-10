@@ -87,6 +87,10 @@ ThePlayer::~ThePlayer()
 
 void ThePlayer::play()
 {
+    // There was a bug the would cause the volume not to be set properly
+    // when a new track was starting. My best guess is that vlc has a problem
+    // setting the volume if the track isn't loaded. Or something else, idk.
+    setVlcVolume();
     libvlc_media_player_play(mp_);
 }
 
@@ -175,9 +179,15 @@ qint64 ThePlayer::position() const
     return (qint64)libvlc_media_player_get_time(mp_);
 }
 
+void ThePlayer::setVlcVolume()
+{
+    libvlc_audio_set_volume(mp_, volume_);
+}
+
 void ThePlayer::setVolume(int volume)
 {
-    libvlc_audio_set_volume(mp_, volume);
+    volume_ = volume;
+    setVlcVolume();
     emit volumeChanged();
 }
 
