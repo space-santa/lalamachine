@@ -117,9 +117,9 @@ QJsonArray Config::playlistColumns()
     return retval;
 }
 
-void Config::setLibPath(const QString &path)
+void Config::setLibPath(const QUrl &path)
 {
-    QString actualPath = QUrl(path).path();
+    QString actualPath = path.toLocalFile();
     Q_ASSERT(QDir(actualPath).exists());
     config_.insert("libPath", actualPath);
     // We want to save the file right after setting the path because we want
@@ -128,16 +128,16 @@ void Config::setLibPath(const QString &path)
     emit libPathChanged();
 }
 
-QString Config::libPath() const
+QUrl Config::libPath() const
 {
-    QString retval("");
+    QUrl retval;
     QJsonValue v = config_.value("libPath");
 
     if (v.isString()) {
-        retval = v.toString();
+        retval = QUrl(v.toString());
 
-        if (!QDir(retval).exists()) {
-            retval = "";
+        if (!QDir(retval.path()).exists()) {
+            retval.clear();
             qCritical() << "libPath doesn't exist!";
         }
     } else {

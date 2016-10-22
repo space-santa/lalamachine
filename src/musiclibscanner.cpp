@@ -74,6 +74,8 @@ void MusicLibScanner::scanLib(const QString &path)
         while (it.hasNext()) {
             line = it.next();
 
+            qDebug() << line;
+
             if (suffixCheck(line)) {
                 tmp = meta.metaData(line);
 

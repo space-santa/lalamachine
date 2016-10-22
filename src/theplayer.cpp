@@ -94,10 +94,10 @@ void ThePlayer::play()
     libvlc_media_player_play(mp_);
 }
 
-void ThePlayer::play(QString mrl)
+void ThePlayer::play(const QUrl &mrl)
 {
     libvlc_media_t *m;
-    m = libvlc_media_new_path(inst_, mrl.toStdString().c_str());
+    m = libvlc_media_new_path(inst_, mrl.toLocalFile().toStdString().c_str());
     libvlc_media_player_set_media(mp_, m);
     libvlc_media_release(m);
     emit trackChanged();

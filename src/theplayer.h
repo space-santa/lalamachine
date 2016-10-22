@@ -21,7 +21,7 @@ public:
     ~ThePlayer();
 
     Q_INVOKABLE void play();
-    Q_INVOKABLE void play(QString mrl);
+    Q_INVOKABLE void play(const QUrl &mrl);
     Q_INVOKABLE bool hasAudio();
     Q_INVOKABLE void seek(qint64 pos);
     Q_INVOKABLE QUrl source();

@@ -147,7 +147,7 @@ public:
 
     Q_INVOKABLE QString getDateAddedByMrl(const QString &mrl) const;
 
-    Q_INVOKABLE QJsonObject getMetadataForMrl(const QString &mrl) const;
+    Q_INVOKABLE QJsonObject getMetadataForMrl(const QUrl &mrl) const;
 
     static QString escapeString(QString str);
 

@@ -395,11 +395,11 @@ QString MusicLib::getDateAddedByMrl(const QString &mrl) const
     return result.value("dateAdded").toString();
 }
 
-QJsonObject MusicLib::getMetadataForMrl(const QString &mrl) const
+QJsonObject MusicLib::getMetadataForMrl(const QUrl &mrl) const
 {
     QString query("SELECT * FROM musiclib WHERE mrl='%1' OR path='%1'");
-    qDebug() << query.arg(escapeString(cleanPath(mrl)));
-    QSqlQuery result = db_.exec(query.arg(escapeString(cleanPath(mrl))));
+    qDebug() << query.arg(escapeString(cleanPath(mrl.toLocalFile())));
+    QSqlQuery result = db_.exec(query.arg(mrl.toLocalFile()));
     QJsonObject retval = queryResultToJson(result).second.first().toObject();
     return retval;
 }

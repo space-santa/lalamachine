@@ -22,6 +22,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QObject>
+#include <QUrl>
 
 class Config : public QObject
 {
@@ -30,7 +31,7 @@ class Config : public QObject
     // clang-format off
     Q_PROPERTY(double volume READ volume WRITE setVolume NOTIFY volumeChanged)
 
-    Q_PROPERTY(QString libPath
+    Q_PROPERTY(QUrl libPath
                READ libPath
                WRITE setLibPath
                NOTIFY libPathChanged)
@@ -64,8 +65,8 @@ public:
     void setPlaylistColumns(const QJsonArray &list);
     QJsonArray playlistColumns();
 
-    void setLibPath(const QString &path);
-    QString libPath() const;
+    void setLibPath(const QUrl &path);
+    QUrl libPath() const;
 
     void setLastPlaylist(const QString &name);
     QString lastPlaylist() const;

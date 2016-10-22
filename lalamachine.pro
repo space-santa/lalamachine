@@ -4,10 +4,10 @@ QT += qml quick widgets sql concurrent
 
 CONFIG += C++11
 
-INCLUDEPATH += /usr/include/taglib
-INCLUDEPATH += /usr/include/vlc
+#INCLUDEPATH += /usr/include/taglib
+#INCLUDEPATH += /usr/include/vlc
 
-LIBS += -ltag -lvlc
+#LIBS += -ltag -lvlc
 
 SOURCES += src/main.cpp \
     src/metadataprovider.cpp \
@@ -69,3 +69,27 @@ OTHER_FILES += \
 DISTFILES += \
     LICENSE \
     changelog
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../Code/taglib-1.11/build/taglib/ -ltag
+INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib
+INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/ape
+INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/asf
+INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/flac
+INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/it
+INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/mod
+INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/mp4
+INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/mpc
+INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/mpeg
+INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/ogg
+INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/riff
+INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/s3m
+INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/toolkit
+INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/trueaudio
+INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/wavpack
+INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/xm
+INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/build
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../Code/libvlc/lib/ -lvlc
+INCLUDEPATH += $$PWD/../../../../Code/libvlc/include
+INCLUDEPATH += $$PWD/../../../../Code/libvlc/include/vlc
+INCLUDEPATH += $$PWD/../../../../Code/libvlc/include/vlc/plugins

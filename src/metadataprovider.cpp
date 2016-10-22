@@ -35,10 +35,9 @@ MetaDataProvider::MetaDataProvider(QObject *parent) : QObject(parent)
 {
 }
 
-Tags MetaDataProvider::metaData(const QString &path)
+Tags MetaDataProvider::metaData(const QUrl &path)
 {
-    QString tmp = path;
-    tmp.remove("file://");
+    QString tmp = path.toLocalFile();
     TagLib::FileRef f(tmp.toUtf8().data(),
                       true,
                       TagLib::AudioProperties::Accurate);
@@ -50,8 +49,8 @@ Tags MetaDataProvider::metaData(const QString &path)
         tc.clear();
         tc.setSeconds(f.audioProperties()->length());
         return Tags(tag,
-                    path,
-                    path,
+                    tmp,
+                    tmp,
                     f.audioProperties()->length(),
                     tc.toString());
     }
@@ -59,7 +58,7 @@ Tags MetaDataProvider::metaData(const QString &path)
     return Tags();
 }
 
-QJsonObject MetaDataProvider::metaDataAsJson(const QString &path) const
+QJsonObject MetaDataProvider::metaDataAsJson(const QUrl &path) const
 {
     return metaData(path).toJson();
 }
