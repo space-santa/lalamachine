@@ -1,13 +1,12 @@
 TEMPLATE = app
 
-QT += qml quick widgets sql concurrent
+QT += qml quick widgets sql concurrent multimedia
 
 CONFIG += C++11
 
 #INCLUDEPATH += /usr/include/taglib
-#INCLUDEPATH += /usr/include/vlc
 
-#LIBS += -ltag -lvlc
+#LIBS += -ltag
 
 SOURCES += src/main.cpp \
     src/metadataprovider.cpp \
@@ -29,8 +28,7 @@ SOURCES += src/main.cpp \
     src/track.cpp \
     src/engineloader.cpp \
     src/lalatray.cpp \
-    src/theplayer.cpp \
-    src/theplayeventhandler.cpp
+    src/theplayer.cpp
 
 RESOURCES += qml.qrc
 
@@ -57,8 +55,7 @@ HEADERS += \
     src/playlistmodel.h \
     src/track.h \
     src/lalatray.h \
-    src/theplayer.h \
-    src/theplayeventhandler.h
+    src/theplayer.h
 
 OTHER_FILES += \
     README.md \
@@ -88,8 +85,3 @@ INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/trueaudio
 INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/wavpack
 INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/xm
 INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/build
-
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../Code/libvlc/lib/ -lvlc
-INCLUDEPATH += $$PWD/../../../../Code/libvlc/include
-INCLUDEPATH += $$PWD/../../../../Code/libvlc/include/vlc
-INCLUDEPATH += $$PWD/../../../../Code/libvlc/include/vlc/plugins

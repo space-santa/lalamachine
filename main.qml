@@ -439,7 +439,7 @@ ApplicationWindow {
                 playMusic.pause()
             } else {
                 if (playMusic.hasAudio()) {
-                    playMusic.pause()
+                    playMusic.play()
                 } else {
                     playlist.playNext()
                 }
@@ -464,7 +464,12 @@ ApplicationWindow {
 
     ThePlayer {
         id: playMusic
-        volume: master.volume * 100
+        property int volume: master.volume * 100
+
+        onVolumeChanged: {
+            console.log("the volume is", volume)
+            setVolume(volume)
+        }
 
         property string currentTitle
         property string currentArtist
@@ -484,7 +489,7 @@ ApplicationWindow {
         }
 
         onError: {
-            //miss_dialog.text = errorString
+            miss_dialog.text = errorString
             miss_dialog.text += "\nYou might want to delete that track"
             miss_dialog.text += "\nfrom the playlist and/or rescan you library."
             miss_dialog.open()

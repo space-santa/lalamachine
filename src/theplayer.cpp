@@ -1,153 +1,78 @@
 #include "theplayer.h"
 
-#include "theplayeventhandler.h"
-
-#include <QDebug>
-
-ThePlayer::ThePlayer(QObject *parent)
-    : QObject(parent),
-      inst_(libvlc_new(0, NULL)),
-      mp_(libvlc_media_player_new(inst_))
+ThePlayer::ThePlayer(QObject *parent) : QMediaPlayer(parent)
 {
-    connect(ThePlayEventHandler::instance(),
-            &ThePlayEventHandler::playing,
+    connect(this,
+            &QMediaPlayer::stateChanged,
             this,
-            &ThePlayer::playing);
-    connect(ThePlayEventHandler::instance(),
-            &ThePlayEventHandler::playing,
-            this,
-            &ThePlayer::isPlayingChanged);
-    connect(ThePlayEventHandler::instance(),
-            &ThePlayEventHandler::positionChanged,
-            this,
-            &ThePlayer::positionChanged);
-    connect(ThePlayEventHandler::instance(),
-            &ThePlayEventHandler::paused,
-            this,
-            &ThePlayer::paused);
-    connect(ThePlayEventHandler::instance(),
-            &ThePlayEventHandler::paused,
-            this,
-            &ThePlayer::isPlayingChanged);
-    connect(ThePlayEventHandler::instance(),
-            &ThePlayEventHandler::stopped,
-            this,
-            &ThePlayer::stopped);
-    connect(ThePlayEventHandler::instance(),
-            &ThePlayEventHandler::stopped,
-            this,
-            &ThePlayer::isPlayingChanged);
-    connect(ThePlayEventHandler::instance(),
-            &ThePlayEventHandler::end,
-            this,
-            &ThePlayer::atEnd);
-    connect(ThePlayEventHandler::instance(),
-            &ThePlayEventHandler::end,
-            this,
-            &ThePlayer::isPlayingChanged);
-    connect(ThePlayEventHandler::instance(),
-            &ThePlayEventHandler::error,
-            this,
-            &ThePlayer::error);
-
-    libvlc_event_manager_t *evt = libvlc_media_player_event_manager(mp_);
-    libvlc_event_attach(evt,
-                        libvlc_MediaPlayerPlaying,
-                        &ThePlayEventHandler::playEventHandler,
-                        nullptr);
-    libvlc_event_attach(evt,
-                        libvlc_MediaPlayerPositionChanged,
-                        &ThePlayEventHandler::positionEventHandler,
-                        nullptr);
-    libvlc_event_attach(evt,
-                        libvlc_MediaPlayerPaused,
-                        &ThePlayEventHandler::pauseEventHandler,
-                        nullptr);
-    libvlc_event_attach(evt,
-                        libvlc_MediaPlayerStopped,
-                        &ThePlayEventHandler::stopEventHandler,
-                        nullptr);
-    libvlc_event_attach(evt,
-                        libvlc_MediaPlayerEndReached,
-                        &ThePlayEventHandler::endEventHandler,
-                        nullptr);
-    libvlc_event_attach(evt,
-                        libvlc_MediaPlayerEncounteredError,
-                        &ThePlayEventHandler::errorEventHandler,
-                        nullptr);
-
-    connect(this, &ThePlayer::atEnd, this, &ThePlayer::onEndReached);
-}
-
-ThePlayer::~ThePlayer()
-{
-    libvlc_media_player_release(mp_);
-    libvlc_release(inst_);
+            &ThePlayer::onStateChanged);
+    connect(this, &ThePlayer::stopped, this, &ThePlayer::onStopped);
 }
 
 void ThePlayer::play()
 {
-    // There was a bug the would cause the volume not to be set properly
-    // when a new track was starting. My best guess is that vlc has a problem
-    // setting the volume if the track isn't loaded. Or something else, idk.
-    setVlcVolume();
-    libvlc_media_player_play(mp_);
+    QMediaPlayer::play();
 }
 
 void ThePlayer::play(const QUrl &mrl)
 {
-    libvlc_media_t *m;
-    m = libvlc_media_new_path(inst_, mrl.toLocalFile().toStdString().c_str());
-    libvlc_media_player_set_media(mp_, m);
-    libvlc_media_release(m);
-    emit trackChanged();
+    setMedia(QMediaContent(mrl));
     play();
 }
 
 bool ThePlayer::hasAudio()
 {
-    bool retval = false;
-    libvlc_media_t *m = libvlc_media_player_get_media(mp_);
-
-    if (m) {
-        retval = true;
-    }
-
-    libvlc_media_release(m);
-    return retval;
+    return !(mediaStatus() == QMediaPlayer::NoMedia
+             || mediaStatus() == QMediaPlayer::UnknownMediaStatus
+             || mediaStatus() == QMediaPlayer::InvalidMedia);
 }
 
 void ThePlayer::seek(qint64 pos)
 {
-    libvlc_media_player_set_time(mp_, pos);
+    qDebug() << "pre set we are now at" << position();
+    qDebug() << "ThePlayer::seek(" << pos << ")" << isSeekable();
+    setPosition(pos);
+    qDebug() << "we are now at" << position() << state() << mediaStatus()
+             << isAudioAvailable();
 }
 
 QUrl ThePlayer::source()
 {
-    QUrl retval;
-    libvlc_media_t *m = libvlc_media_player_get_media(mp_);
-    if (m) {
-        retval = QUrl(QString(libvlc_media_get_mrl(m)));
+    return currentMedia().canonicalUrl();
+}
+
+void ThePlayer::onStateChanged(QMediaPlayer::State state)
+{
+    setIsPlaying(false);
+
+    switch (state) {
+        case QMediaPlayer::StoppedState:
+            qDebug() << "--STOPPED--";
+            emit stopped();
+            break;
+        case QMediaPlayer::PlayingState:
+            qDebug() << "--PLAYING--";
+            setIsPlaying(true);
+            emit playing();
+            break;
+        case QMediaPlayer::PausedState:
+            qDebug() << "--PAUSED--";
+            emit paused();
+            break;
+        default:
+            qWarning() << "This is not supposed to happen";
     }
-    libvlc_media_release(m);
-    return retval;
 }
 
-void ThePlayer::pause()
+void ThePlayer::onStopped()
 {
-    libvlc_media_player_pause(mp_);
-}
+    // We only do something if it stoppes because it is at the end of the track.
+    if (position() < duration()) {
+        return;
+    }
 
-void ThePlayer::stop()
-{
-    libvlc_media_player_stop(mp_);
-}
-
-void ThePlayer::onEndReached()
-{
     qDebug() << "onStopped, loops_ =" << loops_;
     if (loops_) {
-        stop();
         play();
     } else {
         emit playNext();
@@ -156,64 +81,13 @@ void ThePlayer::onEndReached()
 
 bool ThePlayer::isPlaying() const
 {
-    return libvlc_media_player_is_playing(mp_) == 1;
+    return isPlaying_;
 }
 
-qint64 ThePlayer::duration() const
+void ThePlayer::setIsPlaying(bool isPlaying)
 {
-    qint64 retval = 0;
-    libvlc_media_t *m = libvlc_media_player_get_media(mp_);
-
-    if (m) {
-        // If the media is not parsed, there will be no duration.
-        libvlc_media_parse(m);
-        retval = (qint64)libvlc_media_get_duration(m);
-    }
-
-    libvlc_media_release(m);
-    return retval;
-}
-
-qint64 ThePlayer::position() const
-{
-    return (qint64)libvlc_media_player_get_time(mp_);
-}
-
-void ThePlayer::setVlcVolume()
-{
-    libvlc_audio_set_volume(mp_, volume_);
-}
-
-void ThePlayer::setVolume(int volume)
-{
-    volume_ = volume;
-    setVlcVolume();
-    emit volumeChanged();
-}
-
-int ThePlayer::volume() const
-{
-    return libvlc_audio_get_volume(mp_);
-}
-
-void ThePlayer::setMuted(bool muted)
-{
-    if (muted_ == muted) {
-        return;
-    }
-
-    libvlc_audio_set_mute(mp_, muted);
-    muted_ = muted;
-    emit mutedChanged();
-}
-
-bool ThePlayer::muted() const
-{
-    // There is an issue with using this function to determine the muted state.
-    // It appears that after muting the first time the whole thing is out of
-    // sync, most likely because muting happens async.
-    // return libvlc_audio_get_mute(mp_);
-    return muted_;
+    isPlaying_ = isPlaying;
+    emit isPlayingChanged();
 }
 
 bool ThePlayer::loops() const

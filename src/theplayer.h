@@ -1,46 +1,30 @@
 #pragma once
 
+#include <QMediaPlayer>
 #include <QObject>
 #include <QUrl>
 
-#include <vlc.h>
-
-class ThePlayer : public QObject
+class ThePlayer : public QMediaPlayer
 {
     Q_OBJECT
 
     Q_PROPERTY(bool loops READ loops WRITE setLoops NOTIFY loopsChanged)
-    Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChanged)
-    Q_PROPERTY(qint64 duration READ duration NOTIFY trackChanged)
-    Q_PROPERTY(int volume READ volume WRITE setVolume NOTIFY volumeChanged)
-    Q_PROPERTY(qint64 position READ position NOTIFY positionChanged)
-    Q_PROPERTY(bool muted READ muted WRITE setMuted NOTIFY mutedChanged)
-
+    Q_PROPERTY(bool isPlaying READ isPlaying WRITE setIsPlaying NOTIFY
+                   isPlayingChanged)
 public:
     explicit ThePlayer(QObject *parent = 0);
-    ~ThePlayer();
 
     Q_INVOKABLE void play();
     Q_INVOKABLE void play(const QUrl &mrl);
     Q_INVOKABLE bool hasAudio();
     Q_INVOKABLE void seek(qint64 pos);
     Q_INVOKABLE QUrl source();
-    Q_INVOKABLE void pause();
-    Q_INVOKABLE void stop();
 
     bool loops() const;
     void setLoops(bool loops);
 
     bool isPlaying() const;
-
-    qint64 duration() const;
-    qint64 position() const;
-
-    void setVolume(int volume);
-    int volume() const;
-
-    void setMuted(bool muted);
-    bool muted() const;
+    void setIsPlaying(bool isPlaying);
 
 signals:
     void stopped();
@@ -49,22 +33,12 @@ signals:
     void loopsChanged();
     void isPlayingChanged();
     void playNext();
-    void trackChanged();
-    void volumeChanged();
-    void positionChanged();
-    void atEnd();
-    void error();
-    void mutedChanged();
 
 private slots:
-    void onEndReached();
+    void onStateChanged(QMediaPlayer::State state);
+    void onStopped();
 
 private:
     bool loops_{false};
-    bool muted_{false};
-    int volume_{0};
-
-    libvlc_instance_t *inst_;
-    libvlc_media_player_t *mp_;
-    void setVlcVolume();
+    bool isPlaying_{false};
 };
