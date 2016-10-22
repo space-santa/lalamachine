@@ -77,7 +77,7 @@ void MusicLibScanner::scanLib(const QString &path)
             qDebug() << line;
 
             if (suffixCheck(line)) {
-                tmp = meta.metaData(line);
+                tmp = meta.metaData(QUrl::fromLocalFile(line));
 
                 // This is to mitigate another problem. We assume that all files
                 // with the correct sufix are good. Problem is that they might
@@ -134,6 +134,7 @@ QString MusicLibScanner::getTrackQuery(Tags track, const QString date)
                      .arg(MusicLib::escapeString(track.year_))
                      .arg(MusicLib::escapeString(date)));
 
+    qDebug() << query;
     return query;
 }
 

@@ -395,6 +395,11 @@ QString MusicLib::getDateAddedByMrl(const QString &mrl) const
     return result.value("dateAdded").toString();
 }
 
+QJsonObject MusicLib::getMetadataForMrl(const QString &mrl) const
+{
+    return getMetadataForMrl(QUrl::fromLocalFile(mrl));
+}
+
 QJsonObject MusicLib::getMetadataForMrl(const QUrl &mrl) const
 {
     QString query("SELECT * FROM musiclib WHERE mrl='%1' OR path='%1'");
