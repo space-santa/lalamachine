@@ -37,7 +37,7 @@ CdWriter::~CdWriter()
 bool CdWriter::hasK3b() const
 {
     QString result = sys_->exec("which k3b");
-    return !result.contains("no k3b");
+    return !result.contains("no k3b") && !result.isEmpty();
 }
 
 bool CdWriter::burnList(const QStringList &pathList) const

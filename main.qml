@@ -227,6 +227,11 @@ ApplicationWindow {
                 text: "Burn CD"
                 iconSource: "qrc:/images/images/burn.png"
                 onTriggered: burnList()
+
+                Component.onCompleted: {
+                    enabled = burn.hasK3b()
+                    visible = enabled
+                }
             }
             MenuItem {
                 text: "Export Files"
@@ -475,7 +480,7 @@ ApplicationWindow {
         property string currentArtist
 
         onPlayNext: {
-                    playlist.playNext()
+            playlist.playNext()
         }
 
         loops: player_controls.repeatOne
