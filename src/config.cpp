@@ -104,7 +104,7 @@ QJsonArray Config::playlistColumns()
         }
     }
 
-    if (not hasDate) {
+    if (!hasDate) {
         QJsonObject o;
         o.insert("key", "dateAdded");
         o.insert("value", "true");

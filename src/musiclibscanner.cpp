@@ -49,7 +49,7 @@ void MusicLibScanner::scanLib(const QString &path)
     }
 
     ;
-    if (not scanDb_.open()) {
+    if (!scanDb_.open()) {
         qDebug() << "Can't open dbase..." << scanDb_.lastError().type();
         return;
     }
@@ -82,7 +82,7 @@ void MusicLibScanner::scanLib(const QString &path)
                 // This is to mitigate another problem. We assume that all files
                 // with the correct sufix are good. Problem is that they might
                 // not be.
-                if (not tmp.isValid()) {
+                if (!tmp.isValid()) {
                     continue;
                 }
 
