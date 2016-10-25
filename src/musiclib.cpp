@@ -559,7 +559,7 @@ void MusicLib::updateTable()
 {
     QStringList tables = db_.tables();
 
-    if (not tables.contains("musiclib")) {
+    if (!tables.contains("musiclib")) {
         ensureAllTables();
         return;
     }
@@ -645,7 +645,7 @@ void MusicLib::rescan()
 void MusicLib::restoreMetaData()
 {
     QStringList tables = db_.tables();
-    if (not tables.contains("musiclib") or not tables.contains("tmplib")) {
+    if (!tables.contains("musiclib") || !tables.contains("tmplib")) {
         return;
     }
 
