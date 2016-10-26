@@ -215,20 +215,20 @@ void MusicLib::setDisplayLib()
 
     lastDisplayLibQuery_ = query;
 
-    QFuture<QSqlQuery> future
+    QFuture<QPair<int, QJsonArray>> future
         = QtConcurrent::run(this, &MusicLib::runSetDisplayQuery, query);
     watcher_.setFuture(future);
 }
 
-QSqlQuery MusicLib::runSetDisplayQuery(const QString &query)
+QPair<int, QJsonArray> MusicLib::runSetDisplayQuery(const QString &query)
 {
     QMutexLocker locker(mutex_.data());
-    return db_.exec(query);
+    return queryResultToJson(db_.exec(query));
 }
 
 void MusicLib::onDisplayFutureFinished()
 {
-    QPair<int, QJsonArray> tmp = queryResultToJson(watcher_.result());
+    QPair<int, QJsonArray> tmp = watcher_.result();
     displayLib_ = tmp.second;
     emit displayLibChanged();
     totalLength_ = tmp.first;
