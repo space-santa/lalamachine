@@ -2,7 +2,7 @@ TEMPLATE = app
 
 QT += qml quick widgets sql concurrent multimedia
 
-CONFIG += C++11
+CONFIG += C++11 # console
 
 SOURCES += src/main.cpp \
     src/metadataprovider.cpp \
