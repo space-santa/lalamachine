@@ -382,7 +382,7 @@ QJsonArray MusicLib::getAlbumTracks(const QString &album)
     QString query("SELECT * FROM musiclib WHERE album = '%1' ORDER BY track");
 
     QMutexLocker locker(mutex_.data());
-    QSqlQuery result = db_.exec(query.arg(album));
+    QSqlQuery result = db_.exec(query.arg(escapeString(album)));
 
     return queryResultToJson(result).second;
 }
@@ -403,9 +403,11 @@ QJsonObject MusicLib::getMetadataForMrl(const QString &mrl) const
 QJsonObject MusicLib::getMetadataForMrl(const QUrl &mrl) const
 {
     QString query("SELECT * FROM musiclib WHERE mrl='%1' OR path='%1'");
-    qDebug() << query.arg(escapeString(cleanPath(mrl.toLocalFile())));
-    QSqlQuery result = db_.exec(query.arg(mrl.toLocalFile()));
+    query = query.arg(escapeString(cleanPath(mrl.toLocalFile())));
+    qDebug() << query;
+    QSqlQuery result = db_.exec(query);
     QJsonObject retval = queryResultToJson(result).second.first().toObject();
+    qDebug() << retval;
     return retval;
 }
 
