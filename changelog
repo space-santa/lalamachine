@@ -1,3 +1,10 @@
+lalamachine (3.0-1) UNRELEASED; urgency=medium
+
+  * Ported lalamachine to Windows.
+  * Fixed a couple of utf8 and other crossplattform issues.
+
+ -- rmean <armin.zirkel@gmail.com>  Fri, 13 Jan 2017 15:41:11 +1100
+
 lalamachine (2.2-1) UNRELEASED; urgency=medium
 
   * Fixed the sound-off-when-new-track-starts bug.
