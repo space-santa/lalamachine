@@ -49,7 +49,7 @@ void MusicLibScanner::scanLib(const QString &path)
     }
 
     ;
-    if (not scanDb_.open()) {
+    if (!scanDb_.open()) {
         qDebug() << "Can't open dbase..." << scanDb_.lastError().type();
         return;
     }
@@ -74,13 +74,15 @@ void MusicLibScanner::scanLib(const QString &path)
         while (it.hasNext()) {
             line = it.next();
 
+            qDebug() << line;
+
             if (suffixCheck(line)) {
-                tmp = meta.metaData(line);
+                tmp = meta.metaData(QUrl::fromLocalFile(line));
 
                 // This is to mitigate another problem. We assume that all files
                 // with the correct sufix are good. Problem is that they might
                 // not be.
-                if (not tmp.isValid()) {
+                if (!tmp.isValid()) {
                     continue;
                 }
 
@@ -132,6 +134,7 @@ QString MusicLibScanner::getTrackQuery(Tags track, const QString date)
                      .arg(MusicLib::escapeString(track.year_))
                      .arg(MusicLib::escapeString(date)));
 
+    qDebug() << query;
     return query;
 }
 

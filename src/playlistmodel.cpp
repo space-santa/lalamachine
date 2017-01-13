@@ -40,7 +40,7 @@ Qt::ItemFlags PlaylistModel::flags(const QModelIndex &index) const
 
 QVariant PlaylistModel::data(const QModelIndex &index, int role) const
 {
-    if (index.row() < 0 or index.row() >= rowCount()) {
+    if (index.row() < 0 || index.row() >= rowCount()) {
         qDebug() << index.row();
         return QVariant();
     }
@@ -117,11 +117,11 @@ void PlaylistModel::move(int from, int to)
         return;
     }
 
-    if (from < 0 or from > rowCount()) {
+    if (from < 0 || from > rowCount()) {
         return;
     }
 
-    if (to < 0 or to > rowCount()) {
+    if (to < 0 || to > rowCount()) {
         return;
     }
 
@@ -142,7 +142,7 @@ void PlaylistModel::remove(int row)
 
 QJsonObject PlaylistModel::get(int row) const
 {
-    if (row < 0 or row >= rowCount()) {
+    if (row < 0 || row >= rowCount()) {
         return QJsonObject();
     }
 

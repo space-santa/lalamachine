@@ -74,30 +74,24 @@ void M3uInOut::writePlaylist(const QString &name, const QJsonArray &json) const
 QJsonArray M3uInOut::readPlaylist(const QString &name) const
 {
     QFile file(m3uPath(name));
-    QJsonArray retval;
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qWarning() << "Couldn't read playlist" << name;
+        return QJsonArray();
     }
 
-    QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
+    // I ran into an interesting bug on Windows. A playlist had a track
+    // with Umlauts. Lalamachine displays the track properly. It writes
+    // the track properly into the playlist file.
+    // But when reading the file,
+    // QJsonDocument::fromJson(file.readAll(), &error)
+    // tells me that it is not a UTF8 string. QTextStream saves the day.
+    QTextStream in(&file);
+    QJsonParseError error;
+    QJsonDocument jd = QJsonDocument::fromJson(in.readAll().toUtf8(), &error);
+    qDebug() << "readPlaylist QJsonParseError:" << error.errorString();
 
-    if (doc.isArray()) {
-        retval = doc.array();
-    } else {
-        file.close();
-        file.open(QIODevice::ReadOnly | QIODevice::Text);
-
-        QTextStream in(&file);
-
-        retval.append("OLDFORMAT");
-
-        while (!in.atEnd()) {
-            retval.append(in.readLine());
-        }
-    }
-
-    return retval;
+    return jd.array();
 }
 
 QStringList M3uInOut::getPlaylistNames() const

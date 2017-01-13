@@ -30,7 +30,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 AutoPlaylist::AutoPlaylist(const QString &name, QObject *parent)
     : QObject(parent), name_(name)
 {
-    Q_ASSERT(not name_.isEmpty());
+    Q_ASSERT(!name_.isEmpty());
     db_ = QSqlDatabase::addDatabase("QSQLITE", name_);
     db_.setDatabaseName(Config::MUSICLIBDB);
     load();

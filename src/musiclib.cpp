@@ -215,20 +215,20 @@ void MusicLib::setDisplayLib()
 
     lastDisplayLibQuery_ = query;
 
-    QFuture<QSqlQuery> future
+    QFuture<QPair<int, QJsonArray>> future
         = QtConcurrent::run(this, &MusicLib::runSetDisplayQuery, query);
     watcher_.setFuture(future);
 }
 
-QSqlQuery MusicLib::runSetDisplayQuery(const QString &query)
+QPair<int, QJsonArray> MusicLib::runSetDisplayQuery(const QString &query)
 {
     QMutexLocker locker(mutex_.data());
-    return db_.exec(query);
+    return queryResultToJson(db_.exec(query));
 }
 
 void MusicLib::onDisplayFutureFinished()
 {
-    QPair<int, QJsonArray> tmp = queryResultToJson(watcher_.result());
+    QPair<int, QJsonArray> tmp = watcher_.result();
     displayLib_ = tmp.second;
     emit displayLibChanged();
     totalLength_ = tmp.first;
@@ -382,7 +382,7 @@ QJsonArray MusicLib::getAlbumTracks(const QString &album)
     QString query("SELECT * FROM musiclib WHERE album = '%1' ORDER BY track");
 
     QMutexLocker locker(mutex_.data());
-    QSqlQuery result = db_.exec(query.arg(album));
+    QSqlQuery result = db_.exec(query.arg(escapeString(album)));
 
     return queryResultToJson(result).second;
 }
@@ -397,10 +397,17 @@ QString MusicLib::getDateAddedByMrl(const QString &mrl) const
 
 QJsonObject MusicLib::getMetadataForMrl(const QString &mrl) const
 {
+    return getMetadataForMrl(QUrl::fromLocalFile(mrl));
+}
+
+QJsonObject MusicLib::getMetadataForMrl(const QUrl &mrl) const
+{
     QString query("SELECT * FROM musiclib WHERE mrl='%1' OR path='%1'");
-    qDebug() << query.arg(escapeString(cleanPath(mrl)));
-    QSqlQuery result = db_.exec(query.arg(escapeString(cleanPath(mrl))));
+    query = query.arg(escapeString(cleanPath(mrl.toLocalFile())));
+    qDebug() << query;
+    QSqlQuery result = db_.exec(query);
     QJsonObject retval = queryResultToJson(result).second.first().toObject();
+    qDebug() << retval;
     return retval;
 }
 
@@ -554,7 +561,7 @@ void MusicLib::updateTable()
 {
     QStringList tables = db_.tables();
 
-    if (not tables.contains("musiclib")) {
+    if (!tables.contains("musiclib")) {
         ensureAllTables();
         return;
     }
@@ -640,7 +647,7 @@ void MusicLib::rescan()
 void MusicLib::restoreMetaData()
 {
     QStringList tables = db_.tables();
-    if (not tables.contains("musiclib") or not tables.contains("tmplib")) {
+    if (!tables.contains("musiclib") || !tables.contains("tmplib")) {
         return;
     }
 

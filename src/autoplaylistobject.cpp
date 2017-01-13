@@ -79,7 +79,7 @@ void AutoPlaylistObject::fromJson(const QJsonObject &obj)
 QString AutoPlaylistObject::toQuery(bool isFirst) const
 {
     QString query(" ");
-    if (not isFirst) {
+    if (!isFirst) {
         query.append(LalaTypes::ANDOR_MAP.value(andor()) + " ");
     }
     query.append(LalaTypes::TAG_MAP.value(tag()) + " ");

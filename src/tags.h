@@ -1,5 +1,4 @@
-#ifndef TAGS_H
-#define TAGS_H
+#pragma once
 
 #include <QJsonObject>
 #include <QString>
@@ -34,5 +33,3 @@ public:
 
     bool isValid();
 };
-
-#endif  // TAGS_H

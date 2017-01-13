@@ -148,6 +148,7 @@ public:
     Q_INVOKABLE QString getDateAddedByMrl(const QString &mrl) const;
 
     Q_INVOKABLE QJsonObject getMetadataForMrl(const QString &mrl) const;
+    Q_INVOKABLE QJsonObject getMetadataForMrl(const QUrl &mrl) const;
 
     static QString escapeString(QString str);
 
@@ -209,7 +210,7 @@ private:
     bool appStart_;
     QString lastDisplayLibQuery_;
 
-    QFutureWatcher<QSqlQuery> watcher_;
+    QFutureWatcher<QPair<int, QJsonArray> > watcher_;
 
     bool checkVal(const QString &check, const QString &val) const;
 
@@ -223,7 +224,7 @@ private:
     void ensureAllTables();
     void clearMusicLib();
 
-    QSqlQuery runSetDisplayQuery(const QString &query);
+    QPair<int, QJsonArray> runSetDisplayQuery(const QString &query);
 
     void updateTable();
 

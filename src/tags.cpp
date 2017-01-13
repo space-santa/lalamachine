@@ -50,5 +50,5 @@ QJsonObject Tags::toJson()
 // a track should have a name.
 bool Tags::isValid()
 {
-    return length_.toInt() > 0 and not title_.isEmpty();
+    return length_.toInt() > 0 && !title_.isEmpty();
 }

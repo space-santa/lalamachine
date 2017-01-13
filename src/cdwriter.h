@@ -36,7 +36,7 @@ public:
     CdWriter();
     ~CdWriter();
 
-    bool hasK3b() const;
+    Q_INVOKABLE bool hasK3b() const;
     Q_INVOKABLE bool burnList(const QStringList &pathList) const;
 
 private:

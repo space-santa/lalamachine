@@ -48,15 +48,21 @@ FileExporter::~FileExporter()
 
 void FileExporter::exportPlaylist(QString destdir, const QStringList &paths)
 {
+    qDebug() << destdir;
     // Firstly, make it a proper path, not a url.
-    destdir.replace("file://", "");
+    //destdir.replace("file://", "");
+    QUrl url(destdir);
+
+    QString tmp = url.toLocalFile();
+
+    qDebug() << tmp;
 
     // If the directory exists, create a new one. Else the content is mixed.
-    if (QFileInfo::exists(destdir)) {
-        destdir.append("-"
-                       + QDateTime::currentDateTime().toString(Qt::ISODate));
+    if (QFileInfo::exists(tmp)) {
+        // Can't use ISO date format here because Windows doesn't allow : ffs.
+        tmp.append("-" + QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss"));
     }
-    emit go(destdir, paths);
+    emit go(tmp, paths);
     emit started();
 }
 
@@ -96,8 +102,9 @@ void FileExportWorker::doExport(QString destdir, const QStringList &paths)
         QString newpath(destdir);
         newpath.append("/");
         newpath.append(newFileName(i, paths.count(), paths[i]));
-        QString source = paths[i];
-        QFile::copy(source.replace("file://", ""), newpath);
+        QString source(paths[i]);
+        qDebug() << source << newpath;
+        QFile::copy(source, newpath);
 
         // emitting i + 1 for two reasons.
         // 1. to make it work, paths.count is 1 bigger than the last i

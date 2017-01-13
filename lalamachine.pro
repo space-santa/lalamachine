@@ -1,13 +1,8 @@
 TEMPLATE = app
 
-QT += qml quick widgets sql concurrent
+QT += qml quick widgets sql concurrent multimedia
 
-CONFIG += C++11
-
-INCLUDEPATH += /usr/include/taglib
-INCLUDEPATH += /usr/include/vlc
-
-LIBS += -ltag -lvlc
+CONFIG += C++11 # console
 
 SOURCES += src/main.cpp \
     src/metadataprovider.cpp \
@@ -29,8 +24,7 @@ SOURCES += src/main.cpp \
     src/track.cpp \
     src/engineloader.cpp \
     src/lalatray.cpp \
-    src/theplayer.cpp \
-    src/theplayeventhandler.cpp
+    src/theplayer.cpp
 
 RESOURCES += qml.qrc
 
@@ -57,8 +51,7 @@ HEADERS += \
     src/playlistmodel.h \
     src/track.h \
     src/lalatray.h \
-    src/theplayer.h \
-    src/theplayeventhandler.h
+    src/theplayer.h
 
 OTHER_FILES += \
     README.md \
@@ -69,3 +62,30 @@ OTHER_FILES += \
 DISTFILES += \
     LICENSE \
     changelog
+
+unix: {
+    INCLUDEPATH += /usr/include/taglib
+    LIBS += -ltag
+}
+
+win32-g++: {
+    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib
+    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/ape
+    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/asf
+    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/flac
+    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/it
+    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/mod
+    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/mp4
+    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/mpc
+    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/mpeg
+    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/ogg
+    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/riff
+    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/s3m
+    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/toolkit
+    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/trueaudio
+    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/wavpack
+    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/xm
+    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/build
+    CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../Code/taglib-1.11-mingw/ -ltag
+    CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../../../Code/taglib-1.11-mingw/libtag.dll
+}
