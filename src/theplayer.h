@@ -15,7 +15,7 @@ public:
     explicit ThePlayer(QObject *parent = 0);
 
     Q_INVOKABLE void play();
-    Q_INVOKABLE void play(const QUrl &mrl);
+    Q_INVOKABLE void play(const QString &mrl);
     Q_INVOKABLE bool hasAudio();
     Q_INVOKABLE void seek(qint64 pos);
     Q_INVOKABLE QUrl source();
