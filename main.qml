@@ -18,7 +18,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.3
 import QtQuick.Controls 1.2
-import QtMultimedia 5.0
 import QtQuick.Dialogs 1.2
 import QtQuick.Window 2.2
 import Qt.labs.settings 1.0
