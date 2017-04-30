@@ -57,7 +57,7 @@ I would appreciate any help. If you'd like to contribute to lalamachine,
 
 ## License
 
-Copyright 2015-2016 Armin Zirkel
+Copyright 2015-2017 Claus Zirkel
 
 Lalamachine is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
