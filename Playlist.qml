@@ -657,15 +657,5 @@ Rectangle {
                 playlist_view.initialRow = row
             }
         }
-
-        itemDelegate: ItemDelegate {
-            Text {
-                color: "white"
-                elide: styleData.elideMode
-                text: styleData.value ? styleData.value : ""
-                font.pointSize: 10
-                font.family: "Liberation Sans"
-            }
-        }
     }
 }

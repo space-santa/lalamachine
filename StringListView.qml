@@ -137,6 +137,7 @@ Rectangle {
             }
 
             onClicked: {
+                forceActiveFocus()
                 currentRow = row
             }
 
@@ -145,16 +146,6 @@ Rectangle {
                 onRightClick: {
                     container.rightClick()
                     list_view.currentRow = row
-                }
-            }
-
-            itemDelegate: ItemDelegate {
-                Text {
-                    color: "white"
-                    elide: styleData.elideMode
-                    text: styleData.value
-                    font.family: "Liberation Sans"
-                    font.pointSize: 10
                 }
             }
         }
