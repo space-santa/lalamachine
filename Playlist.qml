@@ -216,7 +216,7 @@ Rectangle {
         if (!isLibrary && listname === "") {
             return
         }
-
+        // This is relevant if this is the library view. The library can create a new list/add to the misc playlist.
         if (listname === "") {
             mainPlaylist.createNewList()
             listname = miscPlaylistName
