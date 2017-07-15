@@ -3,6 +3,7 @@ TEMPLATE = app
 QT += qml quick widgets sql concurrent multimedia
 
 CONFIG += C++11 # console
+QMAKE_CXXFLAGS += -Werror
 
 SOURCES += src/main.cpp \
     src/metadataprovider.cpp \
