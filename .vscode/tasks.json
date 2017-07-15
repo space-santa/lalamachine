@@ -30,7 +30,7 @@
         },
         {
             "taskName": "make fresh debug",
-            "command": "make clean && qmake-qt5 CONFIG+=debug ${workspaceRoot}/lalamachine.pro && make",
+            "command": "make clean && qmake-qt5 CONFIG+=debug ${workspaceRoot}/lalamachine.pro && make -j3",
             "type": "shell",
             "group": "build",
             "problemMatcher": [
@@ -39,7 +39,7 @@
         },
         {
             "taskName": "make fresh",
-            "command": "make clean && qmake-qt5 ${workspaceRoot}/lalamachine.pro && make",
+            "command": "make clean && qmake-qt5 ${workspaceRoot}/lalamachine.pro && make -j3",
             "type": "shell",
             "group": "build",
             "problemMatcher": [
@@ -48,7 +48,7 @@
         },
         {
             "taskName": "make",
-            "command": "make",
+            "command": "make -j3",
             "type": "shell",
             "group": {
                 "kind": "build",
