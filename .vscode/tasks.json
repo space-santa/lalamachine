@@ -1,0 +1,62 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "taskName": "runLala",
+            "command": "${workspaceRoot}/lalamachine",
+            "type": "shell",
+            "problemMatcher": [
+                "$lessCompile"
+            ]
+        },
+        {
+            "taskName": "qmake-debug",
+            "command": "qmake-qt5 CONFIG+=debug ${workspaceRoot}/lalamachine.pro",
+            "group": "build",
+            "type": "shell"
+        },
+        {
+            "taskName": "qmake",
+            "command": "qmake-qt5 ${workspaceRoot}/lalamachine.pro",
+            "group": "build",
+            "type": "shell"
+        },
+        {
+            "taskName": "make clean",
+            "command": "make clean",
+            "group": "build"
+        },
+        {
+            "taskName": "make fresh debug",
+            "command": "make clean && qmake-qt5 CONFIG+=debug ${workspaceRoot}/lalamachine.pro && make",
+            "type": "shell",
+            "group": "build",
+            "problemMatcher": [
+                "$lessCompile"
+            ]
+        },
+        {
+            "taskName": "make fresh",
+            "command": "make clean && qmake-qt5 ${workspaceRoot}/lalamachine.pro && make",
+            "type": "shell",
+            "group": "build",
+            "problemMatcher": [
+                "$lessCompile"
+            ]
+        },
+        {
+            "taskName": "make",
+            "command": "make",
+            "type": "shell",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$lessCompile"
+            ]
+        }
+    ]
+}
