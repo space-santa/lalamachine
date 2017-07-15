@@ -19,13 +19,7 @@ bool ThePlayer::hasAudio() {
            mediaStatus() == QMediaPlayer::InvalidMedia);
 }
 
-void ThePlayer::seek(qint64 pos) {
-  qDebug() << "pre set we are now at" << position();
-  qDebug() << "ThePlayer::seek(" << pos << ")" << isSeekable();
-  setPosition(pos);
-  qDebug() << "we are now at" << position() << state() << mediaStatus()
-           << isAudioAvailable();
-}
+void ThePlayer::seek(qint64 pos) { setPosition(pos); }
 
 QUrl ThePlayer::source() { return currentMedia().canonicalUrl(); }
 
