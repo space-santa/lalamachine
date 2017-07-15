@@ -26,31 +26,25 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStringList>
 #include <QTextStream>
 
-CdWriter::CdWriter() : sys_(new SystemInteractor(this))
-{
+CdWriter::CdWriter() : sys_(new SystemInteractor(this)) {}
+
+CdWriter::~CdWriter() {}
+
+bool CdWriter::hasK3b() const {
+  QString result = sys_->exec("which k3b");
+  return !result.contains("no k3b") && !result.isEmpty();
 }
 
-CdWriter::~CdWriter()
-{
-}
+bool CdWriter::burnList(const QStringList &pathList) const {
+  if (!hasK3b()) {
+    qCritical() << "K3b could not be found.";
+    return false;
+  }
 
-bool CdWriter::hasK3b() const
-{
-    QString result = sys_->exec("which k3b");
-    return !result.contains("no k3b") && !result.isEmpty();
-}
+  QString program("k3b");
+  QStringList arguments;
+  arguments << "--audiocd";
+  arguments << pathList;
 
-bool CdWriter::burnList(const QStringList &pathList) const
-{
-    if (!hasK3b()) {
-        qCritical() << "K3b could not be found.";
-        return false;
-    }
-
-    QString program("k3b");
-    QStringList arguments;
-    arguments << "--audiocd";
-    arguments << pathList;
-
-    return sys_->startDetached(program, arguments);
+  return sys_->startDetached(program, arguments);
 }

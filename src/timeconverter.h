@@ -30,39 +30,38 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
  *
  * TODO: Make this work with just one static function. This class is overkill.
  */
-class TimeConverter : public QObject
-{
-    Q_OBJECT
+class TimeConverter : public QObject {
+  Q_OBJECT
 
-    Q_PROPERTY(int seconds READ seconds WRITE setSeconds NOTIFY secondsChanged)
-    Q_PROPERTY(QString timestring READ timestring NOTIFY timestringChanged)
+  Q_PROPERTY(int seconds READ seconds WRITE setSeconds NOTIFY secondsChanged)
+  Q_PROPERTY(QString timestring READ timestring NOTIFY timestringChanged)
 
-public:
-    TimeConverter(QObject *parent = 0);
+ public:
+  TimeConverter(QObject *parent = 0);
 
-    void setSeconds(int sec);
-    int seconds();
+  void setSeconds(int sec);
+  int seconds();
 
-    QString timestring();
+  QString timestring();
 
-    QString toString();
+  QString toString();
 
-    static const int minInSec = 60;
-    static const int hourInSec = 60 * minInSec;
-    static const int dayInSec = 24 * hourInSec;
+  static const int minInSec = 60;
+  static const int hourInSec = 60 * minInSec;
+  static const int dayInSec = 24 * hourInSec;
 
-    QString numToString(int num);
+  QString numToString(int num);
 
-    void clear();
+  void clear();
 
-signals:
-    void secondsChanged();
-    void timestringChanged();
+ signals:
+  void secondsChanged();
+  void timestringChanged();
 
-private:
-    int totalSec_;
-    int sec_;
-    int mins_;
-    int hours_;
-    int days_;
+ private:
+  int totalSec_;
+  int sec_;
+  int mins_;
+  int hours_;
+  int days_;
 };

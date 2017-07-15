@@ -27,18 +27,17 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
  * dedicated thread. This is not done in a future because we want to update the
  * progress bar.
  */
-class FileExportWorker : public QObject
-{
-    Q_OBJECT
-public slots:
-    void doExport(QString destdir, const QStringList &paths);
+class FileExportWorker : public QObject {
+  Q_OBJECT
+ public slots:
+  void doExport(QString destdir, const QStringList &paths);
 
-signals:
-    void finished();
-    void updateProgress(int current, int total);
+ signals:
+  void finished();
+  void updateProgress(int current, int total);
 
-private:
-    QString newFileName(int pos, int max, const QString &path) const;
+ private:
+  QString newFileName(int pos, int max, const QString &path) const;
 };
 
 /*!
@@ -46,24 +45,23 @@ private:
  * folder and renames then to keep the tracks in the order of the playlist
  * when sorted by name.
  */
-class FileExporter : public QObject
-{
-    Q_OBJECT
-public:
-    explicit FileExporter(QObject *parent = 0);
-    ~FileExporter();
+class FileExporter : public QObject {
+  Q_OBJECT
+ public:
+  explicit FileExporter(QObject *parent = 0);
+  ~FileExporter();
 
-    Q_INVOKABLE void exportPlaylist(QString destdir, const QStringList &paths);
+  Q_INVOKABLE void exportPlaylist(QString destdir, const QStringList &paths);
 
-public slots:
-    void handleUpdate(int current, int total);
+ public slots:
+  void handleUpdate(int current, int total);
 
-signals:
-    void go(QString destdir, const QStringList &paths);
-    void started();
-    void finished();
-    void updateProgress(int val);
+ signals:
+  void go(QString destdir, const QStringList &paths);
+  void started();
+  void finished();
+  void updateProgress(int val);
 
-private:
-    QThread workerThread_;
+ private:
+  QThread workerThread_;
 };

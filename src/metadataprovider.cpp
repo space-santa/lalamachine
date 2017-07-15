@@ -31,34 +31,25 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "tags.h"
 #include "timeconverter.h"
 
-MetaDataProvider::MetaDataProvider(QObject *parent) : QObject(parent)
-{
+MetaDataProvider::MetaDataProvider(QObject *parent) : QObject(parent) {}
+
+Tags MetaDataProvider::metaData(const QUrl &path) {
+  QString tmp = path.toLocalFile();
+  TagLib::FileRef f(tmp.toUtf8().data(), true,
+                    TagLib::AudioProperties::Accurate);
+  TimeConverter tc;
+
+  if (!f.isNull() && f.tag()) {
+    TagLib::Tag *tag = f.tag();
+    // Clearing the timeconverter and get the time as displayable string.
+    tc.clear();
+    tc.setSeconds(f.audioProperties()->length());
+    return Tags(tag, tmp, tmp, f.audioProperties()->length(), tc.toString());
+  }
+
+  return Tags();
 }
 
-Tags MetaDataProvider::metaData(const QUrl &path)
-{
-    QString tmp = path.toLocalFile();
-    TagLib::FileRef f(tmp.toUtf8().data(),
-                      true,
-                      TagLib::AudioProperties::Accurate);
-    TimeConverter tc;
-
-    if (!f.isNull() && f.tag()) {
-        TagLib::Tag *tag = f.tag();
-        // Clearing the timeconverter and get the time as displayable string.
-        tc.clear();
-        tc.setSeconds(f.audioProperties()->length());
-        return Tags(tag,
-                    tmp,
-                    tmp,
-                    f.audioProperties()->length(),
-                    tc.toString());
-    }
-
-    return Tags();
-}
-
-QJsonObject MetaDataProvider::metaDataAsJson(const QUrl &path) const
-{
-    return metaData(path).toJson();
+QJsonObject MetaDataProvider::metaDataAsJson(const QUrl &path) const {
+  return metaData(path).toJson();
 }

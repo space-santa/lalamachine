@@ -25,25 +25,24 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 /*!
  * \brief The SystemInteractor class is a convenience class to start processes.
  */
-class SystemInteractor : public QObject
-{
-    Q_OBJECT
-public:
-    explicit SystemInteractor(QObject *parent = 0);
-    ~SystemInteractor();
+class SystemInteractor : public QObject {
+  Q_OBJECT
+ public:
+  explicit SystemInteractor(QObject *parent = 0);
+  ~SystemInteractor();
 
-    QString exec(const QString &cmd);
-    bool startDetached(const QString &program,
-                       const QStringList &arguments) const;
+  QString exec(const QString &cmd);
+  bool startDetached(const QString &program,
+                     const QStringList &arguments) const;
 
-signals:
+ signals:
 
-public slots:
+ public slots:
 
-private slots:
-    void parseOutput();
+ private slots:
+  void parseOutput();
 
-private:
-    QProcess *process_;
-    QString returnValue_;
+ private:
+  QProcess *process_;
+  QString returnValue_;
 };

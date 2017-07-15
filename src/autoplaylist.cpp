@@ -28,122 +28,101 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "musiclib.h"
 
 AutoPlaylist::AutoPlaylist(const QString &name, QObject *parent)
-    : QObject(parent), name_(name)
-{
-    Q_ASSERT(!name_.isEmpty());
-    db_ = QSqlDatabase::addDatabase("QSQLITE", name_);
-    db_.setDatabaseName(Config::MUSICLIBDB);
-    load();
+    : QObject(parent), name_(name) {
+  Q_ASSERT(!name_.isEmpty());
+  db_ = QSqlDatabase::addDatabase("QSQLITE", name_);
+  db_.setDatabaseName(Config::MUSICLIBDB);
+  load();
 }
 
-AutoPlaylist::~AutoPlaylist()
-{
+AutoPlaylist::~AutoPlaylist() {}
+
+QString AutoPlaylist::name() { return name_; }
+
+void AutoPlaylist::save() {
+  if (name_.isEmpty()) {
+    return;
+  }
+
+  QJsonArray jarr;
+
+  for (QList<AutoPlaylistObject>::iterator itr = apos_.begin();
+       itr != apos_.end(); ++itr) {
+    jarr.append((*itr).toJson());
+  }
+
+  QJsonObject obj;
+  obj.insert(name_, jarr);
+
+  Config::saveJsonFile(getPath(name_), obj);
 }
 
-QString AutoPlaylist::name()
-{
-    return name_;
+void AutoPlaylist::deleteList() {
+  if (name_.isEmpty()) {
+    return;
+  }
+
+  QFile::remove(getPath(name_));
+  name_ = "";
 }
 
-void AutoPlaylist::save()
-{
-    if (name_.isEmpty()) {
-        return;
-    }
+void AutoPlaylist::load() {
+  if (name_.isEmpty()) {
+    return;
+  }
 
-    QJsonArray jarr;
-
-    for (QList<AutoPlaylistObject>::iterator itr = apos_.begin();
-         itr != apos_.end();
-         ++itr) {
-        jarr.append((*itr).toJson());
-    }
-
-    QJsonObject obj;
-    obj.insert(name_, jarr);
-
-    Config::saveJsonFile(getPath(name_), obj);
+  fromJson(Config::loadJsonFile(getPath(name_)).value(name_).toArray());
 }
 
-void AutoPlaylist::deleteList()
-{
-    if (name_.isEmpty()) {
-        return;
-    }
-
-    QFile::remove(getPath(name_));
-    name_ = "";
+void AutoPlaylist::fromJson(const QJsonArray &arr) {
+  clear();
+  for (int i = 0; i < arr.count(); ++i) {
+    addApo(AutoPlaylistObject(arr[i].toObject()));
+  }
 }
 
-void AutoPlaylist::load()
-{
-    if (name_.isEmpty()) {
-        return;
-    }
+QJsonArray AutoPlaylist::toJson() const {
+  QJsonArray arr;
+  for (QList<AutoPlaylistObject>::const_iterator itr = apos_.constBegin();
+       itr != apos_.constEnd(); ++itr) {
+    arr.append((*itr).toJson());
+  }
 
-    fromJson(Config::loadJsonFile(getPath(name_)).value(name_).toArray());
+  return arr;
 }
 
-void AutoPlaylist::fromJson(const QJsonArray &arr)
-{
-    clear();
-    for (int i = 0; i < arr.count(); ++i) {
-        addApo(AutoPlaylistObject(arr[i].toObject()));
-    }
+QString AutoPlaylist::getPath(const QString &name) const {
+  return Config::AUTOPLAYLISTDIR + "/" + name + "." +
+         LalaTypes::AUTOPLAYLISTSUFFIX;
 }
 
-QJsonArray AutoPlaylist::toJson() const
-{
-    QJsonArray arr;
-    for (QList<AutoPlaylistObject>::const_iterator itr = apos_.constBegin();
-         itr != apos_.constEnd();
-         ++itr) {
-        arr.append((*itr).toJson());
-    }
-
-    return arr;
+void AutoPlaylist::addApo(const AutoPlaylistObject &apo) {
+  apos_.append(apo);
+  save();
+  emit trackListChanged();
 }
 
-QString AutoPlaylist::getPath(const QString &name) const
-{
-    return Config::AUTOPLAYLISTDIR + "/" + name + "."
-           + LalaTypes::AUTOPLAYLISTSUFFIX;
+void AutoPlaylist::clear() { apos_.clear(); }
+
+QJsonArray AutoPlaylist::trackList() {
+  db_.open();
+  // Processing the QSqlResult imediately before closing the dbase.
+  QJsonArray result = MusicLib::queryResultToJson(db_.exec(toQuery())).second;
+  // WARNING: The dbase must not be closed before the QSqlResult that db.exec
+  // returns is processed.
+  db_.close();
+  return result;
 }
 
-void AutoPlaylist::addApo(const AutoPlaylistObject &apo)
-{
-    apos_.append(apo);
-    save();
-    emit trackListChanged();
-}
+QString AutoPlaylist::toQuery() const {
+  QString query("SELECT * FROM musiclib WHERE ");
+  bool first = true;
+  for (QList<AutoPlaylistObject>::const_iterator itr = apos_.constBegin();
+       itr != apos_.constEnd(); ++itr) {
+    query.append((*itr).toQuery(first));
+    first = false;
+  }
+  query.append(" ORDER BY artist, album, track");
 
-void AutoPlaylist::clear()
-{
-    apos_.clear();
-}
-
-QJsonArray AutoPlaylist::trackList()
-{
-    db_.open();
-    // Processing the QSqlResult imediately before closing the dbase.
-    QJsonArray result = MusicLib::queryResultToJson(db_.exec(toQuery())).second;
-    // WARNING: The dbase must not be closed before the QSqlResult that db.exec
-    // returns is processed.
-    db_.close();
-    return result;
-}
-
-QString AutoPlaylist::toQuery() const
-{
-    QString query("SELECT * FROM musiclib WHERE ");
-    bool first = true;
-    for (QList<AutoPlaylistObject>::const_iterator itr = apos_.constBegin();
-         itr != apos_.constEnd();
-         ++itr) {
-        query.append((*itr).toQuery(first));
-        first = false;
-    }
-    query.append(" ORDER BY artist, album, track");
-
-    return query.simplified();
+  return query.simplified();
 }

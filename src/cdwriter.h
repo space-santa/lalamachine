@@ -28,17 +28,16 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
  * playlist. For this to work, K3B must be in the $PATH and it must be able to
  * decode the audio files.
  */
-class CdWriter : public QQuickItem
-{
-    Q_OBJECT
+class CdWriter : public QQuickItem {
+  Q_OBJECT
 
-public:
-    CdWriter();
-    ~CdWriter();
+ public:
+  CdWriter();
+  ~CdWriter();
 
-    Q_INVOKABLE bool hasK3b() const;
-    Q_INVOKABLE bool burnList(const QStringList &pathList) const;
+  Q_INVOKABLE bool hasK3b() const;
+  Q_INVOKABLE bool burnList(const QStringList &pathList) const;
 
-private:
-    SystemInteractor *sys_;
+ private:
+  SystemInteractor *sys_;
 };

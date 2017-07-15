@@ -29,23 +29,22 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
  * in a dedicated thread. After it is moved to its own thread, calling the
  * scanLib() slot will trigger a scan.
  */
-class MusicLibScanner : public QObject
-{
-    Q_OBJECT
+class MusicLibScanner : public QObject {
+  Q_OBJECT
 
-public:
-    MusicLibScanner(QObject *parent = 0);
+ public:
+  MusicLibScanner(QObject *parent = 0);
 
-public slots:
-    void scanLib(const QString &path);
+ public slots:
+  void scanLib(const QString &path);
 
-signals:
-    void scanStarted();
-    void scanComplete();
-    void trackAdded();
+ signals:
+  void scanStarted();
+  void scanComplete();
+  void trackAdded();
 
-private:
-    bool suffixCheck(const QString &val) const;
-    QSqlDatabase scanDb_;
-    QString getTrackQuery(Tags track, const QString date);
+ private:
+  bool suffixCheck(const QString &val) const;
+  QSqlDatabase scanDb_;
+  QString getTrackQuery(Tags track, const QString date);
 };

@@ -19,36 +19,33 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include "lalatypes.h"
 #include <QJsonObject>
 #include <QString>
+#include "lalatypes.h"
 
 /*!
  * \brief The AutoPlaylistObject class is one component of an AutoPlaylist.
  * It contains the tag (e.g. genre), the operator (e.g. contains) and how it
  * combines with other AutoPlaylistObjects (and/or).
  */
-class AutoPlaylistObject
-{
-public:
-    AutoPlaylistObject(const QJsonObject &obj);
-    AutoPlaylistObject(LalaTypes::AndOr andor,
-                       LalaTypes::Tag tag,
-                       LalaTypes::Operator op,
-                       QString val);
+class AutoPlaylistObject {
+ public:
+  AutoPlaylistObject(const QJsonObject &obj);
+  AutoPlaylistObject(LalaTypes::AndOr andor, LalaTypes::Tag tag,
+                     LalaTypes::Operator op, QString val);
 
-    LalaTypes::AndOr andor() const;
-    LalaTypes::Tag tag() const;
-    LalaTypes::Operator op() const;
-    QString val() const;
+  LalaTypes::AndOr andor() const;
+  LalaTypes::Tag tag() const;
+  LalaTypes::Operator op() const;
+  QString val() const;
 
-    QJsonObject toJson() const;
-    void fromJson(const QJsonObject &obj);
-    QString toQuery(bool isFirst) const;
+  QJsonObject toJson() const;
+  void fromJson(const QJsonObject &obj);
+  QString toQuery(bool isFirst) const;
 
-private:
-    LalaTypes::AndOr andor_;
-    LalaTypes::Tag tag_;
-    LalaTypes::Operator op_;
-    QString val_;
+ private:
+  LalaTypes::AndOr andor_;
+  LalaTypes::Tag tag_;
+  LalaTypes::Operator op_;
+  QString val_;
 };

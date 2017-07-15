@@ -31,11 +31,10 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "musiclibscanner.h"
 
-class MusicLib : public QObject
-{
-    Q_OBJECT
+class MusicLib : public QObject {
+  Q_OBJECT
 
-    // clang-format off
+  // clang-format off
     Q_PROPERTY(bool scanning
                READ scanning
                WRITE setScanning
@@ -88,160 +87,160 @@ class MusicLib : public QObject
                READ titlePartialFilter
                WRITE setTitlePartialFilter
                NOTIFY titlePartialFilterChanged)
-    // clang-format on
+  // clang-format on
 
-public:
-    enum SortWhat {
-        TRACK,
-        TITLE,
-        COMMENT,
-        LENGTH,
-        GENRE,
-        ARTIST,
-        ALBUM,
-        DATEADDED
-    };
-    Q_ENUMS(SortWhat)
-    enum SortHow { ASCENDING, DESCENDING };
-    Q_ENUMS(SortHow)
+ public:
+  enum SortWhat {
+    TRACK,
+    TITLE,
+    COMMENT,
+    LENGTH,
+    GENRE,
+    ARTIST,
+    ALBUM,
+    DATEADDED
+  };
+  Q_ENUMS(SortWhat)
+  enum SortHow { ASCENDING, DESCENDING };
+  Q_ENUMS(SortHow)
 
-    MusicLib(QObject *parent = 0);
-    ~MusicLib();
+  MusicLib(QObject *parent = 0);
+  ~MusicLib();
 
-    static const QString ALL_FILTER;
-    static const QMap<SortWhat, QString> SORT_MAP;
-    static QMap<SortWhat, QString> initSortMap();
+  static const QString ALL_FILTER;
+  static const QMap<SortWhat, QString> SORT_MAP;
+  static QMap<SortWhat, QString> initSortMap();
 
-    bool scanning() const;
-    void setScanning(bool val);
+  bool scanning() const;
+  void setScanning(bool val);
 
-    QJsonArray displayLib() const;
-    int totalLength() const;
+  QJsonArray displayLib() const;
+  int totalLength() const;
 
-    QString libPath() const;
-    void setLibPath(const QString &path);
+  QString libPath() const;
+  void setLibPath(const QString &path);
 
-    QString genreFilter() const;
-    void setGenreFilter(const QString &val);
+  QString genreFilter() const;
+  void setGenreFilter(const QString &val);
 
-    QString artistFilter() const;
-    void setArtistFilter(const QString &val);
+  QString artistFilter() const;
+  void setArtistFilter(const QString &val);
 
-    QString albumFilter() const;
-    void setAlbumFilter(const QString &val);
+  QString albumFilter() const;
+  void setAlbumFilter(const QString &val);
 
-    bool sortAsc() const;
-    void setSortAsc(bool val);
+  bool sortAsc() const;
+  void setSortAsc(bool val);
 
-    SortWhat what() const;
-    void setWhat(SortWhat val);
+  SortWhat what() const;
+  void setWhat(SortWhat val);
 
-    QStringList genreList() const;
-    QStringList artistList() const;
-    QStringList albumList() const;
+  QStringList genreList() const;
+  QStringList artistList() const;
+  QStringList albumList() const;
 
-    Q_INVOKABLE void rescan();
+  Q_INVOKABLE void rescan();
 
-    Q_INVOKABLE void resetFilterAndSort();
-    Q_INVOKABLE QJsonArray getAlbumTracks(const QString &album);
+  Q_INVOKABLE void resetFilterAndSort();
+  Q_INVOKABLE QJsonArray getAlbumTracks(const QString &album);
 
-    Q_INVOKABLE QString getDateAddedByMrl(const QString &mrl) const;
+  Q_INVOKABLE QString getDateAddedByMrl(const QString &mrl) const;
 
-    Q_INVOKABLE QJsonObject getMetadataForMrl(const QString &mrl) const;
-    Q_INVOKABLE QJsonObject getMetadataForMrl(const QUrl &mrl) const;
+  Q_INVOKABLE QJsonObject getMetadataForMrl(const QString &mrl) const;
+  Q_INVOKABLE QJsonObject getMetadataForMrl(const QUrl &mrl) const;
 
-    static QString escapeString(QString str);
+  static QString escapeString(QString str);
 
-    static QPair<int, QJsonArray> queryResultToJson(QSqlQuery result);
+  static QPair<int, QJsonArray> queryResultToJson(QSqlQuery result);
 
-    QString titlePartialFilter() const;
-    void setTitlePartialFilter(const QString &titlePartialFilter);
+  QString titlePartialFilter() const;
+  void setTitlePartialFilter(const QString &titlePartialFilter);
 
-    static QString cleanPath(QString mrl);
-public slots:
-    void scanFinished();
+  static QString cleanPath(QString mrl);
+ public slots:
+  void scanFinished();
 
-signals:
-    void startScan(const QString &path);
-    void musicLibChanged();
+ signals:
+  void startScan(const QString &path);
+  void musicLibChanged();
 
-    void scanningChanged();
+  void scanningChanged();
 
-    void displayLibChanged();
-    void totalLengthChanged();
+  void displayLibChanged();
+  void totalLengthChanged();
 
-    void libPathChanged();
-    void genreFilterChanged();
-    void artistFilterChanged();
-    void albumFilterChanged();
+  void libPathChanged();
+  void genreFilterChanged();
+  void artistFilterChanged();
+  void albumFilterChanged();
 
-    void genreListChanged();
-    void artistListChanged();
-    void albumListChanged();
+  void genreListChanged();
+  void artistListChanged();
+  void albumListChanged();
 
-    void sortAscChanged();
-    void whatChanged();
+  void sortAscChanged();
+  void whatChanged();
 
-    void titlePartialFilterChanged();
+  void titlePartialFilterChanged();
 
-private:
-    // scanner_ MUST be a raw pointer. When this is moved to a new thread, that
-    // QThread becomes the parent. When the parent dies so does the child.
-    // If this is then not a raw pointer a double free happens, because
-    // the thread and this is trying to destroy the scanner.
-    MusicLibScanner *scanner_;
-    QThread scannerThread_;
+ private:
+  // scanner_ MUST be a raw pointer. When this is moved to a new thread, that
+  // QThread becomes the parent. When the parent dies so does the child.
+  // If this is then not a raw pointer a double free happens, because
+  // the thread and this is trying to destroy the scanner.
+  MusicLibScanner *scanner_;
+  QThread scannerThread_;
 
-    QSharedPointer<QMutex> mutex_;
-    QSqlDatabase db_;
-    bool sortAsc_;
-    bool scanning_;
-    SortWhat what_;
-    QJsonArray displayLib_;
-    int totalLength_;
-    QString genreFilter_;
-    QString artistFilter_;
-    QString albumFilter_;
-    QString libPath_;
-    QStringList genreList_;
-    QStringList artistList_;
-    QStringList albumList_;
-    QString titlePartialFilter_;
-    bool appStart_;
-    QString lastDisplayLibQuery_;
+  QSharedPointer<QMutex> mutex_;
+  QSqlDatabase db_;
+  bool sortAsc_;
+  bool scanning_;
+  SortWhat what_;
+  QJsonArray displayLib_;
+  int totalLength_;
+  QString genreFilter_;
+  QString artistFilter_;
+  QString albumFilter_;
+  QString libPath_;
+  QStringList genreList_;
+  QStringList artistList_;
+  QStringList albumList_;
+  QString titlePartialFilter_;
+  bool appStart_;
+  QString lastDisplayLibQuery_;
 
-    QFutureWatcher<QPair<int, QJsonArray> > watcher_;
+  QFutureWatcher<QPair<int, QJsonArray> > watcher_;
 
-    bool checkVal(const QString &check, const QString &val) const;
+  bool checkVal(const QString &check, const QString &val) const;
 
-    QStringList getList(const QString &what) const;
+  QStringList getList(const QString &what) const;
 
-    QString getSortQueryString() const;
-    QString getGenreListQuery() const;
-    QString getArtistListQuery() const;
-    QString getAlbumListQuery() const;
+  QString getSortQueryString() const;
+  QString getGenreListQuery() const;
+  QString getArtistListQuery() const;
+  QString getAlbumListQuery() const;
 
-    void ensureAllTables();
-    void clearMusicLib();
+  void ensureAllTables();
+  void clearMusicLib();
 
-    QPair<int, QJsonArray> runSetDisplayQuery(const QString &query);
+  QPair<int, QJsonArray> runSetDisplayQuery(const QString &query);
 
-    void updateTable();
+  void updateTable();
 
-    void createLibTable(const QString &name);
-    void copyLibToTmp();
-    void restoreMetaData();
-    void init();
-private slots:
-    void debugSignal();
+  void createLibTable(const QString &name);
+  void copyLibToTmp();
+  void restoreMetaData();
+  void init();
+ private slots:
+  void debugSignal();
 
-    void setDisplayLib();
-    void setGenreList();
-    void setArtistList();
-    void setAlbumList();
+  void setDisplayLib();
+  void setGenreList();
+  void setArtistList();
+  void setAlbumList();
 
-    void scanStarted();
+  void scanStarted();
 
-    void scanUpdate();
-    void onDisplayFutureFinished();
+  void scanUpdate();
+  void onDisplayFutureFinished();
 };
