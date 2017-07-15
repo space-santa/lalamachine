@@ -40,9 +40,19 @@ sudo make uninstall
 ```
 
 
-## Package
+## Debug
 
-I build packages for Debian Jessie. I plan to have a repository for that at some point.
+On Fedora >22, don't forget to enable QDebug output. To do that, add or create
+
+`~/.config/QtProject/qtlogging.ini` with this content:
+
+```
+[Rules]
+*.debug=true
+qt.*.debug=false
+```
+
+The first rule enables debug output. The second line disables the Qt internal one.
 
 ## Contribute
 
