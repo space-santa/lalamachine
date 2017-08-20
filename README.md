@@ -5,8 +5,10 @@
 lalamachine is just another music player. It features:
 
 * A library with nice filter and search functionality.
-* Playlists which can be --burned to CD or-- exported into a folder.
+* Playlists which can be exported into a folder.
 * Automatic playlists
+
+There is the option to burn a playlist using K3B. But I don't have a disk-drive anymore so I can't continue to support that.
 
 [User documentation can be found in the wiki.](https://bitbucket.org/r-mean/lalamachine/wiki/Home)
 
