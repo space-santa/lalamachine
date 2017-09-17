@@ -25,7 +25,8 @@ SOURCES += src/main.cpp \
     src/track.cpp \
     src/engineloader.cpp \
     src/lalatray.cpp \
-    src/theplayer.cpp
+    src/theplayer.cpp \
+    src/model.cpp
 
 RESOURCES += qml.qrc
 
@@ -52,7 +53,8 @@ HEADERS += \
     src/playlistmodel.h \
     src/track.h \
     src/lalatray.h \
-    src/theplayer.h
+    src/theplayer.h \
+    src/model.h
 
 OTHER_FILES += \
     README.md \
