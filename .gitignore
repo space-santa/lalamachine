@@ -1,5 +1,6 @@
 *.o
 *.user
 .qmake.stash
+*.swp
 Makefile
 debug/
