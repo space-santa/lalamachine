@@ -1,6 +1,14 @@
 #include "model.h"
 
+#include "config.h"
+
 Model::Model() {}
+
+void Model::init() {
+  db_ = QSqlDatabase::addDatabase("QSQLITE");
+  db_.setDatabaseName(Config::MUSICLIBDB);
+  db_.open();
+}
 
 QStringList Model::genre(const QString &filter) {
   QSqlResult result = db.exec(Model::genreQuery(filter));

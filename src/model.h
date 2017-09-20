@@ -17,6 +17,7 @@ class Model {
 
  private:
   QSqlDatabase db_;
+  void Model::init();
   static QString genreQuery(const QString &filter);
   static QString escapeString(QString &string);
   static QStringList Model::resultToList(const QSqlResult &result,
