@@ -1,5 +1,7 @@
 *.o
 *.user
 .qmake.stash
+.DS_Store
 Makefile
 debug/*
+release/*
