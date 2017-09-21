@@ -1,8 +1,12 @@
 #pragma once
 
 #include <QSqlDatabase>
+#include <QSqlResult>
+#include <QSqlQuery>
 #include <QString>
 #include <QStringList>
+#include <QJsonObject>
+#include <QJsonArray>
 
 class Model {
  public:
@@ -17,8 +21,8 @@ class Model {
 
  private:
   QSqlDatabase db_;
-  void Model::init();
+  void init();
   static QString genreQuery(const QString &filter);
-  static QString escapeString(QString &string);
-  static QStringList Model::resultToList(const QSqlResult &result,
-                                         const QString &what){};
+  static QString escapeString(QString string);
+  static QStringList resultToList(QSqlQuery result, const QString &what);
+};

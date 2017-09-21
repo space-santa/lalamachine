@@ -11,16 +11,16 @@ void Model::init() {
 }
 
 QStringList Model::genre(const QString &filter) {
-  QSqlResult result = db.exec(Model::genreQuery(filter));
+  QSqlQuery result = db_.exec(Model::genreQuery(filter));
   return Model::resultToList(result, "genre");
 }
 
 QString Model::genreQuery(const QString &filter) {
   QString query("SELECT DISTINCT genre FROM musiclib %1 ORDER BY genre ASC");
 
-  if (!filter().isEmpty()) {
+  if (!filter.isEmpty()) {
     query = query.arg("WHERE UPPER(genre) LIKE '%%1%'")
-                .arg(Model::escapeString(filter().toUpper()));
+                .arg(Model::escapeString(filter.toUpper()));
   } else {
     query = query.arg("");
   }
@@ -33,7 +33,7 @@ QString Model::escapeString(QString str) {
   return str.replace("\'", "\'\'");
 }
 
-QStringList Model::resultToList(const QSqlResult &result, const QString &what) {
+QStringList Model::resultToList(QSqlQuery result, const QString &what) {
   QStringList retval;
 
   while (result.next()) {
