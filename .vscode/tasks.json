@@ -13,8 +13,11 @@
         },
         {
             "taskName": "qmake-debug",
-            "command": "cd ${workspaceRoot}/debug/ && qmake-qt5 CONFIG+=debug ${workspaceRoot}/lalamachine.pro -spec linux-g++ && /usr/bin/make qmake_all && make -j3",
-            "group": "build",
+            "command": "cd ${workspaceRoot}/debug/ && qmake CONFIG+=debug ${workspaceRoot}/lalamachine.pro && /usr/bin/make qmake_all && make -j3",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "type": "shell",
             "problemMatcher": [
                 "$lessCompile"
