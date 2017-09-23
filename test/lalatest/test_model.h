@@ -14,4 +14,5 @@ class ModelTest : public QObject {
 
   void testGenreQuery();
   void testArtistQuery();
+  void testAlbumQuery();
 };
