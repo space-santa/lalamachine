@@ -657,5 +657,7 @@ Rectangle {
                 playlist_view.initialRow = row
             }
         }
+
+        itemDelegate: ItemDelegate {}
     }
 }
