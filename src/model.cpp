@@ -1,5 +1,9 @@
 #include "model.h"
 
+#include <QDebug>
+#include <QMutexLocker>
+#include <QSqlError>
+
 #include "config.h"
 
 Model::Model() {}
@@ -25,12 +29,12 @@ QString Model::genreQuery(const QString &filter) {
     query = query.arg("");
   }
 
-  return query;
+  return query.simplified();
 }
 
-QString Model::escapeString(QString str) {
+QString Model::escapeString(QString string) {
   // return str.replace("\'", "\'\'").replace(",", "\'+\',\'+\'");
-  return str.replace("\'", "\'\'");
+  return string.replace("\'", "\'\'");
 }
 
 QStringList Model::resultToList(QSqlQuery result, const QString &what) {
@@ -45,4 +49,74 @@ QStringList Model::resultToList(QSqlQuery result, const QString &what) {
   }
 
   return retval;
+}
+
+void Model::updateTable() {
+  QStringList tables = db_.tables();
+
+  if (!tables.contains("musiclib")) {
+    ensureAllTables();
+    return;
+  }
+
+  QString query("PRAGMA table_info(musiclib)");
+  QMutexLocker locker(mutex_.data());
+  QSqlQuery record = db_.exec(query);
+
+  QStringList tmplist;
+  while (record.next()) {
+    tmplist << record.value("name").toString();
+  }
+
+  if (tmplist.contains("dateAdded")) {
+    return;
+  }
+
+  qDebug()
+      << db_.exec("ALTER TABLE musiclib ADD COLUMN dateAdded TEXT").lastError();
+}
+
+void Model::newUpdateTable() {
+  // create tables
+  // genre -- genreid, name
+  // artist -- artistid, name, genreid (otm)
+  // album -- albumid, genreid (otm), artistid (otm, various artists or null),
+  //          name, disknumber?
+  // track -- trackid, artistid (otm), genreid (otm), title, tracknumber,
+  //          disknumber?, year
+
+  bool oldstuff = false;
+  if (oldstuff) {
+    // rescan musiclib
+    // We can't migrate the data because we now consider more fields
+    // like disk number and I don't wantt to have an incomplete dbase.
+  }
+}
+
+void Model::ensureAllTables() { createLibTable("musiclib"); }
+
+void Model::createLibTable(const QString &name) {
+  QStringList tables = db_.tables();
+
+  if (!tables.contains(name)) {
+    QString qs("CREATE TABLE `%1` ");
+    qs.append("(\n");
+    // qs.append("`ID` INTEGER NOT NULL AUTOINCREMENT,\n");
+    qs.append("`album` TEXT,\n");
+    qs.append("`artist` TEXT,\n");
+    qs.append("`comment` TEXT,\n");
+    qs.append("`genre` TEXT,\n");
+    qs.append("`length` int NOT NULL,\n");
+    qs.append("`lengthString` TEXT NOT NULL,\n");
+    qs.append("`mrl` TEXT NOT NULL PRIMARY KEY,\n");
+    qs.append("`path` TEXT NOT NULL,\n");
+    qs.append("`title` TEXT NOT NULL,\n");
+    qs.append("`track` int,\n");
+    qs.append("`year` int,\n");
+    qs.append("`dateAdded` TEXT\n");
+    qs.append(")");
+
+    QMutexLocker locker(mutex_.data());
+    qDebug() << db_.exec(qs.arg(name)).lastError();
+  }
 }

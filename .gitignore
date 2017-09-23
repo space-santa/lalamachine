@@ -4,5 +4,6 @@
 *.swpS
 .DS_Store
 Makefile
-debug/*
-release/*
+**/debug/*
+**/release/*
+**/build/*

@@ -1,14 +1,18 @@
 #pragma once
 
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QMutex>
+#include <QSharedPointer>
 #include <QSqlDatabase>
-#include <QSqlResult>
 #include <QSqlQuery>
+#include <QSqlResult>
 #include <QString>
 #include <QStringList>
-#include <QJsonObject>
-#include <QJsonArray>
 
 class Model {
+  friend class ModelTest;
+
  public:
   Model();
 
@@ -19,10 +23,17 @@ class Model {
 
   QJsonObject trackDetails(const QString &mrl) const;
 
+  static QString escapeString(QString string);
+
  private:
   QSqlDatabase db_;
+  QSharedPointer<QMutex> mutex_;
+
   void init();
-  static QString genreQuery(const QString &filter);
-  static QString escapeString(QString string);
+  static QString genreQuery(const QString &filter = QString());
   static QStringList resultToList(QSqlQuery result, const QString &what);
+  void updateTable();
+  void newUpdateTable();
+  void createLibTable(const QString &name);
+  void ensureAllTables();
 };
