@@ -148,6 +148,8 @@ Rectangle {
                     list_view.currentRow = row
                 }
             }
+
+            itemDelegate: ItemDelegate {}
         }
 
         Rectangle {
