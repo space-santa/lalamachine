@@ -26,7 +26,7 @@ void ModelTest::escapeString() {
   QCOMPARE(Model::escapeString(string), result);
 }
 
-void ModelTest::genreQuery() {
+void ModelTest::testGenreQuery() {
   QString query("SELECT DISTINCT genre FROM musiclib ORDER BY genre ASC");
   QString filteredQuery(
       "SELECT DISTINCT genre FROM musiclib WHERE UPPER(genre) LIKE '%METAL%' "
@@ -34,4 +34,26 @@ void ModelTest::genreQuery() {
 
   QVERIFY(Model::genreQuery() == query);
   QVERIFY(Model::genreQuery(QString("Metal")) == filteredQuery);
+}
+
+void ModelTest::testArtistQuery() {
+  QString query(
+      "SELECT DISTINCT artist FROM musiclib WHERE artist NOT NULL ORDER BY "
+      "artist ASC");
+  QVERIFY(Model::artistQuery() == query);
+
+  QString query_artist(
+      "SELECT DISTINCT artist FROM musiclib WHERE artist NOT NULL AND "
+      "UPPER(artist) LIKE '%LALA%' ORDER BY artist ASC");
+  QVERIFY(Model::artistQuery("lala") == query_artist);
+
+  QString query_genre(
+      "SELECT DISTINCT artist FROM musiclib WHERE artist NOT NULL AND "
+      "genre = 'lala' ORDER BY artist ASC");
+  QVERIFY(Model::artistQuery("", "lala") == query_genre);
+
+  QString query_artist_genre(
+      "SELECT DISTINCT artist FROM musiclib WHERE artist NOT NULL AND "
+      "UPPER(artist) LIKE '%LALA%' AND genre = 'bubu' ORDER BY artist ASC");
+  QVERIFY(Model::artistQuery("lala", "bubu") == query_artist);
 }

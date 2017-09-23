@@ -32,6 +32,53 @@ QString Model::genreQuery(const QString &filter) {
   return query.simplified();
 }
 
+QString Model::artistQuery(const QString &artist, const QString &genre) {
+  QString query("SELECT DISTINCT artist FROM musiclib WHERE artist NOT NULL ");
+
+  if (!artist.isEmpty()) {
+    query.append("AND UPPER(artist) LIKE '%");
+    query.append(escapeString(artist.toUpper()));
+    query.append("%' ");
+  } else {
+    if (!genre.isEmpty()) {
+      query.append("AND genre = '");
+      query.append(escapeString(genre));
+      query.append("' ");
+    }
+  }
+
+  query.append(" ORDER BY artist ASC");
+
+  return query.simplified();
+}
+
+QString Model::albumQuery(const QString &album, const QString &artist,
+                          const QString &genre) {
+  QString query("SELECT DISTINCT album FROM musiclib WHERE album NOT NULL ");
+
+  if (!album.isEmpty()) {
+    query.append("AND UPPER(album) LIKE '%");
+    query.append(escapeString(album.toUpper()));
+    query.append("%' ");
+  } else {
+    if (!genre.isEmpty()) {
+      query.append("AND genre = '");
+      query.append(escapeString(genre));
+      query.append("' ");
+    }
+
+    if (!artist.isEmpty()) {
+      query.append("AND artist = '");
+      query.append(escapeString(artist));
+      query.append("'");
+    }
+  }
+
+  query.append(" ORDER BY album ASC");
+
+  return query.simplified();
+}
+
 QString Model::escapeString(QString string) {
   // return str.replace("\'", "\'\'").replace(",", "\'+\',\'+\'");
   return string.replace("\'", "\'\'");

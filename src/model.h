@@ -24,13 +24,18 @@ class Model {
   QJsonObject trackDetails(const QString &mrl) const;
 
   static QString escapeString(QString string);
+  static QString genreQuery(const QString &filter = QString());
+  static QString artistQuery(const QString &artist = QString(),
+                             const QString &genre = QString());
+  static QString albumQuery(const QString &album = QString(),
+                            const QString &artist = QString(),
+                            const QString &genre = QString());
 
  private:
   QSqlDatabase db_;
   QSharedPointer<QMutex> mutex_;
 
   void init();
-  static QString genreQuery(const QString &filter = QString());
   static QStringList resultToList(QSqlQuery result, const QString &what);
   void updateTable();
   void newUpdateTable();

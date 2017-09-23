@@ -12,5 +12,6 @@ class ModelTest : public QObject {
   void escapeString_data();
   void escapeString();
 
-  void genreQuery();
+  void testGenreQuery();
+  void testArtistQuery();
 };

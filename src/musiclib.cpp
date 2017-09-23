@@ -36,6 +36,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "autoplaylistmanager.h"
 #include "config.h"
 #include "metadataprovider.h"
+#include "model.h"
 #include "musiclibscanner.h"
 
 MusicLib::MusicLib(QObject *parent) : QObject(parent) {
@@ -324,10 +325,7 @@ QJsonObject MusicLib::getMetadataForMrl(const QUrl &mrl) const {
   return retval;
 }
 
-QString MusicLib::escapeString(QString str) {
-  // return str.replace("\'", "\'\'").replace(",", "\'+\',\'+\'");
-  return str.replace("\'", "\'\'");
-}
+QString MusicLib::escapeString(QString str) { return Model::escapeString(str); }
 
 QString MusicLib::cleanPath(QString mrl) {
   return mrl.remove(QRegularExpression("^file://"));
@@ -404,62 +402,15 @@ QString MusicLib::getSortQueryString() const {
 }
 
 QString MusicLib::getGenreListQuery() const {
-  QString query("SELECT DISTINCT genre FROM musiclib %1 ORDER BY genre ASC");
-
-  if (!titlePartialFilter().isEmpty()) {
-    query = query.arg("WHERE UPPER(genre) LIKE '%%1%'")
-                .arg(escapeString(titlePartialFilter().toUpper()));
-  } else {
-    query = query.arg("");
-  }
-
-  return query;
+  return Model::genreQuery(titlePartialFilter());
 }
 
 QString MusicLib::getArtistListQuery() const {
-  QString query("SELECT DISTINCT artist FROM musiclib WHERE artist NOT NULL ");
-
-  if (!titlePartialFilter().isEmpty()) {
-    query.append("AND UPPER(artist) LIKE '%");
-    query.append(escapeString(titlePartialFilter().toUpper()));
-    query.append("%' ");
-  } else {
-    if (!genreFilter().isEmpty()) {
-      query.append("AND genre = '");
-      query.append(escapeString(genreFilter()));
-      query.append("' ");
-    }
-  }
-
-  query.append(" ORDER BY artist ASC");
-
-  return query;
+  return Model::artistQuery(titlePartialFilter(), genreFilter());
 }
 
 QString MusicLib::getAlbumListQuery() const {
-  QString query("SELECT DISTINCT album FROM musiclib WHERE album NOT NULL ");
-
-  if (!titlePartialFilter().isEmpty()) {
-    query.append("AND UPPER(album) LIKE '%");
-    query.append(escapeString(titlePartialFilter().toUpper()));
-    query.append("%' ");
-  } else {
-    if (!genreFilter().isEmpty()) {
-      query.append("AND genre = '");
-      query.append(escapeString(genreFilter()));
-      query.append("' ");
-    }
-
-    if (!artistFilter().isEmpty()) {
-      query.append("AND artist = '");
-      query.append(escapeString(artistFilter()));
-      query.append("'");
-    }
-  }
-
-  query.append(" ORDER BY album ASC");
-
-  return query;
+  return Model::albumQuery(titlePartialFilter(), artistFilter(), genreFilter());
 }
 
 void MusicLib::updateTable() {
