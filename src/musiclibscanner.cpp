@@ -29,6 +29,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSqlQuery>
 #include "config.h"
 #include "metadataprovider.h"
+#include "model.h"
 #include "musiclib.h"
 #include "tags.h"
 
@@ -118,18 +119,18 @@ QString MusicLibScanner::getTrackQuery(Tags track, const QString date) {
 
   QString valuesA("('%1', '%2', '%3', '%4', '%5', '%6', ");
   QString valuesB("'%1', '%2', '%3', '%4', '%5', '%6')");
-  query.append(valuesA.arg(MusicLib::escapeString(track.album_))
-                   .arg(MusicLib::escapeString(track.artist_))
-                   .arg(MusicLib::escapeString(track.comment_))
-                   .arg(MusicLib::escapeString(track.genre_))
-                   .arg(MusicLib::escapeString(track.length_))
-                   .arg(MusicLib::escapeString(track.lengthString_)));
-  query.append(valuesB.arg(MusicLib::escapeString(track.mrl_))
-                   .arg(MusicLib::escapeString(track.path_))
-                   .arg(MusicLib::escapeString(track.title_))
-                   .arg(MusicLib::escapeString(track.track_))
-                   .arg(MusicLib::escapeString(track.year_))
-                   .arg(MusicLib::escapeString(date)));
+  query.append(valuesA.arg(Model::escapeString(track.album_))
+                   .arg(Model::escapeString(track.artist_))
+                   .arg(Model::escapeString(track.comment_))
+                   .arg(Model::escapeString(track.genre_))
+                   .arg(Model::escapeString(track.length_))
+                   .arg(Model::escapeString(track.lengthString_)));
+  query.append(valuesB.arg(Model::escapeString(track.mrl_))
+                   .arg(Model::escapeString(track.path_))
+                   .arg(Model::escapeString(track.title_))
+                   .arg(Model::escapeString(track.track_))
+                   .arg(Model::escapeString(track.year_))
+                   .arg(Model::escapeString(date)));
 
   qDebug() << query;
   return query;

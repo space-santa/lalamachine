@@ -25,6 +25,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSqlQuery>
 
 #include "config.h"
+#include "model.h"
 #include "musiclib.h"
 
 AutoPlaylist::AutoPlaylist(const QString &name, QObject *parent)
@@ -107,7 +108,7 @@ void AutoPlaylist::clear() { apos_.clear(); }
 QJsonArray AutoPlaylist::trackList() {
   db_.open();
   // Processing the QSqlResult imediately before closing the dbase.
-  QJsonArray result = MusicLib::queryResultToJson(db_.exec(toQuery())).second;
+  QJsonArray result = Model::queryResultToJson(db_.exec(toQuery())).second;
   // WARNING: The dbase must not be closed before the QSqlResult that db.exec
   // returns is processed.
   db_.close();

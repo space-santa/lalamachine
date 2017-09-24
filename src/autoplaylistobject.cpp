@@ -22,6 +22,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QJsonObject>
 #include <QMap>
 #include "lalatypes.h"
+#include "model.h"
 #include "musiclib.h"
 
 AutoPlaylistObject::AutoPlaylistObject(const QJsonObject &obj) {
@@ -72,7 +73,7 @@ QString AutoPlaylistObject::toQuery(bool isFirst) const {
   } else {
     tmp = " '%1'";
   }
-  query.append(tmp.arg(MusicLib::escapeString(val())));
+  query.append(tmp.arg(Model::escapeString(val())));
 
   return query;
 }
