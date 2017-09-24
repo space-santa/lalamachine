@@ -33,12 +33,9 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "musiclib.h"
 #include "tags.h"
 
-MusicLibScanner::MusicLibScanner(QObject *parent) : QObject(parent) {
-  scanDb_ = QSqlDatabase::addDatabase("QSQLITE", "scanner");
-  scanDb_.setDatabaseName(Config::MUSICLIBDB);
-}
-
 void MusicLibScanner::scanLib(const QString &path) {
+  QSqlDatabase scanDb = QSqlDatabase::addDatabase("QSQLITE", "scanner");
+  scanDb.setDatabaseName(Config::MUSICLIBDB);
   QElapsedTimer timer;
   timer.start();
 
@@ -48,8 +45,8 @@ void MusicLibScanner::scanLib(const QString &path) {
   }
 
   ;
-  if (!scanDb_.open()) {
-    qDebug() << "Can't open dbase..." << scanDb_.lastError().type();
+  if (!scanDb.open()) {
+    qDebug() << "Can't open dbase..." << scanDb.lastError().type();
     return;
   }
 
@@ -66,7 +63,7 @@ void MusicLibScanner::scanLib(const QString &path) {
 
     QString date = QDateTime::currentDateTime().toString("yyyy-MM-dd");
     // We begin a transaction here.
-    scanDb_.transaction();
+    scanDb.transaction();
     QString line;
     QString error;
 
@@ -86,7 +83,7 @@ void MusicLibScanner::scanLib(const QString &path) {
         }
 
         // Adding all queries to the transaction.
-        error = scanDb_.exec(getTrackQuery(tmp, date) + ";\n")
+        error = scanDb.exec(getTrackQuery(tmp, date) + ";\n")
                     .lastError()
                     .text()
                     .trimmed();
@@ -99,12 +96,12 @@ void MusicLibScanner::scanLib(const QString &path) {
     qDebug() << "pre commit" << timer.elapsed();
     timer.restart();
     // Now commit everything at once.
-    scanDb_.commit();
+    scanDb.commit();
     qDebug() << "post commit" << timer.elapsed();
     timer.restart();
   }
 
-  scanDb_.close();
+  scanDb.close();
   qDebug() << "End scan" << timer.elapsed();
   emit scanComplete();
 }
@@ -136,7 +133,7 @@ QString MusicLibScanner::getTrackQuery(Tags track, const QString date) {
   return query;
 }
 
-bool MusicLibScanner::suffixCheck(const QString &val) const {
+bool MusicLibScanner::suffixCheck(const QString &val) {
   if (val.endsWith(".mp3")) {
     return true;
   }
