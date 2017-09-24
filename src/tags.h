@@ -11,7 +11,7 @@ class Tags {
  public:
   Tags();
   Tags(const TagLib::Tag *tag, const QString &path, const QString &mrl,
-       int length, QString lengthString);
+       int length, QString lengthString, uint discNumber);
 
   QString album_;
   QString artist_;
@@ -24,6 +24,7 @@ class Tags {
   QString title_;
   QString track_;
   QString year_;
+  QString disc_;
 
   QJsonObject toJson();
 

@@ -1,12 +1,14 @@
 #include "tags.h"
+#include <tpropertymap.h>
 
+#include <QDebug>
 #include <QString>
 #include <QUrl>
 
 Tags::Tags() {}
 
 Tags::Tags(const TagLib::Tag *tag, const QString &path, const QString &mrl,
-           int length, QString lengthString)
+           int length, QString lengthString, uint discNumber)
     : album_(QString::fromUtf8(tag->album().toCString(true))),
       artist_(QString::fromUtf8(tag->artist().toCString(true))),
       comment_(QString::fromUtf8(tag->comment().toCString(true))),
@@ -17,7 +19,8 @@ Tags::Tags(const TagLib::Tag *tag, const QString &path, const QString &mrl,
       path_(path),
       title_(QString::fromUtf8(tag->title().toCString(true))),
       track_(QString::number(tag->track())),
-      year_(QString::number(tag->year())) {}
+      year_(QString::number(tag->year())),
+      disc_(QString::number(discNumber)) {}
 
 QJsonObject Tags::toJson() {
   QJsonObject retval;
@@ -32,6 +35,7 @@ QJsonObject Tags::toJson() {
   retval.insert("title", title_);
   retval.insert("track", track_.toInt());
   retval.insert("year", year_.toInt());
+  retval.insert("disc", disc_.toInt());
 
   return retval;
 }
