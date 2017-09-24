@@ -182,12 +182,18 @@ void Model::updateTable() {
     tmplist << record.value("name").toString();
   }
 
-  if (tmplist.contains("dateAdded")) {
-    return;
+  if (!tmplist.contains("dateAdded")) {
+    qDebug() << db_.exec("ALTER TABLE musiclib ADD COLUMN dateAdded TEXT")
+                    .lastError();
   }
 
-  qDebug()
-      << db_.exec("ALTER TABLE musiclib ADD COLUMN dateAdded TEXT").lastError();
+  if (!tmplist.contains("discNumber")) {
+    qDebug()
+        << db_.exec(
+                  "ALTER TABLE musiclib ADD COLUMN discNumber INT NOT NULL "
+                  "DEFAULT 1")
+               .lastError();
+  }
 }
 
 void Model::newUpdateTable() {
@@ -227,7 +233,8 @@ void Model::createLibTable(const QString &name) {
     qs.append("`title` TEXT NOT NULL,\n");
     qs.append("`track` int,\n");
     qs.append("`year` int,\n");
-    qs.append("`dateAdded` TEXT\n");
+    qs.append("`dateAdded` TEXT,\n");
+    qs.append("`discNumber` int NOT NULL DEFAULT 1\n");
     qs.append(")");
 
     QMutexLocker locker(mutex_.data());

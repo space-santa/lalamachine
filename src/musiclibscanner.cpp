@@ -111,11 +111,11 @@ QString MusicLibScanner::getTrackQuery(Tags track, const QString date) {
       "INSERT into `musiclib` "
       "(`album`, `artist`, `comment`, `genre`, `length`, "
       "`lengthString`, `mrl`, `path`, `title`, `track`, `"
-      "year`, `dateAdded`) "
+      "year`, `dateAdded`, `discNumber`) "
       "VALUES ");
 
   QString valuesA("('%1', '%2', '%3', '%4', '%5', '%6', ");
-  QString valuesB("'%1', '%2', '%3', '%4', '%5', '%6')");
+  QString valuesB("'%1', '%2', '%3', '%4', '%5', '%6', '%7')");
   query.append(valuesA.arg(Model::escapeString(track.album_))
                    .arg(Model::escapeString(track.artist_))
                    .arg(Model::escapeString(track.comment_))
@@ -127,7 +127,8 @@ QString MusicLibScanner::getTrackQuery(Tags track, const QString date) {
                    .arg(Model::escapeString(track.title_))
                    .arg(Model::escapeString(track.track_))
                    .arg(Model::escapeString(track.year_))
-                   .arg(Model::escapeString(date)));
+                   .arg(Model::escapeString(date))
+                   .arg(Model::escapeString(track.disc_)));
 
   qDebug() << query;
   return query;
