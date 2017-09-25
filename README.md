@@ -10,11 +10,9 @@ lalamachine is just another music player. It features:
 
 There is the option to burn a playlist using K3B. But I don't have a disk-drive anymore so I can't continue to support that.
 
-[User documentation can be found in the wiki.](https://bitbucket.org/r-mean/lalamachine/wiki/Home)
-
 ## Dependencies
 
-lalamachine is a Qt5 application and uses libvlc to play music.
+lalamachine is a Qt5 application.
 The only other (direct) dependency is taglib.
 
 ## Build it
@@ -63,7 +61,7 @@ I would appreciate any help. If you'd like to contribute to lalamachine,
 * Test. Either by using the app or by adding to the qt unit test in ./test/lalatest
 * Create packages for other distributions.
 * Add to the wiki.
-* Write code and send me a pull request. There is also a list of issues that wants to be resolved. Please read the [coding guide](https://bitbucket.org/r-mean/lalamachine/wiki/Coding%20Guide)
+* Write code and send me a pull request. There is also a list of issues that wants to be resolved. [Trello-board](https://trello.com/b/7C3MEK7M/lalamachine)
 * Let me know how you like the app and what functionality is missing.
 
 
