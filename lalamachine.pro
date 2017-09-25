@@ -64,6 +64,8 @@ DISTFILES += \
     LICENSE \
     changelog
 
+ICON = ./images/lala-icon.png.icns
+
 unix!macx: {
     INCLUDEPATH += /usr/include/taglib
     LIBS += -ltag
