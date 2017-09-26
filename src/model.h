@@ -24,7 +24,8 @@ class Model {
     GENRE,
     ARTIST,
     ALBUM,
-    DATEADDED
+    DATEADDED,
+    DISCNUMBER
   };
   Q_ENUMS(SortWhat)
 

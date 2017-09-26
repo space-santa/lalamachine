@@ -20,6 +20,7 @@ QMap<Model::SortWhat, QString> Model::initSortMap() {
   tmp.insert(Model::COMMENT, "comment");
   tmp.insert(Model::LENGTH, "length");
   tmp.insert(Model::DATEADDED, "dateAdded");
+  tmp.insert(Model::DISCNUMBER, "discNumber");
 
   return tmp;
 }
@@ -80,7 +81,7 @@ QString Model::getSortQueryString(const QString &title, const QString &genre,
     query.append("DESC");
   }
 
-  query.append(", artist, album, track");
+  query.append(", artist, album, discNumber, track");
 
   qDebug() << "ZZZ" << query;
   return query;
@@ -307,6 +308,7 @@ QPair<int, QJsonArray> Model::queryResultToJson(QSqlQuery result) {
     tmp.insert("lengthString", result.value("lengthString").toString());
     tmp.insert("year", result.value("year").toInt());
     tmp.insert("dateAdded", result.value("dateAdded").toString());
+    tmp.insert("discNumber", result.value("discNumber").toInt());
 
     retval.append(tmp);
   }

@@ -25,6 +25,7 @@ class PlaylistModel : public QAbstractListModel {
     MrlRole,
     PathRole,
     YearRole,
+    DiscNumberRole,
     DateAddedRole,
     IdRole
   };
@@ -90,6 +91,9 @@ class PlaylistModel : public QAbstractListModel {
 
   static bool sortYearAsc(Track t1, Track t2);
   static bool sortYearDesc(Track t1, Track t2);
+
+  static bool sortDiscNumberAsc(Track t1, Track t2);
+  static bool sortDiscNumberDesc(Track t1, Track t2);
 
   static bool sortDateAddedAsc(Track t1, Track t2);
   static bool sortDateAddedDesc(Track t1, Track t2);

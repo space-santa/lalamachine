@@ -84,6 +84,9 @@ Dialog {
                     key: "year",
                     value: "true"
                 }, {
+                    key: "discNumber",
+                    value: "true"
+                }, {
                     key: "dateAdded",
                     value: "true"
                 }]

@@ -30,6 +30,7 @@ class Track {
   int length_;
   QString lengthString_;
   int year_;
+  int disc_;
   QString dateAdded_;
   int id_;
 };
