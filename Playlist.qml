@@ -564,6 +564,10 @@ Rectangle {
             if (tag === "year") {
                 width = 70
             }
+            if (tag === "discNumber") {
+                width = 50
+                title = "Disc"
+            }
             if (tag === "dateAdded") {
                 width = 125
                 title = "Date added"

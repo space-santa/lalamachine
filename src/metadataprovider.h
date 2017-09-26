@@ -35,6 +35,7 @@ class MetaDataProvider : public QObject {
  public:
   explicit MetaDataProvider(QObject *parent = 0);
   static Tags metaData(const QUrl &path);
+  static uint discNumberOfMp3(const QString &path);
 
   /*!
    * \brief metaDataAsJson is a convenience function to be used from QML.

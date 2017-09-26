@@ -4,8 +4,8 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "taskName": "runLala",
-            "command": "${workspaceRoot}/lalamachine",
+            "taskName": "runLalaDebug",
+            "command": "${workspaceRoot}/debug/lalamachine",
             "type": "shell",
             "problemMatcher": [
                 "$lessCompile"
@@ -13,47 +13,21 @@
         },
         {
             "taskName": "qmake-debug",
-            "command": "qmake-qt5 CONFIG+=debug ${workspaceRoot}/lalamachine.pro",
-            "group": "build",
-            "type": "shell"
-        },
-        {
-            "taskName": "qmake",
-            "command": "qmake-qt5 ${workspaceRoot}/lalamachine.pro",
-            "group": "build",
-            "type": "shell"
-        },
-        {
-            "taskName": "make clean",
-            "command": "make clean",
-            "group": "build"
-        },
-        {
-            "taskName": "make fresh debug",
-            "command": "make clean && qmake-qt5 CONFIG+=debug ${workspaceRoot}/lalamachine.pro && make -j3",
-            "type": "shell",
-            "group": "build",
-            "problemMatcher": [
-                "$lessCompile"
-            ]
-        },
-        {
-            "taskName": "make fresh",
-            "command": "make clean && qmake-qt5 ${workspaceRoot}/lalamachine.pro && make -j3",
-            "type": "shell",
-            "group": "build",
-            "problemMatcher": [
-                "$lessCompile"
-            ]
-        },
-        {
-            "taskName": "make",
-            "command": "make -j3",
-            "type": "shell",
+            "command": "cd ${workspaceRoot}/debug/ && qmake CONFIG+=debug ${workspaceRoot}/lalamachine.pro && /usr/bin/make qmake_all && make -j3",
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
+            "type": "shell",
+            "problemMatcher": [
+                "$lessCompile"
+            ]
+        },
+        {
+            "taskName": "make clean",
+            "command": "cd ${workspaceRoot}/debug/ && make clean",
+            "group": "build",
+            "type": "shell",
             "problemMatcher": [
                 "$lessCompile"
             ]

@@ -36,6 +36,7 @@ void Track::fromJson(const QJsonObject &json) {
   length_ = json.value("length").toInt();
   lengthString_ = json.value("lengthString").toString();
   year_ = json.value("year").toInt();
+  disc_ = json.value("discNumber").toInt();
   dateAdded_ = json.value("dateAdded").toString();
   id_ = json.value("id").toInt();
 }
@@ -54,6 +55,7 @@ QJsonObject Track::toJson() const {
   tmp.insert("length", length_);
   tmp.insert("lengthString", lengthString_);
   tmp.insert("year", year_);
+  tmp.insert("discNumber", disc_);
   tmp.insert("dateAdded", dateAdded_);
   tmp.insert("id", id_);
 

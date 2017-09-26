@@ -33,7 +33,7 @@ class MusicLibScanner : public QObject {
   Q_OBJECT
 
  public:
-  MusicLibScanner(QObject *parent = 0);
+  MusicLibScanner(QObject *parent = 0) : QObject(parent){};
 
  public slots:
   void scanLib(const QString &path);
@@ -44,7 +44,6 @@ class MusicLibScanner : public QObject {
   void trackAdded();
 
  private:
-  bool suffixCheck(const QString &val) const;
-  QSqlDatabase scanDb_;
-  QString getTrackQuery(Tags track, const QString date);
+  static bool suffixCheck(const QString &val);
+  static QString getTrackQuery(Tags track, const QString date);
 };

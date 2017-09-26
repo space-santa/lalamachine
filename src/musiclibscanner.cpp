@@ -29,15 +29,13 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSqlQuery>
 #include "config.h"
 #include "metadataprovider.h"
+#include "model.h"
 #include "musiclib.h"
 #include "tags.h"
 
-MusicLibScanner::MusicLibScanner(QObject *parent) : QObject(parent) {
-  scanDb_ = QSqlDatabase::addDatabase("QSQLITE", "scanner");
-  scanDb_.setDatabaseName(Config::MUSICLIBDB);
-}
-
 void MusicLibScanner::scanLib(const QString &path) {
+  QSqlDatabase scanDb = QSqlDatabase::addDatabase("QSQLITE", "scanner");
+  scanDb.setDatabaseName(Config::MUSICLIBDB);
   QElapsedTimer timer;
   timer.start();
 
@@ -47,8 +45,8 @@ void MusicLibScanner::scanLib(const QString &path) {
   }
 
   ;
-  if (!scanDb_.open()) {
-    qDebug() << "Can't open dbase..." << scanDb_.lastError().type();
+  if (!scanDb.open()) {
+    qDebug() << "Can't open dbase..." << scanDb.lastError().type();
     return;
   }
 
@@ -65,7 +63,7 @@ void MusicLibScanner::scanLib(const QString &path) {
 
     QString date = QDateTime::currentDateTime().toString("yyyy-MM-dd");
     // We begin a transaction here.
-    scanDb_.transaction();
+    scanDb.transaction();
     QString line;
     QString error;
 
@@ -85,7 +83,7 @@ void MusicLibScanner::scanLib(const QString &path) {
         }
 
         // Adding all queries to the transaction.
-        error = scanDb_.exec(getTrackQuery(tmp, date) + ";\n")
+        error = scanDb.exec(getTrackQuery(tmp, date) + ";\n")
                     .lastError()
                     .text()
                     .trimmed();
@@ -98,12 +96,12 @@ void MusicLibScanner::scanLib(const QString &path) {
     qDebug() << "pre commit" << timer.elapsed();
     timer.restart();
     // Now commit everything at once.
-    scanDb_.commit();
+    scanDb.commit();
     qDebug() << "post commit" << timer.elapsed();
     timer.restart();
   }
 
-  scanDb_.close();
+  scanDb.close();
   qDebug() << "End scan" << timer.elapsed();
   emit scanComplete();
 }
@@ -113,29 +111,30 @@ QString MusicLibScanner::getTrackQuery(Tags track, const QString date) {
       "INSERT into `musiclib` "
       "(`album`, `artist`, `comment`, `genre`, `length`, "
       "`lengthString`, `mrl`, `path`, `title`, `track`, `"
-      "year`, `dateAdded`) "
+      "year`, `dateAdded`, `discNumber`) "
       "VALUES ");
 
   QString valuesA("('%1', '%2', '%3', '%4', '%5', '%6', ");
-  QString valuesB("'%1', '%2', '%3', '%4', '%5', '%6')");
-  query.append(valuesA.arg(MusicLib::escapeString(track.album_))
-                   .arg(MusicLib::escapeString(track.artist_))
-                   .arg(MusicLib::escapeString(track.comment_))
-                   .arg(MusicLib::escapeString(track.genre_))
-                   .arg(MusicLib::escapeString(track.length_))
-                   .arg(MusicLib::escapeString(track.lengthString_)));
-  query.append(valuesB.arg(MusicLib::escapeString(track.mrl_))
-                   .arg(MusicLib::escapeString(track.path_))
-                   .arg(MusicLib::escapeString(track.title_))
-                   .arg(MusicLib::escapeString(track.track_))
-                   .arg(MusicLib::escapeString(track.year_))
-                   .arg(MusicLib::escapeString(date)));
+  QString valuesB("'%1', '%2', '%3', '%4', '%5', '%6', '%7')");
+  query.append(valuesA.arg(Model::escapeString(track.album_))
+                   .arg(Model::escapeString(track.artist_))
+                   .arg(Model::escapeString(track.comment_))
+                   .arg(Model::escapeString(track.genre_))
+                   .arg(Model::escapeString(track.length_))
+                   .arg(Model::escapeString(track.lengthString_)));
+  query.append(valuesB.arg(Model::escapeString(track.mrl_))
+                   .arg(Model::escapeString(track.path_))
+                   .arg(Model::escapeString(track.title_))
+                   .arg(Model::escapeString(track.track_))
+                   .arg(Model::escapeString(track.year_))
+                   .arg(Model::escapeString(date))
+                   .arg(Model::escapeString(track.disc_)));
 
   qDebug() << query;
   return query;
 }
 
-bool MusicLibScanner::suffixCheck(const QString &val) const {
+bool MusicLibScanner::suffixCheck(const QString &val) {
   if (val.endsWith(".mp3")) {
     return true;
   }

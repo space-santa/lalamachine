@@ -6,7 +6,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/lalamachine",
+            "program": "${workspaceRoot}/debug/lalamachine",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",

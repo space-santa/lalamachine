@@ -20,37 +20,51 @@ TEMPLATE = app
 
 
 SOURCES += \
-    ../../config.cpp \
-    ../../m3uinout.cpp \
-    ../../metadataprovider.cpp \
-    ../../timeconverter.cpp \
-    ../../cdwriter.cpp \
-    ../../musiclib.cpp \
-    ../../systeminteractor.cpp \
-    ../../autoplaylistobject.cpp \
-    ../../autoplaylistmanager.cpp \
-    ../../autoplaylist.cpp \
-    ../../lalatypes.cpp \
-    ../../musiclibscanner.cpp \
+    ../../src/config.cpp \
+    ../../src/m3uinout.cpp \
+    ../../src/metadataprovider.cpp \
+    ../../src/timeconverter.cpp \
+    ../../src/cdwriter.cpp \
+    ../../src/musiclib.cpp \
+    ../../src/systeminteractor.cpp \
+    ../../src/autoplaylistobject.cpp \
+    ../../src/autoplaylistmanager.cpp \
+    ../../src/autoplaylist.cpp \
+    ../../src/lalatypes.cpp \
+    ../../src/model.cpp \
+    ../../src/musiclibscanner.cpp \
     main.cpp \
     lalatest.cpp \
+    test_model.cpp \
     testautoplaylist.cpp \
-    ../../tags.cpp
+    ../../src/tags.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
-    ../../config.h \
-    ../../m3uinout.h \
-    ../../metadataprovider.h \
-    ../../timeconverter.h \
-    ../../cdwriter.h \
-    ../../musiclib.h \
-    ../../systeminteractor.h \
-    ../../autoplaylistobject.h \
-    ../../autoplaylistmanager.h \
-    ../../autoplaylist.h \
-    ../../lalatypes.h \
-    ../../musiclibscanner.h \
+    ../../src/config.h \
+    ../../src/m3uinout.h \
+    ../../src/metadataprovider.h \
+    ../../src/timeconverter.h \
+    ../../src/cdwriter.h \
+    ../../src/musiclib.h \
+    ../../src/systeminteractor.h \
+    ../../src/autoplaylistobject.h \
+    ../../src/autoplaylistmanager.h \
+    ../../src/autoplaylist.h \
+    ../../src/lalatypes.h \
+    ../../src/model.h \
+    ../../src/musiclibscanner.h \
     lalatest.h \
+    test_model.h \
     testautoplaylist.h \
-    ../../tags.h
+    ../../src/tags.h
+
+unix!macx: {
+    INCLUDEPATH += /usr/include/taglib
+    LIBS += -ltag
+}
+
+macx: {
+    INCLUDEPATH += /usr/local/include/taglib
+    LIBS += -L/usr/local/lib/ -ltag
+}

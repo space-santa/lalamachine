@@ -29,87 +29,48 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QString>
 #include <QThread>
 
+#include "model.h"
 #include "musiclibscanner.h"
 
 class MusicLib : public QObject {
   Q_OBJECT
 
-  // clang-format off
-    Q_PROPERTY(bool scanning
-               READ scanning
-               WRITE setScanning
-               NOTIFY scanningChanged)
+  Q_PROPERTY(
+      bool scanning READ scanning WRITE setScanning NOTIFY scanningChanged)
 
-    Q_PROPERTY(QJsonArray displayLib
-               READ displayLib
-               NOTIFY displayLibChanged)
+  Q_PROPERTY(QJsonArray displayLib READ displayLib NOTIFY displayLibChanged)
 
-    Q_PROPERTY(int totalLength
-               READ totalLength
-               NOTIFY totalLengthChanged)
+  Q_PROPERTY(int totalLength READ totalLength NOTIFY totalLengthChanged)
 
-    Q_PROPERTY(QString libPath
-               READ libPath
-               WRITE setLibPath
-               NOTIFY libPathChanged)
+  Q_PROPERTY(
+      QString libPath READ libPath WRITE setLibPath NOTIFY libPathChanged)
 
-    Q_PROPERTY(QString genreFilter
-               READ genreFilter
-               WRITE setGenreFilter
-               NOTIFY genreFilterChanged)
+  Q_PROPERTY(QString genreFilter READ genreFilter WRITE setGenreFilter NOTIFY
+                 genreFilterChanged)
 
-    Q_PROPERTY(QString artistFilter
-               READ artistFilter
-               WRITE setArtistFilter
-               NOTIFY artistFilterChanged)
+  Q_PROPERTY(QString artistFilter READ artistFilter WRITE setArtistFilter NOTIFY
+                 artistFilterChanged)
 
-    Q_PROPERTY(QString albumFilter
-               READ albumFilter
-               WRITE setAlbumFilter
-               NOTIFY albumFilterChanged)
+  Q_PROPERTY(QString albumFilter READ albumFilter WRITE setAlbumFilter NOTIFY
+                 albumFilterChanged)
 
-    Q_PROPERTY(QStringList genreList
-               READ genreList
-               NOTIFY genreListChanged)
+  Q_PROPERTY(QStringList genreList READ genreList NOTIFY genreListChanged)
 
-    Q_PROPERTY(QStringList artistList
-               READ artistList
-               NOTIFY artistListChanged)
+  Q_PROPERTY(QStringList artistList READ artistList NOTIFY artistListChanged)
 
-    Q_PROPERTY(QStringList albumList
-               READ albumList
-               NOTIFY albumListChanged)
+  Q_PROPERTY(QStringList albumList READ albumList NOTIFY albumListChanged)
 
-    Q_PROPERTY(bool sortAsc READ sortAsc WRITE setSortAsc NOTIFY sortAscChanged)
-    Q_PROPERTY(SortWhat what READ what WRITE setWhat NOTIFY whatChanged)
+  Q_PROPERTY(bool sortAsc READ sortAsc WRITE setSortAsc NOTIFY sortAscChanged)
+  Q_PROPERTY(Model::SortWhat what READ what WRITE setWhat NOTIFY whatChanged)
 
-    Q_PROPERTY(QString titlePartialFilter
-               READ titlePartialFilter
-               WRITE setTitlePartialFilter
-               NOTIFY titlePartialFilterChanged)
-  // clang-format on
+  Q_PROPERTY(QString titlePartialFilter READ titlePartialFilter WRITE
+                 setTitlePartialFilter NOTIFY titlePartialFilterChanged)
 
  public:
-  enum SortWhat {
-    TRACK,
-    TITLE,
-    COMMENT,
-    LENGTH,
-    GENRE,
-    ARTIST,
-    ALBUM,
-    DATEADDED
-  };
-  Q_ENUMS(SortWhat)
-  enum SortHow { ASCENDING, DESCENDING };
-  Q_ENUMS(SortHow)
-
   MusicLib(QObject *parent = 0);
   ~MusicLib();
 
   static const QString ALL_FILTER;
-  static const QMap<SortWhat, QString> SORT_MAP;
-  static QMap<SortWhat, QString> initSortMap();
 
   bool scanning() const;
   void setScanning(bool val);
@@ -132,8 +93,8 @@ class MusicLib : public QObject {
   bool sortAsc() const;
   void setSortAsc(bool val);
 
-  SortWhat what() const;
-  void setWhat(SortWhat val);
+  Model::SortWhat what() const;
+  void setWhat(Model::SortWhat val);
 
   QStringList genreList() const;
   QStringList artistList() const;
@@ -142,21 +103,25 @@ class MusicLib : public QObject {
   Q_INVOKABLE void rescan();
 
   Q_INVOKABLE void resetFilterAndSort();
-  Q_INVOKABLE QJsonArray getAlbumTracks(const QString &album);
+  Q_INVOKABLE QJsonArray getAlbumTracks(const QString &album) {
+    return Model::instance()->getAlbumTracks(album);
+  }
 
-  Q_INVOKABLE QString getDateAddedByMrl(const QString &mrl) const;
+  Q_INVOKABLE QString getDateAddedByMrl(const QString &mrl) const {
+    return Model::instance()->getDateAddedByMrl(mrl);
+  }
 
-  Q_INVOKABLE QJsonObject getMetadataForMrl(const QString &mrl) const;
-  Q_INVOKABLE QJsonObject getMetadataForMrl(const QUrl &mrl) const;
+  Q_INVOKABLE QJsonObject getMetadataForMrl(const QString &mrl) const {
+    return Model::instance()->getMetadataForMrl(mrl);
+  }
 
-  static QString escapeString(QString str);
-
-  static QPair<int, QJsonArray> queryResultToJson(QSqlQuery result);
+  Q_INVOKABLE QJsonObject getMetadataForMrl(const QUrl &mrl) const {
+    return Model::instance()->getMetadataForMrl(mrl);
+  }
 
   QString titlePartialFilter() const;
   void setTitlePartialFilter(const QString &titlePartialFilter);
 
-  static QString cleanPath(QString mrl);
  public slots:
   void scanFinished();
 
@@ -192,10 +157,9 @@ class MusicLib : public QObject {
   QThread scannerThread_;
 
   QSharedPointer<QMutex> mutex_;
-  QSqlDatabase db_;
   bool sortAsc_;
   bool scanning_;
-  SortWhat what_;
+  Model::SortWhat what_;
   QJsonArray displayLib_;
   int totalLength_;
   QString genreFilter_;
@@ -215,22 +179,8 @@ class MusicLib : public QObject {
 
   QStringList getList(const QString &what) const;
 
-  QString getSortQueryString() const;
-  QString getGenreListQuery() const;
-  QString getArtistListQuery() const;
-  QString getAlbumListQuery() const;
-
-  void ensureAllTables();
-  void clearMusicLib();
-
-  QPair<int, QJsonArray> runSetDisplayQuery(const QString &query);
-
-  void updateTable();
-
-  void createLibTable(const QString &name);
-  void copyLibToTmp();
-  void restoreMetaData();
   void init();
+
  private slots:
   void debugSignal();
 
