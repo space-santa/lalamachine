@@ -42,7 +42,7 @@ Item {
             verticalCenter: parent.verticalCenter
         }
         height: parent.height
-        color: styleData.selected ? 'darkslategrey' : "transparent"
+        color: styleData.selected ? 'darkorange' : "darkblue"
         MouseArea {
             anchors.fill: parent
             acceptedButtons: Qt.RightButton | Qt.LeftButton

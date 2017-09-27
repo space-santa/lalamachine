@@ -4,7 +4,7 @@ Text {
     font.family: "Helvetica"
     font.pointSize: 12
     clip: true
-    color: styleData.selected ? "lightgrey" : "white"
+    color: styleData.selected ? "white" : "white"
     text: styleData.value ? styleData.value : ""
     verticalAlignment: Qt.AlignVCenter
     horizontalAlignment: styleData.textAlignment

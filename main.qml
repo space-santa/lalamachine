@@ -568,18 +568,7 @@ ApplicationWindow {
 
         Rectangle {
             id: shield
-            color: "black"
-
-            gradient: Gradient {
-                GradientStop {
-                    position: 0.00
-                    color: "#000000"
-                }
-                GradientStop {
-                    position: 1.00
-                    color: "#333333"
-                }
-            }
+            color: "blue"
 
             anchors.fill: parent
             z: 2
@@ -699,6 +688,7 @@ ApplicationWindow {
         duration: lalaplayer.duration
         position: lalaplayer.position
         hasAudio: lalaplayer.hasAudio()
+        color: "blue"
 
         onSeek: {
             lalaplayer.seek(pos)
@@ -707,11 +697,11 @@ ApplicationWindow {
         gradient: Gradient {
             GradientStop {
                 position: 0
-                color: "#333333"
+                color: "blue"
             }
             GradientStop {
                 position: 1.00
-                color: "#717171"
+                color: "lightblue"
             }
         }
     }
