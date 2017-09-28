@@ -13,8 +13,6 @@ Rectangle {
     property alias position: now_playing_container.position
     property alias hasAudio: now_playing_container.hasAudio
 
-    property alias volume: volume_control.value
-
     property alias repeatOne: now_playing_container.repeatOne
     property alias repeatAll: now_playing_container.repeatAll
     property alias random: now_playing_container.random

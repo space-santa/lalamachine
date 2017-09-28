@@ -23,6 +23,19 @@ Rectangle {
     property alias value: volume_slider.value
     color: "transparent"
 
+    onValueChanged: {
+        lalaplayer.setVolume(value * 100)
+    }
+
+    Component.onCompleted: {
+        value = config.volume
+    }
+
+    Component.onDestruction: {
+        config.volume = value
+        config.saveConfig()
+    }
+
     function volumeUp() {
         var tmpvol = value
         if (tmpvol < 0.9) {

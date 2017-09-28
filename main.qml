@@ -57,16 +57,8 @@ ApplicationWindow {
 
     property bool kioskMode: false
 
+    // lalaplayer is globally accessible to change volume, etc
     property ThePlayer lalaplayer: playMusic
-
-    property alias volume: player_controls.volume
-    onVolumeChanged: {
-        console.log("master.volumeChanged")
-        //lalaplayer.setVolume(volume * 100)
-    }
-
-    signal setVolume(int val)
-    //onVolumeChanged: setVolume(volume * 100)
 
     // The nowPlaying signal chain is used to get the currently playing title
     // into the tooltip of lalatray.
@@ -113,8 +105,6 @@ ApplicationWindow {
 
     Component.onCompleted: {
         playlist.setCurrentPlaylist(config.lastPlaylist)
-        master.volume = config.volume
-        console.log("Volume on load", config.volume)
 
         if (settings.showPlaylist) {
             show_list_action.trigger()
@@ -142,7 +132,6 @@ ApplicationWindow {
 
     onClosing: {
         playlist.writePlaylist(miscPlaylistName)
-        config.volume = master.volume
 
         // If the current list has a name we want to remember latest changes.
         playlist.writeCurrentListIfNamed()
@@ -468,12 +457,6 @@ ApplicationWindow {
 
     ThePlayer {
         id: playMusic
-        property int volume: master.volume * 100
-
-        onVolumeChanged: {
-            console.log("the volume is", volume)
-            setVolume(volume)
-        }
 
         property string currentTitle
         property string currentArtist
