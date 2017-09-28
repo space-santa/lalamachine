@@ -140,6 +140,9 @@ ApplicationWindow {
         // If the currentPlaylist is not empty but the miscPlaylistName it still
         // as expected because then the lastPlaylist is set to the
         // miscPlaylistName in the else branch.
+        // FIXME: I don't understand the previous comment. That means this is
+        // probably not a good way to do things because if I don't understand
+        // it I can't maintain it. => TODO: REFACTOR
         if (currentPlaylist === "") {
             config.lastPlaylist = miscPlaylistName
         } else {
