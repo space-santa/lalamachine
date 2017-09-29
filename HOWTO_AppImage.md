@@ -1,4 +1,5 @@
 This is a rough description of what I did to make it work.
+ ```
 cd DEPLOYDIR
 mkdir deploy-lala
 cd deploy-lala
