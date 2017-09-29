@@ -1,65 +1,67 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
-        <file>ImageButton.qml</file>
-        <file>functions.js</file>
-        <file>Playlist.qml</file>
-        <file>PlayerControlButtons.qml</file>
-        <file>SavePlaylistDialog.qml</file>
-        <file>VolumeControl.qml</file>
-        <file>NowPlayingDisplay.qml</file>
-        <file>Configuration.qml</file>
-        <file>LibraryView.qml</file>
-        <file>StringListView.qml</file>
-        <file>RightClickMenu.qml</file>
-        <file>PlaylistMenu.qml</file>
-        <file>InfoDialog.qml</file>
-        <file>KeyValueText.qml</file>
-        <file>AutoPlaylistObject.qml</file>
         <file>AutoPlaylistDialog.qml</file>
-        <file>MultiStateButton.qml</file>
-        <file>SettingsDialog.qml</file>
+        <file>AutoPlaylistObject.qml</file>
+        <file>Configuration.qml</file>
+        <file>ImageButton.qml</file>
+        <file>InfoDialog.qml</file>
+        <file>ItemDelegate.qml</file>
         <file>KeyValueTableView.qml</file>
+        <file>KeyValueText.qml</file>
+        <file>LibraryView.qml</file>
+        <file>MultiStateButton.qml</file>
+        <file>NowPlayingDisplay.qml</file>
+        <file>PlayerControlButtons.qml</file>
+        <file>PlayerControls.qml</file>
+        <file>Playlist.qml</file>
+        <file>PlaylistMenu.qml</file>
+        <file>RightClickMenu.qml</file>
+        <file>SavePlaylistDialog.qml</file>
+        <file>SettingsDialog.qml</file>
+        <file>SliderStyleLala.qml</file>
+        <file>StringListView.qml</file>
+        <file>TableStyle.qml</file>
         <file>TableViewDelegate.qml</file>
         <file>TrackMissingDialog.qml</file>
-        <file>ItemDelegate.qml</file>
-        <file>PlayerControls.qml</file>
+        <file>VolumeControl.qml</file>
+        <file>functions.js</file>
+        <file>main.qml</file>
     </qresource>
     <qresource prefix="/images">
-        <file>images/eject.png</file>
-        <file>images/pause.png</file>
-        <file>images/play.png</file>
-        <file>images/forward.png</file>
         <file>images/back.png</file>
-        <file>images/lalamachine.png</file>
-        <file>images/lalamachine-new.png</file>
+        <file>images/bug.png</file>
+        <file>images/delete.png</file>
+        <file>images/edit-clear.png</file>
+        <file>images/edit.png</file>
+        <file>images/eject.png</file>
+        <file>images/export.png</file>
+        <file>images/forward.png</file>
         <file>images/go-bottom.png</file>
         <file>images/go-down.png</file>
         <file>images/go-top.png</file>
         <file>images/go-up.png</file>
-        <file>images/edit-clear.png</file>
-        <file>images/save.png</file>
-        <file>images/open.png</file>
-        <file>images/random.png</file>
-        <file>images/repeatAll.png</file>
-        <file>images/repeat1.png</file>
-        <file>images/delete.png</file>
-        <file>images/info.png</file>
-        <file>images/bug.png</file>
         <file>images/help.png</file>
-        <file>images/edit.png</file>
+        <file>images/info.png</file>
+        <file>images/lalamachine-new.png</file>
+        <file>images/lalamachine.png</file>
+        <file>images/list-add.png</file>
+        <file>images/list-remove.png</file>
+        <file>images/logo/logo.png</file>
         <file>images/new.png</file>
+        <file>images/no.png</file>
+        <file>images/open.png</file>
+        <file>images/pause.png</file>
+        <file>images/play.png</file>
+        <file>images/preferences.png</file>
+        <file>images/quit.png</file>
+        <file>images/random.png</file>
+        <file>images/refresh.png</file>
+        <file>images/repeat1.png</file>
+        <file>images/repeatAll.png</file>
+        <file>images/repeat_random.png</file>
+        <file>images/save.png</file>
         <file>images/settings.png</file>
         <file>images/tab_new.png</file>
         <file>images/tab_remove.png</file>
-        <file>images/list-add.png</file>
-        <file>images/list-remove.png</file>
-        <file>images/refresh.png</file>
-        <file>images/preferences.png</file>
-        <file>images/repeat_random.png</file>
-        <file>images/export.png</file>
-        <file>images/logo/logo.png</file>
-        <file>images/no.png</file>
-        <file>images/quit.png</file>
     </qresource>
 </RCC>
