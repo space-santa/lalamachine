@@ -1,9 +1,19 @@
+lalamachine (3.2-1) UNRELEASED; urgency=medium
+
+  * Make sure new settings are added and available in the dialog.
+  * The settings dialog now resizes properly.
+  * Remove disc burning functionality.
+  * The background is now blue, the sliders are orange.
+  * New application icon.
+
+ -- rmean <armin.zirkel@gmail.com>  Fri, 29 Sep 2017 19:55:34 +1000
+
 lalamachine (3.1-1) UNRELEASED; urgency=medium
 
   * Ported lalamachine to MacOS.
   * Added the discnumber to the library and playlist.
 
- -- rmean <armin.zirkel@gmail.com>  Fri, 26 Sep 2017 21:16:11 +1000
+ -- rmean <armin.zirkel@gmail.com>  Tue, 26 Sep 2017 21:16:11 +1000
 
 lalamachine (3.0-1) UNRELEASED; urgency=medium
 
