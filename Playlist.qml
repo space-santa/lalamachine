@@ -417,6 +417,9 @@ Rectangle {
         model: playlist_model
         selectionMode: SelectionMode.ExtendedSelection
         backgroundVisible: true
+
+        style: TableStyle {}
+
         property var playlistColumns: config.playlistColumns
 
         // These values are required for drag and move. For a explanation,

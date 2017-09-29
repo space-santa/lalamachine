@@ -536,7 +536,7 @@ ApplicationWindow {
 
         Rectangle {
             id: shield
-            color: "blue"
+            color: "darkblue"
 
             anchors.fill: parent
             z: 2
@@ -656,23 +656,23 @@ ApplicationWindow {
         duration: lalaplayer.duration
         position: lalaplayer.position
         hasAudio: lalaplayer.hasAudio()
-        color: "blue"
-
-        onSeek: {
-            lalaplayer.seek(pos)
-        }
 
         gradient: Gradient {
             GradientStop {
                 position: 0
-                color: "blue"
+                color: "darkblue"
             }
             GradientStop {
                 position: 1.00
                 color: "lightblue"
             }
         }
+
+        onSeek: {
+            lalaplayer.seek(pos)
+        }
     }
+
 
     FileDialog {
         id: fileDialog
