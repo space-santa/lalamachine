@@ -29,14 +29,14 @@ Dialog {
 
     onAccepted: {
         config.playlistColumns = playlist_columns.getJson()
-
         config.saveConfig()
     }
 
+    standardButtons: StandardButton.Ok | StandardButton.Cancel
+
     Item {
         id: columns_edit
-        height: 200
-        width: 220
+        anchors.fill: parent
 
         KeyValueTableView {
             id: playlist_columns
