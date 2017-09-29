@@ -75,6 +75,13 @@ void Config::setPlaylistColumns(const QJsonArray &list) {
   emit playlistColumnsChanged();
 }
 
+QJsonObject Config::addKey(const QString &key) {
+  QJsonObject o;
+  o.insert("key", key);
+  o.insert("value", "true");
+  return o;
+}
+
 QJsonArray Config::playlistColumns() {
   QJsonArray retval;
   QJsonValue v = config_.value("playlistColumns");
@@ -85,23 +92,83 @@ QJsonArray Config::playlistColumns() {
     qWarning("No playlist columns defined.");
   }
 
+  bool hasTrack = false;
+  bool hasTitle = false;
+  bool hasComment = false;
+  bool hasGenre = false;
+  bool hasArtist = false;
+  bool hasAlbum = false;
+  bool hasLength = false;
+  bool hasYear = false;
   bool hasDate = false;
+  bool hasDisc = false;
+
   for (int i = 0; i < retval.count(); ++i) {
-    if (retval[i].toObject().value("key") == "dateAdded") {
+    QString key = retval[i].toObject().value("key").toString();
+    if (key == "track") {
+      hasTrack = true;
+    } else if (key == "title") {
+      hasTitle = true;
+    } else if (key == "comment") {
+      hasComment = true;
+    } else if (key == "genre") {
+      hasGenre = true;
+    } else if (key == "artist") {
+      hasArtist = true;
+    } else if (key == "album") {
+      hasAlbum = true;
+    } else if (key == "length") {
+      hasLength = true;
+    } else if (key == "year") {
+      hasYear = true;
+    } else if (key == "dateAdded") {
       hasDate = true;
-      break;
+    } else if (key == "discNumber") {
+      hasDisc = true;
     }
   }
 
-  if (!hasDate) {
-    QJsonObject o;
-    o.insert("key", "dateAdded");
-    o.insert("value", "true");
-    retval.append(o);
-    // Don't want to emit the signal, so not using the setter.
-    config_.insert("playlistColumns", retval);
+  if (!hasTrack) {
+    retval.append(addKey("track"));
   }
 
+  if (!hasTitle) {
+    retval.append(addKey("title"));
+  }
+
+  if (!hasComment) {
+    retval.append(addKey("comment"));
+  }
+
+  if (!hasGenre) {
+    retval.append(addKey("genre"));
+  }
+
+  if (!hasArtist) {
+    retval.append(addKey("artist"));
+  }
+
+  if (!hasAlbum) {
+    retval.append(addKey("album"));
+  }
+
+  if (!hasLength) {
+    retval.append(addKey("length"));
+  }
+
+  if (!hasYear) {
+    retval.append(addKey("year"));
+  }
+
+  if (!hasDisc) {
+    retval.append(addKey("discNumber"));
+  }
+
+  if (!hasDate) {
+    retval.append(addKey("dateAdded"));
+  }
+
+  config_.insert("playlistColumns", retval);
   qDebug() << "playlistColumns loaded" << retval;
   return retval;
 }

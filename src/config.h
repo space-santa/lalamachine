@@ -64,6 +64,7 @@ class Config : public QObject {
   static QJsonObject loadJsonFile(const QString &path);
   static void saveJsonFile(const QString &path, const QJsonObject &obj);
   static void ensureDir(const QString &path);
+  static QJsonObject addKey(const QString &key);
 
  signals:
   void volumeChanged();

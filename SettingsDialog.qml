@@ -46,51 +46,7 @@ Dialog {
             anchors.right: up_button.left
             keyTitle: "Tag"
             valueTitle: "visible"
-
-            list: getList()
-
-            function getList() {
-                // greater than 1 because the dateAdded is always there
-                if (config.playlistColumns
-                        && config.playlistColumns.length > 1) {
-                    return config.playlistColumns
-                } else {
-                    return defaultList
-                }
-            }
-
-            property var defaultList: [{
-                    key: "track",
-                    value: "true"
-                }, {
-                    key: "title",
-                    value: "true"
-                }, {
-                    key: "comment",
-                    value: "true"
-                }, {
-                    key: "genre",
-                    value: "true"
-                }, {
-                    key: "artist",
-                    value: "true"
-                }, {
-                    key: "album",
-                    value: "true"
-                }, {
-                    key: "length",
-                    value: "true"
-                }, {
-                    key: "year",
-                    value: "true"
-                }, {
-                    key: "discNumber",
-                    value: "true"
-                }, {
-                    key: "dateAdded",
-                    value: "true"
-                }]
-
+            list: config.playlistColumns
             onRightClick: rcm.popup()
         }
 
