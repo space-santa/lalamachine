@@ -8,8 +8,6 @@ lalamachine is just another music player. It features:
 * Playlists which can be exported into a folder.
 * Automatic playlists
 
-There is the option to burn a playlist using K3B. But I don't have a disk-drive anymore so I can't continue to support that.
-
 ## Dependencies
 
 lalamachine is a Qt5 application.

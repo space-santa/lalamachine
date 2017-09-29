@@ -26,7 +26,6 @@ SOURCES += \
     ../../src/timeconverter.cpp \
     ../../src/cdwriter.cpp \
     ../../src/musiclib.cpp \
-    ../../src/systeminteractor.cpp \
     ../../src/autoplaylistobject.cpp \
     ../../src/autoplaylistmanager.cpp \
     ../../src/autoplaylist.cpp \
@@ -47,7 +46,6 @@ HEADERS += \
     ../../src/timeconverter.h \
     ../../src/cdwriter.h \
     ../../src/musiclib.h \
-    ../../src/systeminteractor.h \
     ../../src/autoplaylistobject.h \
     ../../src/autoplaylistmanager.h \
     ../../src/autoplaylist.h \

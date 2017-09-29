@@ -3,6 +3,6 @@ Icon Pack:Sound and Audio for Android
 Designer:icons4android.com
 Licence:Creative Commons Attribution (by)
 
-Edit New Burn Settings TabNew TabRemove
+Edit New Settings TabNew TabRemove
 Everaldo Coelho
 LGPL

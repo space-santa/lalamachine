@@ -9,7 +9,6 @@
 #include "../../src/config.h"
 #include "../../src/lalatypes.h"
 #include "../../src/m3uinout.h"
-#include "../../src/systeminteractor.h"
 #include "../../src/timeconverter.h"
 
 QString LalaTest::backupFileName(QString path) { return path + ".backup"; }
@@ -60,18 +59,6 @@ void LalaTest::timeTest() {
   testString = "12 days, 22:31:23";
   tc.setSeconds(12 * 24 * 3600 + 22 * 3600 + 31 * 60 + 23);
   QVERIFY(tc.toString() == testString);
-}
-
-void LalaTest::systemInteractor() {
-  SystemInteractor sysInt;
-  // That'll work as expected.
-  QVERIFY(sysInt.exec("echo hello") == QString("hello"));
-  // Since gugulala25341 doesn't exist it will return an empty string.
-  QVERIFY(sysInt.exec("gugulala25341") == QString(""));
-  // This will return true since echo can successfully be started detached.
-  QVERIFY(sysInt.startDetached(QString("echo"), QStringList()));
-  // Now it will be false since we can't successfully run nonexisting stuff.
-  QVERIFY(!sysInt.startDetached(QString("gugulala25341"), QStringList()));
 }
 
 void LalaTest::config() {

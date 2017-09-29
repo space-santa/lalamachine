@@ -215,16 +215,6 @@ ApplicationWindow {
             MenuSeparator {
             }
             MenuItem {
-                text: "Burn CD"
-                iconSource: "qrc:/images/images/burn.png"
-                onTriggered: burnList()
-
-                Component.onCompleted: {
-                    enabled = burn.hasK3b()
-                    visible = enabled
-                }
-            }
-            MenuItem {
                 text: "Export Files"
                 iconSource: "qrc:/images/images/export.png"
                 onTriggered: export_dialog.open()
@@ -359,10 +349,6 @@ ApplicationWindow {
         visible: false
     }
 
-    function burnList() {
-        burn.burnList(playlist.pathList())
-    }
-
     M3uInOut {
         id: m3u
     }
@@ -452,10 +438,6 @@ ApplicationWindow {
 
     Configuration {
         id: config
-    }
-
-    CdWriter {
-        id: burn
     }
 
     ThePlayer {

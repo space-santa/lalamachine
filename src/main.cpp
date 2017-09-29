@@ -25,7 +25,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSplashScreen>
 
 #include "autoplaylistmanager.h"
-#include "cdwriter.h"
 #include "config.h"
 #include "engineloader.h"
 #include "fileexporter.h"
@@ -68,7 +67,6 @@ int main(int argc, char *argv[]) {
   qmlRegisterType<Config>("Lala", 1, 0, "Config");
   qmlRegisterType<TimeConverter>("Lala", 1, 0, "TimeConverter");
   qmlRegisterType<MusicLib>("Lala", 1, 0, "MusicLib");
-  qmlRegisterType<CdWriter>("Lala", 1, 0, "CdWriter");
   qmlRegisterType<SysInfo>("Lala", 1, 0, "SysInfo");
   qmlRegisterType<LalaTypes>("Lala", 1, 0, "LalaTypes");
   qmlRegisterType<AutoPlaylistManager>("Lala", 1, 0, "AutoPlaylistManager");
