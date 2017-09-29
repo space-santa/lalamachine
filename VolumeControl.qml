@@ -103,5 +103,7 @@ Rectangle {
         anchors.rightMargin: 20
         anchors.bottom: parent.bottom
         value: 0.5
+
+        style: SliderStyleLala {}
     }
 }

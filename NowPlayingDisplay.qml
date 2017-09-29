@@ -57,6 +57,7 @@ Rectangle {
         anchors.leftMargin: 20
         anchors.rightMargin: 20
         enabled: true
+        style: SliderStyleLala {}
 
         // If this returns true the value has been changed manually.
         // Or, expressed differently, if the value has been changed by the
