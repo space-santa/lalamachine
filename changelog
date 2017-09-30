@@ -1,3 +1,10 @@
+lalamachine (3.3-1) UNRELEASED; urgency=medium
+
+  * Remove systray icon.
+  * Update application icon.
+
+ -- rmean <armin.zirkel@gmail.com>  Sat, 30 Sep 2017 16:48:41 +1000
+
 lalamachine (3.2-1) UNRELEASED; urgency=medium
 
   * Make sure new settings are added and available in the dialog.
