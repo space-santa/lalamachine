@@ -40,7 +40,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 int main(int argc, char *argv[]) {
   QApplication app(argc, argv);
   // Setting the app-icon.
-  app.setWindowIcon(QIcon(QPixmap(":/images/images/lalamachine-new.png")));
+  app.setWindowIcon(QIcon(QPixmap(":/images/images/lala-icon-2-small.png")));
   app.setApplicationVersion("3.2");
   app.setApplicationName("lalamachine");
   app.setOrganizationName("rmean");
