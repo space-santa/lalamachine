@@ -22,7 +22,6 @@ SOURCES += src/main.cpp \
     src/playlistmodel.cpp \
     src/track.cpp \
     src/engineloader.cpp \
-    src/lalatray.cpp \
     src/theplayer.cpp \
     src/model.cpp \
     src/view/volumecontrol.cpp
@@ -49,7 +48,6 @@ HEADERS += \
     src/autoplaylist.h \
     src/playlistmodel.h \
     src/track.h \
-    src/lalatray.h \
     src/theplayer.h \
     src/model.h \
     src/view/volumecontrol.h

@@ -28,7 +28,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #include "engineloader.h"
 #include "fileexporter.h"
-#include "lalatray.h"
 #include "lalatypes.h"
 #include "m3uinout.h"
 #include "metadataprovider.h"
@@ -79,10 +78,6 @@ int main(int argc, char *argv[]) {
 
   loader.load();
   splash.close();
-
-  LalaTray tray(loader.rootWin());
-  QObject::connect(&tray, &LalaTray::quit, &app, &QApplication::quit);
-  tray.show();
 
   if (kiosk) {
     QMetaObject::invokeMethod(loader.rootWin(), "showFullScreen");

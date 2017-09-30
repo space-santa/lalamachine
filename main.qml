@@ -60,16 +60,6 @@ ApplicationWindow {
     // lalaplayer is globally accessible to change volume, etc
     property ThePlayer lalaplayer: playMusic
 
-    // The nowPlaying signal chain is used to get the currently playing title
-    // into the tooltip of lalatray.
-    property alias nowPlaying: playlist.nowPlayingTitle
-    onNowPlayingChanged: newTitlePlaying(nowPlaying)
-
-    signal newTitlePlaying(string title)
-    signal // Need another signal to tell lalatray if it is playing or paused.
-    isPlaying(bool stat)
-    onPlayingStatusChanged: isPlaying(playingStatus)
-
     property bool playingStatus: getPlayingStatus()
 
     function getPlayingStatus() {
@@ -79,29 +69,6 @@ ApplicationWindow {
             return false
         }
     }
-
-    signal // Adding this signal to have something in C++ to connect to.
-    quit
-
-    signal // Next some signals to be triggered from lalatray.
-    playNext
-    onPlayNext: {
-        forward_action.trigger()
-    }
-
-    signal playPrevious
-    onPlayPrevious: {
-        back_action.trigger()
-    }
-    signal playPause
-    onPlayPause: {
-        play_pause_action.trigger()
-    }
-
-    signal volumeUp
-    onVolumeUp: vol_up_action.trigger()
-    signal volumeDown
-    onVolumeDown: vol_down_action.trigger()
 
     Component.onCompleted: {
         playlist.setCurrentPlaylist(config.lastPlaylist)
