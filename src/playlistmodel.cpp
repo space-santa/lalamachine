@@ -283,10 +283,22 @@ void PlaylistModel::addTrackToNamedList(const QString &listName,
 }
 
 bool PlaylistModel::sortTrackAsc(Track t1, Track t2) {
-  return t1.track_ < t2.track_;
+  if (t1.album_ != t2.album_) {
+    return sortAlbumAsc(t1, t2);
+  } else if (t1.disc_ != t2.disc_) {
+    return sortDiscNumberAsc(t1, t2);
+  } else {
+    return t1.track_ < t2.track_;
+  }
 }
 bool PlaylistModel::sortTrackDesc(Track t1, Track t2) {
-  return t1.track_ > t2.track_;
+  if (t1.album_ != t2.album_) {
+    return sortAlbumAsc(t1, t2);
+  } else if (t1.disc_ != t2.disc_) {
+    return sortDiscNumberAsc(t1, t2);
+  } else {
+    return t1.track_ > t2.track_;
+  }
 }
 
 bool PlaylistModel::sortTitleAsc(Track t1, Track t2) {
