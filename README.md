@@ -59,7 +59,7 @@ I would appreciate any help. If you'd like to contribute to lalamachine,
 * Test. Either by using the app or by adding to the qt unit test in ./test/lalatest
 * Create packages for other distributions.
 * Add to the wiki.
-* Write code and send me a pull request. There is also a list of issues that wants to be resolved [here](https://github.com/space-santa/lalamachine/projects/1)
+* Write code and send me a pull request. [There is also a list of issues that wants to be resolved here.](https://github.com/space-santa/lalamachine/projects/1)
 * Let me know how you like the app and what functionality is missing.
 
 
