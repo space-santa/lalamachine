@@ -37,52 +37,52 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "theplayer.h"
 #include "timeconverter.h"
 
-int main(int argc, char *argv[]) {
-  QApplication app(argc, argv);
-  // Setting the app-icon.
-  app.setWindowIcon(QIcon(QPixmap(":/images/images/lala-icon-2-small.png")));
-  app.setApplicationVersion("3.4");
-  app.setApplicationName("lalamachine");
-  app.setOrganizationName("rmean");
+int main(int argc, char* argv[]) {
+    QApplication app(argc, argv);
+    // Setting the app-icon.
+    app.setWindowIcon(QIcon(QPixmap(":/images/images/lala-icon-2-small.png")));
+    app.setApplicationVersion("3.4");
+    app.setApplicationName("lalamachine");
+    app.setOrganizationName("rmean");
 
-  QCommandLineParser parser;
-  parser.setApplicationDescription("The most awesome lalamachine.");
-  parser.addHelpOption();
-  parser.addVersionOption();
+    QCommandLineParser parser;
+    parser.setApplicationDescription("The most awesome lalamachine.");
+    parser.addHelpOption();
+    parser.addVersionOption();
 
-  // Boolean option to start in kiosk mode. (--kiosk)
-  QCommandLineOption kioskMode("kiosk", "Start in kiosk-mode.");
-  parser.addOption(kioskMode);
+    // Boolean option to start in kiosk mode. (--kiosk)
+    QCommandLineOption kioskMode("kiosk", "Start in kiosk-mode.");
+    parser.addOption(kioskMode);
 
-  parser.process(app);
-  bool kiosk = parser.isSet(kioskMode);
+    parser.process(app);
+    // bool kiosk = parser.isSet(kioskMode);
 
-  QPixmap logo(":/images/images/logo/logo.png");
-  QSplashScreen splash(logo);
-  splash.show();
+    QPixmap logo(":/images/images/logo/logo.png");
+    QSplashScreen splash(logo);
+    splash.show();
 
-  qmlRegisterType<MetaDataProvider>("Lala", 1, 0, "Metadata");
-  qmlRegisterType<M3uInOut>("Lala", 1, 0, "M3uInOut");
-  qmlRegisterType<Config>("Lala", 1, 0, "Config");
-  qmlRegisterType<TimeConverter>("Lala", 1, 0, "TimeConverter");
-  qmlRegisterType<MusicLib>("Lala", 1, 0, "MusicLib");
-  qmlRegisterType<SysInfo>("Lala", 1, 0, "SysInfo");
-  qmlRegisterType<LalaTypes>("Lala", 1, 0, "LalaTypes");
-  qmlRegisterType<AutoPlaylistManager>("Lala", 1, 0, "AutoPlaylistManager");
-  qmlRegisterType<FileExporter>("Lala", 1, 0, "FileExporter");
-  qmlRegisterType<PlaylistModel>("Lala", 1, 0, "PlaylistModel");
-  qmlRegisterType<ThePlayer>("Lala", 1, 0, "ThePlayer");
+    qmlRegisterType<MetaDataProvider>("Lala", 1, 0, "Metadata");
+    qmlRegisterType<M3uInOut>("Lala", 1, 0, "M3uInOut");
+    qmlRegisterType<Config>("Lala", 1, 0, "Config");
+    qmlRegisterType<TimeConverter>("Lala", 1, 0, "TimeConverter");
+    qmlRegisterType<MusicLib>("Lala", 1, 0, "MusicLib");
+    qmlRegisterType<SysInfo>("Lala", 1, 0, "SysInfo");
+    qmlRegisterType<LalaTypes>("Lala", 1, 0, "LalaTypes");
+    qmlRegisterType<AutoPlaylistManager>("Lala", 1, 0, "AutoPlaylistManager");
+    qmlRegisterType<FileExporter>("Lala", 1, 0, "FileExporter");
+    qmlRegisterType<PlaylistModel>("Lala", 1, 0, "PlaylistModel");
+    qmlRegisterType<ThePlayer>("Lala", 1, 0, "ThePlayer");
 
-  // INFO: Because we use an ApplicationWindow we cannot use a QQuickView.
-  EngineLoader loader;
+    // INFO: Because we use an ApplicationWindow we cannot use a QQuickView.
+    EngineLoader loader;
+    loader.load();
 
-  loader.load();
-  splash.close();
+    // if (kiosk) {
+    //    QMetaObject::invokeMethod(loader.rootWin(), "showFullScreen");
+    //    loader.rootWin()->setProperty("kioskMode", true);
+    //}
 
-  if (kiosk) {
-    QMetaObject::invokeMethod(loader.rootWin(), "showFullScreen");
-    loader.rootWin()->setProperty("kioskMode", true);
-  }
+    splash.close();
 
-  return app.exec();
+    return app.exec();
 }

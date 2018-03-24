@@ -27,13 +27,13 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
  * dialog.
  */
 class SysInfo : public QObject {
-  Q_OBJECT
- public:
-  Q_INVOKABLE QString appVersion();
-  Q_INVOKABLE QString appName();
-  Q_INVOKABLE QString lalaDir();
+    Q_OBJECT
+public:
+    Q_INVOKABLE QString appVersion();
+    Q_INVOKABLE QString appName();
+    Q_INVOKABLE QString lalaDir();
 
- signals:
+signals:
 
- public slots:
+public slots:
 };

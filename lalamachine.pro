@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick widgets sql concurrent multimedia
+QT += qml quick widgets sql concurrent multimedia quickwidgets
 
 CONFIG += C++11 # console
 QMAKE_CXXFLAGS += -Werror
@@ -23,8 +23,7 @@ SOURCES += src/main.cpp \
     src/track.cpp \
     src/engineloader.cpp \
     src/theplayer.cpp \
-    src/model.cpp \
-    src/view/volumecontrol.cpp
+    src/model.cpp
 
 RESOURCES += qml.qrc
 
@@ -49,8 +48,7 @@ HEADERS += \
     src/playlistmodel.h \
     src/track.h \
     src/theplayer.h \
-    src/model.h \
-    src/view/volumecontrol.h
+    src/model.h
 
 OTHER_FILES += \
     README.md \

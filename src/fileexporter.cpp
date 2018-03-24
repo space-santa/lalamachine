@@ -26,83 +26,81 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFileInfo>
 #include <QString>
 
-FileExporter::FileExporter(QObject *parent) : QObject(parent) {
-  FileExportWorker *worker = new FileExportWorker();
-  worker->moveToThread(&workerThread_);
-  connect(&workerThread_, &QThread::finished, worker, &QObject::deleteLater);
-  connect(this, &FileExporter::go, worker, &FileExportWorker::doExport);
-  connect(worker, &FileExportWorker::finished, this, &FileExporter::finished);
-  connect(worker, &FileExportWorker::updateProgress, this,
-          &FileExporter::handleUpdate);
-  workerThread_.start();
+FileExporter::FileExporter(QObject* parent) : QObject(parent) {
+    FileExportWorker* worker = new FileExportWorker();
+    worker->moveToThread(&workerThread_);
+    connect(&workerThread_, &QThread::finished, worker, &QObject::deleteLater);
+    connect(this, &FileExporter::go, worker, &FileExportWorker::doExport);
+    connect(worker, &FileExportWorker::finished, this, &FileExporter::finished);
+    connect(worker, &FileExportWorker::updateProgress, this, &FileExporter::handleUpdate);
+    workerThread_.start();
 }
 
 FileExporter::~FileExporter() {
-  workerThread_.quit();
-  workerThread_.wait();
+    workerThread_.quit();
+    workerThread_.wait();
 }
 
-void FileExporter::exportPlaylist(QString destdir, const QStringList &paths) {
-  qDebug() << destdir;
-  // Firstly, make it a proper path, not a url.
-  // destdir.replace("file://", "");
-  QUrl url(destdir);
+void FileExporter::exportPlaylist(QString destdir, const QStringList& paths) {
+    qDebug() << destdir;
+    // Firstly, make it a proper path, not a url.
+    // destdir.replace("file://", "");
+    QUrl url(destdir);
 
-  QString tmp = url.toLocalFile();
+    QString tmp = url.toLocalFile();
 
-  qDebug() << tmp;
+    qDebug() << tmp;
 
-  // If the directory exists, create a new one. Else the content is mixed.
-  if (QFileInfo::exists(tmp)) {
-    // Can't use ISO date format here because Windows doesn't allow : ffs.
-    tmp.append("-" + QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss"));
-  }
-  emit go(tmp, paths);
-  emit started();
+    // If the directory exists, create a new one. Else the content is mixed.
+    if (QFileInfo::exists(tmp)) {
+        // Can't use ISO date format here because Windows doesn't allow : ffs.
+        tmp.append("-" + QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss"));
+    }
+    emit go(tmp, paths);
+    emit started();
 }
 
 void FileExporter::handleUpdate(int current, int total) {
-  int retval = static_cast<int>(static_cast<double>(current) / total * 100);
-  qDebug() << "Updating progress" << retval << current << total;
-  emit updateProgress(retval);
+    int retval = static_cast<int>(static_cast<double>(current) / total * 100);
+    qDebug() << "Updating progress" << retval << current << total;
+    emit updateProgress(retval);
 }
 
-QString FileExportWorker::newFileName(int pos, int max,
-                                      const QString &path) const {
-  QFileInfo fi(path);
-  QString retval("");
-  QString posstring(QString::number(pos));
-  QString maxstring(QString::number(max));
-  int diff = maxstring.length() - posstring.length();
+QString FileExportWorker::newFileName(int pos, int max, const QString& path) const {
+    QFileInfo fi(path);
+    QString retval("");
+    QString posstring(QString::number(pos));
+    QString maxstring(QString::number(max));
+    int diff = maxstring.length() - posstring.length();
 
-  for (int i = 0; i < diff; ++i) {
-    retval.append("0");
-  }
+    for (int i = 0; i < diff; ++i) {
+        retval.append("0");
+    }
 
-  retval.append(posstring);
-  retval.append("-");
-  retval.append(fi.fileName());
+    retval.append(posstring);
+    retval.append("-");
+    retval.append(fi.fileName());
 
-  return retval;
+    return retval;
 }
 
-void FileExportWorker::doExport(QString destdir, const QStringList &paths) {
-  Config::ensureDir(destdir + "/");
+void FileExportWorker::doExport(QString destdir, const QStringList& paths) {
+    Config::ensureDir(destdir + "/");
 
-  for (int i = 0; i < paths.count(); ++i) {
-    QString newpath(destdir);
-    newpath.append("/");
-    newpath.append(newFileName(i, paths.count(), paths[i]));
-    QString source(paths[i]);
-    qDebug() << source << newpath;
-    QFile::copy(source, newpath);
+    for (int i = 0; i < paths.count(); ++i) {
+        QString newpath(destdir);
+        newpath.append("/");
+        newpath.append(newFileName(i, paths.count(), paths[i]));
+        QString source(paths[i]);
+        qDebug() << source << newpath;
+        QFile::copy(source, newpath);
 
-    // emitting i + 1 for two reasons.
-    // 1. to make it work, paths.count is 1 bigger than the last i
-    // 2. because it is actually what it is. By the time we emit this
-    // signal, the file has already been processed, so +1.
-    emit updateProgress(i + 1, paths.count());
-  }
+        // emitting i + 1 for two reasons.
+        // 1. to make it work, paths.count is 1 bigger than the last i
+        // 2. because it is actually what it is. By the time we emit this
+        // signal, the file has already been processed, so +1.
+        emit updateProgress(i + 1, paths.count());
+    }
 
-  emit finished();
+    emit finished();
 }

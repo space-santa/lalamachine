@@ -24,7 +24,6 @@ SOURCES += \
     ../../src/m3uinout.cpp \
     ../../src/metadataprovider.cpp \
     ../../src/timeconverter.cpp \
-    ../../src/cdwriter.cpp \
     ../../src/musiclib.cpp \
     ../../src/autoplaylistobject.cpp \
     ../../src/autoplaylistmanager.cpp \
@@ -44,7 +43,6 @@ HEADERS += \
     ../../src/m3uinout.h \
     ../../src/metadataprovider.h \
     ../../src/timeconverter.h \
-    ../../src/cdwriter.h \
     ../../src/musiclib.h \
     ../../src/autoplaylistobject.h \
     ../../src/autoplaylistmanager.h \

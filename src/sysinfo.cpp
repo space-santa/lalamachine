@@ -24,8 +24,14 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config.h"
 
-QString SysInfo::appVersion() { return QCoreApplication::applicationVersion(); }
+QString SysInfo::appVersion() {
+    return QCoreApplication::applicationVersion();
+}
 
-QString SysInfo::appName() { return QCoreApplication::applicationName(); }
+QString SysInfo::appName() {
+    return QCoreApplication::applicationName();
+}
 
-QString SysInfo::lalaDir() { return Config::LALADIR; }
+QString SysInfo::lalaDir() {
+    return Config::LALADIR;
+}

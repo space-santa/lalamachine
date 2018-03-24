@@ -33,164 +33,159 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "musiclibscanner.h"
 
 class MusicLib : public QObject {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY(
-      bool scanning READ scanning WRITE setScanning NOTIFY scanningChanged)
+    Q_PROPERTY(bool scanning READ scanning WRITE setScanning NOTIFY scanningChanged)
 
-  Q_PROPERTY(QJsonArray displayLib READ displayLib NOTIFY displayLibChanged)
+    Q_PROPERTY(QJsonArray displayLib READ displayLib NOTIFY displayLibChanged)
 
-  Q_PROPERTY(int totalLength READ totalLength NOTIFY totalLengthChanged)
+    Q_PROPERTY(int totalLength READ totalLength NOTIFY totalLengthChanged)
 
-  Q_PROPERTY(
-      QString libPath READ libPath WRITE setLibPath NOTIFY libPathChanged)
+    Q_PROPERTY(QString libPath READ libPath WRITE setLibPath NOTIFY libPathChanged)
 
-  Q_PROPERTY(QString genreFilter READ genreFilter WRITE setGenreFilter NOTIFY
-                 genreFilterChanged)
+    Q_PROPERTY(QString genreFilter READ genreFilter WRITE setGenreFilter NOTIFY genreFilterChanged)
 
-  Q_PROPERTY(QString artistFilter READ artistFilter WRITE setArtistFilter NOTIFY
-                 artistFilterChanged)
+    Q_PROPERTY(QString artistFilter READ artistFilter WRITE setArtistFilter NOTIFY artistFilterChanged)
 
-  Q_PROPERTY(QString albumFilter READ albumFilter WRITE setAlbumFilter NOTIFY
-                 albumFilterChanged)
+    Q_PROPERTY(QString albumFilter READ albumFilter WRITE setAlbumFilter NOTIFY albumFilterChanged)
 
-  Q_PROPERTY(QStringList genreList READ genreList NOTIFY genreListChanged)
+    Q_PROPERTY(QStringList genreList READ genreList NOTIFY genreListChanged)
 
-  Q_PROPERTY(QStringList artistList READ artistList NOTIFY artistListChanged)
+    Q_PROPERTY(QStringList artistList READ artistList NOTIFY artistListChanged)
 
-  Q_PROPERTY(QStringList albumList READ albumList NOTIFY albumListChanged)
+    Q_PROPERTY(QStringList albumList READ albumList NOTIFY albumListChanged)
 
-  Q_PROPERTY(bool sortAsc READ sortAsc WRITE setSortAsc NOTIFY sortAscChanged)
-  Q_PROPERTY(Model::SortWhat what READ what WRITE setWhat NOTIFY whatChanged)
+    Q_PROPERTY(bool sortAsc READ sortAsc WRITE setSortAsc NOTIFY sortAscChanged)
+    Q_PROPERTY(Model::SortWhat what READ what WRITE setWhat NOTIFY whatChanged)
 
-  Q_PROPERTY(QString titlePartialFilter READ titlePartialFilter WRITE
-                 setTitlePartialFilter NOTIFY titlePartialFilterChanged)
+    Q_PROPERTY(
+        QString titlePartialFilter READ titlePartialFilter WRITE setTitlePartialFilter NOTIFY titlePartialFilterChanged)
 
- public:
-  MusicLib(QObject *parent = 0);
-  ~MusicLib();
+public:
+    MusicLib(QObject* parent = 0);
+    ~MusicLib();
 
-  static const QString ALL_FILTER;
+    static const QString ALL_FILTER;
 
-  bool scanning() const;
-  void setScanning(bool val);
+    bool scanning() const;
+    void setScanning(bool val);
 
-  QJsonArray displayLib() const;
-  int totalLength() const;
+    QJsonArray displayLib() const;
+    int totalLength() const;
 
-  QString libPath() const;
-  void setLibPath(const QString &path);
+    QString libPath() const;
+    void setLibPath(const QString& path);
 
-  QString genreFilter() const;
-  void setGenreFilter(const QString &val);
+    QString genreFilter() const;
+    void setGenreFilter(const QString& val);
 
-  QString artistFilter() const;
-  void setArtistFilter(const QString &val);
+    QString artistFilter() const;
+    void setArtistFilter(const QString& val);
 
-  QString albumFilter() const;
-  void setAlbumFilter(const QString &val);
+    QString albumFilter() const;
+    void setAlbumFilter(const QString& val);
 
-  bool sortAsc() const;
-  void setSortAsc(bool val);
+    bool sortAsc() const;
+    void setSortAsc(bool val);
 
-  Model::SortWhat what() const;
-  void setWhat(Model::SortWhat val);
+    Model::SortWhat what() const;
+    void setWhat(Model::SortWhat val);
 
-  QStringList genreList() const;
-  QStringList artistList() const;
-  QStringList albumList() const;
+    QStringList genreList() const;
+    QStringList artistList() const;
+    QStringList albumList() const;
 
-  Q_INVOKABLE void rescan();
+    Q_INVOKABLE void rescan();
 
-  Q_INVOKABLE void resetFilterAndSort();
-  Q_INVOKABLE QJsonArray getAlbumTracks(const QString &album) {
-    return Model::instance()->getAlbumTracks(album);
-  }
+    Q_INVOKABLE void resetFilterAndSort();
+    Q_INVOKABLE QJsonArray getAlbumTracks(const QString& album) {
+        return Model::instance()->getAlbumTracks(album);
+    }
 
-  Q_INVOKABLE QString getDateAddedByMrl(const QString &mrl) const {
-    return Model::instance()->getDateAddedByMrl(mrl);
-  }
+    Q_INVOKABLE QString getDateAddedByMrl(const QString& mrl) const {
+        return Model::instance()->getDateAddedByMrl(mrl);
+    }
 
-  Q_INVOKABLE QJsonObject getMetadataForMrl(const QString &mrl) const {
-    return Model::instance()->getMetadataForMrl(mrl);
-  }
+    Q_INVOKABLE QJsonObject getMetadataForMrl(const QString& mrl) const {
+        return Model::instance()->getMetadataForMrl(mrl);
+    }
 
-  Q_INVOKABLE QJsonObject getMetadataForMrl(const QUrl &mrl) const {
-    return Model::instance()->getMetadataForMrl(mrl);
-  }
+    Q_INVOKABLE QJsonObject getMetadataForMrl(const QUrl& mrl) const {
+        return Model::instance()->getMetadataForMrl(mrl);
+    }
 
-  QString titlePartialFilter() const;
-  void setTitlePartialFilter(const QString &titlePartialFilter);
+    QString titlePartialFilter() const;
+    void setTitlePartialFilter(const QString& titlePartialFilter);
 
- public slots:
-  void scanFinished();
+public slots:
+    void scanFinished();
 
- signals:
-  void startScan(const QString &path);
-  void musicLibChanged();
+signals:
+    void startScan(const QString& path);
+    void musicLibChanged();
 
-  void scanningChanged();
+    void scanningChanged();
 
-  void displayLibChanged();
-  void totalLengthChanged();
+    void displayLibChanged();
+    void totalLengthChanged();
 
-  void libPathChanged();
-  void genreFilterChanged();
-  void artistFilterChanged();
-  void albumFilterChanged();
+    void libPathChanged();
+    void genreFilterChanged();
+    void artistFilterChanged();
+    void albumFilterChanged();
 
-  void genreListChanged();
-  void artistListChanged();
-  void albumListChanged();
+    void genreListChanged();
+    void artistListChanged();
+    void albumListChanged();
 
-  void sortAscChanged();
-  void whatChanged();
+    void sortAscChanged();
+    void whatChanged();
 
-  void titlePartialFilterChanged();
+    void titlePartialFilterChanged();
 
- private:
-  // scanner_ MUST be a raw pointer. When this is moved to a new thread, that
-  // QThread becomes the parent. When the parent dies so does the child.
-  // If this is then not a raw pointer a double free happens, because
-  // the thread and this is trying to destroy the scanner.
-  MusicLibScanner *scanner_;
-  QThread scannerThread_;
+private:
+    // scanner_ MUST be a raw pointer. When this is moved to a new thread, that
+    // QThread becomes the parent. When the parent dies so does the child.
+    // If this is then not a raw pointer a double free happens, because
+    // the thread and this is trying to destroy the scanner.
+    MusicLibScanner* scanner_;
+    QThread scannerThread_;
 
-  QSharedPointer<QMutex> mutex_;
-  bool sortAsc_;
-  bool scanning_;
-  Model::SortWhat what_;
-  QJsonArray displayLib_;
-  int totalLength_;
-  QString genreFilter_;
-  QString artistFilter_;
-  QString albumFilter_;
-  QString libPath_;
-  QStringList genreList_;
-  QStringList artistList_;
-  QStringList albumList_;
-  QString titlePartialFilter_;
-  bool appStart_;
-  QString lastDisplayLibQuery_;
+    QSharedPointer<QMutex> mutex_;
+    bool sortAsc_;
+    bool scanning_;
+    Model::SortWhat what_;
+    QJsonArray displayLib_;
+    int totalLength_;
+    QString genreFilter_;
+    QString artistFilter_;
+    QString albumFilter_;
+    QString libPath_;
+    QStringList genreList_;
+    QStringList artistList_;
+    QStringList albumList_;
+    QString titlePartialFilter_;
+    bool appStart_;
+    QString lastDisplayLibQuery_;
 
-  QFutureWatcher<QPair<int, QJsonArray> > watcher_;
+    QFutureWatcher<QPair<int, QJsonArray> > watcher_;
 
-  bool checkVal(const QString &check, const QString &val) const;
+    bool checkVal(const QString& check, const QString& val) const;
 
-  QStringList getList(const QString &what) const;
+    QStringList getList(const QString& what) const;
 
-  void init();
+    void init();
 
- private slots:
-  void debugSignal();
+private slots:
+    void debugSignal();
 
-  void setDisplayLib();
-  void setGenreList();
-  void setArtistList();
-  void setAlbumList();
+    void setDisplayLib();
+    void setGenreList();
+    void setArtistList();
+    void setAlbumList();
 
-  void scanStarted();
+    void scanStarted();
 
-  void scanUpdate();
-  void onDisplayFutureFinished();
+    void scanUpdate();
+    void onDisplayFutureFinished();
 };

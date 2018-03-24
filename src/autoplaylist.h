@@ -31,39 +31,39 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
  * a list and can save and load that list.
  */
 class AutoPlaylist : public QObject {
-  friend class TestAutoPlaylist;
-  Q_OBJECT
+    friend class TestAutoPlaylist;
+    Q_OBJECT
 
- public:
-  explicit AutoPlaylist(const QString &name, QObject *parent = 0);
-  ~AutoPlaylist();
+public:
+    explicit AutoPlaylist(const QString& name, QObject* parent = 0);
+    ~AutoPlaylist();
 
-  QString name();
+    QString name();
 
-  void load();
-  void save();
-  void deleteList();
+    void load();
+    void save();
+    void deleteList();
 
-  void addApo(const AutoPlaylistObject &apo);
-  void clear();
+    void addApo(const AutoPlaylistObject& apo);
+    void clear();
 
-  QJsonArray trackList();
+    QJsonArray trackList();
 
-  void fromJson(const QJsonArray &arr);
-  // The JSON representation of this autoplaylist (e.g. for saving).
-  QJsonArray toJson() const;
+    void fromJson(const QJsonArray& arr);
+    // The JSON representation of this autoplaylist (e.g. for saving).
+    QJsonArray toJson() const;
 
- signals:
-  void trackListChanged();
+signals:
+    void trackListChanged();
 
- public slots:
+public slots:
 
- private:
-  QString name_;
-  QList<AutoPlaylistObject> apos_;
+private:
+    QString name_;
+    QList<AutoPlaylistObject> apos_;
 
-  QSqlDatabase db_;
+    QSqlDatabase db_;
 
-  QString toQuery() const;
-  QString getPath(const QString &name) const;
+    QString toQuery() const;
+    QString getPath(const QString& name) const;
 };

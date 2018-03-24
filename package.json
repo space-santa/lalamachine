@@ -1,0 +1,26 @@
+{
+  "name": "lalamachine",
+  "version": "3.4.0",
+  "description": "## Intro",
+  "main": "main.cpp",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "run": "npm run build && ./build/lalamachine",
+    "build": "mkdir -p build && cd build && qmake-qt5 ../lalamachine.pro && make",
+    "clean": "rm -rf build",
+    "clean-test": "rm -rf test/build",
+    "test": "mkdir -p test/build && cd test/build && qmake-qt5 ../lalatest/lalatest.pro && make && ./tst_lalatesttest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/space-santa/lalamachine.git"
+  },
+  "author": "Claus Zirkel",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/space-santa/lalamachine/issues"
+  },
+  "homepage": "https://github.com/space-santa/lalamachine#readme"
+}

@@ -25,55 +25,53 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QUrl>
 
 class Config : public QObject {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY(double volume READ volume WRITE setVolume NOTIFY volumeChanged)
+    Q_PROPERTY(double volume READ volume WRITE setVolume NOTIFY volumeChanged)
 
-  Q_PROPERTY(QUrl libPath READ libPath WRITE setLibPath NOTIFY libPathChanged)
+    Q_PROPERTY(QUrl libPath READ libPath WRITE setLibPath NOTIFY libPathChanged)
 
-  Q_PROPERTY(QString lastPlaylist READ lastPlaylist WRITE setLastPlaylist NOTIFY
-                 lastPlaylistChanged)
+    Q_PROPERTY(QString lastPlaylist READ lastPlaylist WRITE setLastPlaylist NOTIFY lastPlaylistChanged)
 
-  Q_PROPERTY(QJsonArray playlistColumns READ playlistColumns WRITE
-                 setPlaylistColumns NOTIFY playlistColumnsChanged)
+    Q_PROPERTY(QJsonArray playlistColumns READ playlistColumns WRITE setPlaylistColumns NOTIFY playlistColumnsChanged)
 
- public:
-  explicit Config(QObject *parent = 0);
+public:
+    explicit Config(QObject* parent = 0);
 
-  static const QString LALADIR;
-  static const QString CONFIGPATH;
-  static const QString PLAYLISTDIR;
-  static const QString AUTOPLAYLISTDIR;
-  static const QString MUSICLIBDB;
+    static const QString LALADIR;
+    static const QString CONFIGPATH;
+    static const QString PLAYLISTDIR;
+    static const QString AUTOPLAYLISTDIR;
+    static const QString MUSICLIBDB;
 
-  Q_INVOKABLE void saveConfig();
-  void loadConfig();
+    Q_INVOKABLE void saveConfig();
+    void loadConfig();
 
-  void setVolume(double val);
-  double volume();
+    void setVolume(double val);
+    double volume();
 
-  void setPlaylistColumns(const QJsonArray &list);
-  QJsonArray playlistColumns();
+    void setPlaylistColumns(const QJsonArray& list);
+    QJsonArray playlistColumns();
 
-  void setLibPath(const QUrl &path);
-  QUrl libPath() const;
+    void setLibPath(const QUrl& path);
+    QUrl libPath() const;
 
-  void setLastPlaylist(const QString &name);
-  QString lastPlaylist() const;
+    void setLastPlaylist(const QString& name);
+    QString lastPlaylist() const;
 
-  static QJsonObject loadJsonFile(const QString &path);
-  static void saveJsonFile(const QString &path, const QJsonObject &obj);
-  static void ensureDir(const QString &path);
-  static QJsonObject addKey(const QString &key);
+    static QJsonObject loadJsonFile(const QString& path);
+    static void saveJsonFile(const QString& path, const QJsonObject& obj);
+    static void ensureDir(const QString& path);
+    static QJsonObject addKey(const QString& key);
 
- signals:
-  void volumeChanged();
-  void libPathChanged();
-  void lastPlaylistChanged();
-  void playlistColumnsChanged();
+signals:
+    void volumeChanged();
+    void libPathChanged();
+    void lastPlaylistChanged();
+    void playlistColumnsChanged();
 
- public slots:
+public slots:
 
- private:
-  QJsonObject config_;
+private:
+    QJsonObject config_;
 };

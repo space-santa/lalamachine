@@ -23,15 +23,15 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QQmlApplicationEngine>
 
 class EngineLoader : public QObject {
-  Q_OBJECT
- public:
-  explicit EngineLoader(QObject *parent = 0);
-  QObject *rootWin();
+    Q_OBJECT
+public:
+    explicit EngineLoader(QObject* parent = 0);
+    QObject* rootWin();
 
- public slots:
-  void load();
+public slots:
+    void load();
 
- private:
-  QQmlApplicationEngine engine_;
-  QObject *rootWin_;
+private:
+    QQmlApplicationEngine engine_;
+    QObject* rootWin_;
 };
