@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick widgets sql concurrent multimedia
+QT += qml quick widgets sql concurrent multimedia quickwidgets
 
 CONFIG += C++11 # console
 QMAKE_CXXFLAGS += -Werror

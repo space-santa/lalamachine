@@ -32,238 +32,217 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVariant>
 
 const QString Config::LALADIR =
-    QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) +
-    "/lalamachine";
+    QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + "/lalamachine";
 const QString Config::CONFIGPATH = Config::LALADIR + "/config.json";
 const QString Config::AUTOPLAYLISTDIR = Config::LALADIR + "/autoplaylists";
 const QString Config::PLAYLISTDIR = Config::LALADIR + "/playlists";
 const QString Config::MUSICLIBDB = Config::LALADIR + "/musiclib.sq3";
 
-Config::Config(QObject *parent) : QObject(parent) {
-  QDir dir(Config::LALADIR);
-  dir.mkpath(Config::LALADIR);
-  loadConfig();
+Config::Config(QObject* parent) : QObject(parent) {
+    QDir dir(Config::LALADIR);
+    dir.mkpath(Config::LALADIR);
+    loadConfig();
 }
 
-void Config::saveConfig() { saveJsonFile(Config::CONFIGPATH, config_); }
+void Config::saveConfig() {
+    saveJsonFile(Config::CONFIGPATH, config_);
+}
 
-void Config::loadConfig() { config_ = loadJsonFile(Config::CONFIGPATH); }
+void Config::loadConfig() {
+    config_ = loadJsonFile(Config::CONFIGPATH);
+}
 
 void Config::setVolume(double val) {
-  config_.insert("volume", val);
-  emit volumeChanged();
+    config_.insert("volume", val);
+    emit volumeChanged();
 }
 
 double Config::volume() {
-  // I initialize the volume with 0.4. I turns out to be confusing for users
-  // that on first start the app starts silent (as in volume = 0).
-  double retval = 0.4;
-  QJsonValue v = config_.value("volume");
+    // I initialize the volume with 0.4. I turns out to be confusing for users
+    // that on first start the app starts silent (as in volume = 0).
+    double retval = 0.4;
+    QJsonValue v = config_.value("volume");
 
-  if (v.isDouble()) {
-    retval = v.toDouble();
-  } else {
-    qWarning("No proper volume defined in config.json");
-  }
+    if (v.isDouble()) {
+        retval = v.toDouble();
+    } else {
+        qWarning("No proper volume defined in config.json");
+    }
 
-  qDebug() << "Volume loaded" << retval;
-  return retval;
+    qDebug() << "Volume loaded" << retval;
+    return retval;
 }
 
-void Config::setPlaylistColumns(const QJsonArray &list) {
-  config_.insert("playlistColumns", list);
-  emit playlistColumnsChanged();
+void Config::setPlaylistColumns(const QJsonArray& list) {
+    config_.insert("playlistColumns", list);
+    emit playlistColumnsChanged();
 }
 
-QJsonObject Config::addKey(const QString &key) {
-  QJsonObject o;
-  o.insert("key", key);
-  o.insert("value", "true");
-  return o;
+QJsonObject Config::addKey(const QString& key) {
+    QJsonObject o;
+    o.insert("key", key);
+    o.insert("value", "true");
+    return o;
 }
 
 QJsonArray Config::playlistColumns() {
-  QJsonArray retval;
-  QJsonValue v = config_.value("playlistColumns");
+    QJsonArray retval;
+    QJsonValue v = config_.value("playlistColumns");
 
-  if (v.isArray()) {
-    retval = v.toArray();
-  } else {
-    qWarning("No playlist columns defined.");
-  }
-
-  bool hasTrack = false;
-  bool hasTitle = false;
-  bool hasComment = false;
-  bool hasGenre = false;
-  bool hasArtist = false;
-  bool hasAlbum = false;
-  bool hasLength = false;
-  bool hasYear = false;
-  bool hasDate = false;
-  bool hasDisc = false;
-
-  for (int i = 0; i < retval.count(); ++i) {
-    QString key = retval[i].toObject().value("key").toString();
-    if (key == "track") {
-      hasTrack = true;
-    } else if (key == "title") {
-      hasTitle = true;
-    } else if (key == "comment") {
-      hasComment = true;
-    } else if (key == "genre") {
-      hasGenre = true;
-    } else if (key == "artist") {
-      hasArtist = true;
-    } else if (key == "album") {
-      hasAlbum = true;
-    } else if (key == "length") {
-      hasLength = true;
-    } else if (key == "year") {
-      hasYear = true;
-    } else if (key == "dateAdded") {
-      hasDate = true;
-    } else if (key == "discNumber") {
-      hasDisc = true;
+    if (v.isArray()) {
+        retval = v.toArray();
+    } else {
+        qWarning("No playlist columns defined.");
     }
-  }
 
-  if (!hasTrack) {
-    retval.append(addKey("track"));
-  }
+    bool hasTrack = false;
+    bool hasTitle = false;
+    bool hasComment = false;
+    bool hasGenre = false;
+    bool hasArtist = false;
+    bool hasAlbum = false;
+    bool hasLength = false;
+    bool hasYear = false;
+    bool hasDate = false;
+    bool hasDisc = false;
 
-  if (!hasTitle) {
-    retval.append(addKey("title"));
-  }
+    for (int i = 0; i < retval.count(); ++i) {
+        QString key = retval[i].toObject().value("key").toString();
+        if (key == "track") {
+            hasTrack = true;
+        } else if (key == "title") {
+            hasTitle = true;
+        } else if (key == "comment") {
+            hasComment = true;
+        } else if (key == "genre") {
+            hasGenre = true;
+        } else if (key == "artist") {
+            hasArtist = true;
+        } else if (key == "album") {
+            hasAlbum = true;
+        } else if (key == "length") {
+            hasLength = true;
+        } else if (key == "year") {
+            hasYear = true;
+        } else if (key == "dateAdded") {
+            hasDate = true;
+        } else if (key == "discNumber") {
+            hasDisc = true;
+        }
+    }
 
-  if (!hasComment) {
-    retval.append(addKey("comment"));
-  }
+    if (!hasTrack) { retval.append(addKey("track")); }
 
-  if (!hasGenre) {
-    retval.append(addKey("genre"));
-  }
+    if (!hasTitle) { retval.append(addKey("title")); }
 
-  if (!hasArtist) {
-    retval.append(addKey("artist"));
-  }
+    if (!hasComment) { retval.append(addKey("comment")); }
 
-  if (!hasAlbum) {
-    retval.append(addKey("album"));
-  }
+    if (!hasGenre) { retval.append(addKey("genre")); }
 
-  if (!hasLength) {
-    retval.append(addKey("length"));
-  }
+    if (!hasArtist) { retval.append(addKey("artist")); }
 
-  if (!hasYear) {
-    retval.append(addKey("year"));
-  }
+    if (!hasAlbum) { retval.append(addKey("album")); }
 
-  if (!hasDisc) {
-    retval.append(addKey("discNumber"));
-  }
+    if (!hasLength) { retval.append(addKey("length")); }
 
-  if (!hasDate) {
-    retval.append(addKey("dateAdded"));
-  }
+    if (!hasYear) { retval.append(addKey("year")); }
 
-  config_.insert("playlistColumns", retval);
-  qDebug() << "playlistColumns loaded" << retval;
-  return retval;
+    if (!hasDisc) { retval.append(addKey("discNumber")); }
+
+    if (!hasDate) { retval.append(addKey("dateAdded")); }
+
+    config_.insert("playlistColumns", retval);
+    qDebug() << "playlistColumns loaded" << retval;
+    return retval;
 }
 
-void Config::setLibPath(const QUrl &path) {
-  QString actualPath = path.toLocalFile();
-  Q_ASSERT(QDir(actualPath).exists());
-  config_.insert("libPath", actualPath);
-  // We want to save the file right after setting the path because we want
-  // config.json to match musiclib.json as soon as it changes.
-  saveConfig();
-  emit libPathChanged();
+void Config::setLibPath(const QUrl& path) {
+    QString actualPath = path.toLocalFile();
+    Q_ASSERT(QDir(actualPath).exists());
+    config_.insert("libPath", actualPath);
+    // We want to save the file right after setting the path because we want
+    // config.json to match musiclib.json as soon as it changes.
+    saveConfig();
+    emit libPathChanged();
 }
 
 QUrl Config::libPath() const {
-  QUrl retval;
-  QJsonValue v = config_.value("libPath");
+    QUrl retval;
+    QJsonValue v = config_.value("libPath");
 
-  if (v.isString()) {
-    retval = QUrl(v.toString());
+    if (v.isString()) {
+        retval = QUrl(v.toString());
 
-    if (!QDir(retval.path()).exists()) {
-      retval.clear();
-      qCritical() << "libPath doesn't exist!";
+        if (!QDir(retval.path()).exists()) {
+            retval.clear();
+            qCritical() << "libPath doesn't exist!";
+        }
+    } else {
+        qWarning("No proper libPath defined in config.json");
     }
-  } else {
-    qWarning("No proper libPath defined in config.json");
-  }
 
-  return retval;
+    return retval;
 }
 
-void Config::setLastPlaylist(const QString &name) {
-  config_.insert("lastPlaylist", name);
-  emit lastPlaylistChanged();
+void Config::setLastPlaylist(const QString& name) {
+    config_.insert("lastPlaylist", name);
+    emit lastPlaylistChanged();
 }
 
 QString Config::lastPlaylist() const {
-  QString retval("");
-  QJsonValue v = config_.value("lastPlaylist");
+    QString retval("");
+    QJsonValue v = config_.value("lastPlaylist");
 
-  if (v.isString()) {
-    retval = v.toString();
-  }
+    if (v.isString()) { retval = v.toString(); }
 
-  return retval;
+    return retval;
 }
 
-QJsonObject Config::loadJsonFile(const QString &path) {
-  // Reading the JSON
-  QFile loadFile(path);
+QJsonObject Config::loadJsonFile(const QString& path) {
+    // Reading the JSON
+    QFile loadFile(path);
 
-  if (!loadFile.open(QIODevice::ReadOnly)) {
-    qWarning("Couldn't open json file.");
-    return QJsonObject();
-  }
+    if (!loadFile.open(QIODevice::ReadOnly)) {
+        qWarning("Couldn't open json file.");
+        return QJsonObject();
+    }
 
-  QByteArray val;
-  val = loadFile.readAll();
-  // Create the JsonDocument
-  QJsonDocument d = QJsonDocument::fromJson(val);
+    QByteArray val;
+    val = loadFile.readAll();
+    // Create the JsonDocument
+    QJsonDocument d = QJsonDocument::fromJson(val);
 
-  if (!d.isObject() || d.isEmpty() || d.isNull()) {
-    qWarning("Invalid config file.");
-    return QJsonObject();
-  } else {
-    return d.object();
-  }
+    if (!d.isObject() || d.isEmpty() || d.isNull()) {
+        qWarning("Invalid config file.");
+        return QJsonObject();
+    } else {
+        return d.object();
+    }
 }
 
-void Config::saveJsonFile(const QString &path, const QJsonObject &obj) {
-  QJsonDocument d(obj);
-  QFile saveFile(path);
-  qDebug() << "Config::setData";
+void Config::saveJsonFile(const QString& path, const QJsonObject& obj) {
+    QJsonDocument d(obj);
+    QFile saveFile(path);
+    qDebug() << "Config::setData";
 
-  ensureDir(path);
+    ensureDir(path);
 
-  if (!saveFile.open(QIODevice::WriteOnly)) {
-    qWarning("Couldn't open config file.");
-    return;
-  }
+    if (!saveFile.open(QIODevice::WriteOnly)) {
+        qWarning("Couldn't open config file.");
+        return;
+    }
 
-  // If we want the utf8 encoding to be correctly written to the file,
-  // we cannot write the JSON document directly. We must write an encoded
-  // QString into the file.
-  QTextStream out(&saveFile);
-  out << QString::fromUtf8(d.toJson());
-  qDebug() << "Config::dataSet";
+    // If we want the utf8 encoding to be correctly written to the file,
+    // we cannot write the JSON document directly. We must write an encoded
+    // QString into the file.
+    QTextStream out(&saveFile);
+    out << QString::fromUtf8(d.toJson());
+    qDebug() << "Config::dataSet";
 }
 
-void Config::ensureDir(const QString &path) {
-  QFileInfo fi(path);
-  QDir dir(fi.absoluteDir());
+void Config::ensureDir(const QString& path) {
+    QFileInfo fi(path);
+    QDir dir(fi.absoluteDir());
 
-  if (!dir.exists()) {
-    dir.mkpath(fi.absolutePath());
-  }
+    if (!dir.exists()) { dir.mkpath(fi.absolutePath()); }
 }

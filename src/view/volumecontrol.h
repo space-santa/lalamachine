@@ -7,7 +7,7 @@
 class VolumeControl : public QWidget {
     Q_OBJECT
 public:
-    VolumeControl(QWidget *parent);
+    VolumeControl(QWidget* parent);
 
     Q_PROPERTY(bool muted READ getMuted WRITE setMuted NOTIFY mutedChanged);
     Q_PROPERTY(int volume READ getVolume WRITE setVolume NOTIFY volumeChanged);
@@ -27,8 +27,8 @@ private slots:
     void setButtonSize();
 
 private:
-    QSlider *slider;
-    QPushButton *muteButton;
+    QSlider* slider;
+    QPushButton* muteButton;
 
     void createMuteButton();
     void createSlider();

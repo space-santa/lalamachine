@@ -34,49 +34,42 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
  * AutoPlaylists.
  */
 class AutoPlaylistManager : public QObject {
-  Q_OBJECT
-    Q_PROPERTY(QString currentList
-               READ currentList
-               WRITE setCurrentList
-               NOTIFY currentListChanged)
-    Q_PROPERTY(QStringList autoPlaylistNames
-               READ autoPlaylistNames
-               NOTIFY autoPlaylistNamesChanged)
- public:
-  explicit AutoPlaylistManager(QObject *parent = 0);
-  ~AutoPlaylistManager();
+    Q_OBJECT
+    Q_PROPERTY(QString currentList READ currentList WRITE setCurrentList NOTIFY currentListChanged)
+    Q_PROPERTY(QStringList autoPlaylistNames READ autoPlaylistNames NOTIFY autoPlaylistNamesChanged)
+public:
+    explicit AutoPlaylistManager(QObject* parent = 0);
+    ~AutoPlaylistManager();
 
-  QString currentList() const;
-  void setCurrentList(const QString &val);
+    QString currentList() const;
+    void setCurrentList(const QString& val);
 
-  QStringList autoPlaylistNames();
-  void setAutoPlaylistNames(const QStringList &names);
+    QStringList autoPlaylistNames();
+    void setAutoPlaylistNames(const QStringList& names);
 
-  Q_INVOKABLE QJsonArray getTracks(const QString name) const;
-  Q_INVOKABLE QJsonArray getAutoPlaylist(const QString name) const;
+    Q_INVOKABLE QJsonArray getTracks(const QString name) const;
+    Q_INVOKABLE QJsonArray getAutoPlaylist(const QString name) const;
 
-  /*!
-   * \brief saveAutoPlaylist saves an AutoPlaylist
-   * \param name The name of the list.
-   * \param args A JSON array of AutoPlalistObject-JSON-objects.
-   */
-  Q_INVOKABLE void saveAutoPlaylist(const QString &name,
-                                    const QJsonArray &args);
-  Q_INVOKABLE void deleteAutoPlaylist(const QString &name);
+    /*!
+     * \brief saveAutoPlaylist saves an AutoPlaylist
+     * \param name The name of the list.
+     * \param args A JSON array of AutoPlalistObject-JSON-objects.
+     */
+    Q_INVOKABLE void saveAutoPlaylist(const QString& name, const QJsonArray& args);
+    Q_INVOKABLE void deleteAutoPlaylist(const QString& name);
 
-  static QList<AutoPlaylistObject> jsonToApo(const QJsonArray &args);
+    static QList<AutoPlaylistObject> jsonToApo(const QJsonArray& args);
 
- signals:
-  void currentListChanged();
-  void autoPlaylistNamesChanged();
+signals:
+    void currentListChanged();
+    void autoPlaylistNamesChanged();
 
- private:
-  QString currentList_;
-  QMap<QString, AutoPlaylist *> playlists_;
-  void saveAutoPlaylist(const QString &name,
-                        const QList<AutoPlaylistObject> &args) const;
+private:
+    QString currentList_;
+    QMap<QString, AutoPlaylist*> playlists_;
+    void saveAutoPlaylist(const QString& name, const QList<AutoPlaylistObject>& args) const;
 
-  QString getPath(const QString &name) const;
-  QStringList getPlaylistNames() const;
-  void loadPlaylists();
+    QString getPath(const QString& name) const;
+    QStringList getPlaylistNames() const;
+    void loadPlaylists();
 };

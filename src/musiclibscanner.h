@@ -30,20 +30,20 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
  * scanLib() slot will trigger a scan.
  */
 class MusicLibScanner : public QObject {
-  Q_OBJECT
+    Q_OBJECT
 
- public:
-  MusicLibScanner(QObject *parent = 0) : QObject(parent){};
+public:
+    MusicLibScanner(QObject* parent = 0) : QObject(parent){};
 
- public slots:
-  void scanLib(const QString &path);
+public slots:
+    void scanLib(const QString& path);
 
- signals:
-  void scanStarted();
-  void scanComplete();
-  void trackAdded();
+signals:
+    void scanStarted();
+    void scanComplete();
+    void trackAdded();
 
- private:
-  static bool suffixCheck(const QString &val);
-  static QString getTrackQuery(Tags track, const QString date);
+private:
+    static bool suffixCheck(const QString& val);
+    static QString getTrackQuery(Tags track, const QString date);
 };

@@ -31,35 +31,34 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
  * objects.
  */
 class M3uInOut : public QQuickItem {
-  Q_OBJECT
+    Q_OBJECT
 
-  // clang-format off
+    // clang-format off
     Q_PROPERTY(QStringList playlistNames
                READ playlistNames
                WRITE setPlaylistNames
                NOTIFY playlistNamesChanged)
-  // clang-format on
+    // clang-format on
 
- public:
-  explicit M3uInOut(QQuickItem *parent = 0);
+public:
+    explicit M3uInOut(QQuickItem* parent = 0);
 
-  Q_INVOKABLE void writePlaylist(const QString &name,
-                                 const QJsonArray &json) const;
-  Q_INVOKABLE QJsonArray readPlaylist(const QString &name) const;
-  QStringList getPlaylistNames() const;
-  Q_INVOKABLE QString m3uPath(const QString &name) const;
-  Q_INVOKABLE void deletePlaylist(const QString &name) const;
+    Q_INVOKABLE void writePlaylist(const QString& name, const QJsonArray& json) const;
+    Q_INVOKABLE QJsonArray readPlaylist(const QString& name) const;
+    QStringList getPlaylistNames() const;
+    Q_INVOKABLE QString m3uPath(const QString& name) const;
+    Q_INVOKABLE void deletePlaylist(const QString& name) const;
 
-  void setPlaylistNames(const QStringList &list);
-  QStringList playlistNames() const;
+    void setPlaylistNames(const QStringList& list);
+    QStringList playlistNames() const;
 
- signals:
-  void playlistNamesChanged();
+signals:
+    void playlistNamesChanged();
 
- private slots:
-  void handleDirChange();
+private slots:
+    void handleDirChange();
 
- private:
-  QStringList playlistNames_;
-  QFileSystemWatcher watcher_;
+private:
+    QStringList playlistNames_;
+    QFileSystemWatcher watcher_;
 };

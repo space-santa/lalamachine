@@ -3,7 +3,7 @@
 #include <QHBoxLayout>
 #include <QIcon>
 
-VolumeControl::VolumeControl(QWidget *parent) : QWidget(parent) {
+VolumeControl::VolumeControl(QWidget* parent) : QWidget(parent) {
     createMuteButton();
     createSlider();
     createLayout();
@@ -23,25 +23,28 @@ void VolumeControl::createSlider() {
 }
 
 void VolumeControl::createLayout() {
-    QHBoxLayout *hbox = new QHBoxLayout;
+    QHBoxLayout* hbox = new QHBoxLayout;
     hbox->addWidget(muteButton, 0);
     hbox->addWidget(slider, 1);
     setLayout(hbox);
 }
 
 void VolumeControl::createConnections() {
-    connect(this, &VolumeControl::mutedChanged, this,
-            &VolumeControl::setButtonIcon);
+    connect(this, &VolumeControl::mutedChanged, this, &VolumeControl::setButtonIcon);
 }
 
-bool VolumeControl::getMuted() const { return muteButton->isChecked(); }
+bool VolumeControl::getMuted() const {
+    return muteButton->isChecked();
+}
 
 void VolumeControl::setMuted(bool value) {
     muteButton->setChecked(value);
     emit mutedChanged(value);
 }
 
-int VolumeControl::getVolume() const { return slider->value(); }
+int VolumeControl::getVolume() const {
+    return slider->value();
+}
 
 void VolumeControl::setVolume(int value) {
     if (value < 0) {
