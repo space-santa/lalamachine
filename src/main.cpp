@@ -36,7 +36,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "sysinfo.h"
 #include "theplayer.h"
 #include "timeconverter.h"
-#include "view/mainwindow.h"
 
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
@@ -75,17 +74,14 @@ int main(int argc, char* argv[]) {
     qmlRegisterType<ThePlayer>("Lala", 1, 0, "ThePlayer");
 
     // INFO: Because we use an ApplicationWindow we cannot use a QQuickView.
-    // EngineLoader loader;
-
-    // loader.load();
+    EngineLoader loader;
+    loader.load();
 
     // if (kiosk) {
     //    QMetaObject::invokeMethod(loader.rootWin(), "showFullScreen");
     //    loader.rootWin()->setProperty("kioskMode", true);
     //}
 
-    MainWindow mainWin;
-    mainWin.show();
     splash.close();
 
     return app.exec();

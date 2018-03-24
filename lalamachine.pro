@@ -23,9 +23,7 @@ SOURCES += src/main.cpp \
     src/track.cpp \
     src/engineloader.cpp \
     src/theplayer.cpp \
-    src/model.cpp \
-    src/view/mainwindow.cpp \
-    src/view/volumecontrol.cpp
+    src/model.cpp
 
 RESOURCES += qml.qrc
 
@@ -50,9 +48,7 @@ HEADERS += \
     src/playlistmodel.h \
     src/track.h \
     src/theplayer.h \
-    src/model.h \
-    src/view/mainwindow.h \
-    src/view/volumecontrol.h
+    src/model.h
 
 OTHER_FILES += \
     README.md \
