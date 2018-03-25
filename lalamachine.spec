@@ -16,19 +16,19 @@
 #
 
 Name: lalamachine
-Version: 1.5.1
+Version: 3.5.0
 Release: 1
 License: GPL-3.0+
 Summary: A music player
-Url: https://bitbucket.org/r-mean/lalamachine
-Group: Applications/Multimedia
-Source: %_sourcedir/%{name}-%{version}.tar.gz
-Requires: libqt5-qtquickcontrols >= 5.4.1, libQt5Multimedia5 >= 5.4.1
-BuildRequires: libqt5-qtbase-devel >= 5.4.1, libqt5-qtmultimedia-devel >= 5.4.1 libtag-devel
-BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+Url: https://github.com/space-santa/lalamachin
+Source0: %{name}-%{version}.tar.gz
+Requires: libsingleinstance >= 1.0.0, qt5-qtquickcontrols >= 5.4.1, qt5-qtmultimedia >= 5.4.1, taglib >= 1.11
+BuildRequires: libsingleinstance >= 1.0.0, qt5-qtbase-devel >= 5.4.1, qt5-qtmultimedia-devel >= 5.4.1 taglib-devel >= 1.11
 
 %description
 Lalamachine is a music player.
+
+%global debug_package %{nil}
 
 %prep
 %setup -q
@@ -57,48 +57,86 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
-* Wed Jul 20 2016 r-mean
-  1.5.1-1: Release 1.5.1
+* Sun Mar 25 2018 space-santa 3.5.0-1
+  * Add SingleInstanceGuard to only allow one instance of lalamachine.
+
+* Sat Nov 25 2017 rmean 3.4-1
+  * Consider discnumber when sorting tracks.
+
+* Sat Sep 30 2017 rmean 3.3-1
+  * Remove systray icon.
+  * Update application icon.
+
+* Fri Sep 29 2017 rmean 3.2-1
+  * Make sure new settings are added and available in the dialog.
+  * The settings dialog now resizes properly.
+  * Remove disc burning functionality.
+  * The background is now blue, the sliders are orange.
+  * New application icon.
+
+* Tue Sep 26 2017 rmean 3.1-1
+  * Ported lalamachine to MacOS.
+  * Added the discnumber to the library and playlist.
+
+* Fri Jan 13 2017 rmean 3.0-1
+  * Ported lalamachine to Windows.
+  * Fixed a couple of utf8 and other crossplattform issues.
+
+* Sat Sep 10 2016 rmean 2.2-1
+  * Fixed the sound-off-when-new-track-starts bug.
+
+* Mon Aug 15 2016 rmean 2.1-1
+  * Fixed the mute-button.
+
+* Sun Aug 14 2016 rmean 2.0-1
+  * Now using libvlc as backend for way better performance.
+  * This also fixes the seek bug.
+  * Using the mouse-wheel ober the tray icon changes the volume.
+
+* Sat Aug 06 2016 rmean 1.6.1-1
+  * Fixed a bug that broke play next/previous.
+
+* Fri Aug 05 2016 rmean 1.6.0-1
+  * Replaced qml-multimedia with qtmultimedia as backend.
+
+* Sat Jun 18 2016 rmean 1.5.1-3
   * Bugfix: CD burning works again.
   * Bugfix: Left click in playlist settings works again.
 
-* Sun Jun 12 2016 r-mean
-  1.5-1: Release 1.5
+* Sat Jun 18 2016 rmean 1.5.1-2
+  * Ported lalamachine to debian 8.
+  * Bugfix: Fixed colours in various places.
+  * Bugfix: Fixed a bug that made it impossible to get anything but the added
+    date on first run
+
+* Sun Jun 12 2016 r-mean 1.5.0-1: Release 1.5
   * Ported lalamachine to debian 8.
   * Bugfix: Fixed colours in various places.
   * Bugfix: Fixed a bug that made it impossible to get anything but the added
     date on first run.
 
-* Sat Jun 04 2016 r-mean
-  1.4.3-1: Release 1.4.3
+* Sat Jun 04 2016 r-mean 1.4.3-1: Release 1.4.3
   * Bugfix: Fixed the colours of the table views to also work in the dark.
 
-* Sun May 29 2016 r-mean
-  1.4.2-1: Release 1.4.2
+* Sun May 29 2016 r-mean 1.4.2-1: Release 1.4.2
   * Bugfix: Fixed path so taglib finds files to scan
 
-* Thu Jan 21 2016 r-mean
-  1.4.1-1: Release 1.4.1
+* Thu Jan 21 2016 r-mean 1.4.1-1: Release 1.4.1
   * Bugfix: Significantly reduced the loading time of playlists.
 
-* Thu Jan 21 2016 r-mean
-  1.4-1: Release 1.4
+* Thu Jan 21 2016 r-mean 1.4.0-1: Release 1.4
   * Bugfix: Artist no longer displayed in now playing panel.
 
-* Sat Jan 16 2016 r-mean
-  1.3.3-1: Release 1.3.3
+* Sat Jan 16 2016 r-mean 1.3.3-1: Release 1.3.3
   * Fixed a bug that made drag and move fail for ling playlists.
 
-* Fri Jan 15 2016 r-mean
-  1.3.2-1: Release 1.3.2
+* Fri Jan 15 2016 r-mean 1.3.2-1: Release 1.3.2
   * Player controls are now also visible in library view.
 
-* Sat Jan 01 2016 r-mean
-  1.3.1-1: Release 1.3.1
+* Fri Jan 01 2016 r-mean 1.3.1-1: Release 1.3.1
   * Fixed segfault on openSUSE 42.1.
 
-* Sat Aug 20 2015 r-mean
-  1.3-1: Release 1.3
+* Thu Aug 20 2015 r-mean 1.3.0-1: Release 1.3
   * Kiosk mode.
   * Mousewheel on LalaTray changes the volume and shows message with value.
   * Hovering over LalaTray shows a tooltip with the currently playhing title.
@@ -109,8 +147,7 @@ rm -rf $RPM_BUILD_ROOT
   * Fixed a bug that made it impossible to set the volume to 100% using
     the volume up shortcut.
 
-* Sat Aug 08 2015 r-mean
-  1.2-1: Release 1.2
+* Sat Aug 08 2015 r-mean 1.2-1: Release 1.2
   * Fixed a bug that would move tracks when clicking in the playlist.
   * Playlist and musivlib are now in tabs and no longer visible at once.
   * The app has now a system tray icon.
@@ -123,7 +160,7 @@ rm -rf $RPM_BUILD_ROOT
   * Changed the text colour of the selected row to be visible on dark bg.
 
 * Sun Aug 02 2015 r-mean
-  1.1-1: Release 1.1
+  1.1.0-1: Release 1.1.0
   * Each track now has a tag "date added". This is only inside lalamachine and
     is not an actual tag that is written to the file.
   * Fixed a bug that made sorting not work properly.
