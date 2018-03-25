@@ -16,16 +16,14 @@
 #
 
 Name: lalamachine
-Version: 1.5.1
+Version: 3.5.0
 Release: 1
 License: GPL-3.0+
 Summary: A music player
-Url: https://bitbucket.org/r-mean/lalamachine
-Group: Applications/Multimedia
-Source: %_sourcedir/%{name}-%{version}.tar.gz
-Requires: libqt5-qtquickcontrols >= 5.4.1, libQt5Multimedia5 >= 5.4.1
-BuildRequires: libqt5-qtbase-devel >= 5.4.1, libqt5-qtmultimedia-devel >= 5.4.1 libtag-devel
-BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+Url: https://github.com/space-santa/lalamachin
+Source0: %{name}-%{version}.tar.gz
+Requires: libsingleinstance >= 1.0.0, libqt5-qtquickcontrols >= 5.4.1, libQt5Multimedia5 >= 5.4.1
+BuildRequires: libsingleinstance >= 1.0.0, libqt5-qtbase-devel >= 5.4.1, libqt5-qtmultimedia-devel >= 5.4.1 libtag-devel
 
 %description
 Lalamachine is a music player.
@@ -57,6 +55,96 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+lalamachine (3.5.0-1) -- Sun Mar 25 14:33:52 AEDT 2018, space-santa
+
+  * Add SingleInstanceGuard to only allow one instance of lalamachine.
+
+
+lalamachine (3.4-1)
+
+  * Consider discnumber when sorting tracks.
+
+ -- rmean  Sat, 25 Nov 2017 11:33:00 +1100
+
+lalamachine (3.3-1)
+
+  * Remove systray icon.
+  * Update application icon.
+
+ -- rmean  Sat, 30 Sep 2017 16:48:41 +1000
+
+lalamachine (3.2-1)
+
+  * Make sure new settings are added and available in the dialog.
+  * The settings dialog now resizes properly.
+  * Remove disc burning functionality.
+  * The background is now blue, the sliders are orange.
+  * New application icon.
+
+ -- rmean  Fri, 29 Sep 2017 19:55:34 +1000
+
+lalamachine (3.1-1)
+
+  * Ported lalamachine to MacOS.
+  * Added the discnumber to the library and playlist.
+
+ -- rmean  Tue, 26 Sep 2017 21:16:11 +1000
+
+lalamachine (3.0-1)
+
+  * Ported lalamachine to Windows.
+  * Fixed a couple of utf8 and other crossplattform issues.
+
+ -- rmean  Fri, 13 Jan 2017 15:41:11 +1100
+
+lalamachine (2.2-1)
+
+  * Fixed the sound-off-when-new-track-starts bug.
+
+ -- rmean  Sat, 10 Sep 2016 14:22:15 +1000
+
+lalamachine (2.1-1)
+
+  * Fixed the mute-button.
+
+ -- rmean  Mon, 15 Aug 2016 06:32:31 +1000
+
+lalamachine (2.0-1)
+
+  * Now using libvlc as backend for way better performance.
+  * This also fixes the seek bug.
+  * Using the mouse-wheel ober the tray icon changes the volume.
+
+ -- rmean  Sun, 14 Aug 2016 19:52:19 +1000
+
+lalamachine (1.6.1-1)
+
+  * Fixed a bug that broke play next/previous.
+
+ -- rmean  Sat, 06 Aug 2016 18:44:42 +1000
+
+lalamachine (1.6-1)
+
+  * Replaced qml-multimedia with qtmultimedia as backend.
+
+ -- rmean  Fri, 05 Aug 2016 08:40:45 +1000
+
+lalamachine (1.5.1-1)
+
+  * Bugfix: CD burning works again.
+  * Bugfix: Left click in playlist settings works again.
+
+ -- rmean  Sat, 18 Jun 2016 21:40:45 +1000
+
+lalamachine (1.5-1)
+
+  * Ported lalamachine to debian 8.
+  * Bugfix: Fixed colours in various places.
+  * Bugfix: Fixed a bug that made it impossible to get anything but the added
+    date on first run
+
+ -- rmean  Sat, 18 Jun 2016 21:40:45 +1000
+
 * Wed Jul 20 2016 r-mean
   1.5.1-1: Release 1.5.1
   * Bugfix: CD burning works again.
