@@ -8,19 +8,36 @@ lalamachine is just another music player. It features:
 * Playlists which can be exported into a folder.
 * Automatic playlists
 
+## Fedora packages
+
+I have a yum repository on gemfury. To use it, put this in `/etc/yum.repos.d/fury.repo`
+
+```bash
+[fury]
+name=space-santa repo
+baseurl=https://tdFaGYsdNpoXxsaukHct@yum.fury.io/space-santa/
+enabled=1
+gpgcheck=0
+```
+
+And then:
+
+```bash
+sudo dnf --refresh update
+sudo dnf install lalamachine
+```
+
+This will also install `libsingleinstance`.
+
 ## Dependencies
 
-lalamachine is a Qt5 application.
-The only other (direct) dependency is taglib.
+qtbase, qtmultimedia, taglib, libsingleinstance
 
 ## Build it
 
 Using the qmake of Qt5, the build and install process is very straightforward:
 
-
-```
-#!bash
-
+```bash
 qmake
 make
 sudo make install
@@ -30,13 +47,9 @@ The software will be installed in /usr/bin.
 
 To remove lalamachine,
 
-
-```
-#!bash
-
+```bash
 sudo make uninstall
 ```
-
 
 ## Debug
 
@@ -44,7 +57,7 @@ On Fedora >22, don't forget to enable QDebug output. To do that, add or create
 
 `~/.config/QtProject/qtlogging.ini` with this content:
 
-```
+```bash
 [Rules]
 *.debug=true
 qt.*.debug=false
@@ -62,10 +75,9 @@ I would appreciate any help. If you'd like to contribute to lalamachine,
 * Write code and send me a pull request. [There is also a list of issues that wants to be resolved here.](https://github.com/space-santa/lalamachine/projects/1)
 * Let me know how you like the app and what functionality is missing.
 
-
 ## License
 
-Copyright 2015-2017 Claus Zirkel
+Copyright 2015-2018 Claus Zirkel
 
 Lalamachine is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
