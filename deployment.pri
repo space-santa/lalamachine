@@ -4,7 +4,7 @@ isEmpty(target.path) {
 }
 INSTALLS += target
 
-icon.files = images/lalamachine.png
+icon.files = images/lalamachine-new.png
 export(icon.files)
 isEmpty(icon.path) {
     icon.path = /usr/share/icons/hicolor/64x64/apps

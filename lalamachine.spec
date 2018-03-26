@@ -1,22 +1,5 @@
-#
-# spec file for package lalamachine
-#
-# Copyright (c) 2015 SUSE LINUX Products GmbH, Nuernberg, Germany.
-#
-# All modifications and additions to the file contributed by third parties
-# remain the property of their copyright owners, unless otherwise agreed
-# upon. The license for this file, and modifications and additions to the
-# file, is the same license as for the pristine package itself (unless the
-# license for the pristine package is not an Open Source License, in which
-# case the license is the MIT License). An "Open Source License" is a
-# license that conforms to the Open Source Definition (Version 1.9)
-# published by the Open Source Initiative.
-
-# Please submit bugfixes or comments via http://bugs.opensuse.org/
-#
-
 Name: lalamachine
-Version: 3.5.0
+Version: 3.5.1
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -53,10 +36,13 @@ rm -rf $RPM_BUILD_ROOT
 %dir /usr/share/icons/hicolor/64x64/
 %dir /usr/share/icons/hicolor/64x64/apps/
 /usr/bin/lalamachine
-/usr/share/icons/hicolor/64x64/apps/lalamachine.png
+/usr/share/icons/hicolor/64x64/apps/lalamachine-new.png
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Mon Mar 26 2018 space-santa 3.5.1-1
+  * Add SingleInstanceGuard to only allow one instance of lalamachine.
+
 * Sun Mar 25 2018 space-santa 3.5.0-1
   * Add SingleInstanceGuard to only allow one instance of lalamachine.
 
