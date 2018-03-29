@@ -21,7 +21,6 @@ SOURCES += src/main.cpp \
     src/autoplaylist.cpp \
     src/playlistmodel.cpp \
     src/track.cpp \
-    src/engineloader.cpp \
     src/theplayer.cpp \
     src/model.cpp
 
@@ -42,7 +41,6 @@ HEADERS += \
     src/lalatypes.h \
     src/autoplaylistmanager.h \
     src/fileexporter.h \
-    src/engineloader.h \
     src/tags.h \
     src/autoplaylist.h \
     src/playlistmodel.h \

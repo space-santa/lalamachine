@@ -24,10 +24,10 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPixmap>
 #include <QQmlApplicationEngine>
 #include <QSplashScreen>
+#include <memory>
 
 #include "autoplaylistmanager.h"
 #include "config.h"
-#include "engineloader.h"
 #include "fileexporter.h"
 #include "lalatypes.h"
 #include "m3uinout.h"
@@ -38,33 +38,16 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "theplayer.h"
 #include "timeconverter.h"
 
-int main(int argc, char* argv[]) {
-    SingleInstance::SingleInstanceGuard guard("lalamachine");
-    if (guard.alreadyRunning()) { return 9; }
+std::unique_ptr<QApplication> createApp(int argc, char* argv[]) {
+    std::unique_ptr<QApplication> app(new QApplication(argc, argv));
+    app->setWindowIcon(QIcon(QPixmap(":/images/images/lala-icon-2-small.png")));
+    app->setApplicationVersion("3.5.1");
+    app->setApplicationName("lalamachine");
+    app->setOrganizationName("rmean");
+    return app;
+}
 
-    QApplication app(argc, argv);
-    // Setting the app-icon.
-    app.setWindowIcon(QIcon(QPixmap(":/images/images/lala-icon-2-small.png")));
-    app.setApplicationVersion("3.5.1");
-    app.setApplicationName("lalamachine");
-    app.setOrganizationName("rmean");
-
-    QCommandLineParser parser;
-    parser.setApplicationDescription("The most awesome lalamachine.");
-    parser.addHelpOption();
-    parser.addVersionOption();
-
-    // Boolean option to start in kiosk mode. (--kiosk)
-    QCommandLineOption kioskMode("kiosk", "Start in kiosk-mode.");
-    parser.addOption(kioskMode);
-
-    parser.process(app);
-    // bool kiosk = parser.isSet(kioskMode);
-
-    QPixmap logo(":/images/images/logo/logo.png");
-    QSplashScreen splash(logo);
-    splash.show();
-
+void registerQmlTypes() {
     qmlRegisterType<MetaDataProvider>("Lala", 1, 0, "Metadata");
     qmlRegisterType<M3uInOut>("Lala", 1, 0, "M3uInOut");
     qmlRegisterType<Config>("Lala", 1, 0, "Config");
@@ -76,17 +59,24 @@ int main(int argc, char* argv[]) {
     qmlRegisterType<FileExporter>("Lala", 1, 0, "FileExporter");
     qmlRegisterType<PlaylistModel>("Lala", 1, 0, "PlaylistModel");
     qmlRegisterType<ThePlayer>("Lala", 1, 0, "ThePlayer");
+}
 
+int main(int argc, char* argv[]) {
+    SingleInstance::SingleInstanceGuard guard("lalamachine");
+    if (guard.alreadyRunning()) {
+        return 9;
+    }
+
+    auto app = createApp(argc, argv);
+
+    QPixmap logo(":/images/images/logo/logo.png");
+    QSplashScreen splash(logo);
+    splash.show();
+
+    registerQmlTypes();
     // INFO: Because we use an ApplicationWindow we cannot use a QQuickView.
-    EngineLoader loader;
-    loader.load();
-
-    // if (kiosk) {
-    //    QMetaObject::invokeMethod(loader.rootWin(), "showFullScreen");
-    //    loader.rootWin()->setProperty("kioskMode", true);
-    //}
+    QQmlApplicationEngine engine(QUrl(QStringLiteral("qrc:/main.qml")));
 
     splash.close();
-
-    return app.exec();
+    return app->exec();
 }
