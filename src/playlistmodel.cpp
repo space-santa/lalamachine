@@ -67,7 +67,9 @@ bool PlaylistModel::setData(const QModelIndex& index, const QVariant& value, int
 }
 
 void PlaylistModel::append(Track track) {
-    if (track.mrl_.isEmpty()) { return; }
+    if (track.mrl_.isEmpty()) {
+        return;
+    }
 
     track.id_ = list_.length();
     // NOTE: This has to have an empty QModelIndex as first argument.
@@ -79,11 +81,17 @@ void PlaylistModel::append(Track track) {
 }
 
 void PlaylistModel::move(int from, int to) {
-    if (from == to) { return; }
+    if (from == to) {
+        return;
+    }
 
-    if (from < 0 || from > rowCount()) { return; }
+    if (from < 0 || from > rowCount()) {
+        return;
+    }
 
-    if (to < 0 || to > rowCount()) { return; }
+    if (to < 0 || to > rowCount()) {
+        return;
+    }
 
     qDebug() << "MOVING ROW from" << from << "to" << to;
     list_.swap(from, to);
@@ -100,7 +108,9 @@ void PlaylistModel::remove(int row) {
 }
 
 QJsonObject PlaylistModel::get(int row) const {
-    if (row < 0 || row >= rowCount()) { return QJsonObject(); }
+    if (row < 0 || row >= rowCount()) {
+        return QJsonObject();
+    }
 
     return list_.at(row).toJson();
 }
@@ -312,9 +322,13 @@ int PlaylistModel::compareComment(QString c1, QString c2) {
     // Check if the comment starts with a single digit camelot key (e.g. 5B).
     // If so, add a 0 to correctly compare with 10A or 12B.
     QRegularExpression rex("^\\d(A|B).*$");
-    if (c1.contains(rex)) { c1.prepend("0"); }
+    if (c1.contains(rex)) {
+        c1.prepend("0");
+    }
 
-    if (c2.contains(rex)) { c2.prepend("0"); }
+    if (c2.contains(rex)) {
+        c2.prepend("0");
+    }
     return QString::localeAwareCompare(c1, c2);
 }
 

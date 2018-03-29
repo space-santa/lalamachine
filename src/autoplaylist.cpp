@@ -42,7 +42,9 @@ QString AutoPlaylist::name() {
 }
 
 void AutoPlaylist::save() {
-    if (name_.isEmpty()) { return; }
+    if (name_.isEmpty()) {
+        return;
+    }
 
     QJsonArray jarr;
 
@@ -57,14 +59,18 @@ void AutoPlaylist::save() {
 }
 
 void AutoPlaylist::deleteList() {
-    if (name_.isEmpty()) { return; }
+    if (name_.isEmpty()) {
+        return;
+    }
 
     QFile::remove(getPath(name_));
     name_ = "";
 }
 
 void AutoPlaylist::load() {
-    if (name_.isEmpty()) { return; }
+    if (name_.isEmpty()) {
+        return;
+    }
 
     fromJson(Config::loadJsonFile(getPath(name_)).value(name_).toArray());
 }

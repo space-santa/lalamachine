@@ -82,7 +82,9 @@ QString TimeConverter::toString() {
 QString TimeConverter::numToString(int num) {
     QString retVal("");
 
-    if (num < 10) { retVal.append("0"); }
+    if (num < 10) {
+        retVal.append("0");
+    }
 
     retVal.append(QString::number(num));
 

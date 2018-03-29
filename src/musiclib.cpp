@@ -173,7 +173,9 @@ void MusicLib::setLibPath(const QString& path) {
     libPath_ = path;
     emit libPathChanged();
 
-    if (!appStart_) { rescan(); }
+    if (!appStart_) {
+        rescan();
+    }
 
     appStart_ = false;
 }
@@ -240,7 +242,9 @@ bool MusicLib::sortAsc() const {
 }
 
 void MusicLib::setSortAsc(bool val) {
-    if (sortAsc_ == val) { return; }
+    if (sortAsc_ == val) {
+        return;
+    }
 
     // Only do things when there was an actual change.
     // We only want to setDisplayLib if necessary.
@@ -254,7 +258,9 @@ Model::SortWhat MusicLib::what() const {
 }
 
 void MusicLib::setWhat(Model::SortWhat val) {
-    if (what_ == val) { return; }
+    if (what_ == val) {
+        return;
+    }
     // See comment in MusicLib::setSortAsc
     what_ = val;
     emit whatChanged();
@@ -304,7 +310,9 @@ QStringList MusicLib::getList(const QString& what) const {
 void MusicLib::rescan() {
     qDebug() << "emitting rescan" << libPath();
 
-    if (!scannerThread_.isRunning()) { scannerThread_.start(); }
+    if (!scannerThread_.isRunning()) {
+        scannerThread_.start();
+    }
 
     Model::instance()->copyLibToTmp();
     Model::instance()->clearMusicLib();

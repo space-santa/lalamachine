@@ -1,5 +1,3 @@
-#include "model.h"
-
 #include <QDebug>
 #include <QMutexLocker>
 #include <QRegularExpression>
@@ -163,7 +161,9 @@ QStringList Model::resultToList(QSqlQuery result, const QString& what) {
     while (result.next()) {
         QString tmp = result.value(what).toString();
 
-        if (!tmp.isEmpty()) { retval << tmp; }
+        if (!tmp.isEmpty()) {
+            retval << tmp;
+        }
     }
 
     return retval;
@@ -260,7 +260,9 @@ void Model::clearMusicLib() {
 
 void Model::restoreMetaData() {
     QStringList tables = db_.tables();
-    if (!tables.contains("musiclib") || !tables.contains("tmplib")) { return; }
+    if (!tables.contains("musiclib") || !tables.contains("tmplib")) {
+        return;
+    }
 
     QSqlQuery records = db_.exec("SELECT * FROM musiclib");
 
@@ -272,7 +274,9 @@ void Model::restoreMetaData() {
         tmprec.first();
         QString tmpdate = tmprec.value("dateAdded").toString();
 
-        if (tmpdate.isEmpty()) { continue; }
+        if (tmpdate.isEmpty()) {
+            continue;
+        }
 
         QString query("UPDATE musiclib SET dateAdded='%1' WHERE mrl='%2'");
         db_.exec(query.arg(tmpdate).arg(escapeString(mrl))).lastError();
@@ -354,7 +358,9 @@ QStringList Model::getGenreList(const QString& filter) {
     while (result.next()) {
         QString tmp = result.value("genre").toString();
 
-        if (tmp != "") { retval << tmp; }
+        if (tmp != "") {
+            retval << tmp;
+        }
     }
 
     return retval;
@@ -367,7 +373,9 @@ QStringList Model::getArtistList(const QString& artist, const QString& genre) {
     while (result.next()) {
         QString tmp = result.value("artist").toString();
 
-        if (tmp != "") { retval << tmp; }
+        if (tmp != "") {
+            retval << tmp;
+        }
     }
 
     return retval;
@@ -380,7 +388,9 @@ QStringList Model::getAlbumList(const QString& album, const QString& artist, con
     while (result.next()) {
         QString tmp = result.value("album").toString();
 
-        if (tmp != "") { retval << tmp; }
+        if (tmp != "") {
+            retval << tmp;
+        }
     }
 
     return retval;

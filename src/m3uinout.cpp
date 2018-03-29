@@ -49,7 +49,9 @@ void M3uInOut::handleDirChange() {
 }
 
 void M3uInOut::writePlaylist(const QString& name, const QJsonArray& json) const {
-    if (name.isEmpty()) { return; }
+    if (name.isEmpty()) {
+        return;
+    }
 
     QFile file(m3uPath(name));
 
@@ -94,7 +96,9 @@ QStringList M3uInOut::getPlaylistNames() const {
     QFileInfoList entries = d.entryInfoList();
 
     for (int i = 0; i < entries.length(); ++i) {
-        if (entries[i].baseName() != "cs1m090") { names.append(entries[i].baseName()); }
+        if (entries[i].baseName() != "cs1m090") {
+            names.append(entries[i].baseName());
+        }
     }
 
     return names;

@@ -78,12 +78,16 @@ void MusicLibScanner::scanLib(const QString& path) {
                 // This is to mitigate another problem. We assume that all files
                 // with the correct sufix are good. Problem is that they might
                 // not be.
-                if (!tmp.isValid()) { continue; }
+                if (!tmp.isValid()) {
+                    continue;
+                }
 
                 // Adding all queries to the transaction.
                 error = scanDb.exec(getTrackQuery(tmp, date) + ";\n").lastError().text().trimmed();
 
-                if (!error.isEmpty()) { qDebug() << error; }
+                if (!error.isEmpty()) {
+                    qDebug() << error;
+                }
             }
         }
         qDebug() << "pre commit" << timer.elapsed();
@@ -127,11 +131,17 @@ QString MusicLibScanner::getTrackQuery(Tags track, const QString date) {
 }
 
 bool MusicLibScanner::suffixCheck(const QString& val) {
-    if (val.endsWith(".mp3")) { return true; }
+    if (val.endsWith(".mp3")) {
+        return true;
+    }
 
-    if (val.endsWith(".m4a")) { return true; }
+    if (val.endsWith(".m4a")) {
+        return true;
+    }
 
-    if (val.endsWith(".ogg")) { return true; }
+    if (val.endsWith(".ogg")) {
+        return true;
+    }
 
     return false;
 }
