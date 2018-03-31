@@ -23,24 +23,17 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QUrl>
 
+#include "IMetaDataProvider.h"
 #include "tags.h"
 
-/*!
- * \brief The MetaDataProvider class is basically just a wrapper around the
- * metaData() function. Because it is used from QML it also contains the
- * function metaDataAsJson().
- */
-class MetaDataProvider : public QObject {
+// This is a class because it is also used from QML which requires an object to work.
+class MetaDataProvider : public QObject, public IMetaDataProvider {
     Q_OBJECT
 public:
     explicit MetaDataProvider(QObject* parent = 0);
-    static Tags metaData(const QUrl& path);
+    Tags metaData(const QUrl& path) const;
     static uint discNumberOfMp3(const QString& path);
 
-    /*!
-     * \brief metaDataAsJson is a convenience function to be used from QML.
-     * \param path The path to the media file.
-     * \return The result of Tags::toJson()
-     */
+    // Convenience function to be used from QML.
     Q_INVOKABLE QJsonObject metaDataAsJson(const QUrl& path) const;
 };

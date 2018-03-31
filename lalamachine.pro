@@ -6,6 +6,7 @@ CONFIG += C++11 # console
 QMAKE_CXXFLAGS += -Werror
 
 SOURCES += src/main.cpp \
+    src/exceptions.cpp \
     src/metadataprovider.cpp \
     src/m3uinout.cpp \
     src/config.cpp \
@@ -22,7 +23,9 @@ SOURCES += src/main.cpp \
     src/playlistmodel.cpp \
     src/track.cpp \
     src/theplayer.cpp \
-    src/model.cpp
+    src/model.cpp \
+    src/ScannerDB.cpp \
+    src/DirWalker.cpp
 
 RESOURCES += qml.qrc
 
@@ -30,6 +33,7 @@ RESOURCES += qml.qrc
 include(deployment.pri)
 
 HEADERS += \
+    src/exceptions.h \
     src/metadataprovider.h \
     src/m3uinout.h \
     src/config.h \
@@ -46,7 +50,11 @@ HEADERS += \
     src/playlistmodel.h \
     src/track.h \
     src/theplayer.h \
-    src/model.h
+    src/model.h \
+    src/ScannerDB.h \
+    src/IScannerDB.h \
+    src/IDirWalker.h \
+    src/DirWalker.h
 
 OTHER_FILES += \
     README.md \

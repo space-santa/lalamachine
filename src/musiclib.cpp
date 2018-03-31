@@ -32,7 +32,10 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSqlRecord>
 #include <QUrl>
 #include <QtConcurrent>
+#include <memory>
 
+#include "DirWalker.h"
+#include "ScannerDB.h"
 #include "autoplaylistmanager.h"
 #include "config.h"
 #include "metadataprovider.h"
@@ -93,7 +96,9 @@ MusicLib::~MusicLib() {
 }
 
 void MusicLib::init() {
-    scanner_ = new MusicLibScanner();
+    scanner_ = new MusicLibScanner(std::unique_ptr<IScannerDB>(new ScannerDB()),
+                                   std::unique_ptr<IDirWalker>(new DirWalker()),
+                                   std::unique_ptr<IMetaDataProvider>(new MetaDataProvider()));
     mutex_ = QSharedPointer<QMutex>(new QMutex());
     sortAsc_ = true;
     scanning_ = false;

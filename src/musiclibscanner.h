@@ -20,8 +20,11 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #include <QObject>
-#include <QSqlDatabase>
+#include <memory>
 
+#include "IDirWalker.h"
+#include "IMetaDataProvider.h"
+#include "IScannerDB.h"
 #include "tags.h"
 
 /*!
@@ -31,9 +34,13 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
  */
 class MusicLibScanner : public QObject {
     Q_OBJECT
+    friend class MusicLibScannerTest;
 
 public:
-    MusicLibScanner(QObject* parent = 0) : QObject(parent){};
+    MusicLibScanner(std::unique_ptr<IScannerDB> scanDb,
+                    std::unique_ptr<IDirWalker> dirWalker,
+                    std::unique_ptr<IMetaDataProvider> metaDataProvider,
+                    QObject* parent = 0);
 
 public slots:
     void scanLib(const QString& path);
@@ -44,6 +51,7 @@ signals:
     void trackAdded();
 
 private:
-    static bool suffixCheck(const QString& val);
-    static QString getTrackQuery(Tags track, const QString date);
+    std::unique_ptr<IScannerDB> scanDb;
+    std::unique_ptr<IDirWalker> dirWalker;
+    std::unique_ptr<IMetaDataProvider> metaDataProvider;
 };

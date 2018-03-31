@@ -24,7 +24,6 @@ SOURCES += \
     ../../src/m3uinout.cpp \
     ../../src/metadataprovider.cpp \
     ../../src/timeconverter.cpp \
-    ../../src/musiclib.cpp \
     ../../src/autoplaylistobject.cpp \
     ../../src/autoplaylistmanager.cpp \
     ../../src/autoplaylist.cpp \
@@ -35,7 +34,11 @@ SOURCES += \
     lalatest.cpp \
     test_model.cpp \
     testautoplaylist.cpp \
-    ../../src/tags.cpp
+    musiclibscanner.test.cpp \
+    ../../src/tags.cpp \
+    ../../src/exceptions.cpp \
+    musiclibscanner.test.mock.cpp
+
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
@@ -43,7 +46,6 @@ HEADERS += \
     ../../src/m3uinout.h \
     ../../src/metadataprovider.h \
     ../../src/timeconverter.h \
-    ../../src/musiclib.h \
     ../../src/autoplaylistobject.h \
     ../../src/autoplaylistmanager.h \
     ../../src/autoplaylist.h \
@@ -53,7 +55,13 @@ HEADERS += \
     lalatest.h \
     test_model.h \
     testautoplaylist.h \
-    ../../src/tags.h
+    musiclibscanner.test.h \
+    ../../src/tags.h \
+    ../../src/exceptions.h \
+    ../../src/IDirWalker.h \
+    ../../src/IMetaDataProvider.h \
+    ../../src/IScannerDB.h \
+    musiclibscanner.test.mock.h
 
 unix!macx: {
     INCLUDEPATH += /usr/include/taglib
