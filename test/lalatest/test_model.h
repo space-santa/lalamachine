@@ -3,16 +3,16 @@
 #include <QObject>
 
 class ModelTest : public QObject {
-  Q_OBJECT
- private slots:
-  void initTestCase();
-  void cleanupTestCase();
-  void testCase1();
+    Q_OBJECT
+private slots:
+    void initTestCase();
+    void cleanupTestCase();
+    void testCase1();
 
-  void escapeString_data();
-  void escapeString();
+    void escapeString_data();
+    void escapeString();
 
-  void testGenreQuery();
-  void testArtistQuery();
-  void testAlbumQuery();
+    void testGenreQuery();
+    void testArtistQuery();
+    void testAlbumQuery();
 };

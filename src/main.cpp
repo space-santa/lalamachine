@@ -38,15 +38,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "theplayer.h"
 #include "timeconverter.h"
 
-std::unique_ptr<QApplication> createApp(int argc, char* argv[]) {
-    std::unique_ptr<QApplication> app(new QApplication(argc, argv));
-    app->setWindowIcon(QIcon(QPixmap(":/images/images/lala-icon-2-small.png")));
-    app->setApplicationVersion("3.5.1");
-    app->setApplicationName("lalamachine");
-    app->setOrganizationName("rmean");
-    return app;
-}
-
 void registerQmlTypes() {
     qmlRegisterType<MetaDataProvider>("Lala", 1, 0, "Metadata");
     qmlRegisterType<M3uInOut>("Lala", 1, 0, "M3uInOut");
@@ -64,10 +55,14 @@ void registerQmlTypes() {
 int main(int argc, char* argv[]) {
     SingleInstance::SingleInstanceGuard guard("lalamachine");
     if (guard.alreadyRunning()) {
-        return 9;
+        // return 9;
     }
 
-    auto app = createApp(argc, argv);
+    QApplication app(argc, argv);
+    app.setWindowIcon(QIcon(QPixmap(":/images/images/lala-icon-2-small.png")));
+    app.setApplicationVersion("3.5.1");
+    app.setApplicationName("lalamachine");
+    app.setOrganizationName("rmean");
 
     QPixmap logo(":/images/images/logo/logo.png");
     QSplashScreen splash(logo);
@@ -78,5 +73,5 @@ int main(int argc, char* argv[]) {
     QQmlApplicationEngine engine(QUrl(QStringLiteral("qrc:/main.qml")));
 
     splash.close();
-    return app->exec();
+    return app.exec();
 }

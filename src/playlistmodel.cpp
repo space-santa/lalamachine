@@ -2,7 +2,8 @@
 #include <QDebug>
 #include <QRegularExpression>
 
-PlaylistModel::PlaylistModel(QObject* parent) : QAbstractListModel(parent) {}
+PlaylistModel::PlaylistModel(QObject* parent) : QAbstractListModel(parent) {
+}
 
 QHash<int, QByteArray> PlaylistModel::roleNames() const {
     QHash<int, QByteArray> roles;

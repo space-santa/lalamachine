@@ -3,8 +3,7 @@
 
 #include <QObject>
 
-class TestAutoPlaylist : public QObject
-{
+class TestAutoPlaylist : public QObject {
     Q_OBJECT
 private slots:
     void initTestCase();
@@ -12,4 +11,4 @@ private slots:
     void cleanupTestCase();
 };
 
-#endif // TESTAUTOPLAYLIST_H
+#endif  // TESTAUTOPLAYLIST_H

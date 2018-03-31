@@ -35,7 +35,8 @@ AutoPlaylist::AutoPlaylist(const QString& name, QObject* parent) : QObject(paren
     load();
 }
 
-AutoPlaylist::~AutoPlaylist() {}
+AutoPlaylist::~AutoPlaylist() {
+}
 
 QString AutoPlaylist::name() {
     return name_;

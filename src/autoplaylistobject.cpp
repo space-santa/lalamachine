@@ -30,7 +30,8 @@ AutoPlaylistObject::AutoPlaylistObject(const QJsonObject& obj) {
 }
 
 AutoPlaylistObject::AutoPlaylistObject(LalaTypes::AndOr andor, LalaTypes::Tag tag, LalaTypes::Operator op, QString val)
-    : andor_(andor), tag_(tag), op_(op), val_(val) {}
+    : andor_(andor), tag_(tag), op_(op), val_(val) {
+}
 
 LalaTypes::AndOr AutoPlaylistObject::andor() const {
     return andor_;

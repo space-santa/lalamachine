@@ -9,7 +9,7 @@
   "scripts": {
     "run": "npm run build && ./build/lalamachine",
     "build": "npm run lint && mkdir -p build && cd build && qmake-qt5 ../lalamachine.pro && make",
-    "lint": "clang-format src/*.h src/*.cpp -i",
+    "lint": "clang-format src/*.h src/*.cpp -i test/lalatest/*.h test/lalatest/*.cpp",
     "clean": "rm -rf build",
     "clean-test": "rm -rf test/build",
     "test": "mkdir -p test/build && cd test/build && qmake-qt5 ../lalatest/lalatest.pro && make && ./tst_lalatesttest"
