@@ -351,7 +351,7 @@ QJsonObject Model::getMetadataForMrl(const QUrl& mrl) const {
     return retval;
 }
 
-QStringList Model::getGenreList(const QString& filter) {
+QStringList Model::getGenreList(const QString& filter) const {
     QStringList retval;
     QSqlQuery result = db_.exec(genreQuery(filter));
 
@@ -366,7 +366,7 @@ QStringList Model::getGenreList(const QString& filter) {
     return retval;
 }
 
-QStringList Model::getArtistList(const QString& artist, const QString& genre) {
+QStringList Model::getArtistList(const QString& artist, const QString& genre) const {
     QStringList retval;
     QSqlQuery result = db_.exec(artistQuery(artist, genre));
 
@@ -381,7 +381,7 @@ QStringList Model::getArtistList(const QString& artist, const QString& genre) {
     return retval;
 }
 
-QStringList Model::getAlbumList(const QString& album, const QString& artist, const QString& genre) {
+QStringList Model::getAlbumList(const QString& album, const QString& artist, const QString& genre) const {
     QStringList retval;
     QSqlQuery result = db_.exec(albumQuery(album, artist, genre));
 

@@ -36,28 +36,17 @@ class MusicLib : public QObject {
     Q_OBJECT
 
     Q_PROPERTY(bool scanning READ scanning WRITE setScanning NOTIFY scanningChanged)
-
     Q_PROPERTY(QJsonArray displayLib READ displayLib NOTIFY displayLibChanged)
-
     Q_PROPERTY(int totalLength READ totalLength NOTIFY totalLengthChanged)
-
     Q_PROPERTY(QString libPath READ libPath WRITE setLibPath NOTIFY libPathChanged)
-
     Q_PROPERTY(QString genreFilter READ genreFilter WRITE setGenreFilter NOTIFY genreFilterChanged)
-
     Q_PROPERTY(QString artistFilter READ artistFilter WRITE setArtistFilter NOTIFY artistFilterChanged)
-
     Q_PROPERTY(QString albumFilter READ albumFilter WRITE setAlbumFilter NOTIFY albumFilterChanged)
-
     Q_PROPERTY(QStringList genreList READ genreList NOTIFY genreListChanged)
-
     Q_PROPERTY(QStringList artistList READ artistList NOTIFY artistListChanged)
-
     Q_PROPERTY(QStringList albumList READ albumList NOTIFY albumListChanged)
-
     Q_PROPERTY(bool sortAsc READ sortAsc WRITE setSortAsc NOTIFY sortAscChanged)
     Q_PROPERTY(Model::SortWhat what READ what WRITE setWhat NOTIFY whatChanged)
-
     Q_PROPERTY(
         QString titlePartialFilter READ titlePartialFilter WRITE setTitlePartialFilter NOTIFY titlePartialFilterChanged)
 
@@ -96,23 +85,11 @@ public:
     QStringList albumList() const;
 
     Q_INVOKABLE void rescan();
-
     Q_INVOKABLE void resetFilterAndSort();
-    Q_INVOKABLE QJsonArray getAlbumTracks(const QString& album) {
-        return Model::instance()->getAlbumTracks(album);
-    }
-
-    Q_INVOKABLE QString getDateAddedByMrl(const QString& mrl) const {
-        return Model::instance()->getDateAddedByMrl(mrl);
-    }
-
-    Q_INVOKABLE QJsonObject getMetadataForMrl(const QString& mrl) const {
-        return Model::instance()->getMetadataForMrl(mrl);
-    }
-
-    Q_INVOKABLE QJsonObject getMetadataForMrl(const QUrl& mrl) const {
-        return Model::instance()->getMetadataForMrl(mrl);
-    }
+    Q_INVOKABLE QJsonArray getAlbumTracks(const QString& album);
+    Q_INVOKABLE QString getDateAddedByMrl(const QString& mrl) const;
+    Q_INVOKABLE QJsonObject getMetadataForMrl(const QString& mrl) const;
+    Q_INVOKABLE QJsonObject getMetadataForMrl(const QUrl& mrl) const;
 
     QString titlePartialFilter() const;
     void setTitlePartialFilter(const QString& titlePartialFilter);
@@ -152,6 +129,8 @@ private:
     QThread scannerThread_;
 
     QSharedPointer<QMutex> mutex_;
+    Model model;
+
     bool sortAsc_;
     bool scanning_;
     Model::SortWhat what_;
@@ -177,8 +156,6 @@ private:
     void init();
 
 private slots:
-    void debugSignal();
-
     void setDisplayLib();
     void setGenreList();
     void setArtistList();

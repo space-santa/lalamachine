@@ -19,15 +19,11 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "musiclib.h"
 
-#include <QDir>
-#include <QDirIterator>
-#include <QElapsedTimer>
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QJsonObject>
 #include <QMutexLocker>
 #include <QPair>
-#include <QSqlError>
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QUrl>
@@ -50,41 +46,24 @@ MusicLib::MusicLib(QObject* parent) : QObject(parent) {
     scanner_->moveToThread(&scannerThread_);
 
     connect(&scannerThread_, &QThread::finished, scanner_, &QObject::deleteLater);
-
     connect(this, &MusicLib::startScan, scanner_, &MusicLibScanner::scanLib);
-
     connect(scanner_, &MusicLibScanner::scanComplete, this, &MusicLib::scanFinished);
-
     connect(scanner_, &MusicLibScanner::scanStarted, this, &MusicLib::scanStarted);
-
     connect(scanner_, &MusicLibScanner::trackAdded, this, &MusicLib::scanUpdate);
-
     connect(this, &MusicLib::musicLibChanged, this, &MusicLib::setDisplayLib);
-
     connect(this, &MusicLib::titlePartialFilterChanged, this, &MusicLib::setDisplayLib);
-
     connect(this, &MusicLib::titlePartialFilterChanged, this, &MusicLib::setGenreList);
-
     connect(this, &MusicLib::titlePartialFilterChanged, this, &MusicLib::setArtistList);
-
     connect(this, &MusicLib::titlePartialFilterChanged, this, &MusicLib::setAlbumList);
-
     // Since setting the genre or artist filter always sets the album filter,
     // we only setDisplayLib here.
     connect(this, &MusicLib::albumFilterChanged, this, &MusicLib::setDisplayLib);
-
     connect(this, &MusicLib::musicLibChanged, this, &MusicLib::setGenreList);
-
     connect(this, &MusicLib::musicLibChanged, this, &MusicLib::setArtistList);
-
     connect(this, &MusicLib::musicLibChanged, this, &MusicLib::setAlbumList);
-
     connect(this, &MusicLib::genreFilterChanged, this, &MusicLib::setArtistList);
-
     connect(this, &MusicLib::genreFilterChanged, this, &MusicLib::setAlbumList);
-
     connect(this, &MusicLib::artistFilterChanged, this, &MusicLib::setAlbumList);
-
     connect(&watcher_, &QFutureWatcher<QSqlQuery>::finished, this, &MusicLib::onDisplayFutureFinished);
 
     setGenreList();
@@ -135,10 +114,6 @@ int MusicLib::totalLength() const {
     return totalLength_;
 }
 
-void MusicLib::debugSignal() {
-    qDebug() << "DEBUGGING SIGNAL";
-}
-
 void MusicLib::setDisplayLib() {
     QString query = Model::getSortQueryString(titlePartialFilter(),
                                               genreFilter(),
@@ -147,10 +122,6 @@ void MusicLib::setDisplayLib() {
                                               what(),
                                               sortAsc());
 
-    // WARNING: This can cause a problem after a library scan.
-    // The LibraryView might not be properly updated once the scan finishes
-    // because the query == last query. I am setting lastDisplayLibQuery_ = "-1"
-    // in MusicLib::scanFinished() to work around this.
     if (query == lastDisplayLibQuery_) {
         qDebug() << "query didn't change, nothing to do.";
         return;
@@ -158,7 +129,7 @@ void MusicLib::setDisplayLib() {
 
     lastDisplayLibQuery_ = query;
 
-    QFuture<QPair<int, QJsonArray>> future = QtConcurrent::run(Model::instance(), &Model::runSetDisplayQuery, query);
+    QFuture<QPair<int, QJsonArray>> future = QtConcurrent::run(&model, &Model::runSetDisplayQuery, query);
     watcher_.setFuture(future);
 }
 
@@ -300,16 +271,32 @@ QStringList MusicLib::getList(const QString& what) const {
     QStringList retval;
 
     if (what == "genre") {
-        retval = Model::instance()->getGenreList(titlePartialFilter());
+        retval = model.getGenreList(titlePartialFilter());
     } else if (what == "artist") {
-        retval = Model::instance()->getArtistList(titlePartialFilter(), genreFilter());
+        retval = model.getArtistList(titlePartialFilter(), genreFilter());
     } else if (what == "album") {
-        retval = Model::instance()->getAlbumList(titlePartialFilter(), artistFilter(), genreFilter());
+        retval = model.getAlbumList(titlePartialFilter(), artistFilter(), genreFilter());
     } else {
         qFatal("No valid filter!");
     }
 
     return retval;
+}
+
+QJsonArray MusicLib::getAlbumTracks(const QString& album) {
+    return model.getAlbumTracks(album);
+}
+
+QString MusicLib::getDateAddedByMrl(const QString& mrl) const {
+    return model.getDateAddedByMrl(mrl);
+}
+
+QJsonObject MusicLib::getMetadataForMrl(const QString& mrl) const {
+    return model.getMetadataForMrl(mrl);
+}
+
+QJsonObject MusicLib::getMetadataForMrl(const QUrl& mrl) const {
+    return model.getMetadataForMrl(mrl);
 }
 
 void MusicLib::rescan() {
@@ -319,8 +306,8 @@ void MusicLib::rescan() {
         scannerThread_.start();
     }
 
-    Model::instance()->copyLibToTmp();
-    Model::instance()->clearMusicLib();
+    model.copyLibToTmp();
+    model.clearMusicLib();
 
     emit startScan(libPath());
 }
@@ -367,11 +354,9 @@ void MusicLib::scanUpdate() {
 }
 
 void MusicLib::scanFinished() {
-    // Setting the query to something invalid to have the check in setDisplayLib
-    // do the right thing and display stuff as expected.
-    // FIXME: Having to do that makes me feel dirty. Is the concept sound?
-    lastDisplayLibQuery_ = "-1";
-    Model::instance()->restoreMetaData();
+    QString somethingInvalidToHaveTheCheckInSetDisplayLibDoTheRightThing = "-1";
+    lastDisplayLibQuery_ = somethingInvalidToHaveTheCheckInSetDisplayLibDoTheRightThing;
+    model.restoreMetaData();
     emit musicLibChanged();
     setScanning(false);
 }

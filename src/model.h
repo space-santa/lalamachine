@@ -14,6 +14,7 @@ class Model {
     friend class ModelTest;
 
 public:
+    Model();
     ~Model();
 
     enum SortWhat { TRACK, TITLE, COMMENT, LENGTH, GENRE, ARTIST, ALBUM, DATEADDED, DISCNUMBER };
@@ -24,11 +25,6 @@ public:
 
     static const QMap<SortWhat, QString> SORT_MAP;
     static QMap<SortWhat, QString> initSortMap();
-
-    static Model* instance() {
-        static Model* instance = new Model;
-        return instance;
-    }
 
     QStringList genre(const QString& filter);
     QStringList artist(const QString& filter, const QString& genre = QString());
@@ -56,11 +52,11 @@ public:
     void copyLibToTmp();
     void clearMusicLib();
     void restoreMetaData();
-    QStringList getGenreList(const QString& filter = QString());
-    QStringList getArtistList(const QString& artist = QString(), const QString& genre = QString());
+    QStringList getGenreList(const QString& filter = QString()) const;
+    QStringList getArtistList(const QString& artist = QString(), const QString& genre = QString()) const;
     QStringList getAlbumList(const QString& album = QString(),
                              const QString& artist = QString(),
-                             const QString& genre = QString());
+                             const QString& genre = QString()) const;
 
     QStringList getList(const QString& what) const;
 
@@ -71,7 +67,6 @@ public:
     QJsonObject getMetadataForMrl(const QUrl& mrl) const;
 
 private:
-    Model();
     QSqlDatabase db_;
     QSharedPointer<QMutex> mutex_;
 
