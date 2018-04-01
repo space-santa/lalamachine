@@ -1,158 +1,24 @@
 #include <QDebug>
 #include <QMutexLocker>
 #include <QRegularExpression>
-#include <QSqlError>
 
+#include "QueryBuilder.h"
 #include "config.h"
+#include "exceptions.h"
 #include "model.h"
 
-const QMap<Model::SortWhat, QString> Model::SORT_MAP = initSortMap();
-
-QMap<Model::SortWhat, QString> Model::initSortMap() {
-    QMap<SortWhat, QString> tmp;
-    tmp.insert(Model::ALBUM, "album");
-    tmp.insert(Model::ARTIST, "artist");
-    tmp.insert(Model::GENRE, "genre");
-    tmp.insert(Model::TRACK, "track");
-    tmp.insert(Model::TITLE, "title");
-    tmp.insert(Model::COMMENT, "comment");
-    tmp.insert(Model::LENGTH, "length");
-    tmp.insert(Model::DATEADDED, "dateAdded");
-    tmp.insert(Model::DISCNUMBER, "discNumber");
-
-    return tmp;
-}
-
-Model::Model() {
+Model::Model(std::unique_ptr<IMainDB> mainDB) : mainDB(std::move(mainDB)) {
     init();
-}
-Model::~Model() {
-    db_.close();
 }
 
 void Model::init() {
     mutex_ = QSharedPointer<QMutex>(new QMutex());
-
-    db_ = QSqlDatabase::addDatabase("QSQLITE");
-    db_.setDatabaseName(Config::MUSICLIBDB);
-    db_.open();
     updateTable();
 }
 
 QStringList Model::genre(const QString& filter) {
-    QSqlQuery result = db_.exec(Model::genreQuery(filter));
+    QSqlQuery result = mainDB->exec(QueryBuilder::genreQuery(filter));
     return Model::resultToList(result, "genre");
-}
-
-QString Model::getSortQueryString(const QString& title,
-                                  const QString& genre,
-                                  const QString& artist,
-                                  const QString& album,
-                                  const SortWhat& what,
-                                  bool sortAsc) {
-    QString query("SELECT * FROM musiclib WHERE title NOT NULL ");
-
-    if (!title.isEmpty()) {
-        query.append("AND UPPER(title) LIKE '%");
-        query.append(escapeString(title.toUpper()));
-        query.append("%' ");
-    } else {
-        if (!genre.isEmpty()) {
-            query.append("AND genre = '");
-            query.append(escapeString(genre));
-            query.append("' ");
-        }
-
-        if (!artist.isEmpty()) {
-            query.append("AND artist = '");
-            query.append(escapeString(artist));
-            query.append("'");
-        }
-
-        if (!album.isEmpty()) {
-            query.append("AND album = '");
-            query.append(escapeString(album));
-            query.append("'");
-        }
-    }
-
-    query.append(" ORDER BY ");
-    query.append(SORT_MAP.value(what));
-    query.append(" ");
-
-    if (sortAsc) {
-        query.append("ASC");
-    } else {
-        query.append("DESC");
-    }
-
-    query.append(", artist, album, discNumber, track");
-
-    qDebug() << "ZZZ" << query;
-    return query;
-}
-
-QString Model::genreQuery(const QString& filter) {
-    QString query("SELECT DISTINCT genre FROM musiclib %1 ORDER BY genre ASC");
-
-    if (!filter.isEmpty()) {
-        query = query.arg("WHERE UPPER(genre) LIKE '%%1%'").arg(Model::escapeString(filter.toUpper()));
-    } else {
-        query = query.arg("");
-    }
-
-    return query.simplified();
-}
-
-QString Model::artistQuery(const QString& artist, const QString& genre) {
-    QString query("SELECT DISTINCT artist FROM musiclib WHERE artist NOT NULL ");
-
-    if (!artist.isEmpty()) {
-        query.append("AND UPPER(artist) LIKE '%");
-        query.append(escapeString(artist.toUpper()));
-        query.append("%' ");
-    } else {
-        if (!genre.isEmpty()) {
-            query.append("AND genre = '");
-            query.append(escapeString(genre));
-            query.append("' ");
-        }
-    }
-
-    query.append(" ORDER BY artist ASC");
-
-    return query.simplified();
-}
-
-QString Model::albumQuery(const QString& album, const QString& artist, const QString& genre) {
-    QString query("SELECT DISTINCT album FROM musiclib WHERE album NOT NULL ");
-
-    if (!album.isEmpty()) {
-        query.append("AND UPPER(album) LIKE '%");
-        query.append(escapeString(album.toUpper()));
-        query.append("%' ");
-    } else {
-        if (!genre.isEmpty()) {
-            query.append("AND genre = '");
-            query.append(escapeString(genre));
-            query.append("' ");
-        }
-
-        if (!artist.isEmpty()) {
-            query.append("AND artist = '");
-            query.append(escapeString(artist));
-            query.append("'");
-        }
-    }
-
-    query.append(" ORDER BY album ASC");
-
-    return query.simplified();
-}
-
-QString Model::escapeString(QString string) {
-    // return str.replace("\'", "\'\'").replace(",", "\'+\',\'+\'");
-    return string.replace("\'", "\'\'");
 }
 
 QStringList Model::resultToList(QSqlQuery result, const QString& what) {
@@ -170,7 +36,7 @@ QStringList Model::resultToList(QSqlQuery result, const QString& what) {
 }
 
 void Model::updateTable() {
-    QStringList tables = db_.tables();
+    QStringList tables = mainDB->tables();
 
     if (!tables.contains("musiclib")) {
         ensureAllTables();
@@ -179,7 +45,7 @@ void Model::updateTable() {
 
     QString query("PRAGMA table_info(musiclib)");
     QMutexLocker locker(mutex_.data());
-    QSqlQuery record = db_.exec(query);
+    QSqlQuery record = mainDB->exec(query);
 
     QStringList tmplist;
     while (record.next()) {
@@ -187,30 +53,19 @@ void Model::updateTable() {
     }
 
     if (!tmplist.contains("dateAdded")) {
-        qDebug() << db_.exec("ALTER TABLE musiclib ADD COLUMN dateAdded TEXT").lastError();
+        try {
+            mainDB->exec("ALTER TABLE musiclib ADD COLUMN dateAdded TEXT");
+        } catch (const QueryError& error) {
+            qDebug() << error.what();
+        }
     }
 
     if (!tmplist.contains("discNumber")) {
-        qDebug() << db_.exec("ALTER TABLE musiclib ADD COLUMN discNumber INT NOT NULL "
-                             "DEFAULT 1")
-                        .lastError();
-    }
-}
-
-void Model::newUpdateTable() {
-    // create tables
-    // genre -- genreid, name
-    // artist -- artistid, name, genreid (otm)
-    // album -- albumid, genreid (otm), artistid (otm, various artists or null),
-    //          name, disknumber?
-    // track -- trackid, artistid (otm), genreid (otm), title, tracknumber,
-    //          disknumber?, year
-
-    bool oldstuff = false;
-    if (oldstuff) {
-        // rescan musiclib
-        // We can't migrate the data because we now consider more fields
-        // like disk number and I don't wantt to have an incomplete dbase.
+        try {
+            mainDB->exec("ALTER TABLE musiclib ADD COLUMN discNumber INT NOT NULL DEFAULT 1");
+        } catch (const QueryError& error) {
+            qDebug() << error.what();
+        }
     }
 }
 
@@ -219,12 +74,11 @@ void Model::ensureAllTables() {
 }
 
 void Model::createLibTable(const QString& name) {
-    QStringList tables = db_.tables();
+    QStringList tables = mainDB->tables();
 
     if (!tables.contains(name)) {
         QString qs("CREATE TABLE `%1` ");
         qs.append("(\n");
-        // qs.append("`ID` INTEGER NOT NULL AUTOINCREMENT,\n");
         qs.append("`album` TEXT,\n");
         qs.append("`artist` TEXT,\n");
         qs.append("`comment` TEXT,\n");
@@ -241,7 +95,11 @@ void Model::createLibTable(const QString& name) {
         qs.append(")");
 
         QMutexLocker locker(mutex_.data());
-        qDebug() << db_.exec(qs.arg(name)).lastError();
+        try {
+            mainDB->exec(qs.arg(name));
+        } catch (const QueryError& error) {
+            qDebug() << error.what();
+        }
     }
 }
 
@@ -249,27 +107,42 @@ void Model::copyLibToTmp() {
     createLibTable("tmplib");
     QString query("insert into tmplib SELECT * from musiclib");
     QMutexLocker locker(mutex_.data());
-    qDebug() << db_.exec(query).lastError();
+
+    try {
+        mainDB->exec(query);
+    } catch (const QueryError& error) {
+        qDebug() << error.what();
+    }
 }
 
 void Model::clearMusicLib() {
     QString query("DELETE FROM musiclib");
     QMutexLocker locker(mutex_.data());
-    qDebug() << db_.exec(query).lastError();
+    try {
+        mainDB->exec(query);
+    } catch (const QueryError& error) {
+        qDebug() << error.what();
+    }
 }
 
 void Model::restoreMetaData() {
-    QStringList tables = db_.tables();
+    QStringList tables = mainDB->tables();
     if (!tables.contains("musiclib") || !tables.contains("tmplib")) {
         return;
     }
 
-    QSqlQuery records = db_.exec("SELECT * FROM musiclib");
+    QSqlQuery records = mainDB->exec("SELECT * FROM musiclib");
 
-    db_.transaction();
+    mainDB->transaction();
     while (records.next()) {
         QString mrl = records.value("mrl").toString();
-        QSqlQuery tmprec = db_.exec(QString("SELECT dateAdded FROM tmplib WHERE mrl='%1'").arg(escapeString(mrl)));
+        QSqlQuery tmprec;
+        try {
+            tmprec = mainDB->exec(
+                QString("SELECT dateAdded FROM tmplib WHERE mrl='%1'").arg(QueryBuilder::escapeString(mrl)));
+        } catch (const QueryError& error) {
+            qDebug() << error.what();
+        }
 
         tmprec.first();
         QString tmpdate = tmprec.value("dateAdded").toString();
@@ -279,10 +152,20 @@ void Model::restoreMetaData() {
         }
 
         QString query("UPDATE musiclib SET dateAdded='%1' WHERE mrl='%2'");
-        db_.exec(query.arg(tmpdate).arg(escapeString(mrl))).lastError();
+
+        try {
+            mainDB->exec(query.arg(tmpdate).arg(QueryBuilder::escapeString(mrl)));
+        } catch (const QueryError& error) {
+            qDebug() << error.what();
+        }
     }
-    db_.commit();
-    qDebug() << db_.exec("DROP TABLE tmplib").lastError();
+    mainDB->commit();
+
+    try {
+        mainDB->exec("DROP TABLE tmplib");
+    } catch (const QueryError& error) {
+        qDebug() << error.what();
+    }
 }
 
 QPair<int, QJsonArray> Model::queryResultToJson(QSqlQuery result) {
@@ -318,21 +201,21 @@ QPair<int, QJsonArray> Model::queryResultToJson(QSqlQuery result) {
 
 QPair<int, QJsonArray> Model::runSetDisplayQuery(const QString& query) {
     QMutexLocker locker(mutex_.data());
-    return Model::queryResultToJson(db_.exec(query));
+    return Model::queryResultToJson(mainDB->exec(query));
 }
 
 QJsonArray Model::getAlbumTracks(const QString& album) {
     QString query("SELECT * FROM musiclib WHERE album = '%1' ORDER BY track");
 
     QMutexLocker locker(mutex_.data());
-    QSqlQuery result = db_.exec(query.arg(escapeString(album)));
+    QSqlQuery result = mainDB->exec(query.arg(QueryBuilder::escapeString(album)));
 
     return Model::queryResultToJson(result).second;
 }
 
 QString Model::getDateAddedByMrl(const QString& mrl) const {
     QString query("SELECT dateAdded FROM musiclib WHERE mrl='%1' OR path='%1'");
-    QSqlQuery result = db_.exec(query.arg(escapeString(mrl)));
+    QSqlQuery result = mainDB->exec(query.arg(QueryBuilder::escapeString(mrl)));
     result.first();
     return result.value("dateAdded").toString();
 }
@@ -343,9 +226,9 @@ QJsonObject Model::getMetadataForMrl(const QString& mrl) const {
 
 QJsonObject Model::getMetadataForMrl(const QUrl& mrl) const {
     QString query("SELECT * FROM musiclib WHERE mrl='%1' OR path='%1'");
-    query = query.arg(escapeString(cleanPath(mrl.toLocalFile())));
+    query = query.arg(QueryBuilder::escapeString(cleanPath(mrl.toLocalFile())));
     qDebug() << query;
-    QSqlQuery result = db_.exec(query);
+    QSqlQuery result = mainDB->exec(query);
     QJsonObject retval = Model::queryResultToJson(result).second.first().toObject();
     qDebug() << retval;
     return retval;
@@ -353,7 +236,7 @@ QJsonObject Model::getMetadataForMrl(const QUrl& mrl) const {
 
 QStringList Model::getGenreList(const QString& filter) const {
     QStringList retval;
-    QSqlQuery result = db_.exec(genreQuery(filter));
+    QSqlQuery result = mainDB->exec(QueryBuilder::genreQuery(filter));
 
     while (result.next()) {
         QString tmp = result.value("genre").toString();
@@ -368,7 +251,7 @@ QStringList Model::getGenreList(const QString& filter) const {
 
 QStringList Model::getArtistList(const QString& artist, const QString& genre) const {
     QStringList retval;
-    QSqlQuery result = db_.exec(artistQuery(artist, genre));
+    QSqlQuery result = mainDB->exec(QueryBuilder::artistQuery(artist, genre));
 
     while (result.next()) {
         QString tmp = result.value("artist").toString();
@@ -383,7 +266,7 @@ QStringList Model::getArtistList(const QString& artist, const QString& genre) co
 
 QStringList Model::getAlbumList(const QString& album, const QString& artist, const QString& genre) const {
     QStringList retval;
-    QSqlQuery result = db_.exec(albumQuery(album, artist, genre));
+    QSqlQuery result = mainDB->exec(QueryBuilder::albumQuery(album, artist, genre));
 
     while (result.next()) {
         QString tmp = result.value("album").toString();

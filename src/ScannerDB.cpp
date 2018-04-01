@@ -1,9 +1,10 @@
 #include "ScannerDB.h"
 #include <QDate>
 #include <QSqlError>
+#include <QSqlQuery>
+#include "QueryBuilder.h"
 #include "config.h"
 #include "exceptions.h"
-#include "model.h"
 
 ScannerDB::ScannerDB() : db(QSqlDatabase::addDatabase("QSQLITE", "scanner")) {
     db.setDatabaseName(Config::MUSICLIBDB);
@@ -45,19 +46,19 @@ QString ScannerDB::getTrackQuery(const Tags& track, const QString& date) {
 
     QString valuesA("('%1', '%2', '%3', '%4', '%5', '%6', ");
     QString valuesB("'%1', '%2', '%3', '%4', '%5', '%6', '%7')");
-    query.append(valuesA.arg(Model::escapeString(track.album_))
-                     .arg(Model::escapeString(track.artist_))
-                     .arg(Model::escapeString(track.comment_))
-                     .arg(Model::escapeString(track.genre_))
-                     .arg(Model::escapeString(track.length_))
-                     .arg(Model::escapeString(track.lengthString_)));
-    query.append(valuesB.arg(Model::escapeString(track.mrl_))
-                     .arg(Model::escapeString(track.path_))
-                     .arg(Model::escapeString(track.title_))
-                     .arg(Model::escapeString(track.track_))
-                     .arg(Model::escapeString(track.year_))
-                     .arg(Model::escapeString(date))
-                     .arg(Model::escapeString(track.disc_)));
+    query.append(valuesA.arg(QueryBuilder::escapeString(track.album_))
+                     .arg(QueryBuilder::escapeString(track.artist_))
+                     .arg(QueryBuilder::escapeString(track.comment_))
+                     .arg(QueryBuilder::escapeString(track.genre_))
+                     .arg(QueryBuilder::escapeString(track.length_))
+                     .arg(QueryBuilder::escapeString(track.lengthString_)));
+    query.append(valuesB.arg(QueryBuilder::escapeString(track.mrl_))
+                     .arg(QueryBuilder::escapeString(track.path_))
+                     .arg(QueryBuilder::escapeString(track.title_))
+                     .arg(QueryBuilder::escapeString(track.track_))
+                     .arg(QueryBuilder::escapeString(track.year_))
+                     .arg(QueryBuilder::escapeString(date))
+                     .arg(QueryBuilder::escapeString(track.disc_)));
 
     return query;
 }

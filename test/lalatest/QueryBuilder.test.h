@@ -2,12 +2,11 @@
 
 #include <QObject>
 
-class ModelTest : public QObject {
+class QueryBuilderTest : public QObject {
     Q_OBJECT
 private slots:
     void initTestCase();
     void cleanupTestCase();
-    void testCase1();
 
     void escapeString_data();
     void escapeString();

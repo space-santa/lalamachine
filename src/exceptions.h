@@ -20,3 +20,8 @@ class DirectoryNotFoundError : public std::runtime_error {
 public:
     DirectoryNotFoundError(const std::string& rootPath);
 };
+
+class QueryError : public std::runtime_error {
+public:
+    QueryError(const std::string& error);
+};

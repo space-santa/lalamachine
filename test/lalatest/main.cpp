@@ -1,8 +1,8 @@
 #include <QCoreApplication>
 #include <QTest>
+#include "QueryBuilder.test.h"
 #include "lalatest.h"
 #include "musiclibscanner.test.h"
-#include "test_model.h"
 #include "testautoplaylist.h"
 
 int main() {
@@ -12,8 +12,8 @@ int main() {
     TestAutoPlaylist test2;
     // QTest::qExec(&test2);
 
-    ModelTest test_model;
-    QTest::qExec(&test_model);
+    QueryBuilderTest queryBuilder;
+    QTest::qExec(&queryBuilder);
 
     MusicLibScannerTest scanner;
     QTest::qExec(&scanner);

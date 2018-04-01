@@ -46,7 +46,7 @@ class MusicLib : public QObject {
     Q_PROPERTY(QStringList artistList READ artistList NOTIFY artistListChanged)
     Q_PROPERTY(QStringList albumList READ albumList NOTIFY albumListChanged)
     Q_PROPERTY(bool sortAsc READ sortAsc WRITE setSortAsc NOTIFY sortAscChanged)
-    Q_PROPERTY(Model::SortWhat what READ what WRITE setWhat NOTIFY whatChanged)
+    Q_PROPERTY(QueryBuilder::SortWhat what READ what WRITE setWhat NOTIFY whatChanged)
     Q_PROPERTY(
         QString titlePartialFilter READ titlePartialFilter WRITE setTitlePartialFilter NOTIFY titlePartialFilterChanged)
 
@@ -77,8 +77,8 @@ public:
     bool sortAsc() const;
     void setSortAsc(bool val);
 
-    Model::SortWhat what() const;
-    void setWhat(Model::SortWhat val);
+    QueryBuilder::SortWhat what() const;
+    void setWhat(QueryBuilder::SortWhat val);
 
     QStringList genreList() const;
     QStringList artistList() const;
@@ -133,7 +133,7 @@ private:
 
     bool sortAsc_;
     bool scanning_;
-    Model::SortWhat what_;
+    QueryBuilder::SortWhat what_;
     QJsonArray displayLib_;
     int totalLength_;
     QString genreFilter_;

@@ -5,27 +5,30 @@ QT += qml quick widgets sql concurrent multimedia quickwidgets
 CONFIG += C++11 # console
 QMAKE_CXXFLAGS += -Werror
 
-SOURCES += src/main.cpp \
-    src/exceptions.cpp \
-    src/metadataprovider.cpp \
-    src/m3uinout.cpp \
-    src/config.cpp \
-    src/timeconverter.cpp \
-    src/musiclib.cpp \
-    src/sysinfo.cpp \
-    src/musiclibscanner.cpp \
-    src/autoplaylistobject.cpp \
-    src/lalatypes.cpp \
-    src/autoplaylistmanager.cpp \
-    src/fileexporter.cpp \
-    src/tags.cpp \
-    src/autoplaylist.cpp \
-    src/playlistmodel.cpp \
-    src/track.cpp \
-    src/theplayer.cpp \
-    src/model.cpp \
+SOURCES += \
+    src/DirWalker.cpp \
+    src/MainDB.cpp \
+    src/QueryBuilder.cpp \
     src/ScannerDB.cpp \
-    src/DirWalker.cpp
+    src/autoplaylist.cpp \
+    src/autoplaylistmanager.cpp \
+    src/autoplaylistobject.cpp \
+    src/config.cpp \
+    src/exceptions.cpp \
+    src/fileexporter.cpp \
+    src/lalatypes.cpp \
+    src/m3uinout.cpp \
+    src/main.cpp \
+    src/metadataprovider.cpp \
+    src/model.cpp \
+    src/musiclib.cpp \
+    src/musiclibscanner.cpp \
+    src/playlistmodel.cpp \
+    src/sysinfo.cpp \
+    src/tags.cpp \
+    src/theplayer.cpp \
+    src/timeconverter.cpp \
+    src/track.cpp
 
 RESOURCES += qml.qrc
 
@@ -33,28 +36,31 @@ RESOURCES += qml.qrc
 include(deployment.pri)
 
 HEADERS += \
-    src/exceptions.h \
-    src/metadataprovider.h \
-    src/m3uinout.h \
-    src/config.h \
-    src/timeconverter.h \
-    src/musiclib.h \
-    src/sysinfo.h \
-    src/musiclibscanner.h \
-    src/autoplaylistobject.h \
-    src/lalatypes.h \
-    src/autoplaylistmanager.h \
-    src/fileexporter.h \
-    src/tags.h \
-    src/autoplaylist.h \
-    src/playlistmodel.h \
-    src/track.h \
-    src/theplayer.h \
-    src/model.h \
-    src/ScannerDB.h \
-    src/IScannerDB.h \
+    src/DirWalker.h \
     src/IDirWalker.h \
-    src/DirWalker.h
+    src/IMainDB.h \
+    src/IScannerDB.h \
+    src/MainDB.h \
+    src/QueryBuilder.h \
+    src/ScannerDB.h \
+    src/autoplaylist.h \
+    src/autoplaylistmanager.h \
+    src/autoplaylistobject.h \
+    src/config.h \
+    src/exceptions.h \
+    src/fileexporter.h \
+    src/lalatypes.h \
+    src/m3uinout.h \
+    src/metadataprovider.h \
+    src/model.h \
+    src/musiclib.h \
+    src/musiclibscanner.h \
+    src/playlistmodel.h \
+    src/sysinfo.h \
+    src/tags.h \
+    src/theplayer.h \
+    src/timeconverter.h \
+    src/track.h
 
 OTHER_FILES += \
     README.md \

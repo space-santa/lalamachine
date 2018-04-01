@@ -13,3 +13,6 @@ OpenDatabaseError::OpenDatabaseError(const std::string& error) : std::runtime_er
 DirectoryNotFoundError::DirectoryNotFoundError(const std::string& rootPath)
     : std::runtime_error(std::string("Directory '") + rootPath + std::string("' not found.")) {
 }
+
+QueryError::QueryError(const std::string& error) : std::runtime_error(error) {
+}

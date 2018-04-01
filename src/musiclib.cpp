@@ -31,6 +31,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <memory>
 
 #include "DirWalker.h"
+#include "MainDB.h"
 #include "ScannerDB.h"
 #include "autoplaylistmanager.h"
 #include "config.h"
@@ -38,7 +39,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "model.h"
 #include "musiclibscanner.h"
 
-MusicLib::MusicLib(QObject* parent) : QObject(parent) {
+MusicLib::MusicLib(QObject* parent) : QObject(parent), model(std::unique_ptr<IMainDB>(new MainDB())) {
     init();
     // This moveToThread is making the thread the parent of the scanner_.
     // Therefor it is vital that the scanner_ is a raw pointer, or double free
@@ -81,7 +82,7 @@ void MusicLib::init() {
     mutex_ = QSharedPointer<QMutex>(new QMutex());
     sortAsc_ = true;
     scanning_ = false;
-    what_ = Model::ARTIST;
+    what_ = QueryBuilder::ARTIST;
     totalLength_ = 0;
     genreFilter_ = "";
     artistFilter_ = "";
@@ -115,12 +116,12 @@ int MusicLib::totalLength() const {
 }
 
 void MusicLib::setDisplayLib() {
-    QString query = Model::getSortQueryString(titlePartialFilter(),
-                                              genreFilter(),
-                                              artistFilter(),
-                                              albumFilter(),
-                                              what(),
-                                              sortAsc());
+    QString query = QueryBuilder::getSortQueryString(titlePartialFilter(),
+                                                     genreFilter(),
+                                                     artistFilter(),
+                                                     albumFilter(),
+                                                     what(),
+                                                     sortAsc());
 
     if (query == lastDisplayLibQuery_) {
         qDebug() << "query didn't change, nothing to do.";
@@ -229,11 +230,11 @@ void MusicLib::setSortAsc(bool val) {
     setDisplayLib();
 }
 
-Model::SortWhat MusicLib::what() const {
+QueryBuilder::SortWhat MusicLib::what() const {
     return what_;
 }
 
-void MusicLib::setWhat(Model::SortWhat val) {
+void MusicLib::setWhat(QueryBuilder::SortWhat val) {
     if (what_ == val) {
         return;
     }
@@ -259,7 +260,7 @@ void MusicLib::resetFilterAndSort() {
     // Not using the setter functions because I only want to setDisplayLib once.
     // Otherwise it will take twice as long for this to return.
     sortAsc_ = true;
-    what_ = Model::ARTIST;
+    what_ = QueryBuilder::ARTIST;
 
     genreFilter_ = "";
     artistFilter_ = "";
@@ -343,14 +344,6 @@ void MusicLib::scanUpdate() {
     setGenreList();
     setArtistList();
     setAlbumList();
-
-    // FIXME 1.x: I need a way to update the lists without changing the
-    // selection.
-    // Probably the setDisplayLib query must run in a separate thread and
-    // add line by line to the display lib.
-    // Perhaps the same is true for the other lists.
-    // Or, since this shouldn't happen too often, I don't care about it.
-    // I come back to this when I rescan the library daily.
 }
 
 void MusicLib::scanFinished() {
