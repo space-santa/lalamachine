@@ -28,7 +28,7 @@ public:
 
     QJsonObject trackDetails(const QString& mrl) const;
 
-    static QPair<int, QJsonArray> queryResultToJson(QSqlQuery result);
+    static QPair<int, QJsonArray> queryResultToJson(const std::unique_ptr<IQueryResult>& result);
     static QString cleanPath(QString mrl);
 
     void ensureAllTables();
@@ -55,6 +55,6 @@ private:
     QSharedPointer<QMutex> mutex_;
 
     void init();
-    static QStringList resultToList(QSqlQuery result, const QString& what);
+    static QStringList resultToList(const std::unique_ptr<IQueryResult>& result, const QString& what);
     void updateTable();
 };

@@ -1,5 +1,6 @@
 #include "MainDB.h"
 #include <QSqlError>
+#include "QueryResult.h"
 #include "config.h"
 #include "exceptions.h"
 
@@ -13,14 +14,15 @@ MainDB::~MainDB() {
     db.close();
 }
 
-QSqlQuery MainDB::exec(const QString& query) {
-    auto retval = db.exec(query);
-    auto error = retval.lastError();
+std::unique_ptr<IQueryResult> MainDB::exec(const QString& query) {
+    auto result = db.exec(query);
+    auto error = result.lastError();
 
     if (error.isValid()) {
         throw QueryError(error.text().toStdString());
     } else {
-        return retval;
+        std::unique_ptr<IQueryResult> retval(new QueryResult(result));
+        return std::move(retval);
     }
 }
 

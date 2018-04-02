@@ -9,6 +9,7 @@ SOURCES += \
     src/DirWalker.cpp \
     src/MainDB.cpp \
     src/QueryBuilder.cpp \
+    src/QueryResult.cpp \
     src/ScannerDB.cpp \
     src/autoplaylist.cpp \
     src/autoplaylistmanager.cpp \
@@ -42,6 +43,7 @@ HEADERS += \
     src/IScannerDB.h \
     src/MainDB.h \
     src/QueryBuilder.h \
+    src/QueryResult.h \
     src/ScannerDB.h \
     src/autoplaylist.h \
     src/autoplaylistmanager.h \

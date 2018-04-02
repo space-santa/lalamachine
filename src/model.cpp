@@ -17,15 +17,15 @@ void Model::init() {
 }
 
 QStringList Model::genre(const QString& filter) {
-    QSqlQuery result = mainDB->exec(QueryBuilder::genreQuery(filter));
+    auto result = mainDB->exec(QueryBuilder::genreQuery(filter));
     return Model::resultToList(result, "genre");
 }
 
-QStringList Model::resultToList(QSqlQuery result, const QString& what) {
+QStringList Model::resultToList(const std::unique_ptr<IQueryResult>& result, const QString& what) {
     QStringList retval;
 
-    while (result.next()) {
-        QString tmp = result.value(what).toString();
+    while (result->next()) {
+        QString tmp = result->value(what).toString();
 
         if (!tmp.isEmpty()) {
             retval << tmp;
@@ -45,11 +45,11 @@ void Model::updateTable() {
 
     QString query("PRAGMA table_info(musiclib)");
     QMutexLocker locker(mutex_.data());
-    QSqlQuery record = mainDB->exec(query);
+    auto record = mainDB->exec(query);
 
     QStringList tmplist;
-    while (record.next()) {
-        tmplist << record.value("name").toString();
+    while (record->next()) {
+        tmplist << record->value("name").toString();
     }
 
     if (!tmplist.contains("dateAdded")) {
@@ -131,12 +131,12 @@ void Model::restoreMetaData() {
         return;
     }
 
-    QSqlQuery records = mainDB->exec("SELECT * FROM musiclib");
+    auto records = mainDB->exec("SELECT * FROM musiclib");
 
     mainDB->transaction();
-    while (records.next()) {
-        QString mrl = records.value("mrl").toString();
-        QSqlQuery tmprec;
+    while (records->next()) {
+        QString mrl = records->value("mrl").toString();
+        std::unique_ptr<IQueryResult> tmprec;
         try {
             tmprec = mainDB->exec(
                 QString("SELECT dateAdded FROM tmplib WHERE mrl='%1'").arg(QueryBuilder::escapeString(mrl)));
@@ -144,8 +144,8 @@ void Model::restoreMetaData() {
             qDebug() << error.what();
         }
 
-        tmprec.first();
-        QString tmpdate = tmprec.value("dateAdded").toString();
+        tmprec->first();
+        QString tmpdate = tmprec->value("dateAdded").toString();
 
         if (tmpdate.isEmpty()) {
             continue;
@@ -168,30 +168,30 @@ void Model::restoreMetaData() {
     }
 }
 
-QPair<int, QJsonArray> Model::queryResultToJson(QSqlQuery result) {
+QPair<int, QJsonArray> Model::queryResultToJson(const std::unique_ptr<IQueryResult>& result) {
     QJsonArray retval;
 
     int totalLength = 0;
 
-    while (result.next()) {
+    while (result->next()) {
         QJsonObject tmp;
 
-        int len = result.value("length").toInt();
+        int len = result->value("length").toInt();
         totalLength += len;
 
-        tmp.insert("album", result.value("album").toString());
-        tmp.insert("artist", result.value("artist").toString());
-        tmp.insert("genre", result.value("genre").toString());
-        tmp.insert("comment", result.value("comment").toString());
-        tmp.insert("track", result.value("track").toInt());
-        tmp.insert("title", result.value("title").toString());
-        tmp.insert("mrl", result.value("mrl").toString());
-        tmp.insert("path", result.value("path").toString());
+        tmp.insert("album", result->value("album").toString());
+        tmp.insert("artist", result->value("artist").toString());
+        tmp.insert("genre", result->value("genre").toString());
+        tmp.insert("comment", result->value("comment").toString());
+        tmp.insert("track", result->value("track").toInt());
+        tmp.insert("title", result->value("title").toString());
+        tmp.insert("mrl", result->value("mrl").toString());
+        tmp.insert("path", result->value("path").toString());
         tmp.insert("length", len);
-        tmp.insert("lengthString", result.value("lengthString").toString());
-        tmp.insert("year", result.value("year").toInt());
-        tmp.insert("dateAdded", result.value("dateAdded").toString());
-        tmp.insert("discNumber", result.value("discNumber").toInt());
+        tmp.insert("lengthString", result->value("lengthString").toString());
+        tmp.insert("year", result->value("year").toInt());
+        tmp.insert("dateAdded", result->value("dateAdded").toString());
+        tmp.insert("discNumber", result->value("discNumber").toInt());
 
         retval.append(tmp);
     }
@@ -208,16 +208,16 @@ QJsonArray Model::getAlbumTracks(const QString& album) {
     QString query("SELECT * FROM musiclib WHERE album = '%1' ORDER BY track");
 
     QMutexLocker locker(mutex_.data());
-    QSqlQuery result = mainDB->exec(query.arg(QueryBuilder::escapeString(album)));
+    auto result = mainDB->exec(query.arg(QueryBuilder::escapeString(album)));
 
     return Model::queryResultToJson(result).second;
 }
 
 QString Model::getDateAddedByMrl(const QString& mrl) const {
     QString query("SELECT dateAdded FROM musiclib WHERE mrl='%1' OR path='%1'");
-    QSqlQuery result = mainDB->exec(query.arg(QueryBuilder::escapeString(mrl)));
-    result.first();
-    return result.value("dateAdded").toString();
+    auto result = mainDB->exec(query.arg(QueryBuilder::escapeString(mrl)));
+    result->first();
+    return result->value("dateAdded").toString();
 }
 
 QJsonObject Model::getMetadataForMrl(const QString& mrl) const {
@@ -228,7 +228,7 @@ QJsonObject Model::getMetadataForMrl(const QUrl& mrl) const {
     QString query("SELECT * FROM musiclib WHERE mrl='%1' OR path='%1'");
     query = query.arg(QueryBuilder::escapeString(cleanPath(mrl.toLocalFile())));
     qDebug() << query;
-    QSqlQuery result = mainDB->exec(query);
+    auto result = mainDB->exec(query);
     QJsonObject retval = Model::queryResultToJson(result).second.first().toObject();
     qDebug() << retval;
     return retval;
@@ -236,10 +236,10 @@ QJsonObject Model::getMetadataForMrl(const QUrl& mrl) const {
 
 QStringList Model::getGenreList(const QString& filter) const {
     QStringList retval;
-    QSqlQuery result = mainDB->exec(QueryBuilder::genreQuery(filter));
+    auto result = mainDB->exec(QueryBuilder::genreQuery(filter));
 
-    while (result.next()) {
-        QString tmp = result.value("genre").toString();
+    while (result->next()) {
+        QString tmp = result->value("genre").toString();
 
         if (tmp != "") {
             retval << tmp;
@@ -251,10 +251,10 @@ QStringList Model::getGenreList(const QString& filter) const {
 
 QStringList Model::getArtistList(const QString& artist, const QString& genre) const {
     QStringList retval;
-    QSqlQuery result = mainDB->exec(QueryBuilder::artistQuery(artist, genre));
+    auto result = mainDB->exec(QueryBuilder::artistQuery(artist, genre));
 
-    while (result.next()) {
-        QString tmp = result.value("artist").toString();
+    while (result->next()) {
+        QString tmp = result->value("artist").toString();
 
         if (tmp != "") {
             retval << tmp;
@@ -266,10 +266,10 @@ QStringList Model::getArtistList(const QString& artist, const QString& genre) co
 
 QStringList Model::getAlbumList(const QString& album, const QString& artist, const QString& genre) const {
     QStringList retval;
-    QSqlQuery result = mainDB->exec(QueryBuilder::albumQuery(album, artist, genre));
+    auto result = mainDB->exec(QueryBuilder::albumQuery(album, artist, genre));
 
-    while (result.next()) {
-        QString tmp = result.value("album").toString();
+    while (result->next()) {
+        QString tmp = result->value("album").toString();
 
         if (tmp != "") {
             retval << tmp;

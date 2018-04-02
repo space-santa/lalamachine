@@ -7,7 +7,7 @@ class MainDB : public IMainDB {
 public:
     MainDB();
     ~MainDB();
-    QSqlQuery exec(const QString& query);
+    std::unique_ptr<IQueryResult> exec(const QString& query);
     QStringList tables();
     void transaction();
     void commit();
