@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <santa/SingleInstanceGuard.h>
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QIcon>
@@ -53,11 +52,6 @@ void registerQmlTypes() {
 }
 
 int main(int argc, char* argv[]) {
-    SingleInstance::SingleInstanceGuard guard("lalamachine");
-    if (guard.alreadyRunning()) {
-        // return 9;
-    }
-
     QApplication app(argc, argv);
     app.setWindowIcon(QIcon(QPixmap(":/images/images/lala-icon-2-small.png")));
     app.setApplicationVersion("3.5.1");

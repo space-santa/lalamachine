@@ -82,8 +82,6 @@ macx: {
 linux-g++: {
     INCLUDEPATH += /usr/include/taglib
     LIBS += -ltag
-    INCLUDEPATH += /usr/include/santa
-    LIBS += /usr/lib/libsingleinstance.so
 }
 
 win32-g++: {
