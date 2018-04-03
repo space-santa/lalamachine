@@ -57,4 +57,6 @@ private:
     void init();
     static QStringList resultToList(const std::unique_ptr<IQueryResult>& result, const QString& what);
     void updateTable();
+    void setDateAddedForMrl(const QString& dateAdded, const QString& mrl);
+    QString getDateAddedFromTmpLibForMrl(const QString& mrl);
 };

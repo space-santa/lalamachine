@@ -125,6 +125,29 @@ void Model::clearMusicLib() {
     }
 }
 
+void Model::setDateAddedForMrl(const QString& dateAdded, const QString& mrl) {
+    QString query("UPDATE musiclib SET dateAdded='%1' WHERE mrl='%2'");
+
+    try {
+        mainDB->exec(query.arg(dateAdded).arg(QueryBuilder::escapeString(mrl)));
+    } catch (const QueryError& error) {
+        qDebug() << error.what();
+    }
+}
+
+QString Model::getDateAddedFromTmpLibForMrl(const QString& mrl) {
+    std::unique_ptr<IQueryResult> tmprec;
+    try {
+        tmprec =
+            mainDB->exec(QString("SELECT dateAdded FROM tmplib WHERE mrl='%1'").arg(QueryBuilder::escapeString(mrl)));
+    } catch (const QueryError& error) {
+        qDebug() << error.what();
+    }
+
+    tmprec->first();
+    return tmprec->value("dateAdded").toString();
+}
+
 void Model::restoreMetaData() {
     QStringList tables = mainDB->tables();
     if (!tables.contains("musiclib") || !tables.contains("tmplib")) {
@@ -136,28 +159,13 @@ void Model::restoreMetaData() {
     mainDB->transaction();
     while (records->next()) {
         QString mrl = records->value("mrl").toString();
-        std::unique_ptr<IQueryResult> tmprec;
-        try {
-            tmprec = mainDB->exec(
-                QString("SELECT dateAdded FROM tmplib WHERE mrl='%1'").arg(QueryBuilder::escapeString(mrl)));
-        } catch (const QueryError& error) {
-            qDebug() << error.what();
-        }
-
-        tmprec->first();
-        QString tmpdate = tmprec->value("dateAdded").toString();
+        QString tmpdate = getDateAddedFromTmpLibForMrl(mrl);
 
         if (tmpdate.isEmpty()) {
             continue;
         }
 
-        QString query("UPDATE musiclib SET dateAdded='%1' WHERE mrl='%2'");
-
-        try {
-            mainDB->exec(query.arg(tmpdate).arg(QueryBuilder::escapeString(mrl)));
-        } catch (const QueryError& error) {
-            qDebug() << error.what();
-        }
+        setDateAddedForMrl(tmpdate, mrl);
     }
     mainDB->commit();
 
