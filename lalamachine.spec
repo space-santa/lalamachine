@@ -1,5 +1,5 @@
 Name: lalamachine
-Version: 3.5.1
+Version: 3.5.2
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -40,6 +40,10 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Thu Apr 05 2018 space-santa 3.5.2-1
+  * Remove SingleInstanceGuard to allow more than one instance of lalamachine.
+  * Behind the scenes refactoring to make everything better.
+
 * Mon Mar 26 2018 space-santa 3.5.1-1
   * Add SingleInstanceGuard to only allow one instance of lalamachine.
 

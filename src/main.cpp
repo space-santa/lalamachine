@@ -54,7 +54,7 @@ void registerQmlTypes() {
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
     app.setWindowIcon(QIcon(QPixmap(":/images/images/lala-icon-2-small.png")));
-    app.setApplicationVersion("3.5.1");
+    app.setApplicationVersion("3.5.2");
     app.setApplicationName("lalamachine");
     app.setOrganizationName("rmean");
 
