@@ -2,8 +2,8 @@
 #include <QDebug>
 #include <QTest>
 #include <memory>
-#include "../../src/model.h"
 #include "../../src/exceptions.h"
+#include "../../src/model.h"
 #include "model.test.mock.h"
 
 void ModelTest::testResultToList_data() {
@@ -123,7 +123,8 @@ void ModelTest::testGetTablesToRestoreMetaDataAllGood() {
     Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
     MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.mainDB.get());
     tmpDB->execQueries.clear();
-    tmpDB->tableList << "musiclib" << "tmplib";
+    tmpDB->tableList << "musiclib"
+                     << "tmplib";
     QCOMPARE(model.getTablesToRestoreMetaData(), tmpDB->tableList);
 }
 
@@ -131,7 +132,8 @@ void ModelTest::testRestoreMetaData() {
     Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
     MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.mainDB.get());
     tmpDB->execQueries.clear();
-    tmpDB->tableList << "musiclib" << "tmplib";
+    tmpDB->tableList << "musiclib"
+                     << "tmplib";
     model.restoreMetaData();
     QCOMPARE(tmpDB->execQueries.last(), QString("DROP TABLE tmplib"));
 }
