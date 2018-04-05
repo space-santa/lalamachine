@@ -59,4 +59,5 @@ private:
     void updateTable();
     void setDateAddedForMrl(const QString& dateAdded, const QString& mrl);
     QString getDateAddedFromTmpLibForMrl(const QString& mrl);
+    QStringList getTablesToRestoreMetaData() const;
 };

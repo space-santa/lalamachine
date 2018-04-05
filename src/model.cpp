@@ -148,12 +148,21 @@ QString Model::getDateAddedFromTmpLibForMrl(const QString& mrl) {
     return tmprec->value("dateAdded").toString();
 }
 
-void Model::restoreMetaData() {
-    QStringList tables = mainDB->tables();
-    if (!tables.contains("musiclib") || !tables.contains("tmplib")) {
-        return;
+QStringList Model::getTablesToRestoreMetaData() const {
+    auto tables = mainDB->tables();
+
+    if (!tables.contains("musiclib")) {
+        throw TableNotFoundError("musiclib");
+    }
+    if (!tables.contains("tmplib")) {
+        throw TableNotFoundError("tmplib");
     }
 
+    return tables;
+}
+
+void Model::restoreMetaData() {
+    auto tables = getTablesToRestoreMetaData();
     auto records = mainDB->exec("SELECT * FROM musiclib");
 
     mainDB->transaction();

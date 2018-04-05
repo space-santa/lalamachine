@@ -21,6 +21,7 @@ TEMPLATE = app
 
 SOURCES += \
     ../../src/QueryBuilder.cpp \
+    ../../src/QueryResult.cpp \
     ../../src/autoplaylist.cpp \
     ../../src/autoplaylistmanager.cpp \
     ../../src/autoplaylistobject.cpp \
@@ -36,6 +37,7 @@ SOURCES += \
     QueryBuilder.test.cpp \
     lalatest.cpp \
     main.cpp \
+    model.test.cpp \
     model.test.mock.cpp \
     musiclibscanner.test.cpp \
     musiclibscanner.test.mock.cpp \
@@ -46,8 +48,10 @@ DEFINES += SRCDIR=\\\"$$PWD/\\\"
 HEADERS += \
     ../../src/IDirWalker.h \
     ../../src/IMetaDataProvider.h \
+    ../../src/IQueryResult.h \
     ../../src/IScannerDB.h \
     ../../src/QueryBuilder.h \
+    ../../src/QueryResult.h \
     ../../src/autoplaylist.h \
     ../../src/autoplaylistmanager.h \
     ../../src/autoplaylistobject.h \
@@ -62,6 +66,7 @@ HEADERS += \
     ../../src/timeconverter.h \
     QueryBuilder.test.h \
     lalatest.h \
+    model.test.h \
     model.test.mock.h \
     musiclibscanner.test.h \
     musiclibscanner.test.mock.h \
