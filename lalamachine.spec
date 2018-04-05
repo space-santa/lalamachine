@@ -1,12 +1,12 @@
 Name: lalamachine
-Version: 3.5.1
+Version: 3.5.2
 Release: 1
 License: GPL-3.0+
 Summary: A music player
 Url: https://github.com/space-santa/lalamachin
 Source0: %{name}-%{version}.tar.gz
-Requires: libsingleinstance >= 1.0.0, qt5-qtquickcontrols >= 5.4.1, qt5-qtmultimedia >= 5.4.1, taglib >= 1.11
-BuildRequires: libsingleinstance >= 1.0.0, qt5-qtbase-devel >= 5.4.1, qt5-qtmultimedia-devel >= 5.4.1 taglib-devel >= 1.11
+Requires: qt5-qtquickcontrols >= 5.4.1, qt5-qtmultimedia >= 5.4.1, taglib >= 1.11
+BuildRequires: qt5-qtbase-devel >= 5.4.1, qt5-qtmultimedia-devel >= 5.4.1 taglib-devel >= 1.11
 
 %description
 Lalamachine is a music player.
@@ -40,6 +40,10 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Thu Apr 05 2018 space-santa 3.5.2-1
+  * Remove SingleInstanceGuard to allow more than one instance of lalamachine.
+  * Behind the scenes refactoring to make everything better.
+
 * Mon Mar 26 2018 space-santa 3.5.1-1
   * Add SingleInstanceGuard to only allow one instance of lalamachine.
 

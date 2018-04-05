@@ -1,6 +1,6 @@
 {
   "name": "lalamachine",
-  "version": "3.4.0",
+  "version": "3.5.2",
   "description": "## Intro",
   "main": "main.cpp",
   "directories": {
@@ -8,11 +8,11 @@
   },
   "scripts": {
     "run": "npm run build && ./build/lalamachine",
-    "build": "npm run lint && mkdir -p build && cd build && qmake-qt5 ../lalamachine.pro && make",
-    "lint": "clang-format src/*.h src/*.cpp -i",
+    "build": "npm run lint && mkdir -p build && cd build && qmake-qt5 ../lalamachine.pro && make -j3",
+    "lint": "clang-format src/*.h src/*.cpp -i test/lalatest/*.h test/lalatest/*.cpp",
     "clean": "rm -rf build",
     "clean-test": "rm -rf test/build",
-    "test": "mkdir -p test/build && cd test/build && qmake-qt5 ../lalatest/lalatest.pro && make && ./tst_lalatesttest"
+    "test": "mkdir -p test/build && cd test/build && qmake-qt5 ../lalatest/lalatest.pro && make -j3 && ./tst_lalatesttest"
   },
   "repository": {
     "type": "git",

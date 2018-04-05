@@ -28,7 +28,8 @@ AutoPlaylistManager::AutoPlaylistManager(QObject* parent) : QObject(parent) {
     loadPlaylists();
 }
 
-AutoPlaylistManager::~AutoPlaylistManager() {}
+AutoPlaylistManager::~AutoPlaylistManager() {
+}
 
 QString AutoPlaylistManager::currentList() const {
     return currentList_;

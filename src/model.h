@@ -4,31 +4,23 @@
 #include <QJsonObject>
 #include <QMutex>
 #include <QSharedPointer>
-#include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlResult>
 #include <QString>
 #include <QStringList>
+#include <memory>
+
+#include "IMainDB.h"
+#include "QueryBuilder.h"
 
 class Model {
     friend class ModelTest;
 
 public:
-    ~Model();
+    Model(std::unique_ptr<IMainDB> mainDB);
 
-    enum SortWhat { TRACK, TITLE, COMMENT, LENGTH, GENRE, ARTIST, ALBUM, DATEADDED, DISCNUMBER };
-    Q_ENUMS(SortWhat)
-
-    enum SortHow { ASCENDING, DESCENDING };
-    Q_ENUMS(SortHow)
-
-    static const QMap<SortWhat, QString> SORT_MAP;
-    static QMap<SortWhat, QString> initSortMap();
-
-    static Model* instance() {
-        static Model* instance = new Model;
-        return instance;
-    }
+    Q_ENUMS(QueryBuilder::SortWhat)
+    Q_ENUMS(QueryBuilder::SortHow)
 
     QStringList genre(const QString& filter);
     QStringList artist(const QString& filter, const QString& genre = QString());
@@ -36,19 +28,7 @@ public:
 
     QJsonObject trackDetails(const QString& mrl) const;
 
-    static QString escapeString(QString string);
-    static QString getSortQueryString(const QString& title,
-                                      const QString& genre,
-                                      const QString& artist,
-                                      const QString& album,
-                                      const SortWhat& what,
-                                      bool sortAsc);
-    static QString genreQuery(const QString& filter = QString());
-    static QString artistQuery(const QString& artist = QString(), const QString& genre = QString());
-    static QString albumQuery(const QString& album = QString(),
-                              const QString& artist = QString(),
-                              const QString& genre = QString());
-    static QPair<int, QJsonArray> queryResultToJson(QSqlQuery result);
+    static QPair<int, QJsonArray> queryResultToJson(const std::unique_ptr<IQueryResult>& result);
     static QString cleanPath(QString mrl);
 
     void ensureAllTables();
@@ -56,11 +36,11 @@ public:
     void copyLibToTmp();
     void clearMusicLib();
     void restoreMetaData();
-    QStringList getGenreList(const QString& filter = QString());
-    QStringList getArtistList(const QString& artist = QString(), const QString& genre = QString());
+    QStringList getGenreList(const QString& filter = QString()) const;
+    QStringList getArtistList(const QString& artist = QString(), const QString& genre = QString()) const;
     QStringList getAlbumList(const QString& album = QString(),
                              const QString& artist = QString(),
-                             const QString& genre = QString());
+                             const QString& genre = QString()) const;
 
     QStringList getList(const QString& what) const;
 
@@ -71,12 +51,13 @@ public:
     QJsonObject getMetadataForMrl(const QUrl& mrl) const;
 
 private:
-    Model();
-    QSqlDatabase db_;
+    std::unique_ptr<IMainDB> mainDB;
     QSharedPointer<QMutex> mutex_;
 
     void init();
-    static QStringList resultToList(QSqlQuery result, const QString& what);
+    static QStringList resultToList(const std::unique_ptr<IQueryResult>& result, const QString& what);
     void updateTable();
-    void newUpdateTable();
+    void setDateAddedForMrl(const QString& dateAdded, const QString& mrl);
+    QString getDateAddedFromTmpLibForMrl(const QString& mrl);
+    QStringList getTablesToRestoreMetaData() const;
 };

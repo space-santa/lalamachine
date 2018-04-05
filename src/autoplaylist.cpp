@@ -24,6 +24,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSqlError>
 #include <QSqlQuery>
 
+#include "QueryResult.h"
 #include "config.h"
 #include "model.h"
 #include "musiclib.h"
@@ -35,14 +36,17 @@ AutoPlaylist::AutoPlaylist(const QString& name, QObject* parent) : QObject(paren
     load();
 }
 
-AutoPlaylist::~AutoPlaylist() {}
+AutoPlaylist::~AutoPlaylist() {
+}
 
 QString AutoPlaylist::name() {
     return name_;
 }
 
 void AutoPlaylist::save() {
-    if (name_.isEmpty()) { return; }
+    if (name_.isEmpty()) {
+        return;
+    }
 
     QJsonArray jarr;
 
@@ -57,14 +61,18 @@ void AutoPlaylist::save() {
 }
 
 void AutoPlaylist::deleteList() {
-    if (name_.isEmpty()) { return; }
+    if (name_.isEmpty()) {
+        return;
+    }
 
     QFile::remove(getPath(name_));
     name_ = "";
 }
 
 void AutoPlaylist::load() {
-    if (name_.isEmpty()) { return; }
+    if (name_.isEmpty()) {
+        return;
+    }
 
     fromJson(Config::loadJsonFile(getPath(name_)).value(name_).toArray());
 }
@@ -102,7 +110,8 @@ void AutoPlaylist::clear() {
 QJsonArray AutoPlaylist::trackList() {
     db_.open();
     // Processing the QSqlResult imediately before closing the dbase.
-    QJsonArray result = Model::queryResultToJson(db_.exec(toQuery())).second;
+    QJsonArray result =
+        Model::queryResultToJson(std::unique_ptr<IQueryResult>(new QueryResult(db_.exec(toQuery())))).second;
     // WARNING: The dbase must not be closed before the QSqlResult that db.exec
     // returns is processed.
     db_.close();

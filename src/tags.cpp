@@ -5,7 +5,8 @@
 #include <QString>
 #include <QUrl>
 
-Tags::Tags() {}
+Tags::Tags() {
+}
 
 Tags::Tags(
     const TagLib::Tag* tag, const QString& path, const QString& mrl, int length, QString lengthString, uint discNumber)
@@ -20,7 +21,8 @@ Tags::Tags(
       title_(QString::fromUtf8(tag->title().toCString(true))),
       track_(QString::number(tag->track())),
       year_(QString::number(tag->year())),
-      disc_(QString::number(discNumber)) {}
+      disc_(QString::number(discNumber)) {
+}
 
 QJsonObject Tags::toJson() {
     QJsonObject retval;

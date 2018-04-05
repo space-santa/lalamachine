@@ -1,18 +1,26 @@
 #include <QCoreApplication>
 #include <QTest>
+#include "QueryBuilder.test.h"
 #include "lalatest.h"
-#include "test_model.h"
+#include "model.test.h"
+#include "musiclibscanner.test.h"
 #include "testautoplaylist.h"
 
 int main() {
-  LalaTest lala;
-  // QTest::qExec(&lala);
+    LalaTest lala;
+    // QTest::qExec(&lala);
 
-  TestAutoPlaylist test2;
-  // QTest::qExec(&test2);
+    TestAutoPlaylist test2;
+    // QTest::qExec(&test2);
 
-  ModelTest test_model;
-  QTest::qExec(&test_model);
+    QueryBuilderTest queryBuilder;
+    QTest::qExec(&queryBuilder);
 
-  return 0;
+    MusicLibScannerTest scanner;
+    QTest::qExec(&scanner);
+
+    ModelTest modelTest;
+    QTest::qExec(&modelTest);
+
+    return 0;
 }

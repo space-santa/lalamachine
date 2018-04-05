@@ -20,40 +20,57 @@ TEMPLATE = app
 
 
 SOURCES += \
+    ../../src/QueryBuilder.cpp \
+    ../../src/QueryResult.cpp \
+    ../../src/autoplaylist.cpp \
+    ../../src/autoplaylistmanager.cpp \
+    ../../src/autoplaylistobject.cpp \
     ../../src/config.cpp \
+    ../../src/exceptions.cpp \
+    ../../src/lalatypes.cpp \
     ../../src/m3uinout.cpp \
     ../../src/metadataprovider.cpp \
-    ../../src/timeconverter.cpp \
-    ../../src/musiclib.cpp \
-    ../../src/autoplaylistobject.cpp \
-    ../../src/autoplaylistmanager.cpp \
-    ../../src/autoplaylist.cpp \
-    ../../src/lalatypes.cpp \
     ../../src/model.cpp \
     ../../src/musiclibscanner.cpp \
-    main.cpp \
+    ../../src/tags.cpp \
+    ../../src/timeconverter.cpp \
+    QueryBuilder.test.cpp \
     lalatest.cpp \
-    test_model.cpp \
-    testautoplaylist.cpp \
-    ../../src/tags.cpp
+    main.cpp \
+    model.test.cpp \
+    model.test.mock.cpp \
+    musiclibscanner.test.cpp \
+    musiclibscanner.test.mock.cpp \
+    testautoplaylist.cpp
+
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
+    ../../src/IDirWalker.h \
+    ../../src/IMetaDataProvider.h \
+    ../../src/IQueryResult.h \
+    ../../src/IScannerDB.h \
+    ../../src/QueryBuilder.h \
+    ../../src/QueryResult.h \
+    ../../src/autoplaylist.h \
+    ../../src/autoplaylistmanager.h \
+    ../../src/autoplaylistobject.h \
     ../../src/config.h \
+    ../../src/exceptions.h \
+    ../../src/lalatypes.h \
     ../../src/m3uinout.h \
     ../../src/metadataprovider.h \
-    ../../src/timeconverter.h \
-    ../../src/musiclib.h \
-    ../../src/autoplaylistobject.h \
-    ../../src/autoplaylistmanager.h \
-    ../../src/autoplaylist.h \
-    ../../src/lalatypes.h \
     ../../src/model.h \
     ../../src/musiclibscanner.h \
+    ../../src/tags.h \
+    ../../src/timeconverter.h \
+    QueryBuilder.test.h \
     lalatest.h \
-    test_model.h \
-    testautoplaylist.h \
-    ../../src/tags.h
+    model.test.h \
+    model.test.mock.h \
+    musiclibscanner.test.h \
+    musiclibscanner.test.mock.h \
+    testautoplaylist.h
 
 unix!macx: {
     INCLUDEPATH += /usr/include/taglib

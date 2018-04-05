@@ -131,25 +131,45 @@ QJsonArray Config::playlistColumns() {
         }
     }
 
-    if (!hasTrack) { retval.append(addKey("track")); }
+    if (!hasTrack) {
+        retval.append(addKey("track"));
+    }
 
-    if (!hasTitle) { retval.append(addKey("title")); }
+    if (!hasTitle) {
+        retval.append(addKey("title"));
+    }
 
-    if (!hasComment) { retval.append(addKey("comment")); }
+    if (!hasComment) {
+        retval.append(addKey("comment"));
+    }
 
-    if (!hasGenre) { retval.append(addKey("genre")); }
+    if (!hasGenre) {
+        retval.append(addKey("genre"));
+    }
 
-    if (!hasArtist) { retval.append(addKey("artist")); }
+    if (!hasArtist) {
+        retval.append(addKey("artist"));
+    }
 
-    if (!hasAlbum) { retval.append(addKey("album")); }
+    if (!hasAlbum) {
+        retval.append(addKey("album"));
+    }
 
-    if (!hasLength) { retval.append(addKey("length")); }
+    if (!hasLength) {
+        retval.append(addKey("length"));
+    }
 
-    if (!hasYear) { retval.append(addKey("year")); }
+    if (!hasYear) {
+        retval.append(addKey("year"));
+    }
 
-    if (!hasDisc) { retval.append(addKey("discNumber")); }
+    if (!hasDisc) {
+        retval.append(addKey("discNumber"));
+    }
 
-    if (!hasDate) { retval.append(addKey("dateAdded")); }
+    if (!hasDate) {
+        retval.append(addKey("dateAdded"));
+    }
 
     config_.insert("playlistColumns", retval);
     qDebug() << "playlistColumns loaded" << retval;
@@ -193,7 +213,9 @@ QString Config::lastPlaylist() const {
     QString retval("");
     QJsonValue v = config_.value("lastPlaylist");
 
-    if (v.isString()) { retval = v.toString(); }
+    if (v.isString()) {
+        retval = v.toString();
+    }
 
     return retval;
 }
@@ -244,5 +266,7 @@ void Config::ensureDir(const QString& path) {
     QFileInfo fi(path);
     QDir dir(fi.absoluteDir());
 
-    if (!dir.exists()) { dir.mkpath(fi.absolutePath()); }
+    if (!dir.exists()) {
+        dir.mkpath(fi.absolutePath());
+    }
 }

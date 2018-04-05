@@ -21,7 +21,8 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QString>
 
-TimeConverter::TimeConverter(QObject* parent) : QObject(parent), totalSec_(0), sec_(0), mins_(0), hours_(0), days_(0) {}
+TimeConverter::TimeConverter(QObject* parent) : QObject(parent), totalSec_(0), sec_(0), mins_(0), hours_(0), days_(0) {
+}
 
 void TimeConverter::setSeconds(int sec) {
     totalSec_ = sec;
@@ -82,7 +83,9 @@ QString TimeConverter::toString() {
 QString TimeConverter::numToString(int num) {
     QString retVal("");
 
-    if (num < 10) { retVal.append("0"); }
+    if (num < 10) {
+        retVal.append("0");
+    }
 
     retVal.append(QString::number(num));
 

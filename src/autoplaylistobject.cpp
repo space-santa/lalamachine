@@ -21,8 +21,8 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QJsonObject>
 #include <QMap>
+#include "QueryBuilder.h"
 #include "lalatypes.h"
-#include "model.h"
 #include "musiclib.h"
 
 AutoPlaylistObject::AutoPlaylistObject(const QJsonObject& obj) {
@@ -30,7 +30,8 @@ AutoPlaylistObject::AutoPlaylistObject(const QJsonObject& obj) {
 }
 
 AutoPlaylistObject::AutoPlaylistObject(LalaTypes::AndOr andor, LalaTypes::Tag tag, LalaTypes::Operator op, QString val)
-    : andor_(andor), tag_(tag), op_(op), val_(val) {}
+    : andor_(andor), tag_(tag), op_(op), val_(val) {
+}
 
 LalaTypes::AndOr AutoPlaylistObject::andor() const {
     return andor_;
@@ -67,7 +68,9 @@ void AutoPlaylistObject::fromJson(const QJsonObject& obj) {
 
 QString AutoPlaylistObject::toQuery(bool isFirst) const {
     QString query(" ");
-    if (!isFirst) { query.append(LalaTypes::ANDOR_MAP.value(andor()) + " "); }
+    if (!isFirst) {
+        query.append(LalaTypes::ANDOR_MAP.value(andor()) + " ");
+    }
     query.append(LalaTypes::TAG_MAP.value(tag()) + " ");
     query.append(LalaTypes::OP_MAP.value(op()) + " ");
     QString tmp("");
@@ -77,7 +80,7 @@ QString AutoPlaylistObject::toQuery(bool isFirst) const {
     } else {
         tmp = " '%1'";
     }
-    query.append(tmp.arg(Model::escapeString(val())));
+    query.append(tmp.arg(QueryBuilder::escapeString(val())));
 
     return query;
 }

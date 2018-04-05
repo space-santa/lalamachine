@@ -260,8 +260,7 @@ ApplicationWindow {
                 iconSource: "qrc:/images/images/help.png"
                 MenuItem {
                     text: "Open the lalamachine wiki in your browser."
-                    onTriggered: Qt.openUrlExternally(
-                                     "https://bitbucket.org/r-mean/lalamachine/wiki/Home")
+                    onTriggered: Qt.openUrlExternally("https://github.com/space-santa/lalamachine/wiki")
                 }
             }
 
@@ -270,8 +269,7 @@ ApplicationWindow {
                 iconSource: "qrc:/images/images/bug.png"
                 MenuItem {
                     text: "Create a new lalamachine issue in your browser."
-                    onTriggered: Qt.openUrlExternally(
-                                     "https://bitbucket.org/r-mean/lalamachine/issues/new")
+                    onTriggered: Qt.openUrlExternally("https://github.com/space-santa/lalamachine/issues")
                 }
             }
 

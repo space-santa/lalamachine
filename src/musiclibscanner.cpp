@@ -19,119 +19,55 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "musiclibscanner.h"
 
-#include <QDateTime>
-#include <QDir>
-#include <QDirIterator>
-#include <QElapsedTimer>
-#include <QMutexLocker>
-#include <QRegularExpression>
-#include <QSqlError>
-#include <QSqlQuery>
 #include "config.h"
-#include "metadataprovider.h"
+#include "exceptions.h"
 #include "model.h"
 #include "musiclib.h"
 #include "tags.h"
 
+MusicLibScanner::MusicLibScanner(std::unique_ptr<IScannerDB> scanDb,
+                                 std::unique_ptr<IDirWalker> dirWalker,
+                                 std::unique_ptr<IMetaDataProvider> metaDataProvider,
+                                 QObject* parent)
+    : QObject(parent),
+      scanDb(std::move(scanDb)),
+      dirWalker(std::move(dirWalker)),
+      metaDataProvider(std::move(metaDataProvider)) {
+}
+
 void MusicLibScanner::scanLib(const QString& path) {
-    QSqlDatabase scanDb = QSqlDatabase::addDatabase("QSQLITE", "scanner");
-    scanDb.setDatabaseName(Config::MUSICLIBDB);
-    QElapsedTimer timer;
-    timer.start();
-
-    if (path == "" || !QDir(path).exists()) {
-        qCritical("I can't scan a non-existing folder.");
+    QStringList fileList;
+    try {
+        fileList = dirWalker->getMusicFileList(path);
+    } catch (const DirectoryNotFoundError& error) {
+        qDebug() << error.what();
         return;
     }
 
-    ;
-    if (!scanDb.open()) {
-        qDebug() << "Can't open dbase..." << scanDb.lastError().type();
+    try {
+        scanDb->open();
+    } catch (const OpenDatabaseError& error) {
+        qDebug() << "Can't open dbase..." << error.what();
         return;
     }
 
-    qDebug() << "Start scan";
     emit scanStarted();
-    Tags tmp;
-    MetaDataProvider meta;
-    QDir rootDir(path);
+    scanDb->transaction();
 
-    if (!rootDir.exists()) {
-        qDebug() << "Dir not found.";
-    } else {
-        QDirIterator it(rootDir, QDirIterator::Subdirectories);
-
-        QString date = QDateTime::currentDateTime().toString("yyyy-MM-dd");
-        // We begin a transaction here.
-        scanDb.transaction();
-        QString line;
-        QString error;
-
-        while (it.hasNext()) {
-            line = it.next();
-
-            qDebug() << line;
-
-            if (suffixCheck(line)) {
-                tmp = meta.metaData(QUrl::fromLocalFile(line));
-
-                // This is to mitigate another problem. We assume that all files
-                // with the correct sufix are good. Problem is that they might
-                // not be.
-                if (!tmp.isValid()) { continue; }
-
-                // Adding all queries to the transaction.
-                error = scanDb.exec(getTrackQuery(tmp, date) + ";\n").lastError().text().trimmed();
-
-                if (!error.isEmpty()) { qDebug() << error; }
-            }
+    for (const QString& file : fileList) {
+        try {
+            auto tags = metaDataProvider->metaData(QUrl::fromLocalFile(file));
+            scanDb->addQuery(tags);
+        } catch (const NoMetaDataException& error) {
+            qDebug() << error.what();
+            continue;
+        } catch (const AddQueryError& error) {
+            qDebug() << error.what();
+            continue;
         }
-        qDebug() << "pre commit" << timer.elapsed();
-        timer.restart();
-        // Now commit everything at once.
-        scanDb.commit();
-        qDebug() << "post commit" << timer.elapsed();
-        timer.restart();
     }
 
-    scanDb.close();
-    qDebug() << "End scan" << timer.elapsed();
+    scanDb->commit();
+    scanDb->close();
     emit scanComplete();
-}
-
-QString MusicLibScanner::getTrackQuery(Tags track, const QString date) {
-    QString query("INSERT into `musiclib` "
-                  "(`album`, `artist`, `comment`, `genre`, `length`, "
-                  "`lengthString`, `mrl`, `path`, `title`, `track`, `"
-                  "year`, `dateAdded`, `discNumber`) "
-                  "VALUES ");
-
-    QString valuesA("('%1', '%2', '%3', '%4', '%5', '%6', ");
-    QString valuesB("'%1', '%2', '%3', '%4', '%5', '%6', '%7')");
-    query.append(valuesA.arg(Model::escapeString(track.album_))
-                     .arg(Model::escapeString(track.artist_))
-                     .arg(Model::escapeString(track.comment_))
-                     .arg(Model::escapeString(track.genre_))
-                     .arg(Model::escapeString(track.length_))
-                     .arg(Model::escapeString(track.lengthString_)));
-    query.append(valuesB.arg(Model::escapeString(track.mrl_))
-                     .arg(Model::escapeString(track.path_))
-                     .arg(Model::escapeString(track.title_))
-                     .arg(Model::escapeString(track.track_))
-                     .arg(Model::escapeString(track.year_))
-                     .arg(Model::escapeString(date))
-                     .arg(Model::escapeString(track.disc_)));
-
-    qDebug() << query;
-    return query;
-}
-
-bool MusicLibScanner::suffixCheck(const QString& val) {
-    if (val.endsWith(".mp3")) { return true; }
-
-    if (val.endsWith(".m4a")) { return true; }
-
-    if (val.endsWith(".ogg")) { return true; }
-
-    return false;
 }
