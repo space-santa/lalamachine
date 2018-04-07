@@ -29,6 +29,7 @@
         <file>MusicLibMenu.qml</file>
         <file>MainPlaylistMenu.qml</file>
         <file>InfoMenu.qml</file>
+        <file>AutoPlaylistMenu.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/back.png</file>

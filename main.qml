@@ -145,60 +145,12 @@ ApplicationWindow {
             onOpenExportDialog: export_dialog.open()
             onOpenSettingsDialog: settings_dialog.open()
         }
-        Menu {
-            title: "Automatic Playlists"
-
-            PlaylistMenu {
-                title: "Open"
-                iconSource: "qrc:/images/images/open.png"
-                playlistnames: auto_playlist_manager.autoPlaylistNames
-
-                onSelected: {
-                    playlist.addAutoPlaylist(listname)
-                }
-            }
-
-            PlaylistMenu {
-                title: "Edit"
-                iconSource: "qrc:/images/images/edit.png"
-                playlistnames: auto_playlist_manager.autoPlaylistNames
-
-                onSelected: {
-                    apd.clearAll()
-                    var arr = auto_playlist_manager.getAutoPlaylist(listname)
-
-                    apd.setApo1(arr[0].andor, arr[0].tag, arr[0].operator,
-                                arr[0].value)
-
-                    if (arr[1]) {
-                        apd.setApo2(arr[1].andor, arr[1].tag, arr[1].operator,
-                                    arr[1].value)
-                    }
-
-                    if (arr[2]) {
-                        apd.setApo3(arr[2].andor, arr[2].tag, arr[2].operator,
-                                    arr[2].value)
-                    }
-
-                    apd.apName = listname
-                    apd.open()
-                }
-            }
-            MenuItem {
-                text: "Create"
-                iconSource: "qrc:/images/images/new.png"
-                onTriggered: {
-                    apd.open()
-                    apd.clearAll()
-                }
-            }
-            PlaylistMenu {
-                title: "Delete"
-                iconSource: "qrc:/images/images/delete.png"
-                playlistnames: auto_playlist_manager.autoPlaylistNames
-
-                onSelected: auto_playlist_manager.deleteAutoPlaylist(listname)
-            }
+        AutoPlaylistMenu{
+            autoPlaylistNames: auto_playlist_manager.autoPlaylistNames
+            onOpenAutoPlaylist: playlist.addAutoPlaylist(listname)
+            onEditAutoPlaylist: apd.editAutoPlaylist(listname, auto_playlist_manager.getAutoPlaylist(listname))
+            onCreateNewAutoPlaylist: apd.createNew()
+            onDeleteAutoPlaylist: auto_playlist_manager.deleteAutoPlaylist(listname)
         }
         InfoMenu {
             onShowInfoDialog: infos.visible = true
