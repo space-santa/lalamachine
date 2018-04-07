@@ -55,8 +55,6 @@ ApplicationWindow {
     property M3uInOut m3u: m3u
     property Configuration config: config
 
-    property bool kioskMode: false
-
     // lalaplayer is globally accessible to change volume, etc
     property ThePlayer lalaplayer: playMusic
 
@@ -130,71 +128,22 @@ ApplicationWindow {
 
     menuBar: MenuBar {
         id: menu_bar
-        __contentItem.height: master.kioskMode ? 0 : 25
+        __contentItem.height: 25
         __contentItem.transform: Scale {
-            yScale: master.kioskMode ? 0 : 1
+            yScale: 1
         }
-        Menu {
-            title: "MusicLib"
-            MenuItem {
-                text: "Rescan"
-                iconSource: "qrc:/images/images/refresh.png"
-                onTriggered: {
-                    if (!libview.scanInProgress) {
-                        libview.rescan()
-                    }
-                }
-            }
-            MenuSeparator {
-            }
-            MenuItem {
-                text: "Set library"
-                iconSource: "qrc:/images/images/preferences.png"
-                onTriggered: {
-                    lib_dialog.visible = true
-                }
-            }
+        MusicLibMenu {
+            onShowSetLibraryDialog: lib_dialog.visible = true
+            onRescanLibrary: libview.rescan()
         }
-        Menu {
-            title: "Playlist"
-            PlaylistMenu {
-                title: "Open"
-                iconSource: "qrc:/images/images/open.png"
-                onSelected: playlist.setCurrentPlaylist(listname)
-            }
-            MenuItem {
-                text: "save"
-                action: save_current_list_action
-            }
-            MenuItem {
-                text: "save as"
-                iconSource: "qrc:/images/images/save.png"
-                onTriggered: playlist.showSaveDialog()
-            }
-
-            MenuSeparator {
-            }
-            PlaylistMenu {
-                title: "Delete"
-                iconSource: "qrc:/images/images/delete.png"
-                onSelected: playlist.deletePlaylist(listname)
-            }
-            MenuSeparator {
-            }
-            MenuItem {
-                text: "Export Files"
-                iconSource: "qrc:/images/images/export.png"
-                onTriggered: export_dialog.open()
-            }
-            MenuSeparator {
-            }
-            MenuItem {
-                text: "Settings"
-                iconSource: "qrc:/images/images/preferences.png"
-                onTriggered: {
-                    settings_dialog.open()
-                }
-            }
+        MainPlaylistMenu {
+            saveAction: save_current_list_action
+            onOpenPlaylist: playlist.setCurrentPlaylist(listname)
+            onSaveCurrentPlaylist: playlist.writeCurrentListIfNamed()
+            onShowSavePlaylistDialog: playlist.showSaveDialog()
+            onDeletePlaylist: playlist.deletePlaylist(listname)
+            onOpenExportDialog: export_dialog.open()
+            onOpenSettingsDialog: settings_dialog.open()
         }
         Menu {
             title: "Automatic Playlists"
@@ -478,7 +427,7 @@ ApplicationWindow {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            height: master.kioskMode ? 75 : 35
+            height: 35
 
             Button {
                 id: show_list
@@ -601,6 +550,12 @@ ApplicationWindow {
                 id: libview
                 anchors.fill: parent
                 library: config.libPath
+
+                function rescan() {
+                    if (!libview.scanInProgress) {
+                        libview.rescan()
+                    }
+                }
 
                 onAddTrack: {
                     playlist.add(path)

@@ -26,6 +26,8 @@
         <file>VolumeControl.qml</file>
         <file>functions.js</file>
         <file>main.qml</file>
+        <file>MusicLibMenu.qml</file>
+        <file>MainPlaylistMenu.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/back.png</file>
