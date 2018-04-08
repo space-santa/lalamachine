@@ -145,12 +145,16 @@ ApplicationWindow {
             onOpenExportDialog: export_dialog.open()
             onOpenSettingsDialog: settings_dialog.open()
         }
-        AutoPlaylistMenu{
+        AutoPlaylistMenu {
             autoPlaylistNames: auto_playlist_manager.autoPlaylistNames
             onOpenAutoPlaylist: playlist.addAutoPlaylist(listname)
-            onEditAutoPlaylist: apd.editAutoPlaylist(listname, auto_playlist_manager.getAutoPlaylist(listname))
+            onEditAutoPlaylist: apd.editAutoPlaylist(
+                                    listname,
+                                    auto_playlist_manager.getAutoPlaylist(
+                                        listname))
             onCreateNewAutoPlaylist: apd.createNew()
-            onDeleteAutoPlaylist: auto_playlist_manager.deleteAutoPlaylist(listname)
+            onDeleteAutoPlaylist: auto_playlist_manager.deleteAutoPlaylist(
+                                      listname)
         }
         InfoMenu {
             onShowInfoDialog: infos.visible = true
@@ -566,7 +570,6 @@ ApplicationWindow {
             lalaplayer.seek(pos)
         }
     }
-
 
     FileDialog {
         id: fileDialog
