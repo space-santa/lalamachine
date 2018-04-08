@@ -207,7 +207,7 @@ ApplicationWindow {
         id: del_action
         shortcut: StandardKey.Delete
         tooltip: "Shortcut: " + shortcut
-        onTriggered: playlist.deleteCurrentTrack()
+        onTriggered: playlist.deleteSelection()
     }
 
     Action {
