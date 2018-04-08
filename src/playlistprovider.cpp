@@ -36,7 +36,7 @@ void PlaylistProvider::writePlaylist(const QString& name, const QJsonArray& json
         return;
     }
 
-    QFile file(m3uPath(name));
+    QFile file(playlistPath(name));
 
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         qWarning() << "Couldn't write playlist" << name;
@@ -49,7 +49,7 @@ void PlaylistProvider::writePlaylist(const QString& name, const QJsonArray& json
 }
 
 QJsonArray PlaylistProvider::readPlaylist(const QString& name) const {
-    QFile file(m3uPath(name));
+    QFile file(playlistPath(name));
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qWarning() << "Couldn't read playlist" << name;
@@ -87,13 +87,13 @@ QStringList PlaylistProvider::getPlaylistNames() const {
     return names;
 }
 
-QString PlaylistProvider::m3uPath(const QString& name) const {
+QString PlaylistProvider::playlistPath(const QString& name) const {
     return Config::PLAYLISTDIR + "/" + name + ".m3u";
 }
 
 void PlaylistProvider::deletePlaylist(const QString& name) const {
     Q_ASSERT(QStringList(playlistNames()).contains(name));
-    QFile::remove(m3uPath(name));
+    QFile::remove(playlistPath(name));
 }
 
 void PlaylistProvider::setPlaylistNames(const QStringList& list) {

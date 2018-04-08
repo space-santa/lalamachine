@@ -17,7 +17,7 @@ public:
     Q_INVOKABLE void writePlaylist(const QString& name, const QJsonArray& json) const;
     Q_INVOKABLE QJsonArray readPlaylist(const QString& name) const;
     QStringList getPlaylistNames() const;
-    Q_INVOKABLE QString m3uPath(const QString& name) const;
+    Q_INVOKABLE QString playlistPath(const QString& name) const;
     Q_INVOKABLE void deletePlaylist(const QString& name) const;
 
     void setPlaylistNames(const QStringList& list);

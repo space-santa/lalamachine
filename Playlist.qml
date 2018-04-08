@@ -145,7 +145,7 @@ Rectangle {
     }
 
     function getPlaylistPath(name) {
-        return m3u.m3uPath(name)
+        return m3u.playlistPath(name)
     }
 
     function playCurrentTrack() {
