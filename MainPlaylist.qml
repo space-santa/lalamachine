@@ -9,7 +9,7 @@ Playlist {
 
     MainPlaylistRightClickMenu {
         id: rcm
-        onAddToPlaylist: addToPlaylist(listname)
+        onAddToPlaylist: main_playlist.addToPlaylist(listname)
         onDeleteSelection: main_playlist.deleteSelection()
     }
 }
