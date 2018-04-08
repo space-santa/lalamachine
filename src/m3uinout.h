@@ -33,12 +33,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 class M3uInOut : public QQuickItem {
     Q_OBJECT
 
-    // clang-format off
-    Q_PROPERTY(QStringList playlistNames
-               READ playlistNames
-               WRITE setPlaylistNames
-               NOTIFY playlistNamesChanged)
-    // clang-format on
+    Q_PROPERTY(QStringList playlistNames READ playlistNames WRITE setPlaylistNames NOTIFY playlistNamesChanged)
 
 public:
     explicit M3uInOut(QQuickItem* parent = 0);
