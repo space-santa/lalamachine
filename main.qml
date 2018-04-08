@@ -402,7 +402,7 @@ ApplicationWindow {
                 anchors.fill: parent
                 color: "transparent"
 
-                Playlist {
+                MainPlaylist {
                     id: playlist
                     isLibrary: false
                     anchors.left: parent.left

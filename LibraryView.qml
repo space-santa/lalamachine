@@ -110,10 +110,8 @@ Rectangle {
                 }
             }
 
-            RightClickMenu {
+            LibraryPlaylistRightClickMenu {
                 id: rcm
-
-                isLibrary: true
 
                 onAddToPlaylist: {
                     if (listname === "") {
@@ -192,7 +190,7 @@ Rectangle {
                     }
                 }
 
-                Playlist {
+                LibraryPlaylist {
                     id: titles
                     isLibrary: true
                     anchors.top: titles_filter_box.bottom

@@ -47,6 +47,7 @@ Rectangle {
 
     signal play(string path, string title, string artist)
     signal stop
+    signal showRightClickMenu
 
     // This setter is necessary to make sure that latest changes to the list are
     // remebered when a new playlist is loaded.
@@ -79,7 +80,7 @@ Rectangle {
 
     TimeConverter {
         id: tc
-        seconds: totalPlaytime()
+        seconds: playlist_model.totalPlaytime
     }
 
     FileExporter {
@@ -148,18 +149,6 @@ Rectangle {
         return m3u.m3uPath(name)
     }
 
-    function totalPlaytime() {
-        if (isLibrary) {
-            return lib.totalLength
-        } else {
-            var lenght = 0
-            for (var i = 0; i < playlist_model.count; ++i) {
-                lenght += playlist_model.get(i).length
-            }
-            return lenght
-        }
-    }
-
     function deleteCurrentTrack() {
         if (isLibrary) {
             return
@@ -195,6 +184,11 @@ Rectangle {
                 return
             }
         }
+    }
+
+    function addToPlaylist(listname) {
+        addSelectionToPlaylist(listname)
+        playlist_view.selection.clear()
     }
 
     // This function is adding the selection to the playlist.
@@ -390,19 +384,6 @@ Rectangle {
 
     function pathList() {
         return playlist_model.pathList()
-    }
-
-    RightClickMenu {
-        id: rcm
-
-        isLibrary: playlist_container.isLibrary
-
-        onAddToPlaylist: {
-            addSelectionToPlaylist(listname)
-            playlist_view.selection.clear()
-        }
-
-        onDeleteSelection: deleteCurrentTrack()
     }
 
     PlaylistModel {
@@ -647,7 +628,7 @@ Rectangle {
 
         rowDelegate: TableViewDelegate {
             target: playlist_view
-            onRightClick: rcm.popup()
+            onRightClick: showRightClickMenu()
 
             onDoubleClicked: {
                 stop()
