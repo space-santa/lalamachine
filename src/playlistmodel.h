@@ -11,6 +11,7 @@
 class PlaylistModel : public QAbstractListModel {
     Q_OBJECT
     Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
+    Q_PROPERTY(int totalPlaytime READ getTotalPlaytime NOTIFY countChanged)
 
 public:
     enum PlaylistRoles {
@@ -63,6 +64,7 @@ private:
     QString albumFilter_;
 
     void append(Track track);
+    int getTotalPlaytime();
 
     static bool sortTrackAsc(Track t1, Track t2);
     static bool sortTrackDesc(Track t1, Track t2);

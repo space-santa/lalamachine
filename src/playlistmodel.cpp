@@ -81,6 +81,16 @@ void PlaylistModel::append(Track track) {
     emit countChanged();
 }
 
+int PlaylistModel::getTotalPlaytime() {
+    int retval = 0;
+
+    for (const Track& track : this->list_) {
+        retval += track.length_;
+    }
+
+    return retval;
+}
+
 void PlaylistModel::move(int from, int to) {
     if (from == to) {
         return;
