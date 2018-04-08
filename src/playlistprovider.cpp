@@ -1,23 +1,6 @@
-/*
-Copyright 2015 Armin Zirkel
+// This file is part of lalamachine. License is GPL-3.0 (or later).
 
-This file is part of lalamachine.
-
-Lalamachine is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Lalamachine is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-#include "m3uinout.h"
+#include "playlistprovider.h"
 
 #include <QDir>
 #include <QJsonArray>
@@ -26,13 +9,13 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config.h"
 
-M3uInOut::M3uInOut(QQuickItem* parent) : QQuickItem(parent) {
+PlaylistProvider::PlaylistProvider(QQuickItem* parent) : QQuickItem(parent) {
     setPlaylistNames(getPlaylistNames());
     QDir dir(Config::PLAYLISTDIR);
     dir.mkpath(Config::PLAYLISTDIR);
 
     watcher_.addPath(Config::PLAYLISTDIR);
-    connect(&watcher_, &QFileSystemWatcher::directoryChanged, this, &M3uInOut::handleDirChange);
+    connect(&watcher_, &QFileSystemWatcher::directoryChanged, this, &PlaylistProvider::handleDirChange);
 }
 
 // This requires explanation.
@@ -43,12 +26,12 @@ M3uInOut::M3uInOut(QQuickItem* parent) : QQuickItem(parent) {
 // emitted the signal there. Same endresult, writePlaylist fine, deletePlaylist
 // segfault. So now I listen to directory changes and emit the signal then.
 // No more segfaults.
-void M3uInOut::handleDirChange() {
+void PlaylistProvider::handleDirChange() {
     setPlaylistNames(getPlaylistNames());
     watcher_.addPath(Config::PLAYLISTDIR);
 }
 
-void M3uInOut::writePlaylist(const QString& name, const QJsonArray& json) const {
+void PlaylistProvider::writePlaylist(const QString& name, const QJsonArray& json) const {
     if (name.isEmpty()) {
         return;
     }
@@ -65,7 +48,7 @@ void M3uInOut::writePlaylist(const QString& name, const QJsonArray& json) const 
     out << doc.toJson();
 }
 
-QJsonArray M3uInOut::readPlaylist(const QString& name) const {
+QJsonArray PlaylistProvider::readPlaylist(const QString& name) const {
     QFile file(m3uPath(name));
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -87,7 +70,7 @@ QJsonArray M3uInOut::readPlaylist(const QString& name) const {
     return jd.array();
 }
 
-QStringList M3uInOut::getPlaylistNames() const {
+QStringList PlaylistProvider::getPlaylistNames() const {
     QDir d(Config::PLAYLISTDIR);
     QStringList filters;
     filters << "*.m3u";
@@ -104,20 +87,20 @@ QStringList M3uInOut::getPlaylistNames() const {
     return names;
 }
 
-QString M3uInOut::m3uPath(const QString& name) const {
+QString PlaylistProvider::m3uPath(const QString& name) const {
     return Config::PLAYLISTDIR + "/" + name + ".m3u";
 }
 
-void M3uInOut::deletePlaylist(const QString& name) const {
+void PlaylistProvider::deletePlaylist(const QString& name) const {
     Q_ASSERT(QStringList(playlistNames()).contains(name));
     QFile::remove(m3uPath(name));
 }
 
-void M3uInOut::setPlaylistNames(const QStringList& list) {
+void PlaylistProvider::setPlaylistNames(const QStringList& list) {
     playlistNames_ = list;
     emit playlistNamesChanged();
 }
 
-QStringList M3uInOut::playlistNames() const {
+QStringList PlaylistProvider::playlistNames() const {
     return playlistNames_;
 }

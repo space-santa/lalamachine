@@ -29,7 +29,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #include "fileexporter.h"
 #include "lalatypes.h"
-#include "m3uinout.h"
+#include "playlistprovider.h"
 #include "metadataprovider.h"
 #include "musiclib.h"
 #include "playlistmodel.h"
@@ -39,7 +39,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 void registerQmlTypes() {
     qmlRegisterType<MetaDataProvider>("Lala", 1, 0, "Metadata");
-    qmlRegisterType<M3uInOut>("Lala", 1, 0, "M3uInOut");
+    qmlRegisterType<PlaylistProvider>("Lala", 1, 0, "PlaylistProvider");
     qmlRegisterType<Config>("Lala", 1, 0, "Config");
     qmlRegisterType<TimeConverter>("Lala", 1, 0, "TimeConverter");
     qmlRegisterType<MusicLib>("Lala", 1, 0, "MusicLib");
