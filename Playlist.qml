@@ -39,7 +39,6 @@ Rectangle {
     property url nowPlayingSource
     property string nowPlayingTitle: ""
     property bool repeatAll: false
-    property bool random: false
     property alias totalPlaytimeString: tc.timestring
 
     property int sortwhat: MusicLib.ARTIST
@@ -356,7 +355,7 @@ Rectangle {
         return rand
     }
 
-    function playNext() {
+    function playNext(random) {
         // Random has to be checked first because hasNext catches almost all.
         if (random) {
             console.log("playNext random")

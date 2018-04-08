@@ -37,6 +37,18 @@ Rectangle {
         lib.rescan()
     }
 
+    function playNext(random) {
+        titles.playNext(random)
+    }
+
+    function playPrevious() {
+        titles.playPrevious()
+    }
+
+    function playCurrentTrack() {
+        titles.playCurrentTrack()
+    }
+
     MusicLib {
         id: lib
 

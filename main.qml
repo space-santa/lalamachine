@@ -228,21 +228,21 @@ ApplicationWindow {
         id: forward_action
         shortcut: StandardKey.Forward
         tooltip: "Shortcut: " + shortcut
-        onTriggered: playlist.playNext()
+        onTriggered: playMusic.playNextTrack()
     }
 
     Action {
         id: back_action
         shortcut: StandardKey.Back
         tooltip: "Shortcut: " + shortcut
-        onTriggered: playlist.playPrevious()
+        onTriggered: playMusic.playPreviousTrack()
     }
 
     Action {
         id: play_selected_action
         shortcut: "ctrl+return"
         tooltip: "Shortcut: " + shortcut
-        onTriggered: playlist.playCurrentTrack()
+        onTriggered: playMusic.playCurrentTrack()
     }
 
     Action {
@@ -288,7 +288,31 @@ ApplicationWindow {
         property string currentArtist
 
         onPlayNext: {
-            playlist.playNext()
+            playNextTrack()
+        }
+
+        function playNextTrack() {
+            if (left_shelve.z > right_shelve.z) {
+                left_shelve.playNext(player_controls.random)
+            } else {
+                right_shelve.playNext(player_controls.random)
+            }
+        }
+
+        function playPreviousTrack() {
+            if (left_shelve.z > right_shelve.z) {
+                left_shelve.playPrevious()
+            } else {
+                right_shelve.playPrevious()
+            }
+        }
+
+        function playCurrentTrack() {
+            if (left_shelve.z > right_shelve.z) {
+                left_shelve.playCurrent()
+            } else {
+                right_shelve.playCurrent()
+            }
         }
 
         loops: player_controls.repeatOne
@@ -397,6 +421,18 @@ ApplicationWindow {
             anchors.bottom: parent.bottom
             color: "transparent"
 
+            function playNext(random) {
+                playlist.playNext(random)
+            }
+
+            function playPrevious() {
+                playlist.playPrevious()
+            }
+
+            function playCurrent() {
+                playlist.playCurrentTrack()
+            }
+
             Rectangle {
                 id: playlist_container
                 anchors.fill: parent
@@ -411,7 +447,6 @@ ApplicationWindow {
                     anchors.bottom: playlist_text.top
 
                     repeatAll: player_controls.repeatAll
-                    random: player_controls.random
 
                     nowPlayingSource: playMusic.source()
 
@@ -472,6 +507,18 @@ ApplicationWindow {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             color: "transparent"
+
+            function playNext(random) {
+                libview.playNext(random)
+            }
+
+            function playPrevious() {
+                libview.playPrevious()
+            }
+
+            function playCurrentTrack() {
+                libview.playCurrentTrack()
+            }
 
             LibraryView {
                 id: libview
