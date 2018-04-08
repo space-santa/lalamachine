@@ -235,9 +235,6 @@ QJsonArray PlaylistModel::toJson() const {
 
 void PlaylistModel::fromJson(const QJsonArray& json) {
     clear();
-
-    // This is the important part that saves heaps of time.
-    // Only do the beginInsertRows/endInsertRows/emit countChanged dance once.
     beginInsertRows(QModelIndex(), rowCount(), rowCount() + json.count());
 
     for (int i = 0; i < json.count(); ++i) {
