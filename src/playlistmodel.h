@@ -51,7 +51,6 @@ public:
     Q_INVOKABLE QJsonArray toJson() const;
     Q_INVOKABLE void fromJson(const QJsonArray& json);
     Q_INVOKABLE QStringList pathList() const;
-    Q_INVOKABLE void addTrackToNamedList(const QString& listName, const QJsonObject& track);
 
 signals:
     void countChanged();

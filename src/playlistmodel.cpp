@@ -256,14 +256,6 @@ QStringList PlaylistModel::pathList() const {
     return retval;
 }
 
-void PlaylistModel::addTrackToNamedList(const QString& listName, const QJsonObject& track) {
-    Q_UNUSED(listName)
-    Q_UNUSED(track)
-    // load the list
-    // append the track
-    // write the list
-}
-
 bool PlaylistModel::sortTrackAsc(Track t1, Track t2) {
     if (t1.album_ != t2.album_) {
         return sortAlbumAsc(t1, t2);

@@ -19,6 +19,7 @@ public:
     QStringList getPlaylistNames() const;
     Q_INVOKABLE QString playlistPath(const QString& name) const;
     Q_INVOKABLE void deletePlaylist(const QString& name) const;
+    Q_INVOKABLE void addTrackToNamedList(const QString& listName, const QJsonArray& tracks);
 
     void setPlaylistNames(const QStringList& list);
     QStringList playlistNames() const;

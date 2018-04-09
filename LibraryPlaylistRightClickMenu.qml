@@ -10,6 +10,7 @@ Menu {
     title: "track"
 
     signal addToPlaylist(string listname)
+    signal addToNamedPlaylist(string listname)
 
     MenuItem {
         text: "Add to current playlist"
@@ -24,6 +25,6 @@ Menu {
     PlaylistMenu {
         id: playlist_menu
         title: "Add to playlist"
-        onSelected: addToPlaylist(listname)
+        onSelected: addToNamedPlaylist(listname)
     }
 }

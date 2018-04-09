@@ -212,6 +212,8 @@ Rectangle {
 
                     color: "transparent"
 
+                    onAddTrackToNamedPlaylist: m3u.addTrackToNamedList(listname, tracks)
+
                     onPlay: lalaplayer.playTrack(path, title, artist)
                 }
 
