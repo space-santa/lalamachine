@@ -220,6 +220,18 @@ Rectangle {
         return indices
     }
 
+    function getSelectedTracks() {
+        var indices = getSelectedRowIndices()
+        var retval = []
+
+        for (var i = 0; i < indices.length; ++i) {
+            var row = indices[i]
+            retval.push(playlist_model.get(row))
+        }
+
+        return retval
+    }
+
     function clearSelection() {
         playlist_view.selection.clear()
     }
