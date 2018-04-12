@@ -449,10 +449,10 @@ ApplicationWindow {
                     anchors.right: parent.right
                     anchors.top: parent.top
                     anchors.bottom: playlist_text.top
-
                     repeatAll: player_controls.repeatAll
-
                     nowPlayingSource: playMusic.source()
+
+                    onAddTracksToNamedPlaylist: m3u.addTracksToNamedList(listname, tracks)
 
                     onStop: {
                         playMusic.stop()
