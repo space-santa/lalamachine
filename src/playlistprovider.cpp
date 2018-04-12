@@ -96,14 +96,15 @@ void PlaylistProvider::deletePlaylist(const QString& name) const {
     QFile::remove(playlistPath(name));
 }
 
-void PlaylistProvider::addTrackToNamedList(const QString& listName, const QJsonArray& track)
+void PlaylistProvider::addTracksToNamedList(const QString& listName, const QJsonArray& tracks)
 {
-    Q_UNUSED(listName)
-    Q_UNUSED(track)
-    throw std::runtime_error("Implement PlaylistModel::addTrackToNamedList");
-    // load the list
-    // append the track
-    // write the list
+    auto list = readPlaylist(listName);
+
+    for (const auto& thing : tracks) {
+        list.append(thing);
+    }
+
+    writePlaylist(listName, list);
 }
 
 void PlaylistProvider::setPlaylistNames(const QStringList& list) {
