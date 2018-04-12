@@ -96,7 +96,7 @@ void PlaylistProvider::deletePlaylist(const QString& name) const {
     QFile::remove(playlistPath(name));
 }
 
-void PlaylistProvider::addTracksToNamedList(const QString& listName, const QJsonArray& tracks)
+void PlaylistProvider::addTracksToNamedPlaylist(const QString& listName, const QJsonArray& tracks)
 {
     auto list = readPlaylist(listName);
 
