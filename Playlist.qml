@@ -41,7 +41,6 @@ Rectangle {
     property bool repeatAll: false
     property alias totalPlaytimeString: tc.timestring
 
-    property int sortwhat: MusicLib.ARTIST
     property bool sortAsc: true
 
     signal play(string path, string title, string artist)
