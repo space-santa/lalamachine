@@ -18,7 +18,6 @@ SOURCES += \
     src/exceptions.cpp \
     src/fileexporter.cpp \
     src/lalatypes.cpp \
-    src/m3uinout.cpp \
     src/main.cpp \
     src/metadataprovider.cpp \
     src/model.cpp \
@@ -29,7 +28,8 @@ SOURCES += \
     src/tags.cpp \
     src/theplayer.cpp \
     src/timeconverter.cpp \
-    src/track.cpp
+    src/track.cpp \
+    src/playlistprovider.cpp
 
 RESOURCES += qml.qrc
 
@@ -52,7 +52,6 @@ HEADERS += \
     src/exceptions.h \
     src/fileexporter.h \
     src/lalatypes.h \
-    src/m3uinout.h \
     src/metadataprovider.h \
     src/model.h \
     src/musiclib.h \
@@ -62,7 +61,8 @@ HEADERS += \
     src/tags.h \
     src/theplayer.h \
     src/timeconverter.h \
-    src/track.h
+    src/track.h \
+    src/playlistprovider.h
 
 OTHER_FILES += \
     README.md \

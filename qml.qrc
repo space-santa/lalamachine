@@ -15,7 +15,7 @@
         <file>PlayerControls.qml</file>
         <file>Playlist.qml</file>
         <file>PlaylistMenu.qml</file>
-        <file>RightClickMenu.qml</file>
+        <file>LibraryPlaylistRightClickMenu.qml</file>
         <file>SavePlaylistDialog.qml</file>
         <file>SettingsDialog.qml</file>
         <file>SliderStyleLala.qml</file>
@@ -28,6 +28,11 @@
         <file>main.qml</file>
         <file>MusicLibMenu.qml</file>
         <file>MainPlaylistMenu.qml</file>
+        <file>InfoMenu.qml</file>
+        <file>AutoPlaylistMenu.qml</file>
+        <file>MainPlaylist.qml</file>
+        <file>LibraryPlaylist.qml</file>
+        <file>MainPlaylistRightClickMenu.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/back.png</file>

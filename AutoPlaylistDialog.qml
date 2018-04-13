@@ -86,6 +86,29 @@ Dialog {
         return (name_field.text !== "" && apo1.valueText !== "")
     }
 
+    function createNew() {
+        open()
+        clearAll()
+    }
+
+    function editAutoPlaylist(listname, autoPlaylist) {
+        clearAll()
+
+        setApo1(autoPlaylist[0].andor, autoPlaylist[0].tag, autoPlaylist[0].operator,
+                    arr[0].value)
+
+        if (autoPlaylist[1]) {
+            setApo2(autoPlaylist[1].andor, autoPlaylist[1].tag, autoPlaylist[1].operator, autoPlaylist[1].value)
+        }
+
+        if (autoPlaylist[2]) {
+            setApo3(autoPlaylist[2].andor, autoPlaylist[2].tag, autoPlaylist[2].operator, autoPlaylist[2].value)
+        }
+
+        apName = listname
+        open()
+    }
+
     onRejected: {
         clearAll()
         close()

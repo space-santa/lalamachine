@@ -52,7 +52,7 @@ ApplicationWindow {
     property string miscPlaylistName: "cs1m090"
     property string currentPlaylist: playlist.currentName
     property Playlist mainPlaylist: playlist
-    property M3uInOut m3u: m3u
+    property PlaylistProvider m3u: m3u
     property Configuration config: config
 
     // lalaplayer is globally accessible to change volume, etc
@@ -145,88 +145,19 @@ ApplicationWindow {
             onOpenExportDialog: export_dialog.open()
             onOpenSettingsDialog: settings_dialog.open()
         }
-        Menu {
-            title: "Automatic Playlists"
-
-            PlaylistMenu {
-                title: "Open"
-                iconSource: "qrc:/images/images/open.png"
-                playlistnames: auto_playlist_manager.autoPlaylistNames
-
-                onSelected: {
-                    playlist.addAutoPlaylist(listname)
-                }
-            }
-
-            PlaylistMenu {
-                title: "Edit"
-                iconSource: "qrc:/images/images/edit.png"
-                playlistnames: auto_playlist_manager.autoPlaylistNames
-
-                onSelected: {
-                    apd.clearAll()
-                    var arr = auto_playlist_manager.getAutoPlaylist(listname)
-
-                    apd.setApo1(arr[0].andor, arr[0].tag, arr[0].operator,
-                                arr[0].value)
-
-                    if (arr[1]) {
-                        apd.setApo2(arr[1].andor, arr[1].tag, arr[1].operator,
-                                    arr[1].value)
-                    }
-
-                    if (arr[2]) {
-                        apd.setApo3(arr[2].andor, arr[2].tag, arr[2].operator,
-                                    arr[2].value)
-                    }
-
-                    apd.apName = listname
-                    apd.open()
-                }
-            }
-            MenuItem {
-                text: "Create"
-                iconSource: "qrc:/images/images/new.png"
-                onTriggered: {
-                    apd.open()
-                    apd.clearAll()
-                }
-            }
-            PlaylistMenu {
-                title: "Delete"
-                iconSource: "qrc:/images/images/delete.png"
-                playlistnames: auto_playlist_manager.autoPlaylistNames
-
-                onSelected: auto_playlist_manager.deleteAutoPlaylist(listname)
-            }
+        AutoPlaylistMenu {
+            autoPlaylistNames: auto_playlist_manager.autoPlaylistNames
+            onOpenAutoPlaylist: playlist.addAutoPlaylist(listname)
+            onEditAutoPlaylist: apd.editAutoPlaylist(
+                                    listname,
+                                    auto_playlist_manager.getAutoPlaylist(
+                                        listname))
+            onCreateNewAutoPlaylist: apd.createNew()
+            onDeleteAutoPlaylist: auto_playlist_manager.deleteAutoPlaylist(
+                                      listname)
         }
-
-        Menu {
-            title: "Info"
-
-            Menu {
-                title: "Help"
-                iconSource: "qrc:/images/images/help.png"
-                MenuItem {
-                    text: "Open the lalamachine wiki in your browser."
-                    onTriggered: Qt.openUrlExternally("https://github.com/space-santa/lalamachine/wiki")
-                }
-            }
-
-            Menu {
-                title: "Report Bug"
-                iconSource: "qrc:/images/images/bug.png"
-                MenuItem {
-                    text: "Create a new lalamachine issue in your browser."
-                    onTriggered: Qt.openUrlExternally("https://github.com/space-santa/lalamachine/issues")
-                }
-            }
-
-            MenuItem {
-                text: "About lalamachine"
-                iconSource: "qrc:/images/images/info.png"
-                onTriggered: infos.visible = true
-            }
+        InfoMenu {
+            onShowInfoDialog: infos.visible = true
         }
     }
 
@@ -263,7 +194,7 @@ ApplicationWindow {
         visible: false
     }
 
-    M3uInOut {
+    PlaylistProvider {
         id: m3u
     }
 
@@ -280,7 +211,7 @@ ApplicationWindow {
         id: del_action
         shortcut: StandardKey.Delete
         tooltip: "Shortcut: " + shortcut
-        onTriggered: playlist.deleteCurrentTrack()
+        onTriggered: playlist.deleteSelection()
     }
 
     Action {
@@ -301,21 +232,21 @@ ApplicationWindow {
         id: forward_action
         shortcut: StandardKey.Forward
         tooltip: "Shortcut: " + shortcut
-        onTriggered: playlist.playNext()
+        onTriggered: playMusic.playNextTrack()
     }
 
     Action {
         id: back_action
         shortcut: StandardKey.Back
         tooltip: "Shortcut: " + shortcut
-        onTriggered: playlist.playPrevious()
+        onTriggered: playMusic.playPreviousTrack()
     }
 
     Action {
         id: play_selected_action
         shortcut: "ctrl+return"
         tooltip: "Shortcut: " + shortcut
-        onTriggered: playlist.playCurrentTrack()
+        onTriggered: playMusic.playCurrentTrack()
     }
 
     Action {
@@ -361,7 +292,31 @@ ApplicationWindow {
         property string currentArtist
 
         onPlayNext: {
-            playlist.playNext()
+            playNextTrack()
+        }
+
+        function playNextTrack() {
+            if (left_shelve.z > right_shelve.z) {
+                left_shelve.playNext(player_controls.random)
+            } else {
+                right_shelve.playNext(player_controls.random)
+            }
+        }
+
+        function playPreviousTrack() {
+            if (left_shelve.z > right_shelve.z) {
+                left_shelve.playPrevious()
+            } else {
+                right_shelve.playPrevious()
+            }
+        }
+
+        function playCurrentTrack() {
+            if (left_shelve.z > right_shelve.z) {
+                left_shelve.playCurrent()
+            } else {
+                right_shelve.playCurrent()
+            }
         }
 
         loops: player_controls.repeatOne
@@ -470,23 +425,34 @@ ApplicationWindow {
             anchors.bottom: parent.bottom
             color: "transparent"
 
+            function playNext(random) {
+                playlist.playNext(random)
+            }
+
+            function playPrevious() {
+                playlist.playPrevious()
+            }
+
+            function playCurrent() {
+                playlist.playCurrentTrack()
+            }
+
             Rectangle {
                 id: playlist_container
                 anchors.fill: parent
                 color: "transparent"
 
-                Playlist {
+                MainPlaylist {
                     id: playlist
                     isLibrary: false
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.top: parent.top
                     anchors.bottom: playlist_text.top
-
                     repeatAll: player_controls.repeatAll
-                    random: player_controls.random
-
                     nowPlayingSource: playMusic.source()
+
+                    onAddTracksToNamedPlaylist: m3u.addTracksToNamedPlaylist(listname, tracks)
 
                     onStop: {
                         playMusic.stop()
@@ -546,6 +512,18 @@ ApplicationWindow {
             anchors.bottom: parent.bottom
             color: "transparent"
 
+            function playNext(random) {
+                libview.playNext(random)
+            }
+
+            function playPrevious() {
+                libview.playPrevious()
+            }
+
+            function playCurrentTrack() {
+                libview.playCurrentTrack()
+            }
+
             LibraryView {
                 id: libview
                 anchors.fill: parent
@@ -592,7 +570,6 @@ ApplicationWindow {
             lalaplayer.seek(pos)
         }
     }
-
 
     FileDialog {
         id: fileDialog

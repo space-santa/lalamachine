@@ -1,21 +1,4 @@
-/*
-Copyright 2015 Armin Zirkel
-
-This file is part of lalamachine.
-
-Lalamachine is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Lalamachine is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
-*/
+// This file is part of lalamachine. License is GPL-3.0 (or later).
 
 #include <QApplication>
 #include <QCommandLineParser>
@@ -29,7 +12,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #include "fileexporter.h"
 #include "lalatypes.h"
-#include "m3uinout.h"
+#include "playlistprovider.h"
 #include "metadataprovider.h"
 #include "musiclib.h"
 #include "playlistmodel.h"
@@ -39,7 +22,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 void registerQmlTypes() {
     qmlRegisterType<MetaDataProvider>("Lala", 1, 0, "Metadata");
-    qmlRegisterType<M3uInOut>("Lala", 1, 0, "M3uInOut");
+    qmlRegisterType<PlaylistProvider>("Lala", 1, 0, "PlaylistProvider");
     qmlRegisterType<Config>("Lala", 1, 0, "Config");
     qmlRegisterType<TimeConverter>("Lala", 1, 0, "TimeConverter");
     qmlRegisterType<MusicLib>("Lala", 1, 0, "MusicLib");

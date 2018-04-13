@@ -81,6 +81,16 @@ void PlaylistModel::append(Track track) {
     emit countChanged();
 }
 
+int PlaylistModel::getTotalPlaytime() {
+    int retval = 0;
+
+    for (const Track& track : this->list_) {
+        retval += track.length_;
+    }
+
+    return retval;
+}
+
 void PlaylistModel::move(int from, int to) {
     if (from == to) {
         return;
@@ -180,8 +190,7 @@ void PlaylistModel::sortRole(const QString& role, Qt::SortOrder order) {
                 func = &PlaylistModel::sortLengthDesc;
             }
             break;
-        // The length is displayed with the lengthStringRole, but we want to
-        // sort it by the actual integer value.
+        // The length is displayed with the lengthStringRole, but we want to sort it by the actual integer value.
         case LengthStringRole:
             if (order == Qt::AscendingOrder) {
                 func = &PlaylistModel::sortLengthAsc;
@@ -225,9 +234,6 @@ QJsonArray PlaylistModel::toJson() const {
 
 void PlaylistModel::fromJson(const QJsonArray& json) {
     clear();
-
-    // This is the important part that saves heaps of time.
-    // Only do the beginInsertRows/endInsertRows/emit countChanged dance once.
     beginInsertRows(QModelIndex(), rowCount(), rowCount() + json.count());
 
     for (int i = 0; i < json.count(); ++i) {
@@ -248,14 +254,6 @@ QStringList PlaylistModel::pathList() const {
     }
 
     return retval;
-}
-
-void PlaylistModel::addTrackToNamedList(const QString& listName, const QJsonObject& track) {
-    Q_UNUSED(listName)
-    Q_UNUSED(track)
-    // load the list
-    // append the track
-    // write the list
 }
 
 bool PlaylistModel::sortTrackAsc(Track t1, Track t2) {

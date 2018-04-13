@@ -37,6 +37,18 @@ Rectangle {
         lib.rescan()
     }
 
+    function playNext(random) {
+        titles.playNext(random)
+    }
+
+    function playPrevious() {
+        titles.playPrevious()
+    }
+
+    function playCurrentTrack() {
+        titles.playCurrentTrack()
+    }
+
     MusicLib {
         id: lib
 
@@ -110,10 +122,8 @@ Rectangle {
                 }
             }
 
-            RightClickMenu {
+            LibraryPlaylistRightClickMenu {
                 id: rcm
-
-                isLibrary: true
 
                 onAddToPlaylist: {
                     if (listname === "") {
@@ -192,7 +202,7 @@ Rectangle {
                     }
                 }
 
-                Playlist {
+                LibraryPlaylist {
                     id: titles
                     isLibrary: true
                     anchors.top: titles_filter_box.bottom
@@ -201,6 +211,8 @@ Rectangle {
                     anchors.bottom: titles_info.top
 
                     color: "transparent"
+
+                    onAddTracksToNamedPlaylist: m3u.addTracksToNamedPlaylist(listname, tracks)
 
                     onPlay: lalaplayer.playTrack(path, title, artist)
                 }

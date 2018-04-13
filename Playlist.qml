@@ -39,7 +39,6 @@ Rectangle {
     property url nowPlayingSource
     property string nowPlayingTitle: ""
     property bool repeatAll: false
-    property bool random: false
     property alias totalPlaytimeString: tc.timestring
 
     property int sortwhat: MusicLib.ARTIST
@@ -47,6 +46,7 @@ Rectangle {
 
     signal play(string path, string title, string artist)
     signal stop
+    signal showRightClickMenu
 
     // This setter is necessary to make sure that latest changes to the list are
     // remebered when a new playlist is loaded.
@@ -79,7 +79,7 @@ Rectangle {
 
     TimeConverter {
         id: tc
-        seconds: totalPlaytime()
+        seconds: playlist_model.totalPlaytime
     }
 
     FileExporter {
@@ -145,41 +145,7 @@ Rectangle {
     }
 
     function getPlaylistPath(name) {
-        return m3u.m3uPath(name)
-    }
-
-    function totalPlaytime() {
-        if (isLibrary) {
-            return lib.totalLength
-        } else {
-            var lenght = 0
-            for (var i = 0; i < playlist_model.count; ++i) {
-                lenght += playlist_model.get(i).length
-            }
-            return lenght
-        }
-    }
-
-    function deleteCurrentTrack() {
-        if (isLibrary) {
-            return
-        }
-
-        var indices = []
-
-        playlist_view.selection.forEach(function (rowIndex) {
-            indices.push(rowIndex)
-        })
-
-        playlist_view.selection.clear()
-
-        for (var i = indices.length - 1; i >= 0; --i) {
-            playlist_model.remove(indices[i])
-        }
-
-        if (playlistIsNamed()) {
-            writePlaylist(currentName)
-        }
+        return m3u.playlistPath(name)
     }
 
     function playCurrentTrack() {
@@ -195,6 +161,11 @@ Rectangle {
                 return
             }
         }
+    }
+
+    function addToPlaylist(listname) {
+        addSelectionToPlaylist(listname)
+        playlist_view.selection.clear()
     }
 
     // This function is adding the selection to the playlist.
@@ -237,6 +208,49 @@ Rectangle {
         }
 
         return list
+    }
+
+    function getSelectedRowIndices() {
+        var indices = []
+
+        playlist_view.selection.forEach(function (rowIndex) {
+            indices.push(rowIndex)
+        })
+
+        return indices
+    }
+
+    function getSelectedTracks() {
+        var indices = getSelectedRowIndices()
+        var retval = []
+
+        for (var i = 0; i < indices.length; ++i) {
+            var row = indices[i]
+            retval.push(playlist_model.get(row))
+        }
+
+        return retval
+    }
+
+    function clearSelection() {
+        playlist_view.selection.clear()
+    }
+
+    function removeRows(rows) {
+        for (var i = rows.length - 1; i >= 0; --i) {
+            playlist_model.remove(rows[i])
+        }
+    }
+
+    function deleteSelection() {
+        var indices = getSelectedRowIndices()
+        clearSelection()
+
+        removeRows(indices)
+
+        if (playlistIsNamed()) {
+            writePlaylist(currentName)
+        }
     }
 
     function exportPlaylist(path) {
@@ -353,7 +367,7 @@ Rectangle {
         return rand
     }
 
-    function playNext() {
+    function playNext(random) {
         // Random has to be checked first because hasNext catches almost all.
         if (random) {
             console.log("playNext random")
@@ -390,19 +404,6 @@ Rectangle {
 
     function pathList() {
         return playlist_model.pathList()
-    }
-
-    RightClickMenu {
-        id: rcm
-
-        isLibrary: playlist_container.isLibrary
-
-        onAddToPlaylist: {
-            addSelectionToPlaylist(listname)
-            playlist_view.selection.clear()
-        }
-
-        onDeleteSelection: deleteCurrentTrack()
     }
 
     PlaylistModel {
@@ -647,7 +648,7 @@ Rectangle {
 
         rowDelegate: TableViewDelegate {
             target: playlist_view
-            onRightClick: rcm.popup()
+            onRightClick: showRightClickMenu()
 
             onDoubleClicked: {
                 stop()

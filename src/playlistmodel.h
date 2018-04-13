@@ -11,6 +11,7 @@
 class PlaylistModel : public QAbstractListModel {
     Q_OBJECT
     Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
+    Q_PROPERTY(int totalPlaytime READ getTotalPlaytime NOTIFY countChanged)
 
 public:
     enum PlaylistRoles {
@@ -50,7 +51,6 @@ public:
     Q_INVOKABLE QJsonArray toJson() const;
     Q_INVOKABLE void fromJson(const QJsonArray& json);
     Q_INVOKABLE QStringList pathList() const;
-    Q_INVOKABLE void addTrackToNamedList(const QString& listName, const QJsonObject& track);
 
 signals:
     void countChanged();
@@ -63,6 +63,7 @@ private:
     QString albumFilter_;
 
     void append(Track track);
+    int getTotalPlaytime();
 
     static bool sortTrackAsc(Track t1, Track t2);
     static bool sortTrackDesc(Track t1, Track t2);
