@@ -113,17 +113,15 @@ ApplicationWindow {
         } else {
             config.lastPlaylist = currentPlaylist
         }
-        config.saveConfig()
 
-        // Now we are done, quit the app.
-        quit_action.trigger()
+        config.saveConfig()
     }
 
     Action {
         id: quit_action
         shortcut: "ctrl+q"
         tooltip: "Shortcut: " + shortcut
-        onTriggered: master.quit()
+        onTriggered: master.close()
     }
 
     menuBar: MenuBar {
