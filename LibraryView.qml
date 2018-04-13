@@ -58,7 +58,6 @@ Rectangle {
 
         titlePartialFilter: filter_text.text
 
-        what: titles.sortwhat
         sortAsc: titles.sortAsc
 
         onDisplayLibChanged: {
