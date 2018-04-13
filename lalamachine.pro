@@ -87,23 +87,25 @@ linux-g++: {
 }
 
 win32-g++: {
-    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib
-    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/ape
-    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/asf
-    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/flac
-    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/it
-    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/mod
-    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/mp4
-    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/mpc
-    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/mpeg
-    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/ogg
-    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/riff
-    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/s3m
-    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/toolkit
-    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/trueaudio
-    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/wavpack
-    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/taglib/xm
-    INCLUDEPATH += $$PWD/../../../../Code/taglib-1.11/build
-    CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../Code/taglib-1.11-mingw/ -ltag
-    CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../../../Code/taglib-1.11-mingw/libtag.dll
+    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib
+    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/ape
+    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/asf
+    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/flac
+    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/it
+    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/mod
+    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/mp4
+    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/mpc
+    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/mpeg
+    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/mpeg/id3v2
+    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/ogg
+    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/riff
+    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/s3m
+    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/toolkit
+    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/trueaudio
+    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/wavpack
+    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/xm
+    INCLUDEPATH += $$PWD/../taglib-1.11.1/build
+    INCLUDEPATH += $$PWD/../build-taglib-1.11.1-Desktop_Qt_5_10_1_MinGW_32bit-Default
+    CONFIG(release, debug|release): LIBS += $$PWD/../taglib-1.11.1/build/taglib/libtag.dll
+    #CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../taglib-1.11.1/taglib/build/taglib/libtag.dll
 }
