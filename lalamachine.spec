@@ -3,7 +3,7 @@ Version: 3.5.2
 Release: 1
 License: GPL-3.0+
 Summary: A music player
-Url: https://github.com/space-santa/lalamachin
+Url: https://github.com/space-santa/lalamachine
 Source0: %{name}-%{version}.tar.gz
 Requires: qt5-qtquickcontrols >= 5.4.1, qt5-qtmultimedia >= 5.4.1, taglib >= 1.11
 BuildRequires: qt5-qtbase-devel >= 5.4.1, qt5-qtmultimedia-devel >= 5.4.1 taglib-devel >= 1.11
