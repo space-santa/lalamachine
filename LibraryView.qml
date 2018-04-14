@@ -34,7 +34,9 @@ Rectangle {
     signal addTrack(string path)
 
     function rescan() {
-        lib.rescan()
+        if (!libview.scanInProgress) {
+            lib.rescan()
+        }
     }
 
     function playNext(random) {

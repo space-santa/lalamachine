@@ -527,12 +527,6 @@ ApplicationWindow {
                 anchors.fill: parent
                 library: config.libPath
 
-                function rescan() {
-                    if (!libview.scanInProgress) {
-                        libview.rescan()
-                    }
-                }
-
                 onAddTrack: {
                     playlist.add(path)
                     playlist.updateAndSave()
