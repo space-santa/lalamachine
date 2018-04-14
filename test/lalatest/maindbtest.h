@@ -1,17 +1,9 @@
-#ifndef MAINDBTEST_H
-#define MAINDBTEST_H
+#pragma once
 
 #include <QObject>
 
-class MainDBTest : public QObject
-{
+class MainDBTest : public QObject {
     Q_OBJECT
-public:
-    explicit MainDBTest(QObject *parent = nullptr);
-
-signals:
-
-public slots:
+private slots:
+    void testExec();
 };
-
-#endif // MAINDBTEST_H

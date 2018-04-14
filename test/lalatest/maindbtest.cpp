@@ -1,6 +1,10 @@
 #include "maindbtest.h"
+#include <QTest>
+#include "../../src/MainDB.h"
 
-MainDBTest::MainDBTest(QObject *parent) : QObject(parent)
+void MainDBTest::testExec()
 {
-
+    MainDB db;
+    QString query("PRAGMA table_info(musiclib)");
+    db.exec(query);
 }

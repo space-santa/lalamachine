@@ -2,6 +2,7 @@
 #include <QTest>
 #include "QueryBuilder.test.h"
 #include "lalatest.h"
+#include "maindbtest.h"
 #include "model.test.h"
 #include "musiclibscanner.test.h"
 #include "testautoplaylist.h"
@@ -21,6 +22,9 @@ int main() {
 
     ModelTest modelTest;
     QTest::qExec(&modelTest);
+
+    MainDBTest mainDBTest;
+    QTest::qExec(&mainDBTest);
 
     return 0;
 }

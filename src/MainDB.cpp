@@ -14,9 +14,15 @@ MainDB::~MainDB() {
     db.close();
 }
 
+#include <QDebug>
 std::unique_ptr<IQueryResult> MainDB::exec(const QString& query) {
-    auto result = db.exec(query);
+    QSqlQuery result;
+    result.exec(query);
     auto error = result.lastError();
+
+    while (result.isActive()) {
+        qDebug() << "query" << query << "still active";
+    }
 
     if (error.isValid()) {
         throw QueryError(error.text().toStdString());

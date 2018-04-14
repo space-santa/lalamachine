@@ -10,3 +10,4 @@ Makefile
 **.swp
 tags
 .vscode
+test/build-*

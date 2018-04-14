@@ -62,6 +62,8 @@ Tags MetaDataProvider::metaData(const QUrl& path) const {
         TagLib::Tag* tag = f.tag();
         tc.clear();
         tc.setSeconds(f.audioProperties()->length());
+        auto tags = Tags(tag, tmp, tmp, f.audioProperties()->length(), tc.toString(), discNumberOfMp3(tmp));
+        qDebug() << "++++ moar debug +++" << tags.toJson();
         return Tags(tag, tmp, tmp, f.audioProperties()->length(), tc.toString(), discNumberOfMp3(tmp));
     }
 

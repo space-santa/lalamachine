@@ -8,10 +8,6 @@ QT       += testlib qml quick widgets sql concurrent
 
 CONFIG += c++11
 
-INCLUDEPATH += /usr/include/taglib
-
-LIBS += -ltag
-
 TARGET = tst_lalatesttest
 CONFIG   += console
 CONFIG   -= app_bundle
@@ -28,7 +24,8 @@ SOURCES += \
     ../../src/config.cpp \
     ../../src/exceptions.cpp \
     ../../src/lalatypes.cpp \
-    ../../src/m3uinout.cpp \
+    ../../src/playlistprovider.cpp \
+    ../../src/MainDB.cpp \
     ../../src/metadataprovider.cpp \
     ../../src/model.cpp \
     ../../src/musiclibscanner.cpp \
@@ -41,7 +38,8 @@ SOURCES += \
     model.test.mock.cpp \
     musiclibscanner.test.cpp \
     musiclibscanner.test.mock.cpp \
-    testautoplaylist.cpp
+    testautoplaylist.cpp \
+    maindbtest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
@@ -58,7 +56,8 @@ HEADERS += \
     ../../src/config.h \
     ../../src/exceptions.h \
     ../../src/lalatypes.h \
-    ../../src/m3uinout.h \
+    ../../src/playlistprovider.h \
+    ../../src/MainDB.h \
     ../../src/metadataprovider.h \
     ../../src/model.h \
     ../../src/musiclibscanner.h \
@@ -70,7 +69,8 @@ HEADERS += \
     model.test.mock.h \
     musiclibscanner.test.h \
     musiclibscanner.test.mock.h \
-    testautoplaylist.h
+    testautoplaylist.h \
+    maindbtest.h
 
 unix!macx: {
     INCLUDEPATH += /usr/include/taglib
@@ -81,3 +81,29 @@ macx: {
     INCLUDEPATH += /usr/local/include/taglib
     LIBS += -L/usr/local/lib/ -ltag
 }
+
+win32-g++: {
+    INCLUDEPATH += $$PWD/../../../taglib-1.11.1/taglib
+    INCLUDEPATH += $$PWD/../../../taglib-1.11.1/taglib/ape
+    INCLUDEPATH += $$PWD/../../../taglib-1.11.1/taglib/asf
+    INCLUDEPATH += $$PWD/../../../taglib-1.11.1/taglib/flac
+    INCLUDEPATH += $$PWD/../../../taglib-1.11.1/taglib/it
+    INCLUDEPATH += $$PWD/../../../taglib-1.11.1/taglib/mod
+    INCLUDEPATH += $$PWD/../../../taglib-1.11.1/taglib/mp4
+    INCLUDEPATH += $$PWD/../../../taglib-1.11.1/taglib/mpc
+    INCLUDEPATH += $$PWD/../../../taglib-1.11.1/taglib/mpeg
+    INCLUDEPATH += $$PWD/../../../taglib-1.11.1/taglib/mpeg/id3v2
+    INCLUDEPATH += $$PWD/../../../taglib-1.11.1/taglib/ogg
+    INCLUDEPATH += $$PWD/../../../taglib-1.11.1/taglib/riff
+    INCLUDEPATH += $$PWD/../../../taglib-1.11.1/taglib/s3m
+    INCLUDEPATH += $$PWD/../../../taglib-1.11.1/taglib/toolkit
+    INCLUDEPATH += $$PWD/../../../taglib-1.11.1/taglib/trueaudio
+    INCLUDEPATH += $$PWD/../../../taglib-1.11.1/taglib/wavpack
+    INCLUDEPATH += $$PWD/../../../taglib-1.11.1/taglib/xm
+    INCLUDEPATH += $$PWD/../../../taglib-1.11.1/build
+    INCLUDEPATH += $$PWD/../../../build-taglib-1.11.1-Desktop_Qt_5_10_1_MinGW_32bit-Default
+    CONFIG(release, debug|release): LIBS += $$PWD/../../../taglib-1.11.1/build/taglib/libtag.dll
+}
+
+DISTFILES += \
+    musiclib.sq3

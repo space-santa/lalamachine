@@ -2,6 +2,7 @@
 #include <QDate>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QDebug>
 #include "QueryBuilder.h"
 #include "config.h"
 #include "exceptions.h"
@@ -22,7 +23,8 @@ void ScannerDB::transaction() {
 
 void ScannerDB::addQuery(const Tags& tags) {
     QString date = QDateTime::currentDateTime().toString("yyyy-MM-dd");
-    QString error = db.exec(getTrackQuery(tags, date) + ";\n").lastError().text().trimmed();
+    QString query = getTrackQuery(tags, date) + ";\n";
+    QString error = db.exec(query).lastError().text().trimmed();
 
     if (!error.isEmpty()) {
         throw AddQueryError(error.toStdString());
@@ -30,7 +32,10 @@ void ScannerDB::addQuery(const Tags& tags) {
 }
 
 void ScannerDB::commit() {
-    db.commit();
+    qDebug() << "+++ commit +++";
+    qDebug() << db.commit();
+    qDebug() << db.lastError();
+    qDebug() << "+++ end commit +++";
 }
 
 void ScannerDB::close() {

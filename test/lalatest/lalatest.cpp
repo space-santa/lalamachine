@@ -8,7 +8,7 @@
 #include "../../src/autoplaylistobject.h"
 #include "../../src/config.h"
 #include "../../src/lalatypes.h"
-#include "../../src/m3uinout.h"
+#include "../../src/playlistmodel.h"
 #include "../../src/timeconverter.h"
 
 QString LalaTest::backupFileName(QString path) {
