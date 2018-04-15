@@ -29,7 +29,8 @@ SOURCES += \
     src/theplayer.cpp \
     src/timeconverter.cpp \
     src/track.cpp \
-    src/playlistprovider.cpp
+    src/playlistprovider.cpp \
+    src/DatabaseSetup.cpp
 
 RESOURCES += qml.qrc
 
@@ -62,7 +63,8 @@ HEADERS += \
     src/theplayer.h \
     src/timeconverter.h \
     src/track.h \
-    src/playlistprovider.h
+    src/playlistprovider.h \
+    src/DatabaseSetup.h
 
 OTHER_FILES += \
     README.md \

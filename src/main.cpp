@@ -8,6 +8,7 @@
 #include <QSplashScreen>
 #include <memory>
 
+#include "DatabaseSetup.h"
 #include "autoplaylistmanager.h"
 #include "config.h"
 #include "fileexporter.h"
@@ -44,6 +45,8 @@ int main(int argc, char* argv[]) {
     QPixmap logo(":/images/images/logo/logo.png");
     QSplashScreen splash(logo);
     splash.show();
+
+    DatabaseSetup databaseSetup;
 
     registerQmlTypes();
     // INFO: Because we use an ApplicationWindow we cannot use a QQuickView.

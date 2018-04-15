@@ -30,3 +30,8 @@ class TableNotFoundError : public std::runtime_error {
 public:
     TableNotFoundError(const std::string& tableName);
 };
+
+class DatabaseCommitError : public std::runtime_error {
+public:
+    DatabaseCommitError(const std::string& text);
+};

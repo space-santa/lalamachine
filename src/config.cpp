@@ -37,6 +37,8 @@ const QString Config::CONFIGPATH = Config::LALADIR + "/config.json";
 const QString Config::AUTOPLAYLISTDIR = Config::LALADIR + "/autoplaylists";
 const QString Config::PLAYLISTDIR = Config::LALADIR + "/playlists";
 const QString Config::MUSICLIBDB = Config::LALADIR + "/musiclib.sq3";
+const QString Config::SCANNERDB_NAME = "scanner";
+const QString Config::MAINDB_NAME = "main";
 
 Config::Config(QObject* parent) : QObject(parent) {
     QDir dir(Config::LALADIR);

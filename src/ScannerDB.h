@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QSqlDatabase>
 #include <QString>
 #include "IScannerDB.h"
 
@@ -18,6 +17,5 @@ public:
 
 private:
     QString getTrackQuery(const Tags& track, const QString& date);
-    QString databaseName;
     QStringList queryList;
 };

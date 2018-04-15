@@ -43,6 +43,8 @@ public:
     static const QString PLAYLISTDIR;
     static const QString AUTOPLAYLISTDIR;
     static const QString MUSICLIBDB;
+    static const QString SCANNERDB_NAME;
+    static const QString MAINDB_NAME;
 
     Q_INVOKABLE void saveConfig();
     void loadConfig();
