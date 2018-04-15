@@ -52,7 +52,6 @@ class MusicLib : public QObject {
 
 public:
     MusicLib(QObject* parent = 0);
-    ~MusicLib();
 
     static const QString ALL_FILTER;
 
@@ -121,14 +120,7 @@ signals:
     void titlePartialFilterChanged();
 
 private:
-    // scanner_ MUST be a raw pointer. When this is moved to a new thread, that
-    // QThread becomes the parent. When the parent dies so does the child.
-    // If this is then not a raw pointer a double free happens, because
-    // the thread and this is trying to destroy the scanner.
-    MusicLibScanner* scanner_;
-    QThread scannerThread_;
-
-    QSharedPointer<QMutex> mutex_;
+    std::shared_ptr<MusicLibScanner> scanner_;
     Model model;
 
     bool sortAsc_;
@@ -148,6 +140,7 @@ private:
     QString lastDisplayLibQuery_;
 
     QFutureWatcher<QPair<int, QJsonArray> > watcher_;
+    QFutureWatcher<void> scannerWatcher;
 
     bool checkVal(const QString& check, const QString& val) const;
 
@@ -163,6 +156,5 @@ private slots:
 
     void scanStarted();
 
-    void scanUpdate();
     void onDisplayFutureFinished();
 };

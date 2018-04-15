@@ -41,13 +41,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 MusicLib::MusicLib(QObject* parent) : QObject(parent), model(std::unique_ptr<IMainDB>(new MainDB())) {
     init();
-    scanner_->moveToThread(&scannerThread_);
 
-    connect(&scannerThread_, &QThread::finished, scanner_, &QObject::deleteLater);
-    connect(this, &MusicLib::startScan, scanner_, &MusicLibScanner::scanLib);
-    connect(scanner_, &MusicLibScanner::scanComplete, this, &MusicLib::scanFinished);
-    connect(scanner_, &MusicLibScanner::scanStarted, this, &MusicLib::scanStarted);
-    connect(scanner_, &MusicLibScanner::trackAdded, this, &MusicLib::scanUpdate);
     connect(this, &MusicLib::musicLibChanged, this, &MusicLib::setDisplayLib);
     connect(this, &MusicLib::titlePartialFilterChanged, this, &MusicLib::setDisplayLib);
     connect(this, &MusicLib::titlePartialFilterChanged, this, &MusicLib::setGenreList);
@@ -63,20 +57,17 @@ MusicLib::MusicLib(QObject* parent) : QObject(parent), model(std::unique_ptr<IMa
     connect(this, &MusicLib::genreFilterChanged, this, &MusicLib::setAlbumList);
     connect(this, &MusicLib::artistFilterChanged, this, &MusicLib::setAlbumList);
     connect(&watcher_, &QFutureWatcher<QSqlQuery>::finished, this, &MusicLib::onDisplayFutureFinished);
+    connect(&scannerWatcher, &QFutureWatcher<QSqlQuery>::finished, this, &MusicLib::scanFinished);
 
     setGenreList();
 }
 
-MusicLib::~MusicLib() {
-    scannerThread_.quit();
-    scannerThread_.wait(5000);
-}
-
 void MusicLib::init() {
-    scanner_ = new MusicLibScanner(std::unique_ptr<IScannerDB>(new ScannerDB()),
-                                   std::unique_ptr<IDirWalker>(new DirWalker()),
-                                   std::unique_ptr<IMetaDataProvider>(new MetaDataProvider()));
-    mutex_ = QSharedPointer<QMutex>(new QMutex());
+    scanner_ = std::shared_ptr<MusicLibScanner>(
+        new MusicLibScanner(std::unique_ptr<IScannerDB>(new ScannerDB()),
+                            std::unique_ptr<IDirWalker>(new DirWalker()),
+                            std::unique_ptr<IMetaDataProvider>(new MetaDataProvider())));
+
     sortAsc_ = true;
     scanning_ = false;
     what_ = QueryBuilder::ARTIST;
@@ -298,16 +289,20 @@ QJsonObject MusicLib::getMetadataForMrl(const QUrl& mrl) const {
 }
 
 void MusicLib::rescan() {
-    qDebug() << "emitting rescan" << libPath();
-
-    if (!scannerThread_.isRunning()) {
-        scannerThread_.start();
+    if (scanning()) {
+        qDebug() << "Scan is already in progress.";
+        return;
     }
+
+    qDebug() << "scanning" << libPath();
 
     model.copyLibToTmp();
     model.clearMusicLib();
 
-    emit startScan(libPath());
+    scanStarted();
+
+    auto future = QtConcurrent::run(MusicLibScanner::scan, scanner_, libPath());
+    scannerWatcher.setFuture(future);
 }
 
 void MusicLib::setGenreList() {
@@ -333,14 +328,6 @@ void MusicLib::setAlbumList() {
 
 void MusicLib::scanStarted() {
     setScanning(true);
-}
-
-void MusicLib::scanUpdate() {
-    lastDisplayLibQuery_ = "";
-    setDisplayLib();
-    setGenreList();
-    setArtistList();
-    setAlbumList();
 }
 
 void MusicLib::scanFinished() {

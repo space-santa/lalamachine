@@ -27,12 +27,12 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 MusicLibScanner::MusicLibScanner(std::unique_ptr<IScannerDB> scanDb,
                                  std::unique_ptr<IDirWalker> dirWalker,
-                                 std::unique_ptr<IMetaDataProvider> metaDataProvider,
-                                 QObject* parent)
-    : QObject(parent),
-      scanDb(std::move(scanDb)),
-      dirWalker(std::move(dirWalker)),
-      metaDataProvider(std::move(metaDataProvider)) {
+                                 std::unique_ptr<IMetaDataProvider> metaDataProvider)
+    : scanDb(std::move(scanDb)), dirWalker(std::move(dirWalker)), metaDataProvider(std::move(metaDataProvider)) {
+}
+
+void MusicLibScanner::scan(std::shared_ptr<MusicLibScanner> scanner, const QString& path) {
+    scanner->scanLib(path);
 }
 
 void MusicLibScanner::addPathsToScannerDB(const QStringList& paths) {
@@ -57,7 +57,6 @@ void MusicLibScanner::scanLib(const QString& path) {
         return;
     }
 
-    emit scanStarted();
     scanDb->transaction();
     addPathsToScannerDB(fileList);
 
@@ -67,6 +66,4 @@ void MusicLibScanner::scanLib(const QString& path) {
         qDebug() << "Can't open dbase..." << error.what();
         return;
     }
-
-    emit scanComplete();
 }

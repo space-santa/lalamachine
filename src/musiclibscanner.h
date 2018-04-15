@@ -19,7 +19,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include <QObject>
 #include <memory>
 
 #include "IDirWalker.h"
@@ -27,28 +26,16 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "IScannerDB.h"
 #include "tags.h"
 
-/*!
- * \brief The MusicLibScanner class is the worker class that scans the library
- * in a dedicated thread. After it is moved to its own thread, calling the
- * scanLib() slot will trigger a scan.
- */
-class MusicLibScanner : public QObject {
-    Q_OBJECT
+class MusicLibScanner {
     friend class MusicLibScannerTest;
 
 public:
     MusicLibScanner(std::unique_ptr<IScannerDB> scanDb,
                     std::unique_ptr<IDirWalker> dirWalker,
-                    std::unique_ptr<IMetaDataProvider> metaDataProvider,
-                    QObject* parent = 0);
+                    std::unique_ptr<IMetaDataProvider> metaDataProvider);
 
-public slots:
+    static void scan(std::shared_ptr<MusicLibScanner> scanner, const QString& path);
     void scanLib(const QString& path);
-
-signals:
-    void scanStarted();
-    void scanComplete();
-    void trackAdded();
 
 private:
     std::unique_ptr<IScannerDB> scanDb;
