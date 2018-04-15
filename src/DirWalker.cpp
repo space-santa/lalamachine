@@ -15,7 +15,6 @@ const QStringList DirWalker::getMusicFileList(const QString& rootPath) const {
 
     while (it.hasNext()) {
         QString line = it.next();
-        qDebug() << line;
 
         if (isMusicFile(line)) {
             fileList << line;
