@@ -50,11 +50,6 @@ public:
     Q_INVOKABLE QJsonArray getTracks(const QString name) const;
     Q_INVOKABLE QJsonArray getAutoPlaylist(const QString name) const;
 
-    /*!
-     * \brief saveAutoPlaylist saves an AutoPlaylist
-     * \param name The name of the list.
-     * \param args A JSON array of AutoPlalistObject-JSON-objects.
-     */
     Q_INVOKABLE void saveAutoPlaylist(const QString& name, const QJsonArray& args);
     Q_INVOKABLE void deleteAutoPlaylist(const QString& name);
 

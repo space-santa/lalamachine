@@ -36,7 +36,6 @@ QString AutoPlaylistManager::currentList() const {
 }
 
 void AutoPlaylistManager::setCurrentList(const QString& val) {
-    // The name must have been selected from this list, so sanity check.
     Q_ASSERT(autoPlaylistNames().contains(val));
     currentList_ = val;
     emit currentListChanged();
