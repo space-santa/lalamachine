@@ -8,9 +8,6 @@
 #include "config.h"
 #include "exceptions.h"
 
-ScannerDB::ScannerDB() {
-}
-
 void ScannerDB::open() {
     qDebug() << "ScannerDB::open => this does nothing";
 }

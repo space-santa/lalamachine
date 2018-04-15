@@ -7,8 +7,6 @@ class QSqlDatabase;
 
 class ScannerDB : public IScannerDB {
 public:
-    ScannerDB();
-
     void open();
     void transaction();
     void addQuery(const Tags& tags);
