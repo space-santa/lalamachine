@@ -72,14 +72,14 @@ HEADERS += \
     testautoplaylist.h \
     maindbtest.h
 
-unix!macx: {
-    INCLUDEPATH += /usr/include/taglib
-    LIBS += -ltag
-}
-
 macx: {
     INCLUDEPATH += /usr/local/include/taglib
     LIBS += -L/usr/local/lib/ -ltag
+}
+
+linux-g++: {
+    INCLUDEPATH += /usr/include/taglib
+    LIBS += -ltag
 }
 
 win32-g++: {
