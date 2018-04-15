@@ -40,7 +40,7 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
-* Sat Apr 15 2018 space-santa 3.6.1-1
+* Sun Apr 15 2018 space-santa 3.6.1-1
   * Bugfix: Scanning and rescanning the library works now reliably.
   * Bugfix: No more crashes on closing after scan.
 
