@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QSqlDatabase>
 #include "IMainDB.h"
 
 class MainDB : public IMainDB {
@@ -11,7 +10,4 @@ public:
     QStringList tables();
     void transaction();
     void commit();
-
-private:
-    QSqlDatabase db;
 };

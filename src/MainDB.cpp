@@ -1,16 +1,18 @@
 #include "MainDB.h"
+#include <QSqlDatabase>
 #include <QSqlError>
 #include "QueryResult.h"
 #include "config.h"
 #include "exceptions.h"
 
 MainDB::MainDB() {
-    db = QSqlDatabase::addDatabase("QSQLITE");
+    auto db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(Config::MUSICLIBDB);
     db.open();
 }
 
 MainDB::~MainDB() {
+    auto db = QSqlDatabase::database();
     db.close();
 }
 
@@ -19,10 +21,7 @@ std::unique_ptr<IQueryResult> MainDB::exec(const QString& query) {
     QSqlQuery result;
     result.exec(query);
     auto error = result.lastError();
-
-    while (result.isActive()) {
-        qDebug() << "query" << query << "still active";
-    }
+    qDebug() << "query" << query << "still active";
 
     if (error.isValid()) {
         throw QueryError(error.text().toStdString());
@@ -33,13 +32,16 @@ std::unique_ptr<IQueryResult> MainDB::exec(const QString& query) {
 }
 
 QStringList MainDB::tables() {
+    auto db = QSqlDatabase::database();
     return db.tables();
 }
 
 void MainDB::transaction() {
+    auto db = QSqlDatabase::database();
     db.transaction();
 }
 
 void MainDB::commit() {
+    auto db = QSqlDatabase::database();
     db.commit();
 }
