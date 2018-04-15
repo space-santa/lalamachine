@@ -1,37 +1,47 @@
 #include "ScannerDB.h"
 #include <QDate>
+#include <QDebug>
 #include <QSqlError>
 #include <QSqlQuery>
-#include <QDebug>
 #include "QueryBuilder.h"
 #include "config.h"
 #include "exceptions.h"
 
-ScannerDB::ScannerDB() : db(QSqlDatabase::addDatabase("QSQLITE", "scanner")) {
-    db.setDatabaseName(Config::MUSICLIBDB);
+ScannerDB::ScannerDB() : databaseName("scanner") {
 }
 
 void ScannerDB::open() {
-    if (!db.open()) {
-        throw OpenDatabaseError(db.lastError().text().toStdString());
-    }
+    qDebug() << "this does nothing";
 }
 
 void ScannerDB::transaction() {
-    db.transaction();
+    queryList.clear();
 }
 
 void ScannerDB::addQuery(const Tags& tags) {
     QString date = QDateTime::currentDateTime().toString("yyyy-MM-dd");
     QString query = getTrackQuery(tags, date) + ";\n";
-    QString error = db.exec(query).lastError().text().trimmed();
-
-    if (!error.isEmpty()) {
-        throw AddQueryError(error.toStdString());
-    }
+    queryList << query;
 }
 
 void ScannerDB::commit() {
+    auto db = QSqlDatabase::addDatabase("QSQLITE", databaseName);
+    db.setDatabaseName(Config::MUSICLIBDB);
+
+    if (!db.open()) {
+        throw OpenDatabaseError(db.lastError().text().toStdString());
+    }
+
+    db.transaction();
+
+    for (const auto& query : queryList) {
+        QString error = db.exec(query).lastError().text().trimmed();
+
+        if (!error.isEmpty()) {
+            throw AddQueryError(error.toStdString());
+        }
+    }
+
     qDebug() << "+++ commit +++";
     qDebug() << db.commit();
     qDebug() << db.lastError();
@@ -39,6 +49,7 @@ void ScannerDB::commit() {
 }
 
 void ScannerDB::close() {
+    auto db = QSqlDatabase::database(databaseName);
     db.close();
 }
 

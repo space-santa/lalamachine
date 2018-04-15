@@ -17,6 +17,7 @@ public:
     void close();
 
 private:
-    QSqlDatabase db;
     QString getTrackQuery(const Tags& track, const QString& date);
+    QString databaseName;
+    QStringList queryList;
 };
