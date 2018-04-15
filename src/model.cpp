@@ -125,31 +125,26 @@ void Model::clearMusicLib() {
     }
 }
 
-void Model::setDateAddedForMrl(const QString& dateAdded, const QString& mrl) {
+void Model::setDateAddedForMrl(const QSqlDatabase& db, const QString& dateAdded, const QString& mrl) {
     QString query("UPDATE musiclib SET dateAdded='%1' WHERE mrl='%2'");
 
     try {
-        mainDB->exec(query.arg(dateAdded).arg(QueryBuilder::escapeString(mrl)));
+        db.exec(query.arg(dateAdded).arg(QueryBuilder::escapeString(mrl)));
     } catch (const QueryError& error) {
         qDebug() << error.what();
     }
 }
 
-QString Model::getDateAddedFromTmpLibForMrl(const QString& mrl) {
-    std::unique_ptr<IQueryResult> tmprec;
-    try {
-        tmprec =
-            mainDB->exec(QString("SELECT dateAdded FROM tmplib WHERE mrl='%1'").arg(QueryBuilder::escapeString(mrl)));
-    } catch (const QueryError& error) {
-        qDebug() << error.what();
-    }
+QString Model::getDateAddedFromTmpLibForMrl(const QSqlDatabase& db, const QString& mrl) {
+    auto tmprec =
+            db.exec(QString("SELECT dateAdded FROM tmplib WHERE mrl='%1'").arg(QueryBuilder::escapeString(mrl)));
 
-    tmprec->first();
-    return tmprec->value("dateAdded").toString();
+    tmprec.first();
+    return tmprec.value("dateAdded").toString();
 }
 
-QStringList Model::getTablesToRestoreMetaData() const {
-    auto tables = mainDB->tables();
+void Model::checkIfTablesExist(const QSqlDatabase& db) const {
+    auto tables = db.tables();
 
     if (!tables.contains("musiclib")) {
         throw TableNotFoundError("musiclib");
@@ -157,29 +152,28 @@ QStringList Model::getTablesToRestoreMetaData() const {
     if (!tables.contains("tmplib")) {
         throw TableNotFoundError("tmplib");
     }
-
-    return tables;
 }
 
 void Model::restoreMetaData() {
-    auto tables = getTablesToRestoreMetaData();
-    auto records = mainDB->exec("SELECT * FROM musiclib");
+    auto db = QSqlDatabase::database(Config::MAINDB_NAME);
+    checkIfTablesExist(db);
+    auto records = db.exec("SELECT * FROM musiclib");
 
-    mainDB->transaction();
-    while (records->next()) {
-        QString mrl = records->value("mrl").toString();
-        QString tmpdate = getDateAddedFromTmpLibForMrl(mrl);
+    db.transaction();
+    while (records.next()) {
+        QString mrl = records.value("mrl").toString();
+        QString tmpdate = getDateAddedFromTmpLibForMrl(db, mrl);
 
         if (tmpdate.isEmpty()) {
             continue;
         }
 
-        setDateAddedForMrl(tmpdate, mrl);
+        setDateAddedForMrl(db, tmpdate, mrl);
     }
-    mainDB->commit();
+    db.commit();
 
     try {
-        mainDB->exec("DROP TABLE tmplib");
+        db.exec("DROP TABLE tmplib");
     } catch (const QueryError& error) {
         qDebug() << error.what();
     }

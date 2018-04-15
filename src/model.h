@@ -57,7 +57,7 @@ private:
     void init();
     static QStringList resultToList(const std::unique_ptr<IQueryResult>& result, const QString& what);
     void updateTable();
-    void setDateAddedForMrl(const QString& dateAdded, const QString& mrl);
-    QString getDateAddedFromTmpLibForMrl(const QString& mrl);
-    QStringList getTablesToRestoreMetaData() const;
+    void setDateAddedForMrl(const QSqlDatabase& db, const QString& dateAdded, const QString& mrl);
+    QString getDateAddedFromTmpLibForMrl(const QSqlDatabase& db, const QString& mrl);
+    void checkIfTablesExist(const QSqlDatabase& db) const;
 };
