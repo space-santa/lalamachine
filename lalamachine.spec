@@ -1,5 +1,5 @@
 Name: lalamachine
-Version: 3.6.0
+Version: 3.6.1
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -40,6 +40,10 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Sat Apr 15 2018 space-santa 3.6.1-1
+  * Bugfix: Scanning and rescanning the library works now reliably.
+  * Bugfix: No more crashes on closing after scan.
+
 * Fri Apr 13 2018 space-santa 3.6.0-1
   * Adding tracks to named playlists works now.
   * Behind the scenes refactoring to make everything better.

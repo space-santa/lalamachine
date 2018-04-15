@@ -76,7 +76,8 @@ OTHER_FILES += \
 
 DISTFILES += \
     LICENSE \
-    changelog
+    changelog \
+    package.json
 
 ICON = ./images/lala-icon.png.icns
 
