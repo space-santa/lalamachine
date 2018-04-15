@@ -41,9 +41,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 MusicLib::MusicLib(QObject* parent) : QObject(parent), model(std::unique_ptr<IMainDB>(new MainDB())) {
     init();
-    // This moveToThread is making the thread the parent of the scanner_.
-    // Therefor it is vital that the scanner_ is a raw pointer, or double free
-    // happens.
     scanner_->moveToThread(&scannerThread_);
 
     connect(&scannerThread_, &QThread::finished, scanner_, &QObject::deleteLater);
