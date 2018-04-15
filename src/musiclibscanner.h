@@ -54,4 +54,5 @@ private:
     std::unique_ptr<IScannerDB> scanDb;
     std::unique_ptr<IDirWalker> dirWalker;
     std::unique_ptr<IMetaDataProvider> metaDataProvider;
+    void addPathsToScannerDB(const QStringList& paths);
 };

@@ -35,8 +35,21 @@ MusicLibScanner::MusicLibScanner(std::unique_ptr<IScannerDB> scanDb,
       metaDataProvider(std::move(metaDataProvider)) {
 }
 
+void MusicLibScanner::addPathsToScannerDB(const QStringList& paths) {
+    for (const QString& file : paths) {
+        try {
+            auto tags = metaDataProvider->metaData(QUrl::fromLocalFile(file));
+            scanDb->addQuery(tags);
+        } catch (const NoMetaDataException& error) {
+            qDebug() << error.what();
+            continue;
+        }
+    }
+}
+
 void MusicLibScanner::scanLib(const QString& path) {
     QStringList fileList;
+
     try {
         fileList = dirWalker->getMusicFileList(path);
     } catch (const DirectoryNotFoundError& error) {
@@ -44,30 +57,16 @@ void MusicLibScanner::scanLib(const QString& path) {
         return;
     }
 
+    emit scanStarted();
+    scanDb->transaction();
+    addPathsToScannerDB(fileList);
+
     try {
-        scanDb->open();
+        scanDb->commit();
     } catch (const OpenDatabaseError& error) {
         qDebug() << "Can't open dbase..." << error.what();
         return;
     }
 
-    emit scanStarted();
-    scanDb->transaction();
-
-    for (const QString& file : fileList) {
-        try {
-            auto tags = metaDataProvider->metaData(QUrl::fromLocalFile(file));
-            scanDb->addQuery(tags);
-        } catch (const NoMetaDataException& error) {
-            qDebug() << error.what();
-            continue;
-        } catch (const AddQueryError& error) {
-            qDebug() << error.what();
-            continue;
-        }
-    }
-
-    scanDb->commit();
-    scanDb->close();
     emit scanComplete();
 }
