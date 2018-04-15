@@ -136,8 +136,7 @@ void Model::setDateAddedForMrl(const QSqlDatabase& db, const QString& dateAdded,
 }
 
 QString Model::getDateAddedFromTmpLibForMrl(const QSqlDatabase& db, const QString& mrl) {
-    auto tmprec =
-            db.exec(QString("SELECT dateAdded FROM tmplib WHERE mrl='%1'").arg(QueryBuilder::escapeString(mrl)));
+    auto tmprec = db.exec(QString("SELECT dateAdded FROM tmplib WHERE mrl='%1'").arg(QueryBuilder::escapeString(mrl)));
 
     tmprec.first();
     return tmprec.value("dateAdded").toString();
