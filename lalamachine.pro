@@ -30,7 +30,8 @@ SOURCES += \
     src/timeconverter.cpp \
     src/track.cpp \
     src/playlistprovider.cpp \
-    src/DatabaseSetup.cpp
+    src/DatabaseSetup.cpp \
+    src/QmlMetadataProvider.cpp
 
 RESOURCES += qml.qrc
 
@@ -64,7 +65,8 @@ HEADERS += \
     src/timeconverter.h \
     src/track.h \
     src/playlistprovider.h \
-    src/DatabaseSetup.h
+    src/DatabaseSetup.h \
+    src/QmlMetadataProvider.h
 
 OTHER_FILES += \
     README.md \

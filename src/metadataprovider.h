@@ -19,21 +19,15 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include <QJsonObject>
-#include <QObject>
 #include <QUrl>
 
 #include "IMetaDataProvider.h"
 #include "tags.h"
 
 // This is a class because it is also used from QML which requires an object to work.
-class MetaDataProvider : public QObject, public IMetaDataProvider {
-    Q_OBJECT
+class MetaDataProvider : public IMetaDataProvider {
 public:
-    explicit MetaDataProvider(QObject* parent = 0);
+    explicit MetaDataProvider();
     Tags metaData(const QUrl& path) const;
     static uint discNumberOfMp3(const QString& path);
-
-    // Convenience function to be used from QML.
-    Q_INVOKABLE QJsonObject metaDataAsJson(const QUrl& path) const;
 };

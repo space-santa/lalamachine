@@ -9,11 +9,11 @@
 #include <memory>
 
 #include "DatabaseSetup.h"
+#include "QmlMetadataProvider.h"
 #include "autoplaylistmanager.h"
 #include "config.h"
 #include "fileexporter.h"
 #include "lalatypes.h"
-#include "metadataprovider.h"
 #include "musiclib.h"
 #include "playlistmodel.h"
 #include "playlistprovider.h"
@@ -22,7 +22,7 @@
 #include "timeconverter.h"
 
 void registerQmlTypes() {
-    qmlRegisterType<MetaDataProvider>("Lala", 1, 0, "Metadata");
+    qmlRegisterType<QmlMetadataProvider>("Lala", 1, 0, "Metadata");
     qmlRegisterType<PlaylistProvider>("Lala", 1, 0, "PlaylistProvider");
     qmlRegisterType<Config>("Lala", 1, 0, "Config");
     qmlRegisterType<TimeConverter>("Lala", 1, 0, "TimeConverter");

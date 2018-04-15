@@ -34,7 +34,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "tags.h"
 #include "timeconverter.h"
 
-MetaDataProvider::MetaDataProvider(QObject* parent) : QObject(parent) {
+MetaDataProvider::MetaDataProvider() {
 }
 
 uint MetaDataProvider::discNumberOfMp3(const QString& path) {
@@ -66,8 +66,4 @@ Tags MetaDataProvider::metaData(const QUrl& path) const {
     }
 
     throw NoMetaDataException(path.toString().toStdString());
-}
-
-QJsonObject MetaDataProvider::metaDataAsJson(const QUrl& path) const {
-    return metaData(path).toJson();
 }
