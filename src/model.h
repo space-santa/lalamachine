@@ -51,13 +51,13 @@ public:
     QJsonObject getMetadataForMrl(const QUrl& mrl) const;
 
 private:
-    std::unique_ptr<IMainDB> mainDB;
+    std::unique_ptr<IMainDB> db_;
     QSharedPointer<QMutex> mutex_;
 
     void init();
     static QStringList resultToList(const std::unique_ptr<IQueryResult>& result, const QString& what);
     void updateTable();
-    void setDateAddedForMrl(const QSqlDatabase& db, const QString& dateAdded, const QString& mrl);
-    QString getDateAddedFromTmpLibForMrl(const QSqlDatabase& db, const QString& mrl);
-    void checkIfTablesExist(const QSqlDatabase& db) const;
+    void setDateAddedForMrl(const QString& dateAdded, const QString& mrl);
+    QString getDateAddedFromTmpLibForMrl(const QString& mrl);
+    void checkIfTablesExist() const;
 };
