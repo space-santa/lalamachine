@@ -51,6 +51,39 @@ To remove lalamachine,
 sudo make uninstall
 ```
 
+## Build it on Windows with mingw
+
+This is a bit more involved.
+Install [Qt](https://www.qt.io/download), [cmake](https://cmake.org/download/), and [git](https://git-scm.com/downloads)
+
+(I am going to assume that there is a `D` drive.)
+
+Open git bash
+
+```
+cd /d/
+mkdir lalamachine
+cd lalamachine
+git clone git@github.com:space-santa/lalamachine.git
+```
+
+The result is `/d/lalamachine/lalamachine/`.
+Next download [taglib](http://taglib.org/releases/taglib-1.11.1.tar.gz) and move it into `/d/lalamachine/`.
+
+Also, add `D:\Qt\Tools\mingw530_32\bin` (or wherever your toolchain is) to the `PATH`.
+
+Back in git bash
+
+```
+cd /d/lalamachine/
+tar xzfp taglib-1.11.1.tar.gz
+cd taglib-1.11.1
+mkdir build
+cd build
+cmake -G "MinGW Makefiles" -D CMAKE_CXX_COMPILER=g++.exe -D CMAKE_MAKE_PROGRAM=mingw32-make.exe -DBUILD_SHARED_LIBS=ON -DENABLE_STATIC_RUNTIME=OFF ..
+mingw32-make.exe
+```
+
 ## Debug
 
 On Fedora >22, don't forget to enable QDebug output. To do that, add or create
