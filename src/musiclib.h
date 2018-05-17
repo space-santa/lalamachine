@@ -24,8 +24,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QJsonObject>
 #include <QMutex>
 #include <QObject>
-#include <QSharedPointer>
-#include <QSqlDatabase>
 #include <QString>
 #include <QThread>
 

@@ -22,10 +22,8 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QJsonObject>
-#include <QMutexLocker>
 #include <QPair>
 #include <QSqlQuery>
-#include <QSqlRecord>
 #include <QUrl>
 #include <QtConcurrent>
 #include <memory>
