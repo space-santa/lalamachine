@@ -31,7 +31,8 @@ SOURCES += \
     src/track.cpp \
     src/playlistprovider.cpp \
     src/DatabaseSetup.cpp \
-    src/QmlMetadataProvider.cpp
+    src/QmlMetadataProvider.cpp \
+    src/Database.cpp
 
 RESOURCES += qml.qrc
 
@@ -66,7 +67,8 @@ HEADERS += \
     src/track.h \
     src/playlistprovider.h \
     src/DatabaseSetup.h \
-    src/QmlMetadataProvider.h
+    src/QmlMetadataProvider.h \
+    src/Database.h
 
 OTHER_FILES += \
     README.md \
@@ -91,26 +93,12 @@ linux-g++: {
     LIBS += -ltag
 }
 
-win32-g++: {
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/ape
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/asf
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/flac
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/it
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/mod
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/mp4
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/mpc
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/mpeg
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/mpeg/id3v2
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/ogg
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/riff
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/s3m
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/toolkit
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/trueaudio
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/wavpack
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/xm
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/build
-    INCLUDEPATH += $$PWD/../build-taglib-1.11.1-Desktop_Qt_5_10_1_MinGW_32bit-Default
-    CONFIG(release, debug|release): LIBS += $$PWD/../taglib-1.11.1/build/taglib/libtag.dll
-    #CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../taglib-1.11.1/taglib/build/taglib/libtag.dll
+win32-g++ {
+    INCLUDEPATH += D:/lib/taglib/include/taglib
+    CONFIG(release, debug|release): LIBS += D:/lib/taglib/bin/libtag.dll
+}
+
+win32-msvc* {
+    INCLUDEPATH += D:/Libraries/taglib/include
+    CONFIG(release, debug|release): LIBS += D:/lib/taglib/lib
 }
