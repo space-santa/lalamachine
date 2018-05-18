@@ -1,14 +1,13 @@
 #include "MainDB.h"
 #include <QDebug>
-#include <QSqlDatabase>
 #include <QSqlError>
+#include "Database.h"
 #include "QueryResult.h"
 #include "config.h"
 #include "exceptions.h"
 
 std::unique_ptr<IQueryResult> MainDB::exec(const QString& query) {
-    auto db = QSqlDatabase::database(Config::MAINDB_NAME);
-    auto result = db.exec(query);
+    auto result = Database::getInstance().exec(query);
     auto error = result.lastError();
     qDebug() << "query" << query << "still active";
 
@@ -21,16 +20,13 @@ std::unique_ptr<IQueryResult> MainDB::exec(const QString& query) {
 }
 
 QStringList MainDB::tables() {
-    auto db = QSqlDatabase::database(Config::MAINDB_NAME);
-    return db.tables();
+    return Database::getInstance().tables();
 }
 
 void MainDB::transaction() {
-    auto db = QSqlDatabase::database(Config::MAINDB_NAME);
-    db.transaction();
+    Database::getInstance().transaction();
 }
 
 void MainDB::commit() {
-    auto db = QSqlDatabase::database(Config::MAINDB_NAME);
-    db.commit();
+    Database::getInstance().commit();
 }
