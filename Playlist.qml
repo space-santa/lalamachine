@@ -418,7 +418,8 @@ Rectangle {
         selectionMode: SelectionMode.ExtendedSelection
         backgroundVisible: true
 
-        style: TableStyle {}
+        style: TableStyle {
+        }
 
         property var playlistColumns: config.playlistColumns
 
@@ -665,6 +666,7 @@ Rectangle {
             }
         }
 
-        itemDelegate: ItemDelegate {}
+        itemDelegate: ItemDelegate {
+        }
     }
 }
