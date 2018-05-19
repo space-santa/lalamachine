@@ -20,11 +20,11 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "metadataprovider.h"
 
 #include <QDebug>
+#include <QFile>
 #include <QJsonObject>
 #include <QString>
 #include <QTime>
 #include <QVariantMap>
-#include <QFile>
 
 #include <fileref.h>
 #include <id3v2tag.h>

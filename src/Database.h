@@ -1,8 +1,8 @@
 #pragma once
 
+#include <QMutex>
 #include <QSqlDatabase>
 #include <QSqlQuery>
-#include <QMutex>
 
 class Database {
 public:
