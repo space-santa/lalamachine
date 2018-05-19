@@ -3,7 +3,6 @@ TEMPLATE = app
 QT += qml quick widgets sql concurrent multimedia quickwidgets
 
 CONFIG += C++11 # console
-QMAKE_CXXFLAGS += -Werror
 
 SOURCES += \
     src/DirWalker.cpp \
@@ -84,21 +83,26 @@ DISTFILES += \
 ICON = ./images/lala-icon.png.icns
 
 macx: {
+    QMAKE_CXXFLAGS += -Werror
     INCLUDEPATH += /usr/local/include/taglib
     LIBS += -L/usr/local/lib/ -ltag
 }
 
 linux-g++: {
+    QMAKE_CXXFLAGS += -Werror
     INCLUDEPATH += /usr/include/taglib
     LIBS += -ltag
 }
 
 win32-g++ {
-    INCLUDEPATH += D:/lib/taglib/include/taglib
-    CONFIG(release, debug|release): LIBS += D:/lib/taglib/bin/libtag.dll
+    QMAKE_CXXFLAGS += -Werror
+    LIBS += -L$$PWD/../../../lib/taglib/lib/ -llibtag.dll
+    INCLUDEPATH += $$PWD/../../../lib/taglib/include/taglib
+    DEPENDPATH += $$PWD/../../../lib/taglib/include/taglib
 }
 
 win32-msvc* {
-    INCLUDEPATH += D:/Libraries/taglib/include
-    CONFIG(release, debug|release): LIBS += D:/lib/taglib/lib
+    LIBS += -L$$PWD/../../../Libraries/taglib/lib/ -ltag
+    INCLUDEPATH += $$PWD/../../../Libraries/taglib/include/taglib
+    DEPENDPATH += $$PWD/../../../Libraries/taglib/include
 }

@@ -1,5 +1,4 @@
-#ifndef PLAYLISTMODEL_H
-#define PLAYLISTMODEL_H
+#pragma once
 
 #include <QAbstractListModel>
 #include <QJsonArray>
@@ -96,5 +95,3 @@ private:
     static bool sortDateAddedAsc(Track t1, Track t2);
     static bool sortDateAddedDesc(Track t1, Track t2);
 };
-
-#endif  // PLAYLISTMODEL_H
