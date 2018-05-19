@@ -104,6 +104,7 @@ Rectangle {
         anchors.bottom: parent.bottom
         value: 0.5
 
-        style: SliderStyleLala {}
+        style: SliderStyleLala {
+        }
     }
 }

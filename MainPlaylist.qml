@@ -10,7 +10,8 @@ Playlist {
 
     MainPlaylistRightClickMenu {
         id: rcm
-        onAddToPlaylist: main_playlist.addTracksToNamedPlaylist(listname, getSelectedTracks())
+        onAddToPlaylist: main_playlist.addTracksToNamedPlaylist(
+                             listname, getSelectedTracks())
         onDeleteSelection: main_playlist.deleteSelection()
     }
 }

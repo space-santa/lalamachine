@@ -450,7 +450,8 @@ ApplicationWindow {
                     repeatAll: player_controls.repeatAll
                     nowPlayingSource: playMusic.source()
 
-                    onAddTracksToNamedPlaylist: m3u.addTracksToNamedPlaylist(listname, tracks)
+                    onAddTracksToNamedPlaylist: m3u.addTracksToNamedPlaylist(
+                                                    listname, tracks)
 
                     onStop: {
                         playMusic.stop()
