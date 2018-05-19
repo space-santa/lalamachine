@@ -3,7 +3,6 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QMutex>
-#include <QSharedPointer>
 #include <QSqlQuery>
 #include <QSqlResult>
 #include <QString>
@@ -52,7 +51,7 @@ public:
 
 private:
     std::unique_ptr<IMainDB> db_;
-    QSharedPointer<QMutex> mutex_;
+    QMutex mutex_;
 
     void init();
     static QStringList resultToList(const std::unique_ptr<IQueryResult>& result, const QString& what);
