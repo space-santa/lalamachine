@@ -2,6 +2,7 @@
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QMutex>
 
 class Database {
 public:
@@ -14,4 +15,5 @@ public:
 private:
     Database();
     QSqlDatabase db;
+    QMutex mutex;
 };
