@@ -626,8 +626,10 @@ Rectangle {
         }
 
         onModelChanged: {
-            playlist_view.resizeColumnsToContents()
-            updateNowPlayingRow()
+            if (playlist_model.rowCount() > 0) {
+                playlist_view.resizeColumnsToContents()
+                updateNowPlayingRow()
+            }
         }
 
         function getColumnRole(col) {

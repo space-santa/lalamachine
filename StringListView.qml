@@ -59,6 +59,10 @@ Rectangle {
     }
 
     function sort(how) {
+        if (list_model.count < 2) {
+            return
+        }
+
         if (!container.allowSort) {
             return
         }
@@ -128,7 +132,11 @@ Rectangle {
                 width: container.width
             }
 
-            onModelChanged: list_view.resizeColumnsToContents()
+            onModelChanged: {
+                if (list_model.rowCount() > 0) {
+                    list_view.resizeColumnsToContents()
+                }
+            }
 
             sortIndicatorVisible: container.allowSort
             onSortIndicatorColumnChanged: {
