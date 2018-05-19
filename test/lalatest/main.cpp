@@ -4,6 +4,7 @@
 #include "lalatest.h"
 #include "maindbtest.h"
 #include "model.test.h"
+#include "playlistmodeltest.h"
 #include "testautoplaylist.h"
 
 int main() {
@@ -21,6 +22,9 @@ int main() {
 
     MainDBTest mainDBTest;
     QTest::qExec(&mainDBTest);
+
+    PlaylistModelTest playlistModelTest;
+    QTest::qExec(&playlistModelTest);
 
     return 0;
 }

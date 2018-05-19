@@ -8,6 +8,7 @@
 #include "track.h"
 
 class PlaylistModel : public QAbstractListModel {
+    friend class PlaylistModelTest;
     Q_OBJECT
     Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
     Q_PROPERTY(int totalPlaytime READ getTotalPlaytime NOTIFY countChanged)

@@ -26,11 +26,13 @@ SOURCES += \
     ../../src/exceptions.cpp \
     ../../src/lalatypes.cpp \
     ../../src/playlistprovider.cpp \
+    ../../src/playlistmodel.cpp \
     ../../src/MainDB.cpp \
     ../../src/metadataprovider.cpp \
     ../../src/model.cpp \
     ../../src/musiclibscanner.cpp \
     ../../src/tags.cpp \
+    ../../src/track.cpp \
     ../../src/timeconverter.cpp \
     QueryBuilder.test.cpp \
     lalatest.cpp \
@@ -38,7 +40,8 @@ SOURCES += \
     model.test.cpp \
     model.test.mock.cpp \
     testautoplaylist.cpp \
-    maindbtest.cpp
+    maindbtest.cpp \
+    playlistmodeltest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
@@ -59,16 +62,19 @@ HEADERS += \
     ../../src/playlistprovider.h \
     ../../src/MainDB.h \
     ../../src/metadataprovider.h \
+    ../../src/playlistmodel.h \
     ../../src/model.h \
     ../../src/musiclibscanner.h \
     ../../src/tags.h \
+    ../../src/track.h \
     ../../src/timeconverter.h \
     QueryBuilder.test.h \
     lalatest.h \
     model.test.h \
     model.test.mock.h \
     testautoplaylist.h \
-    maindbtest.h
+    maindbtest.h \
+    playlistmodeltest.h
 
 macx: {
     QMAKE_CXXFLAGS += -Werror
