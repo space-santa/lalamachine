@@ -36,7 +36,7 @@ void ModelTest::testResultToList() {
 
 void ModelTest::testGenre() {
     Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
-    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.mainDB.get());
+    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.db_.get());
     tmpDB->execQueries.clear();
     auto result = model.genre("rockystuff");
     QCOMPARE(tmpDB->execQueries.first().contains("ROCKYSTUFF"), true);
@@ -44,7 +44,7 @@ void ModelTest::testGenre() {
 
 void ModelTest::testUpdateTableNoMusicLib() {
     Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
-    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.mainDB.get());
+    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.db_.get());
     tmpDB->execQueries.clear();
     model.updateTable();
     QCOMPARE(tmpDB->execQueries.count(), 1);
@@ -53,7 +53,7 @@ void ModelTest::testUpdateTableNoMusicLib() {
 
 void ModelTest::testUpdateTableWithMusicLibWithDateAdded() {
     Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
-    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.mainDB.get());
+    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.db_.get());
     tmpDB->execQueries.clear();
     tmpDB->tableList << "musiclib";
     tmpDB->queryRetval = QVariant(QString("dateAdded"));
@@ -65,7 +65,7 @@ void ModelTest::testUpdateTableWithMusicLibWithDateAdded() {
 
 void ModelTest::testUpdateTableWithMusicLibWithDiscNumber() {
     Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
-    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.mainDB.get());
+    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.db_.get());
     tmpDB->execQueries.clear();
     tmpDB->tableList << "musiclib";
     tmpDB->queryRetval = QVariant(QString("discNumber"));
@@ -77,7 +77,7 @@ void ModelTest::testUpdateTableWithMusicLibWithDiscNumber() {
 
 void ModelTest::testCopyLibToTmp() {
     Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
-    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.mainDB.get());
+    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.db_.get());
     tmpDB->execQueries.clear();
     model.copyLibToTmp();
     QCOMPARE(tmpDB->execQueries.count(), 2);
@@ -87,7 +87,7 @@ void ModelTest::testCopyLibToTmp() {
 
 void ModelTest::testClearMusicLib() {
     Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
-    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.mainDB.get());
+    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.db_.get());
     tmpDB->execQueries.clear();
     model.clearMusicLib();
     QCOMPARE(tmpDB->execQueries.count(), 1);
@@ -96,41 +96,16 @@ void ModelTest::testClearMusicLib() {
 
 void ModelTest::testSetDateAddedForMrl() {
     Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
-    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.mainDB.get());
+    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.db_.get());
     tmpDB->execQueries.clear();
     model.setDateAddedForMrl("abc", "def");
     QCOMPARE(tmpDB->execQueries.count(), 1);
     QCOMPARE(tmpDB->execQueries.first(), QString("UPDATE musiclib SET dateAdded='abc' WHERE mrl='def'"));
 }
 
-void ModelTest::testGetTablesToRestoreMetaDataNoMusic() {
-    Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
-    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.mainDB.get());
-    tmpDB->execQueries.clear();
-    tmpDB->tableList << "tmplib";
-    QVERIFY_EXCEPTION_THROWN(model.getTablesToRestoreMetaData(), TableNotFoundError);
-}
-
-void ModelTest::testGetTablesToRestoreMetaDataNoTmp() {
-    Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
-    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.mainDB.get());
-    tmpDB->execQueries.clear();
-    tmpDB->tableList << "musiclib";
-    QVERIFY_EXCEPTION_THROWN(model.getTablesToRestoreMetaData(), TableNotFoundError);
-}
-
-void ModelTest::testGetTablesToRestoreMetaDataAllGood() {
-    Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
-    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.mainDB.get());
-    tmpDB->execQueries.clear();
-    tmpDB->tableList << "musiclib"
-                     << "tmplib";
-    QCOMPARE(model.getTablesToRestoreMetaData(), tmpDB->tableList);
-}
-
 void ModelTest::testRestoreMetaData() {
     Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
-    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.mainDB.get());
+    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.db_.get());
     tmpDB->execQueries.clear();
     tmpDB->tableList << "musiclib"
                      << "tmplib";
