@@ -60,6 +60,8 @@ Install [Qt](https://www.qt.io/download), [cmake](https://cmake.org/download/), 
 
 Open git bash
 
+To actually play music you will most likely need to install [LAV Filter](https://github.com/Nevcairiel/LAVFilters/releases).
+
 ```
 cd /d/
 mkdir lalamachine
