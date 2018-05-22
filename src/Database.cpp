@@ -34,5 +34,6 @@ void Database::commit() {
 Database::Database() {
     qDebug() << "Database::Database()";
     db = QSqlDatabase::addDatabase("QSQLITE", Config::MAINDB_NAME);
+    db.setDatabaseName(Config::MUSICLIBDB);
     db.open();
 }
