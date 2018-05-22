@@ -1,8 +1,5 @@
 #include "Database.h"
 
-#include <QDebug>
-#include <QMutexLocker>
-
 #include "config.h"
 
 Database& Database::getInstance() {
@@ -11,28 +8,27 @@ Database& Database::getInstance() {
 }
 
 QStringList Database::tables() {
-    QMutexLocker locker(&mutex);
+    std::lock_guard<std::mutex> guard(mutex);
     return db.tables();
 }
 
 QSqlQuery Database::exec(const QString& query) {
-    QMutexLocker locker(&mutex);
+    std::lock_guard<std::mutex> guard(mutex);
     QSqlQuery result = db.exec(query);
     return result;
 }
 
 void Database::transaction() {
-    QMutexLocker locker(&mutex);
+    std::lock_guard<std::mutex> guard(mutex);
     db.transaction();
 }
 
 void Database::commit() {
-    QMutexLocker locker(&mutex);
+    std::lock_guard<std::mutex> guard(mutex);
     db.commit();
 }
 
 Database::Database() {
-    qDebug() << "Database::Database()";
     db = QSqlDatabase::addDatabase("QSQLITE", Config::MAINDB_NAME);
     db.setDatabaseName(Config::MUSICLIBDB);
     db.open();

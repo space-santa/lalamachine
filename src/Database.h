@@ -3,6 +3,7 @@
 #include <QMutex>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <mutex>
 
 class Database {
 public:
@@ -15,5 +16,5 @@ public:
 private:
     Database();
     QSqlDatabase db;
-    QMutex mutex;
+    std::mutex mutex;
 };
