@@ -16,7 +16,6 @@ TEMPLATE = app
 
 
 SOURCES += \
-    ../../src/Database.cpp \
     ../../src/QueryBuilder.cpp \
     ../../src/QueryResult.cpp \
     ../../src/autoplaylist.cpp \
@@ -46,7 +45,6 @@ SOURCES += \
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
-    ../../src/Database.h \
     ../../src/IDirWalker.h \
     ../../src/IMetaDataProvider.h \
     ../../src/IQueryResult.h \

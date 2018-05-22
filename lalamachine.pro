@@ -9,7 +9,6 @@ SOURCES += \
     src/MainDB.cpp \
     src/QueryBuilder.cpp \
     src/QueryResult.cpp \
-    src/ScannerDB.cpp \
     src/autoplaylist.cpp \
     src/autoplaylistmanager.cpp \
     src/autoplaylistobject.cpp \
@@ -30,8 +29,7 @@ SOURCES += \
     src/track.cpp \
     src/playlistprovider.cpp \
     src/DatabaseSetup.cpp \
-    src/QmlMetadataProvider.cpp \
-    src/Database.cpp
+    src/QmlMetadataProvider.cpp
 
 RESOURCES += qml.qrc
 
@@ -66,8 +64,7 @@ HEADERS += \
     src/track.h \
     src/playlistprovider.h \
     src/DatabaseSetup.h \
-    src/QmlMetadataProvider.h \
-    src/Database.h
+    src/QmlMetadataProvider.h
 
 OTHER_FILES += \
     README.md \
