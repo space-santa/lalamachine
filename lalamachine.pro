@@ -9,6 +9,7 @@ SOURCES += \
     src/MainDB.cpp \
     src/QueryBuilder.cpp \
     src/QueryResult.cpp \
+    src/ScannerDB.cpp \
     src/autoplaylist.cpp \
     src/autoplaylistmanager.cpp \
     src/autoplaylistobject.cpp \
