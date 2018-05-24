@@ -1,8 +1,8 @@
 #include <QDebug>
-#include <QMutexLocker>
 #include <QRegularExpression>
 
 #include "QueryBuilder.h"
+#include "QueryResult.h"
 #include "config.h"
 #include "exceptions.h"
 #include "model.h"
@@ -206,7 +206,9 @@ QPair<int, QJsonArray> Model::queryResultToJson(const std::unique_ptr<IQueryResu
 }
 
 QPair<int, QJsonArray> Model::runSetDisplayQuery(const QString& query) {
-    return Model::queryResultToJson(db_->exec(query));
+    auto db = QSqlDatabase::database(Config::DISPLAYDBNAME);
+    auto result = db.exec(query);
+    return Model::queryResultToJson(std::make_unique<QueryResult>(QueryResult(result)));
 }
 
 QJsonArray Model::getAlbumTracks(const QString& album) {
