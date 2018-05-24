@@ -22,6 +22,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QObject>
+#include <QString>
 #include <QUrl>
 
 class Config : public QObject {
@@ -43,6 +44,9 @@ public:
     static const QString PLAYLISTDIR;
     static const QString AUTOPLAYLISTDIR;
     static const QString MUSICLIBDB;
+    static const QString MAINDBNAME;
+    static const QString SCANNERDBNAME;
+    static const QString AUTODBNAME;
 
     Q_INVOKABLE void saveConfig();
     void loadConfig();

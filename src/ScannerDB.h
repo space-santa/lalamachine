@@ -3,8 +3,6 @@
 #include <QString>
 #include "IScannerDB.h"
 
-class QSqlDatabase;
-
 class ScannerDB : public IScannerDB {
 public:
     void open();

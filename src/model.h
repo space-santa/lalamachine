@@ -2,12 +2,12 @@
 
 #include <QJsonArray>
 #include <QJsonObject>
-#include <QMutex>
 #include <QSqlQuery>
 #include <QSqlResult>
 #include <QString>
 #include <QStringList>
 #include <memory>
+#include <mutex>
 
 #include "IMainDB.h"
 #include "QueryBuilder.h"
@@ -51,7 +51,7 @@ public:
 
 private:
     std::unique_ptr<IMainDB> db_;
-    QMutex mutex_;
+    std::mutex mutex_;
 
     void init();
     static QStringList resultToList(const std::unique_ptr<IQueryResult>& result, const QString& what);

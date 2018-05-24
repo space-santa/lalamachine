@@ -43,7 +43,6 @@ void Model::updateTable() {
     }
 
     QString query("PRAGMA table_info(musiclib)");
-    QMutexLocker locker(&mutex_);
     auto record = db_->exec(query);
 
     QStringList tmplist;
@@ -93,8 +92,6 @@ void Model::createLibTable(const QString& name) {
         qs.append("`discNumber` int NOT NULL DEFAULT 1\n");
         qs.append(")");
 
-        QMutexLocker locker(&mutex_);
-
         try {
             db_->exec(qs.arg(name));
         } catch (const QueryError& error) {
@@ -106,7 +103,6 @@ void Model::createLibTable(const QString& name) {
 void Model::copyLibToTmp() {
     createLibTable("tmplib");
     QString query("insert into tmplib SELECT * from musiclib");
-    QMutexLocker locker(&mutex_);
 
     try {
         db_->exec(query);
@@ -117,7 +113,6 @@ void Model::copyLibToTmp() {
 
 void Model::clearMusicLib() {
     QString query("DELETE FROM musiclib");
-    QMutexLocker locker(&mutex_);
 
     try {
         db_->exec(query);
@@ -211,14 +206,12 @@ QPair<int, QJsonArray> Model::queryResultToJson(const std::unique_ptr<IQueryResu
 }
 
 QPair<int, QJsonArray> Model::runSetDisplayQuery(const QString& query) {
-    QMutexLocker locker(&mutex_);
     return Model::queryResultToJson(db_->exec(query));
 }
 
 QJsonArray Model::getAlbumTracks(const QString& album) {
     QString query("SELECT * FROM musiclib WHERE album = '%1' ORDER BY track");
 
-    QMutexLocker locker(&mutex_);
     auto result = db_->exec(query.arg(QueryBuilder::escapeString(album)));
 
     return Model::queryResultToJson(result).second;

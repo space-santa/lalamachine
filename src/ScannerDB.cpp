@@ -23,7 +23,7 @@ void ScannerDB::addQuery(const Tags& tags) {
 }
 
 void ScannerDB::commit() {
-    auto db = QSqlDatabase::database();
+    auto db = QSqlDatabase::database(Config::SCANNERDBNAME);
     db.transaction();
 
     for (const auto& query : queryList) {

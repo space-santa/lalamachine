@@ -22,7 +22,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QJsonArray>
 #include <QList>
 #include <QObject>
-#include <QSqlDatabase>
 
 #include "autoplaylistobject.h"
 
@@ -61,8 +60,6 @@ public slots:
 private:
     QString name_;
     QList<AutoPlaylistObject> apos_;
-
-    QSqlDatabase db_;
 
     QString toQuery() const;
     QString getPath(const QString& name) const;
