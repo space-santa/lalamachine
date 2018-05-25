@@ -19,6 +19,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "musiclib.h"
 
+#include <QElapsedTimer>
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QJsonObject>
@@ -54,7 +55,6 @@ MusicLib::MusicLib(QObject* parent) : QObject(parent), model(std::unique_ptr<IMa
     connect(this, &MusicLib::genreFilterChanged, this, &MusicLib::setArtistList);
     connect(this, &MusicLib::genreFilterChanged, this, &MusicLib::setAlbumList);
     connect(this, &MusicLib::artistFilterChanged, this, &MusicLib::setAlbumList);
-    connect(&watcher_, &QFutureWatcher<QSqlQuery>::finished, this, &MusicLib::onDisplayFutureFinished);
     connect(&scannerWatcher, &QFutureWatcher<QSqlQuery>::finished, this, &MusicLib::scanFinished);
 
     setGenreList();
@@ -102,6 +102,9 @@ int MusicLib::totalLength() const {
 }
 
 void MusicLib::setDisplayLib() {
+    QElapsedTimer elapsed;
+    elapsed.start();
+
     QString query = QueryBuilder::getSortQueryString(titlePartialFilter(),
                                                      genreFilter(),
                                                      artistFilter(),
@@ -115,13 +118,10 @@ void MusicLib::setDisplayLib() {
     }
 
     lastDisplayLibQuery_ = query;
+    QPair<int, QJsonArray> tmp = model.runSetDisplayQuery(query);
 
-    QFuture<QPair<int, QJsonArray>> future = QtConcurrent::run(&model, &Model::runSetDisplayQuery, query);
-    watcher_.setFuture(future);
-}
+    qDebug() << "runSetDisplayQuery took:" << elapsed.elapsed();
 
-void MusicLib::onDisplayFutureFinished() {
-    QPair<int, QJsonArray> tmp = watcher_.result();
     displayLib_ = tmp.second;
     emit displayLibChanged();
     totalLength_ = tmp.first;
@@ -340,6 +340,9 @@ QString MusicLib::titlePartialFilter() const {
     return titlePartialFilter_;
 }
 void MusicLib::setTitlePartialFilter(const QString& titlePartialFilter) {
+    if (titlePartialFilter.length() < 3 && titlePartialFilter.length() > 0) {
+        return;
+    }
     titlePartialFilter_ = titlePartialFilter;
     emit titlePartialFilterChanged();
 }

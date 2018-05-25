@@ -47,7 +47,6 @@ public:
     static const QString MAINDBNAME;
     static const QString SCANNERDBNAME;
     static const QString AUTODBNAME;
-    static const QString DISPLAYDBNAME;
 
     Q_INVOKABLE void saveConfig();
     void loadConfig();

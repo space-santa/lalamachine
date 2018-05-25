@@ -206,9 +206,8 @@ QPair<int, QJsonArray> Model::queryResultToJson(const std::unique_ptr<IQueryResu
 }
 
 QPair<int, QJsonArray> Model::runSetDisplayQuery(const QString& query) {
-    auto db = QSqlDatabase::database(Config::DISPLAYDBNAME);
-    auto result = db.exec(query);
-    return Model::queryResultToJson(std::make_unique<QueryResult>(QueryResult(result)));
+    auto result = db_->exec(query);
+    return Model::queryResultToJson(result);
 }
 
 QJsonArray Model::getAlbumTracks(const QString& album) {

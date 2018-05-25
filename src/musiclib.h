@@ -137,7 +137,6 @@ private:
     bool appStart_;
     QString lastDisplayLibQuery_;
 
-    QFutureWatcher<QPair<int, QJsonArray> > watcher_;
     QFutureWatcher<void> scannerWatcher;
 
     bool checkVal(const QString& check, const QString& val) const;
@@ -153,6 +152,4 @@ private slots:
     void setAlbumList();
 
     void scanStarted();
-
-    void onDisplayFutureFinished();
 };

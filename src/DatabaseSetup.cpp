@@ -7,7 +7,6 @@ DatabaseSetup::DatabaseSetup() {
     add(Config::AUTODBNAME);
     add(Config::MAINDBNAME);
     add(Config::SCANNERDBNAME);
-    add(Config::DISPLAYDBNAME);
 }
 
 void DatabaseSetup::add(const QString& name) {
@@ -20,5 +19,4 @@ DatabaseSetup::~DatabaseSetup() {
     QSqlDatabase::database(Config::AUTODBNAME).close();
     QSqlDatabase::database(Config::MAINDBNAME).close();
     QSqlDatabase::database(Config::SCANNERDBNAME).close();
-    QSqlDatabase::database(Config::DISPLAYDBNAME).close();
 }
