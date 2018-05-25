@@ -20,6 +20,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "metadataprovider.h"
 
 #include <QDebug>
+#include <QFile>
 #include <QJsonObject>
 #include <QString>
 #include <QTime>
@@ -55,14 +56,16 @@ uint MetaDataProvider::discNumberOfMp3(const QString& path) {
 
 Tags MetaDataProvider::metaData(const QUrl& path) const {
     QString tmp = path.toLocalFile();
-    TagLib::FileRef f(tmp.toUtf8().data(), true, TagLib::AudioProperties::Accurate);
+    TagLib::FileRef f(QFile::encodeName(tmp).constData(), true, TagLib::AudioProperties::Accurate);
 
     if (!f.isNull() && f.tag()) {
         TimeConverter tc;
         TagLib::Tag* tag = f.tag();
         tc.clear();
         tc.setSeconds(f.audioProperties()->length());
-        return Tags(tag, tmp, tmp, f.audioProperties()->length(), tc.toString(), discNumberOfMp3(tmp));
+
+        Tags tags(tag, tmp, tmp, f.audioProperties()->length(), tc.toString(), discNumberOfMp3(tmp));
+        return tags;
     }
 
     throw NoMetaDataException(path.toString().toStdString());

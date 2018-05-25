@@ -24,8 +24,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QJsonObject>
 #include <QMutex>
 #include <QObject>
-#include <QSharedPointer>
-#include <QSqlDatabase>
 #include <QString>
 #include <QThread>
 
@@ -139,7 +137,6 @@ private:
     bool appStart_;
     QString lastDisplayLibQuery_;
 
-    QFutureWatcher<QPair<int, QJsonArray> > watcher_;
     QFutureWatcher<void> scannerWatcher;
 
     bool checkVal(const QString& check, const QString& val) const;
@@ -155,6 +152,4 @@ private slots:
     void setAlbumList();
 
     void scanStarted();
-
-    void onDisplayFutureFinished();
 };

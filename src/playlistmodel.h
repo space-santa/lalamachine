@@ -1,5 +1,4 @@
-#ifndef PLAYLISTMODEL_H
-#define PLAYLISTMODEL_H
+#pragma once
 
 #include <QAbstractListModel>
 #include <QJsonArray>
@@ -9,6 +8,7 @@
 #include "track.h"
 
 class PlaylistModel : public QAbstractListModel {
+    friend class PlaylistModelTest;
     Q_OBJECT
     Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
     Q_PROPERTY(int totalPlaytime READ getTotalPlaytime NOTIFY countChanged)
@@ -45,6 +45,7 @@ public:
     Q_INVOKABLE QJsonObject get(int row) const;
     Q_INVOKABLE void clear();
     Q_INVOKABLE void append(const QJsonObject& json);
+    Q_INVOKABLE void setLibrary(const QJsonArray& json);
 
     Q_INVOKABLE void sortRole(const QString& role, Qt::SortOrder order = Qt::AscendingOrder);
 
@@ -96,5 +97,3 @@ private:
     static bool sortDateAddedAsc(Track t1, Track t2);
     static bool sortDateAddedDesc(Track t1, Track t2);
 };
-
-#endif  // PLAYLISTMODEL_H

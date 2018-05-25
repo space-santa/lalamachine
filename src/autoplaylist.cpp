@@ -31,8 +31,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 AutoPlaylist::AutoPlaylist(const QString& name, QObject* parent) : QObject(parent), name_(name) {
     Q_ASSERT(!name_.isEmpty());
-    db_ = QSqlDatabase::addDatabase("QSQLITE", name_);
-    db_.setDatabaseName(Config::MUSICLIBDB);
     load();
 }
 
@@ -108,14 +106,10 @@ void AutoPlaylist::clear() {
 }
 
 QJsonArray AutoPlaylist::trackList() {
-    db_.open();
-    // Processing the QSqlResult imediately before closing the dbase.
-    QJsonArray result =
-        Model::queryResultToJson(std::unique_ptr<IQueryResult>(new QueryResult(db_.exec(toQuery())))).second;
-    // WARNING: The dbase must not be closed before the QSqlResult that db.exec
-    // returns is processed.
-    db_.close();
-    return result;
+    auto db = QSqlDatabase::database(Config::AUTODBNAME);
+    auto result = db.exec(toQuery());
+    QJsonArray jsonResult = Model::queryResultToJson(std::unique_ptr<IQueryResult>(new QueryResult(result))).second;
+    return jsonResult;
 }
 
 QString AutoPlaylist::toQuery() const {

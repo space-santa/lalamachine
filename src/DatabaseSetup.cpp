@@ -1,18 +1,22 @@
 #include "DatabaseSetup.h"
 #include <QSqlDatabase>
+#include <QString>
 #include "config.h"
 
 DatabaseSetup::DatabaseSetup() {
-    auto scannerDB = QSqlDatabase::addDatabase("QSQLITE", Config::SCANNERDB_NAME);
-    scannerDB.setDatabaseName(Config::MUSICLIBDB);
-    scannerDB.open();
+    add(Config::AUTODBNAME);
+    add(Config::MAINDBNAME);
+    add(Config::SCANNERDBNAME);
+}
 
-    auto mainDB = QSqlDatabase::addDatabase("QSQLITE", Config::MAINDB_NAME);
-    mainDB.setDatabaseName(Config::MUSICLIBDB);
-    mainDB.open();
+void DatabaseSetup::add(const QString& name) {
+    auto db = QSqlDatabase::addDatabase("QSQLITE", name);
+    db.setDatabaseName(Config::MUSICLIBDB);
+    db.open();
 }
 
 DatabaseSetup::~DatabaseSetup() {
-    QSqlDatabase::database(Config::SCANNERDB_NAME).close();
-    QSqlDatabase::database(Config::MAINDB_NAME).close();
+    QSqlDatabase::database(Config::AUTODBNAME).close();
+    QSqlDatabase::database(Config::MAINDBNAME).close();
+    QSqlDatabase::database(Config::SCANNERDBNAME).close();
 }

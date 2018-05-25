@@ -1,23 +1,22 @@
 #include <QDebug>
-#include <QMutexLocker>
 #include <QRegularExpression>
 
 #include "QueryBuilder.h"
+#include "QueryResult.h"
 #include "config.h"
 #include "exceptions.h"
 #include "model.h"
 
-Model::Model(std::unique_ptr<IMainDB> mainDB) : mainDB(std::move(mainDB)) {
+Model::Model(std::unique_ptr<IMainDB> mainDB) : db_(std::move(mainDB)) {
     init();
 }
 
 void Model::init() {
-    mutex_ = QSharedPointer<QMutex>(new QMutex());
     updateTable();
 }
 
 QStringList Model::genre(const QString& filter) {
-    auto result = mainDB->exec(QueryBuilder::genreQuery(filter));
+    auto result = db_->exec(QueryBuilder::genreQuery(filter));
     return Model::resultToList(result, "genre");
 }
 
@@ -36,7 +35,7 @@ QStringList Model::resultToList(const std::unique_ptr<IQueryResult>& result, con
 }
 
 void Model::updateTable() {
-    QStringList tables = mainDB->tables();
+    QStringList tables = db_->tables();
 
     if (!tables.contains("musiclib")) {
         ensureAllTables();
@@ -44,8 +43,7 @@ void Model::updateTable() {
     }
 
     QString query("PRAGMA table_info(musiclib)");
-    QMutexLocker locker(mutex_.data());
-    auto record = mainDB->exec(query);
+    auto record = db_->exec(query);
 
     QStringList tmplist;
     while (record->next()) {
@@ -54,7 +52,7 @@ void Model::updateTable() {
 
     if (!tmplist.contains("dateAdded")) {
         try {
-            mainDB->exec("ALTER TABLE musiclib ADD COLUMN dateAdded TEXT");
+            db_->exec("ALTER TABLE musiclib ADD COLUMN dateAdded TEXT");
         } catch (const QueryError& error) {
             qDebug() << error.what();
         }
@@ -62,7 +60,7 @@ void Model::updateTable() {
 
     if (!tmplist.contains("discNumber")) {
         try {
-            mainDB->exec("ALTER TABLE musiclib ADD COLUMN discNumber INT NOT NULL DEFAULT 1");
+            db_->exec("ALTER TABLE musiclib ADD COLUMN discNumber INT NOT NULL DEFAULT 1");
         } catch (const QueryError& error) {
             qDebug() << error.what();
         }
@@ -74,7 +72,7 @@ void Model::ensureAllTables() {
 }
 
 void Model::createLibTable(const QString& name) {
-    QStringList tables = mainDB->tables();
+    QStringList tables = db_->tables();
 
     if (!tables.contains(name)) {
         QString qs("CREATE TABLE `%1` ");
@@ -94,9 +92,8 @@ void Model::createLibTable(const QString& name) {
         qs.append("`discNumber` int NOT NULL DEFAULT 1\n");
         qs.append(")");
 
-        QMutexLocker locker(mutex_.data());
         try {
-            mainDB->exec(qs.arg(name));
+            db_->exec(qs.arg(name));
         } catch (const QueryError& error) {
             qDebug() << error.what();
         }
@@ -106,10 +103,9 @@ void Model::createLibTable(const QString& name) {
 void Model::copyLibToTmp() {
     createLibTable("tmplib");
     QString query("insert into tmplib SELECT * from musiclib");
-    QMutexLocker locker(mutex_.data());
 
     try {
-        mainDB->exec(query);
+        db_->exec(query);
     } catch (const QueryError& error) {
         qDebug() << error.what();
     }
@@ -117,33 +113,34 @@ void Model::copyLibToTmp() {
 
 void Model::clearMusicLib() {
     QString query("DELETE FROM musiclib");
-    QMutexLocker locker(mutex_.data());
+
     try {
-        mainDB->exec(query);
+        db_->exec(query);
     } catch (const QueryError& error) {
         qDebug() << error.what();
     }
 }
 
-void Model::setDateAddedForMrl(const QSqlDatabase& db, const QString& dateAdded, const QString& mrl) {
+void Model::setDateAddedForMrl(const QString& dateAdded, const QString& mrl) {
     QString query("UPDATE musiclib SET dateAdded='%1' WHERE mrl='%2'");
 
     try {
-        db.exec(query.arg(dateAdded).arg(QueryBuilder::escapeString(mrl)));
+        db_->exec(query.arg(dateAdded).arg(QueryBuilder::escapeString(mrl)));
     } catch (const QueryError& error) {
         qDebug() << error.what();
     }
 }
 
-QString Model::getDateAddedFromTmpLibForMrl(const QSqlDatabase& db, const QString& mrl) {
-    auto tmprec = db.exec(QString("SELECT dateAdded FROM tmplib WHERE mrl='%1'").arg(QueryBuilder::escapeString(mrl)));
+QString Model::getDateAddedFromTmpLibForMrl(const QString& mrl) {
+    auto tmprec =
+        db_->exec(QString("SELECT dateAdded FROM tmplib WHERE mrl='%1'").arg(QueryBuilder::escapeString(mrl)));
 
-    tmprec.first();
-    return tmprec.value("dateAdded").toString();
+    tmprec->first();
+    return tmprec->value("dateAdded").toString();
 }
 
-void Model::checkIfTablesExist(const QSqlDatabase& db) const {
-    auto tables = db.tables();
+void Model::checkIfTablesExist() const {
+    auto tables = db_->tables();
 
     if (!tables.contains("musiclib")) {
         throw TableNotFoundError("musiclib");
@@ -154,25 +151,24 @@ void Model::checkIfTablesExist(const QSqlDatabase& db) const {
 }
 
 void Model::restoreMetaData() {
-    auto db = QSqlDatabase::database(Config::MAINDB_NAME);
-    checkIfTablesExist(db);
-    auto records = db.exec("SELECT * FROM musiclib");
+    checkIfTablesExist();
+    auto records = db_->exec("SELECT * FROM musiclib");
 
-    db.transaction();
-    while (records.next()) {
-        QString mrl = records.value("mrl").toString();
-        QString tmpdate = getDateAddedFromTmpLibForMrl(db, mrl);
+    db_->transaction();
+    while (records->next()) {
+        QString mrl = records->value("mrl").toString();
+        QString tmpdate = getDateAddedFromTmpLibForMrl(mrl);
 
         if (tmpdate.isEmpty()) {
             continue;
         }
 
-        setDateAddedForMrl(db, tmpdate, mrl);
+        setDateAddedForMrl(tmpdate, mrl);
     }
-    db.commit();
+    db_->commit();
 
     try {
-        db.exec("DROP TABLE tmplib");
+        db_->exec("DROP TABLE tmplib");
     } catch (const QueryError& error) {
         qDebug() << error.what();
     }
@@ -210,22 +206,21 @@ QPair<int, QJsonArray> Model::queryResultToJson(const std::unique_ptr<IQueryResu
 }
 
 QPair<int, QJsonArray> Model::runSetDisplayQuery(const QString& query) {
-    QMutexLocker locker(mutex_.data());
-    return Model::queryResultToJson(mainDB->exec(query));
+    auto result = db_->exec(query);
+    return Model::queryResultToJson(result);
 }
 
 QJsonArray Model::getAlbumTracks(const QString& album) {
     QString query("SELECT * FROM musiclib WHERE album = '%1' ORDER BY track");
 
-    QMutexLocker locker(mutex_.data());
-    auto result = mainDB->exec(query.arg(QueryBuilder::escapeString(album)));
+    auto result = db_->exec(query.arg(QueryBuilder::escapeString(album)));
 
     return Model::queryResultToJson(result).second;
 }
 
 QString Model::getDateAddedByMrl(const QString& mrl) const {
     QString query("SELECT dateAdded FROM musiclib WHERE mrl='%1' OR path='%1'");
-    auto result = mainDB->exec(query.arg(QueryBuilder::escapeString(mrl)));
+    auto result = db_->exec(query.arg(QueryBuilder::escapeString(mrl)));
     result->first();
     return result->value("dateAdded").toString();
 }
@@ -238,7 +233,7 @@ QJsonObject Model::getMetadataForMrl(const QUrl& mrl) const {
     QString query("SELECT * FROM musiclib WHERE mrl='%1' OR path='%1'");
     query = query.arg(QueryBuilder::escapeString(cleanPath(mrl.toLocalFile())));
     qDebug() << query;
-    auto result = mainDB->exec(query);
+    auto result = db_->exec(query);
     QJsonObject retval = Model::queryResultToJson(result).second.first().toObject();
     qDebug() << retval;
     return retval;
@@ -246,7 +241,7 @@ QJsonObject Model::getMetadataForMrl(const QUrl& mrl) const {
 
 QStringList Model::getGenreList(const QString& filter) const {
     QStringList retval;
-    auto result = mainDB->exec(QueryBuilder::genreQuery(filter));
+    auto result = db_->exec(QueryBuilder::genreQuery(filter));
 
     while (result->next()) {
         QString tmp = result->value("genre").toString();
@@ -261,7 +256,7 @@ QStringList Model::getGenreList(const QString& filter) const {
 
 QStringList Model::getArtistList(const QString& artist, const QString& genre) const {
     QStringList retval;
-    auto result = mainDB->exec(QueryBuilder::artistQuery(artist, genre));
+    auto result = db_->exec(QueryBuilder::artistQuery(artist, genre));
 
     while (result->next()) {
         QString tmp = result->value("artist").toString();
@@ -276,7 +271,7 @@ QStringList Model::getArtistList(const QString& artist, const QString& genre) co
 
 QStringList Model::getAlbumList(const QString& album, const QString& artist, const QString& genre) const {
     QStringList retval;
-    auto result = mainDB->exec(QueryBuilder::albumQuery(album, artist, genre));
+    auto result = db_->exec(QueryBuilder::albumQuery(album, artist, genre));
 
     while (result->next()) {
         QString tmp = result->value("album").toString();

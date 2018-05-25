@@ -2,13 +2,12 @@
 
 #include <QJsonArray>
 #include <QJsonObject>
-#include <QMutex>
-#include <QSharedPointer>
 #include <QSqlQuery>
 #include <QSqlResult>
 #include <QString>
 #include <QStringList>
 #include <memory>
+#include <mutex>
 
 #include "IMainDB.h"
 #include "QueryBuilder.h"
@@ -51,13 +50,13 @@ public:
     QJsonObject getMetadataForMrl(const QUrl& mrl) const;
 
 private:
-    std::unique_ptr<IMainDB> mainDB;
-    QSharedPointer<QMutex> mutex_;
+    std::unique_ptr<IMainDB> db_;
+    std::mutex mutex_;
 
     void init();
     static QStringList resultToList(const std::unique_ptr<IQueryResult>& result, const QString& what);
     void updateTable();
-    void setDateAddedForMrl(const QSqlDatabase& db, const QString& dateAdded, const QString& mrl);
-    QString getDateAddedFromTmpLibForMrl(const QSqlDatabase& db, const QString& mrl);
-    void checkIfTablesExist(const QSqlDatabase& db) const;
+    void setDateAddedForMrl(const QString& dateAdded, const QString& mrl);
+    QString getDateAddedFromTmpLibForMrl(const QString& mrl);
+    void checkIfTablesExist() const;
 };

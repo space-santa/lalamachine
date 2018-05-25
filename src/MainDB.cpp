@@ -7,10 +7,9 @@
 #include "exceptions.h"
 
 std::unique_ptr<IQueryResult> MainDB::exec(const QString& query) {
-    auto db = QSqlDatabase::database(Config::MAINDB_NAME);
+    auto db = QSqlDatabase::database(Config::MAINDBNAME);
     auto result = db.exec(query);
     auto error = result.lastError();
-    qDebug() << "query" << query << "still active";
 
     if (error.isValid()) {
         throw QueryError(error.text().toStdString());
@@ -21,16 +20,13 @@ std::unique_ptr<IQueryResult> MainDB::exec(const QString& query) {
 }
 
 QStringList MainDB::tables() {
-    auto db = QSqlDatabase::database(Config::MAINDB_NAME);
-    return db.tables();
+    return QSqlDatabase::database(Config::MAINDBNAME).tables();
 }
 
 void MainDB::transaction() {
-    auto db = QSqlDatabase::database(Config::MAINDB_NAME);
-    db.transaction();
+    QSqlDatabase::database(Config::MAINDBNAME).transaction();
 }
 
 void MainDB::commit() {
-    auto db = QSqlDatabase::database(Config::MAINDB_NAME);
-    db.commit();
+    QSqlDatabase::database(Config::MAINDBNAME).commit();
 }

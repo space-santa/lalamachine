@@ -59,6 +59,10 @@ Rectangle {
     }
 
     function sort(how) {
+        if (list_model.count < 2) {
+            return
+        }
+
         if (!container.allowSort) {
             return
         }
@@ -110,13 +114,14 @@ Rectangle {
             anchors.bottom: parent.bottom
             model: list_model
             backgroundVisible: false
-            style: TableStyle {}
+            style: TableStyle {
+            }
+
 
             // I found the horizontal scrollbars annoying for this lists.
             // They take up too much space and don't really give better info
             // when searching through e.g. a list of genres.
             //horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-
             onCurrentRowChanged: {
                 selection.clear()
                 selection.select(currentRow)
@@ -127,7 +132,11 @@ Rectangle {
                 width: container.width
             }
 
-            onModelChanged: list_view.resizeColumnsToContents()
+            onModelChanged: {
+                if (list_model.rowCount() > 0) {
+                    list_view.resizeColumnsToContents()
+                }
+            }
 
             sortIndicatorVisible: container.allowSort
             onSortIndicatorColumnChanged: {
@@ -150,7 +159,8 @@ Rectangle {
                 }
             }
 
-            itemDelegate: ItemDelegate {}
+            itemDelegate: ItemDelegate {
+            }
         }
 
         Rectangle {

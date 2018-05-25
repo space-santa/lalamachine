@@ -3,7 +3,6 @@ TEMPLATE = app
 QT += qml quick widgets sql concurrent multimedia quickwidgets
 
 CONFIG += C++11 # console
-QMAKE_CXXFLAGS += -Werror
 
 SOURCES += \
     src/DirWalker.cpp \
@@ -82,35 +81,26 @@ DISTFILES += \
 ICON = ./images/lala-icon.png.icns
 
 macx: {
+    QMAKE_CXXFLAGS += -Werror
     INCLUDEPATH += /usr/local/include/taglib
     LIBS += -L/usr/local/lib/ -ltag
 }
 
 linux-g++: {
+    QMAKE_CXXFLAGS += -Werror
     INCLUDEPATH += /usr/include/taglib
     LIBS += -ltag
 }
 
-win32-g++: {
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/ape
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/asf
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/flac
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/it
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/mod
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/mp4
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/mpc
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/mpeg
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/mpeg/id3v2
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/ogg
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/riff
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/s3m
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/toolkit
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/trueaudio
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/wavpack
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/taglib/xm
-    INCLUDEPATH += $$PWD/../taglib-1.11.1/build
-    INCLUDEPATH += $$PWD/../build-taglib-1.11.1-Desktop_Qt_5_10_1_MinGW_32bit-Default
-    CONFIG(release, debug|release): LIBS += $$PWD/../taglib-1.11.1/build/taglib/libtag.dll
-    #CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../taglib-1.11.1/taglib/build/taglib/libtag.dll
+win32-g++ {
+    QMAKE_CXXFLAGS += -Werror
+    LIBS += -L$$PWD/../../../lib/taglib/lib/ -llibtag.dll
+    INCLUDEPATH += $$PWD/../../../lib/taglib/include/taglib
+    DEPENDPATH += $$PWD/../../../lib/taglib/include/taglib
+}
+
+win32-msvc* {
+    LIBS += -L$$PWD/../../../Libraries/taglib/lib/ -ltag
+    INCLUDEPATH += $$PWD/../../../Libraries/taglib/include/taglib
+    DEPENDPATH += $$PWD/../../../Libraries/taglib/include
 }

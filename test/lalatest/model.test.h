@@ -14,9 +14,6 @@ private slots:
     void testCopyLibToTmp();
     void testClearMusicLib();
     void testSetDateAddedForMrl();
-    void testGetTablesToRestoreMetaDataNoMusic();
-    void testGetTablesToRestoreMetaDataNoTmp();
-    void testGetTablesToRestoreMetaDataAllGood();
     void testRestoreMetaData();
     void testCleanPath();
 };

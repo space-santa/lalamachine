@@ -325,9 +325,7 @@ Rectangle {
     }
 
     function addLib(json) {
-        for (var i in json) {
-            playlist_model.append(setId(json[i]))
-        }
+        playlist_model.setLibrary(json)
     }
 
     function replaceJson(json) {
@@ -418,7 +416,8 @@ Rectangle {
         selectionMode: SelectionMode.ExtendedSelection
         backgroundVisible: true
 
-        style: TableStyle {}
+        style: TableStyle {
+        }
 
         property var playlistColumns: config.playlistColumns
 
@@ -625,8 +624,10 @@ Rectangle {
         }
 
         onModelChanged: {
-            playlist_view.resizeColumnsToContents()
-            updateNowPlayingRow()
+            if (playlist_model.rowCount() > 0) {
+                playlist_view.resizeColumnsToContents()
+                updateNowPlayingRow()
+            }
         }
 
         function getColumnRole(col) {
@@ -665,6 +666,7 @@ Rectangle {
             }
         }
 
-        itemDelegate: ItemDelegate {}
+        itemDelegate: ItemDelegate {
+        }
     }
 }
