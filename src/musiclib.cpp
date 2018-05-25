@@ -340,9 +340,6 @@ QString MusicLib::titlePartialFilter() const {
     return titlePartialFilter_;
 }
 void MusicLib::setTitlePartialFilter(const QString& titlePartialFilter) {
-    if (titlePartialFilter.length() < 3 && titlePartialFilter.length() > 0) {
-        return;
-    }
     titlePartialFilter_ = titlePartialFilter;
     emit titlePartialFilterChanged();
 }

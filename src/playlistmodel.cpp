@@ -145,6 +145,17 @@ void PlaylistModel::append(const QJsonObject& json) {
     append(Track(json));
 }
 
+void PlaylistModel::setLibrary(const QJsonArray& json) {
+    beginInsertRows(QModelIndex(), 0, json.count());
+
+    for (int i = 0; i < json.count(); ++i) {
+        list_.append(Track(json[i].toObject()));
+    }
+
+    endInsertRows();
+    emit countChanged();
+}
+
 void PlaylistModel::sortRole(const QString& role, Qt::SortOrder order) {
     auto func = &PlaylistModel::sortTrackAsc;
     switch (roleNames().key(role.toUtf8())) {

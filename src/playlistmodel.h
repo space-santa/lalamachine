@@ -45,6 +45,7 @@ public:
     Q_INVOKABLE QJsonObject get(int row) const;
     Q_INVOKABLE void clear();
     Q_INVOKABLE void append(const QJsonObject& json);
+    Q_INVOKABLE void setLibrary(const QJsonArray& json);
 
     Q_INVOKABLE void sortRole(const QString& role, Qt::SortOrder order = Qt::AscendingOrder);
 

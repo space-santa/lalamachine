@@ -325,9 +325,7 @@ Rectangle {
     }
 
     function addLib(json) {
-        for (var i in json) {
-            playlist_model.append(setId(json[i]))
-        }
+        playlist_model.setLibrary(json)
     }
 
     function replaceJson(json) {
