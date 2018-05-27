@@ -4,6 +4,8 @@ QT += qml quick widgets sql concurrent multimedia quickwidgets
 
 CONFIG += C++11 # console
 
+win32:RC_ICONS += images/lalamachine-new.ico
+
 SOURCES += \
     src/DirWalker.cpp \
     src/MainDB.cpp \

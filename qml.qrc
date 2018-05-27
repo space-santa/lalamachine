@@ -72,5 +72,6 @@
         <file>images/settings.png</file>
         <file>images/tab_new.png</file>
         <file>images/tab_remove.png</file>
+        <file>images/lalamachine-new.ico</file>
     </qresource>
 </RCC>
