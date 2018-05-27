@@ -94,7 +94,7 @@ Item {
             }
 
             function emitMouseYChanged() {
-                    container.mouseYChanged(mouseY, container.height, styleData.row)
+                container.mouseYChanged(mouseY, container.height, styleData.row)
             }
         }
     }
