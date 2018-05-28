@@ -21,7 +21,7 @@ import QtQuick.Controls 1.2
 
 Item {
     id: container
-    height: 20
+    height: 24
     property TableView target
     signal rightClick(int row)
     signal pressed(int row)

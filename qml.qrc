@@ -33,6 +33,8 @@
         <file>MainPlaylist.qml</file>
         <file>LibraryPlaylist.qml</file>
         <file>MainPlaylistRightClickMenu.qml</file>
+        <file>TableHeaderDelegate.qml</file>
+        <file>TextBase.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/back.png</file>

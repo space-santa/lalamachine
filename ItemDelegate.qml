@@ -1,8 +1,6 @@
 import QtQuick 2.0
 
-Text {
-    font.family: "Helvetica"
-    font.pointSize: 12
+TextBase {
     clip: true
     color: "white"
     text: styleData.value ? styleData.value : ""
