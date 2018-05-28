@@ -23,8 +23,11 @@ import QtQuick.Layouts 1.1
 import Lala 1.0
 
 Dialog {
-    width: 500
+    width: mainWidth + 8
     height: 250
+
+    readonly property int mainWidth: 700
+    readonly property int mainLabelWidth: 200
 
     title: "Info"
 
@@ -32,44 +35,51 @@ Dialog {
         id: sysinfo
     }
 
-    ColumnLayout {
-        id: col
-        height: 180
-        property int childHeight: height / 6
-        KeyValueText {
-            labelText: "App Name: "
-            valueText: sysinfo.appName()
-            labelWidth: 150
-            width: 500
-            height: col.childHeight
-        }
-        KeyValueText {
-            labelText: "Version: "
-            valueText: sysinfo.appVersion()
-            labelWidth: 150
-            width: 500
-            height: col.childHeight
-        }
-        KeyValueText {
-            labelText: "Config directory: "
-            valueText: sysinfo.lalaDir()
-            labelWidth: 150
-            width: 500
-            height: col.childHeight
-        }
-        KeyValueText {
-            labelText: "License: "
-            valueText: "GPL v3"
-            labelWidth: 150
-            width: 500
-            height: col.childHeight
-        }
-        KeyValueText {
-            labelText: "Copyright: "
-            valueText: "2015-2018 Claus Zirkel"
-            labelWidth: 150
-            width: 500
-            height: col.childHeight
+    contentItem: Rectangle {
+        color: "darkblue"
+        border.color: "darkorange"
+        border.width: 4
+
+        ColumnLayout {
+            id: col
+            height: 180
+            anchors.centerIn: parent
+            property int childHeight: height / 6
+            KeyValueText {
+                labelText: "App Name: "
+                valueText: sysinfo.appName()
+                labelWidth: mainLabelWidth
+                width: mainWidth
+                height: col.childHeight
+            }
+            KeyValueText {
+                labelText: "Version: "
+                valueText: sysinfo.appVersion()
+                labelWidth: mainLabelWidth
+                width: mainWidth
+                height: col.childHeight
+            }
+            KeyValueText {
+                labelText: "Config directory: "
+                valueText: sysinfo.lalaDir()
+                labelWidth: mainLabelWidth
+                width: mainWidth
+                height: col.childHeight
+            }
+            KeyValueText {
+                labelText: "License: "
+                valueText: "GPL v3"
+                labelWidth: mainLabelWidth
+                width: mainWidth
+                height: col.childHeight
+            }
+            KeyValueText {
+                labelText: "Copyright: "
+                valueText: "2015-2018 Claus Zirkel"
+                labelWidth: mainLabelWidth
+                width: mainWidth
+                height: col.childHeight
+            }
         }
     }
 }
