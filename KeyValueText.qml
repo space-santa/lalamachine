@@ -19,13 +19,13 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 import QtQuick 2.0
 
 Rectangle {
-    width: 200
+    width: 300
     height: 40
 
-    color: "black"
-    readonly property string textColour: "limegreen"
+    color: "darkblue"
+    readonly property string textColour: "white"
 
-    property int labelWidth: 60
+    property int labelWidth: 80
     property alias labelText: label.text
 
     property alias valueText: value.text
@@ -38,6 +38,8 @@ Rectangle {
         anchors.bottom: parent.bottom
 
         color: textColour
+        font.family: "Helvetica"
+        font.pointSize: 12
 
         verticalAlignment: Qt.AlignVCenter
         horizontalAlignment: Qt.AlignRight
@@ -51,6 +53,8 @@ Rectangle {
         anchors.left: label.right
 
         color: textColour
+        font.family: "Helvetica"
+        font.pointSize: 12
 
         verticalAlignment: Qt.AlignVCenter
         horizontalAlignment: Qt.AlignLeft
