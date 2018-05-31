@@ -668,5 +668,8 @@ Rectangle {
 
         itemDelegate: ItemDelegate {
         }
+
+        headerDelegate: TableHeaderDelegate {
+        }
     }
 }

@@ -164,7 +164,7 @@ Rectangle {
                     id: titles_filter_box
                     anchors.top: parent.top
                     anchors.horizontalCenter: titles.horizontalCenter
-                    height: 25
+                    height: 32
                     width: 250
 
                     TextField {
@@ -174,6 +174,9 @@ Rectangle {
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         anchors.right: clear_button.left
+
+                        font.pointSize: 12
+                        font.family: "Helvetica"
 
                         placeholderText: "Filter..."
                     }
@@ -252,7 +255,7 @@ Rectangle {
                 height: lib.scanning ? 50 : 0
                 color: "transparent"
 
-                Text {
+                TextBase {
                     anchors.fill: parent
 
                     visible: lib.scanning

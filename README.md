@@ -27,11 +27,9 @@ sudo dnf --refresh update
 sudo dnf install lalamachine
 ```
 
-This will also install `libsingleinstance`.
-
 ## Dependencies
 
-qtbase, qtmultimedia, taglib, libsingleinstance
+qtbase, qtmultimedia, taglib
 
 ## Build it
 

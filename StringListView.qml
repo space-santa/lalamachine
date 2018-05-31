@@ -161,6 +161,9 @@ Rectangle {
 
             itemDelegate: ItemDelegate {
             }
+
+            headerDelegate: TableHeaderDelegate {
+            }
         }
 
         Rectangle {
@@ -168,7 +171,7 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: parent.top
-            height: 20
+            height: 28
             color: "transparent"
 
             Text {

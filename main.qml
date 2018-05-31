@@ -21,6 +21,7 @@ import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.2
 import QtQuick.Window 2.2
 import Qt.labs.settings 1.0
+import QtQuick.Controls.Styles 1.4
 
 import Lala 1.0
 
@@ -380,7 +381,7 @@ ApplicationWindow {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            height: 35
+            height: 45
 
             Button {
                 id: show_list
@@ -389,6 +390,12 @@ ApplicationWindow {
                 anchors.bottom: parent.bottom
                 width: parent.width / 2
                 action: show_list_action
+
+                style: ButtonStyle {
+                    label: TextBase {
+                        text: control.text
+                    }
+                }
             }
 
             Button {
@@ -398,6 +405,12 @@ ApplicationWindow {
                 anchors.right: parent.right
                 anchors.left: show_list.right
                 action: show_musiclib_action
+
+                style: ButtonStyle {
+                    label: TextBase {
+                        text: control.text
+                    }
+                }
             }
         }
 

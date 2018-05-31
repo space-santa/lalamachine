@@ -21,6 +21,7 @@ import QtQuick.Controls 1.2
 
 Item {
     id: container
+    height: 24
     property TableView target
     signal rightClick(int row)
     signal pressed(int row)
@@ -93,7 +94,7 @@ Item {
             }
 
             function emitMouseYChanged() {
-                    container.mouseYChanged(mouseY, container.height, styleData.row)
+                container.mouseYChanged(mouseY, container.height, styleData.row)
             }
         }
     }
