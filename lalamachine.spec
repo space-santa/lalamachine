@@ -1,5 +1,5 @@
 Name: lalamachine
-Version: 3.6.1
+Version: 3.7.1
 Release: 1
 License: GPL-3.0+
 Summary: A music player
@@ -40,6 +40,12 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/applications/lalamachine.desktop
 
 %changelog
+* Fri Jun 15 2018 space-santa 3.7.1-1
+  * Bugfix: Minimizing doesn't hide the app anymore.
+
+* Fri Jun 01 2018 space-santa 3.7.0-1
+  * Make the UI on Windows look nicer.
+
 * Sun Apr 15 2018 space-santa 3.6.1-1
   * Bugfix: Scanning and rescanning the library works now reliably.
   * Bugfix: No more crashes on closing after scan.

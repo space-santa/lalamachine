@@ -90,12 +90,6 @@ ApplicationWindow {
         property bool showPlaylist: show_list.checked
     }
 
-    onWindowStateChanged: {
-        if (windowState == Qt.WindowMinimized) {
-            hide()
-        }
-    }
-
     onClosing: {
         playlist.writePlaylist(miscPlaylistName)
 
