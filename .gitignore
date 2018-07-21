@@ -11,3 +11,5 @@ Makefile
 tags
 .vscode
 test/build-*
+.vs
+GeneratedFiles
