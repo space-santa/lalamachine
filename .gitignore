@@ -13,3 +13,6 @@ tags
 test/build-*
 .vs
 GeneratedFiles
+**.msi
+**.wixobj
+**.wixpdb

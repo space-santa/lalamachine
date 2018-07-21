@@ -1,0 +1,2143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+    <Product Id="59045D84-B9F8-40AD-8740-DB00EC5FA31E" Name="lalamachine" Language="1033" Version="3.7.2" Manufacturer="SpaceSanta" UpgradeCode="8201A73E-C7BC-43DE-B219-5FC632CF8529">
+        <Package Description="Test file in a Product" Comments="Simple test" InstallerVersion="200" Compressed="yes" />
+        <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" />
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFilesFolder" Name="PFiles" />
+            <Directory Id="RELEASE" Name="release">
+                <Component Id="D3DCOMPILER_47.DLL" DiskId="1" Guid="35AD258C-9ADA-4E11-A7C7-E7C0BD33F034">
+                    <File Id="D3DCOMPILER_47.DLL" Name="D3Dcompiler_47.dll" Source="..\release\D3Dcompiler_47.dll" />
+                </Component>
+                <Component Id="LALAMACHINE.EXE" DiskId="1" Guid="8EBBAF13-E6B4-45BB-977B-2EFEAB78688F">
+                    <File Id="LALAMACHINE.EXE" Name="lalamachine.exe" Source="..\release\lalamachine.exe">
+                        <Shortcut Id="ExeShortcut" Directory="ProgramMenuDir" Name="lalamachine" Advertise="yes" Icon="StartMenuIcon.exe" IconIndex="0" />
+                    </File>
+                </Component>
+                <Component Id="LIBEGL.DLL" DiskId="1" Guid="8F25F617-EFF6-4BA7-9D24-2DA57F4C38D5">
+                    <File Id="LIBEGL.DLL" Name="libEGL.dll" Source="..\release\libEGL.dll" />
+                </Component>
+                <Component Id="LIBGLESV2.DLL" DiskId="1" Guid="CCD4C4F8-CC0F-4FDC-8EB1-E5C53B032FC9">
+                    <File Id="LIBGLESV2.DLL" Name="libGLESV2.dll" Source="..\release\libGLESV2.dll" />
+                </Component>
+                <Component Id="MOC_PREDEFS.H" DiskId="1" Guid="37F5C415-21B7-4E4C-A075-391F7D94DAF6">
+                    <File Id="MOC_PREDEFS.H" Name="moc_predefs.h" Source="..\release\moc_predefs.h" />
+                </Component>
+                <Component Id="MOC_PREDEFS.H.CBT" DiskId="1" Guid="65D497B5-5077-4D28-8341-62770ED37A89">
+                    <File Id="MOC_PREDEFS.H.CBT" Name="moc_predefs.h.cbt" Source="..\release\moc_predefs.h.cbt" />
+                </Component>
+                <Component Id="OPENGL32SW.DLL" DiskId="1" Guid="6F01980F-2041-448F-922E-601DBC5F3F0C">
+                    <File Id="OPENGL32SW.DLL" Name="opengl32sw.dll" Source="..\release\opengl32sw.dll" />
+                </Component>
+                <Component Id="QT5CORE.DLL" DiskId="1" Guid="908E1B46-BDCB-41ED-9CCF-38B06D11BC2D">
+                    <File Id="QT5CORE.DLL" Name="Qt5Core.dll" Source="..\release\Qt5Core.dll" />
+                </Component>
+                <Component Id="QT5GUI.DLL" DiskId="1" Guid="EDAEB673-F5B4-4655-BCE6-6214AC65474C">
+                    <File Id="QT5GUI.DLL" Name="Qt5Gui.dll" Source="..\release\Qt5Gui.dll" />
+                </Component>
+                <Component Id="QT5MULTIMEDIA.DLL" DiskId="1" Guid="C1345591-2836-40EC-AF04-982D1EFDF051">
+                    <File Id="QT5MULTIMEDIA.DLL" Name="Qt5Multimedia.dll" Source="..\release\Qt5Multimedia.dll" />
+                </Component>
+                <Component Id="QT5NETWORK.DLL" DiskId="1" Guid="2FA64D3B-59EE-419C-A169-EAB90B3D345F">
+                    <File Id="QT5NETWORK.DLL" Name="Qt5Network.dll" Source="..\release\Qt5Network.dll" />
+                </Component>
+                <Component Id="QT5QML.DLL" DiskId="1" Guid="874DD228-AD92-4A36-A140-F709AD9CF6F2">
+                    <File Id="QT5QML.DLL" Name="Qt5Qml.dll" Source="..\release\Qt5Qml.dll" />
+                </Component>
+                <Component Id="QT5QUICK.DLL" DiskId="1" Guid="FA6AA440-6BBD-41D5-9ED0-15D8C0BB78E3">
+                    <File Id="QT5QUICK.DLL" Name="Qt5Quick.dll" Source="..\release\Qt5Quick.dll" />
+                </Component>
+                <Component Id="QT5SQL.DLL" DiskId="1" Guid="7DAABD10-950F-4F33-A957-7FA65546B97E">
+                    <File Id="QT5SQL.DLL" Name="Qt5Sql.dll" Source="..\release\Qt5Sql.dll" />
+                </Component>
+                <Component Id="QT5SVG.DLL" DiskId="1" Guid="FE4C8FFB-5636-441D-8DA8-AB94594DF26E">
+                    <File Id="QT5SVG.DLL" Name="Qt5Svg.dll" Source="..\release\Qt5Svg.dll" />
+                </Component>
+                <Component Id="QT5WIDGETS.DLL" DiskId="1" Guid="4F151471-9308-4A4E-9C30-93679E968921">
+                    <File Id="QT5WIDGETS.DLL" Name="Qt5Widgets.dll" Source="..\release\Qt5Widgets.dll" />
+                </Component>
+                <Component Id="TAG.DLL" DiskId="1" Guid="CDABC4BD-7AD5-467A-B487-3FEC4B2D713F">
+                    <File Id="TAG.DLL" Name="tag.dll" Source="..\release\tag.dll" />
+                </Component>
+                <Directory Id="AUDIO" Name="audio">
+                    <Component Id="QTAUDIO_WASAPI.DLL" DiskId="1" Guid="128D785C-F514-4EBC-B57D-ED3E313EC66F">
+                        <File Id="QTAUDIO_WASAPI.DLL" Name="qtaudio_wasapi.dll" Source="..\release\audio\qtaudio_wasapi.dll" />
+                    </Component>
+                    <Component Id="QTAUDIO_WINDOWS.DLL" DiskId="1" Guid="8B8931D4-4EE7-4376-89B2-AFA010A039FC">
+                        <File Id="QTAUDIO_WINDOWS.DLL" Name="qtaudio_windows.dll" Source="..\release\audio\qtaudio_windows.dll" />
+                    </Component>
+                </Directory>
+                <Directory Id="BEARER" Name="bearer">
+                    <Component Id="QGENERICBEARER.DLL" DiskId="1" Guid="0A23C516-A17D-4BED-B5DD-6EB02F52B0A1">
+                        <File Id="QGENERICBEARER.DLL" Name="qgenericbearer.dll" Source="..\release\bearer\qgenericbearer.dll" />
+                    </Component>
+                </Directory>
+                <Directory Id="ICONENGINES" Name="iconengines">
+                    <Component Id="QSVGICON.DLL" DiskId="1" Guid="2B427229-1493-4024-ABD2-D850EDE649A2">
+                        <File Id="QSVGICON.DLL" Name="qsvgicon.dll" Source="..\release\iconengines\qsvgicon.dll" />
+                    </Component>
+                </Directory>
+                <Directory Id="IMAGEFORMATS" Name="imageformats">
+                    <Component Id="QGIF.DLL" DiskId="1" Guid="E011300A-0C0B-4D3C-9407-E7933C5199E5">
+                        <File Id="QGIF.DLL" Name="qgif.dll" Source="..\release\imageformats\qgif.dll" />
+                    </Component>
+                    <Component Id="QICNS.DLL" DiskId="1" Guid="E9BD65C7-E46A-466C-A751-0FC93680D74B">
+                        <File Id="QICNS.DLL" Name="qicns.dll" Source="..\release\imageformats\qicns.dll" />
+                    </Component>
+                    <Component Id="QICO.DLL" DiskId="1" Guid="C3C4E203-F6F7-4EAB-AD12-C9CA37CAD99E">
+                        <File Id="QICO.DLL" Name="qico.dll" Source="..\release\imageformats\qico.dll" />
+                    </Component>
+                    <Component Id="QJPEG.DLL" DiskId="1" Guid="51265B41-6647-4285-92A9-14F9737D285E">
+                        <File Id="QJPEG.DLL" Name="qjpeg.dll" Source="..\release\imageformats\qjpeg.dll" />
+                    </Component>
+                    <Component Id="QSVG.DLL" DiskId="1" Guid="9D246738-9047-476D-918E-289FAC01AD2B">
+                        <File Id="QSVG.DLL" Name="qsvg.dll" Source="..\release\imageformats\qsvg.dll" />
+                    </Component>
+                    <Component Id="QTGA.DLL" DiskId="1" Guid="1434F758-BC9D-48B8-B1BE-DDB21523D7CA">
+                        <File Id="QTGA.DLL" Name="qtga.dll" Source="..\release\imageformats\qtga.dll" />
+                    </Component>
+                    <Component Id="QTIFF.DLL" DiskId="1" Guid="321C7388-F278-4E87-B4FB-4785BF43F006">
+                        <File Id="QTIFF.DLL" Name="qtiff.dll" Source="..\release\imageformats\qtiff.dll" />
+                    </Component>
+                    <Component Id="QWBMP.DLL" DiskId="1" Guid="D66DBA86-7F61-4B3A-AD3D-B2BC9688F407">
+                        <File Id="QWBMP.DLL" Name="qwbmp.dll" Source="..\release\imageformats\qwbmp.dll" />
+                    </Component>
+                    <Component Id="QWEBP.DLL" DiskId="1" Guid="A0CAEC73-5D33-4CDB-9CCC-BE37474A1382">
+                        <File Id="QWEBP.DLL" Name="qwebp.dll" Source="..\release\imageformats\qwebp.dll" />
+                    </Component>
+                </Directory>
+                <Directory Id="MEDIASERVICE" Name="mediaservice">
+                    <Component Id="DSENGINE.DLL" DiskId="1" Guid="C1B40687-F587-4D62-B4CD-523CF334A5CA">
+                        <File Id="DSENGINE.DLL" Name="dsengine.dll" Source="..\release\mediaservice\dsengine.dll" />
+                    </Component>
+                    <Component Id="QTMEDIA_AUDIOENGINE.DLL" DiskId="1" Guid="14977B16-9720-4604-82A7-67786D6A1146">
+                        <File Id="QTMEDIA_AUDIOENGINE.DLL" Name="qtmedia_audioengine.dll" Source="..\release\mediaservice\qtmedia_audioengine.dll" />
+                    </Component>
+                    <Component Id="WMFENGINE.DLL" DiskId="1" Guid="B911CDEC-4558-4E7F-ACD0-CFA01E8CBE55">
+                        <File Id="WMFENGINE.DLL" Name="wmfengine.dll" Source="..\release\mediaservice\wmfengine.dll" />
+                    </Component>
+                </Directory>
+                <Directory Id="PLATFORMS" Name="platforms">
+                    <Component Id="QWINDOWS.DLL" DiskId="1" Guid="C8E37DD2-0ECA-49A1-B326-27BFB8897CCE">
+                        <File Id="QWINDOWS.DLL" Name="qwindows.dll" Source="..\release\platforms\qwindows.dll" />
+                    </Component>
+                </Directory>
+                <Directory Id="PLAYLISTFORMATS" Name="playlistformats">
+                    <Component Id="QTMULTIMEDIA_M3U.DLL" DiskId="1" Guid="41FE43FC-741B-4E5D-9977-7F9E84AE499D">
+                        <File Id="QTMULTIMEDIA_M3U.DLL" Name="qtmultimedia_m3u.dll" Source="..\release\playlistformats\qtmultimedia_m3u.dll" />
+                    </Component>
+                </Directory>
+                <Directory Id="QMLTOOLING" Name="qmltooling">
+                    <Component Id="QMLDBG_DEBUGGER.DLL" DiskId="1" Guid="A9F61066-DA36-457D-912C-2616B915FF4A">
+                        <File Id="QMLDBG_DEBUGGER.DLL" Name="qmldbg_debugger.dll" Source="..\release\qmltooling\qmldbg_debugger.dll" />
+                    </Component>
+                    <Component Id="QMLDBG_INSPECTOR.DLL" DiskId="1" Guid="053F1801-277B-4468-94F9-9117A6A6A575">
+                        <File Id="QMLDBG_INSPECTOR.DLL" Name="qmldbg_inspector.dll" Source="..\release\qmltooling\qmldbg_inspector.dll" />
+                    </Component>
+                    <Component Id="QMLDBG_LOCAL.DLL" DiskId="1" Guid="D93628A3-A89E-4405-8348-884194DB63A7">
+                        <File Id="QMLDBG_LOCAL.DLL" Name="qmldbg_local.dll" Source="..\release\qmltooling\qmldbg_local.dll" />
+                    </Component>
+                    <Component Id="QMLDBG_MESSAGES.DLL" DiskId="1" Guid="F1F1EB30-C9F6-44E0-B667-934BF49A1EF9">
+                        <File Id="QMLDBG_MESSAGES.DLL" Name="qmldbg_messages.dll" Source="..\release\qmltooling\qmldbg_messages.dll" />
+                    </Component>
+                    <Component Id="QMLDBG_NATIVE.DLL" DiskId="1" Guid="9109823D-8753-4102-A3EA-4854084939AD">
+                        <File Id="QMLDBG_NATIVE.DLL" Name="qmldbg_native.dll" Source="..\release\qmltooling\qmldbg_native.dll" />
+                    </Component>
+                    <Component Id="QMLDBG_NATIVEDEBUGGER.DLL" DiskId="1" Guid="F91B1910-731D-4135-BDA6-85CF4B853F9C">
+                        <File Id="QMLDBG_NATIVEDEBUGGER.DLL" Name="qmldbg_nativedebugger.dll" Source="..\release\qmltooling\qmldbg_nativedebugger.dll" />
+                    </Component>
+                    <Component Id="QMLDBG_PROFILER.DLL" DiskId="1" Guid="ADC9C645-477E-4FF3-A93C-803402FB53B1">
+                        <File Id="QMLDBG_PROFILER.DLL" Name="qmldbg_profiler.dll" Source="..\release\qmltooling\qmldbg_profiler.dll" />
+                    </Component>
+                    <Component Id="QMLDBG_QUICKPROFILER.DLL" DiskId="1" Guid="6ABB9915-B290-46DE-B58E-73B04A2BAA72">
+                        <File Id="QMLDBG_QUICKPROFILER.DLL" Name="qmldbg_quickprofiler.dll" Source="..\release\qmltooling\qmldbg_quickprofiler.dll" />
+                    </Component>
+                    <Component Id="QMLDBG_SERVER.DLL" DiskId="1" Guid="D7F678A0-9259-4C41-A642-DDABBEC945E2">
+                        <File Id="QMLDBG_SERVER.DLL" Name="qmldbg_server.dll" Source="..\release\qmltooling\qmldbg_server.dll" />
+                    </Component>
+                    <Component Id="QMLDBG_TCP.DLL" DiskId="1" Guid="5DFFFB81-F22D-429F-A346-4BEF57FED415">
+                        <File Id="QMLDBG_TCP.DLL" Name="qmldbg_tcp.dll" Source="..\release\qmltooling\qmldbg_tcp.dll" />
+                    </Component>
+                </Directory>
+                <Directory Id="QT" Name="Qt">
+                    <Directory Id="LABS" Name="labs">
+                        <Directory Id="FOLDERLISTMODEL" Name="folderlistmodel">
+                            <Component Id="PLUGINS.QMLTYPES" DiskId="1" Guid="295960FD-D674-4930-BB9D-DB3138F4D407">
+                                <File Id="PLUGINS.QMLTYPES" Name="plugins.qmltypes" Source="..\release\Qt\labs\folderlistmodel\plugins.qmltypes" />
+                            </Component>
+                            <Component Id="QMLDIR" DiskId="1" Guid="65070921-ABB0-4360-833E-2024A58F731F">
+                                <File Id="QMLDIR" Name="qmldir" Source="..\release\Qt\labs\folderlistmodel\qmldir" />
+                            </Component>
+                            <Component Id="QMLFOLDERLISTMODELPLUGIN.DLL" DiskId="1" Guid="A5839C48-08C8-4C19-852A-F3992D8407C0">
+                                <File Id="QMLFOLDERLISTMODELPLUGIN.DLL" Name="qmlfolderlistmodelplugin.dll" Source="..\release\Qt\labs\folderlistmodel\qmlfolderlistmodelplugin.dll" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="SETTINGS" Name="settings">
+                            <Component Id="PLUGINS.QMLTYPES_1" DiskId="1" Guid="BFBE958E-2610-4A40-8BF2-F1E7AA2D1E48">
+                                <File Id="PLUGINS.QMLTYPES_1" Name="plugins.qmltypes" Source="..\release\Qt\labs\settings\plugins.qmltypes" />
+                            </Component>
+                            <Component Id="QMLDIR_1" DiskId="1" Guid="402A50B5-E258-4D37-B051-5E2A84827BC3">
+                                <File Id="QMLDIR_1" Name="qmldir" Source="..\release\Qt\labs\settings\qmldir" />
+                            </Component>
+                            <Component Id="QMLSETTINGSPLUGIN.DLL" DiskId="1" Guid="D4FEB9B2-30F8-4BF1-9814-F61EBC4C59D7">
+                                <File Id="QMLSETTINGSPLUGIN.DLL" Name="qmlsettingsplugin.dll" Source="..\release\Qt\labs\settings\qmlsettingsplugin.dll" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                </Directory>
+                <Directory Id="QTGRAPHICALEFFECTS" Name="QtGraphicalEffects">
+                    <Component Id="BLEND.QML" DiskId="1" Guid="DE5B9EBA-5C54-41EE-A9EB-69AD10041B0C">
+                        <File Id="BLEND.QML" Name="Blend.qml" Source="..\release\QtGraphicalEffects\Blend.qml" />
+                    </Component>
+                    <Component Id="BRIGHTNESSCONTRAST.QML" DiskId="1" Guid="AFD13F2E-F1E9-4A27-B090-CB0DC0473F43">
+                        <File Id="BRIGHTNESSCONTRAST.QML" Name="BrightnessContrast.qml" Source="..\release\QtGraphicalEffects\BrightnessContrast.qml" />
+                    </Component>
+                    <Component Id="COLORIZE.QML" DiskId="1" Guid="E1D7BA26-9997-4E6E-99AA-BD16DBBC710D">
+                        <File Id="COLORIZE.QML" Name="Colorize.qml" Source="..\release\QtGraphicalEffects\Colorize.qml" />
+                    </Component>
+                    <Component Id="COLOROVERLAY.QML" DiskId="1" Guid="8860AA11-AA65-40F1-8793-08A6D3D1CA55">
+                        <File Id="COLOROVERLAY.QML" Name="ColorOverlay.qml" Source="..\release\QtGraphicalEffects\ColorOverlay.qml" />
+                    </Component>
+                    <Component Id="CONICALGRADIENT.QML" DiskId="1" Guid="06D8490F-C668-4E1D-9FDA-C2899D80C79D">
+                        <File Id="CONICALGRADIENT.QML" Name="ConicalGradient.qml" Source="..\release\QtGraphicalEffects\ConicalGradient.qml" />
+                    </Component>
+                    <Component Id="DESATURATE.QML" DiskId="1" Guid="F283F71D-57DA-4567-BB5B-5FD7BAAD6496">
+                        <File Id="DESATURATE.QML" Name="Desaturate.qml" Source="..\release\QtGraphicalEffects\Desaturate.qml" />
+                    </Component>
+                    <Component Id="DIRECTIONALBLUR.QML" DiskId="1" Guid="3C78D6C6-0014-4DF3-8713-B0ACA070EA7D">
+                        <File Id="DIRECTIONALBLUR.QML" Name="DirectionalBlur.qml" Source="..\release\QtGraphicalEffects\DirectionalBlur.qml" />
+                    </Component>
+                    <Component Id="DISPLACE.QML" DiskId="1" Guid="52C5B18E-E0B2-418A-A705-32CF6390EDA2">
+                        <File Id="DISPLACE.QML" Name="Displace.qml" Source="..\release\QtGraphicalEffects\Displace.qml" />
+                    </Component>
+                    <Component Id="DROPSHADOW.QML" DiskId="1" Guid="92E81FB0-44BC-4036-AE75-A9AF93D24B9D">
+                        <File Id="DROPSHADOW.QML" Name="DropShadow.qml" Source="..\release\QtGraphicalEffects\DropShadow.qml" />
+                    </Component>
+                    <Component Id="FASTBLUR.QML" DiskId="1" Guid="F3E44BE9-512D-4FB3-8121-F264410309C5">
+                        <File Id="FASTBLUR.QML" Name="FastBlur.qml" Source="..\release\QtGraphicalEffects\FastBlur.qml" />
+                    </Component>
+                    <Component Id="GAMMAADJUST.QML" DiskId="1" Guid="61E01D33-EB79-4E35-8F65-89642601EE15">
+                        <File Id="GAMMAADJUST.QML" Name="GammaAdjust.qml" Source="..\release\QtGraphicalEffects\GammaAdjust.qml" />
+                    </Component>
+                    <Component Id="GAUSSIANBLUR.QML" DiskId="1" Guid="B830DD43-18AB-4F5A-A4E1-DA9111F49717">
+                        <File Id="GAUSSIANBLUR.QML" Name="GaussianBlur.qml" Source="..\release\QtGraphicalEffects\GaussianBlur.qml" />
+                    </Component>
+                    <Component Id="GLOW.QML" DiskId="1" Guid="297BC114-3018-481B-815A-17C40D3C93DC">
+                        <File Id="GLOW.QML" Name="Glow.qml" Source="..\release\QtGraphicalEffects\Glow.qml" />
+                    </Component>
+                    <Component Id="HUESATURATION.QML" DiskId="1" Guid="969E55DF-6902-4257-8577-6570EAE8AFC2">
+                        <File Id="HUESATURATION.QML" Name="HueSaturation.qml" Source="..\release\QtGraphicalEffects\HueSaturation.qml" />
+                    </Component>
+                    <Component Id="INNERSHADOW.QML" DiskId="1" Guid="81AD348F-B425-4EF9-AECC-3DEE4326C67D">
+                        <File Id="INNERSHADOW.QML" Name="InnerShadow.qml" Source="..\release\QtGraphicalEffects\InnerShadow.qml" />
+                    </Component>
+                    <Component Id="LEVELADJUST.QML" DiskId="1" Guid="9108A94B-EA61-49F8-98ED-F8A7D4BACA17">
+                        <File Id="LEVELADJUST.QML" Name="LevelAdjust.qml" Source="..\release\QtGraphicalEffects\LevelAdjust.qml" />
+                    </Component>
+                    <Component Id="LINEARGRADIENT.QML" DiskId="1" Guid="CB43B750-AE5A-46B8-BC2B-E2367D27DA8C">
+                        <File Id="LINEARGRADIENT.QML" Name="LinearGradient.qml" Source="..\release\QtGraphicalEffects\LinearGradient.qml" />
+                    </Component>
+                    <Component Id="MASKEDBLUR.QML" DiskId="1" Guid="EC3B51EA-3F4C-49B6-92FC-86D5E839A5DF">
+                        <File Id="MASKEDBLUR.QML" Name="MaskedBlur.qml" Source="..\release\QtGraphicalEffects\MaskedBlur.qml" />
+                    </Component>
+                    <Component Id="OPACITYMASK.QML" DiskId="1" Guid="339AB292-5CBC-4C3F-BB10-DB8303DF0265">
+                        <File Id="OPACITYMASK.QML" Name="OpacityMask.qml" Source="..\release\QtGraphicalEffects\OpacityMask.qml" />
+                    </Component>
+                    <Component Id="PLUGINS.QMLTYPES_2" DiskId="1" Guid="6E0AD749-87B6-480F-A1CF-7042D9D0B879">
+                        <File Id="PLUGINS.QMLTYPES_2" Name="plugins.qmltypes" Source="..\release\QtGraphicalEffects\plugins.qmltypes" />
+                    </Component>
+                    <Component Id="QMLDIR_2" DiskId="1" Guid="213370E6-6FAC-4F50-98F1-63A56ECE9B9B">
+                        <File Id="QMLDIR_2" Name="qmldir" Source="..\release\QtGraphicalEffects\qmldir" />
+                    </Component>
+                    <Component Id="QTGRAPHICALEFFECTSPLUGIN.DLL" DiskId="1" Guid="BABA814B-4F45-4BED-8B47-4E058C30B345">
+                        <File Id="QTGRAPHICALEFFECTSPLUGIN.DLL" Name="qtgraphicaleffectsplugin.dll" Source="..\release\QtGraphicalEffects\qtgraphicaleffectsplugin.dll" />
+                    </Component>
+                    <Component Id="RADIALBLUR.QML" DiskId="1" Guid="53B61432-05DB-4AA8-9F97-6C3938EF0844">
+                        <File Id="RADIALBLUR.QML" Name="RadialBlur.qml" Source="..\release\QtGraphicalEffects\RadialBlur.qml" />
+                    </Component>
+                    <Component Id="RADIALGRADIENT.QML" DiskId="1" Guid="A10D0FA1-28EE-4A54-8865-157FFF26C2BD">
+                        <File Id="RADIALGRADIENT.QML" Name="RadialGradient.qml" Source="..\release\QtGraphicalEffects\RadialGradient.qml" />
+                    </Component>
+                    <Component Id="RECTANGULARGLOW.QML" DiskId="1" Guid="B9D3CE89-20F9-411A-B187-B75ED4CAFC0B">
+                        <File Id="RECTANGULARGLOW.QML" Name="RectangularGlow.qml" Source="..\release\QtGraphicalEffects\RectangularGlow.qml" />
+                    </Component>
+                    <Component Id="RECURSIVEBLUR.QML" DiskId="1" Guid="F97D20D1-B831-47D8-AB80-133D7356D0A0">
+                        <File Id="RECURSIVEBLUR.QML" Name="RecursiveBlur.qml" Source="..\release\QtGraphicalEffects\RecursiveBlur.qml" />
+                    </Component>
+                    <Component Id="THRESHOLDMASK.QML" DiskId="1" Guid="89D402D1-3E48-43CA-BD24-88399D0903AC">
+                        <File Id="THRESHOLDMASK.QML" Name="ThresholdMask.qml" Source="..\release\QtGraphicalEffects\ThresholdMask.qml" />
+                    </Component>
+                    <Component Id="ZOOMBLUR.QML" DiskId="1" Guid="C4B4BE8F-E803-442B-8FE6-461C0AA4EEE7">
+                        <File Id="ZOOMBLUR.QML" Name="ZoomBlur.qml" Source="..\release\QtGraphicalEffects\ZoomBlur.qml" />
+                    </Component>
+                    <Directory Id="PRIVATE" Name="private">
+                        <Component Id="DROPSHADOWBASE.QML" DiskId="1" Guid="8B8E0266-789C-44BD-86ED-4B2087D32804">
+                            <File Id="DROPSHADOWBASE.QML" Name="DropShadowBase.qml" Source="..\release\QtGraphicalEffects\private\DropShadowBase.qml" />
+                        </Component>
+                        <Component Id="DROPSHADOWBASE.QMLC" DiskId="1" Guid="E56FFFCE-1A98-4C64-B03C-0E9D3A1DFEB3">
+                            <File Id="DROPSHADOWBASE.QMLC" Name="DropShadowBase.qmlc" Source="..\release\QtGraphicalEffects\private\DropShadowBase.qmlc" />
+                        </Component>
+                        <Component Id="FASTGLOW.QML" DiskId="1" Guid="D1BF9B3D-BF57-4048-B2E7-6A0442CE5C0F">
+                            <File Id="FASTGLOW.QML" Name="FastGlow.qml" Source="..\release\QtGraphicalEffects\private\FastGlow.qml" />
+                        </Component>
+                        <Component Id="FASTGLOW.QMLC" DiskId="1" Guid="3588C0D7-8D0A-4813-988E-C03EB42216CA">
+                            <File Id="FASTGLOW.QMLC" Name="FastGlow.qmlc" Source="..\release\QtGraphicalEffects\private\FastGlow.qmlc" />
+                        </Component>
+                        <Component Id="FASTINNERSHADOW.QML" DiskId="1" Guid="497E687C-9992-4C15-9D96-6FA18E1B05BC">
+                            <File Id="FASTINNERSHADOW.QML" Name="FastInnerShadow.qml" Source="..\release\QtGraphicalEffects\private\FastInnerShadow.qml" />
+                        </Component>
+                        <Component Id="FASTINNERSHADOW.QMLC" DiskId="1" Guid="318DB053-0867-4E1D-8E82-D23411A61F35">
+                            <File Id="FASTINNERSHADOW.QMLC" Name="FastInnerShadow.qmlc" Source="..\release\QtGraphicalEffects\private\FastInnerShadow.qmlc" />
+                        </Component>
+                        <Component Id="FASTMASKEDBLUR.QML" DiskId="1" Guid="5DB72E5E-05CB-4C2E-9CAA-49209257EECB">
+                            <File Id="FASTMASKEDBLUR.QML" Name="FastMaskedBlur.qml" Source="..\release\QtGraphicalEffects\private\FastMaskedBlur.qml" />
+                        </Component>
+                        <Component Id="FASTMASKEDBLUR.QMLC" DiskId="1" Guid="1A48EFB7-B96F-4FCF-801B-D7AE832E6025">
+                            <File Id="FASTMASKEDBLUR.QMLC" Name="FastMaskedBlur.qmlc" Source="..\release\QtGraphicalEffects\private\FastMaskedBlur.qmlc" />
+                        </Component>
+                        <Component Id="GAUSSIANDIRECTIONALBLUR.QML" DiskId="1" Guid="9B7D0E7D-D3D6-4C23-B220-0743DE9584A5">
+                            <File Id="GAUSSIANDIRECTIONALBLUR.QML" Name="GaussianDirectionalBlur.qml" Source="..\release\QtGraphicalEffects\private\GaussianDirectionalBlur.qml" />
+                        </Component>
+                        <Component Id="GAUSSIANDIRECTIONALBLUR.QMLC" DiskId="1" Guid="628A4F06-CA70-420D-8233-DBD2897D1BFA">
+                            <File Id="GAUSSIANDIRECTIONALBLUR.QMLC" Name="GaussianDirectionalBlur.qmlc" Source="..\release\QtGraphicalEffects\private\GaussianDirectionalBlur.qmlc" />
+                        </Component>
+                        <Component Id="GAUSSIANGLOW.QML" DiskId="1" Guid="44E55365-CD24-4EF1-AEFD-E17D297843FD">
+                            <File Id="GAUSSIANGLOW.QML" Name="GaussianGlow.qml" Source="..\release\QtGraphicalEffects\private\GaussianGlow.qml" />
+                        </Component>
+                        <Component Id="GAUSSIANGLOW.QMLC" DiskId="1" Guid="B93F33F5-2912-4362-940A-004F0A07408C">
+                            <File Id="GAUSSIANGLOW.QMLC" Name="GaussianGlow.qmlc" Source="..\release\QtGraphicalEffects\private\GaussianGlow.qmlc" />
+                        </Component>
+                        <Component Id="GAUSSIANINNERSHADOW.QML" DiskId="1" Guid="72E76568-703A-48A0-8332-240B1E2CD2DB">
+                            <File Id="GAUSSIANINNERSHADOW.QML" Name="GaussianInnerShadow.qml" Source="..\release\QtGraphicalEffects\private\GaussianInnerShadow.qml" />
+                        </Component>
+                        <Component Id="GAUSSIANINNERSHADOW.QMLC" DiskId="1" Guid="6669581E-56AA-48BC-B103-EE37CA7B63C3">
+                            <File Id="GAUSSIANINNERSHADOW.QMLC" Name="GaussianInnerShadow.qmlc" Source="..\release\QtGraphicalEffects\private\GaussianInnerShadow.qmlc" />
+                        </Component>
+                        <Component Id="GAUSSIANMASKEDBLUR.QML" DiskId="1" Guid="B92DDD82-1D61-444C-81B5-EC52B4EF6B05">
+                            <File Id="GAUSSIANMASKEDBLUR.QML" Name="GaussianMaskedBlur.qml" Source="..\release\QtGraphicalEffects\private\GaussianMaskedBlur.qml" />
+                        </Component>
+                        <Component Id="GAUSSIANMASKEDBLUR.QMLC" DiskId="1" Guid="C0E82808-C770-4B1C-A85D-2EF400B14C7C">
+                            <File Id="GAUSSIANMASKEDBLUR.QMLC" Name="GaussianMaskedBlur.qmlc" Source="..\release\QtGraphicalEffects\private\GaussianMaskedBlur.qmlc" />
+                        </Component>
+                        <Component Id="QMLDIR_3" DiskId="1" Guid="B8942CBE-302C-482D-AE7E-B4F66B379BB8">
+                            <File Id="QMLDIR_3" Name="qmldir" Source="..\release\QtGraphicalEffects\private\qmldir" />
+                        </Component>
+                        <Component Id="QTGRAPHICALEFFECTSPRIVATE.DLL" DiskId="1" Guid="FC3DD9CA-E2CD-420F-B61F-FFCA5D4F78D3">
+                            <File Id="QTGRAPHICALEFFECTSPRIVATE.DLL" Name="qtgraphicaleffectsprivate.dll" Source="..\release\QtGraphicalEffects\private\qtgraphicaleffectsprivate.dll" />
+                        </Component>
+                    </Directory>
+                </Directory>
+                <Directory Id="QTQML" Name="QtQml">
+                    <Directory Id="MODELS.2" Name="Models.2">
+                        <Component Id="MODELSPLUGIN.DLL" DiskId="1" Guid="092EA3E5-E601-44C7-9A7C-63CD2C7BFA77">
+                            <File Id="MODELSPLUGIN.DLL" Name="modelsplugin.dll" Source="..\release\QtQml\Models.2\modelsplugin.dll" />
+                        </Component>
+                        <Component Id="PLUGINS.QMLTYPES_3" DiskId="1" Guid="6AC740CA-E9A7-4679-9F06-6CBCA18C11D5">
+                            <File Id="PLUGINS.QMLTYPES_3" Name="plugins.qmltypes" Source="..\release\QtQml\Models.2\plugins.qmltypes" />
+                        </Component>
+                        <Component Id="QMLDIR_4" DiskId="1" Guid="0D94200A-00DF-4482-9183-26F360534762">
+                            <File Id="QMLDIR_4" Name="qmldir" Source="..\release\QtQml\Models.2\qmldir" />
+                        </Component>
+                    </Directory>
+                </Directory>
+                <Directory Id="QTQUICK" Name="QtQuick">
+                    <Directory Id="CONTROLS" Name="Controls">
+                        <Component Id="APPLICATIONWINDOW.QML" DiskId="1" Guid="C3BD6995-6389-4A16-B7BF-6630770D8EE9">
+                            <File Id="APPLICATIONWINDOW.QML" Name="ApplicationWindow.qml" Source="..\release\QtQuick\Controls\ApplicationWindow.qml" />
+                        </Component>
+                        <Component Id="APPLICATIONWINDOW.QMLC" DiskId="1" Guid="4B6276D6-5B19-4C27-8304-BA5D2F2CF6FE">
+                            <File Id="APPLICATIONWINDOW.QMLC" Name="ApplicationWindow.qmlc" Source="..\release\QtQuick\Controls\ApplicationWindow.qmlc" />
+                        </Component>
+                        <Component Id="BUSYINDICATOR.QML" DiskId="1" Guid="B03250EC-905E-4A7E-8D13-EFDB5C33ECAB">
+                            <File Id="BUSYINDICATOR.QML" Name="BusyIndicator.qml" Source="..\release\QtQuick\Controls\BusyIndicator.qml" />
+                        </Component>
+                        <Component Id="BUSYINDICATOR.QMLC" DiskId="1" Guid="F8B00199-FA5D-458A-A016-EDE22312ECA4">
+                            <File Id="BUSYINDICATOR.QMLC" Name="BusyIndicator.qmlc" Source="..\release\QtQuick\Controls\BusyIndicator.qmlc" />
+                        </Component>
+                        <Component Id="BUTTON.QML" DiskId="1" Guid="049F0609-9BFA-4B59-B3A2-26EC3BD1D765">
+                            <File Id="BUTTON.QML" Name="Button.qml" Source="..\release\QtQuick\Controls\Button.qml" />
+                        </Component>
+                        <Component Id="BUTTON.QMLC" DiskId="1" Guid="1CADA4BB-388B-4CCC-BE87-9CBFFFE1882C">
+                            <File Id="BUTTON.QMLC" Name="Button.qmlc" Source="..\release\QtQuick\Controls\Button.qmlc" />
+                        </Component>
+                        <Component Id="CALENDAR.QML" DiskId="1" Guid="F89B95D2-C05B-4595-9A47-AE43E2F2C49C">
+                            <File Id="CALENDAR.QML" Name="Calendar.qml" Source="..\release\QtQuick\Controls\Calendar.qml" />
+                        </Component>
+                        <Component Id="CALENDAR.QMLC" DiskId="1" Guid="114FE71E-2173-4456-9CAA-F4FCBD7E70E5">
+                            <File Id="CALENDAR.QMLC" Name="Calendar.qmlc" Source="..\release\QtQuick\Controls\Calendar.qmlc" />
+                        </Component>
+                        <Component Id="CHECKBOX.QML" DiskId="1" Guid="11A08C1C-4801-46C0-96DE-33783CD3CEAC">
+                            <File Id="CHECKBOX.QML" Name="CheckBox.qml" Source="..\release\QtQuick\Controls\CheckBox.qml" />
+                        </Component>
+                        <Component Id="CHECKBOX.QMLC" DiskId="1" Guid="209453E3-DA86-4D8A-8555-C4A61F2F36F6">
+                            <File Id="CHECKBOX.QMLC" Name="CheckBox.qmlc" Source="..\release\QtQuick\Controls\CheckBox.qmlc" />
+                        </Component>
+                        <Component Id="COMBOBOX.QML" DiskId="1" Guid="393AEA94-4A03-46FA-BB07-33E9987E716E">
+                            <File Id="COMBOBOX.QML" Name="ComboBox.qml" Source="..\release\QtQuick\Controls\ComboBox.qml" />
+                        </Component>
+                        <Component Id="COMBOBOX.QMLC" DiskId="1" Guid="27A22BF8-09FF-4BE7-BA70-BCF0F4CA8AD2">
+                            <File Id="COMBOBOX.QMLC" Name="ComboBox.qmlc" Source="..\release\QtQuick\Controls\ComboBox.qmlc" />
+                        </Component>
+                        <Component Id="GROUPBOX.QML" DiskId="1" Guid="816FAFD7-204D-4F93-B8D0-A1D1E22F1E8B">
+                            <File Id="GROUPBOX.QML" Name="GroupBox.qml" Source="..\release\QtQuick\Controls\GroupBox.qml" />
+                        </Component>
+                        <Component Id="GROUPBOX.QMLC" DiskId="1" Guid="C8938EF6-F2F2-49A1-BFB8-534D7144715A">
+                            <File Id="GROUPBOX.QMLC" Name="GroupBox.qmlc" Source="..\release\QtQuick\Controls\GroupBox.qmlc" />
+                        </Component>
+                        <Component Id="LABEL.QML" DiskId="1" Guid="F9A8AE50-E4D5-441F-AFF6-2C6221390862">
+                            <File Id="LABEL.QML" Name="Label.qml" Source="..\release\QtQuick\Controls\Label.qml" />
+                        </Component>
+                        <Component Id="LABEL.QMLC" DiskId="1" Guid="00B738A5-01A7-4C56-A308-93ADEFEB4073">
+                            <File Id="LABEL.QMLC" Name="Label.qmlc" Source="..\release\QtQuick\Controls\Label.qmlc" />
+                        </Component>
+                        <Component Id="MENU.QML" DiskId="1" Guid="3E9A5E0B-6D00-410D-A866-410FE247724E">
+                            <File Id="MENU.QML" Name="Menu.qml" Source="..\release\QtQuick\Controls\Menu.qml" />
+                        </Component>
+                        <Component Id="MENU.QMLC" DiskId="1" Guid="A543A9F9-B6C5-4294-AC8F-83868670BC30">
+                            <File Id="MENU.QMLC" Name="Menu.qmlc" Source="..\release\QtQuick\Controls\Menu.qmlc" />
+                        </Component>
+                        <Component Id="MENUBAR.QML" DiskId="1" Guid="2AD6D62B-BC8B-4C65-9262-3C0AFC520847">
+                            <File Id="MENUBAR.QML" Name="MenuBar.qml" Source="..\release\QtQuick\Controls\MenuBar.qml" />
+                        </Component>
+                        <Component Id="MENUBAR.QMLC" DiskId="1" Guid="124123E5-92BC-4B7A-A428-D7ECD5468DB5">
+                            <File Id="MENUBAR.QMLC" Name="MenuBar.qmlc" Source="..\release\QtQuick\Controls\MenuBar.qmlc" />
+                        </Component>
+                        <Component Id="PLUGINS.QMLTYPES_4" DiskId="1" Guid="885EB285-CF40-404A-AE09-E382994CCFE2">
+                            <File Id="PLUGINS.QMLTYPES_4" Name="plugins.qmltypes" Source="..\release\QtQuick\Controls\plugins.qmltypes" />
+                        </Component>
+                        <Component Id="PROGRESSBAR.QML" DiskId="1" Guid="F97C5F75-0B0C-4183-B339-086643C306C9">
+                            <File Id="PROGRESSBAR.QML" Name="ProgressBar.qml" Source="..\release\QtQuick\Controls\ProgressBar.qml" />
+                        </Component>
+                        <Component Id="PROGRESSBAR.QMLC" DiskId="1" Guid="7ECE86C7-8824-48FA-889B-0A5154DD404C">
+                            <File Id="PROGRESSBAR.QMLC" Name="ProgressBar.qmlc" Source="..\release\QtQuick\Controls\ProgressBar.qmlc" />
+                        </Component>
+                        <Component Id="QMLDIR_5" DiskId="1" Guid="C1AE94B7-BE31-47E3-89C8-65A4F4B27094">
+                            <File Id="QMLDIR_5" Name="qmldir" Source="..\release\QtQuick\Controls\qmldir" />
+                        </Component>
+                        <Component Id="QTQUICKCONTROLSPLUGIN.DLL" DiskId="1" Guid="4C3D6DD5-B109-46CE-8C71-CB1EF97FCDFD">
+                            <File Id="QTQUICKCONTROLSPLUGIN.DLL" Name="qtquickcontrolsplugin.dll" Source="..\release\QtQuick\Controls\qtquickcontrolsplugin.dll" />
+                        </Component>
+                        <Component Id="RADIOBUTTON.QML" DiskId="1" Guid="1D34422B-0991-417D-95FD-D3C3380F54A3">
+                            <File Id="RADIOBUTTON.QML" Name="RadioButton.qml" Source="..\release\QtQuick\Controls\RadioButton.qml" />
+                        </Component>
+                        <Component Id="RADIOBUTTON.QMLC" DiskId="1" Guid="8B11883A-56A6-416B-AA3C-7360BB1675E8">
+                            <File Id="RADIOBUTTON.QMLC" Name="RadioButton.qmlc" Source="..\release\QtQuick\Controls\RadioButton.qmlc" />
+                        </Component>
+                        <Component Id="SCROLLVIEW.QML" DiskId="1" Guid="BC75CE6D-2815-464B-B7B2-2F372876CA42">
+                            <File Id="SCROLLVIEW.QML" Name="ScrollView.qml" Source="..\release\QtQuick\Controls\ScrollView.qml" />
+                        </Component>
+                        <Component Id="SCROLLVIEW.QMLC" DiskId="1" Guid="0E7E3138-E84C-446C-A189-3267315314BB">
+                            <File Id="SCROLLVIEW.QMLC" Name="ScrollView.qmlc" Source="..\release\QtQuick\Controls\ScrollView.qmlc" />
+                        </Component>
+                        <Component Id="SLIDER.QML" DiskId="1" Guid="79721213-EC01-4F77-8E91-D79EAA6BA82A">
+                            <File Id="SLIDER.QML" Name="Slider.qml" Source="..\release\QtQuick\Controls\Slider.qml" />
+                        </Component>
+                        <Component Id="SLIDER.QMLC" DiskId="1" Guid="16FA6CAE-9E8C-4A85-A01E-A81B56F479B4">
+                            <File Id="SLIDER.QMLC" Name="Slider.qmlc" Source="..\release\QtQuick\Controls\Slider.qmlc" />
+                        </Component>
+                        <Component Id="SPINBOX.QML" DiskId="1" Guid="CB4E15AD-5B45-410B-BFDA-AD3A2B7F966B">
+                            <File Id="SPINBOX.QML" Name="SpinBox.qml" Source="..\release\QtQuick\Controls\SpinBox.qml" />
+                        </Component>
+                        <Component Id="SPINBOX.QMLC" DiskId="1" Guid="53EEBDA3-0AD8-4455-9C8B-C7EA788F7C34">
+                            <File Id="SPINBOX.QMLC" Name="SpinBox.qmlc" Source="..\release\QtQuick\Controls\SpinBox.qmlc" />
+                        </Component>
+                        <Component Id="SPLITVIEW.QML" DiskId="1" Guid="606796CB-AF0E-4802-8EE3-CC93E7E78722">
+                            <File Id="SPLITVIEW.QML" Name="SplitView.qml" Source="..\release\QtQuick\Controls\SplitView.qml" />
+                        </Component>
+                        <Component Id="SPLITVIEW.QMLC" DiskId="1" Guid="28A8E9F2-A948-438A-9A33-BD20C9E8C825">
+                            <File Id="SPLITVIEW.QMLC" Name="SplitView.qmlc" Source="..\release\QtQuick\Controls\SplitView.qmlc" />
+                        </Component>
+                        <Component Id="STACKVIEW.QML" DiskId="1" Guid="16F1D7F8-4497-4DF9-9634-56DE479E9C73">
+                            <File Id="STACKVIEW.QML" Name="StackView.qml" Source="..\release\QtQuick\Controls\StackView.qml" />
+                        </Component>
+                        <Component Id="STACKVIEW.QMLC" DiskId="1" Guid="97C39542-1824-43BE-9E07-D0130D838577">
+                            <File Id="STACKVIEW.QMLC" Name="StackView.qmlc" Source="..\release\QtQuick\Controls\StackView.qmlc" />
+                        </Component>
+                        <Component Id="STACKVIEWDELEGATE.QML" DiskId="1" Guid="380A02F2-57B9-45B9-963B-F9191B892204">
+                            <File Id="STACKVIEWDELEGATE.QML" Name="StackViewDelegate.qml" Source="..\release\QtQuick\Controls\StackViewDelegate.qml" />
+                        </Component>
+                        <Component Id="STACKVIEWDELEGATE.QMLC" DiskId="1" Guid="B077E8D8-F50D-43BF-B733-0184F4A196E9">
+                            <File Id="STACKVIEWDELEGATE.QMLC" Name="StackViewDelegate.qmlc" Source="..\release\QtQuick\Controls\StackViewDelegate.qmlc" />
+                        </Component>
+                        <Component Id="STACKVIEWTRANSITION.QML" DiskId="1" Guid="817F77D4-3DD3-4888-82EE-C9EBE91638A0">
+                            <File Id="STACKVIEWTRANSITION.QML" Name="StackViewTransition.qml" Source="..\release\QtQuick\Controls\StackViewTransition.qml" />
+                        </Component>
+                        <Component Id="STACKVIEWTRANSITION.QMLC" DiskId="1" Guid="20AB4E48-1367-48DA-BD61-8436A5FF9710">
+                            <File Id="STACKVIEWTRANSITION.QMLC" Name="StackViewTransition.qmlc" Source="..\release\QtQuick\Controls\StackViewTransition.qmlc" />
+                        </Component>
+                        <Component Id="STATUSBAR.QML" DiskId="1" Guid="8D048EBD-1DE6-4A44-969B-64566114A0DD">
+                            <File Id="STATUSBAR.QML" Name="StatusBar.qml" Source="..\release\QtQuick\Controls\StatusBar.qml" />
+                        </Component>
+                        <Component Id="STATUSBAR.QMLC" DiskId="1" Guid="6720BC52-1535-4325-AD10-8F830E69BE94">
+                            <File Id="STATUSBAR.QMLC" Name="StatusBar.qmlc" Source="..\release\QtQuick\Controls\StatusBar.qmlc" />
+                        </Component>
+                        <Component Id="SWITCH.QML" DiskId="1" Guid="DC1B1E98-D1C0-4205-AD67-18D06380EAE6">
+                            <File Id="SWITCH.QML" Name="Switch.qml" Source="..\release\QtQuick\Controls\Switch.qml" />
+                        </Component>
+                        <Component Id="SWITCH.QMLC" DiskId="1" Guid="B550B8EB-B8E6-407C-A9A0-015B39EF8F6E">
+                            <File Id="SWITCH.QMLC" Name="Switch.qmlc" Source="..\release\QtQuick\Controls\Switch.qmlc" />
+                        </Component>
+                        <Component Id="TAB.QML" DiskId="1" Guid="ECD1ABA0-68A3-48CB-BACA-5198BACF7AFE">
+                            <File Id="TAB.QML" Name="Tab.qml" Source="..\release\QtQuick\Controls\Tab.qml" />
+                        </Component>
+                        <Component Id="TAB.QMLC" DiskId="1" Guid="10E2B66F-B785-4E71-A17E-E353A2F511BC">
+                            <File Id="TAB.QMLC" Name="Tab.qmlc" Source="..\release\QtQuick\Controls\Tab.qmlc" />
+                        </Component>
+                        <Component Id="TABLEVIEW.QML" DiskId="1" Guid="55CDFEEF-775C-4028-AA88-4AC7319CBF9B">
+                            <File Id="TABLEVIEW.QML" Name="TableView.qml" Source="..\release\QtQuick\Controls\TableView.qml" />
+                        </Component>
+                        <Component Id="TABLEVIEW.QMLC" DiskId="1" Guid="BBEB2AAD-61B1-466F-8A21-231E65CFDE1B">
+                            <File Id="TABLEVIEW.QMLC" Name="TableView.qmlc" Source="..\release\QtQuick\Controls\TableView.qmlc" />
+                        </Component>
+                        <Component Id="TABLEVIEWCOLUMN.QML" DiskId="1" Guid="1575EC5A-552E-4F6C-8EB2-59379708B67E">
+                            <File Id="TABLEVIEWCOLUMN.QML" Name="TableViewColumn.qml" Source="..\release\QtQuick\Controls\TableViewColumn.qml" />
+                        </Component>
+                        <Component Id="TABLEVIEWCOLUMN.QMLC" DiskId="1" Guid="3833AF43-BABB-405F-B8B6-F73AF9D7D713">
+                            <File Id="TABLEVIEWCOLUMN.QMLC" Name="TableViewColumn.qmlc" Source="..\release\QtQuick\Controls\TableViewColumn.qmlc" />
+                        </Component>
+                        <Component Id="TABVIEW.QML" DiskId="1" Guid="ACE62CE8-3A6A-4586-B86D-2FF0541FE0C4">
+                            <File Id="TABVIEW.QML" Name="TabView.qml" Source="..\release\QtQuick\Controls\TabView.qml" />
+                        </Component>
+                        <Component Id="TABVIEW.QMLC" DiskId="1" Guid="038F2E61-43E0-4AA3-BAAE-64A0B844959E">
+                            <File Id="TABVIEW.QMLC" Name="TabView.qmlc" Source="..\release\QtQuick\Controls\TabView.qmlc" />
+                        </Component>
+                        <Component Id="TEXTAREA.QML" DiskId="1" Guid="3963F0ED-614C-4035-956A-039C5DAE4976">
+                            <File Id="TEXTAREA.QML" Name="TextArea.qml" Source="..\release\QtQuick\Controls\TextArea.qml" />
+                        </Component>
+                        <Component Id="TEXTAREA.QMLC" DiskId="1" Guid="A6A35E0A-BB46-4701-B262-CCE4CA3E20EC">
+                            <File Id="TEXTAREA.QMLC" Name="TextArea.qmlc" Source="..\release\QtQuick\Controls\TextArea.qmlc" />
+                        </Component>
+                        <Component Id="TEXTFIELD.QML" DiskId="1" Guid="D1CAA7B1-852B-496C-809C-133A0A844F41">
+                            <File Id="TEXTFIELD.QML" Name="TextField.qml" Source="..\release\QtQuick\Controls\TextField.qml" />
+                        </Component>
+                        <Component Id="TEXTFIELD.QMLC" DiskId="1" Guid="83289A25-0CF9-4AD5-8937-50CEBB5B5FD3">
+                            <File Id="TEXTFIELD.QMLC" Name="TextField.qmlc" Source="..\release\QtQuick\Controls\TextField.qmlc" />
+                        </Component>
+                        <Component Id="TOOLBAR.QML" DiskId="1" Guid="BE809F0C-8626-4020-9029-49776012D1C2">
+                            <File Id="TOOLBAR.QML" Name="ToolBar.qml" Source="..\release\QtQuick\Controls\ToolBar.qml" />
+                        </Component>
+                        <Component Id="TOOLBAR.QMLC" DiskId="1" Guid="72DFE490-4BA7-4A23-8DB5-55BC495842B9">
+                            <File Id="TOOLBAR.QMLC" Name="ToolBar.qmlc" Source="..\release\QtQuick\Controls\ToolBar.qmlc" />
+                        </Component>
+                        <Component Id="TOOLBUTTON.QML" DiskId="1" Guid="B626E31A-3BB8-4D0F-A154-270513E4235F">
+                            <File Id="TOOLBUTTON.QML" Name="ToolButton.qml" Source="..\release\QtQuick\Controls\ToolButton.qml" />
+                        </Component>
+                        <Component Id="TOOLBUTTON.QMLC" DiskId="1" Guid="EA6B6943-D8B5-4C05-B467-C3906E126506">
+                            <File Id="TOOLBUTTON.QMLC" Name="ToolButton.qmlc" Source="..\release\QtQuick\Controls\ToolButton.qmlc" />
+                        </Component>
+                        <Component Id="TREEVIEW.QML" DiskId="1" Guid="D7191ED7-B838-4489-AC9E-6FE1B6B6B7D1">
+                            <File Id="TREEVIEW.QML" Name="TreeView.qml" Source="..\release\QtQuick\Controls\TreeView.qml" />
+                        </Component>
+                        <Component Id="TREEVIEW.QMLC" DiskId="1" Guid="A960D0AB-D7FA-466A-997A-712478F0546D">
+                            <File Id="TREEVIEW.QMLC" Name="TreeView.qmlc" Source="..\release\QtQuick\Controls\TreeView.qmlc" />
+                        </Component>
+                        <Directory Id="PRIVATE_1" Name="Private">
+                            <Component Id="ABSTRACTCHECKABLE.QML" DiskId="1" Guid="50CC055B-3681-42C9-937E-DB6EA6EB448B">
+                                <File Id="ABSTRACTCHECKABLE.QML" Name="AbstractCheckable.qml" Source="..\release\QtQuick\Controls\Private\AbstractCheckable.qml" />
+                            </Component>
+                            <Component Id="ABSTRACTCHECKABLE.QMLC" DiskId="1" Guid="C3657E78-FD0E-435B-96E2-F54CAAA35F0A">
+                                <File Id="ABSTRACTCHECKABLE.QMLC" Name="AbstractCheckable.qmlc" Source="..\release\QtQuick\Controls\Private\AbstractCheckable.qmlc" />
+                            </Component>
+                            <Component Id="BASICBUTTON.QML" DiskId="1" Guid="B13A682F-E91E-478E-B310-9229E099000F">
+                                <File Id="BASICBUTTON.QML" Name="BasicButton.qml" Source="..\release\QtQuick\Controls\Private\BasicButton.qml" />
+                            </Component>
+                            <Component Id="BASICBUTTON.QMLC" DiskId="1" Guid="E6CB7347-49E1-49DB-96F1-1A245B20C208">
+                                <File Id="BASICBUTTON.QMLC" Name="BasicButton.qmlc" Source="..\release\QtQuick\Controls\Private\BasicButton.qmlc" />
+                            </Component>
+                            <Component Id="BASICTABLEVIEW.QML" DiskId="1" Guid="3C759E33-9462-4FDF-B99A-4ED26204A5B0">
+                                <File Id="BASICTABLEVIEW.QML" Name="BasicTableView.qml" Source="..\release\QtQuick\Controls\Private\BasicTableView.qml" />
+                            </Component>
+                            <Component Id="BASICTABLEVIEW.QMLC" DiskId="1" Guid="3D04917C-800E-4E83-8F3E-8CCA130C581D">
+                                <File Id="BASICTABLEVIEW.QMLC" Name="BasicTableView.qmlc" Source="..\release\QtQuick\Controls\Private\BasicTableView.qmlc" />
+                            </Component>
+                            <Component Id="CALENDARHEADERMODEL.QML" DiskId="1" Guid="86724F47-463B-4E65-B8B5-42266B4E550A">
+                                <File Id="CALENDARHEADERMODEL.QML" Name="CalendarHeaderModel.qml" Source="..\release\QtQuick\Controls\Private\CalendarHeaderModel.qml" />
+                            </Component>
+                            <Component Id="CALENDARHEADERMODEL.QMLC" DiskId="1" Guid="73C756A8-6FBF-4C2A-A7E6-1580114A2A16">
+                                <File Id="CALENDARHEADERMODEL.QMLC" Name="CalendarHeaderModel.qmlc" Source="..\release\QtQuick\Controls\Private\CalendarHeaderModel.qmlc" />
+                            </Component>
+                            <Component Id="CALENDARUTILS.JS" DiskId="1" Guid="FCA0A95E-C9CF-4B99-BFDA-AB1991723BB6">
+                                <File Id="CALENDARUTILS.JS" Name="CalendarUtils.js" Source="..\release\QtQuick\Controls\Private\CalendarUtils.js" />
+                            </Component>
+                            <Component Id="CALENDARUTILS.JSC" DiskId="1" Guid="9526F378-D9FA-4DB4-8DF4-9EEAD4098D1E">
+                                <File Id="CALENDARUTILS.JSC" Name="CalendarUtils.jsc" Source="..\release\QtQuick\Controls\Private\CalendarUtils.jsc" />
+                            </Component>
+                            <Component Id="COLUMNMENUCONTENT.QML" DiskId="1" Guid="7421714D-D04E-4F6A-99B9-402666A27AC1">
+                                <File Id="COLUMNMENUCONTENT.QML" Name="ColumnMenuContent.qml" Source="..\release\QtQuick\Controls\Private\ColumnMenuContent.qml" />
+                            </Component>
+                            <Component Id="COLUMNMENUCONTENT.QMLC" DiskId="1" Guid="76306A87-74B7-4A14-83B7-AB663FEB1157">
+                                <File Id="COLUMNMENUCONTENT.QMLC" Name="ColumnMenuContent.qmlc" Source="..\release\QtQuick\Controls\Private\ColumnMenuContent.qmlc" />
+                            </Component>
+                            <Component Id="CONTENTITEM.QML" DiskId="1" Guid="72A31822-F20D-4A62-9D45-B19AFD4EC07A">
+                                <File Id="CONTENTITEM.QML" Name="ContentItem.qml" Source="..\release\QtQuick\Controls\Private\ContentItem.qml" />
+                            </Component>
+                            <Component Id="CONTENTITEM.QMLC" DiskId="1" Guid="A272AA3B-3557-41FE-A287-5C374BC79308">
+                                <File Id="CONTENTITEM.QMLC" Name="ContentItem.qmlc" Source="..\release\QtQuick\Controls\Private\ContentItem.qmlc" />
+                            </Component>
+                            <Component Id="CONTROL.QML" DiskId="1" Guid="05DE7915-CC3C-4820-A650-AE34531E7CE9">
+                                <File Id="CONTROL.QML" Name="Control.qml" Source="..\release\QtQuick\Controls\Private\Control.qml" />
+                            </Component>
+                            <Component Id="CONTROL.QMLC" DiskId="1" Guid="F78A4086-2B7F-41B9-98F5-7F1011B7F234">
+                                <File Id="CONTROL.QMLC" Name="Control.qmlc" Source="..\release\QtQuick\Controls\Private\Control.qmlc" />
+                            </Component>
+                            <Component Id="EDITMENU.QML" DiskId="1" Guid="69AC2C8B-9A8B-421B-B057-EDAF154B6397">
+                                <File Id="EDITMENU.QML" Name="EditMenu.qml" Source="..\release\QtQuick\Controls\Private\EditMenu.qml" />
+                            </Component>
+                            <Component Id="EDITMENU.QMLC" DiskId="1" Guid="FA15BB5B-B5AF-4F2F-877B-BCBABAAD028C">
+                                <File Id="EDITMENU.QMLC" Name="EditMenu.qmlc" Source="..\release\QtQuick\Controls\Private\EditMenu.qmlc" />
+                            </Component>
+                            <Component Id="EDITMENU_BASE.QML" DiskId="1" Guid="79F95B9F-BF41-4B19-92E9-CE89611DF98E">
+                                <File Id="EDITMENU_BASE.QML" Name="EditMenu_base.qml" Source="..\release\QtQuick\Controls\Private\EditMenu_base.qml" />
+                            </Component>
+                            <Component Id="EDITMENU_BASE.QMLC" DiskId="1" Guid="3CA2E857-3D53-4FA2-9CE5-CF488A1E6FD4">
+                                <File Id="EDITMENU_BASE.QMLC" Name="EditMenu_base.qmlc" Source="..\release\QtQuick\Controls\Private\EditMenu_base.qmlc" />
+                            </Component>
+                            <Component Id="FASTGLOW.QML_1" DiskId="1" Guid="3837989A-B15C-4160-9B34-2E3E78978AA3">
+                                <File Id="FASTGLOW.QML_1" Name="FastGlow.qml" Source="..\release\QtQuick\Controls\Private\FastGlow.qml" />
+                            </Component>
+                            <Component Id="FASTGLOW.QMLC_1" DiskId="1" Guid="9B576FE6-77BE-4083-817C-89F30F8B04D7">
+                                <File Id="FASTGLOW.QMLC_1" Name="FastGlow.qmlc" Source="..\release\QtQuick\Controls\Private\FastGlow.qmlc" />
+                            </Component>
+                            <Component Id="FOCUSFRAME.QML" DiskId="1" Guid="0FE1AC68-5C65-439E-B4FB-3B78FE4CC8A2">
+                                <File Id="FOCUSFRAME.QML" Name="FocusFrame.qml" Source="..\release\QtQuick\Controls\Private\FocusFrame.qml" />
+                            </Component>
+                            <Component Id="FOCUSFRAME.QMLC" DiskId="1" Guid="E46F0F42-D9AE-48E6-AF47-FB6348323CB7">
+                                <File Id="FOCUSFRAME.QMLC" Name="FocusFrame.qmlc" Source="..\release\QtQuick\Controls\Private\FocusFrame.qmlc" />
+                            </Component>
+                            <Component Id="HOVERBUTTON.QML" DiskId="1" Guid="76EDB414-34ED-484A-9FDF-A22025090A0F">
+                                <File Id="HOVERBUTTON.QML" Name="HoverButton.qml" Source="..\release\QtQuick\Controls\Private\HoverButton.qml" />
+                            </Component>
+                            <Component Id="HOVERBUTTON.QMLC" DiskId="1" Guid="8B46E4FE-3501-42BC-91CE-469D39437815">
+                                <File Id="HOVERBUTTON.QMLC" Name="HoverButton.qmlc" Source="..\release\QtQuick\Controls\Private\HoverButton.qmlc" />
+                            </Component>
+                            <Component Id="MENUCONTENTITEM.QML" DiskId="1" Guid="E3F6E853-7703-4EFF-8EBD-9F5276C588ED">
+                                <File Id="MENUCONTENTITEM.QML" Name="MenuContentItem.qml" Source="..\release\QtQuick\Controls\Private\MenuContentItem.qml" />
+                            </Component>
+                            <Component Id="MENUCONTENTITEM.QMLC" DiskId="1" Guid="611C69E2-B7EC-4D53-A456-F69505DFA74B">
+                                <File Id="MENUCONTENTITEM.QMLC" Name="MenuContentItem.qmlc" Source="..\release\QtQuick\Controls\Private\MenuContentItem.qmlc" />
+                            </Component>
+                            <Component Id="MENUCONTENTSCROLLER.QML" DiskId="1" Guid="45036614-23A6-46C3-9492-4725F3E050ED">
+                                <File Id="MENUCONTENTSCROLLER.QML" Name="MenuContentScroller.qml" Source="..\release\QtQuick\Controls\Private\MenuContentScroller.qml" />
+                            </Component>
+                            <Component Id="MENUCONTENTSCROLLER.QMLC" DiskId="1" Guid="163A7881-2D9F-4293-8B2D-64F20233673E">
+                                <File Id="MENUCONTENTSCROLLER.QMLC" Name="MenuContentScroller.qmlc" Source="..\release\QtQuick\Controls\Private\MenuContentScroller.qmlc" />
+                            </Component>
+                            <Component Id="MENUITEMSUBCONTROLS.QML" DiskId="1" Guid="D3568A18-E016-42A7-A310-251CA342FAD1">
+                                <File Id="MENUITEMSUBCONTROLS.QML" Name="MenuItemSubControls.qml" Source="..\release\QtQuick\Controls\Private\MenuItemSubControls.qml" />
+                            </Component>
+                            <Component Id="MENUITEMSUBCONTROLS.QMLC" DiskId="1" Guid="9683F24A-837F-46D8-9AFA-E85C2CC1A014">
+                                <File Id="MENUITEMSUBCONTROLS.QMLC" Name="MenuItemSubControls.qmlc" Source="..\release\QtQuick\Controls\Private\MenuItemSubControls.qmlc" />
+                            </Component>
+                            <Component Id="MODALPOPUPBEHAVIOR.QML" DiskId="1" Guid="55C666A2-91CB-415C-BB85-29D6F70440A9">
+                                <File Id="MODALPOPUPBEHAVIOR.QML" Name="ModalPopupBehavior.qml" Source="..\release\QtQuick\Controls\Private\ModalPopupBehavior.qml" />
+                            </Component>
+                            <Component Id="MODALPOPUPBEHAVIOR.QMLC" DiskId="1" Guid="218369F2-4228-40D3-AB94-D7623600AD81">
+                                <File Id="MODALPOPUPBEHAVIOR.QMLC" Name="ModalPopupBehavior.qmlc" Source="..\release\QtQuick\Controls\Private\ModalPopupBehavior.qmlc" />
+                            </Component>
+                            <Component Id="QMLDIR_6" DiskId="1" Guid="5AE2AD69-997D-4463-AFE0-A86102EC4C85">
+                                <File Id="QMLDIR_6" Name="qmldir" Source="..\release\QtQuick\Controls\Private\qmldir" />
+                            </Component>
+                            <Component Id="SCROLLBAR.QML" DiskId="1" Guid="B9EEB3F2-6BD4-45F2-BCF1-1D94A86691EA">
+                                <File Id="SCROLLBAR.QML" Name="ScrollBar.qml" Source="..\release\QtQuick\Controls\Private\ScrollBar.qml" />
+                            </Component>
+                            <Component Id="SCROLLBAR.QMLC" DiskId="1" Guid="8846D1D0-1C73-4A17-AE20-641530F9F834">
+                                <File Id="SCROLLBAR.QMLC" Name="ScrollBar.qmlc" Source="..\release\QtQuick\Controls\Private\ScrollBar.qmlc" />
+                            </Component>
+                            <Component Id="SCROLLVIEWHELPER.QML" DiskId="1" Guid="6964FECD-39FA-4881-8DEE-C730D1D10C6F">
+                                <File Id="SCROLLVIEWHELPER.QML" Name="ScrollViewHelper.qml" Source="..\release\QtQuick\Controls\Private\ScrollViewHelper.qml" />
+                            </Component>
+                            <Component Id="SCROLLVIEWHELPER.QMLC" DiskId="1" Guid="D0E12592-0B10-4182-B3F6-DAF8ED6A7EDC">
+                                <File Id="SCROLLVIEWHELPER.QMLC" Name="ScrollViewHelper.qmlc" Source="..\release\QtQuick\Controls\Private\ScrollViewHelper.qmlc" />
+                            </Component>
+                            <Component Id="SOURCEPROXY.QML" DiskId="1" Guid="B47E6A24-3F99-48C1-BEE3-F09EF397B5D7">
+                                <File Id="SOURCEPROXY.QML" Name="SourceProxy.qml" Source="..\release\QtQuick\Controls\Private\SourceProxy.qml" />
+                            </Component>
+                            <Component Id="SOURCEPROXY.QMLC" DiskId="1" Guid="74BB3F42-5A26-4027-A656-2BF5162F920C">
+                                <File Id="SOURCEPROXY.QMLC" Name="SourceProxy.qmlc" Source="..\release\QtQuick\Controls\Private\SourceProxy.qmlc" />
+                            </Component>
+                            <Component Id="STACKVIEW.JS" DiskId="1" Guid="7AEF87FC-85CB-47C3-A7C2-7FD521C4093B">
+                                <File Id="STACKVIEW.JS" Name="StackView.js" Source="..\release\QtQuick\Controls\Private\StackView.js" />
+                            </Component>
+                            <Component Id="STACKVIEW.JSC" DiskId="1" Guid="42930AC6-C29B-4DFE-AB4C-C3705505CB73">
+                                <File Id="STACKVIEW.JSC" Name="StackView.jsc" Source="..\release\QtQuick\Controls\Private\StackView.jsc" />
+                            </Component>
+                            <Component Id="STACKVIEWSLIDEDELEGATE.QML" DiskId="1" Guid="C1DE53C2-5DE3-4002-B72C-086331F680B2">
+                                <File Id="STACKVIEWSLIDEDELEGATE.QML" Name="StackViewSlideDelegate.qml" Source="..\release\QtQuick\Controls\Private\StackViewSlideDelegate.qml" />
+                            </Component>
+                            <Component Id="STACKVIEWSLIDEDELEGATE.QMLC" DiskId="1" Guid="3AA6E684-C4AF-4459-8E74-856E253AAB5D">
+                                <File Id="STACKVIEWSLIDEDELEGATE.QMLC" Name="StackViewSlideDelegate.qmlc" Source="..\release\QtQuick\Controls\Private\StackViewSlideDelegate.qmlc" />
+                            </Component>
+                            <Component Id="STYLE.JS" DiskId="1" Guid="81C7FE32-A58E-485D-ADA6-EAF6402F65D9">
+                                <File Id="STYLE.JS" Name="style.js" Source="..\release\QtQuick\Controls\Private\style.js" />
+                            </Component>
+                            <Component Id="STYLE.JSC" DiskId="1" Guid="77A9F608-66DC-4064-B305-A4C075CD9E90">
+                                <File Id="STYLE.JSC" Name="style.jsc" Source="..\release\QtQuick\Controls\Private\style.jsc" />
+                            </Component>
+                            <Component Id="STYLE.QML" DiskId="1" Guid="5AC60761-52F5-43E2-B6E2-98F89E1F61AE">
+                                <File Id="STYLE.QML" Name="Style.qml" Source="..\release\QtQuick\Controls\Private\Style.qml" />
+                            </Component>
+                            <Component Id="STYLE.QMLC" DiskId="1" Guid="F848235A-4206-466E-8A53-69C4021299C1">
+                                <File Id="STYLE.QMLC" Name="Style.qmlc" Source="..\release\QtQuick\Controls\Private\Style.qmlc" />
+                            </Component>
+                            <Component Id="SYSTEMPALETTESINGLETON.QML" DiskId="1" Guid="8E3A8F13-E493-4D53-AB06-46A65AA87BB8">
+                                <File Id="SYSTEMPALETTESINGLETON.QML" Name="SystemPaletteSingleton.qml" Source="..\release\QtQuick\Controls\Private\SystemPaletteSingleton.qml" />
+                            </Component>
+                            <Component Id="SYSTEMPALETTESINGLETON.QMLC" DiskId="1" Guid="EF535B96-A86F-4180-8F8A-0BD02E19ADA2">
+                                <File Id="SYSTEMPALETTESINGLETON.QMLC" Name="SystemPaletteSingleton.qmlc" Source="..\release\QtQuick\Controls\Private\SystemPaletteSingleton.qmlc" />
+                            </Component>
+                            <Component Id="TABBAR.QML" DiskId="1" Guid="1D0AA5ED-008D-41DF-A7DF-677769119E04">
+                                <File Id="TABBAR.QML" Name="TabBar.qml" Source="..\release\QtQuick\Controls\Private\TabBar.qml" />
+                            </Component>
+                            <Component Id="TABBAR.QMLC" DiskId="1" Guid="846BFBE9-7638-4F2C-81AD-08B0DA7AEE4B">
+                                <File Id="TABBAR.QMLC" Name="TabBar.qmlc" Source="..\release\QtQuick\Controls\Private\TabBar.qmlc" />
+                            </Component>
+                            <Component Id="TABLEVIEWITEMDELEGATELOADER.QML" DiskId="1" Guid="89FAFBA5-EDD3-4916-8C69-4FCA32AB9DD6">
+                                <File Id="TABLEVIEWITEMDELEGATELOADER.QML" Name="TableViewItemDelegateLoader.qml" Source="..\release\QtQuick\Controls\Private\TableViewItemDelegateLoader.qml" />
+                            </Component>
+                            <Component Id="TABLEVIEWITEMDELEGATELOADER.QMLC" DiskId="1" Guid="6D1F14CB-0EEB-48A4-A1B5-458BF730A431">
+                                <File Id="TABLEVIEWITEMDELEGATELOADER.QMLC" Name="TableViewItemDelegateLoader.qmlc" Source="..\release\QtQuick\Controls\Private\TableViewItemDelegateLoader.qmlc" />
+                            </Component>
+                            <Component Id="TABLEVIEWSELECTION.QML" DiskId="1" Guid="3CB85566-4E8C-4BE7-87D1-E8E2CFD657A8">
+                                <File Id="TABLEVIEWSELECTION.QML" Name="TableViewSelection.qml" Source="..\release\QtQuick\Controls\Private\TableViewSelection.qml" />
+                            </Component>
+                            <Component Id="TABLEVIEWSELECTION.QMLC" DiskId="1" Guid="830EF683-9CAF-40C2-AB44-C6C8327729B7">
+                                <File Id="TABLEVIEWSELECTION.QMLC" Name="TableViewSelection.qmlc" Source="..\release\QtQuick\Controls\Private\TableViewSelection.qmlc" />
+                            </Component>
+                            <Component Id="TEXTHANDLE.QML" DiskId="1" Guid="5A36BE1A-D608-4077-85A6-CCA59BE6A85F">
+                                <File Id="TEXTHANDLE.QML" Name="TextHandle.qml" Source="..\release\QtQuick\Controls\Private\TextHandle.qml" />
+                            </Component>
+                            <Component Id="TEXTHANDLE.QMLC" DiskId="1" Guid="20B27B1B-2AC8-4D75-A430-8745D0108593">
+                                <File Id="TEXTHANDLE.QMLC" Name="TextHandle.qmlc" Source="..\release\QtQuick\Controls\Private\TextHandle.qmlc" />
+                            </Component>
+                            <Component Id="TEXTINPUTWITHHANDLES.QML" DiskId="1" Guid="1F2B51A8-5DF7-4D28-99F6-1A4E2995C2E6">
+                                <File Id="TEXTINPUTWITHHANDLES.QML" Name="TextInputWithHandles.qml" Source="..\release\QtQuick\Controls\Private\TextInputWithHandles.qml" />
+                            </Component>
+                            <Component Id="TEXTINPUTWITHHANDLES.QMLC" DiskId="1" Guid="C0F5BD69-24EF-4437-AFDB-73145048C963">
+                                <File Id="TEXTINPUTWITHHANDLES.QMLC" Name="TextInputWithHandles.qmlc" Source="..\release\QtQuick\Controls\Private\TextInputWithHandles.qmlc" />
+                            </Component>
+                            <Component Id="TEXTSINGLETON.QML" DiskId="1" Guid="FBBE1BDB-E640-484B-8A56-B192493136E9">
+                                <File Id="TEXTSINGLETON.QML" Name="TextSingleton.qml" Source="..\release\QtQuick\Controls\Private\TextSingleton.qml" />
+                            </Component>
+                            <Component Id="TEXTSINGLETON.QMLC" DiskId="1" Guid="108C1C1B-172F-4B33-BF41-EC37692F6976">
+                                <File Id="TEXTSINGLETON.QMLC" Name="TextSingleton.qmlc" Source="..\release\QtQuick\Controls\Private\TextSingleton.qmlc" />
+                            </Component>
+                            <Component Id="TOOLMENUBUTTON.QML" DiskId="1" Guid="47E614BC-2BEB-4938-9A63-9504D57D0242">
+                                <File Id="TOOLMENUBUTTON.QML" Name="ToolMenuButton.qml" Source="..\release\QtQuick\Controls\Private\ToolMenuButton.qml" />
+                            </Component>
+                            <Component Id="TOOLMENUBUTTON.QMLC" DiskId="1" Guid="DBA556E3-9B48-4E10-A898-5CF6D78FF90D">
+                                <File Id="TOOLMENUBUTTON.QMLC" Name="ToolMenuButton.qmlc" Source="..\release\QtQuick\Controls\Private\ToolMenuButton.qmlc" />
+                            </Component>
+                            <Component Id="TREEVIEWITEMDELEGATELOADER.QML" DiskId="1" Guid="A4068856-12E0-4A48-8F07-16A51B3F3755">
+                                <File Id="TREEVIEWITEMDELEGATELOADER.QML" Name="TreeViewItemDelegateLoader.qml" Source="..\release\QtQuick\Controls\Private\TreeViewItemDelegateLoader.qml" />
+                            </Component>
+                            <Component Id="TREEVIEWITEMDELEGATELOADER.QMLC" DiskId="1" Guid="7F4A4963-951E-46B9-8872-482B8F88F5A8">
+                                <File Id="TREEVIEWITEMDELEGATELOADER.QMLC" Name="TreeViewItemDelegateLoader.qmlc" Source="..\release\QtQuick\Controls\Private\TreeViewItemDelegateLoader.qmlc" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="STYLES" Name="Styles">
+                            <Component Id="QMLDIR_7" DiskId="1" Guid="8A50EFB0-2F47-4BD8-AFFE-626CD2CE7004">
+                                <File Id="QMLDIR_7" Name="qmldir" Source="..\release\QtQuick\Controls\Styles\qmldir" />
+                            </Component>
+                            <Directory Id="BASE" Name="Base">
+                                <Component Id="APPLICATIONWINDOWSTYLE.QML" DiskId="1" Guid="85F579A9-6D73-4F28-B454-FAE300D97B3B">
+                                    <File Id="APPLICATIONWINDOWSTYLE.QML" Name="ApplicationWindowStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\ApplicationWindowStyle.qml" />
+                                </Component>
+                                <Component Id="APPLICATIONWINDOWSTYLE.QMLC" DiskId="1" Guid="1D9F3BC3-4793-4D43-AE39-7A216B7CB04E">
+                                    <File Id="APPLICATIONWINDOWSTYLE.QMLC" Name="ApplicationWindowStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\ApplicationWindowStyle.qmlc" />
+                                </Component>
+                                <Component Id="BASICTABLEVIEWSTYLE.QML" DiskId="1" Guid="F20CB4FB-A590-4FDF-BB09-8DD6DA7AFB98">
+                                    <File Id="BASICTABLEVIEWSTYLE.QML" Name="BasicTableViewStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\BasicTableViewStyle.qml" />
+                                </Component>
+                                <Component Id="BASICTABLEVIEWSTYLE.QMLC" DiskId="1" Guid="CF7D2DB3-491B-4A2C-8EAA-85C016F7B999">
+                                    <File Id="BASICTABLEVIEWSTYLE.QMLC" Name="BasicTableViewStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\BasicTableViewStyle.qmlc" />
+                                </Component>
+                                <Component Id="BUSYINDICATORSTYLE.QML" DiskId="1" Guid="BE9E0698-271D-4672-928E-FFD25EE89D26">
+                                    <File Id="BUSYINDICATORSTYLE.QML" Name="BusyIndicatorStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\BusyIndicatorStyle.qml" />
+                                </Component>
+                                <Component Id="BUSYINDICATORSTYLE.QMLC" DiskId="1" Guid="D42411A2-733A-40A5-A357-E07AF26AC666">
+                                    <File Id="BUSYINDICATORSTYLE.QMLC" Name="BusyIndicatorStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\BusyIndicatorStyle.qmlc" />
+                                </Component>
+                                <Component Id="BUTTONSTYLE.QML" DiskId="1" Guid="EE90789F-9095-45F0-86C3-34F7A6382D32">
+                                    <File Id="BUTTONSTYLE.QML" Name="ButtonStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\ButtonStyle.qml" />
+                                </Component>
+                                <Component Id="BUTTONSTYLE.QMLC" DiskId="1" Guid="BA15AAC5-74E9-4DCC-B12C-B96809E53626">
+                                    <File Id="BUTTONSTYLE.QMLC" Name="ButtonStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\ButtonStyle.qmlc" />
+                                </Component>
+                                <Component Id="CALENDARSTYLE.QML" DiskId="1" Guid="B49ADB26-0185-4C16-993E-7A08A389DDE1">
+                                    <File Id="CALENDARSTYLE.QML" Name="CalendarStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\CalendarStyle.qml" />
+                                </Component>
+                                <Component Id="CALENDARSTYLE.QMLC" DiskId="1" Guid="1DD4D92D-7D2E-4496-94A4-EA4B4CB8C0C3">
+                                    <File Id="CALENDARSTYLE.QMLC" Name="CalendarStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\CalendarStyle.qmlc" />
+                                </Component>
+                                <Component Id="CHECKBOXSTYLE.QML" DiskId="1" Guid="750650BB-02FC-47BB-A6A7-F7757E19DBC8">
+                                    <File Id="CHECKBOXSTYLE.QML" Name="CheckBoxStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\CheckBoxStyle.qml" />
+                                </Component>
+                                <Component Id="CHECKBOXSTYLE.QMLC" DiskId="1" Guid="CD965260-A81B-43AF-9F02-C5D3647A634D">
+                                    <File Id="CHECKBOXSTYLE.QMLC" Name="CheckBoxStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\CheckBoxStyle.qmlc" />
+                                </Component>
+                                <Component Id="CIRCULARBUTTONSTYLE.QML" DiskId="1" Guid="A1FB2D35-4715-4120-B6C7-763A4A0A8004">
+                                    <File Id="CIRCULARBUTTONSTYLE.QML" Name="CircularButtonStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\CircularButtonStyle.qml" />
+                                </Component>
+                                <Component Id="CIRCULARBUTTONSTYLE.QMLC" DiskId="1" Guid="592641DE-D6B4-44C0-AC15-608F6C65470E">
+                                    <File Id="CIRCULARBUTTONSTYLE.QMLC" Name="CircularButtonStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\CircularButtonStyle.qmlc" />
+                                </Component>
+                                <Component Id="CIRCULARGAUGESTYLE.QML" DiskId="1" Guid="A65EC29C-77CC-427A-9DC0-63F3126196E2">
+                                    <File Id="CIRCULARGAUGESTYLE.QML" Name="CircularGaugeStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\CircularGaugeStyle.qml" />
+                                </Component>
+                                <Component Id="CIRCULARGAUGESTYLE.QMLC" DiskId="1" Guid="56400093-59BF-4C54-8CA3-5A1B308783FA">
+                                    <File Id="CIRCULARGAUGESTYLE.QMLC" Name="CircularGaugeStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\CircularGaugeStyle.qmlc" />
+                                </Component>
+                                <Component Id="CIRCULARTICKMARKLABELSTYLE.QML" DiskId="1" Guid="3C27CDCF-1809-4BB3-A07B-D4163EF6ADE8">
+                                    <File Id="CIRCULARTICKMARKLABELSTYLE.QML" Name="CircularTickmarkLabelStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\CircularTickmarkLabelStyle.qml" />
+                                </Component>
+                                <Component Id="CIRCULARTICKMARKLABELSTYLE.QMLC" DiskId="1" Guid="C18850BF-B1AA-4D00-8CE8-B23FDE5D94FD">
+                                    <File Id="CIRCULARTICKMARKLABELSTYLE.QMLC" Name="CircularTickmarkLabelStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\CircularTickmarkLabelStyle.qmlc" />
+                                </Component>
+                                <Component Id="COMBOBOXSTYLE.QML" DiskId="1" Guid="CCEB59DF-8FF1-4F38-A0DD-96D370AFAB21">
+                                    <File Id="COMBOBOXSTYLE.QML" Name="ComboBoxStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\ComboBoxStyle.qml" />
+                                </Component>
+                                <Component Id="COMBOBOXSTYLE.QMLC" DiskId="1" Guid="BEF8A81B-6D57-43BE-9B05-DADE85D58282">
+                                    <File Id="COMBOBOXSTYLE.QMLC" Name="ComboBoxStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\ComboBoxStyle.qmlc" />
+                                </Component>
+                                <Component Id="COMMONSTYLEHELPER.QML" DiskId="1" Guid="28C5A51D-A882-42BF-89DA-0B1568AE1D24">
+                                    <File Id="COMMONSTYLEHELPER.QML" Name="CommonStyleHelper.qml" Source="..\release\QtQuick\Controls\Styles\Base\CommonStyleHelper.qml" />
+                                </Component>
+                                <Component Id="COMMONSTYLEHELPER.QMLC" DiskId="1" Guid="6EB79072-EF02-4280-AFC7-DF6FD2185E73">
+                                    <File Id="COMMONSTYLEHELPER.QMLC" Name="CommonStyleHelper.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\CommonStyleHelper.qmlc" />
+                                </Component>
+                                <Component Id="DELAYBUTTONSTYLE.QML" DiskId="1" Guid="5A703E6E-F1B5-4C6E-A00B-BAE204398EAC">
+                                    <File Id="DELAYBUTTONSTYLE.QML" Name="DelayButtonStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\DelayButtonStyle.qml" />
+                                </Component>
+                                <Component Id="DELAYBUTTONSTYLE.QMLC" DiskId="1" Guid="A58587F6-5CFE-4E1D-9431-9154758D74D5">
+                                    <File Id="DELAYBUTTONSTYLE.QMLC" Name="DelayButtonStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\DelayButtonStyle.qmlc" />
+                                </Component>
+                                <Component Id="DIALSTYLE.QML" DiskId="1" Guid="5F854301-C3A5-465B-8BF9-22C60EBE5C65">
+                                    <File Id="DIALSTYLE.QML" Name="DialStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\DialStyle.qml" />
+                                </Component>
+                                <Component Id="DIALSTYLE.QMLC" DiskId="1" Guid="31FF949D-1AB2-4AE6-BF64-CFD2F6B0AA45">
+                                    <File Id="DIALSTYLE.QMLC" Name="DialStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\DialStyle.qmlc" />
+                                </Component>
+                                <Component Id="FOCUSFRAMESTYLE.QML" DiskId="1" Guid="BD0C8351-034A-4B56-8F26-B0D5CB98DF8D">
+                                    <File Id="FOCUSFRAMESTYLE.QML" Name="FocusFrameStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\FocusFrameStyle.qml" />
+                                </Component>
+                                <Component Id="FOCUSFRAMESTYLE.QMLC" DiskId="1" Guid="C6357C4E-0A5A-4707-AA32-208850B7CD06">
+                                    <File Id="FOCUSFRAMESTYLE.QMLC" Name="FocusFrameStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\FocusFrameStyle.qmlc" />
+                                </Component>
+                                <Component Id="GAUGESTYLE.QML" DiskId="1" Guid="DAEE1A7D-3479-465A-A5B4-A72929CF6936">
+                                    <File Id="GAUGESTYLE.QML" Name="GaugeStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\GaugeStyle.qml" />
+                                </Component>
+                                <Component Id="GAUGESTYLE.QMLC" DiskId="1" Guid="2F491D36-B5B4-41C9-B8F3-FA6488CDC7F0">
+                                    <File Id="GAUGESTYLE.QMLC" Name="GaugeStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\GaugeStyle.qmlc" />
+                                </Component>
+                                <Component Id="GROUPBOXSTYLE.QML" DiskId="1" Guid="B6CAE285-CCB5-4D3C-BE6E-1952C50CE401">
+                                    <File Id="GROUPBOXSTYLE.QML" Name="GroupBoxStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\GroupBoxStyle.qml" />
+                                </Component>
+                                <Component Id="GROUPBOXSTYLE.QMLC" DiskId="1" Guid="DF229EDF-0EB0-4E41-93B9-8DAAF50546B1">
+                                    <File Id="GROUPBOXSTYLE.QMLC" Name="GroupBoxStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\GroupBoxStyle.qmlc" />
+                                </Component>
+                                <Component Id="HANDLESTYLE.QML" DiskId="1" Guid="129A7142-66F3-4D5B-AE34-E7EE29357952">
+                                    <File Id="HANDLESTYLE.QML" Name="HandleStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\HandleStyle.qml" />
+                                </Component>
+                                <Component Id="HANDLESTYLE.QMLC" DiskId="1" Guid="3B5D41B5-40FB-46D2-A108-10185E00BAFF">
+                                    <File Id="HANDLESTYLE.QMLC" Name="HandleStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\HandleStyle.qmlc" />
+                                </Component>
+                                <Component Id="HANDLESTYLEHELPER.QML" DiskId="1" Guid="D43D66DD-AD0E-415B-955D-D7116119557A">
+                                    <File Id="HANDLESTYLEHELPER.QML" Name="HandleStyleHelper.qml" Source="..\release\QtQuick\Controls\Styles\Base\HandleStyleHelper.qml" />
+                                </Component>
+                                <Component Id="HANDLESTYLEHELPER.QMLC" DiskId="1" Guid="DE76B9DB-2372-472B-A757-626ACBF31C9B">
+                                    <File Id="HANDLESTYLEHELPER.QMLC" Name="HandleStyleHelper.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\HandleStyleHelper.qmlc" />
+                                </Component>
+                                <Component Id="MENUBARSTYLE.QML" DiskId="1" Guid="A4A228DC-9DB9-4C60-9CE8-B5946FA900D2">
+                                    <File Id="MENUBARSTYLE.QML" Name="MenuBarStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\MenuBarStyle.qml" />
+                                </Component>
+                                <Component Id="MENUBARSTYLE.QMLC" DiskId="1" Guid="79C21C42-7439-48C1-BAAB-E81BACB7D174">
+                                    <File Id="MENUBARSTYLE.QMLC" Name="MenuBarStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\MenuBarStyle.qmlc" />
+                                </Component>
+                                <Component Id="MENUSTYLE.QML" DiskId="1" Guid="AE3391DF-B90B-4B47-99CA-27A5CEF4B3B4">
+                                    <File Id="MENUSTYLE.QML" Name="MenuStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\MenuStyle.qml" />
+                                </Component>
+                                <Component Id="MENUSTYLE.QMLC" DiskId="1" Guid="2016C021-FB24-49CE-882F-C8390300C4CE">
+                                    <File Id="MENUSTYLE.QMLC" Name="MenuStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\MenuStyle.qmlc" />
+                                </Component>
+                                <Component Id="PIEMENUSTYLE.QML" DiskId="1" Guid="B5BDD9E3-F384-4ED6-B93D-D4880A512131">
+                                    <File Id="PIEMENUSTYLE.QML" Name="PieMenuStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\PieMenuStyle.qml" />
+                                </Component>
+                                <Component Id="PIEMENUSTYLE.QMLC" DiskId="1" Guid="F1F236E7-4E7C-4D1D-B791-56247147A25A">
+                                    <File Id="PIEMENUSTYLE.QMLC" Name="PieMenuStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\PieMenuStyle.qmlc" />
+                                </Component>
+                                <Component Id="PROGRESSBARSTYLE.QML" DiskId="1" Guid="5E9BBEBD-9F7E-443A-BC43-DDC03C2C614A">
+                                    <File Id="PROGRESSBARSTYLE.QML" Name="ProgressBarStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\ProgressBarStyle.qml" />
+                                </Component>
+                                <Component Id="PROGRESSBARSTYLE.QMLC" DiskId="1" Guid="F0812C06-2875-449A-9AA5-EB2A001AB0D6">
+                                    <File Id="PROGRESSBARSTYLE.QMLC" Name="ProgressBarStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\ProgressBarStyle.qmlc" />
+                                </Component>
+                                <Component Id="RADIOBUTTONSTYLE.QML" DiskId="1" Guid="1A835166-32F9-47BE-9DFD-8239D4AAE017">
+                                    <File Id="RADIOBUTTONSTYLE.QML" Name="RadioButtonStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\RadioButtonStyle.qml" />
+                                </Component>
+                                <Component Id="RADIOBUTTONSTYLE.QMLC" DiskId="1" Guid="C8424784-984E-47A4-8950-45D2632EDD74">
+                                    <File Id="RADIOBUTTONSTYLE.QMLC" Name="RadioButtonStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\RadioButtonStyle.qmlc" />
+                                </Component>
+                                <Component Id="SCROLLVIEWSTYLE.QML" DiskId="1" Guid="80E90B80-F390-4B77-99AC-C606110EC54F">
+                                    <File Id="SCROLLVIEWSTYLE.QML" Name="ScrollViewStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\ScrollViewStyle.qml" />
+                                </Component>
+                                <Component Id="SCROLLVIEWSTYLE.QMLC" DiskId="1" Guid="DC2BB97D-B8D1-4421-92A6-35AE821D0E14">
+                                    <File Id="SCROLLVIEWSTYLE.QMLC" Name="ScrollViewStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\ScrollViewStyle.qmlc" />
+                                </Component>
+                                <Component Id="SLIDERSTYLE.QML" DiskId="1" Guid="FF9E9D8B-1872-439C-8DAE-9104C760E487">
+                                    <File Id="SLIDERSTYLE.QML" Name="SliderStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\SliderStyle.qml" />
+                                </Component>
+                                <Component Id="SLIDERSTYLE.QMLC" DiskId="1" Guid="FB87C7EA-2C11-4314-805B-7A0424C9F710">
+                                    <File Id="SLIDERSTYLE.QMLC" Name="SliderStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\SliderStyle.qmlc" />
+                                </Component>
+                                <Component Id="SPINBOXSTYLE.QML" DiskId="1" Guid="BF9B88EE-5A56-40BA-9734-F01376323AA9">
+                                    <File Id="SPINBOXSTYLE.QML" Name="SpinBoxStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\SpinBoxStyle.qml" />
+                                </Component>
+                                <Component Id="SPINBOXSTYLE.QMLC" DiskId="1" Guid="67308D27-E53C-4B6F-9C12-9BC2BC35077E">
+                                    <File Id="SPINBOXSTYLE.QMLC" Name="SpinBoxStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\SpinBoxStyle.qmlc" />
+                                </Component>
+                                <Component Id="STATUSBARSTYLE.QML" DiskId="1" Guid="10EFA145-3C50-4CB8-9F84-E1781AB09939">
+                                    <File Id="STATUSBARSTYLE.QML" Name="StatusBarStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\StatusBarStyle.qml" />
+                                </Component>
+                                <Component Id="STATUSBARSTYLE.QMLC" DiskId="1" Guid="57E98FE2-44BF-4E25-89E7-1D0BC0A4D8F1">
+                                    <File Id="STATUSBARSTYLE.QMLC" Name="StatusBarStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\StatusBarStyle.qmlc" />
+                                </Component>
+                                <Component Id="STATUSINDICATORSTYLE.QML" DiskId="1" Guid="C291B92B-3C9C-40E9-8C19-E110A2B662E2">
+                                    <File Id="STATUSINDICATORSTYLE.QML" Name="StatusIndicatorStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\StatusIndicatorStyle.qml" />
+                                </Component>
+                                <Component Id="STATUSINDICATORSTYLE.QMLC" DiskId="1" Guid="91EE8A23-A1B0-4D88-BB58-6DF2694CCF93">
+                                    <File Id="STATUSINDICATORSTYLE.QMLC" Name="StatusIndicatorStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\StatusIndicatorStyle.qmlc" />
+                                </Component>
+                                <Component Id="SWITCHSTYLE.QML" DiskId="1" Guid="189DA5F0-5D06-4138-8BBD-B76275BCF2BA">
+                                    <File Id="SWITCHSTYLE.QML" Name="SwitchStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\SwitchStyle.qml" />
+                                </Component>
+                                <Component Id="SWITCHSTYLE.QMLC" DiskId="1" Guid="839C2F43-FE1B-4FCA-AED9-DE4C7764F417">
+                                    <File Id="SWITCHSTYLE.QMLC" Name="SwitchStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\SwitchStyle.qmlc" />
+                                </Component>
+                                <Component Id="TABLEVIEWSTYLE.QML" DiskId="1" Guid="BBADCBB4-3D23-41E3-8E9F-518485DA8313">
+                                    <File Id="TABLEVIEWSTYLE.QML" Name="TableViewStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\TableViewStyle.qml" />
+                                </Component>
+                                <Component Id="TABLEVIEWSTYLE.QMLC" DiskId="1" Guid="78F9DC8C-CBC6-4BBD-8390-2E37947F7F60">
+                                    <File Id="TABLEVIEWSTYLE.QMLC" Name="TableViewStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\TableViewStyle.qmlc" />
+                                </Component>
+                                <Component Id="TABVIEWSTYLE.QML" DiskId="1" Guid="36541027-1B78-4C30-A588-2127FE5CDB1B">
+                                    <File Id="TABVIEWSTYLE.QML" Name="TabViewStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\TabViewStyle.qml" />
+                                </Component>
+                                <Component Id="TABVIEWSTYLE.QMLC" DiskId="1" Guid="98AED5BA-6FB6-45CF-A5AA-348182EE8441">
+                                    <File Id="TABVIEWSTYLE.QMLC" Name="TabViewStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\TabViewStyle.qmlc" />
+                                </Component>
+                                <Component Id="TEXTAREASTYLE.QML" DiskId="1" Guid="EF1046F1-9256-42C8-A74D-E36675DD4B7F">
+                                    <File Id="TEXTAREASTYLE.QML" Name="TextAreaStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\TextAreaStyle.qml" />
+                                </Component>
+                                <Component Id="TEXTAREASTYLE.QMLC" DiskId="1" Guid="B5FFC97A-1458-4183-A70F-77CA5B7DD8BD">
+                                    <File Id="TEXTAREASTYLE.QMLC" Name="TextAreaStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\TextAreaStyle.qmlc" />
+                                </Component>
+                                <Component Id="TEXTFIELDSTYLE.QML" DiskId="1" Guid="6D57E7E3-3747-4751-8630-9B552E4DF3DD">
+                                    <File Id="TEXTFIELDSTYLE.QML" Name="TextFieldStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\TextFieldStyle.qml" />
+                                </Component>
+                                <Component Id="TEXTFIELDSTYLE.QMLC" DiskId="1" Guid="23BA0FD2-B087-47E5-AD32-2FD6D4747F79">
+                                    <File Id="TEXTFIELDSTYLE.QMLC" Name="TextFieldStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\TextFieldStyle.qmlc" />
+                                </Component>
+                                <Component Id="TOGGLEBUTTONSTYLE.QML" DiskId="1" Guid="E501D920-612C-480B-B04A-9DF92A5E23BB">
+                                    <File Id="TOGGLEBUTTONSTYLE.QML" Name="ToggleButtonStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\ToggleButtonStyle.qml" />
+                                </Component>
+                                <Component Id="TOGGLEBUTTONSTYLE.QMLC" DiskId="1" Guid="ACC8AA64-7905-4049-8005-1AB22AB73561">
+                                    <File Id="TOGGLEBUTTONSTYLE.QMLC" Name="ToggleButtonStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\ToggleButtonStyle.qmlc" />
+                                </Component>
+                                <Component Id="TOOLBARSTYLE.QML" DiskId="1" Guid="04A1F2B0-C008-4CA3-978F-2F4D1F10EEA3">
+                                    <File Id="TOOLBARSTYLE.QML" Name="ToolBarStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\ToolBarStyle.qml" />
+                                </Component>
+                                <Component Id="TOOLBARSTYLE.QMLC" DiskId="1" Guid="4E2D0145-2177-4CFB-A7BD-B1CAE126853C">
+                                    <File Id="TOOLBARSTYLE.QMLC" Name="ToolBarStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\ToolBarStyle.qmlc" />
+                                </Component>
+                                <Component Id="TOOLBUTTONSTYLE.QML" DiskId="1" Guid="7F180719-E729-41DE-84B5-7CBD268B731A">
+                                    <File Id="TOOLBUTTONSTYLE.QML" Name="ToolButtonStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\ToolButtonStyle.qml" />
+                                </Component>
+                                <Component Id="TOOLBUTTONSTYLE.QMLC" DiskId="1" Guid="C0AEEAC8-6253-4F48-85B1-EE9E3CF4105B">
+                                    <File Id="TOOLBUTTONSTYLE.QMLC" Name="ToolButtonStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\ToolButtonStyle.qmlc" />
+                                </Component>
+                                <Component Id="TREEVIEWSTYLE.QML" DiskId="1" Guid="33062C42-1D35-4585-AD5C-00A2AB2D99A9">
+                                    <File Id="TREEVIEWSTYLE.QML" Name="TreeViewStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\TreeViewStyle.qml" />
+                                </Component>
+                                <Component Id="TREEVIEWSTYLE.QMLC" DiskId="1" Guid="C72A729A-DD9F-4276-B201-6693A19A921E">
+                                    <File Id="TREEVIEWSTYLE.QMLC" Name="TreeViewStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\TreeViewStyle.qmlc" />
+                                </Component>
+                                <Component Id="TUMBLERSTYLE.QML" DiskId="1" Guid="A326E786-2B70-40E3-BEB1-8CDC020AE2B9">
+                                    <File Id="TUMBLERSTYLE.QML" Name="TumblerStyle.qml" Source="..\release\QtQuick\Controls\Styles\Base\TumblerStyle.qml" />
+                                </Component>
+                                <Component Id="TUMBLERSTYLE.QMLC" DiskId="1" Guid="7B8D888E-AE03-4380-B1D5-93E308194ABD">
+                                    <File Id="TUMBLERSTYLE.QMLC" Name="TumblerStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Base\TumblerStyle.qmlc" />
+                                </Component>
+                                <Directory Id="IMAGES" Name="images">
+                                    <Component Id="ARROW_DOWN.PNG" DiskId="1" Guid="C1B58C92-998C-49CD-AECB-DD1FE7316606">
+                                        <File Id="ARROW_DOWN.PNG" Name="arrow-down.png" Source="..\release\QtQuick\Controls\Styles\Base\images\arrow-down.png" />
+                                    </Component>
+                                    <Component Id="ARROW_DOWN_2X.PNG" DiskId="1" Guid="29F6F5FC-31F9-4029-8679-CF072651C902">
+                                        <File Id="ARROW_DOWN_2X.PNG" Name="arrow-down@2x.png" Source="..\release\QtQuick\Controls\Styles\Base\images\arrow-down@2x.png" />
+                                    </Component>
+                                    <Component Id="ARROW_LEFT.PNG" DiskId="1" Guid="8DA9A910-F619-48FD-8144-F21FEBEEEB8F">
+                                        <File Id="ARROW_LEFT.PNG" Name="arrow-left.png" Source="..\release\QtQuick\Controls\Styles\Base\images\arrow-left.png" />
+                                    </Component>
+                                    <Component Id="ARROW_LEFT_2X.PNG" DiskId="1" Guid="3EA52F6A-4627-4D53-997F-EEB2D5F5F332">
+                                        <File Id="ARROW_LEFT_2X.PNG" Name="arrow-left@2x.png" Source="..\release\QtQuick\Controls\Styles\Base\images\arrow-left@2x.png" />
+                                    </Component>
+                                    <Component Id="ARROW_RIGHT.PNG" DiskId="1" Guid="D745D8DC-883B-4C28-B6F7-635C6DAAC056">
+                                        <File Id="ARROW_RIGHT.PNG" Name="arrow-right.png" Source="..\release\QtQuick\Controls\Styles\Base\images\arrow-right.png" />
+                                    </Component>
+                                    <Component Id="ARROW_RIGHT_2X.PNG" DiskId="1" Guid="A8F35177-7B1E-4FAF-A019-A317EABD3445">
+                                        <File Id="ARROW_RIGHT_2X.PNG" Name="arrow-right@2x.png" Source="..\release\QtQuick\Controls\Styles\Base\images\arrow-right@2x.png" />
+                                    </Component>
+                                    <Component Id="ARROW_UP.PNG" DiskId="1" Guid="41B56B87-E3DD-48D2-8DE8-13CCD0029C36">
+                                        <File Id="ARROW_UP.PNG" Name="arrow-up.png" Source="..\release\QtQuick\Controls\Styles\Base\images\arrow-up.png" />
+                                    </Component>
+                                    <Component Id="ARROW_UP_2X.PNG" DiskId="1" Guid="D666BE06-F36F-4111-A5C5-A76C6D31C5F3">
+                                        <File Id="ARROW_UP_2X.PNG" Name="arrow-up@2x.png" Source="..\release\QtQuick\Controls\Styles\Base\images\arrow-up@2x.png" />
+                                    </Component>
+                                    <Component Id="BUTTON.PNG" DiskId="1" Guid="8CF34F70-973B-4437-8A2E-09DF52FDD8F4">
+                                        <File Id="BUTTON.PNG" Name="button.png" Source="..\release\QtQuick\Controls\Styles\Base\images\button.png" />
+                                    </Component>
+                                    <Component Id="BUTTON_DOWN.PNG" DiskId="1" Guid="64EADCAB-9A03-4508-BA87-D057C0CC3F8B">
+                                        <File Id="BUTTON_DOWN.PNG" Name="button_down.png" Source="..\release\QtQuick\Controls\Styles\Base\images\button_down.png" />
+                                    </Component>
+                                    <Component Id="CHECK.PNG" DiskId="1" Guid="9A46CD2D-8BB9-40D2-8CBE-47FD690C4C6A">
+                                        <File Id="CHECK.PNG" Name="check.png" Source="..\release\QtQuick\Controls\Styles\Base\images\check.png" />
+                                    </Component>
+                                    <Component Id="CHECK_2X.PNG" DiskId="1" Guid="BD630B06-0EAD-4FAC-8492-17B19F7F809F">
+                                        <File Id="CHECK_2X.PNG" Name="check@2x.png" Source="..\release\QtQuick\Controls\Styles\Base\images\check@2x.png" />
+                                    </Component>
+                                    <Component Id="EDITBOX.PNG" DiskId="1" Guid="CA30DE7C-A8EE-47B0-B7A3-53F9607CF57D">
+                                        <File Id="EDITBOX.PNG" Name="editbox.png" Source="..\release\QtQuick\Controls\Styles\Base\images\editbox.png" />
+                                    </Component>
+                                    <Component Id="FOCUSFRAME.PNG" DiskId="1" Guid="E11C9F86-4569-4B41-A91E-E1CF9C7E4CAE">
+                                        <File Id="FOCUSFRAME.PNG" Name="focusframe.png" Source="..\release\QtQuick\Controls\Styles\Base\images\focusframe.png" />
+                                    </Component>
+                                    <Component Id="GROUPBOX.PNG" DiskId="1" Guid="C228BBCB-A179-4C32-A5E6-1105C81BE298">
+                                        <File Id="GROUPBOX.PNG" Name="groupbox.png" Source="..\release\QtQuick\Controls\Styles\Base\images\groupbox.png" />
+                                    </Component>
+                                    <Component Id="HEADER.PNG" DiskId="1" Guid="8F536F4F-AD8D-4AC2-A626-CB83F98E6B3F">
+                                        <File Id="HEADER.PNG" Name="header.png" Source="..\release\QtQuick\Controls\Styles\Base\images\header.png" />
+                                    </Component>
+                                    <Component Id="KNOB.PNG" DiskId="1" Guid="2E862EAD-87AC-4F35-A68E-11E5C6E762FB">
+                                        <File Id="KNOB.PNG" Name="knob.png" Source="..\release\QtQuick\Controls\Styles\Base\images\knob.png" />
+                                    </Component>
+                                    <Component Id="LEFTANGLEARROW.PNG" DiskId="1" Guid="4504D964-1B69-4145-AF6F-7CDA020A9365">
+                                        <File Id="LEFTANGLEARROW.PNG" Name="leftanglearrow.png" Source="..\release\QtQuick\Controls\Styles\Base\images\leftanglearrow.png" />
+                                    </Component>
+                                    <Component Id="NEEDLE.PNG" DiskId="1" Guid="2E390CCE-6B2D-4BE9-AA91-C322421A5964">
+                                        <File Id="NEEDLE.PNG" Name="needle.png" Source="..\release\QtQuick\Controls\Styles\Base\images\needle.png" />
+                                    </Component>
+                                    <Component Id="PROGRESS_INDETERMINATE.PNG" DiskId="1" Guid="5CDFF0A8-2290-462F-B3EE-B3A493E88045">
+                                        <File Id="PROGRESS_INDETERMINATE.PNG" Name="progress-indeterminate.png" Source="..\release\QtQuick\Controls\Styles\Base\images\progress-indeterminate.png" />
+                                    </Component>
+                                    <Component Id="RIGHTANGLEARROW.PNG" DiskId="1" Guid="64C7A5EF-4459-4159-9F10-FD9A334E2D5F">
+                                        <File Id="RIGHTANGLEARROW.PNG" Name="rightanglearrow.png" Source="..\release\QtQuick\Controls\Styles\Base\images\rightanglearrow.png" />
+                                    </Component>
+                                    <Component Id="SCROLLBAR_HANDLE_HORIZONTAL.PNG" DiskId="1" Guid="790AC220-C7F5-44D8-809B-78A1214F0E0C">
+                                        <File Id="SCROLLBAR_HANDLE_HORIZONTAL.PNG" Name="scrollbar-handle-horizontal.png" Source="..\release\QtQuick\Controls\Styles\Base\images\scrollbar-handle-horizontal.png" />
+                                    </Component>
+                                    <Component Id="SCROLLBAR_HANDLE_TRANSIENT.PNG" DiskId="1" Guid="CCF27235-E98E-4789-8A99-F159C4634F56">
+                                        <File Id="SCROLLBAR_HANDLE_TRANSIENT.PNG" Name="scrollbar-handle-transient.png" Source="..\release\QtQuick\Controls\Styles\Base\images\scrollbar-handle-transient.png" />
+                                    </Component>
+                                    <Component Id="SCROLLBAR_HANDLE_VERTICAL.PNG" DiskId="1" Guid="521D7337-DC6F-4E04-B1FE-E4D01B90270D">
+                                        <File Id="SCROLLBAR_HANDLE_VERTICAL.PNG" Name="scrollbar-handle-vertical.png" Source="..\release\QtQuick\Controls\Styles\Base\images\scrollbar-handle-vertical.png" />
+                                    </Component>
+                                    <Component Id="SLIDER_GROOVE.PNG" DiskId="1" Guid="46640280-75D3-4068-BEAB-C903DA01B843">
+                                        <File Id="SLIDER_GROOVE.PNG" Name="slider-groove.png" Source="..\release\QtQuick\Controls\Styles\Base\images\slider-groove.png" />
+                                    </Component>
+                                    <Component Id="SLIDER_HANDLE.PNG" DiskId="1" Guid="A79BC55E-FB43-4B73-B7F9-67518C240282">
+                                        <File Id="SLIDER_HANDLE.PNG" Name="slider-handle.png" Source="..\release\QtQuick\Controls\Styles\Base\images\slider-handle.png" />
+                                    </Component>
+                                    <Component Id="SPINNER_LARGE.PNG" DiskId="1" Guid="46715892-CFCA-4BF8-8C9C-D34D961E7FD5">
+                                        <File Id="SPINNER_LARGE.PNG" Name="spinner_large.png" Source="..\release\QtQuick\Controls\Styles\Base\images\spinner_large.png" />
+                                    </Component>
+                                    <Component Id="SPINNER_MEDIUM.PNG" DiskId="1" Guid="A1E358B5-065D-45DF-9B87-50E2888EB84E">
+                                        <File Id="SPINNER_MEDIUM.PNG" Name="spinner_medium.png" Source="..\release\QtQuick\Controls\Styles\Base\images\spinner_medium.png" />
+                                    </Component>
+                                    <Component Id="SPINNER_SMALL.PNG" DiskId="1" Guid="97F966D7-5CC3-4BAD-8507-9169F720107E">
+                                        <File Id="SPINNER_SMALL.PNG" Name="spinner_small.png" Source="..\release\QtQuick\Controls\Styles\Base\images\spinner_small.png" />
+                                    </Component>
+                                    <Component Id="TAB.PNG" DiskId="1" Guid="06B24E1C-EF57-4E06-844F-A0EB4DC30299">
+                                        <File Id="TAB.PNG" Name="tab.png" Source="..\release\QtQuick\Controls\Styles\Base\images\tab.png" />
+                                    </Component>
+                                    <Component Id="TAB_SELECTED.PNG" DiskId="1" Guid="4386D28C-FCD3-44D5-BC66-4792ADE74BC2">
+                                        <File Id="TAB_SELECTED.PNG" Name="tab_selected.png" Source="..\release\QtQuick\Controls\Styles\Base\images\tab_selected.png" />
+                                    </Component>
+                                </Directory>
+                            </Directory>
+                            <Directory Id="DESKTOP" Name="Desktop">
+                                <Component Id="APPLICATIONWINDOWSTYLE.QML_1" DiskId="1" Guid="D9DCB76B-35EA-49B8-9FCB-448E0A3CDF20">
+                                    <File Id="APPLICATIONWINDOWSTYLE.QML_1" Name="ApplicationWindowStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\ApplicationWindowStyle.qml" />
+                                </Component>
+                                <Component Id="APPLICATIONWINDOWSTYLE.QMLC_1" DiskId="1" Guid="B9893506-DDCA-4F09-896B-CF0074F9D42E">
+                                    <File Id="APPLICATIONWINDOWSTYLE.QMLC_1" Name="ApplicationWindowStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\ApplicationWindowStyle.qmlc" />
+                                </Component>
+                                <Component Id="BUSYINDICATORSTYLE.QML_1" DiskId="1" Guid="8FFBE7E9-4BFD-4F8E-90C0-AA906A15F78B">
+                                    <File Id="BUSYINDICATORSTYLE.QML_1" Name="BusyIndicatorStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\BusyIndicatorStyle.qml" />
+                                </Component>
+                                <Component Id="BUSYINDICATORSTYLE.QMLC_1" DiskId="1" Guid="5CBE9F9F-AEE2-437D-9ABF-15333442F9AB">
+                                    <File Id="BUSYINDICATORSTYLE.QMLC_1" Name="BusyIndicatorStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\BusyIndicatorStyle.qmlc" />
+                                </Component>
+                                <Component Id="BUTTONSTYLE.QML_1" DiskId="1" Guid="A4F57ACD-982D-44EA-9D4B-6A623DB863AB">
+                                    <File Id="BUTTONSTYLE.QML_1" Name="ButtonStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\ButtonStyle.qml" />
+                                </Component>
+                                <Component Id="BUTTONSTYLE.QMLC_1" DiskId="1" Guid="90D45FE5-B79F-4B92-8252-CB1B0F966CA0">
+                                    <File Id="BUTTONSTYLE.QMLC_1" Name="ButtonStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\ButtonStyle.qmlc" />
+                                </Component>
+                                <Component Id="CALENDARSTYLE.QML_1" DiskId="1" Guid="B3AD282E-1DE5-47E0-8E88-8E3F93029109">
+                                    <File Id="CALENDARSTYLE.QML_1" Name="CalendarStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\CalendarStyle.qml" />
+                                </Component>
+                                <Component Id="CALENDARSTYLE.QMLC_1" DiskId="1" Guid="77AEBE1D-2BD4-45AE-8890-6C7D0A09F856">
+                                    <File Id="CALENDARSTYLE.QMLC_1" Name="CalendarStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\CalendarStyle.qmlc" />
+                                </Component>
+                                <Component Id="CHECKBOXSTYLE.QML_1" DiskId="1" Guid="C9740F80-B533-4BB9-9D31-746F9D0EB4D2">
+                                    <File Id="CHECKBOXSTYLE.QML_1" Name="CheckBoxStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\CheckBoxStyle.qml" />
+                                </Component>
+                                <Component Id="CHECKBOXSTYLE.QMLC_1" DiskId="1" Guid="A626264A-D808-4B1B-ABA5-B949C0924632">
+                                    <File Id="CHECKBOXSTYLE.QMLC_1" Name="CheckBoxStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\CheckBoxStyle.qmlc" />
+                                </Component>
+                                <Component Id="COMBOBOXSTYLE.QML_1" DiskId="1" Guid="B755787E-8CD2-47FA-B3FA-0485C8EC315D">
+                                    <File Id="COMBOBOXSTYLE.QML_1" Name="ComboBoxStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\ComboBoxStyle.qml" />
+                                </Component>
+                                <Component Id="COMBOBOXSTYLE.QMLC_1" DiskId="1" Guid="9C097B31-5ABF-4269-A723-1DF52D8D4F79">
+                                    <File Id="COMBOBOXSTYLE.QMLC_1" Name="ComboBoxStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\ComboBoxStyle.qmlc" />
+                                </Component>
+                                <Component Id="FOCUSFRAMESTYLE.QML_1" DiskId="1" Guid="824E833B-DA71-4AE6-8F1A-E715FD1ABF72">
+                                    <File Id="FOCUSFRAMESTYLE.QML_1" Name="FocusFrameStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\FocusFrameStyle.qml" />
+                                </Component>
+                                <Component Id="FOCUSFRAMESTYLE.QMLC_1" DiskId="1" Guid="BBF93444-6079-431D-80F4-03B9333A93F2">
+                                    <File Id="FOCUSFRAMESTYLE.QMLC_1" Name="FocusFrameStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\FocusFrameStyle.qmlc" />
+                                </Component>
+                                <Component Id="GROUPBOXSTYLE.QML_1" DiskId="1" Guid="32971CB7-9DE6-442F-B036-D64E26D1EED8">
+                                    <File Id="GROUPBOXSTYLE.QML_1" Name="GroupBoxStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\GroupBoxStyle.qml" />
+                                </Component>
+                                <Component Id="GROUPBOXSTYLE.QMLC_1" DiskId="1" Guid="E84CD527-3512-4C79-ABF5-408245C83AA1">
+                                    <File Id="GROUPBOXSTYLE.QMLC_1" Name="GroupBoxStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\GroupBoxStyle.qmlc" />
+                                </Component>
+                                <Component Id="MENUBARSTYLE.QML_1" DiskId="1" Guid="07A37EE3-2132-4AF0-A7B7-C03CFF0ED337">
+                                    <File Id="MENUBARSTYLE.QML_1" Name="MenuBarStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\MenuBarStyle.qml" />
+                                </Component>
+                                <Component Id="MENUBARSTYLE.QMLC_1" DiskId="1" Guid="C511AD9C-FCCC-4D87-B1D9-F16EE785D392">
+                                    <File Id="MENUBARSTYLE.QMLC_1" Name="MenuBarStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\MenuBarStyle.qmlc" />
+                                </Component>
+                                <Component Id="MENUSTYLE.QML_1" DiskId="1" Guid="040818AE-CD00-462A-8E78-05A565E01858">
+                                    <File Id="MENUSTYLE.QML_1" Name="MenuStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\MenuStyle.qml" />
+                                </Component>
+                                <Component Id="MENUSTYLE.QMLC_1" DiskId="1" Guid="13C1DAEF-A3AC-492F-BFC1-7EE9B08B341F">
+                                    <File Id="MENUSTYLE.QMLC_1" Name="MenuStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\MenuStyle.qmlc" />
+                                </Component>
+                                <Component Id="PROGRESSBARSTYLE.QML_1" DiskId="1" Guid="371B99D1-D050-4165-B6B7-6AD00A03666A">
+                                    <File Id="PROGRESSBARSTYLE.QML_1" Name="ProgressBarStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\ProgressBarStyle.qml" />
+                                </Component>
+                                <Component Id="PROGRESSBARSTYLE.QMLC_1" DiskId="1" Guid="572C97C6-33E0-4658-AEAF-A2B7FF971AE9">
+                                    <File Id="PROGRESSBARSTYLE.QMLC_1" Name="ProgressBarStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\ProgressBarStyle.qmlc" />
+                                </Component>
+                                <Component Id="QMLDIR_8" DiskId="1" Guid="02A648C0-2AC9-4B23-8793-416B3177FCAA">
+                                    <File Id="QMLDIR_8" Name="qmldir" Source="..\release\QtQuick\Controls\Styles\Desktop\qmldir" />
+                                </Component>
+                                <Component Id="RADIOBUTTONSTYLE.QML_1" DiskId="1" Guid="3A6D51F2-760B-40D1-A5F3-5A5C10B1C4D6">
+                                    <File Id="RADIOBUTTONSTYLE.QML_1" Name="RadioButtonStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\RadioButtonStyle.qml" />
+                                </Component>
+                                <Component Id="RADIOBUTTONSTYLE.QMLC_1" DiskId="1" Guid="26E27E30-0F5A-4B64-BA80-7D34AD822411">
+                                    <File Id="RADIOBUTTONSTYLE.QMLC_1" Name="RadioButtonStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\RadioButtonStyle.qmlc" />
+                                </Component>
+                                <Component Id="ROWITEMSINGLETON.QML" DiskId="1" Guid="99C1C6D3-D82D-4B79-A9A8-AC6E818EC38D">
+                                    <File Id="ROWITEMSINGLETON.QML" Name="RowItemSingleton.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\RowItemSingleton.qml" />
+                                </Component>
+                                <Component Id="ROWITEMSINGLETON.QMLC" DiskId="1" Guid="AD4E2A57-1283-4E75-8FB7-9FCB8E1C017A">
+                                    <File Id="ROWITEMSINGLETON.QMLC" Name="RowItemSingleton.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\RowItemSingleton.qmlc" />
+                                </Component>
+                                <Component Id="SCROLLVIEWSTYLE.QML_1" DiskId="1" Guid="EC870A7C-D73F-4E4A-9838-3DA0BE128771">
+                                    <File Id="SCROLLVIEWSTYLE.QML_1" Name="ScrollViewStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\ScrollViewStyle.qml" />
+                                </Component>
+                                <Component Id="SCROLLVIEWSTYLE.QMLC_1" DiskId="1" Guid="9B12EEFA-326B-4957-A8EF-8B546BDC66DF">
+                                    <File Id="SCROLLVIEWSTYLE.QMLC_1" Name="ScrollViewStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\ScrollViewStyle.qmlc" />
+                                </Component>
+                                <Component Id="SLIDERSTYLE.QML_1" DiskId="1" Guid="E5D94399-192B-46D0-BECE-69D663443DB8">
+                                    <File Id="SLIDERSTYLE.QML_1" Name="SliderStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\SliderStyle.qml" />
+                                </Component>
+                                <Component Id="SLIDERSTYLE.QMLC_1" DiskId="1" Guid="56A82AB3-DFAD-48DB-B6FE-2D3C114F9119">
+                                    <File Id="SLIDERSTYLE.QMLC_1" Name="SliderStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\SliderStyle.qmlc" />
+                                </Component>
+                                <Component Id="SPINBOXSTYLE.QML_1" DiskId="1" Guid="E256C71C-FE42-4302-A958-0EC3E489C7CD">
+                                    <File Id="SPINBOXSTYLE.QML_1" Name="SpinBoxStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\SpinBoxStyle.qml" />
+                                </Component>
+                                <Component Id="SPINBOXSTYLE.QMLC_1" DiskId="1" Guid="94EE4C83-8084-44A2-B4C1-8648444C4E11">
+                                    <File Id="SPINBOXSTYLE.QMLC_1" Name="SpinBoxStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\SpinBoxStyle.qmlc" />
+                                </Component>
+                                <Component Id="STATUSBARSTYLE.QML_1" DiskId="1" Guid="579235EA-5D5B-4779-888A-ED633856BFF0">
+                                    <File Id="STATUSBARSTYLE.QML_1" Name="StatusBarStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\StatusBarStyle.qml" />
+                                </Component>
+                                <Component Id="STATUSBARSTYLE.QMLC_1" DiskId="1" Guid="98248121-C92B-41B2-BEB0-BE767F46CDC2">
+                                    <File Id="STATUSBARSTYLE.QMLC_1" Name="StatusBarStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\StatusBarStyle.qmlc" />
+                                </Component>
+                                <Component Id="SWITCHSTYLE.QML_1" DiskId="1" Guid="BA4BAAEC-402A-45E0-A08C-7216172DC4D8">
+                                    <File Id="SWITCHSTYLE.QML_1" Name="SwitchStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\SwitchStyle.qml" />
+                                </Component>
+                                <Component Id="SWITCHSTYLE.QMLC_1" DiskId="1" Guid="211E0F62-C185-4555-BEEC-8E3ED1BE812A">
+                                    <File Id="SWITCHSTYLE.QMLC_1" Name="SwitchStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\SwitchStyle.qmlc" />
+                                </Component>
+                                <Component Id="TABLEVIEWSTYLE.QML_1" DiskId="1" Guid="E660D220-299D-4533-BC60-3065A6C65327">
+                                    <File Id="TABLEVIEWSTYLE.QML_1" Name="TableViewStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\TableViewStyle.qml" />
+                                </Component>
+                                <Component Id="TABLEVIEWSTYLE.QMLC_1" DiskId="1" Guid="E499D5A6-490D-4286-BE4D-75F1F726797E">
+                                    <File Id="TABLEVIEWSTYLE.QMLC_1" Name="TableViewStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\TableViewStyle.qmlc" />
+                                </Component>
+                                <Component Id="TABVIEWSTYLE.QML_1" DiskId="1" Guid="327C29E7-8C35-4B1C-9CCC-DA4827E95577">
+                                    <File Id="TABVIEWSTYLE.QML_1" Name="TabViewStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\TabViewStyle.qml" />
+                                </Component>
+                                <Component Id="TABVIEWSTYLE.QMLC_1" DiskId="1" Guid="251C60EA-5513-4D31-B5EB-50B520446240">
+                                    <File Id="TABVIEWSTYLE.QMLC_1" Name="TabViewStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\TabViewStyle.qmlc" />
+                                </Component>
+                                <Component Id="TEXTAREASTYLE.QML_1" DiskId="1" Guid="A999B914-5341-42D0-9AE0-0F2DFE0A7D74">
+                                    <File Id="TEXTAREASTYLE.QML_1" Name="TextAreaStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\TextAreaStyle.qml" />
+                                </Component>
+                                <Component Id="TEXTAREASTYLE.QMLC_1" DiskId="1" Guid="0CA4ECCC-BCE1-4356-9BC4-2764AD0785CA">
+                                    <File Id="TEXTAREASTYLE.QMLC_1" Name="TextAreaStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\TextAreaStyle.qmlc" />
+                                </Component>
+                                <Component Id="TEXTFIELDSTYLE.QML_1" DiskId="1" Guid="8E483B65-8E26-41B8-AF9A-A6795FFD1CE9">
+                                    <File Id="TEXTFIELDSTYLE.QML_1" Name="TextFieldStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\TextFieldStyle.qml" />
+                                </Component>
+                                <Component Id="TEXTFIELDSTYLE.QMLC_1" DiskId="1" Guid="1E6BF731-2A3F-4A28-BFA0-746FD3203E56">
+                                    <File Id="TEXTFIELDSTYLE.QMLC_1" Name="TextFieldStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\TextFieldStyle.qmlc" />
+                                </Component>
+                                <Component Id="TOOLBARSTYLE.QML_1" DiskId="1" Guid="582B2782-213A-4E08-A52D-C4C6F82336DF">
+                                    <File Id="TOOLBARSTYLE.QML_1" Name="ToolBarStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\ToolBarStyle.qml" />
+                                </Component>
+                                <Component Id="TOOLBARSTYLE.QMLC_1" DiskId="1" Guid="D8E72317-32E3-48EB-A28E-1F5853C8413D">
+                                    <File Id="TOOLBARSTYLE.QMLC_1" Name="ToolBarStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\ToolBarStyle.qmlc" />
+                                </Component>
+                                <Component Id="TOOLBUTTONSTYLE.QML_1" DiskId="1" Guid="40808707-2D52-40CA-A8D9-8C76EF942B29">
+                                    <File Id="TOOLBUTTONSTYLE.QML_1" Name="ToolButtonStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\ToolButtonStyle.qml" />
+                                </Component>
+                                <Component Id="TOOLBUTTONSTYLE.QMLC_1" DiskId="1" Guid="3E87633D-6C52-4230-93C6-FEA71F89E1F5">
+                                    <File Id="TOOLBUTTONSTYLE.QMLC_1" Name="ToolButtonStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\ToolButtonStyle.qmlc" />
+                                </Component>
+                                <Component Id="TREEVIEWSTYLE.QML_1" DiskId="1" Guid="82B6DC8E-005D-4852-BE4B-6C1D415E2029">
+                                    <File Id="TREEVIEWSTYLE.QML_1" Name="TreeViewStyle.qml" Source="..\release\QtQuick\Controls\Styles\Desktop\TreeViewStyle.qml" />
+                                </Component>
+                                <Component Id="TREEVIEWSTYLE.QMLC_1" DiskId="1" Guid="D36ACE86-6259-42C4-831C-B0C6C1D53BA2">
+                                    <File Id="TREEVIEWSTYLE.QMLC_1" Name="TreeViewStyle.qmlc" Source="..\release\QtQuick\Controls\Styles\Desktop\TreeViewStyle.qmlc" />
+                                </Component>
+                            </Directory>
+                            <Directory Id="FLAT" Name="Flat">
+                                <Component Id="QMLDIR_9" DiskId="1" Guid="CD09A34B-DEB9-4294-AAAC-22C1AEE7CC8C">
+                                    <File Id="QMLDIR_9" Name="qmldir" Source="..\release\QtQuick\Controls\Styles\Flat\qmldir" />
+                                </Component>
+                                <Component Id="QTQUICKEXTRASFLATPLUGIN.DLL" DiskId="1" Guid="FF55C74B-53D5-4642-B419-19ABCD1047E9">
+                                    <File Id="QTQUICKEXTRASFLATPLUGIN.DLL" Name="qtquickextrasflatplugin.dll" Source="..\release\QtQuick\Controls\Styles\Flat\qtquickextrasflatplugin.dll" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="DIALOGS" Name="Dialogs">
+                        <Component Id="DEFAULTCOLORDIALOG.QML" DiskId="1" Guid="449991C0-7A36-4AFB-8CD5-179E0BBAE626">
+                            <File Id="DEFAULTCOLORDIALOG.QML" Name="DefaultColorDialog.qml" Source="..\release\QtQuick\Dialogs\DefaultColorDialog.qml" />
+                        </Component>
+                        <Component Id="DEFAULTCOLORDIALOG.QMLC" DiskId="1" Guid="0E12A6EB-8AC1-4622-9E71-24913EE13696">
+                            <File Id="DEFAULTCOLORDIALOG.QMLC" Name="DefaultColorDialog.qmlc" Source="..\release\QtQuick\Dialogs\DefaultColorDialog.qmlc" />
+                        </Component>
+                        <Component Id="DEFAULTDIALOGWRAPPER.QML" DiskId="1" Guid="0B3B3860-CE39-47BC-8B61-9FA29124026D">
+                            <File Id="DEFAULTDIALOGWRAPPER.QML" Name="DefaultDialogWrapper.qml" Source="..\release\QtQuick\Dialogs\DefaultDialogWrapper.qml" />
+                        </Component>
+                        <Component Id="DEFAULTDIALOGWRAPPER.QMLC" DiskId="1" Guid="3E47DE0D-5399-478C-8A70-0AD354FA9E6B">
+                            <File Id="DEFAULTDIALOGWRAPPER.QMLC" Name="DefaultDialogWrapper.qmlc" Source="..\release\QtQuick\Dialogs\DefaultDialogWrapper.qmlc" />
+                        </Component>
+                        <Component Id="DEFAULTFILEDIALOG.QML" DiskId="1" Guid="F970AEF3-8772-43B3-8757-63D453E017B5">
+                            <File Id="DEFAULTFILEDIALOG.QML" Name="DefaultFileDialog.qml" Source="..\release\QtQuick\Dialogs\DefaultFileDialog.qml" />
+                        </Component>
+                        <Component Id="DEFAULTFILEDIALOG.QMLC" DiskId="1" Guid="427E2D38-E4D6-466B-815C-A0475104F339">
+                            <File Id="DEFAULTFILEDIALOG.QMLC" Name="DefaultFileDialog.qmlc" Source="..\release\QtQuick\Dialogs\DefaultFileDialog.qmlc" />
+                        </Component>
+                        <Component Id="DEFAULTFONTDIALOG.QML" DiskId="1" Guid="48F3D1BF-9BA6-46BF-BBF1-6ECCDF92C167">
+                            <File Id="DEFAULTFONTDIALOG.QML" Name="DefaultFontDialog.qml" Source="..\release\QtQuick\Dialogs\DefaultFontDialog.qml" />
+                        </Component>
+                        <Component Id="DEFAULTFONTDIALOG.QMLC" DiskId="1" Guid="0440D696-E512-4A69-9113-AF8F7D1E4335">
+                            <File Id="DEFAULTFONTDIALOG.QMLC" Name="DefaultFontDialog.qmlc" Source="..\release\QtQuick\Dialogs\DefaultFontDialog.qmlc" />
+                        </Component>
+                        <Component Id="DEFAULTMESSAGEDIALOG.QML" DiskId="1" Guid="C19D1152-B5E0-42AC-954C-2B1BD7A7DD58">
+                            <File Id="DEFAULTMESSAGEDIALOG.QML" Name="DefaultMessageDialog.qml" Source="..\release\QtQuick\Dialogs\DefaultMessageDialog.qml" />
+                        </Component>
+                        <Component Id="DEFAULTMESSAGEDIALOG.QMLC" DiskId="1" Guid="3393F4E8-41FF-4E56-8159-9A3BBB4C46EC">
+                            <File Id="DEFAULTMESSAGEDIALOG.QMLC" Name="DefaultMessageDialog.qmlc" Source="..\release\QtQuick\Dialogs\DefaultMessageDialog.qmlc" />
+                        </Component>
+                        <Component Id="DIALOGPLUGIN.DLL" DiskId="1" Guid="D4083F3C-05C9-42A4-BB5C-C1F261F74175">
+                            <File Id="DIALOGPLUGIN.DLL" Name="dialogplugin.dll" Source="..\release\QtQuick\Dialogs\dialogplugin.dll" />
+                        </Component>
+                        <Component Id="PLUGINS.QMLTYPES_5" DiskId="1" Guid="9A7848E4-7A40-4F4A-A58E-665D43A3E3CB">
+                            <File Id="PLUGINS.QMLTYPES_5" Name="plugins.qmltypes" Source="..\release\QtQuick\Dialogs\plugins.qmltypes" />
+                        </Component>
+                        <Component Id="QMLDIR_10" DiskId="1" Guid="D4054C40-263A-4C09-B7C8-AD702E0187A2">
+                            <File Id="QMLDIR_10" Name="qmldir" Source="..\release\QtQuick\Dialogs\qmldir" />
+                        </Component>
+                        <Component Id="WIDGETCOLORDIALOG.QML" DiskId="1" Guid="95AB460D-AAE2-455B-8A54-5F0B32B4DC16">
+                            <File Id="WIDGETCOLORDIALOG.QML" Name="WidgetColorDialog.qml" Source="..\release\QtQuick\Dialogs\WidgetColorDialog.qml" />
+                        </Component>
+                        <Component Id="WIDGETCOLORDIALOG.QMLC" DiskId="1" Guid="887A47A9-5474-4C18-9CF0-3DE9A0CB830F">
+                            <File Id="WIDGETCOLORDIALOG.QMLC" Name="WidgetColorDialog.qmlc" Source="..\release\QtQuick\Dialogs\WidgetColorDialog.qmlc" />
+                        </Component>
+                        <Component Id="WIDGETFILEDIALOG.QML" DiskId="1" Guid="9DC5D8D6-41E2-46C3-8E81-6BF08B2180FC">
+                            <File Id="WIDGETFILEDIALOG.QML" Name="WidgetFileDialog.qml" Source="..\release\QtQuick\Dialogs\WidgetFileDialog.qml" />
+                        </Component>
+                        <Component Id="WIDGETFILEDIALOG.QMLC" DiskId="1" Guid="84D32013-98A6-4992-A4F3-D1711543EB08">
+                            <File Id="WIDGETFILEDIALOG.QMLC" Name="WidgetFileDialog.qmlc" Source="..\release\QtQuick\Dialogs\WidgetFileDialog.qmlc" />
+                        </Component>
+                        <Component Id="WIDGETFONTDIALOG.QML" DiskId="1" Guid="FAA8AEEB-0FEA-41D7-94BE-0EBFE8E35BB7">
+                            <File Id="WIDGETFONTDIALOG.QML" Name="WidgetFontDialog.qml" Source="..\release\QtQuick\Dialogs\WidgetFontDialog.qml" />
+                        </Component>
+                        <Component Id="WIDGETFONTDIALOG.QMLC" DiskId="1" Guid="C38950D4-8DBA-487C-BA27-7366C16B4B8E">
+                            <File Id="WIDGETFONTDIALOG.QMLC" Name="WidgetFontDialog.qmlc" Source="..\release\QtQuick\Dialogs\WidgetFontDialog.qmlc" />
+                        </Component>
+                        <Component Id="WIDGETMESSAGEDIALOG.QML" DiskId="1" Guid="F60D546C-9908-4EFF-BB6A-6D874745405E">
+                            <File Id="WIDGETMESSAGEDIALOG.QML" Name="WidgetMessageDialog.qml" Source="..\release\QtQuick\Dialogs\WidgetMessageDialog.qml" />
+                        </Component>
+                        <Component Id="WIDGETMESSAGEDIALOG.QMLC" DiskId="1" Guid="65296823-E5F2-4B45-8B4B-352BDAABA294">
+                            <File Id="WIDGETMESSAGEDIALOG.QMLC" Name="WidgetMessageDialog.qmlc" Source="..\release\QtQuick\Dialogs\WidgetMessageDialog.qmlc" />
+                        </Component>
+                        <Directory Id="IMAGES_1" Name="images">
+                            <Component Id="CHECKERS.PNG" DiskId="1" Guid="8E594E2C-D25D-4B85-BAB2-7497D39533E4">
+                                <File Id="CHECKERS.PNG" Name="checkers.png" Source="..\release\QtQuick\Dialogs\images\checkers.png" />
+                            </Component>
+                            <Component Id="CHECKMARK.PNG" DiskId="1" Guid="85C6817C-168A-48E7-BB4C-538A8EBDC00F">
+                                <File Id="CHECKMARK.PNG" Name="checkmark.png" Source="..\release\QtQuick\Dialogs\images\checkmark.png" />
+                            </Component>
+                            <Component Id="COPY.PNG" DiskId="1" Guid="1A96045E-1DED-4100-BB2C-DA9D2862C3DF">
+                                <File Id="COPY.PNG" Name="copy.png" Source="..\release\QtQuick\Dialogs\images\copy.png" />
+                            </Component>
+                            <Component Id="CRITICAL.PNG" DiskId="1" Guid="516C3FED-F8E4-496A-BB27-9CB6668D9444">
+                                <File Id="CRITICAL.PNG" Name="critical.png" Source="..\release\QtQuick\Dialogs\images\critical.png" />
+                            </Component>
+                            <Component Id="CROSSHAIRS.PNG" DiskId="1" Guid="423D436B-525B-4A71-A36D-77ED8DE759BA">
+                                <File Id="CROSSHAIRS.PNG" Name="crosshairs.png" Source="..\release\QtQuick\Dialogs\images\crosshairs.png" />
+                            </Component>
+                            <Component Id="INFORMATION.PNG" DiskId="1" Guid="3EF23CB4-809F-4C6D-862F-A46AB3509CCC">
+                                <File Id="INFORMATION.PNG" Name="information.png" Source="..\release\QtQuick\Dialogs\images\information.png" />
+                            </Component>
+                            <Component Id="QUESTION.PNG" DiskId="1" Guid="9C7DE769-0E24-4FA6-88C9-7DAF5AFD1809">
+                                <File Id="QUESTION.PNG" Name="question.png" Source="..\release\QtQuick\Dialogs\images\question.png" />
+                            </Component>
+                            <Component Id="SLIDER_HANDLE.PNG_1" DiskId="1" Guid="A808E05E-A243-4636-819F-E2F7037D6680">
+                                <File Id="SLIDER_HANDLE.PNG_1" Name="slider_handle.png" Source="..\release\QtQuick\Dialogs\images\slider_handle.png" />
+                            </Component>
+                            <Component Id="SUNKEN_FRAME.PNG" DiskId="1" Guid="9AB83261-4FFA-4236-8E40-DAF9E435C1F3">
+                                <File Id="SUNKEN_FRAME.PNG" Name="sunken_frame.png" Source="..\release\QtQuick\Dialogs\images\sunken_frame.png" />
+                            </Component>
+                            <Component Id="WARNING.PNG" DiskId="1" Guid="3AEE723F-24CE-454D-9888-E407ECC287DE">
+                                <File Id="WARNING.PNG" Name="warning.png" Source="..\release\QtQuick\Dialogs\images\warning.png" />
+                            </Component>
+                            <Component Id="WINDOW_BORDER.PNG" DiskId="1" Guid="50DF4C3C-BE7B-45A2-9BCB-566EDFC5C2EA">
+                                <File Id="WINDOW_BORDER.PNG" Name="window_border.png" Source="..\release\QtQuick\Dialogs\images\window_border.png" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="PRIVATE_2" Name="Private">
+                            <Component Id="DIALOGSPRIVATEPLUGIN.DLL" DiskId="1" Guid="1C927A85-1030-4352-8A47-4F357A257F6F">
+                                <File Id="DIALOGSPRIVATEPLUGIN.DLL" Name="dialogsprivateplugin.dll" Source="..\release\QtQuick\Dialogs\Private\dialogsprivateplugin.dll" />
+                            </Component>
+                            <Component Id="PLUGINS.QMLTYPES_6" DiskId="1" Guid="A592B1AC-29F3-4AF3-9ED7-34375E9D0B5B">
+                                <File Id="PLUGINS.QMLTYPES_6" Name="plugins.qmltypes" Source="..\release\QtQuick\Dialogs\Private\plugins.qmltypes" />
+                            </Component>
+                            <Component Id="QMLDIR_11" DiskId="1" Guid="E9A6A846-17F8-49DD-A6DF-335440DECDC6">
+                                <File Id="QMLDIR_11" Name="qmldir" Source="..\release\QtQuick\Dialogs\Private\qmldir" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="QML" Name="qml">
+                            <Component Id="COLORSLIDER.QML" DiskId="1" Guid="98C5A1B3-5C38-4047-A679-3C60F1A8C0E9">
+                                <File Id="COLORSLIDER.QML" Name="ColorSlider.qml" Source="..\release\QtQuick\Dialogs\qml\ColorSlider.qml" />
+                            </Component>
+                            <Component Id="COLORSLIDER.QMLC" DiskId="1" Guid="B4F90909-E84A-48BB-A97E-E5E1DEC1134A">
+                                <File Id="COLORSLIDER.QMLC" Name="ColorSlider.qmlc" Source="..\release\QtQuick\Dialogs\qml\ColorSlider.qmlc" />
+                            </Component>
+                            <Component Id="DEFAULTWINDOWDECORATION.QML" DiskId="1" Guid="99958315-BA11-4B28-94B6-B469AFD57ACC">
+                                <File Id="DEFAULTWINDOWDECORATION.QML" Name="DefaultWindowDecoration.qml" Source="..\release\QtQuick\Dialogs\qml\DefaultWindowDecoration.qml" />
+                            </Component>
+                            <Component Id="DEFAULTWINDOWDECORATION.QMLC" DiskId="1" Guid="E5917C7E-3FF2-498C-B532-3541B2190E36">
+                                <File Id="DEFAULTWINDOWDECORATION.QMLC" Name="DefaultWindowDecoration.qmlc" Source="..\release\QtQuick\Dialogs\qml\DefaultWindowDecoration.qmlc" />
+                            </Component>
+                            <Component Id="ICONBUTTONSTYLE.QML" DiskId="1" Guid="613D4524-EB80-4DB5-B5D7-36FD824D79E0">
+                                <File Id="ICONBUTTONSTYLE.QML" Name="IconButtonStyle.qml" Source="..\release\QtQuick\Dialogs\qml\IconButtonStyle.qml" />
+                            </Component>
+                            <Component Id="ICONBUTTONSTYLE.QMLC" DiskId="1" Guid="4BDE69C0-FD00-41D4-A086-84EDF40C9F5F">
+                                <File Id="ICONBUTTONSTYLE.QMLC" Name="IconButtonStyle.qmlc" Source="..\release\QtQuick\Dialogs\qml\IconButtonStyle.qmlc" />
+                            </Component>
+                            <Component Id="ICONGLYPH.QML" DiskId="1" Guid="E8BDF2DF-6DA7-43D8-80EA-4A240C317253">
+                                <File Id="ICONGLYPH.QML" Name="IconGlyph.qml" Source="..\release\QtQuick\Dialogs\qml\IconGlyph.qml" />
+                            </Component>
+                            <Component Id="ICONGLYPH.QMLC" DiskId="1" Guid="CF0828D8-065B-4CA6-A313-F6F1E5AC23FA">
+                                <File Id="ICONGLYPH.QMLC" Name="IconGlyph.qmlc" Source="..\release\QtQuick\Dialogs\qml\IconGlyph.qmlc" />
+                            </Component>
+                            <Component Id="ICONS.TTF" DiskId="1" Guid="5E86211D-6F4C-4364-9E05-C2D859532994">
+                                <File Id="ICONS.TTF" Name="icons.ttf" Source="..\release\QtQuick\Dialogs\qml\icons.ttf" />
+                            </Component>
+                            <Component Id="QMLDIR_12" DiskId="1" Guid="B851B2B8-6CE3-4C49-89DD-FA44BCF44B50">
+                                <File Id="QMLDIR_12" Name="qmldir" Source="..\release\QtQuick\Dialogs\qml\qmldir" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="EXTRAS" Name="Extras">
+                        <Component Id="CIRCULARGAUGE.QML" DiskId="1" Guid="7C38F912-517D-4717-950D-4D3FBF922FA6">
+                            <File Id="CIRCULARGAUGE.QML" Name="CircularGauge.qml" Source="..\release\QtQuick\Extras\CircularGauge.qml" />
+                        </Component>
+                        <Component Id="CIRCULARGAUGE.QMLC" DiskId="1" Guid="FAC25940-93EB-447A-8C1D-2F551265C8DA">
+                            <File Id="CIRCULARGAUGE.QMLC" Name="CircularGauge.qmlc" Source="..\release\QtQuick\Extras\CircularGauge.qmlc" />
+                        </Component>
+                        <Component Id="DELAYBUTTON.QML" DiskId="1" Guid="BF278FE6-EC5B-4571-B899-A6B655C330F0">
+                            <File Id="DELAYBUTTON.QML" Name="DelayButton.qml" Source="..\release\QtQuick\Extras\DelayButton.qml" />
+                        </Component>
+                        <Component Id="DELAYBUTTON.QMLC" DiskId="1" Guid="2F8530CC-6ABE-460D-A87E-368F0B9C82A8">
+                            <File Id="DELAYBUTTON.QMLC" Name="DelayButton.qmlc" Source="..\release\QtQuick\Extras\DelayButton.qmlc" />
+                        </Component>
+                        <Component Id="DIAL.QML" DiskId="1" Guid="D1E6DF00-914B-4843-95D6-46D38BC72DA5">
+                            <File Id="DIAL.QML" Name="Dial.qml" Source="..\release\QtQuick\Extras\Dial.qml" />
+                        </Component>
+                        <Component Id="DIAL.QMLC" DiskId="1" Guid="C5A5EE68-CB1C-4558-A843-F4CF976F5799">
+                            <File Id="DIAL.QMLC" Name="Dial.qmlc" Source="..\release\QtQuick\Extras\Dial.qmlc" />
+                        </Component>
+                        <Component Id="GAUGE.QML" DiskId="1" Guid="B420E843-B5B6-4E29-A1FF-EB330B6EB4E8">
+                            <File Id="GAUGE.QML" Name="Gauge.qml" Source="..\release\QtQuick\Extras\Gauge.qml" />
+                        </Component>
+                        <Component Id="GAUGE.QMLC" DiskId="1" Guid="1D1C8470-00A0-46F9-9D35-F6562698B87C">
+                            <File Id="GAUGE.QMLC" Name="Gauge.qmlc" Source="..\release\QtQuick\Extras\Gauge.qmlc" />
+                        </Component>
+                        <Component Id="PIEMENU.QML" DiskId="1" Guid="F997C416-86FA-4AE2-BE8C-47E98179E4F3">
+                            <File Id="PIEMENU.QML" Name="PieMenu.qml" Source="..\release\QtQuick\Extras\PieMenu.qml" />
+                        </Component>
+                        <Component Id="PIEMENU.QMLC" DiskId="1" Guid="D74E58B8-CDF4-4908-B272-B0651DE3F88C">
+                            <File Id="PIEMENU.QMLC" Name="PieMenu.qmlc" Source="..\release\QtQuick\Extras\PieMenu.qmlc" />
+                        </Component>
+                        <Component Id="PLUGINS.QMLTYPES_7" DiskId="1" Guid="B06362FC-57E2-46A7-9255-D472EDE6C24B">
+                            <File Id="PLUGINS.QMLTYPES_7" Name="plugins.qmltypes" Source="..\release\QtQuick\Extras\plugins.qmltypes" />
+                        </Component>
+                        <Component Id="QMLDIR_13" DiskId="1" Guid="39D7808D-FA46-4B56-83B9-364219F678C0">
+                            <File Id="QMLDIR_13" Name="qmldir" Source="..\release\QtQuick\Extras\qmldir" />
+                        </Component>
+                        <Component Id="QTQUICKEXTRASPLUGIN.DLL" DiskId="1" Guid="BF61079B-DE87-4EE6-A236-A9B02317EB4E">
+                            <File Id="QTQUICKEXTRASPLUGIN.DLL" Name="qtquickextrasplugin.dll" Source="..\release\QtQuick\Extras\qtquickextrasplugin.dll" />
+                        </Component>
+                        <Component Id="STATUSINDICATOR.QML" DiskId="1" Guid="043DD99F-9843-4924-8365-A86436178625">
+                            <File Id="STATUSINDICATOR.QML" Name="StatusIndicator.qml" Source="..\release\QtQuick\Extras\StatusIndicator.qml" />
+                        </Component>
+                        <Component Id="STATUSINDICATOR.QMLC" DiskId="1" Guid="E9B7F92B-BC56-46A7-BC2F-C3111DD7397C">
+                            <File Id="STATUSINDICATOR.QMLC" Name="StatusIndicator.qmlc" Source="..\release\QtQuick\Extras\StatusIndicator.qmlc" />
+                        </Component>
+                        <Component Id="TOGGLEBUTTON.QML" DiskId="1" Guid="8D009260-8024-4824-B301-6A96BBFCD4DC">
+                            <File Id="TOGGLEBUTTON.QML" Name="ToggleButton.qml" Source="..\release\QtQuick\Extras\ToggleButton.qml" />
+                        </Component>
+                        <Component Id="TOGGLEBUTTON.QMLC" DiskId="1" Guid="FA3F2D5E-3D55-4443-BD38-1737FC5C9339">
+                            <File Id="TOGGLEBUTTON.QMLC" Name="ToggleButton.qmlc" Source="..\release\QtQuick\Extras\ToggleButton.qmlc" />
+                        </Component>
+                        <Component Id="TUMBLER.QML" DiskId="1" Guid="FC19993E-FB43-454E-89A9-F472C1F70304">
+                            <File Id="TUMBLER.QML" Name="Tumbler.qml" Source="..\release\QtQuick\Extras\Tumbler.qml" />
+                        </Component>
+                        <Component Id="TUMBLER.QMLC" DiskId="1" Guid="A6149F6E-E1C3-4D91-9D59-A97FE141BF79">
+                            <File Id="TUMBLER.QMLC" Name="Tumbler.qmlc" Source="..\release\QtQuick\Extras\Tumbler.qmlc" />
+                        </Component>
+                        <Component Id="TUMBLERCOLUMN.QML" DiskId="1" Guid="94EEB646-2228-45E1-B393-E1776C67ECCB">
+                            <File Id="TUMBLERCOLUMN.QML" Name="TumblerColumn.qml" Source="..\release\QtQuick\Extras\TumblerColumn.qml" />
+                        </Component>
+                        <Component Id="TUMBLERCOLUMN.QMLC" DiskId="1" Guid="7D07F88F-2C8A-4504-8FDA-F3959B2F2162">
+                            <File Id="TUMBLERCOLUMN.QMLC" Name="TumblerColumn.qmlc" Source="..\release\QtQuick\Extras\TumblerColumn.qmlc" />
+                        </Component>
+                        <Directory Id="PRIVATE_3" Name="Private">
+                            <Component Id="CIRCULARBUTTON.QML" DiskId="1" Guid="39D4AB4B-4A32-4F80-8B4D-3931AB89A86D">
+                                <File Id="CIRCULARBUTTON.QML" Name="CircularButton.qml" Source="..\release\QtQuick\Extras\Private\CircularButton.qml" />
+                            </Component>
+                            <Component Id="CIRCULARBUTTON.QMLC" DiskId="1" Guid="307F7280-802B-4281-A0CE-5245AAA6624B">
+                                <File Id="CIRCULARBUTTON.QMLC" Name="CircularButton.qmlc" Source="..\release\QtQuick\Extras\Private\CircularButton.qmlc" />
+                            </Component>
+                            <Component Id="CIRCULARBUTTONSTYLEHELPER.QML" DiskId="1" Guid="E7B1E2CA-7834-4B0E-84A5-1408D0A51FE1">
+                                <File Id="CIRCULARBUTTONSTYLEHELPER.QML" Name="CircularButtonStyleHelper.qml" Source="..\release\QtQuick\Extras\Private\CircularButtonStyleHelper.qml" />
+                            </Component>
+                            <Component Id="CIRCULARBUTTONSTYLEHELPER.QMLC" DiskId="1" Guid="446DEB81-691D-4493-B4C9-2F42D63216EC">
+                                <File Id="CIRCULARBUTTONSTYLEHELPER.QMLC" Name="CircularButtonStyleHelper.qmlc" Source="..\release\QtQuick\Extras\Private\CircularButtonStyleHelper.qmlc" />
+                            </Component>
+                            <Component Id="CIRCULARTICKMARKLABEL.QML" DiskId="1" Guid="BD56D575-9EBE-4353-AE69-BFAD7DBF011B">
+                                <File Id="CIRCULARTICKMARKLABEL.QML" Name="CircularTickmarkLabel.qml" Source="..\release\QtQuick\Extras\Private\CircularTickmarkLabel.qml" />
+                            </Component>
+                            <Component Id="CIRCULARTICKMARKLABEL.QMLC" DiskId="1" Guid="573AD1FE-E52B-48D3-B708-8205C5615877">
+                                <File Id="CIRCULARTICKMARKLABEL.QMLC" Name="CircularTickmarkLabel.qmlc" Source="..\release\QtQuick\Extras\Private\CircularTickmarkLabel.qmlc" />
+                            </Component>
+                            <Component Id="HANDLE.QML" DiskId="1" Guid="DF157BFA-70F5-4130-A8C4-3DF6CE778817">
+                                <File Id="HANDLE.QML" Name="Handle.qml" Source="..\release\QtQuick\Extras\Private\Handle.qml" />
+                            </Component>
+                            <Component Id="HANDLE.QMLC" DiskId="1" Guid="374666A5-7E39-4DF0-9F43-25C2987462BB">
+                                <File Id="HANDLE.QMLC" Name="Handle.qmlc" Source="..\release\QtQuick\Extras\Private\Handle.qmlc" />
+                            </Component>
+                            <Component Id="PIEMENUICON.QML" DiskId="1" Guid="E39764C6-2E65-403A-B334-FF2188D4EC18">
+                                <File Id="PIEMENUICON.QML" Name="PieMenuIcon.qml" Source="..\release\QtQuick\Extras\Private\PieMenuIcon.qml" />
+                            </Component>
+                            <Component Id="PIEMENUICON.QMLC" DiskId="1" Guid="B0B00062-EB13-4411-B386-F7978A472BC3">
+                                <File Id="PIEMENUICON.QMLC" Name="PieMenuIcon.qmlc" Source="..\release\QtQuick\Extras\Private\PieMenuIcon.qmlc" />
+                            </Component>
+                            <Component Id="QMLDIR_14" DiskId="1" Guid="16C7106A-B24F-4BF3-A5E6-D6D7F87EDA08">
+                                <File Id="QMLDIR_14" Name="qmldir" Source="..\release\QtQuick\Extras\Private\qmldir" />
+                            </Component>
+                            <Component Id="TEXTSINGLETON.QML_1" DiskId="1" Guid="44C46F00-E256-4233-9264-1FA5C2F2CA81">
+                                <File Id="TEXTSINGLETON.QML_1" Name="TextSingleton.qml" Source="..\release\QtQuick\Extras\Private\TextSingleton.qml" />
+                            </Component>
+                            <Component Id="TEXTSINGLETON.QMLC_1" DiskId="1" Guid="B9EA601E-DFEE-45D5-88D2-6E62B7F83221">
+                                <File Id="TEXTSINGLETON.QMLC_1" Name="TextSingleton.qmlc" Source="..\release\QtQuick\Extras\Private\TextSingleton.qmlc" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="LAYOUTS" Name="Layouts">
+                        <Component Id="PLUGINS.QMLTYPES_8" DiskId="1" Guid="8C9BEE2C-8E33-4BC3-B7B2-AA8803BF7211">
+                            <File Id="PLUGINS.QMLTYPES_8" Name="plugins.qmltypes" Source="..\release\QtQuick\Layouts\plugins.qmltypes" />
+                        </Component>
+                        <Component Id="QMLDIR_15" DiskId="1" Guid="BF478215-BC42-49C9-9126-02E1ABBBBA40">
+                            <File Id="QMLDIR_15" Name="qmldir" Source="..\release\QtQuick\Layouts\qmldir" />
+                        </Component>
+                        <Component Id="QQUICKLAYOUTSPLUGIN.DLL" DiskId="1" Guid="E3199E26-0488-412E-8801-6B6DB0778434">
+                            <File Id="QQUICKLAYOUTSPLUGIN.DLL" Name="qquicklayoutsplugin.dll" Source="..\release\QtQuick\Layouts\qquicklayoutsplugin.dll" />
+                        </Component>
+                    </Directory>
+                    <Directory Id="PRIVATEWIDGETS" Name="PrivateWidgets">
+                        <Component Id="PLUGINS.QMLTYPES_9" DiskId="1" Guid="B564DAA7-561A-48A5-9613-DAE7F5272577">
+                            <File Id="PLUGINS.QMLTYPES_9" Name="plugins.qmltypes" Source="..\release\QtQuick\PrivateWidgets\plugins.qmltypes" />
+                        </Component>
+                        <Component Id="QMLDIR_16" DiskId="1" Guid="82439B31-17A3-4889-B732-DE5BADE7373E">
+                            <File Id="QMLDIR_16" Name="qmldir" Source="..\release\QtQuick\PrivateWidgets\qmldir" />
+                        </Component>
+                        <Component Id="WIDGETSPLUGIN.DLL" DiskId="1" Guid="3E801B4C-7AE3-4075-99FE-D732511AB94E">
+                            <File Id="WIDGETSPLUGIN.DLL" Name="widgetsplugin.dll" Source="..\release\QtQuick\PrivateWidgets\widgetsplugin.dll" />
+                        </Component>
+                    </Directory>
+                    <Directory Id="WINDOW.2" Name="Window.2">
+                        <Component Id="PLUGINS.QMLTYPES_10" DiskId="1" Guid="FB0A4082-7BF7-40F7-90DC-D66970ADB90D">
+                            <File Id="PLUGINS.QMLTYPES_10" Name="plugins.qmltypes" Source="..\release\QtQuick\Window.2\plugins.qmltypes" />
+                        </Component>
+                        <Component Id="QMLDIR_17" DiskId="1" Guid="28ACE860-4E8E-42EF-9D72-BE4387206595">
+                            <File Id="QMLDIR_17" Name="qmldir" Source="..\release\QtQuick\Window.2\qmldir" />
+                        </Component>
+                        <Component Id="WINDOWPLUGIN.DLL" DiskId="1" Guid="D968F143-30A5-4FAA-B287-B8E5C18C513A">
+                            <File Id="WINDOWPLUGIN.DLL" Name="windowplugin.dll" Source="..\release\QtQuick\Window.2\windowplugin.dll" />
+                        </Component>
+                    </Directory>
+                </Directory>
+                <Directory Id="QTQUICK.2" Name="QtQuick.2">
+                    <Component Id="PLUGINS.QMLTYPES_11" DiskId="1" Guid="DBF2F306-FBCD-4051-BCB6-B6549CDE5096">
+                        <File Id="PLUGINS.QMLTYPES_11" Name="plugins.qmltypes" Source="..\release\QtQuick.2\plugins.qmltypes" />
+                    </Component>
+                    <Component Id="QMLDIR_18" DiskId="1" Guid="F27EFA7E-0888-40F5-82E6-09236C82594B">
+                        <File Id="QMLDIR_18" Name="qmldir" Source="..\release\QtQuick.2\qmldir" />
+                    </Component>
+                    <Component Id="QTQUICK2PLUGIN.DLL" DiskId="1" Guid="5F0DB7B9-338C-4BAF-AC42-1A1AEE7D43C3">
+                        <File Id="QTQUICK2PLUGIN.DLL" Name="qtquick2plugin.dll" Source="..\release\QtQuick.2\qtquick2plugin.dll" />
+                    </Component>
+                </Directory>
+                <Directory Id="SCENEGRAPH" Name="scenegraph">
+                    <Component Id="QSGD3D12BACKEND.DLL" DiskId="1" Guid="FD530DA8-BE54-42AB-BC28-3DD3924F2522">
+                        <File Id="QSGD3D12BACKEND.DLL" Name="qsgd3d12backend.dll" Source="..\release\scenegraph\qsgd3d12backend.dll" />
+                    </Component>
+                </Directory>
+                <Directory Id="SQLDRIVERS" Name="sqldrivers">
+                    <Component Id="QSQLITE.DLL" DiskId="1" Guid="107FF489-CD8E-4D86-8B40-F1C21015B889">
+                        <File Id="QSQLITE.DLL" Name="qsqlite.dll" Source="..\release\sqldrivers\qsqlite.dll" />
+                    </Component>
+                    <Component Id="QSQLMYSQL.DLL" DiskId="1" Guid="0338D3D5-61E8-4454-8047-FD2D83F4023F">
+                        <File Id="QSQLMYSQL.DLL" Name="qsqlmysql.dll" Source="..\release\sqldrivers\qsqlmysql.dll" />
+                    </Component>
+                    <Component Id="QSQLODBC.DLL" DiskId="1" Guid="8985F2FD-296D-4475-BE7D-4493E56A8D36">
+                        <File Id="QSQLODBC.DLL" Name="qsqlodbc.dll" Source="..\release\sqldrivers\qsqlodbc.dll" />
+                    </Component>
+                    <Component Id="QSQLPSQL.DLL" DiskId="1" Guid="9916F905-631C-4D6F-963F-75C42E942184">
+                        <File Id="QSQLPSQL.DLL" Name="qsqlpsql.dll" Source="..\release\sqldrivers\qsqlpsql.dll" />
+                    </Component>
+                </Directory>
+                <Directory Id="STYLES_1" Name="styles">
+                    <Component Id="QWINDOWSVISTASTYLE.DLL" DiskId="1" Guid="7FEF17A7-ECCB-4BFF-AA0B-F3B155871AD5">
+                        <File Id="QWINDOWSVISTASTYLE.DLL" Name="qwindowsvistastyle.dll" Source="..\release\styles\qwindowsvistastyle.dll" />
+                    </Component>
+                </Directory>
+                <Directory Id="TRANSLATIONS" Name="translations">
+                    <Component Id="QT_AR.QM" DiskId="1" Guid="F8BFC24E-1082-4663-8160-7238DDE4D58F">
+                        <File Id="QT_AR.QM" Name="qt_ar.qm" Source="..\release\translations\qt_ar.qm" />
+                    </Component>
+                    <Component Id="QT_BG.QM" DiskId="1" Guid="CC4634FE-E927-4A39-A212-41856395E373">
+                        <File Id="QT_BG.QM" Name="qt_bg.qm" Source="..\release\translations\qt_bg.qm" />
+                    </Component>
+                    <Component Id="QT_CA.QM" DiskId="1" Guid="AF71D5F7-18EA-4C77-B1DC-3051BFC420DF">
+                        <File Id="QT_CA.QM" Name="qt_ca.qm" Source="..\release\translations\qt_ca.qm" />
+                    </Component>
+                    <Component Id="QT_CS.QM" DiskId="1" Guid="B7178FF9-B4DD-4774-AFFB-6FBBD43F9E18">
+                        <File Id="QT_CS.QM" Name="qt_cs.qm" Source="..\release\translations\qt_cs.qm" />
+                    </Component>
+                    <Component Id="QT_DA.QM" DiskId="1" Guid="A6909806-2E7D-4F8D-B603-F203F209A0FE">
+                        <File Id="QT_DA.QM" Name="qt_da.qm" Source="..\release\translations\qt_da.qm" />
+                    </Component>
+                    <Component Id="QT_DE.QM" DiskId="1" Guid="604B9700-93F0-438A-B536-BF6843F1486E">
+                        <File Id="QT_DE.QM" Name="qt_de.qm" Source="..\release\translations\qt_de.qm" />
+                    </Component>
+                    <Component Id="QT_EN.QM" DiskId="1" Guid="4868BBDC-3EB6-4925-880F-6C1047247716">
+                        <File Id="QT_EN.QM" Name="qt_en.qm" Source="..\release\translations\qt_en.qm" />
+                    </Component>
+                    <Component Id="QT_ES.QM" DiskId="1" Guid="1BD380A0-5C53-4596-B561-83BEF99758E8">
+                        <File Id="QT_ES.QM" Name="qt_es.qm" Source="..\release\translations\qt_es.qm" />
+                    </Component>
+                    <Component Id="QT_FI.QM" DiskId="1" Guid="76E7B329-F404-44F9-A8DD-4EF20B1DE249">
+                        <File Id="QT_FI.QM" Name="qt_fi.qm" Source="..\release\translations\qt_fi.qm" />
+                    </Component>
+                    <Component Id="QT_FR.QM" DiskId="1" Guid="EDB34615-1E76-46FF-A9B3-435806A10E1D">
+                        <File Id="QT_FR.QM" Name="qt_fr.qm" Source="..\release\translations\qt_fr.qm" />
+                    </Component>
+                    <Component Id="QT_GD.QM" DiskId="1" Guid="EE00CDC8-5240-4991-ACA2-A82C85EDE6E6">
+                        <File Id="QT_GD.QM" Name="qt_gd.qm" Source="..\release\translations\qt_gd.qm" />
+                    </Component>
+                    <Component Id="QT_HE.QM" DiskId="1" Guid="7EE7FBFB-178A-41C0-918A-69D63AFAC603">
+                        <File Id="QT_HE.QM" Name="qt_he.qm" Source="..\release\translations\qt_he.qm" />
+                    </Component>
+                    <Component Id="QT_HU.QM" DiskId="1" Guid="6D014E95-7295-4967-B293-95B4D7D95CB6">
+                        <File Id="QT_HU.QM" Name="qt_hu.qm" Source="..\release\translations\qt_hu.qm" />
+                    </Component>
+                    <Component Id="QT_IT.QM" DiskId="1" Guid="906DC0EB-8159-4B40-92BB-B784F5A212A4">
+                        <File Id="QT_IT.QM" Name="qt_it.qm" Source="..\release\translations\qt_it.qm" />
+                    </Component>
+                    <Component Id="QT_JA.QM" DiskId="1" Guid="78D41AFA-4B0B-4BA0-80DF-B1BDCC2851C3">
+                        <File Id="QT_JA.QM" Name="qt_ja.qm" Source="..\release\translations\qt_ja.qm" />
+                    </Component>
+                    <Component Id="QT_KO.QM" DiskId="1" Guid="DC1BA845-3B72-4670-91F1-3F48A97B20FF">
+                        <File Id="QT_KO.QM" Name="qt_ko.qm" Source="..\release\translations\qt_ko.qm" />
+                    </Component>
+                    <Component Id="QT_LV.QM" DiskId="1" Guid="E02AE5B4-1CCD-4115-894F-6B3498E63A5B">
+                        <File Id="QT_LV.QM" Name="qt_lv.qm" Source="..\release\translations\qt_lv.qm" />
+                    </Component>
+                    <Component Id="QT_PL.QM" DiskId="1" Guid="0C1BD161-7990-4423-A159-A47CBD5A27E2">
+                        <File Id="QT_PL.QM" Name="qt_pl.qm" Source="..\release\translations\qt_pl.qm" />
+                    </Component>
+                    <Component Id="QT_RU.QM" DiskId="1" Guid="E9D4FF6D-B951-48A3-BA7B-7681EF273602">
+                        <File Id="QT_RU.QM" Name="qt_ru.qm" Source="..\release\translations\qt_ru.qm" />
+                    </Component>
+                    <Component Id="QT_SK.QM" DiskId="1" Guid="F89A40FF-651E-41FD-94FC-2FF06A25D4A3">
+                        <File Id="QT_SK.QM" Name="qt_sk.qm" Source="..\release\translations\qt_sk.qm" />
+                    </Component>
+                    <Component Id="QT_UK.QM" DiskId="1" Guid="D437CB48-3975-4313-880B-114DD4366CFC">
+                        <File Id="QT_UK.QM" Name="qt_uk.qm" Source="..\release\translations\qt_uk.qm" />
+                    </Component>
+                </Directory>
+            </Directory>
+            <Directory Id="ProgramMenuFolder">
+                <Directory Id="ProgramMenuDir" Name="lalamachine">
+                    <Component Id="StartMenuShortcuts" Guid="E3C22D79-2000-4727-981D-79B232870BBA">
+                        <RemoveFolder Id="ProgramMenuDir" On="uninstall" />
+                        <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="" />
+                        <Shortcut Id="UninstallProduct" Name="Uninstall" Description="Uninstalls the application" Target="[System64Folder]msiexec.exe" Arguments="/x [ProductCode]" />
+                        <util:InternetShortcut Id="WebsiteShortcut" Name="github" Target="https://github.com/space-santa/lalamachine" />
+                    </Component>
+                </Directory>
+            </Directory>
+        </Directory>
+        <Feature Id="DefaultFeature" Title="Main Feature" Level="1">
+            <ComponentRef Id="D3DCOMPILER_47.DLL" />
+            <ComponentRef Id="LALAMACHINE.EXE" />
+            <ComponentRef Id="LIBEGL.DLL" />
+            <ComponentRef Id="LIBGLESV2.DLL" />
+            <ComponentRef Id="MOC_PREDEFS.H" />
+            <ComponentRef Id="MOC_PREDEFS.H.CBT" />
+            <ComponentRef Id="OPENGL32SW.DLL" />
+            <ComponentRef Id="QT5CORE.DLL" />
+            <ComponentRef Id="QT5GUI.DLL" />
+            <ComponentRef Id="QT5MULTIMEDIA.DLL" />
+            <ComponentRef Id="QT5NETWORK.DLL" />
+            <ComponentRef Id="QT5QML.DLL" />
+            <ComponentRef Id="QT5QUICK.DLL" />
+            <ComponentRef Id="QT5SQL.DLL" />
+            <ComponentRef Id="QT5SVG.DLL" />
+            <ComponentRef Id="QT5WIDGETS.DLL" />
+            <ComponentRef Id="TAG.DLL" />
+            <ComponentRef Id="QTAUDIO_WASAPI.DLL" />
+            <ComponentRef Id="QTAUDIO_WINDOWS.DLL" />
+            <ComponentRef Id="QGENERICBEARER.DLL" />
+            <ComponentRef Id="QSVGICON.DLL" />
+            <ComponentRef Id="QGIF.DLL" />
+            <ComponentRef Id="QICNS.DLL" />
+            <ComponentRef Id="QICO.DLL" />
+            <ComponentRef Id="QJPEG.DLL" />
+            <ComponentRef Id="QSVG.DLL" />
+            <ComponentRef Id="QTGA.DLL" />
+            <ComponentRef Id="QTIFF.DLL" />
+            <ComponentRef Id="QWBMP.DLL" />
+            <ComponentRef Id="QWEBP.DLL" />
+            <ComponentRef Id="DSENGINE.DLL" />
+            <ComponentRef Id="QTMEDIA_AUDIOENGINE.DLL" />
+            <ComponentRef Id="WMFENGINE.DLL" />
+            <ComponentRef Id="QWINDOWS.DLL" />
+            <ComponentRef Id="QTMULTIMEDIA_M3U.DLL" />
+            <ComponentRef Id="QMLDBG_DEBUGGER.DLL" />
+            <ComponentRef Id="QMLDBG_INSPECTOR.DLL" />
+            <ComponentRef Id="QMLDBG_LOCAL.DLL" />
+            <ComponentRef Id="QMLDBG_MESSAGES.DLL" />
+            <ComponentRef Id="QMLDBG_NATIVE.DLL" />
+            <ComponentRef Id="QMLDBG_NATIVEDEBUGGER.DLL" />
+            <ComponentRef Id="QMLDBG_PROFILER.DLL" />
+            <ComponentRef Id="QMLDBG_QUICKPROFILER.DLL" />
+            <ComponentRef Id="QMLDBG_SERVER.DLL" />
+            <ComponentRef Id="QMLDBG_TCP.DLL" />
+            <ComponentRef Id="PLUGINS.QMLTYPES" />
+            <ComponentRef Id="QMLDIR" />
+            <ComponentRef Id="QMLFOLDERLISTMODELPLUGIN.DLL" />
+            <ComponentRef Id="PLUGINS.QMLTYPES_1" />
+            <ComponentRef Id="QMLDIR_1" />
+            <ComponentRef Id="QMLSETTINGSPLUGIN.DLL" />
+            <ComponentRef Id="BLEND.QML" />
+            <ComponentRef Id="BRIGHTNESSCONTRAST.QML" />
+            <ComponentRef Id="COLORIZE.QML" />
+            <ComponentRef Id="COLOROVERLAY.QML" />
+            <ComponentRef Id="CONICALGRADIENT.QML" />
+            <ComponentRef Id="DESATURATE.QML" />
+            <ComponentRef Id="DIRECTIONALBLUR.QML" />
+            <ComponentRef Id="DISPLACE.QML" />
+            <ComponentRef Id="DROPSHADOW.QML" />
+            <ComponentRef Id="FASTBLUR.QML" />
+            <ComponentRef Id="GAMMAADJUST.QML" />
+            <ComponentRef Id="GAUSSIANBLUR.QML" />
+            <ComponentRef Id="GLOW.QML" />
+            <ComponentRef Id="HUESATURATION.QML" />
+            <ComponentRef Id="INNERSHADOW.QML" />
+            <ComponentRef Id="LEVELADJUST.QML" />
+            <ComponentRef Id="LINEARGRADIENT.QML" />
+            <ComponentRef Id="MASKEDBLUR.QML" />
+            <ComponentRef Id="OPACITYMASK.QML" />
+            <ComponentRef Id="PLUGINS.QMLTYPES_2" />
+            <ComponentRef Id="QMLDIR_2" />
+            <ComponentRef Id="QTGRAPHICALEFFECTSPLUGIN.DLL" />
+            <ComponentRef Id="RADIALBLUR.QML" />
+            <ComponentRef Id="RADIALGRADIENT.QML" />
+            <ComponentRef Id="RECTANGULARGLOW.QML" />
+            <ComponentRef Id="RECURSIVEBLUR.QML" />
+            <ComponentRef Id="THRESHOLDMASK.QML" />
+            <ComponentRef Id="ZOOMBLUR.QML" />
+            <ComponentRef Id="DROPSHADOWBASE.QML" />
+            <ComponentRef Id="DROPSHADOWBASE.QMLC" />
+            <ComponentRef Id="FASTGLOW.QML" />
+            <ComponentRef Id="FASTGLOW.QMLC" />
+            <ComponentRef Id="FASTINNERSHADOW.QML" />
+            <ComponentRef Id="FASTINNERSHADOW.QMLC" />
+            <ComponentRef Id="FASTMASKEDBLUR.QML" />
+            <ComponentRef Id="FASTMASKEDBLUR.QMLC" />
+            <ComponentRef Id="GAUSSIANDIRECTIONALBLUR.QML" />
+            <ComponentRef Id="GAUSSIANDIRECTIONALBLUR.QMLC" />
+            <ComponentRef Id="GAUSSIANGLOW.QML" />
+            <ComponentRef Id="GAUSSIANGLOW.QMLC" />
+            <ComponentRef Id="GAUSSIANINNERSHADOW.QML" />
+            <ComponentRef Id="GAUSSIANINNERSHADOW.QMLC" />
+            <ComponentRef Id="GAUSSIANMASKEDBLUR.QML" />
+            <ComponentRef Id="GAUSSIANMASKEDBLUR.QMLC" />
+            <ComponentRef Id="QMLDIR_3" />
+            <ComponentRef Id="QTGRAPHICALEFFECTSPRIVATE.DLL" />
+            <ComponentRef Id="MODELSPLUGIN.DLL" />
+            <ComponentRef Id="PLUGINS.QMLTYPES_3" />
+            <ComponentRef Id="QMLDIR_4" />
+            <ComponentRef Id="APPLICATIONWINDOW.QML" />
+            <ComponentRef Id="APPLICATIONWINDOW.QMLC" />
+            <ComponentRef Id="BUSYINDICATOR.QML" />
+            <ComponentRef Id="BUSYINDICATOR.QMLC" />
+            <ComponentRef Id="BUTTON.QML" />
+            <ComponentRef Id="BUTTON.QMLC" />
+            <ComponentRef Id="CALENDAR.QML" />
+            <ComponentRef Id="CALENDAR.QMLC" />
+            <ComponentRef Id="CHECKBOX.QML" />
+            <ComponentRef Id="CHECKBOX.QMLC" />
+            <ComponentRef Id="COMBOBOX.QML" />
+            <ComponentRef Id="COMBOBOX.QMLC" />
+            <ComponentRef Id="GROUPBOX.QML" />
+            <ComponentRef Id="GROUPBOX.QMLC" />
+            <ComponentRef Id="LABEL.QML" />
+            <ComponentRef Id="LABEL.QMLC" />
+            <ComponentRef Id="MENU.QML" />
+            <ComponentRef Id="MENU.QMLC" />
+            <ComponentRef Id="MENUBAR.QML" />
+            <ComponentRef Id="MENUBAR.QMLC" />
+            <ComponentRef Id="PLUGINS.QMLTYPES_4" />
+            <ComponentRef Id="PROGRESSBAR.QML" />
+            <ComponentRef Id="PROGRESSBAR.QMLC" />
+            <ComponentRef Id="QMLDIR_5" />
+            <ComponentRef Id="QTQUICKCONTROLSPLUGIN.DLL" />
+            <ComponentRef Id="RADIOBUTTON.QML" />
+            <ComponentRef Id="RADIOBUTTON.QMLC" />
+            <ComponentRef Id="SCROLLVIEW.QML" />
+            <ComponentRef Id="SCROLLVIEW.QMLC" />
+            <ComponentRef Id="SLIDER.QML" />
+            <ComponentRef Id="SLIDER.QMLC" />
+            <ComponentRef Id="SPINBOX.QML" />
+            <ComponentRef Id="SPINBOX.QMLC" />
+            <ComponentRef Id="SPLITVIEW.QML" />
+            <ComponentRef Id="SPLITVIEW.QMLC" />
+            <ComponentRef Id="STACKVIEW.QML" />
+            <ComponentRef Id="STACKVIEW.QMLC" />
+            <ComponentRef Id="STACKVIEWDELEGATE.QML" />
+            <ComponentRef Id="STACKVIEWDELEGATE.QMLC" />
+            <ComponentRef Id="STACKVIEWTRANSITION.QML" />
+            <ComponentRef Id="STACKVIEWTRANSITION.QMLC" />
+            <ComponentRef Id="STATUSBAR.QML" />
+            <ComponentRef Id="STATUSBAR.QMLC" />
+            <ComponentRef Id="SWITCH.QML" />
+            <ComponentRef Id="SWITCH.QMLC" />
+            <ComponentRef Id="TAB.QML" />
+            <ComponentRef Id="TAB.QMLC" />
+            <ComponentRef Id="TABLEVIEW.QML" />
+            <ComponentRef Id="TABLEVIEW.QMLC" />
+            <ComponentRef Id="TABLEVIEWCOLUMN.QML" />
+            <ComponentRef Id="TABLEVIEWCOLUMN.QMLC" />
+            <ComponentRef Id="TABVIEW.QML" />
+            <ComponentRef Id="TABVIEW.QMLC" />
+            <ComponentRef Id="TEXTAREA.QML" />
+            <ComponentRef Id="TEXTAREA.QMLC" />
+            <ComponentRef Id="TEXTFIELD.QML" />
+            <ComponentRef Id="TEXTFIELD.QMLC" />
+            <ComponentRef Id="TOOLBAR.QML" />
+            <ComponentRef Id="TOOLBAR.QMLC" />
+            <ComponentRef Id="TOOLBUTTON.QML" />
+            <ComponentRef Id="TOOLBUTTON.QMLC" />
+            <ComponentRef Id="TREEVIEW.QML" />
+            <ComponentRef Id="TREEVIEW.QMLC" />
+            <ComponentRef Id="ABSTRACTCHECKABLE.QML" />
+            <ComponentRef Id="ABSTRACTCHECKABLE.QMLC" />
+            <ComponentRef Id="BASICBUTTON.QML" />
+            <ComponentRef Id="BASICBUTTON.QMLC" />
+            <ComponentRef Id="BASICTABLEVIEW.QML" />
+            <ComponentRef Id="BASICTABLEVIEW.QMLC" />
+            <ComponentRef Id="CALENDARHEADERMODEL.QML" />
+            <ComponentRef Id="CALENDARHEADERMODEL.QMLC" />
+            <ComponentRef Id="CALENDARUTILS.JS" />
+            <ComponentRef Id="CALENDARUTILS.JSC" />
+            <ComponentRef Id="COLUMNMENUCONTENT.QML" />
+            <ComponentRef Id="COLUMNMENUCONTENT.QMLC" />
+            <ComponentRef Id="CONTENTITEM.QML" />
+            <ComponentRef Id="CONTENTITEM.QMLC" />
+            <ComponentRef Id="CONTROL.QML" />
+            <ComponentRef Id="CONTROL.QMLC" />
+            <ComponentRef Id="EDITMENU.QML" />
+            <ComponentRef Id="EDITMENU.QMLC" />
+            <ComponentRef Id="EDITMENU_BASE.QML" />
+            <ComponentRef Id="EDITMENU_BASE.QMLC" />
+            <ComponentRef Id="FASTGLOW.QML_1" />
+            <ComponentRef Id="FASTGLOW.QMLC_1" />
+            <ComponentRef Id="FOCUSFRAME.QML" />
+            <ComponentRef Id="FOCUSFRAME.QMLC" />
+            <ComponentRef Id="HOVERBUTTON.QML" />
+            <ComponentRef Id="HOVERBUTTON.QMLC" />
+            <ComponentRef Id="MENUCONTENTITEM.QML" />
+            <ComponentRef Id="MENUCONTENTITEM.QMLC" />
+            <ComponentRef Id="MENUCONTENTSCROLLER.QML" />
+            <ComponentRef Id="MENUCONTENTSCROLLER.QMLC" />
+            <ComponentRef Id="MENUITEMSUBCONTROLS.QML" />
+            <ComponentRef Id="MENUITEMSUBCONTROLS.QMLC" />
+            <ComponentRef Id="MODALPOPUPBEHAVIOR.QML" />
+            <ComponentRef Id="MODALPOPUPBEHAVIOR.QMLC" />
+            <ComponentRef Id="QMLDIR_6" />
+            <ComponentRef Id="SCROLLBAR.QML" />
+            <ComponentRef Id="SCROLLBAR.QMLC" />
+            <ComponentRef Id="SCROLLVIEWHELPER.QML" />
+            <ComponentRef Id="SCROLLVIEWHELPER.QMLC" />
+            <ComponentRef Id="SOURCEPROXY.QML" />
+            <ComponentRef Id="SOURCEPROXY.QMLC" />
+            <ComponentRef Id="STACKVIEW.JS" />
+            <ComponentRef Id="STACKVIEW.JSC" />
+            <ComponentRef Id="STACKVIEWSLIDEDELEGATE.QML" />
+            <ComponentRef Id="STACKVIEWSLIDEDELEGATE.QMLC" />
+            <ComponentRef Id="STYLE.JS" />
+            <ComponentRef Id="STYLE.JSC" />
+            <ComponentRef Id="STYLE.QML" />
+            <ComponentRef Id="STYLE.QMLC" />
+            <ComponentRef Id="SYSTEMPALETTESINGLETON.QML" />
+            <ComponentRef Id="SYSTEMPALETTESINGLETON.QMLC" />
+            <ComponentRef Id="TABBAR.QML" />
+            <ComponentRef Id="TABBAR.QMLC" />
+            <ComponentRef Id="TABLEVIEWITEMDELEGATELOADER.QML" />
+            <ComponentRef Id="TABLEVIEWITEMDELEGATELOADER.QMLC" />
+            <ComponentRef Id="TABLEVIEWSELECTION.QML" />
+            <ComponentRef Id="TABLEVIEWSELECTION.QMLC" />
+            <ComponentRef Id="TEXTHANDLE.QML" />
+            <ComponentRef Id="TEXTHANDLE.QMLC" />
+            <ComponentRef Id="TEXTINPUTWITHHANDLES.QML" />
+            <ComponentRef Id="TEXTINPUTWITHHANDLES.QMLC" />
+            <ComponentRef Id="TEXTSINGLETON.QML" />
+            <ComponentRef Id="TEXTSINGLETON.QMLC" />
+            <ComponentRef Id="TOOLMENUBUTTON.QML" />
+            <ComponentRef Id="TOOLMENUBUTTON.QMLC" />
+            <ComponentRef Id="TREEVIEWITEMDELEGATELOADER.QML" />
+            <ComponentRef Id="TREEVIEWITEMDELEGATELOADER.QMLC" />
+            <ComponentRef Id="QMLDIR_7" />
+            <ComponentRef Id="APPLICATIONWINDOWSTYLE.QML" />
+            <ComponentRef Id="APPLICATIONWINDOWSTYLE.QMLC" />
+            <ComponentRef Id="BASICTABLEVIEWSTYLE.QML" />
+            <ComponentRef Id="BASICTABLEVIEWSTYLE.QMLC" />
+            <ComponentRef Id="BUSYINDICATORSTYLE.QML" />
+            <ComponentRef Id="BUSYINDICATORSTYLE.QMLC" />
+            <ComponentRef Id="BUTTONSTYLE.QML" />
+            <ComponentRef Id="BUTTONSTYLE.QMLC" />
+            <ComponentRef Id="CALENDARSTYLE.QML" />
+            <ComponentRef Id="CALENDARSTYLE.QMLC" />
+            <ComponentRef Id="CHECKBOXSTYLE.QML" />
+            <ComponentRef Id="CHECKBOXSTYLE.QMLC" />
+            <ComponentRef Id="CIRCULARBUTTONSTYLE.QML" />
+            <ComponentRef Id="CIRCULARBUTTONSTYLE.QMLC" />
+            <ComponentRef Id="CIRCULARGAUGESTYLE.QML" />
+            <ComponentRef Id="CIRCULARGAUGESTYLE.QMLC" />
+            <ComponentRef Id="CIRCULARTICKMARKLABELSTYLE.QML" />
+            <ComponentRef Id="CIRCULARTICKMARKLABELSTYLE.QMLC" />
+            <ComponentRef Id="COMBOBOXSTYLE.QML" />
+            <ComponentRef Id="COMBOBOXSTYLE.QMLC" />
+            <ComponentRef Id="COMMONSTYLEHELPER.QML" />
+            <ComponentRef Id="COMMONSTYLEHELPER.QMLC" />
+            <ComponentRef Id="DELAYBUTTONSTYLE.QML" />
+            <ComponentRef Id="DELAYBUTTONSTYLE.QMLC" />
+            <ComponentRef Id="DIALSTYLE.QML" />
+            <ComponentRef Id="DIALSTYLE.QMLC" />
+            <ComponentRef Id="FOCUSFRAMESTYLE.QML" />
+            <ComponentRef Id="FOCUSFRAMESTYLE.QMLC" />
+            <ComponentRef Id="GAUGESTYLE.QML" />
+            <ComponentRef Id="GAUGESTYLE.QMLC" />
+            <ComponentRef Id="GROUPBOXSTYLE.QML" />
+            <ComponentRef Id="GROUPBOXSTYLE.QMLC" />
+            <ComponentRef Id="HANDLESTYLE.QML" />
+            <ComponentRef Id="HANDLESTYLE.QMLC" />
+            <ComponentRef Id="HANDLESTYLEHELPER.QML" />
+            <ComponentRef Id="HANDLESTYLEHELPER.QMLC" />
+            <ComponentRef Id="MENUBARSTYLE.QML" />
+            <ComponentRef Id="MENUBARSTYLE.QMLC" />
+            <ComponentRef Id="MENUSTYLE.QML" />
+            <ComponentRef Id="MENUSTYLE.QMLC" />
+            <ComponentRef Id="PIEMENUSTYLE.QML" />
+            <ComponentRef Id="PIEMENUSTYLE.QMLC" />
+            <ComponentRef Id="PROGRESSBARSTYLE.QML" />
+            <ComponentRef Id="PROGRESSBARSTYLE.QMLC" />
+            <ComponentRef Id="RADIOBUTTONSTYLE.QML" />
+            <ComponentRef Id="RADIOBUTTONSTYLE.QMLC" />
+            <ComponentRef Id="SCROLLVIEWSTYLE.QML" />
+            <ComponentRef Id="SCROLLVIEWSTYLE.QMLC" />
+            <ComponentRef Id="SLIDERSTYLE.QML" />
+            <ComponentRef Id="SLIDERSTYLE.QMLC" />
+            <ComponentRef Id="SPINBOXSTYLE.QML" />
+            <ComponentRef Id="SPINBOXSTYLE.QMLC" />
+            <ComponentRef Id="STATUSBARSTYLE.QML" />
+            <ComponentRef Id="STATUSBARSTYLE.QMLC" />
+            <ComponentRef Id="STATUSINDICATORSTYLE.QML" />
+            <ComponentRef Id="STATUSINDICATORSTYLE.QMLC" />
+            <ComponentRef Id="SWITCHSTYLE.QML" />
+            <ComponentRef Id="SWITCHSTYLE.QMLC" />
+            <ComponentRef Id="TABLEVIEWSTYLE.QML" />
+            <ComponentRef Id="TABLEVIEWSTYLE.QMLC" />
+            <ComponentRef Id="TABVIEWSTYLE.QML" />
+            <ComponentRef Id="TABVIEWSTYLE.QMLC" />
+            <ComponentRef Id="TEXTAREASTYLE.QML" />
+            <ComponentRef Id="TEXTAREASTYLE.QMLC" />
+            <ComponentRef Id="TEXTFIELDSTYLE.QML" />
+            <ComponentRef Id="TEXTFIELDSTYLE.QMLC" />
+            <ComponentRef Id="TOGGLEBUTTONSTYLE.QML" />
+            <ComponentRef Id="TOGGLEBUTTONSTYLE.QMLC" />
+            <ComponentRef Id="TOOLBARSTYLE.QML" />
+            <ComponentRef Id="TOOLBARSTYLE.QMLC" />
+            <ComponentRef Id="TOOLBUTTONSTYLE.QML" />
+            <ComponentRef Id="TOOLBUTTONSTYLE.QMLC" />
+            <ComponentRef Id="TREEVIEWSTYLE.QML" />
+            <ComponentRef Id="TREEVIEWSTYLE.QMLC" />
+            <ComponentRef Id="TUMBLERSTYLE.QML" />
+            <ComponentRef Id="TUMBLERSTYLE.QMLC" />
+            <ComponentRef Id="ARROW_DOWN.PNG" />
+            <ComponentRef Id="ARROW_DOWN_2X.PNG" />
+            <ComponentRef Id="ARROW_LEFT.PNG" />
+            <ComponentRef Id="ARROW_LEFT_2X.PNG" />
+            <ComponentRef Id="ARROW_RIGHT.PNG" />
+            <ComponentRef Id="ARROW_RIGHT_2X.PNG" />
+            <ComponentRef Id="ARROW_UP.PNG" />
+            <ComponentRef Id="ARROW_UP_2X.PNG" />
+            <ComponentRef Id="BUTTON.PNG" />
+            <ComponentRef Id="BUTTON_DOWN.PNG" />
+            <ComponentRef Id="CHECK.PNG" />
+            <ComponentRef Id="CHECK_2X.PNG" />
+            <ComponentRef Id="EDITBOX.PNG" />
+            <ComponentRef Id="FOCUSFRAME.PNG" />
+            <ComponentRef Id="GROUPBOX.PNG" />
+            <ComponentRef Id="HEADER.PNG" />
+            <ComponentRef Id="KNOB.PNG" />
+            <ComponentRef Id="LEFTANGLEARROW.PNG" />
+            <ComponentRef Id="NEEDLE.PNG" />
+            <ComponentRef Id="PROGRESS_INDETERMINATE.PNG" />
+            <ComponentRef Id="RIGHTANGLEARROW.PNG" />
+            <ComponentRef Id="SCROLLBAR_HANDLE_HORIZONTAL.PNG" />
+            <ComponentRef Id="SCROLLBAR_HANDLE_TRANSIENT.PNG" />
+            <ComponentRef Id="SCROLLBAR_HANDLE_VERTICAL.PNG" />
+            <ComponentRef Id="SLIDER_GROOVE.PNG" />
+            <ComponentRef Id="SLIDER_HANDLE.PNG" />
+            <ComponentRef Id="SPINNER_LARGE.PNG" />
+            <ComponentRef Id="SPINNER_MEDIUM.PNG" />
+            <ComponentRef Id="SPINNER_SMALL.PNG" />
+            <ComponentRef Id="TAB.PNG" />
+            <ComponentRef Id="TAB_SELECTED.PNG" />
+            <ComponentRef Id="APPLICATIONWINDOWSTYLE.QML_1" />
+            <ComponentRef Id="APPLICATIONWINDOWSTYLE.QMLC_1" />
+            <ComponentRef Id="BUSYINDICATORSTYLE.QML_1" />
+            <ComponentRef Id="BUSYINDICATORSTYLE.QMLC_1" />
+            <ComponentRef Id="BUTTONSTYLE.QML_1" />
+            <ComponentRef Id="BUTTONSTYLE.QMLC_1" />
+            <ComponentRef Id="CALENDARSTYLE.QML_1" />
+            <ComponentRef Id="CALENDARSTYLE.QMLC_1" />
+            <ComponentRef Id="CHECKBOXSTYLE.QML_1" />
+            <ComponentRef Id="CHECKBOXSTYLE.QMLC_1" />
+            <ComponentRef Id="COMBOBOXSTYLE.QML_1" />
+            <ComponentRef Id="COMBOBOXSTYLE.QMLC_1" />
+            <ComponentRef Id="FOCUSFRAMESTYLE.QML_1" />
+            <ComponentRef Id="FOCUSFRAMESTYLE.QMLC_1" />
+            <ComponentRef Id="GROUPBOXSTYLE.QML_1" />
+            <ComponentRef Id="GROUPBOXSTYLE.QMLC_1" />
+            <ComponentRef Id="MENUBARSTYLE.QML_1" />
+            <ComponentRef Id="MENUBARSTYLE.QMLC_1" />
+            <ComponentRef Id="MENUSTYLE.QML_1" />
+            <ComponentRef Id="MENUSTYLE.QMLC_1" />
+            <ComponentRef Id="PROGRESSBARSTYLE.QML_1" />
+            <ComponentRef Id="PROGRESSBARSTYLE.QMLC_1" />
+            <ComponentRef Id="QMLDIR_8" />
+            <ComponentRef Id="RADIOBUTTONSTYLE.QML_1" />
+            <ComponentRef Id="RADIOBUTTONSTYLE.QMLC_1" />
+            <ComponentRef Id="ROWITEMSINGLETON.QML" />
+            <ComponentRef Id="ROWITEMSINGLETON.QMLC" />
+            <ComponentRef Id="SCROLLVIEWSTYLE.QML_1" />
+            <ComponentRef Id="SCROLLVIEWSTYLE.QMLC_1" />
+            <ComponentRef Id="SLIDERSTYLE.QML_1" />
+            <ComponentRef Id="SLIDERSTYLE.QMLC_1" />
+            <ComponentRef Id="SPINBOXSTYLE.QML_1" />
+            <ComponentRef Id="SPINBOXSTYLE.QMLC_1" />
+            <ComponentRef Id="STATUSBARSTYLE.QML_1" />
+            <ComponentRef Id="STATUSBARSTYLE.QMLC_1" />
+            <ComponentRef Id="SWITCHSTYLE.QML_1" />
+            <ComponentRef Id="SWITCHSTYLE.QMLC_1" />
+            <ComponentRef Id="TABLEVIEWSTYLE.QML_1" />
+            <ComponentRef Id="TABLEVIEWSTYLE.QMLC_1" />
+            <ComponentRef Id="TABVIEWSTYLE.QML_1" />
+            <ComponentRef Id="TABVIEWSTYLE.QMLC_1" />
+            <ComponentRef Id="TEXTAREASTYLE.QML_1" />
+            <ComponentRef Id="TEXTAREASTYLE.QMLC_1" />
+            <ComponentRef Id="TEXTFIELDSTYLE.QML_1" />
+            <ComponentRef Id="TEXTFIELDSTYLE.QMLC_1" />
+            <ComponentRef Id="TOOLBARSTYLE.QML_1" />
+            <ComponentRef Id="TOOLBARSTYLE.QMLC_1" />
+            <ComponentRef Id="TOOLBUTTONSTYLE.QML_1" />
+            <ComponentRef Id="TOOLBUTTONSTYLE.QMLC_1" />
+            <ComponentRef Id="TREEVIEWSTYLE.QML_1" />
+            <ComponentRef Id="TREEVIEWSTYLE.QMLC_1" />
+            <ComponentRef Id="QMLDIR_9" />
+            <ComponentRef Id="QTQUICKEXTRASFLATPLUGIN.DLL" />
+            <ComponentRef Id="DEFAULTCOLORDIALOG.QML" />
+            <ComponentRef Id="DEFAULTCOLORDIALOG.QMLC" />
+            <ComponentRef Id="DEFAULTDIALOGWRAPPER.QML" />
+            <ComponentRef Id="DEFAULTDIALOGWRAPPER.QMLC" />
+            <ComponentRef Id="DEFAULTFILEDIALOG.QML" />
+            <ComponentRef Id="DEFAULTFILEDIALOG.QMLC" />
+            <ComponentRef Id="DEFAULTFONTDIALOG.QML" />
+            <ComponentRef Id="DEFAULTFONTDIALOG.QMLC" />
+            <ComponentRef Id="DEFAULTMESSAGEDIALOG.QML" />
+            <ComponentRef Id="DEFAULTMESSAGEDIALOG.QMLC" />
+            <ComponentRef Id="DIALOGPLUGIN.DLL" />
+            <ComponentRef Id="PLUGINS.QMLTYPES_5" />
+            <ComponentRef Id="QMLDIR_10" />
+            <ComponentRef Id="WIDGETCOLORDIALOG.QML" />
+            <ComponentRef Id="WIDGETCOLORDIALOG.QMLC" />
+            <ComponentRef Id="WIDGETFILEDIALOG.QML" />
+            <ComponentRef Id="WIDGETFILEDIALOG.QMLC" />
+            <ComponentRef Id="WIDGETFONTDIALOG.QML" />
+            <ComponentRef Id="WIDGETFONTDIALOG.QMLC" />
+            <ComponentRef Id="WIDGETMESSAGEDIALOG.QML" />
+            <ComponentRef Id="WIDGETMESSAGEDIALOG.QMLC" />
+            <ComponentRef Id="CHECKERS.PNG" />
+            <ComponentRef Id="CHECKMARK.PNG" />
+            <ComponentRef Id="COPY.PNG" />
+            <ComponentRef Id="CRITICAL.PNG" />
+            <ComponentRef Id="CROSSHAIRS.PNG" />
+            <ComponentRef Id="INFORMATION.PNG" />
+            <ComponentRef Id="QUESTION.PNG" />
+            <ComponentRef Id="SLIDER_HANDLE.PNG_1" />
+            <ComponentRef Id="SUNKEN_FRAME.PNG" />
+            <ComponentRef Id="WARNING.PNG" />
+            <ComponentRef Id="WINDOW_BORDER.PNG" />
+            <ComponentRef Id="DIALOGSPRIVATEPLUGIN.DLL" />
+            <ComponentRef Id="PLUGINS.QMLTYPES_6" />
+            <ComponentRef Id="QMLDIR_11" />
+            <ComponentRef Id="COLORSLIDER.QML" />
+            <ComponentRef Id="COLORSLIDER.QMLC" />
+            <ComponentRef Id="DEFAULTWINDOWDECORATION.QML" />
+            <ComponentRef Id="DEFAULTWINDOWDECORATION.QMLC" />
+            <ComponentRef Id="ICONBUTTONSTYLE.QML" />
+            <ComponentRef Id="ICONBUTTONSTYLE.QMLC" />
+            <ComponentRef Id="ICONGLYPH.QML" />
+            <ComponentRef Id="ICONGLYPH.QMLC" />
+            <ComponentRef Id="ICONS.TTF" />
+            <ComponentRef Id="QMLDIR_12" />
+            <ComponentRef Id="CIRCULARGAUGE.QML" />
+            <ComponentRef Id="CIRCULARGAUGE.QMLC" />
+            <ComponentRef Id="DELAYBUTTON.QML" />
+            <ComponentRef Id="DELAYBUTTON.QMLC" />
+            <ComponentRef Id="DIAL.QML" />
+            <ComponentRef Id="DIAL.QMLC" />
+            <ComponentRef Id="GAUGE.QML" />
+            <ComponentRef Id="GAUGE.QMLC" />
+            <ComponentRef Id="PIEMENU.QML" />
+            <ComponentRef Id="PIEMENU.QMLC" />
+            <ComponentRef Id="PLUGINS.QMLTYPES_7" />
+            <ComponentRef Id="QMLDIR_13" />
+            <ComponentRef Id="QTQUICKEXTRASPLUGIN.DLL" />
+            <ComponentRef Id="STATUSINDICATOR.QML" />
+            <ComponentRef Id="STATUSINDICATOR.QMLC" />
+            <ComponentRef Id="TOGGLEBUTTON.QML" />
+            <ComponentRef Id="TOGGLEBUTTON.QMLC" />
+            <ComponentRef Id="TUMBLER.QML" />
+            <ComponentRef Id="TUMBLER.QMLC" />
+            <ComponentRef Id="TUMBLERCOLUMN.QML" />
+            <ComponentRef Id="TUMBLERCOLUMN.QMLC" />
+            <ComponentRef Id="CIRCULARBUTTON.QML" />
+            <ComponentRef Id="CIRCULARBUTTON.QMLC" />
+            <ComponentRef Id="CIRCULARBUTTONSTYLEHELPER.QML" />
+            <ComponentRef Id="CIRCULARBUTTONSTYLEHELPER.QMLC" />
+            <ComponentRef Id="CIRCULARTICKMARKLABEL.QML" />
+            <ComponentRef Id="CIRCULARTICKMARKLABEL.QMLC" />
+            <ComponentRef Id="HANDLE.QML" />
+            <ComponentRef Id="HANDLE.QMLC" />
+            <ComponentRef Id="PIEMENUICON.QML" />
+            <ComponentRef Id="PIEMENUICON.QMLC" />
+            <ComponentRef Id="QMLDIR_14" />
+            <ComponentRef Id="TEXTSINGLETON.QML_1" />
+            <ComponentRef Id="TEXTSINGLETON.QMLC_1" />
+            <ComponentRef Id="PLUGINS.QMLTYPES_8" />
+            <ComponentRef Id="QMLDIR_15" />
+            <ComponentRef Id="QQUICKLAYOUTSPLUGIN.DLL" />
+            <ComponentRef Id="PLUGINS.QMLTYPES_9" />
+            <ComponentRef Id="QMLDIR_16" />
+            <ComponentRef Id="WIDGETSPLUGIN.DLL" />
+            <ComponentRef Id="PLUGINS.QMLTYPES_10" />
+            <ComponentRef Id="QMLDIR_17" />
+            <ComponentRef Id="WINDOWPLUGIN.DLL" />
+            <ComponentRef Id="PLUGINS.QMLTYPES_11" />
+            <ComponentRef Id="QMLDIR_18" />
+            <ComponentRef Id="QTQUICK2PLUGIN.DLL" />
+            <ComponentRef Id="QSGD3D12BACKEND.DLL" />
+            <ComponentRef Id="QSQLITE.DLL" />
+            <ComponentRef Id="QSQLMYSQL.DLL" />
+            <ComponentRef Id="QSQLODBC.DLL" />
+            <ComponentRef Id="QSQLPSQL.DLL" />
+            <ComponentRef Id="QWINDOWSVISTASTYLE.DLL" />
+            <ComponentRef Id="QT_AR.QM" />
+            <ComponentRef Id="QT_BG.QM" />
+            <ComponentRef Id="QT_CA.QM" />
+            <ComponentRef Id="QT_CS.QM" />
+            <ComponentRef Id="QT_DA.QM" />
+            <ComponentRef Id="QT_DE.QM" />
+            <ComponentRef Id="QT_EN.QM" />
+            <ComponentRef Id="QT_ES.QM" />
+            <ComponentRef Id="QT_FI.QM" />
+            <ComponentRef Id="QT_FR.QM" />
+            <ComponentRef Id="QT_GD.QM" />
+            <ComponentRef Id="QT_HE.QM" />
+            <ComponentRef Id="QT_HU.QM" />
+            <ComponentRef Id="QT_IT.QM" />
+            <ComponentRef Id="QT_JA.QM" />
+            <ComponentRef Id="QT_KO.QM" />
+            <ComponentRef Id="QT_LV.QM" />
+            <ComponentRef Id="QT_PL.QM" />
+            <ComponentRef Id="QT_RU.QM" />
+            <ComponentRef Id="QT_SK.QM" />
+            <ComponentRef Id="QT_UK.QM" />
+            <ComponentRef Id="StartMenuShortcuts" />
+        </Feature>
+        <UI />
+        <UIRef Id="WixUI_Minimal" />
+        <Icon Id="StartMenuIcon.exe" SourceFile="..\release\lalamachine.exe" />
+        <WixVariable Id="WixUILicenseRtf" Value="..\gpl-3.0.rtf" />
+    </Product>
+</Wix>
