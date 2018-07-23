@@ -215,11 +215,13 @@
     <ClCompile Include="src\track.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="src\DatabaseSetup.h" />
     <ClInclude Include="src\DirWalker.h" />
     <ClInclude Include="src\IDirWalker.h" />
     <ClInclude Include="src\IMainDB.h" />
     <ClInclude Include="src\IScannerDB.h" />
+    <ClInclude Include="src\Logger.h" />
     <ClInclude Include="src\MainDB.h" />
     <QtMoc Include="src\QmlMetadataProvider.h">
     </QtMoc>
