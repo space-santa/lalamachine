@@ -58,7 +58,12 @@ The Qt tools for Visual Studio are required
 Build and install taglib according to their INSTALL file.
 I recommend using the cmake-GUI and set the install prefix next to the source directory. I use `msbuild` to build and install.
 
-In Visual Studio, add the `include`, `lib`, and `bin` dir of taglib to the `lalamachine` project properties (not the solution properties).
+```
+msbuild /pconfiguration=release ALL_BUILD.vcxproj
+msbuild INSTALL.vcxproj
+
+
+If the install dir is not `../Libraries` add the `include`, `lib`, and `bin` dir of taglib to the `lalamachine` project properties (not the solution properties).
 
 Finally, to actually run lalamachine, copy taglib.dll (or taglib.lib) next to `lalamachine.exe` in the debug or release folder. This is required because the project properties only take care of what is required to build the thing. You have to take care of the runtime dependencies.
 
