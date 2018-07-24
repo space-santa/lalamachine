@@ -1,0 +1,467 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Distribution Files">
+      <UniqueIdentifier>{B83CAF91-C7BF-462F-B76C-EA11631F866C}</UniqueIdentifier>
+      <Extensions>*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Distribution Files">
+      <UniqueIdentifier>{B83CAF91-C7BF-462F-B76C-EA11631F866C}</UniqueIdentifier>
+      <Extensions>*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\DatabaseSetup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DirWalker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MainDB.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\QmlMetadataProvider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\QueryBuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\QueryResult.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ScannerDB.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\autoplaylist.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\autoplaylistmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\autoplaylistobject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\config.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\exceptions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fileexporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lalatypes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\metadataprovider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\musiclib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\musiclibscanner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\playlistmodel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\playlistprovider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sysinfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tags.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\theplayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\timeconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\track.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\DatabaseSetup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DirWalker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IDirWalker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IMainDB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IScannerDB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MainDB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="src\QmlMetadataProvider.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="src\QueryBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\QueryResult.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ScannerDB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="src\autoplaylist.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\autoplaylistmanager.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="src\autoplaylistobject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="src\config.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="src\exceptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="src\fileexporter.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\lalatypes.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="src\metadataprovider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="src\musiclib.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="src\musiclibscanner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="src\playlistmodel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\playlistprovider.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\sysinfo.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="src\tags.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="src\theplayer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\timeconverter.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="src\track.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="debug\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="release\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AutoPlaylistDialog.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="AutoPlaylistMenu.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="AutoPlaylistObject.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Configuration.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ImageButton.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="InfoDialog.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="InfoMenu.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ItemDelegate.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="KeyValueTableView.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="KeyValueText.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="LibraryPlaylist.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="LibraryPlaylistRightClickMenu.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="LibraryView.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="MainPlaylist.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="MainPlaylistMenu.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="MainPlaylistRightClickMenu.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="MultiStateButton.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="MusicLibMenu.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="NowPlayingDisplay.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="PlayerControlButtons.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="PlayerControls.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Playlist.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="PlaylistMenu.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="SavePlaylistDialog.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="SettingsDialog.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="SliderStyleLala.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="StringListView.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="TableHeaderDelegate.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="TableStyle.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="TableViewDelegate.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="TextBase.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="TrackMissingDialog.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="VolumeControl.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\back.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\bug.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\delete.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\edit-clear.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\edit.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\eject.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\export.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\forward.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="functions.js">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\go-bottom.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\go-down.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\go-top.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\go-up.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\help.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\info.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\lala-icon-2-small.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\lala-icon-2.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\lalamachine-new.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\lalamachine-new.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\lalamachine.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\list-add.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\list-remove.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\logo\logo.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="main.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\new.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\no.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\open.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\pause.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\play.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\preferences.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <QtRcc Include="qml.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+    <None Include="images\quit.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\random.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\refresh.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\repeat1.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\repeatAll.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\repeat_random.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\save.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\settings.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\tab_new.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\tab_remove.png">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LICENSE">
+      <Filter>Distribution Files</Filter>
+    </None>
+    <None Include="changelog">
+      <Filter>Distribution Files</Filter>
+    </None>
+    <None Include="package.json">
+      <Filter>Distribution Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include=".\lalamachine_resource.rc" />
+  </ItemGroup>
+</Project>

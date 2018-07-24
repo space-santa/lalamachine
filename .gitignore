@@ -11,3 +11,9 @@ Makefile
 tags
 .vscode
 test/build-*
+.vs
+GeneratedFiles
+**.msi
+**.wixobj
+**.wixpdb
+**.aps

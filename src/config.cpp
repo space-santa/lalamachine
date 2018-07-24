@@ -34,6 +34,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 const QString Config::LALADIR =
     QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + "/lalamachine";
 const QString Config::CONFIGPATH = Config::LALADIR + "/config.json";
+const QString Config::LOGPATH = Config::LALADIR + "/the.log";
 const QString Config::AUTOPLAYLISTDIR = Config::LALADIR + "/autoplaylists";
 const QString Config::PLAYLISTDIR = Config::LALADIR + "/playlists";
 const QString Config::MUSICLIBDB = Config::LALADIR + "/musiclib.sq3";

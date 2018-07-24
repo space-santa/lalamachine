@@ -9,6 +9,7 @@
 #include <memory>
 
 #include "DatabaseSetup.h"
+#include "Logger.h"
 #include "QmlMetadataProvider.h"
 #include "autoplaylistmanager.h"
 #include "config.h"
@@ -20,6 +21,19 @@
 #include "sysinfo.h"
 #include "theplayer.h"
 #include "timeconverter.h"
+
+Logger logger;
+
+void myMessageOutput(QtMsgType type, const QMessageLogContext& context, const QString& msg) {
+    QString theMessage = msg + " (" + context.file + ":" + context.line + ", " + context.function + ")";
+    switch (type) {
+        case QtDebugMsg: logger.write(theMessage); break;
+        case QtInfoMsg: logger.write(theMessage); break;
+        case QtWarningMsg: logger.write(theMessage); break;
+        case QtCriticalMsg: logger.write(theMessage); break;
+        case QtFatalMsg: logger.write(theMessage); break;
+    }
+}
 
 void registerQmlTypes() {
     qmlRegisterType<QmlMetadataProvider>("Lala", 1, 0, "Metadata");
@@ -36,6 +50,7 @@ void registerQmlTypes() {
 }
 
 int main(int argc, char* argv[]) {
+    qInstallMessageHandler(myMessageOutput);
     QApplication app(argc, argv);
     app.setWindowIcon(QIcon(QPixmap(":/images/images/lala-icon-2-small.png")));
     app.setApplicationVersion("3.7.1");
