@@ -195,11 +195,13 @@ QUrl Config::libPath() const {
     QJsonValue v = config_.value("libPath");
 
     if (v.isString()) {
-        retval = QUrl(v.toString());
+        auto path_string = v.toString();
+        qCritical() << path_string << path_string.compare("C:/Users/claus/Music");
+        retval = QUrl(path_string);
 
-        if (!QDir(retval.path()).exists()) {
+        if (!QDir(retval.toString()).exists()) {
+            qCritical() << "libPath" << retval << "doesn't exist!";
             retval.clear();
-            qCritical() << "libPath doesn't exist!";
         }
     } else {
         qWarning("No proper libPath defined in config.json");
