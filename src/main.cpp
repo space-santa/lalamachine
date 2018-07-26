@@ -26,6 +26,10 @@ Logger logger;
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext& context, const QString& msg) {
     QString theMessage = msg + " (" + context.file + ":" + context.line + ", " + context.function + ")";
+    if (theMessage.contains("TableView")) {
+        // FIXME: This is here to not grow the.log to big. But the underlying problem should be addressed eventually.
+        return;
+    }
     switch (type) {
         case QtDebugMsg: logger.write(theMessage); break;
         case QtInfoMsg: logger.write(theMessage); break;
