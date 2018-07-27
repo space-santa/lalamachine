@@ -48,37 +48,29 @@ Config::Config(QObject* parent) : QObject(parent) {
     loadConfig();
 }
 
-void Config::saveConfig() {
-    saveJsonFile(Config::CONFIGPATH, config_);
-}
-
 void Config::loadConfig() {
-    config_ = loadJsonFile(Config::CONFIGPATH);
+    bool migrationRequired = QFile::exists(CONFIGPATH);
+    if (migrationRequired) {
+        QJsonObject config = loadJsonFile(Config::CONFIGPATH);
+        migrateVolume(config);
+        migratePlaylistColumns(config);
+        migrateLibPath(config);
+        migrateLastPlaylist(config);
+        QFile::remove(CONFIGPATH);
+	}
 }
 
 void Config::setVolume(double val) {
-    config_.insert("volume", val);
+    settings_.setValue("player/volume", val);
     emit volumeChanged();
 }
 
 double Config::volume() {
-    // I initialize the volume with 0.4. I turns out to be confusing for users
-    // that on first start the app starts silent (as in volume = 0).
-    double retval = 0.4;
-    QJsonValue v = config_.value("volume");
-
-    if (v.isDouble()) {
-        retval = v.toDouble();
-    } else {
-        qWarning("No proper volume defined in config.json");
-    }
-
-    qDebug() << "Volume loaded" << retval;
-    return retval;
+    return settings_.value("player/volume", 0.4).toDouble();
 }
 
 void Config::setPlaylistColumns(const QJsonArray& list) {
-    config_.insert("playlistColumns", list);
+    settings_.setValue("playlist/columns", list);
     emit playlistColumnsChanged();
 }
 
@@ -90,14 +82,7 @@ QJsonObject Config::addKey(const QString& key) {
 }
 
 QJsonArray Config::playlistColumns() {
-    QJsonArray retval;
-    QJsonValue v = config_.value("playlistColumns");
-
-    if (v.isArray()) {
-        retval = v.toArray();
-    } else {
-        qWarning("No playlist columns defined.");
-    }
+    QJsonArray retval = settings_.value("playlist/columns").toJsonArray();
 
     bool hasTrack = false;
     bool hasTitle = false;
@@ -175,55 +160,31 @@ QJsonArray Config::playlistColumns() {
         retval.append(addKey("dateAdded"));
     }
 
-    config_.insert("playlistColumns", retval);
     qDebug() << "playlistColumns loaded" << retval;
     return retval;
 }
 
 void Config::setLibPath(const QUrl& path) {
-    QString actualPath = path.toLocalFile();
-    Q_ASSERT(QDir(actualPath).exists());
-    config_.insert("libPath", actualPath);
-    // We want to save the file right after setting the path because we want
-    // config.json to match musiclib.json as soon as it changes.
-    saveConfig();
+    settings_.setValue("library/path", path);
     emit libPathChanged();
 }
 
 QUrl Config::libPath() const {
-    QUrl retval;
-    QJsonValue v = config_.value("libPath");
-
-    if (v.isString()) {
-        auto path_string = v.toString();
-        qCritical() << path_string << path_string.compare("C:/Users/claus/Music");
-        retval = QUrl(path_string);
-
-        if (!QDir(retval.toString()).exists()) {
-            qCritical() << "libPath" << retval << "doesn't exist!";
-            retval.clear();
-        }
-    } else {
-        qWarning("No proper libPath defined in config.json");
+    QUrl retval = settings_.value("library/path").toUrl();
+    if (!QDir(retval.toString()).exists()) {
+        qCritical() << "libPath" << retval << "doesn't exist!";
+        retval.clear();
     }
-
     return retval;
 }
 
 void Config::setLastPlaylist(const QString& name) {
-    config_.insert("lastPlaylist", name);
+    settings_.setValue("playlist/lastPlaylistName", name);
     emit lastPlaylistChanged();
 }
 
 QString Config::lastPlaylist() const {
-    QString retval("");
-    QJsonValue v = config_.value("lastPlaylist");
-
-    if (v.isString()) {
-        retval = v.toString();
-    }
-
-    return retval;
+    return settings_.value("playlist/lastPlaylistName").toString();
 }
 
 QJsonObject Config::loadJsonFile(const QString& path) {
@@ -275,4 +236,61 @@ void Config::ensureDir(const QString& path) {
     if (!dir.exists()) {
         dir.mkpath(fi.absolutePath());
     }
+}
+
+void Config::migrateLastPlaylist(const QJsonObject& config) {
+    QString retval("");
+    QJsonValue v = config.value("lastPlaylist");
+
+    if (v.isString()) {
+        retval = v.toString();
+    }
+
+    this->setLastPlaylist(retval);
+}
+
+void Config::migrateLibPath(const QJsonObject& config) {
+    QUrl retval;
+    QJsonValue v = config.value("libPath");
+
+    if (v.isString()) {
+        auto path_string = v.toString();
+        qCritical() << path_string << path_string.compare("C:/Users/claus/Music");
+        retval = QUrl(path_string);
+
+        if (!QDir(retval.toString()).exists()) {
+            qCritical() << "libPath" << retval << "doesn't exist!";
+            retval.clear();
+        }
+    } else {
+        qWarning("No proper libPath defined in config.json");
+    }
+
+    this->setLibPath(retval);
+}
+
+void Config::migratePlaylistColumns(const QJsonObject& config) {
+    QJsonArray retval;
+    QJsonValue v = config.value("playlistColumns");
+
+    if (v.isArray()) {
+        this->setPlaylistColumns(v.toArray());
+    } else {
+        qWarning("No playlist columns defined.");
+    }
+}
+
+void Config::migrateVolume(const QJsonObject& config) {
+    // I initialize the volume with 0.4. I turns out to be confusing for users
+    // that on first start the app starts silent (as in volume = 0).
+    double retval = 0.4;
+    QJsonValue v = config.value("volume");
+
+    if (v.isDouble()) {
+        retval = v.toDouble();
+    } else {
+        qWarning("No proper volume defined in config.json");
+    }
+
+    this->setVolume(retval);
 }

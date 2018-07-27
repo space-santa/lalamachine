@@ -33,7 +33,6 @@ Rectangle {
 
     Component.onDestruction: {
         config.volume = value
-        config.saveConfig()
     }
 
     function volumeUp() {

@@ -108,8 +108,6 @@ ApplicationWindow {
         } else {
             config.lastPlaylist = currentPlaylist
         }
-
-        config.saveConfig()
     }
 
     Action {

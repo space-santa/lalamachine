@@ -29,7 +29,6 @@ Dialog {
 
     onAccepted: {
         config.playlistColumns = playlist_columns.getJson()
-        config.saveConfig()
     }
 
     standardButtons: StandardButton.Ok | StandardButton.Cancel

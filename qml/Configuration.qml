@@ -25,10 +25,6 @@ Item {
     property alias lastPlaylist: json.lastPlaylist
     property alias playlistColumns: json.playlistColumns
 
-    function saveConfig() {
-        json.saveConfig()
-    }
-
     Config {
         id: json
 

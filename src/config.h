@@ -22,6 +22,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QObject>
+#include <QSettings>
 #include <QString>
 #include <QUrl>
 
@@ -49,7 +50,6 @@ public:
     static const QString SCANNERDBNAME;
     static const QString AUTODBNAME;
 
-    Q_INVOKABLE void saveConfig();
     void loadConfig();
 
     void setVolume(double val);
@@ -75,8 +75,11 @@ signals:
     void lastPlaylistChanged();
     void playlistColumnsChanged();
 
-public slots:
-
 private:
-    QJsonObject config_;
+    QSettings settings_;
+
+	void migrateVolume(const QJsonObject& config);
+    void migratePlaylistColumns(const QJsonObject& config);
+    void migrateLibPath(const QJsonObject& config);
+    void migrateLastPlaylist(const QJsonObject& config);
 };
