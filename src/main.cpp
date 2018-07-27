@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
 
     registerQmlTypes();
     // INFO: Because we use an ApplicationWindow we cannot use a QQuickView.
-    QQmlApplicationEngine engine(QUrl(QStringLiteral("qrc:/main.qml")));
+    QQmlApplicationEngine engine(QUrl(QStringLiteral("qrc:/qml/main.qml")));
 
     splash.close();
     return app.exec();

@@ -25,7 +25,7 @@ import QtQuick.Controls.Styles 1.4
 
 import Lala 1.0
 
-import "qrc:/functions.js" as Functions
+import "qrc:/qml/functions.js" as Functions
 
 ApplicationWindow {
     id: master

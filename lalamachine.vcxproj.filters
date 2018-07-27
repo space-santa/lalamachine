@@ -227,105 +227,6 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <None Include="AutoPlaylistDialog.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="AutoPlaylistMenu.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="AutoPlaylistObject.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Configuration.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="ImageButton.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="InfoDialog.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="InfoMenu.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="ItemDelegate.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="KeyValueTableView.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="KeyValueText.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="LibraryPlaylist.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="LibraryPlaylistRightClickMenu.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="LibraryView.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="MainPlaylist.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="MainPlaylistMenu.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="MainPlaylistRightClickMenu.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="MultiStateButton.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="MusicLibMenu.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="NowPlayingDisplay.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="PlayerControlButtons.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="PlayerControls.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Playlist.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="PlaylistMenu.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="SavePlaylistDialog.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="SettingsDialog.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="SliderStyleLala.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="StringListView.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="TableHeaderDelegate.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="TableStyle.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="TableViewDelegate.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="TextBase.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="TrackMissingDialog.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="VolumeControl.qml">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="images\back.png">
       <Filter>Resource Files</Filter>
     </None>
@@ -348,9 +249,6 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="images\forward.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="functions.js">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="images\go-bottom.png">
@@ -393,9 +291,6 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="images\logo\logo.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="main.qml">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="images\new.png">
@@ -447,6 +342,111 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="images\tab_remove.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\AutoPlaylistDialog.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\AutoPlaylistMenu.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\AutoPlaylistObject.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\Configuration.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\functions.js">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\ImageButton.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\InfoDialog.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\InfoMenu.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\KeyValueTableView.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\ItemDelegate.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\KeyValueText.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\LibraryPlaylist.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\LibraryPlaylistRightClickMenu.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\LibraryView.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\main.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\MainPlaylist.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\MainPlaylistMenu.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\MainPlaylistRightClickMenu.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\MultiStateButton.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\MusicLibMenu.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\NowPlayingDisplay.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\PlayerControlButtons.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\PlayerControls.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\Playlist.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\PlaylistMenu.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\TableStyle.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\TableHeaderDelegate.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\StringListView.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\SliderStyleLala.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\SettingsDialog.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\SavePlaylistDialog.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\TableViewDelegate.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\TextBase.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\TrackMissingDialog.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\VolumeControl.qml">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

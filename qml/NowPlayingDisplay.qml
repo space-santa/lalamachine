@@ -19,7 +19,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 import QtQuick 2.0
 import QtQuick.Controls 1.2
 
-import "qrc:/functions.js" as Functions
+import "qrc:/qml/functions.js" as Functions
 
 Rectangle {
     id: now_playing_container
