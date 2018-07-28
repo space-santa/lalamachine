@@ -134,10 +134,7 @@ void PlaylistModel::clear() {
         upperLimit = 0;
     }
 
-    beginRemoveRows(QModelIndex(), 0, upperLimit);
-    list_ = QList<Track>();
-    list_ = list_;
-    endRemoveRows();
+    list_.clear();
     emit countChanged();
 }
 
