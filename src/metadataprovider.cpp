@@ -22,10 +22,15 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <memory>
 
 #include "tags.h"
+#include "exceptions.h"
 #include "TagLibTag.h"
 
 Tags MetaDataProvider::metaData(const QUrl& path) const {
     std::unique_ptr<ITag> tag = std::unique_ptr<ITag>(new TagLibTag(path));
-    Tags tags(std::move(tag));
-    return tags;
+    try {
+        Tags tags(std::move(tag));
+        return tags;
+    } catch (...) {
+        throw NoMetaDataException("");
+	}
 }
