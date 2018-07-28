@@ -1,21 +1,17 @@
 #pragma once
 
-#include <tag.h>
 #include <QJsonObject>
 #include <QString>
 #include <QUrl>
 
-// TODO: Make this a child of TagLib::Tag. It just adds toJson()
-// functionality, path and lengthString.
+#include <memory>
+
+#include "ITag.h"
+
 class Tags {
 public:
     Tags();
-    Tags(const TagLib::Tag* tag,
-         const QString& path,
-         const QString& mrl,
-         int length,
-         QString lengthString,
-         uint discNumber);
+    Tags(std::unique_ptr<ITag> tag);
 
     QString album_;
     QString artist_;

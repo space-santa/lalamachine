@@ -8,20 +8,19 @@
 Tags::Tags() {
 }
 
-Tags::Tags(
-    const TagLib::Tag* tag, const QString& path, const QString& mrl, int length, QString lengthString, uint discNumber)
-    : album_(QString::fromUtf8(tag->album().toCString(true))),
-      artist_(QString::fromUtf8(tag->artist().toCString(true))),
-      comment_(QString::fromUtf8(tag->comment().toCString(true))),
-      genre_(QString::fromUtf8(tag->genre().toCString(true))),
-      length_(QString::number(length)),
-      lengthString_(lengthString),
-      mrl_(mrl),
-      path_(path),
-      title_(QString::fromUtf8(tag->title().toCString(true))),
-      track_(QString::number(tag->track())),
-      year_(QString::number(tag->year())),
-      disc_(QString::number(discNumber)) {
+Tags::Tags(std::unique_ptr<ITag> tag)
+    : album_(tag->album()),
+      artist_(tag->artist()),
+      comment_(tag->comment()),
+      genre_(tag->genre()),
+      length_(tag->length()),
+      lengthString_(tag->lengthString()),
+      mrl_(tag->path()),
+      path_(tag->path()),
+      title_(tag->title()),
+      track_(tag->track()),
+      year_(tag->year()),
+      disc_(tag->discNumber()) {
 }
 
 QJsonObject Tags::toJson() {

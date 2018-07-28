@@ -27,7 +27,5 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 // This is a class because it is also used from QML which requires an object to work.
 class MetaDataProvider : public IMetaDataProvider {
 public:
-    explicit MetaDataProvider();
     Tags metaData(const QUrl& path) const;
-    static uint discNumberOfMp3(const QString& path);
 };

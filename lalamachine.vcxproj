@@ -209,6 +209,7 @@
     <ClCompile Include="src\playlistmodel.cpp" />
     <ClCompile Include="src\playlistprovider.cpp" />
     <ClCompile Include="src\sysinfo.cpp" />
+    <ClCompile Include="src\TagLibTag.cpp" />
     <ClCompile Include="src\tags.cpp" />
     <ClCompile Include="src\theplayer.cpp" />
     <ClCompile Include="src\timeconverter.cpp" />
@@ -221,6 +222,7 @@
     <ClInclude Include="src\IDirWalker.h" />
     <ClInclude Include="src\IMainDB.h" />
     <ClInclude Include="src\IScannerDB.h" />
+    <ClInclude Include="src\ITag.h" />
     <ClInclude Include="src\Logger.h" />
     <ClInclude Include="src\MainDB.h" />
     <QtMoc Include="src\QmlMetadataProvider.h">
@@ -251,6 +253,7 @@
     </QtMoc>
     <QtMoc Include="src\sysinfo.h">
     </QtMoc>
+    <ClInclude Include="src\TagLibTag.h" />
     <ClInclude Include="src\tags.h" />
     <QtMoc Include="src\theplayer.h">
     </QtMoc>
