@@ -454,12 +454,6 @@
     <None Include="LICENSE">
       <Filter>Distribution Files</Filter>
     </None>
-    <None Include="changelog">
-      <Filter>Distribution Files</Filter>
-    </None>
-    <None Include="package.json">
-      <Filter>Distribution Files</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include=".\lalamachine_resource.rc" />

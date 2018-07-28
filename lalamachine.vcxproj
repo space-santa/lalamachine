@@ -355,8 +355,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="LICENSE" />
-    <None Include="changelog" />
-    <None Include="package.json" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include=".\lalamachine_resource.rc" />
