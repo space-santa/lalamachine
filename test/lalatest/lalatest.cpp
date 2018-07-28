@@ -6,38 +6,9 @@
 #include <QtTest>
 
 #include "../../src/autoplaylistobject.h"
-#include "../../src/config.h"
 #include "../../src/lalatypes.h"
 #include "../../src/playlistmodel.h"
 #include "../../src/timeconverter.h"
-
-QString LalaTest::backupFileName(QString path) {
-    return path + ".backup";
-}
-
-void LalaTest::backupFile(QString path) {
-    if (QFile::exists(backupFileName(path))) {
-        QFile::remove(backupFileName(path));
-    }
-    QFile::copy(path, backupFileName(path));
-}
-
-void LalaTest::restoreBackup(QString path) {
-    if (QFile::exists(path)) {
-        QFile::remove(path);
-    }
-    QFile::rename(backupFileName(path), path);
-}
-
-void LalaTest::initTestCase() {
-}
-
-void LalaTest::cleanupTestCase() {
-}
-
-void LalaTest::testCase1() {
-    QVERIFY2(true, "Failure");
-}
 
 void LalaTest::timeTest() {
     QString testString("");
@@ -66,57 +37,6 @@ void LalaTest::timeTest() {
     tc.setSeconds(12 * 24 * 3600 + 22 * 3600 + 31 * 60 + 23);
     QVERIFY(tc.toString() == testString);
 }
-
-void LalaTest::config() {
-    backupFile(Config::CONFIGPATH);
-    Config cfg;
-    double oldvol = cfg.volume();
-    double newvol = 0.37;
-    cfg.setVolume(newvol);
-    cfg.saveConfig();
-    Config cfg2;
-    QVERIFY(cfg2.volume() == newvol);
-
-    // Testing a path.
-    // setLibPath automatically saves the json file.
-    cfg.setLibPath(QString("/tmp"));
-    cfg2.loadConfig();
-    QVERIFY(cfg2.libPath() == cfg.libPath());
-    // A QUrl must also work.
-    cfg.setLibPath(QUrl("file:///tmp"));
-    cfg2.loadConfig();
-    QVERIFY(cfg2.libPath() == cfg.libPath());
-
-    restoreBackup(Config::CONFIGPATH);
-    // This is to check if the restoreBackup worked.
-    Config cfg3;
-    QVERIFY(cfg3.volume() == oldvol);
-}
-
-// void LalaTest::m3uInOut()
-//{
-//    M3uInOut m3;
-//    QString laladir(Config::PLAYLISTDIR);
-//    QString name("testlist456723");
-//    QStringList testlist(QStringList() << "lala.mp3"
-//                         << "gugu.mp3" << "dada.mp3"
-//                         << "pupu.mp3");
-//    QStringList returnList;
-
-//    for (int i = 0; i < testlist.length(); ++i) {
-//        returnList << "file://" + testlist[i];
-//    }
-
-//    QVERIFY(m3.m3uPath(name) == QString(laladir + "/" + name + ".m3u"));
-//    m3.writePlaylist(name, testlist);
-//    QVERIFY(m3.getPlaylistNames().contains(name));
-//    QVERIFY(m3.readPlaylist(name) == returnList);
-//    m3.deletePlaylist(name);
-//    QVERIFY(!m3.getPlaylistNames().contains(name));
-//    // A nonexisting playlistname will return an empty list.
-//    QVERIFY(m3.readPlaylist("strangeunlikelyplaylistnamethatdoesntexist")
-//            == QStringList());
-//}
 
 void LalaTest::autoPlaylistObject() {
     LalaTypes::AndOr andor = LalaTypes::AND;
