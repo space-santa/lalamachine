@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-    <Product Id="59045D84-B9F8-40AD-8740-DB00EC5FA31E" Name="lalamachine" Language="1033" Version="3.8.1" Manufacturer="SpaceSanta" UpgradeCode="8201A73E-C7BC-43DE-B219-5FC632CF8529">
+    <Product Id="59045D84-B9F8-40AD-8740-DB00EC5FA31E" Name="lalamachine" Language="1033" Version="3.9.0" Manufacturer="SpaceSanta" UpgradeCode="8201A73E-C7BC-43DE-B219-5FC632CF8529">
         <Package Description="Test file in a Product" Comments="Simple test" InstallerVersion="200" Compressed="yes" />
         <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" />
         <Directory Id="TARGETDIR" Name="SourceDir">
