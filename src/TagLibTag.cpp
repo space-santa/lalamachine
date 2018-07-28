@@ -8,19 +8,19 @@ TagLibTag::TagLibTag(const QUrl& url) {
     tag_ = fileRef_.tag();
 }
 
-QString TagLibTag::album() {
+QString TagLibTag::album() const {
     return QString::fromUtf8(tag_->album().toCString(true));
 }
 
-QString TagLibTag::artist() {
+QString TagLibTag::artist() const {
     return QString::fromUtf8(tag_->artist().toCString(true));
 }
 
-QString TagLibTag::comment() {
+QString TagLibTag::comment() const {
     return QString::fromUtf8(tag_->comment().toCString(true));
 }
 
-QString TagLibTag::discNumber() {
+QString TagLibTag::discNumber() const {
     TagLib::MPEG::File f(path_.toStdString().c_str());
     if (f.ID3v2Tag()) {
         TagLib::ID3v2::FrameList l = f.ID3v2Tag()->frameListMap()["TPOS"];
@@ -35,33 +35,33 @@ QString TagLibTag::discNumber() {
     return 1;
 }
 
-QString TagLibTag::genre() {
+QString TagLibTag::genre() const {
     return QString::fromUtf8(tag_->genre().toCString(true));
 }
 
-QString TagLibTag::length() {
+QString TagLibTag::length() const {
     return QString::number(fileRef_.audioProperties()->length());
 }
 
-QString TagLibTag::lengthString() {
+QString TagLibTag::lengthString() const {
     TimeConverter tc;
     tc.clear();
     tc.setSeconds(fileRef_.audioProperties()->length());
     return tc.toString();
 }
 
-QString TagLibTag::title() {
+QString TagLibTag::title() const {
     return QString::fromUtf8(tag_->title().toCString(true));
 }
 
-QString TagLibTag::track() {
+QString TagLibTag::track() const {
     return QString::number(tag_->track());
 }
 
-QString TagLibTag::year() {
+QString TagLibTag::year() const {
     return QString::number(tag_->year());
 }
 
-QString TagLibTag::path() {
+QString TagLibTag::path() const {
     return path_;
 }

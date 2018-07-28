@@ -13,17 +13,17 @@ class TagLibTag : public ITag {
 public:
     TagLibTag(const QUrl& url);
 
-    QString album();
-    QString artist();
-    QString comment();
-    QString genre();
-    QString title();
-    QString track();
-    QString year();
-    QString discNumber();
-    QString length();
-    QString lengthString();
-    QString path();
+    QString album() const;
+    QString artist() const;
+    QString comment() const;
+    QString genre() const;
+    QString title() const;
+    QString track() const;
+    QString year() const;
+    QString discNumber() const;
+    QString length() const;
+    QString lengthString() const;
+    QString path() const;
 
 private:
     QString path_;
