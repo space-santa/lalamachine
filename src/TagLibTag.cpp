@@ -2,10 +2,16 @@
 #include "TagLibTag.h"
 #include "timeconverter.h"
 
+#include <QDebug>
+
 TagLibTag::TagLibTag(const QUrl& url) {
     path_ = url.toLocalFile();
-	fileRef_ = TagLib::FileRef(QFile::encodeName(path_).constData(), true, TagLib::AudioProperties::Accurate);
+    fileRef_ = TagLib::FileRef(QFile::encodeName(path_).constData(), true, TagLib::AudioProperties::Accurate);
     tag_ = fileRef_.tag();
+}
+
+TagLibTag::~TagLibTag() {
+    qDebug() << "~TagLibTag" << this->path();
 }
 
 QString TagLibTag::album() const {
