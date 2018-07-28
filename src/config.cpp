@@ -171,11 +171,13 @@ void Config::setLibPath(const QUrl& path) {
 
 QUrl Config::libPath() const {
     QUrl retval = settings_.value("library/path").toUrl();
-    if (!QDir(retval.toString()).exists()) {
-        qCritical() << "libPath" << retval << "doesn't exist!";
+    QString path = retval.toLocalFile();
+    path.remove("file:///");
+    if (!QDir(path).exists()) {
+        qCritical() << "libPath" << path << "doesn't exist!";
         retval.clear();
     }
-    return retval;
+    return path;
 }
 
 void Config::setLastPlaylist(const QString& name) {
