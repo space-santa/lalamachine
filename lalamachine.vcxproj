@@ -221,6 +221,7 @@
     <ClInclude Include="src\DirWalker.h" />
     <ClInclude Include="src\IDirWalker.h" />
     <ClInclude Include="src\IMainDB.h" />
+    <ClInclude Include="src\IMetaDataProvider.h" />
     <ClInclude Include="src\IScannerDB.h" />
     <ClInclude Include="src\ITag.h" />
     <ClInclude Include="src\Logger.h" />
