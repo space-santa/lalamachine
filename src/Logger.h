@@ -4,7 +4,7 @@
 #include <QFile>
 #include <QTextStream>
 
-#include "Config.h";
+#include "Config.h"
 
 class Logger {
 public:
