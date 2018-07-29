@@ -4,6 +4,7 @@
 
 class ITag {
 public:
+    virtual ~ITag(){};
     virtual QString album() const = 0;
     virtual QString artist() const = 0;
     virtual QString comment() const = 0;

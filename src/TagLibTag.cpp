@@ -10,10 +10,6 @@ TagLibTag::TagLibTag(const QUrl& url) {
     tag_ = fileRef_.tag();
 }
 
-TagLibTag::~TagLibTag() {
-    qDebug() << "~TagLibTag" << this->path();
-}
-
 QString TagLibTag::album() const {
     return QString::fromUtf8(tag_->album().toCString(true));
 }

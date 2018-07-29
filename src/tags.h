@@ -1,23 +1,19 @@
 #pragma once
 
 #include <QJsonObject>
-#include <QString>
-#include <QUrl>
 
 #include <memory>
 
-#include "TagLibTag.h"
+#include "ITag.h"
 
 class Tags {
 public:
-    Tags(const QUrl& path);
-
-    ~Tags();
+    Tags(std::unique_ptr<ITag> tag);
 
     QJsonObject toJson();
 
     bool isValid();
 
 private:
-    TagLibTag tag_;
+    std::unique_ptr<ITag> tag_;
 };

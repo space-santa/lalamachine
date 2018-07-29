@@ -12,7 +12,6 @@
 class TagLibTag : public ITag {
 public:
     TagLibTag(const QUrl& url);
-    ~TagLibTag();
 
     QString album() const;
     QString artist() const;
