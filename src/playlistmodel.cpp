@@ -1,4 +1,5 @@
 #include "playlistmodel.h"
+
 #include <QDebug>
 #include <QRegularExpression>
 
@@ -133,8 +134,9 @@ void PlaylistModel::clear() {
     if (upperLimit < 0) {
         upperLimit = 0;
     }
-
+    beginRemoveRows(QModelIndex(), 0, upperLimit);
     list_.clear();
+    endRemoveRows();
     emit countChanged();
 }
 
