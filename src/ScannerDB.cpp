@@ -42,12 +42,11 @@ void ScannerDB::commit() {
             QString error = db.exec(query).lastError().text().trimmed();
 
             if (!error.isEmpty()) {
-                qDebug() << error;
+                qDebug() << "db.exec has an error:" << error;
             }
         }
 
         auto commitSuccessful = db.commit();
-        qDebug() << db.lastError().text();
 
         if (!commitSuccessful) {
             kill();
@@ -83,6 +82,5 @@ QString ScannerDB::getTrackQuery(const QJsonObject& track, const QString& date) 
                      .arg(QueryBuilder::escapeString(track.value("year").toString()))
                      .arg(QueryBuilder::escapeString(date))
                      .arg(QueryBuilder::escapeString(track.value("disc").toString())));
-    qDebug() << query;
     return query;
 }
