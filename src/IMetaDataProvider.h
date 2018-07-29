@@ -1,8 +1,9 @@
 #pragma once
 
-#include "tags.h"
+#include <QJsonObject>
+#include <QUrl>
 
 class IMetaDataProvider {
 public:
-    virtual Tags metaData(const QUrl& path) const = 0;
+    virtual QJsonObject metaData(const QUrl& path) const = 0;
 };

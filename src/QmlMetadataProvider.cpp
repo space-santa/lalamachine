@@ -8,7 +8,7 @@ QmlMetadataProvider::QmlMetadataProvider(QObject* parent) : QObject(parent) {
 
 QJsonObject QmlMetadataProvider::metaDataAsJson(const QUrl& path) const {
     try {
-        return metaData(path).toJson();
+        return metaData(path);
     } catch (const NoMetaDataException& e) {
         qDebug() << "VUCKING ERROR" << e.what();
     }

@@ -21,11 +21,12 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QUrl>
 
+#include <QJsonObject>
+
 #include "IMetaDataProvider.h"
-#include "tags.h"
 
 // This is a class because it is also used from QML which requires an object to work.
 class MetaDataProvider : public IMetaDataProvider {
 public:
-    Tags metaData(const QUrl& path) const;
+    QJsonObject metaData(const QUrl& path) const;
 };

@@ -1,17 +1,18 @@
 #pragma once
 
 #include <QString>
+#include <QStringList>
 #include "IScannerDB.h"
 
 class ScannerDB : public IScannerDB {
 public:
     void open();
     void transaction();
-    void addQuery(const Tags& tags);
+    void addQuery(const QJsonObject& tags);
     void commit();
     void close();
 
 private:
-    QString getTrackQuery(const Tags& track, const QString& date);
+    QString getTrackQuery(const QJsonObject& track, const QString& date);
     QStringList queryList;
 };

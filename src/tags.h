@@ -6,27 +6,18 @@
 
 #include <memory>
 
-#include "ITag.h"
+#include "TagLibTag.h"
 
 class Tags {
 public:
-    Tags();
-    Tags(std::unique_ptr<ITag> tag);
+    Tags(const QUrl& path);
 
-    QString album_;
-    QString artist_;
-    QString comment_;
-    QString genre_;
-    QString length_;
-    QString lengthString_;
-    QString mrl_;
-    QString path_;
-    QString title_;
-    QString track_;
-    QString year_;
-    QString disc_;
+    ~Tags();
 
     QJsonObject toJson();
 
     bool isValid();
+
+private:
+    TagLibTag tag_;
 };

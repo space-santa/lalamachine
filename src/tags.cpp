@@ -1,42 +1,34 @@
 #include "tags.h"
-#include <tpropertymap.h>
 
 #include <QDebug>
 #include <QString>
 #include <QUrl>
 
-Tags::Tags() {
+#include <QDebug>
+
+#include "TagLibTag.h"
+
+Tags::Tags(const QUrl& url) : tag_(url) {
 }
 
-Tags::Tags(std::unique_ptr<ITag> tag)
-    : album_(tag->album()),
-      artist_(tag->artist()),
-      comment_(tag->comment()),
-      genre_(tag->genre()),
-      length_(tag->length()),
-      lengthString_(tag->lengthString()),
-      mrl_(tag->path()),
-      path_(tag->path()),
-      title_(tag->title()),
-      track_(tag->track()),
-      year_(tag->year()),
-      disc_(tag->discNumber()) {
+Tags::~Tags() {
+    qDebug() << "~Tags";
 }
 
 QJsonObject Tags::toJson() {
     QJsonObject retval;
-    retval.insert("album", album_);
-    retval.insert("artist", artist_);
-    retval.insert("comment", comment_);
-    retval.insert("genre", genre_);
-    retval.insert("length", length_.toInt());
-    retval.insert("lengthString", lengthString_);
-    retval.insert("mrl", mrl_);
-    retval.insert("path", path_);
-    retval.insert("title", title_);
-    retval.insert("track", track_.toInt());
-    retval.insert("year", year_.toInt());
-    retval.insert("disc", disc_.toInt());
+    retval.insert("album", tag_.album());
+    retval.insert("artist", tag_.artist());
+    retval.insert("comment", tag_.comment());
+    retval.insert("genre", tag_.genre());
+    retval.insert("length", tag_.length().toInt());
+    retval.insert("lengthString", tag_.lengthString());
+    retval.insert("mrl", tag_.path());
+    retval.insert("path", tag_.path());
+    retval.insert("title", tag_.title());
+    retval.insert("track", tag_.track().toInt());
+    retval.insert("year", tag_.year().toInt());
+    retval.insert("disc", tag_.discNumber().toInt());
 
     return retval;
 }
@@ -46,5 +38,5 @@ QJsonObject Tags::toJson() {
 // While technically not necessary I also want the title, because I think
 // a track should have a name.
 bool Tags::isValid() {
-    return length_.toInt() > 0 && !title_.isEmpty();
+    return tag_.length().toInt() > 0 && !tag_.title().isEmpty();
 }

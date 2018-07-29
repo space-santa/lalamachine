@@ -21,16 +21,15 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <memory>
 
-#include "tags.h"
-#include "exceptions.h"
 #include "TagLibTag.h"
+#include "exceptions.h"
+#include "tags.h"
 
-Tags MetaDataProvider::metaData(const QUrl& path) const {
-    std::unique_ptr<ITag> tag = std::unique_ptr<ITag>(new TagLibTag(path));
+QJsonObject MetaDataProvider::metaData(const QUrl& path) const {
     try {
-        Tags tags(std::move(tag));
-        return tags;
+        Tags tags(path);
+        return tags.toJson();
     } catch (...) {
         throw NoMetaDataException("");
-	}
+    }
 }
