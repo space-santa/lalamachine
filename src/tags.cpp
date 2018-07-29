@@ -11,14 +11,14 @@ QJsonObject Tags::toJson() {
     retval.insert("artist", tag_->artist());
     retval.insert("comment", tag_->comment());
     retval.insert("genre", tag_->genre());
-    retval.insert("length", tag_->length().toInt());
+    retval.insert("length", tag_->length());
     retval.insert("lengthString", tag_->lengthString());
     retval.insert("mrl", tag_->path());
     retval.insert("path", tag_->path());
     retval.insert("title", tag_->title());
-    retval.insert("track", tag_->track().toInt());
-    retval.insert("year", tag_->year().toInt());
-    retval.insert("disc", tag_->discNumber().toInt());
+    retval.insert("track", tag_->track());
+    retval.insert("year", tag_->year());
+    retval.insert("disc", tag_->discNumber());
 
     return retval;
 }
