@@ -6,6 +6,8 @@
 
 class ScannerDB : public IScannerDB {
 public:
+    void init();
+    void kill();
     void open();
     void transaction();
     void addQuery(const QJsonObject& tags);

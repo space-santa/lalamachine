@@ -8,6 +8,16 @@
 #include "config.h"
 #include "exceptions.h"
 
+void ScannerDB::init() {
+    auto db = QSqlDatabase::addDatabase("QSQLITE", Config::SCANNERDBNAME);
+    db.setDatabaseName(Config::MUSICLIBDB);
+    db.open();
+}
+
+void ScannerDB::kill() {
+    QSqlDatabase::removeDatabase(Config::SCANNERDBNAME);
+}
+
 void ScannerDB::open() {
     qDebug() << "ScannerDB::open => this does nothing";
 }
@@ -23,22 +33,28 @@ void ScannerDB::addQuery(const QJsonObject& tags) {
 }
 
 void ScannerDB::commit() {
-    auto db = QSqlDatabase::database(Config::SCANNERDBNAME);
-    db.transaction();
+    init();
+    {
+        auto db = QSqlDatabase::database(Config::SCANNERDBNAME);
+        db.transaction();
 
-    for (const auto& query : queryList) {
-        QString error = db.exec(query).lastError().text().trimmed();
+        for (const auto& query : queryList) {
+            QString error = db.exec(query).lastError().text().trimmed();
 
-        if (!error.isEmpty()) {
-            qDebug() << error;
+            if (!error.isEmpty()) {
+                qDebug() << error;
+            }
+        }
+
+        auto commitSuccessful = db.commit();
+        qDebug() << db.lastError().text();
+
+        if (!commitSuccessful) {
+            kill();
+            throw DatabaseCommitError(db.lastError().text().toStdString());
         }
     }
-
-    auto commitSuccessful = db.commit();
-
-    if (!commitSuccessful) {
-        throw DatabaseCommitError(db.lastError().text().toStdString());
-    }
+    kill();
 }
 
 void ScannerDB::close() {
@@ -67,6 +83,6 @@ QString ScannerDB::getTrackQuery(const QJsonObject& track, const QString& date) 
                      .arg(QueryBuilder::escapeString(track.value("year").toString()))
                      .arg(QueryBuilder::escapeString(date))
                      .arg(QueryBuilder::escapeString(track.value("disc").toString())));
-
+    qDebug() << query;
     return query;
 }

@@ -34,7 +34,7 @@ public:
                     std::unique_ptr<IDirWalker> dirWalker,
                     std::unique_ptr<IMetaDataProvider> metaDataProvider);
 
-    static void scan(std::shared_ptr<MusicLibScanner> scanner, const QString& path);
+    static void scan(const QString& path);
     void scanLib(const QString& path);
 
 private:

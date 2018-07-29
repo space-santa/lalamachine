@@ -24,6 +24,9 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "model.h"
 #include "musiclib.h"
 #include "tags.h"
+#include "DirWalker.h"
+#include "ScannerDB.h"
+#include "metadataprovider.h"
 
 MusicLibScanner::MusicLibScanner(std::unique_ptr<IScannerDB> scanDb,
                                  std::unique_ptr<IDirWalker> dirWalker,
@@ -31,7 +34,11 @@ MusicLibScanner::MusicLibScanner(std::unique_ptr<IScannerDB> scanDb,
     : scanDb(std::move(scanDb)), dirWalker(std::move(dirWalker)), metaDataProvider(std::move(metaDataProvider)) {
 }
 
-void MusicLibScanner::scan(std::shared_ptr<MusicLibScanner> scanner, const QString& path) {
+void MusicLibScanner::scan(const QString& path) {
+    auto scanner = std::unique_ptr<MusicLibScanner>(
+        new MusicLibScanner(std::unique_ptr<IScannerDB>(new ScannerDB()),
+                            std::unique_ptr<IDirWalker>(new DirWalker()),
+                            std::unique_ptr<IMetaDataProvider>(new MetaDataProvider())));
     scanner->scanLib(path);
 }
 

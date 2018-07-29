@@ -61,11 +61,6 @@ MusicLib::MusicLib(QObject* parent) : QObject(parent), model(std::unique_ptr<IMa
 }
 
 void MusicLib::init() {
-    scanner_ = std::shared_ptr<MusicLibScanner>(
-        new MusicLibScanner(std::unique_ptr<IScannerDB>(new ScannerDB()),
-                            std::unique_ptr<IDirWalker>(new DirWalker()),
-                            std::unique_ptr<IMetaDataProvider>(new MetaDataProvider())));
-
     sortAsc_ = true;
     scanning_ = false;
     what_ = QueryBuilder::ARTIST;
@@ -299,7 +294,7 @@ void MusicLib::rescan() {
 
     scanStarted();
 
-    auto future = QtConcurrent::run(MusicLibScanner::scan, scanner_, libPath());
+    auto future = QtConcurrent::run(MusicLibScanner::scan, libPath());
     scannerWatcher.setFuture(future);
 }
 

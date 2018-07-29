@@ -118,7 +118,6 @@ signals:
     void titlePartialFilterChanged();
 
 private:
-    std::shared_ptr<MusicLibScanner> scanner_;
     Model model;
 
     bool sortAsc_;
