@@ -57,7 +57,7 @@ void Config::loadConfig() {
         migrateLibPath(config);
         migrateLastPlaylist(config);
         QFile::remove(CONFIGPATH);
-	}
+    }
 }
 
 void Config::setVolume(double val) {
