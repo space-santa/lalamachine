@@ -9,6 +9,7 @@
 
 class IMainDB {
 public:
+    virtual ~IMainDB(){};
     virtual std::unique_ptr<IQueryResult> exec(const QString& query) = 0;
     virtual QStringList tables() = 0;
     virtual void transaction() = 0;

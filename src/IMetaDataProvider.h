@@ -5,5 +5,6 @@
 
 class IMetaDataProvider {
 public:
+    virtual ~IMetaDataProvider(){};
     virtual QJsonObject metaData(const QUrl& path) const = 0;
 };
