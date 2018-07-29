@@ -55,7 +55,7 @@ MusicLib::MusicLib(QObject* parent) : QObject(parent), model(std::unique_ptr<IMa
     connect(this, &MusicLib::genreFilterChanged, this, &MusicLib::setArtistList);
     connect(this, &MusicLib::genreFilterChanged, this, &MusicLib::setAlbumList);
     connect(this, &MusicLib::artistFilterChanged, this, &MusicLib::setAlbumList);
-    connect(&scannerWatcher, &QFutureWatcher<QSqlQuery>::finished, this, &MusicLib::scanFinished);
+    connect(&scannerController_, &ScannerController::scanFinished, this, &MusicLib::scanFinished);
 
     setGenreList();
 }
@@ -293,9 +293,7 @@ void MusicLib::rescan() {
     model.clearMusicLib();
 
     scanStarted();
-
-    auto future = QtConcurrent::run(MusicLibScanner::scan, libPath());
-    scannerWatcher.setFuture(future);
+	scannerController_.scan(libPath());
 }
 
 void MusicLib::setGenreList() {
