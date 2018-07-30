@@ -51,18 +51,6 @@ void ModelTest::testUpdateTableNoMusicLib() {
     QCOMPARE(tmpDB->execQueries.first().startsWith("CREATE TABLE `musiclib`"), true);
 }
 
-void ModelTest::testUpdateTableWithMusicLibWithDateAdded() {
-    Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
-    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.db_.get());
-    tmpDB->execQueries.clear();
-    tmpDB->tableList << "musiclib";
-    tmpDB->queryRetval = QVariant(QString("dateAdded"));
-    model.updateTable();
-    QCOMPARE(tmpDB->execQueries.count(), 2);
-    QCOMPARE(tmpDB->execQueries.first(), QString("PRAGMA table_info(musiclib)"));
-    QCOMPARE(tmpDB->execQueries.at(1), QString("ALTER TABLE musiclib ADD COLUMN discNumber INT NOT NULL DEFAULT 1"));
-}
-
 void ModelTest::testUpdateTableWithMusicLibWithDiscNumber() {
     Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
     MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.db_.get());
@@ -72,45 +60,6 @@ void ModelTest::testUpdateTableWithMusicLibWithDiscNumber() {
     model.updateTable();
     QCOMPARE(tmpDB->execQueries.count(), 2);
     QCOMPARE(tmpDB->execQueries.first(), QString("PRAGMA table_info(musiclib)"));
-    QCOMPARE(tmpDB->execQueries.at(1), QString("ALTER TABLE musiclib ADD COLUMN dateAdded TEXT"));
-}
-
-void ModelTest::testCopyLibToTmp() {
-    Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
-    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.db_.get());
-    tmpDB->execQueries.clear();
-    model.copyLibToTmp();
-    QCOMPARE(tmpDB->execQueries.count(), 2);
-    QCOMPARE(tmpDB->execQueries.first().startsWith("CREATE TABLE `tmplib`"), true);
-    QCOMPARE(tmpDB->execQueries.at(1), QString("insert into tmplib SELECT * from musiclib"));
-}
-
-void ModelTest::testClearMusicLib() {
-    Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
-    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.db_.get());
-    tmpDB->execQueries.clear();
-    model.clearMusicLib();
-    QCOMPARE(tmpDB->execQueries.count(), 1);
-    QCOMPARE(tmpDB->execQueries.first(), QString("DELETE FROM musiclib"));
-}
-
-void ModelTest::testSetDateAddedForMrl() {
-    Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
-    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.db_.get());
-    tmpDB->execQueries.clear();
-    model.setDateAddedForMrl("abc", "def");
-    QCOMPARE(tmpDB->execQueries.count(), 1);
-    QCOMPARE(tmpDB->execQueries.first(), QString("UPDATE musiclib SET dateAdded='abc' WHERE mrl='def'"));
-}
-
-void ModelTest::testRestoreMetaData() {
-    Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
-    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.db_.get());
-    tmpDB->execQueries.clear();
-    tmpDB->tableList << "musiclib"
-                     << "tmplib";
-    model.restoreMetaData();
-    QCOMPARE(tmpDB->execQueries.last(), QString("DROP TABLE tmplib"));
 }
 
 void ModelTest::testCleanPath() {

@@ -50,14 +50,6 @@ void Model::updateTable() {
         tmplist << record->value("name").toString();
     }
 
-    if (!tmplist.contains("dateAdded")) {
-        try {
-            db_->exec("ALTER TABLE musiclib ADD COLUMN dateAdded TEXT");
-        } catch (const QueryError& error) {
-            qDebug() << error.what();
-        }
-    }
-
     if (!tmplist.contains("discNumber")) {
         try {
             db_->exec("ALTER TABLE musiclib ADD COLUMN discNumber INT NOT NULL DEFAULT 1");
@@ -88,7 +80,6 @@ void Model::createLibTable(const QString& name) {
         qs.append("`title` TEXT NOT NULL,\n");
         qs.append("`track` int,\n");
         qs.append("`year` int,\n");
-        qs.append("`dateAdded` TEXT,\n");
         qs.append("`discNumber` int NOT NULL DEFAULT 1\n");
         qs.append(")");
 
@@ -100,45 +91,6 @@ void Model::createLibTable(const QString& name) {
     }
 }
 
-void Model::copyLibToTmp() {
-    createLibTable("tmplib");
-    QString query("insert into tmplib SELECT * from musiclib");
-
-    try {
-        db_->exec(query);
-    } catch (const QueryError& error) {
-        qDebug() << error.what();
-    }
-}
-
-void Model::clearMusicLib() {
-    QString query("DELETE FROM musiclib");
-
-    try {
-        db_->exec(query);
-    } catch (const QueryError& error) {
-        qDebug() << error.what();
-    }
-}
-
-void Model::setDateAddedForMrl(const QString& dateAdded, const QString& mrl) {
-    QString query("UPDATE musiclib SET dateAdded='%1' WHERE mrl='%2'");
-
-    try {
-        db_->exec(query.arg(dateAdded).arg(QueryBuilder::escapeString(mrl)));
-    } catch (const QueryError& error) {
-        qDebug() << error.what();
-    }
-}
-
-QString Model::getDateAddedFromTmpLibForMrl(const QString& mrl) {
-    auto tmprec =
-        db_->exec(QString("SELECT dateAdded FROM tmplib WHERE mrl='%1'").arg(QueryBuilder::escapeString(mrl)));
-
-    tmprec->first();
-    return tmprec->value("dateAdded").toString();
-}
-
 void Model::checkIfTablesExist() const {
     auto tables = db_->tables();
 
@@ -147,30 +99,6 @@ void Model::checkIfTablesExist() const {
     }
     if (!tables.contains("tmplib")) {
         throw TableNotFoundError("tmplib");
-    }
-}
-
-void Model::restoreMetaData() {
-    checkIfTablesExist();
-    auto records = db_->exec("SELECT * FROM musiclib");
-
-    db_->transaction();
-    while (records->next()) {
-        QString mrl = records->value("mrl").toString();
-        QString tmpdate = getDateAddedFromTmpLibForMrl(mrl);
-
-        if (tmpdate.isEmpty()) {
-            continue;
-        }
-
-        setDateAddedForMrl(tmpdate, mrl);
-    }
-    db_->commit();
-
-    try {
-        db_->exec("DROP TABLE tmplib");
-    } catch (const QueryError& error) {
-        qDebug() << error.what();
     }
 }
 
@@ -196,7 +124,6 @@ QPair<int, QJsonArray> Model::queryResultToJson(const std::unique_ptr<IQueryResu
         tmp.insert("length", len);
         tmp.insert("lengthString", result->value("lengthString").toString());
         tmp.insert("year", result->value("year").toInt());
-        tmp.insert("dateAdded", result->value("dateAdded").toString());
         tmp.insert("discNumber", result->value("discNumber").toInt());
 
         retval.append(tmp);
@@ -216,13 +143,6 @@ QJsonArray Model::getAlbumTracks(const QString& album) {
     auto result = db_->exec(query.arg(QueryBuilder::escapeString(album)));
 
     return Model::queryResultToJson(result).second;
-}
-
-QString Model::getDateAddedByMrl(const QString& mrl) const {
-    QString query("SELECT dateAdded FROM musiclib WHERE mrl='%1' OR path='%1'");
-    auto result = db_->exec(query.arg(QueryBuilder::escapeString(mrl)));
-    result->first();
-    return result->value("dateAdded").toString();
 }
 
 QJsonObject Model::getMetadataForMrl(const QString& mrl) const {

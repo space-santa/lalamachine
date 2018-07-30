@@ -309,7 +309,6 @@ Rectangle {
             // Only get the metadata from taglib if its not in the dbase
             // because it takes about forever.
             tmp = setId(meta.metaDataAsJson(path))
-            tmp["dateAdded"] = musicLib.getDateAddedByMrl(tmp.mrl)
             console.log("INFO: Had to get metadate from taglib for", path)
         }
 
@@ -569,10 +568,6 @@ Rectangle {
             if (tag === "discNumber") {
                 width = 50
                 title = "Disc"
-            }
-            if (tag === "dateAdded") {
-                width = 125
-                title = "Date added"
             }
 
             return columnString(tag, title, width)

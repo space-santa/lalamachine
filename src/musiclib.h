@@ -85,7 +85,6 @@ public:
     Q_INVOKABLE void rescan();
     Q_INVOKABLE void resetFilterAndSort();
     Q_INVOKABLE QJsonArray getAlbumTracks(const QString& album);
-    Q_INVOKABLE QString getDateAddedByMrl(const QString& mrl) const;
     Q_INVOKABLE QJsonObject getMetadataForMrl(const QString& mrl) const;
     Q_INVOKABLE QJsonObject getMetadataForMrl(const QUrl& mrl) const;
 

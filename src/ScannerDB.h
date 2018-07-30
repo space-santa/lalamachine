@@ -15,7 +15,7 @@ public:
     void close();
 
 private:
-    QString getTrackQuery(const QJsonObject& track, const QString& date);
+    QString getTrackQuery(const QJsonObject& track);
     QStringList queryList;
     void clearMusicLib();
 };

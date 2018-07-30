@@ -9,11 +9,6 @@ private slots:
     void testResultToList();
     void testGenre();
     void testUpdateTableNoMusicLib();
-    void testUpdateTableWithMusicLibWithDateAdded();
     void testUpdateTableWithMusicLibWithDiscNumber();
-    void testCopyLibToTmp();
-    void testClearMusicLib();
-    void testSetDateAddedForMrl();
-    void testRestoreMetaData();
     void testCleanPath();
 };

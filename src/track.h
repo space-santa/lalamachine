@@ -20,7 +20,6 @@ public:
           const QString& length,
           const QString& lengthString,
           const QString& year,
-          const QString& dateAdded,
           const QString& id = 0);
     Track(const QJsonObject& json);
 
@@ -39,6 +38,5 @@ public:
     QString lengthString_;
     int year_;
     int disc_;
-    QString dateAdded_;
     int id_;
 };

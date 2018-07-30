@@ -269,10 +269,6 @@ QJsonArray MusicLib::getAlbumTracks(const QString& album) {
     return model.getAlbumTracks(album);
 }
 
-QString MusicLib::getDateAddedByMrl(const QString& mrl) const {
-    return model.getDateAddedByMrl(mrl);
-}
-
 QJsonObject MusicLib::getMetadataForMrl(const QString& mrl) const {
     return model.getMetadataForMrl(mrl);
 }

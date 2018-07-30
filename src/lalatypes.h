@@ -29,7 +29,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 class LalaTypes : public QObject {
     Q_OBJECT
 public:
-    enum Tag { TRACK, TITLE, COMMENT, GENRE, ARTIST, ALBUM, LENGTH, LENGTHSTRING, MRL, PATH, YEAR, DATEADDED };
+    enum Tag { TRACK, TITLE, COMMENT, GENRE, ARTIST, ALBUM, LENGTH, LENGTHSTRING, MRL, PATH, YEAR };
     Q_ENUMS(Tag)
 
     static const QMap<Tag, QString> TAG_MAP;

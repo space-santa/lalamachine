@@ -27,7 +27,6 @@ public:
         PathRole,
         YearRole,
         DiscNumberRole,
-        DateAddedRole,
         IdRole
     };
     Q_ENUMS(PlaylistRoles)
@@ -93,7 +92,4 @@ private:
 
     static bool sortDiscNumberAsc(Track t1, Track t2);
     static bool sortDiscNumberDesc(Track t1, Track t2);
-
-    static bool sortDateAddedAsc(Track t1, Track t2);
-    static bool sortDateAddedDesc(Track t1, Track t2);
 };

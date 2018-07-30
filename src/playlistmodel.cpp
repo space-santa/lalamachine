@@ -18,7 +18,6 @@ QHash<int, QByteArray> PlaylistModel::roleNames() const {
     roles[LengthStringRole] = "lengthString";
     roles[YearRole] = "year";
     roles[DiscNumberRole] = "discNumber";
-    roles[DateAddedRole] = "dateAdded";
     roles[IdRole] = "id";
     return roles;
 }
@@ -54,7 +53,6 @@ QVariant PlaylistModel::data(const QModelIndex& index, int role) const {
         case LengthRole: return QVariant(track.length_); break;
         case YearRole: return QVariant(track.year_); break;
         case DiscNumberRole: return QVariant(track.disc_); break;
-        case DateAddedRole: return QVariant(track.dateAdded_); break;
         case IdRole: return QVariant(track.id_); break;
         default: return QVariant();
     }
@@ -229,13 +227,6 @@ void PlaylistModel::sortRole(const QString& role, Qt::SortOrder order) {
                 func = &PlaylistModel::sortDiscNumberDesc;
             }
             break;
-        case DateAddedRole:
-            if (order == Qt::AscendingOrder) {
-                func = &PlaylistModel::sortDateAddedAsc;
-            } else {
-                func = &PlaylistModel::sortDateAddedDesc;
-            }
-            break;
     }
     std::sort(list_.begin(), list_.end(), func);
     emit dataChanged(createIndex(0, 0), createIndex(rowCount(), 0));
@@ -373,11 +364,4 @@ bool PlaylistModel::sortDiscNumberAsc(Track t1, Track t2) {
 }
 bool PlaylistModel::sortDiscNumberDesc(Track t1, Track t2) {
     return t1.disc_ > t2.disc_;
-}
-
-bool PlaylistModel::sortDateAddedAsc(Track t1, Track t2) {
-    return t1.dateAdded_ < t2.dateAdded_;
-}
-bool PlaylistModel::sortDateAddedDesc(Track t1, Track t2) {
-    return t1.dateAdded_ > t2.dateAdded_;
 }
