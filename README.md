@@ -10,22 +10,7 @@ lalamachine is just another music player. It features:
 
 ## Fedora packages
 
-I have a yum repository on gemfury. To use it, put this in `/etc/yum.repos.d/fury.repo`
-
-```bash
-[fury]
-name=space-santa repo
-baseurl=https://tdFaGYsdNpoXxsaukHct@yum.fury.io/space-santa/
-enabled=1
-gpgcheck=0
-```
-
-And then:
-
-```bash
-sudo dnf --refresh update
-sudo dnf install lalamachine
-```
+I no longer provide packages because I no longer use it.
 
 ## Dependencies
 
