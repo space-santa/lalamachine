@@ -92,7 +92,6 @@ QJsonArray Config::playlistColumns() {
     bool hasAlbum = false;
     bool hasLength = false;
     bool hasYear = false;
-    bool hasDate = false;
     bool hasDisc = false;
 
     for (int i = 0; i < retval.count(); ++i) {
@@ -113,8 +112,6 @@ QJsonArray Config::playlistColumns() {
             hasLength = true;
         } else if (key == "year") {
             hasYear = true;
-        } else if (key == "dateAdded") {
-            hasDate = true;
         } else if (key == "discNumber") {
             hasDisc = true;
         }
@@ -154,10 +151,6 @@ QJsonArray Config::playlistColumns() {
 
     if (!hasDisc) {
         retval.append(addKey("discNumber"));
-    }
-
-    if (!hasDate) {
-        retval.append(addKey("dateAdded"));
     }
 
     qDebug() << "playlistColumns loaded" << retval;

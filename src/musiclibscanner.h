@@ -34,7 +34,6 @@ public:
                     std::unique_ptr<IDirWalker> dirWalker,
                     std::unique_ptr<IMetaDataProvider> metaDataProvider);
 
-    static void scan(const QString& path);
     void scanLib(const QString& path);
 
 private:

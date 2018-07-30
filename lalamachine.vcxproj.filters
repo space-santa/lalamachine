@@ -470,4 +470,12 @@
   <ItemGroup>
     <ResourceCompile Include=".\lalamachine_resource.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="src\ScannerController.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\ScannerWorker.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
 </Project>

@@ -5,7 +5,7 @@
 
 class QueryBuilder {
 public:
-    enum SortWhat { TRACK, TITLE, COMMENT, LENGTH, GENRE, ARTIST, ALBUM, DATEADDED, DISCNUMBER };
+    enum SortWhat { TRACK, TITLE, COMMENT, LENGTH, GENRE, ARTIST, ALBUM, DISCNUMBER };
     enum SortHow { ASCENDING, DESCENDING };
 
     static const QMap<QueryBuilder::SortWhat, QString> SORT_MAP;

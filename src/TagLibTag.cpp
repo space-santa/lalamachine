@@ -24,17 +24,17 @@ QString TagLibTag::comment() const {
 
 QString TagLibTag::discNumber() const {
     TagLib::MPEG::File f(path_.toStdString().c_str());
-    if (f.ID3v2Tag()) {
+    if (f.hasID3v2Tag()) {
         TagLib::ID3v2::FrameList l = f.ID3v2Tag()->frameListMap()["TPOS"];
         if (!l.isEmpty()) {
             QString tmp = TStringToQString(l.front()->toString());
-            uint retval;
+            QString retval;
             auto list = tmp.split('/');
-            retval = list.first().toInt();
+            retval = list.first();
             return retval;
         }
     }
-    return 1;
+    return "1";
 }
 
 QString TagLibTag::genre() const {

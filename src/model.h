@@ -32,9 +32,6 @@ public:
 
     void ensureAllTables();
     void createLibTable(const QString& name);
-    void copyLibToTmp();
-    void clearMusicLib();
-    void restoreMetaData();
     QStringList getGenreList(const QString& filter = QString()) const;
     QStringList getArtistList(const QString& artist = QString(), const QString& genre = QString()) const;
     QStringList getAlbumList(const QString& album = QString(),
@@ -45,7 +42,6 @@ public:
 
     QPair<int, QJsonArray> runSetDisplayQuery(const QString& query);
     QJsonArray getAlbumTracks(const QString& album);
-    QString getDateAddedByMrl(const QString& mrl) const;
     QJsonObject getMetadataForMrl(const QString& mrl) const;
     QJsonObject getMetadataForMrl(const QUrl& mrl) const;
 
@@ -56,7 +52,5 @@ private:
     void init();
     static QStringList resultToList(const std::unique_ptr<IQueryResult>& result, const QString& what);
     void updateTable();
-    void setDateAddedForMrl(const QString& dateAdded, const QString& mrl);
-    QString getDateAddedFromTmpLibForMrl(const QString& mrl);
     void checkIfTablesExist() const;
 };

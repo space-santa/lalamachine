@@ -28,12 +28,25 @@ void ScannerDB::transaction() {
 
 void ScannerDB::addQuery(const QJsonObject& tags) {
     QString date = QDateTime::currentDateTime().toString("yyyy-MM-dd");
-    QString query = getTrackQuery(tags, date) + ";\n";
+    QString query = getTrackQuery(tags) + ";\n";
     queryList << query;
 }
 
+void ScannerDB::clearMusicLib() {
+    QString query("DELETE FROM musiclib");
+    auto db = QSqlDatabase::database(Config::SCANNERDBNAME);
+
+    try {
+        db.exec(query);
+    } catch (const QueryError& error) {
+        qDebug() << error.what();
+    }
+}
+
+
 void ScannerDB::commit() {
     init();
+    clearMusicLib();
     {
         auto db = QSqlDatabase::database(Config::SCANNERDBNAME);
         db.transaction();
@@ -60,15 +73,15 @@ void ScannerDB::close() {
     qDebug() << "ScannerDB::close => This does nothing.";
 }
 
-QString ScannerDB::getTrackQuery(const QJsonObject& track, const QString& date) {
+QString ScannerDB::getTrackQuery(const QJsonObject& track) {
     QString query("INSERT into `musiclib` "
                   "(`album`, `artist`, `comment`, `genre`, `length`, "
                   "`lengthString`, `mrl`, `path`, `title`, `track`, `"
-                  "year`, `dateAdded`, `discNumber`) "
+                  "year`, `discNumber`) "
                   "VALUES ");
 
     QString valuesA("('%1', '%2', '%3', '%4', '%5', '%6', ");
-    QString valuesB("'%1', '%2', '%3', '%4', '%5', '%6', '%7')");
+    QString valuesB("'%1', '%2', '%3', '%4', '%5', '%6')");
     query.append(valuesA.arg(QueryBuilder::escapeString(track.value("album").toString()))
                      .arg(QueryBuilder::escapeString(track.value("artist").toString()))
                      .arg(QueryBuilder::escapeString(track.value("comment").toString()))
@@ -80,7 +93,6 @@ QString ScannerDB::getTrackQuery(const QJsonObject& track, const QString& date) 
                      .arg(QueryBuilder::escapeString(track.value("title").toString()))
                      .arg(QueryBuilder::escapeString(track.value("track").toString()))
                      .arg(QueryBuilder::escapeString(track.value("year").toString()))
-                     .arg(QueryBuilder::escapeString(date))
                      .arg(QueryBuilder::escapeString(track.value("disc").toString())));
     return query;
 }

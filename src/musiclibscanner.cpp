@@ -34,14 +34,6 @@ MusicLibScanner::MusicLibScanner(std::unique_ptr<IScannerDB> scanDb,
     : scanDb(std::move(scanDb)), dirWalker(std::move(dirWalker)), metaDataProvider(std::move(metaDataProvider)) {
 }
 
-void MusicLibScanner::scan(const QString& path) {
-    auto scanner = std::unique_ptr<MusicLibScanner>(
-        new MusicLibScanner(std::unique_ptr<IScannerDB>(new ScannerDB()),
-                            std::unique_ptr<IDirWalker>(new DirWalker()),
-                            std::unique_ptr<IMetaDataProvider>(new MetaDataProvider())));
-    scanner->scanLib(path);
-}
-
 void MusicLibScanner::addPathsToScannerDB(const QStringList& paths) {
     for (const QString& file : paths) {
         try {

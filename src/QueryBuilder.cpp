@@ -11,7 +11,6 @@ QMap<QueryBuilder::SortWhat, QString> QueryBuilder::initSortMap() {
     tmp.insert(QueryBuilder::TITLE, "title");
     tmp.insert(QueryBuilder::COMMENT, "comment");
     tmp.insert(QueryBuilder::LENGTH, "length");
-    tmp.insert(QueryBuilder::DATEADDED, "dateAdded");
     tmp.insert(QueryBuilder::DISCNUMBER, "discNumber");
 
     return tmp;

@@ -29,6 +29,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "model.h"
 #include "musiclibscanner.h"
+#include "ScannerController.h"
 
 class MusicLib : public QObject {
     Q_OBJECT
@@ -84,7 +85,6 @@ public:
     Q_INVOKABLE void rescan();
     Q_INVOKABLE void resetFilterAndSort();
     Q_INVOKABLE QJsonArray getAlbumTracks(const QString& album);
-    Q_INVOKABLE QString getDateAddedByMrl(const QString& mrl) const;
     Q_INVOKABLE QJsonObject getMetadataForMrl(const QString& mrl) const;
     Q_INVOKABLE QJsonObject getMetadataForMrl(const QUrl& mrl) const;
 
@@ -136,7 +136,7 @@ private:
     bool appStart_;
     QString lastDisplayLibQuery_;
 
-    QFutureWatcher<void> scannerWatcher;
+    ScannerController scannerController_;
 
     bool checkVal(const QString& check, const QString& val) const;
 

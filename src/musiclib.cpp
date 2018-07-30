@@ -55,7 +55,7 @@ MusicLib::MusicLib(QObject* parent) : QObject(parent), model(std::unique_ptr<IMa
     connect(this, &MusicLib::genreFilterChanged, this, &MusicLib::setArtistList);
     connect(this, &MusicLib::genreFilterChanged, this, &MusicLib::setAlbumList);
     connect(this, &MusicLib::artistFilterChanged, this, &MusicLib::setAlbumList);
-    connect(&scannerWatcher, &QFutureWatcher<QSqlQuery>::finished, this, &MusicLib::scanFinished);
+    connect(&scannerController_, &ScannerController::scanFinished, this, &MusicLib::scanFinished);
 
     setGenreList();
 }
@@ -269,10 +269,6 @@ QJsonArray MusicLib::getAlbumTracks(const QString& album) {
     return model.getAlbumTracks(album);
 }
 
-QString MusicLib::getDateAddedByMrl(const QString& mrl) const {
-    return model.getDateAddedByMrl(mrl);
-}
-
 QJsonObject MusicLib::getMetadataForMrl(const QString& mrl) const {
     return model.getMetadataForMrl(mrl);
 }
@@ -288,14 +284,8 @@ void MusicLib::rescan() {
     }
 
     qDebug() << "scanning" << libPath();
-
-    model.copyLibToTmp();
-    model.clearMusicLib();
-
     scanStarted();
-
-    auto future = QtConcurrent::run(MusicLibScanner::scan, libPath());
-    scannerWatcher.setFuture(future);
+	scannerController_.scan(libPath());
 }
 
 void MusicLib::setGenreList() {
@@ -326,7 +316,6 @@ void MusicLib::scanStarted() {
 void MusicLib::scanFinished() {
     QString somethingInvalidToHaveTheCheckInSetDisplayLibDoTheRightThing = "-1";
     lastDisplayLibQuery_ = somethingInvalidToHaveTheCheckInSetDisplayLibDoTheRightThing;
-    model.restoreMetaData();
     emit musicLibChanged();
     setScanning(false);
 }
