@@ -32,8 +32,21 @@ void ScannerDB::addQuery(const QJsonObject& tags) {
     queryList << query;
 }
 
+void ScannerDB::clearMusicLib() {
+    QString query("DELETE FROM musiclib");
+    auto db = QSqlDatabase::database(Config::SCANNERDBNAME);
+
+    try {
+        db.exec(query);
+    } catch (const QueryError& error) {
+        qDebug() << error.what();
+    }
+}
+
+
 void ScannerDB::commit() {
     init();
+    clearMusicLib();
     {
         auto db = QSqlDatabase::database(Config::SCANNERDBNAME);
         db.transaction();

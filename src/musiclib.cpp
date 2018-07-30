@@ -288,10 +288,6 @@ void MusicLib::rescan() {
     }
 
     qDebug() << "scanning" << libPath();
-
-    model.copyLibToTmp();
-    model.clearMusicLib();
-
     scanStarted();
 	scannerController_.scan(libPath());
 }
@@ -324,7 +320,6 @@ void MusicLib::scanStarted() {
 void MusicLib::scanFinished() {
     QString somethingInvalidToHaveTheCheckInSetDisplayLibDoTheRightThing = "-1";
     lastDisplayLibQuery_ = somethingInvalidToHaveTheCheckInSetDisplayLibDoTheRightThing;
-    model.restoreMetaData();
     emit musicLibChanged();
     setScanning(false);
 }
