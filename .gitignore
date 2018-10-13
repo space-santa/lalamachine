@@ -17,3 +17,6 @@ GeneratedFiles
 **.wixobj
 **.wixpdb
 **.aps
+packages
+**obj
+**bin
