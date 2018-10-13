@@ -19,10 +19,8 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include <QFutureWatcher>
 #include <QJsonArray>
 #include <QJsonObject>
-#include <QMutex>
 #include <QObject>
 #include <QString>
 #include <QThread>

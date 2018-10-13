@@ -24,7 +24,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "TagLibTag.h"
 #include "exceptions.h"
 #include "tags.h"
-#include "TagLibTag.h"
 
 QJsonObject MetaDataProvider::metaData(const QUrl& path) const {
     try {
