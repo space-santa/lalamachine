@@ -4,32 +4,6 @@
 Track::Track() {
 }
 
-Track::Track(const QString& track,
-             const QString& title,
-             const QString& comment,
-             const QString& genre,
-             const QString& artist,
-             const QString& album,
-             const QString& mrl,
-             const QString& path,
-             const QString& length,
-             const QString& lengthString,
-             const QString& year,
-             const QString& id)
-    : track_(track.toInt()),
-      title_(title),
-      comment_(comment),
-      genre_(genre),
-      artist_(artist),
-      album_(album),
-      mrl_(mrl),
-      path_(path),
-      length_(length.toInt()),
-      lengthString_(lengthString),
-      year_(year.toInt()),
-      id_(id.toInt()) {
-}
-
 Track::Track(const QJsonObject& json) {
     fromJson(json);
 }
