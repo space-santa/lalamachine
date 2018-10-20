@@ -214,6 +214,7 @@
     <ClCompile Include="src\theplayer.cpp" />
     <ClCompile Include="src\timeconverter.cpp" />
     <ClCompile Include="src\track.cpp" />
+    <ClCompile Include="src\WinTag.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logger.h" />
@@ -226,6 +227,7 @@
     <ClInclude Include="src\ITag.h" />
     <ClInclude Include="src\Logger.h" />
     <ClInclude Include="src\MainDB.h" />
+    <ClInclude Include="src\WinTag.h" />
     <QtMoc Include="src\QmlMetadataProvider.h">
     </QtMoc>
     <ClInclude Include="src\QueryBuilder.h" />
