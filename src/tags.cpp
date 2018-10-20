@@ -18,7 +18,7 @@ QJsonObject Tags::toJson() {
     retval.insert("title", tag_->title());
     retval.insert("track", tag_->track());
     retval.insert("year", tag_->year());
-    retval.insert("disc", tag_->discNumber());
+    retval.insert("discNumber", tag_->discNumber());
 
     return retval;
 }
