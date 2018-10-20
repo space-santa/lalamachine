@@ -34,16 +34,16 @@ QString WinTag::title() const {
     return raw_.value("title").toString();
 }
 
-QString WinTag::track() const {
-    return raw_.value("track").toString();
+int WinTag::track() const {
+    return raw_.value("track").toInt();
 }
 
-QString WinTag::year() const {
-    return QString::number(raw_.value("year").toInt());
+int WinTag::year() const {
+    return raw_.value("year").toInt();
 }
 
-QString WinTag::discNumber() const {
-    return QString::number(raw_.value("discNumber").toInt());
+int WinTag::discNumber() const {
+    return raw_.value("discNumber").toInt();
 }
 
 QString WinTag::length() const {

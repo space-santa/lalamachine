@@ -22,7 +22,7 @@ QString TagLibTag::comment() const {
     return QString::fromUtf8(tag_->comment().toCString(true));
 }
 
-QString TagLibTag::discNumber() const {
+int TagLibTag::discNumber() const {
     TagLib::MPEG::File f(path_.toStdString().c_str());
     if (f.hasID3v2Tag()) {
         TagLib::ID3v2::FrameList l = f.ID3v2Tag()->frameListMap()["TPOS"];
@@ -31,10 +31,10 @@ QString TagLibTag::discNumber() const {
             QString retval;
             auto list = tmp.split('/');
             retval = list.first();
-            return retval;
+            return retval.toInt();
         }
     }
-    return "1";
+    return 1;
 }
 
 QString TagLibTag::genre() const {
@@ -56,12 +56,12 @@ QString TagLibTag::title() const {
     return QString::fromUtf8(tag_->title().toCString(true));
 }
 
-QString TagLibTag::track() const {
-    return QString::number(tag_->track());
+int TagLibTag::track() const {
+    return tag_->track();
 }
 
-QString TagLibTag::year() const {
-    return QString::number(tag_->year());
+int TagLibTag::year() const {
+    return tag_->year();
 }
 
 QString TagLibTag::path() const {

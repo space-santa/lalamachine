@@ -18,9 +18,9 @@ public:
     QString comment() const;
     QString genre() const;
     QString title() const;
-    QString track() const;
-    QString year() const;
-    QString discNumber() const;
+    int track() const;
+    int year() const;
+    int discNumber() const;
     QString length() const;
     QString lengthString() const;
     QString path() const;

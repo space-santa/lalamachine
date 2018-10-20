@@ -86,13 +86,13 @@ QString ScannerDB::getTrackQuery(const QJsonObject& track) {
                      .arg(QueryBuilder::escapeString(track.value("artist").toString()))
                      .arg(QueryBuilder::escapeString(track.value("comment").toString()))
                      .arg(QueryBuilder::escapeString(track.value("genre").toString()))
-                     .arg(QueryBuilder::escapeString(track.value("length").toString()))
+                     .arg(QueryBuilder::escapeString(QString::number(track.value("length").toInt())))
                      .arg(QueryBuilder::escapeString(track.value("lengthString").toString())));
     query.append(valuesB.arg(QueryBuilder::escapeString(track.value("path").toString()))
                      .arg(QueryBuilder::escapeString(track.value("path").toString()))
                      .arg(QueryBuilder::escapeString(track.value("title").toString()))
-                     .arg(QueryBuilder::escapeString(track.value("track").toString()))
-                     .arg(QueryBuilder::escapeString(track.value("year").toString()))
-                     .arg(QueryBuilder::escapeString(track.value("disc").toString())));
+                     .arg(QueryBuilder::escapeString(QString::number(track.value("track").toInt())))
+                     .arg(QueryBuilder::escapeString(QString::number(track.value("year").toInt())))
+                     .arg(QueryBuilder::escapeString(QString::number(track.value("discNumber").toInt()))));
     return query;
 }
