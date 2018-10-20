@@ -28,5 +28,5 @@ QJsonObject Tags::toJson() {
 // While technically not necessary I also want the title, because I think
 // a track should have a name.
 bool Tags::isValid() {
-    return tag_->length().toInt() > 0 && !tag_->title().isEmpty();
+    return tag_->length() > 0 && !tag_->title().isEmpty();
 }

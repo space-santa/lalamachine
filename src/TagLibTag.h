@@ -21,7 +21,7 @@ public:
     int track() const;
     int year() const;
     int discNumber() const;
-    QString length() const;
+    int length() const;
     QString lengthString() const;
     QString path() const;
 

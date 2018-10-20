@@ -41,8 +41,8 @@ QString TagLibTag::genre() const {
     return QString::fromUtf8(tag_->genre().toCString(true));
 }
 
-QString TagLibTag::length() const {
-    return QString::number(fileRef_.audioProperties()->length());
+int TagLibTag::length() const {
+    return fileRef_.audioProperties()->length();
 }
 
 QString TagLibTag::lengthString() const {

@@ -46,19 +46,28 @@ int WinTag::discNumber() const {
     return raw_.value("discNumber").toInt();
 }
 
-QString WinTag::length() const {
+int WinTag::length() const {
     auto lstr = lengthString();
+    auto split1 = lstr.split(":");
+    int minutes = split1[0].toInt();
+    int seconds = split1[1].toInt();
+    int secondTotal = minutes * 60 + seconds;
+    return secondTotal;
+}
+
+QString WinTag::lengthString() const {
+    auto lstr = raw_.value("duration").toString();
     auto split1 = lstr.split(":");
     int hours = split1[0].toInt();
     int minutes = split1[1].toInt();
     auto secondsplit = split1[2].split(".");
     int seconds = secondsplit[0].toInt();
-    int secondValue = hours * 60 * 60 + minutes * 60 + seconds;
-    return QString::number(secondValue);
-}
-
-QString WinTag::lengthString() const {
-    return raw_.value("duration").toString();
+    int minutesValue = hours * 60 * 60 + minutes;
+    QString secondsString = QString::number(seconds);
+    if (secondsString.length() == 1) {
+        secondsString.prepend("0");
+	}
+    return QString::number(minutesValue) + ":" + secondsString;
 }
 
 QString WinTag::path() const {
