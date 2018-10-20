@@ -127,6 +127,9 @@ QJsonObject PlaylistModel::get(int row) const {
 }
 
 void PlaylistModel::clear() {
+    if (list_.empty()) {
+        return;
+	}
     int upperLimit = list_.count() - 1;
 
     if (upperLimit < 0) {
