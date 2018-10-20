@@ -67,7 +67,7 @@ QString WinTag::path() const {
 
 void WinTag::getTheTag() {
     QProcess gzip;
-    gzip.start("C:/Users/claus/code/Qt/lalamachine/dependencies/tag/TheInterface.exe", QStringList() << path_);
+    gzip.start("TheInterface.exe", QStringList() << path_);
     if (!gzip.waitForStarted())
         return;
 
