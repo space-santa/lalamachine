@@ -7,7 +7,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QProcess>
-#include <qstring.h>
+#include <QString>
 
 WinTag::WinTag(const QUrl& url) {
     path_ = url.toLocalFile();
@@ -75,8 +75,8 @@ void WinTag::getTheTag() {
         return;
 
     QByteArray result = gzip.readAll();
-
-    QJsonDocument doc = QJsonDocument::fromJson(result);
-
+    QString str = QString::fromLocal8Bit(result);
+    QJsonParseError err;
+    QJsonDocument doc = QJsonDocument::fromJson(str.toUtf8(), &err);
     raw_ = doc.object();
 }
