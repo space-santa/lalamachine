@@ -25,4 +25,5 @@ private:
     QString path_;
     QJsonObject raw_;
     void getTheTag();
+    QString execPath() const;
 };
