@@ -1,7 +1,7 @@
 #include "WinTag.h"
 #include <QFile>
-#include "timeconverter.h"
 #include <stdexcept>
+#include "timeconverter.h"
 
 #include <QDebug>
 #include <QJsonArray>

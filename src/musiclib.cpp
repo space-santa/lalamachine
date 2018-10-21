@@ -283,7 +283,7 @@ void MusicLib::rescan() {
 
     qDebug() << "scanning" << libPath();
     scanStarted();
-	scannerController_.scan(libPath());
+    scannerController_.scan(libPath());
 }
 
 void MusicLib::setGenreList() {

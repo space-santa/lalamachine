@@ -1,10 +1,10 @@
+#include "ScannerDB.h"
 #include <QDate>
 #include <QDebug>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
 #include "QueryBuilder.h"
-#include "ScannerDB.h"
 #include "config.h"
 #include "exceptions.h"
 
@@ -42,7 +42,6 @@ void ScannerDB::clearMusicLib() {
         qDebug() << error.what();
     }
 }
-
 
 void ScannerDB::commit() {
     init();
