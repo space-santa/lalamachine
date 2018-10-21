@@ -78,7 +78,7 @@ signals:
 private:
     QSettings settings_;
 
-	void migrateVolume(const QJsonObject& config);
+    void migrateVolume(const QJsonObject& config);
     void migratePlaylistColumns(const QJsonObject& config);
     void migrateLibPath(const QJsonObject& config);
     void migrateLastPlaylist(const QJsonObject& config);

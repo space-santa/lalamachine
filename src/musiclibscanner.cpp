@@ -19,14 +19,16 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "musiclibscanner.h"
 
+#include <QDebug>
+
+#include "DirWalker.h"
+#include "ScannerDB.h"
 #include "config.h"
 #include "exceptions.h"
+#include "metadataprovider.h"
 #include "model.h"
 #include "musiclib.h"
 #include "tags.h"
-#include "DirWalker.h"
-#include "ScannerDB.h"
-#include "metadataprovider.h"
 
 MusicLibScanner::MusicLibScanner(std::unique_ptr<IScannerDB> scanDb,
                                  std::unique_ptr<IDirWalker> dirWalker,

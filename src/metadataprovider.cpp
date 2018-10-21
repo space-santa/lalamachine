@@ -21,14 +21,19 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <memory>
 
+#ifdef _WIN32
+#include "WinTag.h"
+typedef WinTag TheTag;
+#else
 #include "TagLibTag.h"
+typedef TagLibTag TheTag;
+#endif
 #include "exceptions.h"
 #include "tags.h"
-#include "TagLibTag.h"
 
 QJsonObject MetaDataProvider::metaData(const QUrl& path) const {
     try {
-        Tags tags(std::unique_ptr<TagLibTag>(new TagLibTag(path)));
+        Tags tags(std::unique_ptr<TheTag>(new TheTag(path)));
         return tags.toJson();
     } catch (...) {
         throw NoMetaDataException("");

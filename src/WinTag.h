@@ -1,17 +1,13 @@
 #pragma once
 
-#include <fileref.h>
-#include <id3v2tag.h>
-#include <mpegfile.h>
-#include <tag.h>
-
+#include <QJsonObject>
 #include <QUrl>
 
 #include "ITag.h"
 
-class TagLibTag : public ITag {
+class WinTag : public ITag {
 public:
-    TagLibTag(const QUrl& url);
+    WinTag(const QUrl& url);
 
     QString album() const;
     QString artist() const;
@@ -27,6 +23,7 @@ public:
 
 private:
     QString path_;
-    TagLib::FileRef fileRef_;
-    TagLib::Tag* tag_;
+    QJsonObject raw_;
+    void getTheTag();
+    QString execPath() const;
 };
