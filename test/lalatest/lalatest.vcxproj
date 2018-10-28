@@ -185,7 +185,6 @@
     <ClCompile Include="..\..\src\model.cpp" />
     <ClCompile Include="model.test.cpp" />
     <ClCompile Include="model.test.mock.cpp" />
-    <ClCompile Include="..\..\src\musiclibscanner.cpp" />
     <ClCompile Include="..\..\src\playlistmodel.cpp" />
     <ClCompile Include="playlistmodeltest.cpp" />
     <ClCompile Include="..\..\src\playlistprovider.cpp" />
@@ -219,7 +218,6 @@
     <QtMoc Include="model.test.h">
     </QtMoc>
     <ClInclude Include="model.test.mock.h" />
-    <ClInclude Include="..\..\src\musiclibscanner.h" />
     <QtMoc Include="..\..\src\playlistmodel.h">
     </QtMoc>
     <QtMoc Include="playlistmodeltest.h">

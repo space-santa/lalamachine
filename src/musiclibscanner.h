@@ -19,26 +19,20 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include <memory>
+#include <QProcess>
+#include <QString>
+#include <QObject>
 
-#include "IDirWalker.h"
-#include "IMetaDataProvider.h"
-#include "IScannerDB.h"
-#include "tags.h"
-
-class MusicLibScanner {
-    friend class MusicLibScannerTest;
-
+class MusicLibScanner : public QObject {
+	Q_OBJECT
 public:
-    MusicLibScanner(std::unique_ptr<IScannerDB> scanDb,
-                    std::unique_ptr<IDirWalker> dirWalker,
-                    std::unique_ptr<IMetaDataProvider> metaDataProvider);
-
+    MusicLibScanner(QObject* parent = 0);
     void scanLib(const QString& path);
+    static QString execPath();
+
+signals:
+    void scanFinished();
 
 private:
-    std::unique_ptr<IScannerDB> scanDb;
-    std::unique_ptr<IDirWalker> dirWalker;
-    std::unique_ptr<IMetaDataProvider> metaDataProvider;
-    void addPathsToScannerDB(const QStringList& paths);
+    QProcess process_;
 };

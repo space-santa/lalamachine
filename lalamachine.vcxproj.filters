@@ -50,9 +50,6 @@
     <ClCompile Include="src\DatabaseSetup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\DirWalker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\MainDB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -63,9 +60,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\QueryResult.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ScannerDB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\autoplaylist.cpp">
@@ -136,16 +130,7 @@
     <ClInclude Include="src\DatabaseSetup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\DirWalker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\IDirWalker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\IMainDB.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\IScannerDB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\MainDB.h">
@@ -158,9 +143,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\QueryResult.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ScannerDB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <QtMoc Include="src\autoplaylist.h">
@@ -193,9 +175,6 @@
     <QtMoc Include="src\musiclib.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClInclude Include="src\musiclibscanner.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <QtMoc Include="src\playlistmodel.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -477,10 +456,7 @@
     <ResourceCompile Include=".\lalamachine_resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="src\ScannerController.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\ScannerWorker.h">
+    <QtMoc Include="src\musiclibscanner.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
