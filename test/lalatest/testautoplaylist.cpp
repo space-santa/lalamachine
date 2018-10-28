@@ -6,7 +6,6 @@
 #include "../../src/autoplaylist.h"
 #include "../../src/autoplaylistobject.h"
 #include "../../src/lalatypes.h"
-#include "../../src/musiclib.h"
 
 void TestAutoPlaylist::initTestCase() {
     //

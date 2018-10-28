@@ -87,7 +87,7 @@ QString WinTag::execPath() const {
     GetModuleFileNameW(hModule, modulePath, MAX_PATH);
     QString execPath = QString::fromWCharArray(modulePath);
     execPath.remove(QRegularExpression("lalamachine.exe$"));
-    return execPath + "TheInterface.exe";
+    return execPath + "TheInterface/TheInterface.exe";
 #else
     throw std::runtime_error("This must not happen. This class only makes sense on Windows.");
 #endif

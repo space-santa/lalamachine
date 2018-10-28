@@ -1,5 +1,5 @@
 /*
-Copyright 2015 Armin Zirkel
+Copyright 2015-2018 Claus Zirkel
 
 This file is part of lalamachine.
 
@@ -23,9 +23,7 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QJsonObject>
 #include <QObject>
 #include <QString>
-#include <QThread>
 
-#include "ScannerController.h"
 #include "model.h"
 #include "musiclibscanner.h"
 
@@ -118,6 +116,8 @@ signals:
 private:
     Model model;
 
+	MusicLibScanner scanner_;
+
     bool sortAsc_;
     bool scanning_;
     QueryBuilder::SortWhat what_;
@@ -133,8 +133,6 @@ private:
     QString titlePartialFilter_;
     bool appStart_;
     QString lastDisplayLibQuery_;
-
-    ScannerController scannerController_;
 
     bool checkVal(const QString& check, const QString& val) const;
 

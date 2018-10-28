@@ -20,51 +20,38 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "musiclibscanner.h"
 
 #include <QDebug>
+#include <QRegularExpression>
+#include <QFile>
 
-#include "DirWalker.h"
-#include "ScannerDB.h"
 #include "config.h"
-#include "exceptions.h"
-#include "metadataprovider.h"
-#include "model.h"
-#include "musiclib.h"
-#include "tags.h"
 
-MusicLibScanner::MusicLibScanner(std::unique_ptr<IScannerDB> scanDb,
-                                 std::unique_ptr<IDirWalker> dirWalker,
-                                 std::unique_ptr<IMetaDataProvider> metaDataProvider)
-    : scanDb(std::move(scanDb)), dirWalker(std::move(dirWalker)), metaDataProvider(std::move(metaDataProvider)) {
-}
+#ifdef _WIN32
+#include <Windows.h>
+#endif
 
-void MusicLibScanner::addPathsToScannerDB(const QStringList& paths) {
-    for (const QString& file : paths) {
-        try {
-            auto tags = metaDataProvider->metaData(QUrl::fromLocalFile(file));
-            scanDb->addQuery(tags);
-        } catch (const NoMetaDataException& error) {
-            qDebug() << error.what();
-            continue;
-        }
-    }
-}
+MusicLibScanner::MusicLibScanner(QObject* parent) : QObject(parent) {
+    connect(&process_,
+            QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+            [=](int exitCode, QProcess::ExitStatus exitStatus) { emit scanFinished(); });
+    
+	connect(&process_,
+			&QProcess::errorOccurred,
+			[=]() { emit scanFinished(); });
+ }
 
 void MusicLibScanner::scanLib(const QString& path) {
-    QStringList fileList;
+    process_.start(execPath(), QStringList() << Config::MUSICLIBDB + ".new" << path);
+}
 
-    try {
-        fileList = dirWalker->getMusicFileList(path);
-    } catch (const DirectoryNotFoundError& error) {
-        qDebug() << error.what();
-        return;
-    }
-
-    scanDb->transaction();
-    addPathsToScannerDB(fileList);
-
-    try {
-        scanDb->commit();
-    } catch (const OpenDatabaseError& error) {
-        qDebug() << "Can't open dbase..." << error.what();
-        return;
-    }
+QString MusicLibScanner::execPath() {
+#ifdef _WIN32
+    auto hModule = GetModuleHandleW(NULL);
+    WCHAR modulePath[MAX_PATH];
+    GetModuleFileNameW(hModule, modulePath, MAX_PATH);
+    QString execPath = QString::fromWCharArray(modulePath);
+    execPath.remove(QRegularExpression("lalamachine.exe$"));
+    return execPath + "/ScannerCLI/ScannerCLI.exe";
+#else
+    throw std::runtime_error("This must not happen. This class only makes sense on Windows.");
+#endif
 }
