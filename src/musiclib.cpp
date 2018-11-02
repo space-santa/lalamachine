@@ -30,7 +30,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include "MainDB.h"
 #include "autoplaylistmanager.h"
 #include "config.h"
-#include "metadataprovider.h"
 #include "model.h"
 #include "musiclibscanner.h"
 

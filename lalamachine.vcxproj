@@ -189,7 +189,6 @@
   <ItemGroup>
     <ClCompile Include="src\DatabaseSetup.cpp" />
     <ClCompile Include="src\MainDB.cpp" />
-    <ClCompile Include="src\QmlMetadataProvider.cpp" />
     <ClCompile Include="src\QueryBuilder.cpp" />
     <ClCompile Include="src\QueryResult.cpp" />
     <ClCompile Include="src\autoplaylist.cpp" />
@@ -200,31 +199,28 @@
     <ClCompile Include="src\fileexporter.cpp" />
     <ClCompile Include="src\lalatypes.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\metadataprovider.cpp" />
     <ClCompile Include="src\model.cpp" />
     <ClCompile Include="src\musiclib.cpp" />
     <ClCompile Include="src\musiclibscanner.cpp" />
     <ClCompile Include="src\playlistmodel.cpp" />
     <ClCompile Include="src\playlistprovider.cpp" />
     <ClCompile Include="src\sysinfo.cpp" />
-    <ClCompile Include="src\TagLibTag.cpp" />
-    <ClCompile Include="src\tags.cpp" />
     <ClCompile Include="src\theplayer.cpp" />
     <ClCompile Include="src\timeconverter.cpp" />
     <ClCompile Include="src\track.cpp" />
-    <ClCompile Include="src\WinTag.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logger.h" />
     <ClInclude Include="src\DatabaseSetup.h" />
     <ClInclude Include="src\IMainDB.h" />
-    <ClInclude Include="src\IMetaDataProvider.h" />
-    <ClInclude Include="src\ITag.h" />
+    <ClInclude Include="src\LalaServer.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;.\..\Libraries\taglib\include\taglib;$(QTDIR)\include;.\debug;\include;$(QTDIR)\mkspecs\win32-msvc;$(QTDIR)\include\QtConcurrent;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtMultimedia;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtQml;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtQuickWidgets;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtWidgets</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;QT_CONCURRENT_LIB;QT_CORE_LIB;QT_GUI_LIB;QT_MULTIMEDIA_LIB;QT_NETWORK_LIB;QT_QML_LIB;QT_QUICK_LIB;QT_QUICKWIDGETS_LIB;QT_SQL_LIB;QT_WIDGETS_LIB</Define>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;.\..\Libraries\taglib\include\taglib;$(QTDIR)\include;.\release;\include;$(QTDIR)\mkspecs\win32-msvc;$(QTDIR)\include\QtConcurrent;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtMultimedia;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtQml;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtQuickWidgets;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtWidgets</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;QT_NO_DEBUG;NDEBUG;QT_CONCURRENT_LIB;QT_CORE_LIB;QT_GUI_LIB;QT_MULTIMEDIA_LIB;QT_NETWORK_LIB;QT_QML_LIB;QT_QUICK_LIB;QT_QUICKWIDGETS_LIB;QT_SQL_LIB;QT_WIDGETS_LIB</Define>
+    </ClInclude>
     <ClInclude Include="src\Logger.h" />
     <ClInclude Include="src\MainDB.h" />
-    <ClInclude Include="src\WinTag.h" />
-    <QtMoc Include="src\QmlMetadataProvider.h">
-    </QtMoc>
     <ClInclude Include="src\QueryBuilder.h" />
     <ClInclude Include="src\QueryResult.h" />
     <QtMoc Include="src\autoplaylist.h">
@@ -239,7 +235,6 @@
     </QtMoc>
     <QtMoc Include="src\lalatypes.h">
     </QtMoc>
-    <ClInclude Include="src\metadataprovider.h" />
     <ClInclude Include="src\model.h" />
     <QtMoc Include="src\musiclib.h">
     </QtMoc>
@@ -255,8 +250,6 @@
     </QtMoc>
     <QtMoc Include="src\sysinfo.h">
     </QtMoc>
-    <ClInclude Include="src\TagLibTag.h" />
-    <ClInclude Include="src\tags.h" />
     <QtMoc Include="src\theplayer.h">
     </QtMoc>
     <QtMoc Include="src\timeconverter.h">

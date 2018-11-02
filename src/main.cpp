@@ -10,7 +10,6 @@
 
 #include "DatabaseSetup.h"
 #include "Logger.h"
-#include "QmlMetadataProvider.h"
 #include "autoplaylistmanager.h"
 #include "config.h"
 #include "fileexporter.h"
@@ -21,6 +20,7 @@
 #include "sysinfo.h"
 #include "theplayer.h"
 #include "timeconverter.h"
+#include "LalaServer.h"
 
 Logger logger;
 
@@ -40,7 +40,6 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext& context, const QS
 }
 
 void registerQmlTypes() {
-    qmlRegisterType<QmlMetadataProvider>("Lala", 1, 0, "Metadata");
     qmlRegisterType<PlaylistProvider>("Lala", 1, 0, "PlaylistProvider");
     qmlRegisterType<Config>("Lala", 1, 0, "Config");
     qmlRegisterType<TimeConverter>("Lala", 1, 0, "TimeConverter");
@@ -65,6 +64,10 @@ int main(int argc, char* argv[]) {
     QSplashScreen splash(logo);
     splash.show();
 
+	LalaServer lalaServer;
+    if (!lalaServer.start()) {
+        qFatal("Couldn't start LalaServer");
+	}
     DatabaseSetup databaseSetup;
 
     registerQmlTypes();

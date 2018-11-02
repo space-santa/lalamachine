@@ -88,9 +88,6 @@
     <ClCompile Include="..\..\src\playlistprovider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\tags.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="testautoplaylist.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -103,9 +100,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\IDirWalker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\IMetaDataProvider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\IQueryResult.h">
@@ -162,9 +156,6 @@
     <QtMoc Include="..\..\src\playlistprovider.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClInclude Include="..\..\src\tags.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <QtMoc Include="testautoplaylist.h">
       <Filter>Header Files</Filter>
     </QtMoc>

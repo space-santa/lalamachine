@@ -188,14 +188,12 @@
     <ClCompile Include="..\..\src\playlistmodel.cpp" />
     <ClCompile Include="playlistmodeltest.cpp" />
     <ClCompile Include="..\..\src\playlistprovider.cpp" />
-    <ClCompile Include="..\..\src\tags.cpp" />
     <ClCompile Include="testautoplaylist.cpp" />
     <ClCompile Include="..\..\src\timeconverter.cpp" />
     <ClCompile Include="..\..\src\track.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\IDirWalker.h" />
-    <ClInclude Include="..\..\src\IMetaDataProvider.h" />
     <ClInclude Include="..\..\src\IQueryResult.h" />
     <ClInclude Include="..\..\src\IScannerDB.h" />
     <ClInclude Include="..\..\src\QueryBuilder.h" />
@@ -224,7 +222,6 @@
     </QtMoc>
     <QtMoc Include="..\..\src\playlistprovider.h">
     </QtMoc>
-    <ClInclude Include="..\..\src\tags.h" />
     <QtMoc Include="testautoplaylist.h">
     </QtMoc>
     <QtMoc Include="..\..\src\timeconverter.h">

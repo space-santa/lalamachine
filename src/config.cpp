@@ -30,6 +30,11 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStandardPaths>
 #include <QUrl>
 #include <QVariant>
+#include <QRegularExpression>
+
+#ifdef _WIN32
+#include <Windows.h>
+#endif
 
 const QString Config::LALADIR =
     QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + "/lalamachine";
@@ -46,6 +51,20 @@ Config::Config(QObject* parent) : QObject(parent) {
     QDir dir(Config::LALADIR);
     dir.mkpath(Config::LALADIR);
     loadConfig();
+}
+
+const QString Config::execPath() {
+#ifdef _WIN32
+    auto hModule = GetModuleHandleW(NULL);
+    WCHAR modulePath[MAX_PATH];
+    GetModuleFileNameW(hModule, modulePath, MAX_PATH);
+    QString execPath = QString::fromWCharArray(modulePath);
+    execPath.remove(QRegularExpression("lalamachine.exe$"));
+    return execPath;
+#else
+    throw std::runtime_error("This must not happen. This class only makes sense on Windows.");
+#endif
+    return QString();
 }
 
 void Config::loadConfig() {
