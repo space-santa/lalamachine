@@ -188,14 +188,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\DatabaseSetup.cpp" />
-    <ClCompile Include="src\MainDB.cpp" />
     <ClCompile Include="src\QueryBuilder.cpp" />
     <ClCompile Include="src\QueryResult.cpp" />
     <ClCompile Include="src\autoplaylist.cpp" />
     <ClCompile Include="src\autoplaylistmanager.cpp" />
     <ClCompile Include="src\autoplaylistobject.cpp" />
     <ClCompile Include="src\config.cpp" />
-    <ClCompile Include="src\exceptions.cpp" />
     <ClCompile Include="src\fileexporter.cpp" />
     <ClCompile Include="src\lalatypes.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -203,9 +201,7 @@
     <ClCompile Include="src\musiclib.cpp" />
     <ClCompile Include="src\playlistmodel.cpp" />
     <ClCompile Include="src\playlistprovider.cpp" />
-    <ClCompile Include="src\sysinfo.cpp" />
     <ClCompile Include="src\theplayer.cpp" />
-    <ClCompile Include="src\track.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logger.h" />

@@ -178,7 +178,6 @@
     <ClCompile Include="..\..\src\autoplaylistmanager.cpp" />
     <ClCompile Include="..\..\src\autoplaylistobject.cpp" />
     <ClCompile Include="..\..\src\config.cpp" />
-    <ClCompile Include="..\..\src\exceptions.cpp" />
     <ClCompile Include="lalatest.cpp" />
     <ClCompile Include="..\..\src\lalatypes.cpp" />
     <ClCompile Include="main.cpp" />
@@ -189,7 +188,6 @@
     <ClCompile Include="playlistmodeltest.cpp" />
     <ClCompile Include="..\..\src\playlistprovider.cpp" />
     <ClCompile Include="testautoplaylist.cpp" />
-    <ClCompile Include="..\..\src\track.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\IDirWalker.h" />
