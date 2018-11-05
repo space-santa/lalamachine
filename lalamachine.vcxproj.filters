@@ -89,9 +89,6 @@
     <ClCompile Include="src\musiclib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\musiclibscanner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\playlistmodel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -421,10 +418,5 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include=".\lalamachine_resource.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="src\musiclibscanner.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
   </ItemGroup>
 </Project>

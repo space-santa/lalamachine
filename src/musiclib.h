@@ -25,7 +25,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QString>
 
 #include "model.h"
-#include "musiclibscanner.h"
 #include "config.h"
 
 class MusicLib : public QObject {
@@ -120,8 +119,6 @@ signals:
 
 private:
     Model model;
-
-	MusicLibScanner scanner_;
 
     bool sortAsc_;
     bool scanning_;
