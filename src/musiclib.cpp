@@ -127,7 +127,7 @@ void MusicLib::setLibPath(const QString& path) {
     emit libPathChanged();
 
     if (!appStart_) {
-        rescan();
+        emit doRescan();
     }
 
     appStart_ = false;
@@ -272,15 +272,15 @@ QJsonObject MusicLib::getMetadataForMrl(const QUrl& mrl) const {
     return model.getMetadataForMrl(mrl);
 }
 
-void MusicLib::rescan() {
+bool MusicLib::canScan() {
     if (scanning()) {
         qDebug() << "Scan is already in progress.";
-        return;
+        return false;
     }
 
     qDebug() << "scanning" << libPath();
     scanStarted();
-    scanner_.scanLib(libPath());
+    return true;
 }
 
 void MusicLib::setGenreList() {
