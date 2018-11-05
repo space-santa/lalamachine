@@ -38,6 +38,7 @@ function getSafeValue(value) {
         return value
     }
 }
+module.exports.getSafeValue = getSafeValue;
 
 // Random number within range min <= num <= max.
 function randomInt(min, max) {
@@ -96,3 +97,4 @@ function secondsToDisplayString(seconds) {
 
     return retVal;
 }
+module.exports.secondsToDisplayString = secondsToDisplayString;

@@ -21,3 +21,4 @@ packages
 **obj
 **bin
 dependencies
+node_modules
