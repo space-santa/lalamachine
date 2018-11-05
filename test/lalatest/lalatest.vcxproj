@@ -189,7 +189,6 @@
     <ClCompile Include="playlistmodeltest.cpp" />
     <ClCompile Include="..\..\src\playlistprovider.cpp" />
     <ClCompile Include="testautoplaylist.cpp" />
-    <ClCompile Include="..\..\src\timeconverter.cpp" />
     <ClCompile Include="..\..\src\track.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -223,8 +222,6 @@
     <QtMoc Include="..\..\src\playlistprovider.h">
     </QtMoc>
     <QtMoc Include="testautoplaylist.h">
-    </QtMoc>
-    <QtMoc Include="..\..\src\timeconverter.h">
     </QtMoc>
     <ClInclude Include="..\..\src\track.h" />
   </ItemGroup>

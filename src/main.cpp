@@ -19,7 +19,6 @@
 #include "playlistprovider.h"
 #include "sysinfo.h"
 #include "theplayer.h"
-#include "timeconverter.h"
 #include "LalaServer.h"
 
 Logger logger;
@@ -42,7 +41,6 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext& context, const QS
 void registerQmlTypes() {
     qmlRegisterType<PlaylistProvider>("Lala", 1, 0, "PlaylistProvider");
     qmlRegisterType<Config>("Lala", 1, 0, "Config");
-    qmlRegisterType<TimeConverter>("Lala", 1, 0, "TimeConverter");
     qmlRegisterType<MusicLib>("Lala", 1, 0, "MusicLib");
     qmlRegisterType<SysInfo>("Lala", 1, 0, "SysInfo");
     qmlRegisterType<LalaTypes>("Lala", 1, 0, "LalaTypes");

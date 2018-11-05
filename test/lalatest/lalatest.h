@@ -7,7 +7,6 @@
 class LalaTest : public QObject {
     Q_OBJECT
 private slots:
-    void timeTest();
     void autoPlaylistObject();
 };
 

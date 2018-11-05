@@ -95,9 +95,12 @@ Rectangle {
         }
     }
 
-    TimeConverter {
+    Item {
         id: tc
-        seconds: playlist_model.totalPlaytime
+        property int seconds: playlist_model.totalPlaytime
+		readonly property string timestring: {
+			Functions.secondsToDisplayString(tc.seconds);
+		}
     }
 
     FileExporter {

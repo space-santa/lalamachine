@@ -101,9 +101,6 @@
     <ClCompile Include="src\theplayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\timeconverter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\track.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -161,9 +158,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="src\theplayer.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\timeconverter.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <ClInclude Include="src\track.h">

@@ -205,7 +205,6 @@
     <ClCompile Include="src\playlistprovider.cpp" />
     <ClCompile Include="src\sysinfo.cpp" />
     <ClCompile Include="src\theplayer.cpp" />
-    <ClCompile Include="src\timeconverter.cpp" />
     <ClCompile Include="src\track.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -244,8 +243,6 @@
     <QtMoc Include="src\sysinfo.h">
     </QtMoc>
     <QtMoc Include="src\theplayer.h">
-    </QtMoc>
-    <QtMoc Include="src\timeconverter.h">
     </QtMoc>
     <ClInclude Include="src\track.h" />
   </ItemGroup>
