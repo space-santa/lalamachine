@@ -67,5 +67,3 @@ QMap<LalaTypes::AndOr, QString> LalaTypes::initAndOrMap() {
 
     return tmp;
 }
-
-const QString LalaTypes::AUTOPLAYLISTSUFFIX = "lala";

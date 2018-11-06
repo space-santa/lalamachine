@@ -1,5 +1,5 @@
 /*
-Copyright 2015 Armin Zirkel
+Copyright 2015-2018 Claus Zirkel
 
 This file is part of lalamachine.
 
@@ -22,6 +22,8 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <QCoreApplication>
 #include <QObject>
 
+#include "config.h"
+
 /*!
  * \brief The SysInfo class provides the information displayed in the about
  * dialog.
@@ -29,11 +31,13 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 class SysInfo : public QObject {
     Q_OBJECT
 public:
-    Q_INVOKABLE QString appVersion();
-    Q_INVOKABLE QString appName();
-    Q_INVOKABLE QString lalaDir();
-
-signals:
-
-public slots:
+    Q_INVOKABLE QString appVersion() {
+        return QCoreApplication::applicationVersion();
+    }
+    Q_INVOKABLE QString appName() {
+        return QCoreApplication::applicationName();
+    }
+    Q_INVOKABLE QString lalaDir() {
+        return Config::LALADIR;
+    }
 };

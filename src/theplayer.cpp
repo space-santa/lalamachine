@@ -10,6 +10,7 @@ void ThePlayer::play() {
 }
 
 void ThePlayer::play(const QString& mrl) {
+    qDebug() << mrl;
     QUrl tmp = QUrl::fromLocalFile(mrl);
     setMedia(QMediaContent(tmp));
     play();

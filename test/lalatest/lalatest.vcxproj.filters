@@ -46,22 +46,7 @@
     <ClCompile Include="..\..\src\QueryResult.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\autoplaylist.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\autoplaylistmanager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\autoplaylistobject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\config.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\exceptions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="lalatest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\lalatypes.cpp">
@@ -88,24 +73,9 @@
     <ClCompile Include="..\..\src\playlistprovider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\tags.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="testautoplaylist.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\timeconverter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\track.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\IDirWalker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\IMetaDataProvider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\IQueryResult.h">
@@ -123,24 +93,12 @@
     <ClInclude Include="..\..\src\QueryResult.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <QtMoc Include="..\..\src\autoplaylist.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="..\..\src\autoplaylistmanager.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <ClInclude Include="..\..\src\autoplaylistobject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <QtMoc Include="..\..\src\config.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <ClInclude Include="..\..\src\exceptions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <QtMoc Include="lalatest.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="..\..\src\lalatypes.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -160,15 +118,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="..\..\src\playlistprovider.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <ClInclude Include="..\..\src\tags.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <QtMoc Include="testautoplaylist.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="..\..\src\timeconverter.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <ClInclude Include="..\..\src\track.h">

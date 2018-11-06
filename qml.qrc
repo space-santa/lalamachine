@@ -1,7 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>qml/AutoPlaylistDialog.qml</file>
-        <file>qml/AutoPlaylistObject.qml</file>
         <file>qml/Configuration.qml</file>
         <file>qml/ImageButton.qml</file>
         <file>qml/InfoDialog.qml</file>
@@ -29,7 +27,6 @@
         <file>qml/MusicLibMenu.qml</file>
         <file>qml/MainPlaylistMenu.qml</file>
         <file>qml/InfoMenu.qml</file>
-        <file>qml/AutoPlaylistMenu.qml</file>
         <file>qml/MainPlaylist.qml</file>
         <file>qml/LibraryPlaylist.qml</file>
         <file>qml/MainPlaylistRightClickMenu.qml</file>

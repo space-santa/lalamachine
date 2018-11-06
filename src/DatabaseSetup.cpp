@@ -4,7 +4,6 @@
 #include "config.h"
 
 DatabaseSetup::DatabaseSetup() {
-    add(Config::AUTODBNAME);
     add(Config::MAINDBNAME);
 }
 
@@ -15,6 +14,5 @@ void DatabaseSetup::add(const QString& name) {
 }
 
 DatabaseSetup::~DatabaseSetup() {
-    QSqlDatabase::database(Config::AUTODBNAME).close();
     QSqlDatabase::database(Config::MAINDBNAME).close();
 }

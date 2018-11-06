@@ -28,11 +28,8 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <memory>
 
 #include "MainDB.h"
-#include "autoplaylistmanager.h"
 #include "config.h"
-#include "metadataprovider.h"
 #include "model.h"
-#include "musiclibscanner.h"
 
 MusicLib::MusicLib(QObject* parent) : QObject(parent), model(std::unique_ptr<IMainDB>(new MainDB())) {
     init();
@@ -51,7 +48,6 @@ MusicLib::MusicLib(QObject* parent) : QObject(parent), model(std::unique_ptr<IMa
     connect(this, &MusicLib::genreFilterChanged, this, &MusicLib::setArtistList);
     connect(this, &MusicLib::genreFilterChanged, this, &MusicLib::setAlbumList);
     connect(this, &MusicLib::artistFilterChanged, this, &MusicLib::setAlbumList);
-    connect(&scanner_, &MusicLibScanner::scanFinished, this, &MusicLib::scanFinished);
 
     setGenreList();
 }
@@ -128,7 +124,7 @@ void MusicLib::setLibPath(const QString& path) {
     emit libPathChanged();
 
     if (!appStart_) {
-        rescan();
+        emit doRescan();
     }
 
     appStart_ = false;
@@ -273,15 +269,15 @@ QJsonObject MusicLib::getMetadataForMrl(const QUrl& mrl) const {
     return model.getMetadataForMrl(mrl);
 }
 
-void MusicLib::rescan() {
+bool MusicLib::canScan() {
     if (scanning()) {
         qDebug() << "Scan is already in progress.";
-        return;
+        return false;
     }
 
     qDebug() << "scanning" << libPath();
     scanStarted();
-    scanner_.scanLib(libPath());
+    return true;
 }
 
 void MusicLib::setGenreList() {
@@ -310,16 +306,12 @@ void MusicLib::scanStarted() {
 }
 
 void MusicLib::scanFinished() {
-    QSqlDatabase::database(Config::AUTODBNAME).close();
     QSqlDatabase::database(Config::MAINDBNAME).close();
     QFile::remove(Config::MUSICLIBDB);
     QFile::rename(Config::MUSICLIBDB + ".new", Config::MUSICLIBDB);
     auto db1 = QSqlDatabase::addDatabase("QSQLITE", Config::MAINDBNAME);
     db1.setDatabaseName(Config::MUSICLIBDB);
     db1.open();
-    auto db2 = QSqlDatabase::addDatabase("QSQLITE", Config::AUTODBNAME);
-    db2.setDatabaseName(Config::MUSICLIBDB);
-    db2.open();
 
     QString somethingInvalidToHaveTheCheckInSetDisplayLibDoTheRightThing = "-1";
     lastDisplayLibQuery_ = somethingInvalidToHaveTheCheckInSetDisplayLibDoTheRightThing;

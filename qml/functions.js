@@ -38,8 +38,63 @@ function getSafeValue(value) {
         return value
     }
 }
+module.exports.getSafeValue = getSafeValue;
 
 // Random number within range min <= num <= max.
 function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
 }
+
+function numToString(num) {
+    var retval = "";
+
+    if (num < 10) {
+        retval += "0";
+    }
+
+    retval += num;
+
+    return retval;
+}
+
+function secondsToDisplayString(seconds) {
+    var minInSec = 60;
+    var hourInSec = 60 * minInSec;
+    var dayInSec = 24 * hourInSec;
+
+    var totalSec = seconds;
+    // Integer division to get the days.
+    var days = Math.floor(seconds / dayInSec);
+    // We have the days, now we only want the rest.
+    seconds -= days * dayInSec;
+    // Integer division to get the hours.
+    var hours = Math.floor(seconds / hourInSec);
+    // Remove the hours.
+    seconds -= hours * hourInSec;
+    // Get the rest.
+    var mins = Math.floor(seconds / minInSec);
+    var sec = seconds - mins * minInSec;
+
+    var retVal = "";
+
+    if (days > 0) {
+        retVal += days;
+        if (days === 1) {
+            retVal += " day, ";
+        } else {
+            retVal += " days, ";
+        }
+    }
+
+    if (days > 0 || hours > 0) {
+        retVal += numToString(hours);
+        retVal += ":";
+    }
+
+    retVal += numToString(mins);
+    retVal += ":";
+    retVal += numToString(sec);
+
+    return retVal;
+}
+module.exports.secondsToDisplayString = secondsToDisplayString;

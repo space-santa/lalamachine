@@ -18,9 +18,6 @@ TEMPLATE = app
 SOURCES += \
     ../../src/QueryBuilder.cpp \
     ../../src/QueryResult.cpp \
-    ../../src/autoplaylist.cpp \
-    ../../src/autoplaylistmanager.cpp \
-    ../../src/autoplaylistobject.cpp \
     ../../src/config.cpp \
     ../../src/exceptions.cpp \
     ../../src/lalatypes.cpp \
@@ -38,7 +35,6 @@ SOURCES += \
     main.cpp \
     model.test.cpp \
     model.test.mock.cpp \
-    testautoplaylist.cpp \
     maindbtest.cpp \
     playlistmodeltest.cpp
 
@@ -51,9 +47,6 @@ HEADERS += \
     ../../src/IScannerDB.h \
     ../../src/QueryBuilder.h \
     ../../src/QueryResult.h \
-    ../../src/autoplaylist.h \
-    ../../src/autoplaylistmanager.h \
-    ../../src/autoplaylistobject.h \
     ../../src/config.h \
     ../../src/exceptions.h \
     ../../src/lalatypes.h \
@@ -70,7 +63,6 @@ HEADERS += \
     lalatest.h \
     model.test.h \
     model.test.mock.h \
-    testautoplaylist.h \
     maindbtest.h \
     playlistmodeltest.h
 

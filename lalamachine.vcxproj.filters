@@ -50,31 +50,13 @@
     <ClCompile Include="src\DatabaseSetup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\MainDB.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\QmlMetadataProvider.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\QueryBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\QueryResult.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\autoplaylist.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\autoplaylistmanager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\autoplaylistobject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\config.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\exceptions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\fileexporter.cpp">
@@ -86,16 +68,10 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\metadataprovider.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\musiclib.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\musiclibscanner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\playlistmodel.cpp">
@@ -104,25 +80,7 @@
     <ClCompile Include="src\playlistprovider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\sysinfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\tags.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\theplayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\timeconverter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\track.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TagLibTag.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WinTag.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -136,22 +94,10 @@
     <ClInclude Include="src\MainDB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <QtMoc Include="src\QmlMetadataProvider.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <ClInclude Include="src\QueryBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\QueryResult.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <QtMoc Include="src\autoplaylist.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\autoplaylistmanager.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <ClInclude Include="src\autoplaylistobject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <QtMoc Include="src\config.h">
@@ -166,9 +112,6 @@
     <QtMoc Include="src\lalatypes.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClInclude Include="src\metadataprovider.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -184,13 +127,7 @@
     <QtMoc Include="src\sysinfo.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClInclude Include="src\tags.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <QtMoc Include="src\theplayer.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\timeconverter.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <ClInclude Include="src\track.h">
@@ -202,16 +139,7 @@
     <ClInclude Include="src\Logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ITag.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\TagLibTag.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\IMetaDataProvider.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\WinTag.h">
+    <ClInclude Include="src\LalaServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -341,15 +269,6 @@
     <None Include="images\tab_remove.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="qml\AutoPlaylistDialog.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="qml\AutoPlaylistMenu.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="qml\AutoPlaylistObject.qml">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="qml\Configuration.qml">
       <Filter>Resource Files</Filter>
     </None>
@@ -454,10 +373,5 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include=".\lalamachine_resource.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="src\musiclibscanner.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
   </ItemGroup>
 </Project>

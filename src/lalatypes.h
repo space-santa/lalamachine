@@ -47,8 +47,6 @@ public:
     static const QMap<AndOr, QString> ANDOR_MAP;
     static QMap<AndOr, QString> initAndOrMap();
 
-    static const QString AUTOPLAYLISTSUFFIX;
-
     explicit LalaTypes(QObject* parent = 0);
     ~LalaTypes();
 };

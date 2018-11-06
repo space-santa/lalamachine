@@ -54,10 +54,6 @@ Menu {
     }
 
     function populatePlaylistMenu() {
-        // FIXME: This call to clear() will cause a segfault.
-        // The signal emission in AutoPlaylistManager "autoPlaylistNamesChanged"
-        // will for some reason require the original menu item to still exist.
-        // If the object has already been destroyed it will segfault.
         playlist_menu.clear()
         playlistnames.forEach(function (name) {
             var o = Qt.createQmlObject(generateQbjectString(name),
