@@ -17,7 +17,6 @@
 #include "playlistmodel.h"
 #include "playlistprovider.h"
 #include "sysinfo.h"
-#include "theplayer.h"
 #include "LalaServer.h"
 
 Logger logger;
@@ -45,7 +44,6 @@ void registerQmlTypes() {
     qmlRegisterType<LalaTypes>("Lala", 1, 0, "LalaTypes");
     qmlRegisterType<FileExporter>("Lala", 1, 0, "FileExporter");
     qmlRegisterType<PlaylistModel>("Lala", 1, 0, "PlaylistModel");
-    qmlRegisterType<ThePlayer>("Lala", 1, 0, "ThePlayer");
 }
 
 int main(int argc, char* argv[]) {

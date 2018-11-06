@@ -198,7 +198,6 @@
     <ClCompile Include="src\musiclib.cpp" />
     <ClCompile Include="src\playlistmodel.cpp" />
     <ClCompile Include="src\playlistprovider.cpp" />
-    <ClCompile Include="src\theplayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logger.h" />
@@ -229,8 +228,6 @@
     <QtMoc Include="src\playlistprovider.h">
     </QtMoc>
     <QtMoc Include="src\sysinfo.h">
-    </QtMoc>
-    <QtMoc Include="src\theplayer.h">
     </QtMoc>
     <ClInclude Include="src\track.h" />
   </ItemGroup>

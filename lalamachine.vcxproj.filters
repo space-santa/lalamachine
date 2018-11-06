@@ -80,9 +80,6 @@
     <ClCompile Include="src\playlistprovider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\theplayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\DatabaseSetup.h">
@@ -125,9 +122,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="src\sysinfo.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\theplayer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <ClInclude Include="src\track.h">
