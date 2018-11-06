@@ -28,7 +28,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 #include <memory>
 
 #include "MainDB.h"
-#include "autoplaylistmanager.h"
 #include "config.h"
 #include "model.h"
 
@@ -307,16 +306,12 @@ void MusicLib::scanStarted() {
 }
 
 void MusicLib::scanFinished() {
-    QSqlDatabase::database(Config::AUTODBNAME).close();
     QSqlDatabase::database(Config::MAINDBNAME).close();
     QFile::remove(Config::MUSICLIBDB);
     QFile::rename(Config::MUSICLIBDB + ".new", Config::MUSICLIBDB);
     auto db1 = QSqlDatabase::addDatabase("QSQLITE", Config::MAINDBNAME);
     db1.setDatabaseName(Config::MUSICLIBDB);
     db1.open();
-    auto db2 = QSqlDatabase::addDatabase("QSQLITE", Config::AUTODBNAME);
-    db2.setDatabaseName(Config::MUSICLIBDB);
-    db2.open();
 
     QString somethingInvalidToHaveTheCheckInSetDisplayLibDoTheRightThing = "-1";
     lastDisplayLibQuery_ = somethingInvalidToHaveTheCheckInSetDisplayLibDoTheRightThing;

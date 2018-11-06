@@ -31,11 +31,9 @@ public:
     static const QString CONFIGPATH;
     static const QString LOGPATH;
     static const QString PLAYLISTDIR;
-    static const QString AUTOPLAYLISTDIR;
     static const QString MUSICLIBDB;
     static const QString MAINDBNAME;
     static const QString SCANNERDBNAME;
-    static const QString AUTODBNAME;
 
 	static const QString execPath();
 

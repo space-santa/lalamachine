@@ -174,11 +174,7 @@
     <ClCompile Include="..\..\src\QueryBuilder.cpp" />
     <ClCompile Include="QueryBuilder.test.cpp" />
     <ClCompile Include="..\..\src\QueryResult.cpp" />
-    <ClCompile Include="..\..\src\autoplaylist.cpp" />
-    <ClCompile Include="..\..\src\autoplaylistmanager.cpp" />
-    <ClCompile Include="..\..\src\autoplaylistobject.cpp" />
     <ClCompile Include="..\..\src\config.cpp" />
-    <ClCompile Include="lalatest.cpp" />
     <ClCompile Include="..\..\src\lalatypes.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="..\..\src\model.cpp" />
@@ -187,7 +183,6 @@
     <ClCompile Include="..\..\src\playlistmodel.cpp" />
     <ClCompile Include="playlistmodeltest.cpp" />
     <ClCompile Include="..\..\src\playlistprovider.cpp" />
-    <ClCompile Include="testautoplaylist.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\IDirWalker.h" />
@@ -197,16 +192,9 @@
     <QtMoc Include="QueryBuilder.test.h">
     </QtMoc>
     <ClInclude Include="..\..\src\QueryResult.h" />
-    <QtMoc Include="..\..\src\autoplaylist.h">
-    </QtMoc>
-    <QtMoc Include="..\..\src\autoplaylistmanager.h">
-    </QtMoc>
-    <ClInclude Include="..\..\src\autoplaylistobject.h" />
     <QtMoc Include="..\..\src\config.h">
     </QtMoc>
     <ClInclude Include="..\..\src\exceptions.h" />
-    <QtMoc Include="lalatest.h">
-    </QtMoc>
     <QtMoc Include="..\..\src\lalatypes.h">
     </QtMoc>
     <ClInclude Include="..\..\src\model.h" />
@@ -218,8 +206,6 @@
     <QtMoc Include="playlistmodeltest.h">
     </QtMoc>
     <QtMoc Include="..\..\src\playlistprovider.h">
-    </QtMoc>
-    <QtMoc Include="testautoplaylist.h">
     </QtMoc>
     <ClInclude Include="..\..\src\track.h" />
   </ItemGroup>

@@ -56,15 +56,6 @@
     <ClCompile Include="src\QueryResult.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\autoplaylist.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\autoplaylistmanager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\autoplaylistobject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -107,15 +98,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\QueryResult.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <QtMoc Include="src\autoplaylist.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\autoplaylistmanager.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <ClInclude Include="src\autoplaylistobject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <QtMoc Include="src\config.h">
@@ -285,15 +267,6 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="images\tab_remove.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="qml\AutoPlaylistDialog.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="qml\AutoPlaylistMenu.qml">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="qml\AutoPlaylistObject.qml">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="qml\Configuration.qml">

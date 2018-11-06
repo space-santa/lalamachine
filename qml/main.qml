@@ -136,40 +136,8 @@ ApplicationWindow {
             onOpenExportDialog: export_dialog.open()
             onOpenSettingsDialog: settings_dialog.open()
         }
-        AutoPlaylistMenu {
-            autoPlaylistNames: auto_playlist_manager.autoPlaylistNames
-            onOpenAutoPlaylist: playlist.addAutoPlaylist(listname)
-            onEditAutoPlaylist: apd.editAutoPlaylist(
-                                    listname,
-                                    auto_playlist_manager.getAutoPlaylist(
-                                        listname))
-            onCreateNewAutoPlaylist: apd.createNew()
-            onDeleteAutoPlaylist: auto_playlist_manager.deleteAutoPlaylist(
-                                      listname)
-        }
         InfoMenu {
             onShowInfoDialog: infos.visible = true
-        }
-    }
-
-    AutoPlaylistManager {
-        id: auto_playlist_manager
-    }
-
-    AutoPlaylistDialog {
-        id: apd
-        visible: false
-
-        onAccepted: {
-            if (!canQuit()) {
-                return
-            }
-
-            var name = apd.apName
-            var values = collectValues()
-            auto_playlist_manager.saveAutoPlaylist(name, values)
-            apd.close()
-            playlist.addAutoPlaylist(name)
         }
     }
 
@@ -464,12 +432,6 @@ ApplicationWindow {
 
                     onPlay: {
                         playMusic.playTrack(path, title, artist)
-                    }
-
-                    function addAutoPlaylist(listname) {
-                        playlist.createNewList()
-                        playlist.addLib(auto_playlist_manager.getTracks(
-                                            listname))
                     }
                 }
 

@@ -7,9 +7,6 @@ CONFIG += C++11 # console
 win32:RC_ICONS += images/lalamachine-new.ico
 
 SOURCES += \
-    src/autoplaylist.cpp \
-    src/autoplaylistmanager.cpp \
-    src/autoplaylistobject.cpp \
     src/config.cpp \
     src/DatabaseSetup.cpp \
     src/DirWalker.cpp \
@@ -32,7 +29,7 @@ SOURCES += \
     src/tags.cpp \
     src/theplayer.cpp \
     src/timeconverter.cpp \
-    src/track.cpp 
+    src/track.cpp
     src/WinTag.cpp \
 
 RESOURCES += qml.qrc
@@ -41,9 +38,6 @@ RESOURCES += qml.qrc
 include(deployment.pri)
 
 HEADERS += \
-    src/autoplaylist.h \
-    src/autoplaylistmanager.h \
-    src/autoplaylistobject.h \
     src/config.h \
     src/DatabaseSetup.h \
     src/exceptions.h \
@@ -67,7 +61,7 @@ HEADERS += \
     src/tags.h \
     src/theplayer.h \
     src/timeconverter.h \
-    src/track.h 
+    src/track.h
     src/WinTag.h \
 
 OTHER_FILES += \

@@ -190,9 +190,6 @@
     <ClCompile Include="src\DatabaseSetup.cpp" />
     <ClCompile Include="src\QueryBuilder.cpp" />
     <ClCompile Include="src\QueryResult.cpp" />
-    <ClCompile Include="src\autoplaylist.cpp" />
-    <ClCompile Include="src\autoplaylistmanager.cpp" />
-    <ClCompile Include="src\autoplaylistobject.cpp" />
     <ClCompile Include="src\config.cpp" />
     <ClCompile Include="src\fileexporter.cpp" />
     <ClCompile Include="src\lalatypes.cpp" />
@@ -217,11 +214,6 @@
     <ClInclude Include="src\MainDB.h" />
     <ClInclude Include="src\QueryBuilder.h" />
     <ClInclude Include="src\QueryResult.h" />
-    <QtMoc Include="src\autoplaylist.h">
-    </QtMoc>
-    <QtMoc Include="src\autoplaylistmanager.h">
-    </QtMoc>
-    <ClInclude Include="src\autoplaylistobject.h" />
     <QtMoc Include="src\config.h">
     </QtMoc>
     <ClInclude Include="src\exceptions.h" />
@@ -261,9 +253,6 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <None Include="qml\AutoPlaylistDialog.qml" />
-    <None Include="qml\AutoPlaylistMenu.qml" />
-    <None Include="qml\AutoPlaylistObject.qml" />
     <None Include="qml\Configuration.qml" />
     <None Include="qml\ImageButton.qml" />
     <None Include="qml\InfoDialog.qml" />
