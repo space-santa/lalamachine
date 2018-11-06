@@ -1,6 +1,6 @@
 import QtQuick 2.0
 
-Playlist {
+LalaPlaylist {
     id: library_playlist
     onShowRightClickMenu: rcm.popup()
     signal addTracksToNamedPlaylist(string listname, var tracks)

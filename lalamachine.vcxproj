@@ -271,7 +271,7 @@
     <None Include="qml\NowPlayingDisplay.qml" />
     <None Include="qml\PlayerControlButtons.qml" />
     <None Include="qml\PlayerControls.qml" />
-    <None Include="qml\Playlist.qml" />
+    <None Include="qml\LalaPlaylist.qml" />
     <None Include="qml\PlaylistMenu.qml" />
     <None Include="qml\SavePlaylistDialog.qml" />
     <None Include="qml\SettingsDialog.qml" />
