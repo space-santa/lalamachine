@@ -43,9 +43,6 @@
     <ClCompile Include="QueryBuilder.test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\QueryResult.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
