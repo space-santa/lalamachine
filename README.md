@@ -6,7 +6,6 @@ lalamachine is just another music player. It features:
 
 * A library with nice filter and search functionality.
 * Playlists which can be exported into a folder.
-* Automatic playlists
 
 ## Fedora packages
 
@@ -14,92 +13,15 @@ I no longer provide packages because I no longer use it.
 
 ## Dependencies
 
-qtbase, qtmultimedia, taglib
+qtbase, qtmultimedia, LalaServer
 
 ## Build it
 
-Using the qmake of Qt5, the build and install process is very straightforward:
-
-```bash
-qmake
-make
-sudo make install
-```
-
-The software will be installed in /usr/bin.
-
-To remove lalamachine,
-
-```bash
-sudo make uninstall
-```
-
-## Build it on Windows 
+I only support Windows. This used to be multiplattform, and will probably work without too much adjustments on Linux but I simply don't have the time to support multiple targets.
 
 ### MSVC
 
-The Qt tools for Visual Studio are required
-
-Build and install taglib according to their INSTALL file.
-I recommend using the cmake-GUI and set the install prefix next to the source directory. I use `msbuild` to build and install.
-
-```
-msbuild /pconfiguration=release ALL_BUILD.vcxproj
-msbuild INSTALL.vcxproj
-
-
-If the install dir is not `../Libraries` add the `include`, `lib`, and `bin` dir of taglib to the `lalamachine` project properties (not the solution properties).
-
-Finally, to actually run lalamachine, copy taglib.dll (or taglib.lib) next to `lalamachine.exe` in the debug or release folder. This is required because the project properties only take care of what is required to build the thing. You have to take care of the runtime dependencies.
-
-### mingw
-
-This is a bit more involved.
-Install [Qt](https://www.qt.io/download), [cmake](https://cmake.org/download/), and [git](https://git-scm.com/downloads)
-
-(I am going to assume that there is a `D` drive.)
-
-Open git bash
-
-To actually play music you will most likely need to install [LAV Filter](https://github.com/Nevcairiel/LAVFilters/releases).
-
-```
-cd /d/
-mkdir lalamachine
-cd lalamachine
-git clone git@github.com:space-santa/lalamachine.git
-```
-
-The result is `/d/lalamachine/lalamachine/`.
-Next download [taglib](http://taglib.org/releases/taglib-1.11.1.tar.gz) and move it into `/d/lalamachine/`.
-
-Also, add `D:\Qt\Tools\mingw530_32\bin` (or wherever your toolchain is) to the `PATH`.
-
-Back in git bash
-
-```
-cd /d/lalamachine/
-tar xzfp taglib-1.11.1.tar.gz
-cd taglib-1.11.1
-mkdir build
-cd build
-cmake -G "MinGW Makefiles" -D CMAKE_CXX_COMPILER=g++.exe -D CMAKE_MAKE_PROGRAM=mingw32-make.exe -DBUILD_SHARED_LIBS=ON -DENABLE_STATIC_RUNTIME=OFF ..
-mingw32-make.exe
-```
-
-## Debug
-
-On Fedora >22, don't forget to enable QDebug output. To do that, add or create
-
-`~/.config/QtProject/qtlogging.ini` with this content:
-
-```bash
-[Rules]
-*.debug=true
-qt.*.debug=false
-```
-
-The first rule enables debug output. The second line disables the Qt internal one.
+The Qt tools for Visual Studio are required. Open the solution and press play. For that to work you need to copy all the required Qt *.ddl and folders into the appropriate folder (the one where lalamachine.exe is located, probably `release` or `debug`). There must also be a folder `LalaServer` that should contain `LalaServer.exe` and all its dependencies.
 
 ## Contribute
 
