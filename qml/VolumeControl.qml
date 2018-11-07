@@ -24,7 +24,7 @@ Rectangle {
     color: "transparent"
 
     onValueChanged: {
-        lalaplayer.setVolume(value * 100)
+        lalaplayer.volume = value
     }
 
     Component.onCompleted: {

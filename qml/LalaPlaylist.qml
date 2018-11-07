@@ -392,7 +392,7 @@ Rectangle {
             playRow(getRandomNext())
         } else if (hasNext()) {
             console.log("playNext has next")
-            playRow(rowPlaying + 1)
+			playRow(rowPlaying + 1)
         } else if (repeatAll) {
             console.log("playNext repeat all")
             playRow(0)

@@ -47,13 +47,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\DatabaseSetup.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\QueryBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\QueryResult.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\config.cpp">
@@ -78,9 +72,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\playlistprovider.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\theplayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -125,9 +116,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="src\sysinfo.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\theplayer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <ClInclude Include="src\track.h">
@@ -329,9 +317,6 @@
     <None Include="qml\PlayerControls.qml">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="qml\Playlist.qml">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="qml\PlaylistMenu.qml">
       <Filter>Resource Files</Filter>
     </None>
@@ -363,6 +348,9 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="qml\VolumeControl.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\LalaPlaylist.qml">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

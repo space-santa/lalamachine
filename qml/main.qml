@@ -22,6 +22,7 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Window 2.2
 import Qt.labs.settings 1.0
 import QtQuick.Controls.Styles 1.4
+import QtMultimedia 5.8
 
 import Lala 1.0
 
@@ -52,12 +53,12 @@ ApplicationWindow {
     property alias musicLib: libview.musicLib
     property string miscPlaylistName: "cs1m090"
     property string currentPlaylist: playlist.currentName
-    property Playlist mainPlaylist: playlist
+    property LalaPlaylist mainPlaylist: playlist
     property PlaylistProvider m3u: m3u
     property Configuration config: config
 
     // lalaplayer is globally accessible to change volume, etc
-    property ThePlayer lalaplayer: playMusic
+    property MediaPlayer lalaplayer: playMusic
 
     property bool playingStatus: getPlayingStatus()
 
@@ -224,7 +225,7 @@ ApplicationWindow {
             if (playMusic.isPlaying) {
                 playMusic.pause()
             } else {
-                if (playMusic.hasAudio()) {
+                if (playMusic.hasAudio) {
                     playMusic.play()
                 } else {
                     playlist.playNext()
@@ -244,14 +245,20 @@ ApplicationWindow {
         id: config
     }
 
-    ThePlayer {
+    MediaPlayer {
         id: playMusic
 
         property string currentTitle
         property string currentArtist
+		property bool isPlaying: playMusic.playbackState == MediaPlayer.PlayingState
+		loops: player_controls.repeatOne ? MediaPlayer.Infinite : 1
+		audioRole: MediaPlayer.MusicRole
+		property bool currentTrackIsAtEnd: duration - position < 100
 
-        onPlayNext: {
-            playNextTrack()
+        onStopped: {
+			if (currentTrackIsAtEnd) {
+				playNextTrack()
+			}
         }
 
         function playNextTrack() {
@@ -278,12 +285,10 @@ ApplicationWindow {
             }
         }
 
-        loops: player_controls.repeatOne
-
         function playTrack(path, title, artist) {
-            // Since the addition of the library it is necessary to
-            // make sure an mrl is actually an mrl.
-            playMusic.play(path)
+			var pathWithoutBackSlash = path.replace(/\\/g, "/");
+			playMusic.source = pathWithoutBackSlash
+            playMusic.play()
             currentTitle = title
             currentArtist = artist
         }
@@ -421,7 +426,7 @@ ApplicationWindow {
                     anchors.top: parent.top
                     anchors.bottom: playlist_text.top
                     repeatAll: player_controls.repeatAll
-                    nowPlayingSource: playMusic.source()
+                    nowPlayingSource: playMusic.source
 
                     onAddTracksToNamedPlaylist: m3u.addTracksToNamedPlaylist(
                                                     listname, tracks)
@@ -513,7 +518,7 @@ ApplicationWindow {
         rawAlbumArtist: lalaplayer.currentArtist
         duration: lalaplayer.duration
         position: lalaplayer.position
-        hasAudio: lalaplayer.hasAudio()
+        hasAudio: lalaplayer.hasAudio
 
         gradient: Gradient {
             GradientStop {

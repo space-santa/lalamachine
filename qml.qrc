@@ -11,7 +11,6 @@
         <file>qml/NowPlayingDisplay.qml</file>
         <file>qml/PlayerControlButtons.qml</file>
         <file>qml/PlayerControls.qml</file>
-        <file>qml/Playlist.qml</file>
         <file>qml/PlaylistMenu.qml</file>
         <file>qml/LibraryPlaylistRightClickMenu.qml</file>
         <file>qml/SavePlaylistDialog.qml</file>
@@ -32,6 +31,7 @@
         <file>qml/MainPlaylistRightClickMenu.qml</file>
         <file>qml/TableHeaderDelegate.qml</file>
         <file>qml/TextBase.qml</file>
+        <file>qml/LalaPlaylist.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/back.png</file>

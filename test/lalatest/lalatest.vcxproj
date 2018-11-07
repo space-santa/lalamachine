@@ -173,7 +173,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\QueryBuilder.cpp" />
     <ClCompile Include="QueryBuilder.test.cpp" />
-    <ClCompile Include="..\..\src\QueryResult.cpp" />
     <ClCompile Include="..\..\src\config.cpp" />
     <ClCompile Include="..\..\src\lalatypes.cpp" />
     <ClCompile Include="main.cpp" />

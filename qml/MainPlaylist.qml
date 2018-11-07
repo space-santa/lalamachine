@@ -2,7 +2,7 @@ import QtQuick 2.0
 
 import Lala 1.0
 
-Playlist {
+LalaPlaylist {
     id: main_playlist
 
     onShowRightClickMenu: rcm.popup()
