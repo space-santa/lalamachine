@@ -7,7 +7,6 @@
 #include <QString>
 #include <QStringList>
 #include <memory>
-#include <mutex>
 
 #include "IMainDB.h"
 #include "QueryBuilder.h"
@@ -21,24 +20,14 @@ public:
     Q_ENUMS(QueryBuilder::SortWhat)
     Q_ENUMS(QueryBuilder::SortHow)
 
-    QStringList genre(const QString& filter);
-    QStringList artist(const QString& filter, const QString& genre = QString());
-    QStringList album(const QString& filter, const QString& genre = QString(), const QString& artist = QString());
-
-    QJsonObject trackDetails(const QString& mrl) const;
-
     static QPair<int, QJsonArray> queryResultToJson(const std::unique_ptr<IQueryResult>& result);
     static QString cleanPath(QString mrl);
 
-    void ensureAllTables();
-    void createLibTable(const QString& name);
     QStringList getGenreList(const QString& filter = QString()) const;
     QStringList getArtistList(const QString& artist = QString(), const QString& genre = QString()) const;
     QStringList getAlbumList(const QString& album = QString(),
                              const QString& artist = QString(),
                              const QString& genre = QString()) const;
-
-    QStringList getList(const QString& what) const;
 
     QPair<int, QJsonArray> runSetDisplayQuery(const QString& query);
     QJsonArray getAlbumTracks(const QString& album);
@@ -47,10 +36,5 @@ public:
 
 private:
     std::unique_ptr<IMainDB> db_;
-    std::mutex mutex_;
-
-    void init();
     static QStringList resultToList(const std::unique_ptr<IQueryResult>& result, const QString& what);
-    void updateTable();
-    void checkIfTablesExist() const;
 };

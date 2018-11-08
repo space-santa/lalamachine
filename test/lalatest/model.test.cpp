@@ -34,34 +34,6 @@ void ModelTest::testResultToList() {
     }
 }
 
-void ModelTest::testGenre() {
-    Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
-    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.db_.get());
-    tmpDB->execQueries.clear();
-    auto result = model.genre("rockystuff");
-    QCOMPARE(tmpDB->execQueries.first().contains("ROCKYSTUFF"), true);
-}
-
-void ModelTest::testUpdateTableNoMusicLib() {
-    Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
-    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.db_.get());
-    tmpDB->execQueries.clear();
-    model.updateTable();
-    QCOMPARE(tmpDB->execQueries.count(), 1);
-    QCOMPARE(tmpDB->execQueries.first().startsWith("CREATE TABLE `musiclib`"), true);
-}
-
-void ModelTest::testUpdateTableWithMusicLibWithDiscNumber() {
-    Model model(std::unique_ptr<IMainDB>(new MainDBMock()));
-    MainDBMock* tmpDB = dynamic_cast<MainDBMock*>(model.db_.get());
-    tmpDB->execQueries.clear();
-    tmpDB->tableList << "musiclib";
-    tmpDB->queryRetval = QVariant(QString("discNumber"));
-    model.updateTable();
-    QCOMPARE(tmpDB->execQueries.count(), 2);
-    QCOMPARE(tmpDB->execQueries.first(), QString("PRAGMA table_info(musiclib)"));
-}
-
 void ModelTest::testCleanPath() {
     QCOMPARE(Model::cleanPath("file://lalala"), QString("lalala"));
     QCOMPARE(Model::cleanPath("lfile://lalala"), QString("lfile://lalala"));

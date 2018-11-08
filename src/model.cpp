@@ -8,16 +8,6 @@
 #include "model.h"
 
 Model::Model(std::unique_ptr<IMainDB> mainDB) : db_(std::move(mainDB)) {
-    init();
-}
-
-void Model::init() {
-    updateTable();
-}
-
-QStringList Model::genre(const QString& filter) {
-    auto result = db_->exec(QueryBuilder::genreQuery(filter));
-    return Model::resultToList(result, "genre");
 }
 
 QStringList Model::resultToList(const std::unique_ptr<IQueryResult>& result, const QString& what) {
@@ -32,74 +22,6 @@ QStringList Model::resultToList(const std::unique_ptr<IQueryResult>& result, con
     }
 
     return retval;
-}
-
-void Model::updateTable() {
-    QStringList tables = db_->tables();
-
-    if (!tables.contains("musiclib")) {
-        ensureAllTables();
-        return;
-    }
-
-    QString query("PRAGMA table_info(musiclib)");
-    auto record = db_->exec(query);
-
-    QStringList tmplist;
-    while (record->next()) {
-        tmplist << record->value("name").toString();
-    }
-
-    if (!tmplist.contains("discNumber")) {
-        try {
-            db_->exec("ALTER TABLE musiclib ADD COLUMN discNumber INT NOT NULL DEFAULT 1");
-        } catch (const QueryError& error) {
-            qDebug() << error.what();
-        }
-    }
-}
-
-void Model::ensureAllTables() {
-    createLibTable("musiclib");
-}
-
-void Model::createLibTable(const QString& name) {
-    QStringList tables = db_->tables();
-
-    if (!tables.contains(name)) {
-        QString qs("CREATE TABLE `%1` ");
-        qs.append("(\n");
-        qs.append("`album` TEXT,\n");
-        qs.append("`artist` TEXT,\n");
-        qs.append("`comment` TEXT,\n");
-        qs.append("`genre` TEXT,\n");
-        qs.append("`length` int NOT NULL,\n");
-        qs.append("`lengthString` TEXT NOT NULL,\n");
-        qs.append("`mrl` TEXT NOT NULL PRIMARY KEY,\n");
-        qs.append("`path` TEXT NOT NULL,\n");
-        qs.append("`title` TEXT NOT NULL,\n");
-        qs.append("`track` int,\n");
-        qs.append("`year` int,\n");
-        qs.append("`discNumber` int NOT NULL DEFAULT 1\n");
-        qs.append(")");
-
-        try {
-            db_->exec(qs.arg(name));
-        } catch (const QueryError& error) {
-            qDebug() << error.what();
-        }
-    }
-}
-
-void Model::checkIfTablesExist() const {
-    auto tables = db_->tables();
-
-    if (!tables.contains("musiclib")) {
-        throw TableNotFoundError("musiclib");
-    }
-    if (!tables.contains("tmplib")) {
-        throw TableNotFoundError("tmplib");
-    }
 }
 
 QPair<int, QJsonArray> Model::queryResultToJson(const std::unique_ptr<IQueryResult>& result) {
