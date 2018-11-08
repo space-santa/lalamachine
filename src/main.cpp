@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
     qInstallMessageHandler(myMessageOutput);
     QApplication app(argc, argv);
     app.setWindowIcon(QIcon(QPixmap(":/images/images/lala-icon-2-small.png")));
-    app.setApplicationVersion("3.12.0");
+    app.setApplicationVersion("3.13.0");
     app.setApplicationName("lalamachine");
     app.setOrganizationName("rmean");
 
