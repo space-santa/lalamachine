@@ -192,7 +192,6 @@
   <ItemGroup>
     <ClCompile Include="src\QueryBuilder.cpp" />
     <ClCompile Include="src\config.cpp" />
-    <ClCompile Include="src\fileexporter.cpp" />
     <ClCompile Include="src\lalatypes.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\model.cpp" />
@@ -217,8 +216,6 @@
     <QtMoc Include="src\config.h">
     </QtMoc>
     <ClInclude Include="src\exceptions.h" />
-    <QtMoc Include="src\fileexporter.h">
-    </QtMoc>
     <QtMoc Include="src\lalatypes.h">
     </QtMoc>
     <ClInclude Include="src\model.h" />

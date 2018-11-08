@@ -53,9 +53,6 @@
     <ClCompile Include="src\config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\fileexporter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\lalatypes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -97,9 +94,6 @@
     <ClInclude Include="src\exceptions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <QtMoc Include="src\fileexporter.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="src\lalatypes.h">
       <Filter>Header Files</Filter>
     </QtMoc>

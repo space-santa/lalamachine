@@ -103,15 +103,26 @@ Rectangle {
 		}
     }
 
-    FileExporter {
+    Item {
         id: file_ex
 
-        onStarted: progress_window.show()
-        onFinished: progress_window.close()
-
-        onUpdateProgress: {
-            progress_bar.value = val
-        }
+		function exportPlaylist(destination, files) {
+			destination = destination.replace("file:///", "")
+			var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "http://localhost:5003/api/fileexport/", true);
+            xhttp.setRequestHeader("Content-type", "application/json");
+            xhttp.onreadystatechange = function() {
+				console.log("readyState", this.readyState);
+				console.log("status", this.status);
+				progress_window.close();
+            };
+            var data = {};
+            data["Destination"] = destination;
+            data["Files"] = files;
+			console.log(JSON.stringify(data))
+            xhttp.send(JSON.stringify(data));
+			onStarted: progress_window.show()
+		}
     }
 
     Window {
@@ -126,8 +137,7 @@ Rectangle {
             width: 250
             height: 50
             anchors.centerIn: parent
-            minimumValue: 0
-            maximumValue: 100
+			indeterminate: true
 
             Text {
                 color: "white"
