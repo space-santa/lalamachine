@@ -59,6 +59,9 @@
                 <Component Id="QT5WIDGETS.DLL" DiskId="1" Guid="0E49D60A-A7AF-4470-B495-41B062C17D6E">
                     <File Id="QT5WIDGETS.DLL" Name="Qt5Widgets.dll" Source="..\release\Qt5Widgets.dll" />
                 </Component>
+                <Component Id="VC_REDIST.X64.EXE" DiskId="1" Guid="C1F050CC-80C1-4210-A58D-2D61671A7E72">
+                    <File Id="VC_REDIST.X64.EXE" Name="vc_redist.x64.exe" Source="..\release\vc_redist.x64.exe" />
+                </Component>
                 <Directory Id="AUDIO" Name="audio">
                     <Component Id="QTAUDIO_WASAPI.DLL" DiskId="1" Guid="A0CB3DB2-65F2-44D8-B6E8-DA4D52B5F341">
                         <File Id="QTAUDIO_WASAPI.DLL" Name="qtaudio_wasapi.dll" Source="..\release\audio\qtaudio_wasapi.dll" />
@@ -2841,6 +2844,7 @@
             <ComponentRef Id="QT5SQL.DLL" />
             <ComponentRef Id="QT5SVG.DLL" />
             <ComponentRef Id="QT5WIDGETS.DLL" />
+            <ComponentRef Id="VC_REDIST.X64.EXE" />
             <ComponentRef Id="QTAUDIO_WASAPI.DLL" />
             <ComponentRef Id="QTAUDIO_WINDOWS.DLL" />
             <ComponentRef Id="QGENERICBEARER.DLL" />
