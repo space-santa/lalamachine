@@ -14,7 +14,7 @@
     <ProjectGuid>{44ABF7E0-5BDA-3856-88EE-F0220B024057}</ProjectGuid>
     <RootNamespace>lalamachine</RootNamespace>
     <Keyword>Qt4VSv1.0</Keyword>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.17134.0</WindowsTargetPlatformMinVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -150,8 +150,8 @@
       <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(QTDIR)\lib\qtmaind.lib;shell32.lib;tag.lib;$(QTDIR)\lib\Qt5QuickWidgetsd.lib;$(QTDIR)\lib\Qt5Quickd.lib;$(QTDIR)\lib\Qt5Widgetsd.lib;$(QTDIR)\lib\Qt5Multimediad.lib;$(QTDIR)\lib\Qt5Guid.lib;$(QTDIR)\lib\Qt5Qmld.lib;$(QTDIR)\lib\Qt5Networkd.lib;$(QTDIR)\lib\Qt5Sqld.lib;$(QTDIR)\lib\Qt5Concurrentd.lib;$(QTDIR)\lib\Qt5Cored.lib;Qt5Concurrentd.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Multimediad.lib;Qt5Networkd.lib;Qt5Qmld.lib;Qt5Quickd.lib;Qt5QuickWidgetsd.lib;Qt5Sqld.lib;Qt5Widgetsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Libraries\taglib\bin;..\Libraries\taglib\lib;$(QTDIR)\lib;C:\openssl\lib;C:\Utils\my_sql\mysql-5.6.11-winx64\lib;C:\Utils\postgresql\pgsql\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(QTDIR)\lib\qtmaind.lib;shell32.lib;$(QTDIR)\lib\Qt5QuickWidgetsd.lib;$(QTDIR)\lib\Qt5Quickd.lib;$(QTDIR)\lib\Qt5Widgetsd.lib;$(QTDIR)\lib\Qt5Multimediad.lib;$(QTDIR)\lib\Qt5Guid.lib;$(QTDIR)\lib\Qt5Qmld.lib;$(QTDIR)\lib\Qt5Networkd.lib;$(QTDIR)\lib\Qt5Sqld.lib;$(QTDIR)\lib\Qt5Concurrentd.lib;$(QTDIR)\lib\Qt5Cored.lib;Qt5Concurrentd.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Multimediad.lib;Qt5Networkd.lib;Qt5Qmld.lib;Qt5Quickd.lib;Qt5QuickWidgetsd.lib;Qt5Sqld.lib;Qt5Widgetsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;C:\openssl\lib;C:\Utils\my_sql\mysql-5.6.11-winx64\lib;C:\Utils\postgresql\pgsql\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>
