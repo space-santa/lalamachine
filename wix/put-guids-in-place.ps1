@@ -1,0 +1,1 @@
+(Get-Content .\MainGroup.wxs) | ForEach-Object { $_.replace('PUT1GUIDHERE', [guid]::NewGuid()) } | Set-Content .\MainGroup.wxs
