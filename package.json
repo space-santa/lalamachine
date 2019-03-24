@@ -1,6 +1,6 @@
 {
   "name": "lalamachine",
-  "version": "3.13.0",
+  "version": "3.14.0",
   "description": "lalamachine is just another music player. It features:",
   "main": "index.js",
   "directories": {

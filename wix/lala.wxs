@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <Product Id="475D6740-95A9-4AD6-8223-4A261CC4C092" Name="lalamachine" Language="1033" Version="3.13.0" Manufacturer="space-santa" UpgradeCode="81575B97-6BED-4C90-B066-37A095D2C803">
+    <Product Id="475D6740-95A9-4AD6-8223-4A261CC4C092" Name="lalamachine" Language="1033" Version="3.14.0" Manufacturer="space-santa" UpgradeCode="81575B97-6BED-4C90-B066-37A095D2C803">
         <Package Description="Test file in a Product" Comments="Simple test" InstallerVersion="200" Compressed="yes" />
         <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" />
         <Directory Id="TARGETDIR" Name="SourceDir">
@@ -743,9 +743,6 @@
                     <Component Id="MSCORDACCORE.DLL" DiskId="1" Guid="4752F0D8-C814-4FA3-A1B5-F9C2943C1639">
                         <File Id="MSCORDACCORE.DLL" Name="mscordaccore.dll" Source="..\release\LalaServer\mscordaccore.dll" />
                     </Component>
-                    <Component Id="MSCORDACCORE_AMD64_AMD64_4.6.26919.02.DLL" DiskId="1" Guid="B3F11A26-3038-43A8-859D-9F130B2379A5">
-                        <File Id="MSCORDACCORE_AMD64_AMD64_4.6.26919.02.DLL" Name="mscordaccore_amd64_amd64_4.6.26919.02.dll" Source="..\release\LalaServer\mscordaccore_amd64_amd64_4.6.26919.02.dll" />
-                    </Component>
                     <Component Id="MSCORDBI.DLL" DiskId="1" Guid="44A2541F-76ED-4140-BE65-925E18367763">
                         <File Id="MSCORDBI.DLL" Name="mscordbi.dll" Source="..\release\LalaServer\mscordbi.dll" />
                     </Component>
@@ -784,9 +781,6 @@
                     </Component>
                     <Component Id="SOS.NETCORE.DLL" DiskId="1" Guid="C67F988C-F8F2-4BCA-B77B-6449A3A7A9AE">
                         <File Id="SOS.NETCORE.DLL" Name="SOS.NETCore.dll" Source="..\release\LalaServer\SOS.NETCore.dll" />
-                    </Component>
-                    <Component Id="SOS_AMD64_AMD64_4.6.26919.02.DLL" DiskId="1" Guid="E3A36B18-CBDA-4078-9EBC-D65F34176E79">
-                        <File Id="SOS_AMD64_AMD64_4.6.26919.02.DLL" Name="sos_amd64_amd64_4.6.26919.02.dll" Source="..\release\LalaServer\sos_amd64_amd64_4.6.26919.02.dll" />
                     </Component>
                     <Component Id="SQLITE.INTEROP.DLL" DiskId="1" Guid="BEC043B9-4051-4323-B562-35DDEAD1D4DC">
                         <File Id="SQLITE.INTEROP.DLL" Name="SQLite.Interop.dll" Source="..\release\LalaServer\SQLite.Interop.dll" />
@@ -1295,14 +1289,6 @@
                     <Component Id="WINDOWSBASE.DLL" DiskId="1" Guid="F74E8836-0314-49CA-9CA3-42372AF38E3F">
                         <File Id="WINDOWSBASE.DLL" Name="WindowsBase.dll" Source="..\release\LalaServer\WindowsBase.dll" />
                     </Component>
-                    <Directory Id="WWWROOT" Name="wwwroot">
-                        <Component Id="HORSE.MP3" DiskId="1" Guid="519B966F-9EFB-4986-A826-77106B75C2F2">
-                            <File Id="HORSE.MP3" Name="horse.mp3" Source="..\release\LalaServer\wwwroot\horse.mp3" />
-                        </Component>
-                        <Component Id="INDEX.HTML" DiskId="1" Guid="D720A2F8-A9F8-499C-8911-8347F6B974ED">
-                            <File Id="INDEX.HTML" Name="index.html" Source="..\release\LalaServer\wwwroot\index.html" />
-                        </Component>
-                    </Directory>
                 </Directory>
                 <Directory Id="MEDIASERVICE" Name="mediaservice">
                     <Component Id="DSENGINE.DLL" DiskId="1" Guid="6F9FB695-537C-4D79-850A-9A12BCB32013">
@@ -1529,14 +1515,8 @@
                     <Component Id="DECLARATIVE_MULTIMEDIA.DLL" DiskId="1" Guid="93E13AB3-7C0A-44C6-BB49-9633741396F8">
                         <File Id="DECLARATIVE_MULTIMEDIA.DLL" Name="declarative_multimedia.dll" Source="..\release\QtMultimedia\declarative_multimedia.dll" />
                     </Component>
-                    <Component Id="DECLARATIVE_MULTIMEDIA.PDB" DiskId="1" Guid="365E20B9-2B53-43DC-B409-797A61D1FAD7">
-                        <File Id="DECLARATIVE_MULTIMEDIA.PDB" Name="declarative_multimedia.pdb" Source="..\release\QtMultimedia\declarative_multimedia.pdb" />
-                    </Component>
                     <Component Id="DECLARATIVE_MULTIMEDIAD.DLL" DiskId="1" Guid="754D38CC-89CF-489C-993C-1AD3E5932401">
                         <File Id="DECLARATIVE_MULTIMEDIAD.DLL" Name="declarative_multimediad.dll" Source="..\release\QtMultimedia\declarative_multimediad.dll" />
-                    </Component>
-                    <Component Id="DECLARATIVE_MULTIMEDIAD.PDB" DiskId="1" Guid="B8120BC4-28BA-415E-8140-7A93F0C4E231">
-                        <File Id="DECLARATIVE_MULTIMEDIAD.PDB" Name="declarative_multimediad.pdb" Source="..\release\QtMultimedia\declarative_multimediad.pdb" />
                     </Component>
                     <Component Id="PLUGINS.QMLTYPES_3" DiskId="1" Guid="FEB82D2A-995E-4821-8B27-547772121572">
                         <File Id="PLUGINS.QMLTYPES_3" Name="plugins.qmltypes" Source="..\release\QtMultimedia\plugins.qmltypes" />
@@ -3086,7 +3066,6 @@
             <ComponentRef Id="MICROSOFT.WIN32.PRIMITIVES.DLL" />
             <ComponentRef Id="MICROSOFT.WIN32.REGISTRY.DLL" />
             <ComponentRef Id="MSCORDACCORE.DLL" />
-            <ComponentRef Id="MSCORDACCORE_AMD64_AMD64_4.6.26919.02.DLL" />
             <ComponentRef Id="MSCORDBI.DLL" />
             <ComponentRef Id="MSCORLIB.DLL" />
             <ComponentRef Id="MSCORRC.DEBUG.DLL" />
@@ -3100,7 +3079,6 @@
             <ComponentRef Id="SNI.DLL" />
             <ComponentRef Id="SOS.DLL" />
             <ComponentRef Id="SOS.NETCORE.DLL" />
-            <ComponentRef Id="SOS_AMD64_AMD64_4.6.26919.02.DLL" />
             <ComponentRef Id="SQLITE.INTEROP.DLL" />
             <ComponentRef Id="SYSTEM.APPCONTEXT.DLL" />
             <ComponentRef Id="SYSTEM.BUFFERS.DLL" />
@@ -3270,8 +3248,6 @@
             <ComponentRef Id="UCRTBASE.DLL" />
             <ComponentRef Id="WEB.CONFIG" />
             <ComponentRef Id="WINDOWSBASE.DLL" />
-            <ComponentRef Id="HORSE.MP3" />
-            <ComponentRef Id="INDEX.HTML" />
             <ComponentRef Id="DSENGINE.DLL" />
             <ComponentRef Id="QTMEDIA_AUDIOENGINE.DLL" />
             <ComponentRef Id="WMFENGINE.DLL" />
@@ -3340,9 +3316,7 @@
             <ComponentRef Id="QMLDIR_3" />
             <ComponentRef Id="QTGRAPHICALEFFECTSPRIVATE.DLL" />
             <ComponentRef Id="DECLARATIVE_MULTIMEDIA.DLL" />
-            <ComponentRef Id="DECLARATIVE_MULTIMEDIA.PDB" />
             <ComponentRef Id="DECLARATIVE_MULTIMEDIAD.DLL" />
-            <ComponentRef Id="DECLARATIVE_MULTIMEDIAD.PDB" />
             <ComponentRef Id="PLUGINS.QMLTYPES_3" />
             <ComponentRef Id="QMLDIR_4" />
             <ComponentRef Id="VIDEO.QML" />
@@ -3761,7 +3735,6 @@
             <ComponentRef Id="StartMenuShortcuts" />
         </Feature>
         <UI />
-        <UIRef Id="WixUI_Minimal" />
         <Icon Id="StartMenuIcon.exe" SourceFile="..\release\lalamachine.exe" />
         <WixVariable Id="WixUILicenseRtf" Value="..\gpl-3.0.rtf" />
     </Product>
