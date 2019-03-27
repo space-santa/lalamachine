@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <Product 
-        Name="lalamachine" 
-        Manufacturer="SpaceSanta" 
-        Id="475D6740-95A9-4AD6-8223-4A261CC4C092" 
+    <Product
+        Name="lalamachine"
+        Manufacturer="SpaceSanta"
+        Id="475D6740-95A9-4AD6-8223-4A261CC4C092"
         UpgradeCode="81575B97-6BED-4C90-B066-37A095D2C803"
         Language="1033"
         Codepage="1252"
-        Version="3.14.0" 
+        Version="3.15.0"
     >
         <Package
-            Id="*" 
-            Description="lalamachine installer" 
-            Comments="SpaceSanta is the best" 
-            Manufacturer="SpaceSanta" 
-            InstallerVersion="100" 
+            Id="*"
+            Description="lalamachine installer"
+            Comments="SpaceSanta is the best"
+            Manufacturer="SpaceSanta"
+            InstallerVersion="100"
             Languages="1033"
             Compressed="yes"
             SummaryCodepage="1252"
@@ -118,7 +118,7 @@
              <Directory Id="DesktopFolder" Name="Desktop" />
         </Directory>
 
-        <Feature 
+        <Feature
             Id='Complete' Title='lalamachine' Description='The complete package.'
             Display='expand' Level='1' ConfigurableDirectory='INSTALLDIR'
         >
