@@ -5425,7 +5425,7 @@
                 <File Id="fil94C6F418DDEE0C584D3E34845DB6140E" KeyPath="yes" Source="..\release\LalaServer\mscordaccore.dll" />
             </Component>
             <Component Id="cmp5345EAB3F70CE23602D598EEA69A6E68" Directory="dirE983C4B1D836C5A5591DF03006ACB64F" Guid="5ce8865e-bed3-4d8f-8c84-ef285fc831e5">
-                <File Id="fil1701DB50114C428B850E3528C7085261" KeyPath="yes" Source="..\release\LalaServer\mscordaccore_amd64_amd64_4.6.27129.04.dll" />
+                <File Id="fil1701DB50114C428B850E3528C7085261" KeyPath="yes" Source="..\release\LalaServer\mscordaccore_amd64_amd64_4.6.27414.06.dll" />
             </Component>
             <Component Id="cmp5C1DF3E18B21811F36009553592D337C" Directory="dirE983C4B1D836C5A5591DF03006ACB64F" Guid="9ed60be0-879c-47e4-a467-1a8f07ef5ac7">
                 <File Id="filE8925E378717B7D9B7F5E1E568A307D1" KeyPath="yes" Source="..\release\LalaServer\mscordbi.dll" />
@@ -5839,7 +5839,7 @@
                 <File Id="filEADC7337E017864E71702A49F3C199C5" KeyPath="yes" Source="..\release\LalaServer\SOS.NETCore.dll" />
             </Component>
             <Component Id="cmp45DBA062DEBA0EABA4F76DB90208573E" Directory="dirE983C4B1D836C5A5591DF03006ACB64F" Guid="4cfd068a-723a-4fb7-9155-d250ccfb8f28">
-                <File Id="filDEE4DDEE94C9AE55A8E58EC857F73705" KeyPath="yes" Source="..\release\LalaServer\sos_amd64_amd64_4.6.27129.04.dll" />
+                <File Id="filDEE4DDEE94C9AE55A8E58EC857F73705" KeyPath="yes" Source="..\release\LalaServer\sos_amd64_amd64_4.6.27414.06.dll" />
             </Component>
             <Component Id="cmp16EC80B8E01883BF27BBD764DBBE2DA0" Directory="dirE983C4B1D836C5A5591DF03006ACB64F" Guid="b3cb5056-97c6-4c4e-b612-a03b27f21406">
                 <File Id="fil680F9D6A614E7554888BA09610EA794F" KeyPath="yes" Source="..\release\LalaServer\SQLite.Interop.dll" />
