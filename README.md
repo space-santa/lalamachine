@@ -7,13 +7,9 @@ lalamachine is just another music player. It features:
 * A library with nice filter and search functionality.
 * Playlists which can be exported into a folder.
 
-## Fedora packages
-
-I no longer provide packages because I no longer use it.
-
 ## Dependencies
 
-qtbase, qtmultimedia, LalaServer
+Qt5, LalaServer
 
 ## Build it
 
@@ -25,17 +21,16 @@ The Qt tools for Visual Studio are required. Open the solution and press play. F
 
 ## Contribute
 
-I would appreciate any help. If you'd like to contribute to lalamachine,
+If you'd like to contribute to lalamachine,
 
 * Test. Either by using the app or by adding to the qt unit test in ./test/lalatest
-* Create packages for other distributions.
-* Add to the wiki.
+* Create packages for other operating systems.
 * Write code and send me a pull request. [There is also a list of issues that wants to be resolved here.](https://github.com/space-santa/lalamachine/projects/1)
 * Let me know how you like the app and what functionality is missing.
 
 ## License
 
-Copyright 2015-2018 Claus Zirkel
+Copyright 2015-2019 Claus Zirkel
 
 Lalamachine is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
