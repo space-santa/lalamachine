@@ -55,8 +55,12 @@ QPair<int, QJsonArray> Model::queryResultToJson(const std::unique_ptr<IQueryResu
 }
 
 QPair<int, QJsonArray> Model::runSetDisplayQuery(const QString& query) {
-    auto result = db_->exec(query);
-    return Model::queryResultToJson(result);
+    try {
+        auto result = db_->exec(query);
+        return Model::queryResultToJson(result);
+    } catch (QueryError e) {
+        return QPair<int, QJsonArray>(0, QJsonArray());
+	}
 }
 
 QJsonArray Model::getAlbumTracks(const QString& album) {
@@ -83,14 +87,19 @@ QJsonObject Model::getMetadataForMrl(const QUrl& mrl) const {
 
 QStringList Model::getGenreList(const QString& filter) const {
     QStringList retval;
-    auto result = db_->exec(QueryBuilder::genreQuery(filter));
 
-    while (result->next()) {
-        QString tmp = result->value("genre").toString();
+    try {
+        auto result = db_->exec(QueryBuilder::genreQuery(filter));
 
-        if (tmp != "") {
-            retval << tmp;
+        while (result->next()) {
+            QString tmp = result->value("genre").toString();
+
+            if (tmp != "") {
+                retval << tmp;
+            }
         }
+    } catch (QueryError e) {
+        qWarning() << e.what();
     }
 
     return retval;
@@ -98,14 +107,19 @@ QStringList Model::getGenreList(const QString& filter) const {
 
 QStringList Model::getArtistList(const QString& artist, const QString& genre) const {
     QStringList retval;
-    auto result = db_->exec(QueryBuilder::artistQuery(artist, genre));
 
-    while (result->next()) {
-        QString tmp = result->value("artist").toString();
+    try {
+        auto result = db_->exec(QueryBuilder::artistQuery(artist, genre));
 
-        if (tmp != "") {
-            retval << tmp;
+        while (result->next()) {
+            QString tmp = result->value("artist").toString();
+
+            if (tmp != "") {
+                retval << tmp;
+            }
         }
+    } catch (QueryError e) {
+        qWarning() << e.what();
     }
 
     return retval;
@@ -113,14 +127,19 @@ QStringList Model::getArtistList(const QString& artist, const QString& genre) co
 
 QStringList Model::getAlbumList(const QString& album, const QString& artist, const QString& genre) const {
     QStringList retval;
-    auto result = db_->exec(QueryBuilder::albumQuery(album, artist, genre));
 
-    while (result->next()) {
-        QString tmp = result->value("album").toString();
+    try {
+        auto result = db_->exec(QueryBuilder::albumQuery(album, artist, genre));
 
-        if (tmp != "") {
-            retval << tmp;
+        while (result->next()) {
+            QString tmp = result->value("album").toString();
+
+            if (tmp != "") {
+                retval << tmp;
+            }
         }
+    } catch (QueryError e) {
+        qWarning() << e.what();
     }
 
     return retval;
