@@ -184,9 +184,7 @@
     <ClCompile Include="..\..\src\playlistprovider.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\IDirWalker.h" />
     <ClInclude Include="..\..\src\IQueryResult.h" />
-    <ClInclude Include="..\..\src\IScannerDB.h" />
     <ClInclude Include="..\..\src\QueryBuilder.h" />
     <QtMoc Include="QueryBuilder.test.h">
     </QtMoc>
