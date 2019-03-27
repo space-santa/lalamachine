@@ -16,6 +16,7 @@ public:
         auto error = result.lastError();
 
         if (error.isValid()) {
+             qWarning() << error.text();
             throw QueryError(error.text().toStdString());
         } else {
             std::unique_ptr<IQueryResult> retval(new QueryResult(result));
