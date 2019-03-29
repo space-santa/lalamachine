@@ -1,6 +1,6 @@
 ﻿namespace dotnet
 {
-    internal class PlaylistModel
+    public class PlaylistModel
     {
     }
 }
