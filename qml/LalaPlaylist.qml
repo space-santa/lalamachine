@@ -337,7 +337,7 @@ Rectangle {
 
         // First check the dbase here.
         var tmp = musicLib.getMetadataForMrl(path)
-        if (!tmp.title) {
+        if (!tmp || !tmp.title) {
             // Only get the metadata from taglib if its not in the dbase
             // because it takes about forever.
             tmp = setId(meta.metaDataAsJson(path))
@@ -434,10 +434,22 @@ Rectangle {
         return playlist_model.pathList()
     }
 
-    PlaylistModel {
+    ListModel {
         id: playlist_model
+		property int totalPlaytime: 0
 
-        //onDataChanged: updateNowPlayingRow()
+		function setLibrary(json){
+			for (var i = 0; i < json.length; ++i) {
+				append(json[i]);
+			}
+		}
+		function sortRole(role, order) {}
+		function toJson() {}
+		function fromJson(json) {
+			clear();
+			setLibrary(json);
+		}
+		function pathList() {}
     }
 
     TableView {
@@ -458,8 +470,8 @@ Rectangle {
         property int containerHeight
         property int initialRow
 
-        Component.onCompleted: setColumns()
-        onPlaylistColumnsChanged: setColumns()
+        //Component.onCompleted: setColumns()
+        //onPlaylistColumnsChanged: setColumns()
 
         // Since we are handling left clicks in the delegate we are effectively
         // disabling ctrl-click/shift-click here.
@@ -625,9 +637,14 @@ Rectangle {
             width: 50
         }
         TableViewColumn {
+            role: "discNumber"
+            title: "disc"
+            width: 50
+        }
+        TableViewColumn {
             role: "title"
             title: "title"
-            width: 200
+            width: 300
         }
         TableViewColumn {
             role: "comment"
@@ -642,12 +659,22 @@ Rectangle {
         TableViewColumn {
             role: "genre"
             title: "genre"
-            width: 150
+            width: 200
+        }
+        TableViewColumn {
+            role: "album"
+            title: "album"
+            width: 200
         }
         TableViewColumn {
             role: "artist"
             title: "artist"
-            width: 150
+            width: 200
+        }
+        TableViewColumn {
+            role: "year"
+            title: "year"
+            width: 70
         }
 
         onModelChanged: {
