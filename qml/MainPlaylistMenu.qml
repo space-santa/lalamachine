@@ -14,7 +14,7 @@ Menu {
 
     PlaylistMenu {
         title: "Open"
-        iconSource: "qrc:/images/images/open.png"
+        iconSource: "../images/open.png"
         onSelected: openPlaylist(listname)
     }
     MenuItem {
@@ -23,7 +23,7 @@ Menu {
     }
     MenuItem {
         text: "save as"
-        iconSource: "qrc:/images/images/save.png"
+        iconSource: "../images/save.png"
         onTriggered: showSavePlaylistDialog()
     }
 
@@ -31,21 +31,21 @@ Menu {
     }
     PlaylistMenu {
         title: "Delete"
-        iconSource: "qrc:/images/images/delete.png"
+        iconSource: "../images/delete.png"
         onSelected: deletePlaylist(listname)
     }
     MenuSeparator {
     }
     MenuItem {
         text: "Export Files"
-        iconSource: "qrc:/images/images/export.png"
+        iconSource: "../images/export.png"
         onTriggered: openExportDialog()
     }
     MenuSeparator {
     }
     MenuItem {
         text: "Settings"
-        iconSource: "qrc:/images/images/preferences.png"
+        iconSource: "../images/preferences.png"
         onTriggered: openSettingsDialog()
     }
 }

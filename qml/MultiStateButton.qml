@@ -84,15 +84,15 @@ ImageButton {
 
     function imageSource() {
         if (repeatOne) {
-            return "qrc:/images/images/repeat1.png"
+            return "../images/repeat1.png"
         }
         if (repeatAll) {
-            return "qrc:/images/images/repeatAll.png"
+            return "../images/repeatAll.png"
         }
         if (random) {
-            return "qrc:/images/images/random.png"
+            return "../images/random.png"
         }
-        return "qrc:/images/images/repeat_random.png"
+        return "../images/repeat_random.png"
     }
 
     MouseArea {

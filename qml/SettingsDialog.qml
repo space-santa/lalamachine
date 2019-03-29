@@ -28,7 +28,7 @@ Dialog {
     title: "Settings"
 
     onAccepted: {
-        config.playlistColumns = playlist_columns.getJson()
+        //config.playlistColumns = playlist_columns.getJson()
     }
 
     standardButtons: StandardButton.Ok | StandardButton.Cancel

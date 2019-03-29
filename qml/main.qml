@@ -26,7 +26,7 @@ import QtMultimedia 5.8
 
 import Lala 1.0
 
-import "qrc:/qml/functions.js" as Functions
+import "./functions.js" as Functions
 
 ApplicationWindow {
     id: master
@@ -164,7 +164,7 @@ ApplicationWindow {
         tooltip: "Shortcut: " + shortcut
         onTriggered: playlist.writeCurrentListIfNamed()
         enabled: playlist.playlistIsNamed()
-        iconSource: "qrc:/images/images/save.png"
+        iconSource: "../images/save.png"
     }
 
     Action {

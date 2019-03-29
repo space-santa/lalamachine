@@ -28,7 +28,7 @@ Rectangle {
     color: "transparent"
 
     property bool scanInProgress: lib.scanning
-    property alias library: lib.libPath
+    property string library: "lib.libPath"
     property alias musicLib: lib
 
     signal addTrack(string path)
@@ -54,20 +54,20 @@ Rectangle {
     MusicLib {
         id: lib
 
-        genreFilter: genre_list.selection
-        artistFilter: artist_list.selection
-        albumFilter: album_list.selection
+        //genreFilter: genre_list.selection
+        //artistFilter: artist_list.selection
+        //albumFilter: album_list.selection
 
-        titlePartialFilter: filter_text.text
+        //titlePartialFilter: filter_text.text
 
-        sortAsc: titles.sortAsc
+        //sortAsc: titles.sortAsc
 
-        onDisplayLibChanged: {
-            titles.emptyCurrentList()
-            titles.addLib(displayLib)
-        }
+        //onDisplayLibChanged: {
+        //    titles.emptyCurrentList()
+        //   titles.addLib(displayLib)
+        //}
 
-		onDoRescan: rescan();
+		//onDoRescan: rescan();
 
 		function rescan() {
 			if (!canScan()) {
@@ -209,7 +209,7 @@ Rectangle {
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
 
-                        source: "qrc:/images/images/edit-clear.png"
+                        source: "../images/edit-clear.png"
 
                         onClicked: {
                             var ts = Date.now()

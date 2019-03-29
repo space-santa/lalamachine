@@ -69,7 +69,7 @@ Rectangle {
             anchors.bottom: parent.bottom
             height: iconSize()
             width: height
-            source: "qrc:/images/images/lalamachine.png"
+            source: "../images/lalamachine.png"
             visible: !mute_icon.visible
 
             function iconSize() {
@@ -83,7 +83,7 @@ Rectangle {
             anchors.bottom: parent.bottom
             height: vol_icon.height
             width: height
-            source: "qrc:/images/images/no.png"
+            source: "../images/no.png"
             visible: playMusic.muted
         }
 

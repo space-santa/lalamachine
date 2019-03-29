@@ -23,7 +23,7 @@ import QtQuick.Window 2.2
 
 import Lala 1.0
 
-import "qrc:/qml/functions.js" as Functions
+import "./functions.js" as Functions
 
 Rectangle {
     id: playlist_container
@@ -437,7 +437,7 @@ Rectangle {
     PlaylistModel {
         id: playlist_model
 
-        onDataChanged: updateNowPlayingRow()
+        //onDataChanged: updateNowPlayingRow()
     }
 
     TableView {

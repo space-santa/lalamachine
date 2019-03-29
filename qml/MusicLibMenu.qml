@@ -8,7 +8,7 @@ Menu {
 
     MenuItem {
         text: "Rescan"
-        iconSource: "qrc:/images/images/refresh.png"
+        iconSource: "../images/refresh.png"
         onTriggered: {
             rescanLibrary()
         }
@@ -17,7 +17,7 @@ Menu {
     }
     MenuItem {
         text: "Set library"
-        iconSource: "qrc:/images/images/preferences.png"
+        iconSource: "../images/preferences.png"
         onTriggered: {
             showSetLibraryDialog()
         }

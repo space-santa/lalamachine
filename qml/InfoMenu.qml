@@ -7,7 +7,7 @@ Menu {
 
     Menu {
         title: "Help"
-        iconSource: "qrc:/images/images/help.png"
+        iconSource: "../images/help.png"
         MenuItem {
             text: "Open the lalamachine wiki in your browser."
             onTriggered: Qt.openUrlExternally("https://github.com/space-santa/lalamachine/wiki")
@@ -16,7 +16,7 @@ Menu {
 
     Menu {
         title: "Report Bug"
-        iconSource: "qrc:/images/images/bug.png"
+        iconSource: "../images/bug.png"
         MenuItem {
             text: "Create a new lalamachine issue in your browser."
             onTriggered: Qt.openUrlExternally("https://github.com/space-santa/lalamachine/issues")
@@ -25,7 +25,7 @@ Menu {
 
     MenuItem {
         text: "About lalamachine"
-        iconSource: "qrc:/images/images/info.png"
+        iconSource: "../images/info.png"
         onTriggered: showInfoDialog()
     }
 }

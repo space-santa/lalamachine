@@ -1,6 +1,6 @@
 import QtQuick 2.0
 
-import "qrc:/qml/functions.js" as Functions
+import "./functions.js" as Functions
 
 Rectangle {
     id: container

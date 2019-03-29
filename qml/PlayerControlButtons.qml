@@ -27,24 +27,24 @@ Row {
     ImageButton {
         id: back_btn
         action: back_action
-        source: "qrc:/images/images/back.png"
+        source: "../images/back.png"
     }
 
     ImageButton {
         id: play_btn
         action: play_pause_action
-        source: playMusic.isPlaying ? "qrc:/images/images/pause.png" : "qrc:/images/images/play.png"
+        source: playMusic.isPlaying ? "../images/pause.png" : "../images/play.png"
     }
 
     ImageButton {
         id: open_btn
         action: open_action
-        source: "qrc:/images/images/eject.png"
+        source: "../images/eject.png"
     }
 
     ImageButton {
         id: next_btn
         action: forward_action
-        source: "qrc:/images/images/forward.png"
+        source: "../images/forward.png"
     }
 }
