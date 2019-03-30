@@ -470,7 +470,7 @@ Rectangle {
         property int containerHeight
         property int initialRow
 
-        //Component.onCompleted: setColumns()
+        Component.onCompleted: setColumns()
         //onPlaylistColumnsChanged: setColumns()
 
         // Since we are handling left clicks in the delegate we are effectively
@@ -570,13 +570,15 @@ Rectangle {
                 removeColumn(i)
             }
 
-            for (i = 0; i < playlistColumns.length; ++i) {
-                if (playlistColumns[i].value === "true") {
-                    var o = Qt.createQmlObject(buildColumnString(
-                                                   playlistColumns[i].key),
-                                               playlist_view, "DynO")
-                    playlist_view.addColumn(o)
-                }
+            let columnsJson = JSON.parse(playlistColumns);
+
+            for (i = 0; i < columnsJson.length; ++i) {
+                console.log(columnsJson[i], typeof(columnsJson[i]));
+                var o = Qt.createQmlObject(buildColumnString(
+                    columnsJson[i]),
+                    playlist_view, "DynO"
+                );
+                playlist_view.addColumn(o)
             }
         }
 
@@ -585,10 +587,10 @@ Rectangle {
             var title = tag
 
             if (tag === "track") {
-                width = 50
+                width = 70
             }
             if (tag === "title") {
-                width = 200
+                width = 250
             }
             if (tag === "comment") {
                 width = 100
@@ -627,54 +629,6 @@ Rectangle {
             retval += "}"
 
             return retval
-        }
-
-        // Leaving the default columns in here for now because on first start,
-        // the config.json doesn't exist, hence no playlistColumns.
-        TableViewColumn {
-            role: "track"
-            title: "track"
-            width: 50
-        }
-        TableViewColumn {
-            role: "discNumber"
-            title: "disc"
-            width: 50
-        }
-        TableViewColumn {
-            role: "title"
-            title: "title"
-            width: 300
-        }
-        TableViewColumn {
-            role: "comment"
-            title: "comment"
-            width: 100
-        }
-        TableViewColumn {
-            role: "lengthString"
-            title: "length"
-            width: 100
-        }
-        TableViewColumn {
-            role: "genre"
-            title: "genre"
-            width: 200
-        }
-        TableViewColumn {
-            role: "album"
-            title: "album"
-            width: 200
-        }
-        TableViewColumn {
-            role: "artist"
-            title: "artist"
-            width: 200
-        }
-        TableViewColumn {
-            role: "year"
-            title: "year"
-            width: 70
         }
 
         onModelChanged: {
