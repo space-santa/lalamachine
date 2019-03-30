@@ -29,7 +29,11 @@ namespace dotnet
                     Layout = (Dictionary<string, int>)serializer.Deserialize(file, typeof(Dictionary<string, int>));
                 }
             }
-            catch (IOException)
+            catch (DirectoryNotFoundException)
+            {
+                Config.CreateLaladir();
+            }
+            catch (FileNotFoundException)
             {
                 // Nothing to worry about, file just doesn't exist.
             }

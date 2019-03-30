@@ -14,13 +14,19 @@ namespace dotnet
         public double volume { get; set; }
         public string lastPlaylist { get; set; }
         public string libPath { get; set; }
-        public INetJsValue playlistColumns { get; set; }
+        public string[] playlistColumns { get; set; }
 
         public Config()
         {
             volume = 0.5;
             lastPlaylist = "";
             libPath = "";
+            playlistColumns = new string[9];
+        }
+
+        public static void CreateLaladir()
+        {
+            Directory.CreateDirectory(LALADIR);
         }
     }
 }
