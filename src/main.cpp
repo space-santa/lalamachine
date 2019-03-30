@@ -11,7 +11,6 @@
 #include "DatabaseSetup.h"
 #include "Logger.h"
 #include "config.h"
-#include "lalatypes.h"
 #include "musiclib.h"
 #include "playlistmodel.h"
 #include "playlistprovider.h"
@@ -40,7 +39,6 @@ void registerQmlTypes() {
     qmlRegisterType<Config>("Lala", 1, 0, "Config");
     qmlRegisterType<MusicLib>("Lala", 1, 0, "MusicLib");
     qmlRegisterType<SysInfo>("Lala", 1, 0, "SysInfo");
-    qmlRegisterType<LalaTypes>("Lala", 1, 0, "LalaTypes");
     qmlRegisterType<PlaylistModel>("Lala", 1, 0, "PlaylistModel");
 }
 
