@@ -55,11 +55,12 @@ Menu {
 
     function populatePlaylistMenu() {
         playlist_menu.clear()
-        playlistnames.forEach(function (name) {
+        for (var i = 0; i < playlistnames.length; ++i) {
+            let name = playlistnames[i];
             var o = Qt.createQmlObject(generateQbjectString(name),
-                                       playlist_menu, 'PlaylistMenu')
-            playlist_menu.insertItem(playlist_menu.items.length, o)
-        })
+                                       playlist_menu, 'PlaylistMenu');
+            playlist_menu.insertItem(playlist_menu.items.length, o);
+        }
     }
 
     // This creates the string for a MenuItem with text 'name' that will call

@@ -5,10 +5,12 @@ namespace dotnet
 {
     public class PlaylistProvider
     {
-        public List<string> playlistNames { get; set; }
+        public string[] playlistNames { get; set; }
 
         public PlaylistProvider()
         {
+            playlistNames = new string[1];
+            playlistNames[0] = "default";
         }
 
         public void writePlaylist(string name, INetJsValue json)
