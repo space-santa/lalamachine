@@ -93,10 +93,18 @@ ApplicationWindow {
     Component.onCompleted: {
         playlist.setCurrentPlaylist(config.lastPlaylist)
 
-		master.x = settings.x
-		master.y = settings.y
-		master.height = settings.height
-		master.width = settings.width
+		if (settings.x > 0) {
+			master.x = settings.x
+		}
+		if (settings.y > 0) {
+			master.y = settings.y
+		}
+		if (settings.height > 0) {
+			master.height = settings.height
+		}
+		if (settings.width > 0) {
+			master.width = settings.width
+		}
 		settings.isActive = true
 
 		console.log(settings.height, settings.width, settings.writable)
@@ -110,7 +118,6 @@ ApplicationWindow {
 
     Settings {
         id: settings
-		property bool isActive: false
         property bool showPlaylist: show_list.checked
     }
 
