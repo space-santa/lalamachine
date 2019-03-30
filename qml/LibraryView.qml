@@ -70,25 +70,25 @@ Rectangle {
         //   titles.addLib(displayLib)
         //}
 
-		//onDoRescan: rescan();
+        //onDoRescan: rescan();
 
-		function rescan() {
-			if (!canScan()) {
-				return
-			}
+        function rescan() {
+            if (!canScan()) {
+                return
+            }
             var xhttp = new XMLHttpRequest();
             xhttp.open("POST", "http://localhost:5003/api/scanner/", true);
             xhttp.setRequestHeader("Content-type", "application/json");
             xhttp.onreadystatechange = function() {
-				console.log("readyState", this.readyState);
-				console.log("status", this.status);
-				lib.scanFinished();
+                console.log("readyState", this.readyState);
+                console.log("status", this.status);
+                lib.scanFinished();
             };
             var data = {};
             data["DbPath"] = getDbPath();
             data["MusicDir"] = libPath;
             xhttp.send(JSON.stringify(data));
-		}
+        }
     }
 
     SplitView {
@@ -106,19 +106,19 @@ Rectangle {
 
             color: "transparent"
 
-			onHeightChanged: {
-				if (libsettings.isActive) {
-					libsettings.libraryTopShelveHeight = height
-				}
-				libsettings.isActive = true;
-			}
+            onHeightChanged: {
+                if (libsettings.isActive) {
+                    libsettings.libraryTopShelveHeight = height
+                }
+                libsettings.isActive = true;
+            }
 
-			Component.onCompleted: {
-				if (libsettings.libraryTopShelveHeight > 0) {
-					height = libsettings.libraryTopShelveHeight
-				}
-				libsettings.isActive = true
-			}
+            Component.onCompleted: {
+                if (libsettings.libraryTopShelveHeight > 0) {
+                    height = libsettings.libraryTopShelveHeight
+                }
+                libsettings.isActive = true
+            }
 
             StringListView {
                 id: genre_list

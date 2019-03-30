@@ -11,14 +11,14 @@
 class LalaServer {
 public:
     bool start() {
-		process_.start(execPath());
+        process_.start(execPath());
 
         if (!process_.waitForStarted()) {
             qWarning() << process_.errorString() << execPath();
             return false;
         }
 
-		return true;
+        return true;
     }
 
 private:

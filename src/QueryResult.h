@@ -12,12 +12,12 @@ public:
     bool next() {
         return query.next();
     }
-    
-	QVariant value(const QString& val) {
+
+    QVariant value(const QString& val) {
         return query.value(val);
     }
-    
-	void first() {
+
+    void first() {
         query.first();
     }
 

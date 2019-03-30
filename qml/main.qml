@@ -69,45 +69,45 @@ ApplicationWindow {
         }
     }
 
-	onXChanged: {
-		if (settings.isActive) {
-			settings.x = master.x
-		}
-	}
-	onYChanged: {
-		if (settings.isActive) {
-			settings.y = master.y
-		}
-	}
-	onHeightChanged: {
-		if (settings.isActive) {
-			settings.height = master.height
-		}
-	}
-	onWidthChanged: {
-		if (settings.isActive) {
-			settings.width = master.width
-		}
-	}
+    onXChanged: {
+        if (settings.isActive) {
+            settings.x = master.x
+        }
+    }
+    onYChanged: {
+        if (settings.isActive) {
+            settings.y = master.y
+        }
+    }
+    onHeightChanged: {
+        if (settings.isActive) {
+            settings.height = master.height
+        }
+    }
+    onWidthChanged: {
+        if (settings.isActive) {
+            settings.width = master.width
+        }
+    }
 
     Component.onCompleted: {
         playlist.setCurrentPlaylist(config.lastPlaylist)
 
-		if (settings.x > 0) {
-			master.x = settings.x
-		}
-		if (settings.y > 0) {
-			master.y = settings.y
-		}
-		if (settings.height > 0) {
-			master.height = settings.height
-		}
-		if (settings.width > 0) {
-			master.width = settings.width
-		}
-		settings.isActive = true
+        if (settings.x > 0) {
+            master.x = settings.x
+        }
+        if (settings.y > 0) {
+            master.y = settings.y
+        }
+        if (settings.height > 0) {
+            master.height = settings.height
+        }
+        if (settings.width > 0) {
+            master.width = settings.width
+        }
+        settings.isActive = true
 
-		console.log(settings.height, settings.width, settings.writable)
+        console.log(settings.height, settings.width, settings.writable)
 
         if (settings.showPlaylist) {
             show_list_action.trigger()
@@ -280,15 +280,15 @@ ApplicationWindow {
 
         property string currentTitle
         property string currentArtist
-		property bool isPlaying: playMusic.playbackState == MediaPlayer.PlayingState
-		loops: player_controls.repeatOne ? MediaPlayer.Infinite : 1
-		audioRole: MediaPlayer.MusicRole
-		property bool currentTrackIsAtEnd: duration - position < 100
+        property bool isPlaying: playMusic.playbackState == MediaPlayer.PlayingState
+        loops: player_controls.repeatOne ? MediaPlayer.Infinite : 1
+        audioRole: MediaPlayer.MusicRole
+        property bool currentTrackIsAtEnd: duration - position < 100
 
         onStopped: {
-			if (currentTrackIsAtEnd) {
-				playNextTrack()
-			}
+            if (currentTrackIsAtEnd) {
+                playNextTrack()
+            }
         }
 
         function playNextTrack() {
@@ -316,8 +316,8 @@ ApplicationWindow {
         }
 
         function playTrack(path, title, artist) {
-			var pathWithoutBackSlash = path.replace(/\\/g, "/");
-			playMusic.source = pathWithoutBackSlash
+            var pathWithoutBackSlash = path.replace(/\\/g, "/");
+            playMusic.source = pathWithoutBackSlash
             playMusic.play()
             currentTitle = title
             currentArtist = artist

@@ -81,7 +81,7 @@ public:
     Q_INVOKABLE bool canScan();
     Q_INVOKABLE QString getDbPath() {
         return Config::MUSICLIBDB;
-	}
+    }
     Q_INVOKABLE void resetFilterAndSort();
     Q_INVOKABLE QJsonArray getAlbumTracks(const QString& album);
     Q_INVOKABLE QJsonObject getMetadataForMrl(const QString& mrl) const;

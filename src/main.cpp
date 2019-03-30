@@ -56,10 +56,10 @@ int main(int argc, char* argv[]) {
     QSplashScreen splash(logo);
     splash.show();
 
-	LalaServer lalaServer;
+    LalaServer lalaServer;
     if (!lalaServer.start()) {
         qFatal("Couldn't start LalaServer");
-	}
+    }
     DatabaseSetup databaseSetup;
 
     registerQmlTypes();

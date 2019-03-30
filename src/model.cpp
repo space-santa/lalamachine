@@ -60,7 +60,7 @@ QPair<int, QJsonArray> Model::runSetDisplayQuery(const QString& query) {
         return Model::queryResultToJson(result);
     } catch (QueryError e) {
         return QPair<int, QJsonArray>(0, QJsonArray());
-	}
+    }
 }
 
 QJsonArray Model::getAlbumTracks(const QString& album) {

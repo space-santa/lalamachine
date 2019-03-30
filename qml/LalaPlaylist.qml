@@ -76,9 +76,9 @@ Rectangle {
         id: meta
         function metaDataAsJson(path) {
             var res = path.replace("file:///", "");
-			res = res.trim();
-			res = res.replace(/\s/g, "%20");
-			res = res.replace(/\//g, "%5C");
+            res = res.trim();
+            res = res.replace(/\s/g, "%20");
+            res = res.replace(/\//g, "%5C");
             var theUrl = "http://localhost:5003/api/tag/" + res;
             console.log(theUrl);
             var xmlHttp = new XMLHttpRequest();
@@ -89,8 +89,8 @@ Rectangle {
             var response = JSON.parse(rawResponse);
             response["mrl"] = path.replace("file:///", "");
             response["path"] = path.replace("file:///", "");
-			response["artist"] = response["artist"].join(", ");
-			response["genre"] = response["genre"].join(", ");
+            response["artist"] = response["artist"].join(", ");
+            response["genre"] = response["genre"].join(", ");
             return response;
         }
     }
@@ -98,31 +98,31 @@ Rectangle {
     Item {
         id: tc
         property int seconds: playlist_model.totalPlaytime
-		readonly property string timestring: {
-			Functions.secondsToDisplayString(tc.seconds);
-		}
+        readonly property string timestring: {
+            Functions.secondsToDisplayString(tc.seconds);
+        }
     }
 
     Item {
         id: file_ex
 
-		function exportPlaylist(destination, files) {
-			destination = destination.replace("file:///", "")
-			var xhttp = new XMLHttpRequest();
+        function exportPlaylist(destination, files) {
+            destination = destination.replace("file:///", "")
+            var xhttp = new XMLHttpRequest();
             xhttp.open("POST", "http://localhost:5003/api/fileexport/", true);
             xhttp.setRequestHeader("Content-type", "application/json");
             xhttp.onreadystatechange = function() {
-				console.log("readyState", this.readyState);
-				console.log("status", this.status);
-				progress_window.close();
+                console.log("readyState", this.readyState);
+                console.log("status", this.status);
+                progress_window.close();
             };
             var data = {};
             data["Destination"] = destination;
             data["Files"] = files;
-			console.log(JSON.stringify(data))
+            console.log(JSON.stringify(data))
             xhttp.send(JSON.stringify(data));
-			onStarted: progress_window.show()
-		}
+            onStarted: progress_window.show()
+        }
     }
 
     Window {
@@ -137,7 +137,7 @@ Rectangle {
             width: 250
             height: 50
             anchors.centerIn: parent
-			indeterminate: true
+            indeterminate: true
 
             Text {
                 color: "white"
@@ -402,7 +402,7 @@ Rectangle {
             playRow(getRandomNext())
         } else if (hasNext()) {
             console.log("playNext has next")
-			playRow(rowPlaying + 1)
+            playRow(rowPlaying + 1)
         } else if (repeatAll) {
             console.log("playNext repeat all")
             playRow(0)
@@ -436,20 +436,20 @@ Rectangle {
 
     ListModel {
         id: playlist_model
-		property int totalPlaytime: 0
+        property int totalPlaytime: 0
 
-		function setLibrary(json){
-			for (var i = 0; i < json.length; ++i) {
-				append(json[i]);
-			}
-		}
-		function sortRole(role, order) {}
-		function toJson() {}
-		function fromJson(json) {
-			clear();
-			setLibrary(json);
-		}
-		function pathList() {}
+        function setLibrary(json){
+            for (var i = 0; i < json.length; ++i) {
+                append(json[i]);
+            }
+        }
+        function sortRole(role, order) {}
+        function toJson() {}
+        function fromJson(json) {
+            clear();
+            setLibrary(json);
+        }
+        function pathList() {}
     }
 
     TableView {

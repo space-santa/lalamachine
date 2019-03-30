@@ -35,7 +35,7 @@ public:
     static const QString MAINDBNAME;
     static const QString SCANNERDBNAME;
 
-	static const QString execPath();
+    static const QString execPath();
 
     void loadConfig();
 
