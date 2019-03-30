@@ -19,7 +19,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 import QtQuick 2.0
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
-import Qt.labs.settings 1.0
 
 import Lala 1.0
 
@@ -32,6 +31,10 @@ Rectangle {
     property alias musicLib: lib
 
     signal addTrack(string path)
+
+    LibSettings {
+        id: libsettings
+    }
 
     function rescan() {
         if (!libview.scanInProgress) {
@@ -88,10 +91,6 @@ Rectangle {
 		}
     }
 
-    Settings {
-        property alias libraryTopShelveHeight: topShelve.height
-    }
-
     SplitView {
         anchors.fill: parent
         orientation: Qt.Vertical
@@ -103,9 +102,23 @@ Rectangle {
             anchors.right: parent.right
             height: 250
 
-            Layout.minimumHeight: 150
+            Layout.minimumHeight: 200
 
             color: "transparent"
+
+			onHeightChanged: {
+				if (libsettings.isActive) {
+					libsettings.libraryTopShelveHeight = height
+				}
+				libsettings.isActive = true;
+			}
+
+			Component.onCompleted: {
+				if (libsettings.libraryTopShelveHeight > 0) {
+					height = libsettings.libraryTopShelveHeight
+				}
+				libsettings.isActive = true
+			}
 
             StringListView {
                 id: genre_list
