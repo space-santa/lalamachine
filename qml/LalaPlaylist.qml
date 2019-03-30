@@ -572,13 +572,12 @@ Rectangle {
 
             let columnsJson = JSON.parse(playlistColumns);
 
-            for (i = 0; i < columnsJson.length; ++i) {
-                console.log(columnsJson[i], typeof(columnsJson[i]));
-                var o = Qt.createQmlObject(buildColumnString(
-                    columnsJson[i]),
-                    playlist_view, "DynO"
-                );
-                playlist_view.addColumn(o)
+            for (let i = 0; i < columnsJson.length; ++i) {
+                if (columnsJson[i].value) {
+                    let columnString = buildColumnString(columnsJson[i].key);
+                    var o = Qt.createQmlObject(columnString, playlist_view, "DynO");
+                    playlist_view.addColumn(o)
+                }
             }
         }
 

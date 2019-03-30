@@ -21,7 +21,18 @@ namespace dotnet
             volume = 0.5;
             lastPlaylist = "";
             libPath = "";
-            playlistColumns = "[ \"track\", \"discNumber\", \"title\", \"comment\", \"length\", \"genre\", \"album\", \"artist\", \"year\" ]";
+            playlistColumns = @"
+                [
+                    { ""key"": ""track"", ""value"": true },
+                    { ""key"": ""discNumber"", ""value"": true },
+                    { ""key"": ""title"", ""value"": true },
+                    { ""key"": ""comment"", ""value"": true },
+                    { ""key"": ""length"", ""value"": true },
+                    { ""key"": ""genre"", ""value"": true },
+                    { ""key"": ""album"", ""value"": true },
+                    { ""key"": ""artist"", ""value"": true },
+                    { ""key"": ""year"", ""value"": true }
+                ]";
         }
 
         public static void CreateLaladir()
