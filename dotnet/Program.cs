@@ -12,6 +12,7 @@ namespace dotnet
                 using (var engine = new QQmlApplicationEngine())
                 {
                     // TODO: Register your .NET types.
+                    Qml.Net.Qml.RegisterType<Settings>("Lala", 1, 0);
                     Qml.Net.Qml.RegisterType<PlaylistProvider>("Lala", 1, 0);
                     Qml.Net.Qml.RegisterType<Config>("Lala", 1, 0);
                     Qml.Net.Qml.RegisterType<MusicLib>("Lala", 1, 0);

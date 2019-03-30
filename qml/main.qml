@@ -20,7 +20,6 @@ import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.2
 import QtQuick.Window 2.2
-import Qt.labs.settings 1.0
 import QtQuick.Controls.Styles 1.4
 import QtMultimedia 5.8
 
@@ -70,8 +69,37 @@ ApplicationWindow {
         }
     }
 
+	onXChanged: {
+		if (settings.isActive) {
+			settings.x = master.x
+		}
+	}
+	onYChanged: {
+		if (settings.isActive) {
+			settings.y = master.y
+		}
+	}
+	onHeightChanged: {
+		if (settings.isActive) {
+			settings.height = master.height
+		}
+	}
+	onWidthChanged: {
+		if (settings.isActive) {
+			settings.width = master.width
+		}
+	}
+
     Component.onCompleted: {
         playlist.setCurrentPlaylist(config.lastPlaylist)
+
+		master.x = settings.x
+		master.y = settings.y
+		master.height = settings.height
+		master.width = settings.width
+		settings.isActive = true
+
+		console.log(settings.height, settings.width, settings.writable)
 
         if (settings.showPlaylist) {
             show_list_action.trigger()
@@ -82,12 +110,7 @@ ApplicationWindow {
 
     Settings {
         id: settings
-
-        property alias x: master.x
-        property alias y: master.y
-        property alias width: master.width
-        property alias height: master.height
-
+		property bool isActive: false
         property bool showPlaylist: show_list.checked
     }
 
