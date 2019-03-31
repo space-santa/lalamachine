@@ -319,13 +319,12 @@ Rectangle {
     }
 
     function addJsonList(json) {
-        var d = Date.now()
-        if (json[0].toString() == "OLDFORMAT") {
-            json.shift()
-            addList(json)
-        } else {
-            playlist_model.fromJson(json)
+        if (!json) {
+            return
         }
+        
+        var d = Date.now()
+        playlist_model.fromJson(json)
         updateNowPlayingRow()
         console.log("Adding the list took", Date.now() - d, "ms.")
     }
