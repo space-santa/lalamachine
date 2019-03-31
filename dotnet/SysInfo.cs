@@ -12,7 +12,7 @@
         }
         public string lalaDir()
         {
-            return Config.LALADIR;
+            return Constants.LALADIR;
         }
     }
 }
