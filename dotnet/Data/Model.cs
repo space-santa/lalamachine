@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace dotnet
+namespace dotnet.Data
 {
 
     public class Genre
