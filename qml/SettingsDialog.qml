@@ -28,7 +28,8 @@ Dialog {
     title: "Settings"
 
     onAccepted: {
-        //config.playlistColumns = playlist_columns.getJson()
+        let json = playlist_columns.getJson();
+        config.playlistColumns = JSON.stringify(json)
     }
 
     standardButtons: StandardButton.Ok | StandardButton.Cancel
@@ -45,7 +46,7 @@ Dialog {
             anchors.right: up_button.left
             keyTitle: "Tag"
             valueTitle: "visible"
-            list: config.playlistColumns
+            list: JSON.parse(config.playlistColumns)
             onRightClick: rcm.popup()
         }
 
@@ -53,11 +54,11 @@ Dialog {
             id: rcm
             MenuItem {
                 text: "enable"
-                onTriggered: playlist_columns.setSelectionEnabled("true")
+                onTriggered: playlist_columns.setSelectionEnabled(true)
             }
             MenuItem {
                 text: "disable"
-                onTriggered: playlist_columns.setSelectionEnabled("false")
+                onTriggered: playlist_columns.setSelectionEnabled(false)
             }
         }
 
