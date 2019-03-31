@@ -471,7 +471,7 @@ Rectangle {
         property int initialRow
 
         Component.onCompleted: setColumns()
-        //onPlaylistColumnsChanged: setColumns()
+        onPlaylistColumnsChanged: setColumns()
 
         // Since we are handling left clicks in the delegate we are effectively
         // disabling ctrl-click/shift-click here.
