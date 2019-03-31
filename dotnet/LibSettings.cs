@@ -11,7 +11,7 @@ namespace dotnet
         public bool isActive { get; set; }
         public int libraryTopShelveHeight
         {
-            get => Layout["libraryTopShelveHeight"];
+            get => _LibSettings["libraryTopShelveHeight"];
             set => SetLayoutValue("libraryTopShelveHeight", value);
         }
 
@@ -19,14 +19,14 @@ namespace dotnet
         public LibSettings()
         {
             isActive = false;
-            Layout = new Dictionary<string, int>();
-            Layout["libraryTopShelveHeight"] = 0;
+            _LibSettings = new Dictionary<string, int>();
+            _LibSettings["libraryTopShelveHeight"] = 0;
             try
             {
                 using (StreamReader file = File.OpenText(Config.LIB_SETTINGS_PATH))
                 {
                     JsonSerializer serializer = new JsonSerializer();
-                    Layout = (Dictionary<string, int>)serializer.Deserialize(file, typeof(Dictionary<string, int>));
+                    _LibSettings = (Dictionary<string, int>)serializer.Deserialize(file, typeof(Dictionary<string, int>));
                 }
             }
             catch (DirectoryNotFoundException)
@@ -41,14 +41,14 @@ namespace dotnet
 
         private void SetLayoutValue(string key, int value)
         {
-            Layout[key] = value;
+            _LibSettings[key] = value;
             using (StreamWriter file = File.CreateText(Config.LIB_SETTINGS_PATH))
             {
                 JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(file, Layout);
+                serializer.Serialize(file, _LibSettings);
             }
         }
 
-        private Dictionary<string, int> Layout;
+        private Dictionary<string, int> _LibSettings;
     }
 }
