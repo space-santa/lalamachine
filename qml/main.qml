@@ -107,8 +107,6 @@ ApplicationWindow {
         }
         settings.isActive = true
 
-        console.log(settings.height, settings.width, settings.writable)
-
         if (settings.showPlaylist) {
             show_list_action.trigger()
         } else {
