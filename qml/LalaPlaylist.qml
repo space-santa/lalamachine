@@ -430,10 +430,6 @@ Rectangle {
         return retval
     }
 
-    function pathList() {
-        return playlist_model.pathList()
-    }
-
     ListModel {
         id: playlist_model
         property int totalPlaytime: 0
@@ -449,7 +445,6 @@ Rectangle {
             clear();
             setLibrary(json);
         }
-        function pathList() {}
     }
 
     TableView {
