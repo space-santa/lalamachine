@@ -7,63 +7,40 @@ using System.IO;
 namespace dotnet
 {
     [Signal("volumeChanged")]
-    public class Config
+    public class Config : AbstractBaseSettings
     {
-        public static string LALADIR = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "lalamachine");
-        public static string SETTINGS_PATH = Path.Combine(LALADIR, "settings.json");
-        public static string LIB_SETTINGS_PATH = Path.Combine(LALADIR, "libsettings.json");
-        public static string CONFIG_PATH = Path.Combine(LALADIR, "config.json");
-
         public double volume
         {
-            get => Convert.ToDouble(_Config["volume"]);
-            set => SetConfigValue("volume", value);
+            get => GetDoubleValue("volume");
+            set => SetSettingsValue("volume", value);
         }
 
         public string lastPlaylist
         {
-            get => _Config["lastPlaylist"];
-            set => SetConfigValue("lastPlaylist", value);
+            get => GetStringValue("lastPlaylist");
+            set => SetSettingsValue("lastPlaylist", value);
         }
 
         public string libPath
         {
-            get => _Config["libPath"];
-            set => SetConfigValue("libPath", value);
+            get => GetStringValue("libPath");
+            set => SetSettingsValue("libPath", value);
         }
 
         public string playlistColumns
         {
-            get => _Config["playlistColumns"];
-            set => SetConfigValue("playlistColumns", value);
+            get => GetStringValue("playlistColumns");
+            set => SetSettingsValue("playlistColumns", value);
         }
 
-        public Config()
+        protected override void Init()
         {
-            Init();
-
-            try
-            {
-                Load();
-            }
-            catch (DirectoryNotFoundException)
-            {
-                CreateLaladir();
-            }
-            catch (FileNotFoundException)
-            {
-                // Nothing to worry about, file just doesn't exist.
-            }
-        }
-
-        private void Init()
-        {
-            _Config = new Dictionary<string, string>();
-            _Config["volume"] = "0.5";
-            _Config["lastPlaylist"] = "";
-            _Config["libPath"] = "";
-            _Config["playlistColumns"] = @"
-                [
+            InitSettingsValue("volume", 0.5);
+            InitSettingsValue("lastPlaylist", "");
+            InitSettingsValue("libPath", "");
+            InitSettingsValue(
+                "playlistColumns", 
+                @"[
                     { ""key"": ""track"", ""value"": true },
                     { ""key"": ""discNumber"", ""value"": true },
                     { ""key"": ""title"", ""value"": true },
@@ -73,38 +50,12 @@ namespace dotnet
                     { ""key"": ""album"", ""value"": true },
                     { ""key"": ""artist"", ""value"": true },
                     { ""key"": ""year"", ""value"": true }
-                ]";
+                ]");
         }
 
-        private void Load()
+        protected override string targetPath()
         {
-            using (StreamReader file = File.OpenText(dotnet.Config.CONFIG_PATH))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                _Config = (Dictionary<string, string>)serializer.Deserialize(file, typeof(Dictionary<string, string>));
-            }
+            return Constants.CONFIG_PATH;
         }
-
-        public static void CreateLaladir()
-        {
-            Directory.CreateDirectory(LALADIR);
-        }
-
-        private void SetConfigValue(string key, double value)
-        {
-            SetConfigValue(key, $"{value}");
-        }
-
-        private void SetConfigValue(string key, string value)
-        {
-            _Config[key] = value;
-            using (StreamWriter file = File.CreateText(dotnet.Config.CONFIG_PATH))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(file, _Config);
-            }
-        }
-
-        private Dictionary<string, string> _Config;
     }
 }

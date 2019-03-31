@@ -6,49 +6,24 @@ using System.Text;
 
 namespace dotnet
 {
-    public class LibSettings
+    public class LibSettings : AbstractBaseSettings
     {
         public bool isActive { get; set; }
         public int libraryTopShelveHeight
         {
-            get => _LibSettings["libraryTopShelveHeight"];
-            set => SetLayoutValue("libraryTopShelveHeight", value);
+            get => GetIntValue("libraryTopShelveHeight");
+            set => SetSettingsValue("libraryTopShelveHeight", value);
         }
 
-
-        public LibSettings()
+        protected override void Init()
         {
             isActive = false;
-            _LibSettings = new Dictionary<string, int>();
-            _LibSettings["libraryTopShelveHeight"] = 0;
-            try
-            {
-                using (StreamReader file = File.OpenText(Config.LIB_SETTINGS_PATH))
-                {
-                    JsonSerializer serializer = new JsonSerializer();
-                    _LibSettings = (Dictionary<string, int>)serializer.Deserialize(file, typeof(Dictionary<string, int>));
-                }
-            }
-            catch (DirectoryNotFoundException)
-            {
-                Config.CreateLaladir();
-            }
-            catch (FileNotFoundException)
-            {
-                // Nothing to worry about, file just doesn't exist.
-            }
+            InitSettingsValue("libraryTopShelveHeight", 0);
         }
 
-        private void SetLayoutValue(string key, int value)
+        protected override string targetPath()
         {
-            _LibSettings[key] = value;
-            using (StreamWriter file = File.CreateText(Config.LIB_SETTINGS_PATH))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(file, _LibSettings);
-            }
+            return Constants.LIB_SETTINGS_PATH;
         }
-
-        private Dictionary<string, int> _LibSettings;
     }
 }

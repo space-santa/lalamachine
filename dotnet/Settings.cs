@@ -6,50 +6,26 @@ using System.Text;
 
 namespace dotnet
 {
-    public class Settings
+    public class Settings : AbstractBaseSettings
     {
         public bool isActive { get; set; }
-        public int x { get => Layout["x"]; set => SetLayoutValue("x", value); }
-        public int y { get => Layout["y"]; set => SetLayoutValue("y", value); }
-        public int height { get => Layout["h"]; set => SetLayoutValue("h", value); }
-        public int width { get => Layout["w"]; set => SetLayoutValue("w", value); }
+        public int x { get => GetIntValue("x"); set => SetSettingsValue("x", value); }
+        public int y { get => GetIntValue("y"); set => SetSettingsValue("y", value); }
+        public int height { get => GetIntValue("h"); set => SetSettingsValue("h", value); }
+        public int width { get => GetIntValue("w"); set => SetSettingsValue("w", value); }
 
-        public Settings()
+        protected override void Init()
         {
             isActive = false;
-            Layout = new Dictionary<string, int>();
-            Layout["x"] = 0;
-            Layout["y"] = 0;
-            Layout["h"] = 0;
-            Layout["w"] = 0;
-            try
-            {
-                using (StreamReader file = File.OpenText(Config.SETTINGS_PATH))
-                {
-                    JsonSerializer serializer = new JsonSerializer();
-                    Layout = (Dictionary<string, int>)serializer.Deserialize(file, typeof(Dictionary<string, int>));
-                }
-            }
-            catch (DirectoryNotFoundException)
-            {
-                Config.CreateLaladir();
-            }
-            catch (FileNotFoundException)
-            {
-                // Nothing to worry about, file just doesn't exist.
-            }
+            InitSettingsValue("x", 0);
+            InitSettingsValue("y", 0);
+            InitSettingsValue("h", 0);
+            InitSettingsValue("w", 0);
         }
 
-        private void SetLayoutValue(string key, int value)
+        protected override string targetPath()
         {
-            Layout[key] = value;
-            using (StreamWriter file = File.CreateText(Config.SETTINGS_PATH))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(file, Layout);
-            }
+            return Constants.SETTINGS_PATH;
         }
-
-        private Dictionary<string, int> Layout;
     }
 }
