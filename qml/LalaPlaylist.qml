@@ -231,16 +231,6 @@ Rectangle {
         updateAndSave()
     }
 
-    function getPathList() {
-        var list = []
-
-        for (var i = 0; i < playlist_model.count; ++i) {
-            list[i] = playlist_model.get(i)["path"]
-        }
-
-        return list
-    }
-
     function getSelectedRowIndices() {
         var indices = []
 
@@ -286,6 +276,16 @@ Rectangle {
 
     function exportPlaylist(path) {
         file_ex.exportPlaylist(path, getPathList())
+    }
+
+    function getPathList() {
+        var list = []
+
+        for (var i = 0; i < playlist_model.count; ++i) {
+            list[i] = playlist_model.get(i)["path"]
+        }
+
+        return list
     }
 
     function writePlaylist(name) {
