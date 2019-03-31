@@ -120,18 +120,14 @@ ApplicationWindow {
     }
 
     onClosing: {
+        // This looks like the last playlist is always saved as the misc playlist and then under its name when it has one.
+        // That seems redundant because the last playlist is (should be) loaded when this is constructed.
+        // TODO: This looks like it needs refactoring.
         playlist.writePlaylist(miscPlaylistName)
 
         // If the current list has a name we want to remember latest changes.
         playlist.writeCurrentListIfNamed()
 
-        // I am deliberatly not checking for a named playlist here.
-        // If the currentPlaylist is not empty but the miscPlaylistName it still
-        // as expected because then the lastPlaylist is set to the
-        // miscPlaylistName in the else branch.
-        // FIXME: I don't understand the previous comment. That means this is
-        // probably not a good way to do things because if I don't understand
-        // it I can't maintain it. => TODO: REFACTOR
         if (currentPlaylist === "") {
             config.lastPlaylist = miscPlaylistName
         } else {
