@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicScanner", "MusicScanne
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicScanner.Unittests", "MusicScanner.Unittests\MusicScanner.Unittests.csproj", "{729C6719-B0A0-4689-81AD-EBFAA96CA733}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TagReader", "TagReader\TagReader.csproj", "{DEFDF336-5612-430E-8813-6D7ABD3BCC9D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TagReader.Unittests", "TagReader.Unittests\TagReader.Unittests.csproj", "{17DEBB83-F4A8-44C6-A784-3A5E06CC028F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +81,22 @@ Global
 		{729C6719-B0A0-4689-81AD-EBFAA96CA733}.Release|Any CPU.Build.0 = Release|Any CPU
 		{729C6719-B0A0-4689-81AD-EBFAA96CA733}.Release|x64.ActiveCfg = Release|Any CPU
 		{729C6719-B0A0-4689-81AD-EBFAA96CA733}.Release|x64.Build.0 = Release|Any CPU
+		{DEFDF336-5612-430E-8813-6D7ABD3BCC9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEFDF336-5612-430E-8813-6D7ABD3BCC9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEFDF336-5612-430E-8813-6D7ABD3BCC9D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DEFDF336-5612-430E-8813-6D7ABD3BCC9D}.Debug|x64.Build.0 = Debug|Any CPU
+		{DEFDF336-5612-430E-8813-6D7ABD3BCC9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEFDF336-5612-430E-8813-6D7ABD3BCC9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEFDF336-5612-430E-8813-6D7ABD3BCC9D}.Release|x64.ActiveCfg = Release|Any CPU
+		{DEFDF336-5612-430E-8813-6D7ABD3BCC9D}.Release|x64.Build.0 = Release|Any CPU
+		{17DEBB83-F4A8-44C6-A784-3A5E06CC028F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17DEBB83-F4A8-44C6-A784-3A5E06CC028F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17DEBB83-F4A8-44C6-A784-3A5E06CC028F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{17DEBB83-F4A8-44C6-A784-3A5E06CC028F}.Debug|x64.Build.0 = Debug|Any CPU
+		{17DEBB83-F4A8-44C6-A784-3A5E06CC028F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17DEBB83-F4A8-44C6-A784-3A5E06CC028F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17DEBB83-F4A8-44C6-A784-3A5E06CC028F}.Release|x64.ActiveCfg = Release|Any CPU
+		{17DEBB83-F4A8-44C6-A784-3A5E06CC028F}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
