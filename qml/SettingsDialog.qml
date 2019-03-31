@@ -67,7 +67,7 @@ Dialog {
             width: 50
             anchors.right: parent.right
             anchors.bottom: playlist_columns.verticalCenter
-            source: "qrc:///images/images/go-up.png"
+            source: "../images/go-up.png"
             onClicked: playlist_columns.moveUp()
         }
         ImageButton {
@@ -75,7 +75,7 @@ Dialog {
             width: 50
             anchors.right: parent.right
             anchors.top: playlist_columns.verticalCenter
-            source: "qrc:///images/images/go-down.png"
+            source: "../images/go-down.png"
             onClicked: playlist_columns.moveDown()
         }
     }
