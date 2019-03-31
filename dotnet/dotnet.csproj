@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PlaylistProvider\PlaylistProvider.csproj" />
+    <ProjectReference Include="..\MusicScanner\MusicScanner.csproj" />
   </ItemGroup>
 
 </Project>
