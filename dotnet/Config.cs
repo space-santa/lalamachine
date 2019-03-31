@@ -9,6 +9,7 @@ namespace dotnet
     [Signal("volumeChanged")]
     public class Config : AbstractBaseSettings
     {
+        [NotifySignal("volumeChanged")]
         public double volume
         {
             get => GetDoubleValue("volume");
@@ -27,6 +28,7 @@ namespace dotnet
             set => SetSettingsValue("libPath", value);
         }
 
+        [NotifySignal("playlistColumnsChanged")]
         public string playlistColumns
         {
             get => GetStringValue("playlistColumns");

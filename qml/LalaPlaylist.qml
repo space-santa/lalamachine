@@ -289,13 +289,13 @@ Rectangle {
     }
 
     function writePlaylist(name) {
-        m3u.writePlaylist(name, playlist_model.toJson())
+        m3u.writePlaylist(name, JSON.stringify(playlist_model.toJson()))
     }
 
     function readPlaylist(name) {
         // We use this function here because we want to keep the currentName.
         emptyCurrentList()
-        addJsonList(m3u.readPlaylist(name))
+        addJsonList(JSON.parse(m3u.readPlaylist(name)));
     }
 
     function createNewList() {
@@ -322,7 +322,7 @@ Rectangle {
         if (!json) {
             return
         }
-        
+
         var d = Date.now()
         playlist_model.fromJson(json)
         updateNowPlayingRow()

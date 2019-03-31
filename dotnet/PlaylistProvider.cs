@@ -1,41 +1,72 @@
 ﻿using Qml.Net;
 using System.Collections.Generic;
+using PlaylistProvider;
+using System.IO;
+using System.Linq;
 
 namespace dotnet
 {
+    [Signal("playlistNamesChanged")]
     public class PlaylistProvider
     {
-        public string[] playlistNames { get; set; }
+        public string[] playlistNames
+        {
+            get
+            {
+                return Playlist.getAllNames().Where(x => x != Constants.MISC_PLAYLIST_NAME).ToArray();
+            }
+        }
 
         public PlaylistProvider()
         {
-            playlistNames = new string[1];
-            playlistNames[0] = "default";
         }
 
-        public void writePlaylist(string name, INetJsValue json)
+        public void writePlaylist(string name, string json)
         {
-
+            try
+            {
+                var playlist = Playlist.FromJson(json);
+                playlist.save(name);
+                this.ActivateSignal("playlistNamesChanged");
+            }
+            catch (System.ArgumentNullException)
+            {
+                // Probably an empty playlist the wants to be saved on close.
+            }
         }
 
-        public INetJsValue readPlaylist(string name)
+        public string readPlaylist(string name)
         {
-            return null;
+            try
+            {
+                return Playlist.load(name).ToJson();
+            }
+            catch (FileNotFoundException)
+            {
+                return "{}";
+            }
         }
 
         public string playlistPath(string name)
         {
-            return name;
+            return Playlist.getPath(name);
         }
 
         public void deletePlaylist(string name)
         {
-
+            File.Delete(Playlist.getPath(name));
+            this.ActivateSignal("playlistNamesChanged");
         }
 
-        public void addTrackToNamedPlaylist(string listName, INetJsValue tracks)
+        public void addTracksToNamedPlaylist(string listName, string[] trackStrings)
         {
-
+            var playlist = Playlist.load(listName);
+            foreach (string trackString in trackStrings)
+            {
+                Track track = Track.FromJson(trackString);
+                playlist.Add(track);
+            }
+            playlist.save(listName);
         }
     }
 }

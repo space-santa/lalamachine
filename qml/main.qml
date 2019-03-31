@@ -453,7 +453,7 @@ ApplicationWindow {
                     nowPlayingSource: playMusic.source
 
                     onAddTracksToNamedPlaylist: m3u.addTracksToNamedPlaylist(
-                                                    listname, tracks)
+                                                    listname, JSON.stringify(tracks))
 
                     onStop: {
                         playMusic.stop()

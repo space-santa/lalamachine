@@ -11,5 +11,7 @@ namespace dotnet
         public static string SETTINGS_PATH = Path.Combine(LALADIR, "settings.json");
         public static string LIB_SETTINGS_PATH = Path.Combine(LALADIR, "libsettings.json");
         public static string CONFIG_PATH = Path.Combine(LALADIR, "config.json");
+
+        public static string MISC_PLAYLIST_NAME = "cs1m090";
     }
 }

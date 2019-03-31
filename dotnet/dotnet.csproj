@@ -10,4 +10,8 @@
     <PackageReference Include="Qml.Net.WindowsBinaries" Version="0.7.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PlaylistProvider\PlaylistProvider.csproj" />
+  </ItemGroup>
+
 </Project>
