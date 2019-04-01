@@ -150,7 +150,7 @@ ApplicationWindow {
         }
         MusicLibMenu {
             onShowSetLibraryDialog: lib_dialog.visible = true
-            onRescanLibrary: libview.rescan()
+            onRescanLibrary: libview.rescan(config.libPath)
         }
         MainPlaylistMenu {
             saveAction: save_current_list_action
