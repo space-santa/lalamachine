@@ -586,6 +586,7 @@ ApplicationWindow {
 
         onAccepted: {
             config.libPath = lib_dialog.folder
+            libview.rescan(config.libPath)
             visible = false
         }
         onRejected: {

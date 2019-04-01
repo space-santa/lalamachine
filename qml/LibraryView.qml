@@ -27,7 +27,7 @@ Rectangle {
     color: "transparent"
 
     property bool scanInProgress: lib.scanning
-    property string library: "lib.libPath"
+    property string library: config.libPath
     property alias musicLib: lib
 
     signal addTrack(string path)
@@ -36,9 +36,9 @@ Rectangle {
         id: libsettings
     }
 
-    function rescan() {
+    function rescan(path) {
         if (!libview.scanInProgress) {
-            lib.rescan()
+            lib.rescan(path)
         }
     }
 
