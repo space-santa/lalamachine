@@ -1,5 +1,6 @@
 ﻿using dotnet.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace dotnet
 {
@@ -17,9 +18,15 @@ namespace dotnet
 
         public bool scanning { get; set; }
 
-        public void rescan(string path)
+        public async void scanAsync(string path)
         {
-            MusicScanner.MusicScanner.ProcessDirectory(path, _scannerDb);
+            if (scanning)
+            {
+                return;
+            }
+            scanning = true;
+            await Task.Run(() => MusicScanner.MusicScanner.ProcessDirectory(path, _scannerDb));
+            scanning = false;
         }
 
         public void getMetadataForMrl(string mrl)
