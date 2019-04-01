@@ -25,7 +25,14 @@ namespace dotnet
         public string libPath
         {
             get => GetStringValue("libPath");
-            set => SetSettingsValue("libPath", value);
+            set
+            {
+                if (value.StartsWith("file:///"))
+                {
+                    value = value.Remove(0, 8);
+                }
+                SetSettingsValue("libPath", value);
+            }
         }
 
         [NotifySignal("playlistColumnsChanged")]
