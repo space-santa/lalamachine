@@ -70,24 +70,8 @@ Rectangle {
         //   titles.addLib(displayLib)
         //}
 
-        //onDoRescan: rescan();
-
-        function rescan() {
-            if (!canScan()) {
-                return
-            }
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "http://localhost:5003/api/scanner/", true);
-            xhttp.setRequestHeader("Content-type", "application/json");
-            xhttp.onreadystatechange = function() {
-                console.log("readyState", this.readyState);
-                console.log("status", this.status);
-                lib.scanFinished();
-            };
-            var data = {};
-            data["DbPath"] = getDbPath();
-            data["MusicDir"] = libPath;
-            xhttp.send(JSON.stringify(data));
+        function rescan(path) {
+            scanAsync(path)
         }
     }
 
