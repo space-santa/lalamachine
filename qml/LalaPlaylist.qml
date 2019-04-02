@@ -91,11 +91,11 @@ Rectangle {
     Exporter {
         id: file_ex
 
+        onExportFinished: progress_window.close();
+
         function exportPlaylist(destination, files) {
+            progress_window.show();
             exportFilesAsync(destination, JSON.stringify(files));
-            // TODO: Fix signaling.
-//                progress_window.close();
-//            onStarted: progress_window.show()
         }
     }
 
