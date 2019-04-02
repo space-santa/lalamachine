@@ -20,6 +20,9 @@ namespace dotnet
         }
 
         public bool scanning { get; set; }
+        public string genreList { get; set; }
+        public string artistList { get; set; }
+        public string albumList { get; set; }
 
         public async void scanAsync(string path)
         {
