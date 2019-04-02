@@ -17,6 +17,8 @@ namespace MusicScanner
                 var tags = TagReader.TagReader.Read(file);
                 db.AddTagsToDatabase(tags);
             }
+
+            db.SaveChanges();
         }
 
         private static IEnumerable<string> DirSearch(string basePath)

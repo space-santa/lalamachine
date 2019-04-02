@@ -11,6 +11,7 @@ namespace MusicScanner
     {
         void EnsureDatabase();
         void AddTagsToDatabase(Tags tags);
+        void SaveChanges();
     }
 
     public class MusicDatabase : IMusicDatabase
@@ -18,6 +19,11 @@ namespace MusicScanner
         private string dbPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "test.db3"
         );
+
+        public void SaveChanges()
+        {
+            //
+        }
 
         SQLiteConnection m_dbConnection;
         public string DbPath
