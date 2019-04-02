@@ -19,8 +19,17 @@ namespace dotnet
             _scannerDb = new ScannerDb(_context);
         }
 
+        public string searchString { get; set; }
+
         public bool scanning { get; set; }
-        public string genreList { get; set; }
+        public string genreList
+        {
+            get
+            {
+                var list = _context.Genres.Where(x => x.Name.Contains(searchString)).Select(x => x.Name).ToArray();
+                return Newtonsoft.Json.JsonConvert.SerializeObject(list);
+            }
+        }
         public string artistList { get; set; }
         public string albumList { get; set; }
 

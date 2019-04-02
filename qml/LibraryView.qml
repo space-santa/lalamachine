@@ -204,6 +204,11 @@ Rectangle {
                         font.family: "Helvetica"
 
                         placeholderText: "Filter..."
+
+                        onTextChanged: function() {
+                            lib.searchString = text
+                            genre_list.stringList = JSON.parse(lib.genreList)
+                        }
                     }
 
                     ImageButton {
