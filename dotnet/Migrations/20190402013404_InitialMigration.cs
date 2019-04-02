@@ -2,7 +2,7 @@
 
 namespace dotnet.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -10,8 +10,7 @@ namespace dotnet.Migrations
                 name: "Albums",
                 columns: table => new
                 {
-                    AlbumId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    AlbumId = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -23,8 +22,7 @@ namespace dotnet.Migrations
                 name: "Artists",
                 columns: table => new
                 {
-                    ArtistId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    ArtistId = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -33,11 +31,23 @@ namespace dotnet.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ArtistsOfTracks",
+                columns: table => new
+                {
+                    ArtistsOfTrackId = table.Column<string>(nullable: false),
+                    TrackId = table.Column<string>(nullable: true),
+                    ArtistId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ArtistsOfTracks", x => x.ArtistsOfTrackId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Genres",
                 columns: table => new
                 {
-                    GenreId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    GenreId = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -46,11 +56,23 @@ namespace dotnet.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "GenresOfTracks",
+                columns: table => new
+                {
+                    GenresOfTrackId = table.Column<string>(nullable: false),
+                    TrackId = table.Column<string>(nullable: true),
+                    GenreId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GenresOfTracks", x => x.GenresOfTrackId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tracks",
                 columns: table => new
                 {
-                    TrackId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    TrackId = table.Column<string>(nullable: false),
                     Title = table.Column<string>(nullable: true),
                     Comment = table.Column<string>(nullable: true),
                     TrackNumber = table.Column<int>(nullable: false),
@@ -58,9 +80,7 @@ namespace dotnet.Migrations
                     Length = table.Column<int>(nullable: false),
                     Year = table.Column<int>(nullable: false),
                     DiscNumber = table.Column<int>(nullable: false),
-                    GenreId = table.Column<int>(nullable: false),
-                    ArtistId = table.Column<int>(nullable: false),
-                    AlbumId = table.Column<int>(nullable: false)
+                    AlbumId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -77,7 +97,13 @@ namespace dotnet.Migrations
                 name: "Artists");
 
             migrationBuilder.DropTable(
+                name: "ArtistsOfTracks");
+
+            migrationBuilder.DropTable(
                 name: "Genres");
+
+            migrationBuilder.DropTable(
+                name: "GenresOfTracks");
 
             migrationBuilder.DropTable(
                 name: "Tracks");

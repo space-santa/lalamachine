@@ -8,26 +8,26 @@ namespace dotnet.Data
 
     public class Genre
     {
-        public int GenreId { get; set; }
+        public string GenreId { get; set; }
         public string Name { get; set; }
     }
 
     public class Artist
     {
-        public int ArtistId { get; set; }
+        public string ArtistId { get; set; }
         public string Name { get; set; }
 
     }
 
     public class Album
     {
-        public int AlbumId { get; set; }
+        public string AlbumId { get; set; }
         public string Name { get; set; }
     }
 
     public class Track
     {
-        public int TrackId { get; set; }
+        public string TrackId { get; set; }
         public string Title { get; set; }
         public string Comment { get; set; }
         public int TrackNumber { get; set; }
@@ -36,9 +36,20 @@ namespace dotnet.Data
         public int Year { get; set; }
         public int DiscNumber { get; set; }
 
-        public int GenreId { get; set; }
-        public int ArtistId { get; set; }
-        public int AlbumId { get; set; }
+        public string AlbumId { get; set; }
+    }
 
+    public class GenresOfTrack
+    {
+        public string GenresOfTrackId { get; set; }
+        public string TrackId { get; set; }
+        public string GenreId { get; set; }
+    }
+
+    public class ArtistsOfTrack
+    {
+        public string ArtistsOfTrackId { get; set; }
+        public string TrackId { get; set; }
+        public string ArtistId { get; set; }
     }
 }

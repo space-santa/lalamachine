@@ -8,8 +8,8 @@ using dotnet.Data;
 namespace dotnet.Migrations
 {
     [DbContext(typeof(LalaContext))]
-    [Migration("20190401095917_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20190402013404_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,7 +19,7 @@ namespace dotnet.Migrations
 
             modelBuilder.Entity("dotnet.Data.Album", b =>
                 {
-                    b.Property<int>("AlbumId")
+                    b.Property<string>("AlbumId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Name");
@@ -31,7 +31,7 @@ namespace dotnet.Migrations
 
             modelBuilder.Entity("dotnet.Data.Artist", b =>
                 {
-                    b.Property<int>("ArtistId")
+                    b.Property<string>("ArtistId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Name");
@@ -41,9 +41,23 @@ namespace dotnet.Migrations
                     b.ToTable("Artists");
                 });
 
+            modelBuilder.Entity("dotnet.Data.ArtistsOfTrack", b =>
+                {
+                    b.Property<string>("ArtistsOfTrackId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ArtistId");
+
+                    b.Property<string>("TrackId");
+
+                    b.HasKey("ArtistsOfTrackId");
+
+                    b.ToTable("ArtistsOfTracks");
+                });
+
             modelBuilder.Entity("dotnet.Data.Genre", b =>
                 {
-                    b.Property<int>("GenreId")
+                    b.Property<string>("GenreId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Name");
@@ -53,20 +67,30 @@ namespace dotnet.Migrations
                     b.ToTable("Genres");
                 });
 
-            modelBuilder.Entity("dotnet.Data.Track", b =>
+            modelBuilder.Entity("dotnet.Data.GenresOfTrack", b =>
                 {
-                    b.Property<int>("TrackId")
+                    b.Property<string>("GenresOfTrackId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("AlbumId");
+                    b.Property<string>("GenreId");
 
-                    b.Property<int>("ArtistId");
+                    b.Property<string>("TrackId");
+
+                    b.HasKey("GenresOfTrackId");
+
+                    b.ToTable("GenresOfTracks");
+                });
+
+            modelBuilder.Entity("dotnet.Data.Track", b =>
+                {
+                    b.Property<string>("TrackId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AlbumId");
 
                     b.Property<string>("Comment");
 
                     b.Property<int>("DiscNumber");
-
-                    b.Property<int>("GenreId");
 
                     b.Property<int>("Length");
 
