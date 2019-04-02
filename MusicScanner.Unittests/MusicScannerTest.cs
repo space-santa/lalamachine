@@ -33,6 +33,11 @@ namespace MusicScanner.Unittests
         {
             args.Add(tags);
         }
+
+        public void SaveChanges()
+        {
+            throw new NotImplementedException();
+        }
     }
     public class MusicScannerTest
     {
