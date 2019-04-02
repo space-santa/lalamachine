@@ -72,26 +72,11 @@ Rectangle {
         nowPlayingTitle = playlist_model.get(rowPlaying).title
     }
 
-    Item {
+    MetadataProvider {
         id: meta
         function metaDataAsJson(path) {
-            var res = path.replace("file:///", "");
-            res = res.trim();
-            res = res.replace(/\s/g, "%20");
-            res = res.replace(/\//g, "%5C");
-            var theUrl = "http://localhost:5003/api/tag/" + res;
-            console.log(theUrl);
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open("GET", theUrl, false ); // false for synchronous request
-            xmlHttp.send();
-            var rawResponse = xmlHttp.response;
-            console.log(rawResponse);
-            var response = JSON.parse(rawResponse);
-            response["mrl"] = path.replace("file:///", "");
-            response["path"] = path.replace("file:///", "");
-            response["artist"] = response["artist"].join(", ");
-            response["genre"] = response["genre"].join(", ");
-            return response;
+            var cleanPath = path.replace("file:///", "");
+            return JSON.parse(metaDataAsJsonString(cleanPath));
         }
     }
 

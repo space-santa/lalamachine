@@ -25,14 +25,7 @@ namespace dotnet
         public string libPath
         {
             get => GetStringValue("libPath");
-            set
-            {
-                if (value.StartsWith("file:///"))
-                {
-                    value = value.Remove(0, 8);
-                }
-                SetSettingsValue("libPath", value);
-            }
+            set => SetSettingsValue("libPath", LalaUtils.Utils.RemoveFilePrefix(value));
         }
 
         [NotifySignal("playlistColumnsChanged")]

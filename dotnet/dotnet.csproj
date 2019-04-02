@@ -16,6 +16,7 @@
     <ProjectReference Include="..\PlaylistProvider\PlaylistProvider.csproj" />
     <ProjectReference Include="..\MusicScanner\MusicScanner.csproj" />
     <ProjectReference Include="..\TagReader\TagReader.csproj" />
+    <ProjectReference Include="..\LalaUtils\LalaUtils.csproj" />
   </ItemGroup>
 
 </Project>

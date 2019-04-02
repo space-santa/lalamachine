@@ -13,6 +13,8 @@ namespace TagReader
     {
         public static Tags Read(string path)
         {
+            path = LalaUtils.Utils.RemoveFilePrefix(path);
+
             if (path.Length == 0)
             {
                 throw new TagReaderException("You must give a value for path.");

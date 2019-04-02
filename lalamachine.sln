@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TagReader", "TagReader\TagR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TagReader.Unittests", "TagReader.Unittests\TagReader.Unittests.csproj", "{17DEBB83-F4A8-44C6-A784-3A5E06CC028F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LalaUtils", "LalaUtils\LalaUtils.csproj", "{817FC4AF-7B70-4CD6-9855-7826A598B74E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,14 @@ Global
 		{17DEBB83-F4A8-44C6-A784-3A5E06CC028F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{17DEBB83-F4A8-44C6-A784-3A5E06CC028F}.Release|x64.ActiveCfg = Release|Any CPU
 		{17DEBB83-F4A8-44C6-A784-3A5E06CC028F}.Release|x64.Build.0 = Release|Any CPU
+		{817FC4AF-7B70-4CD6-9855-7826A598B74E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{817FC4AF-7B70-4CD6-9855-7826A598B74E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{817FC4AF-7B70-4CD6-9855-7826A598B74E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{817FC4AF-7B70-4CD6-9855-7826A598B74E}.Debug|x64.Build.0 = Debug|Any CPU
+		{817FC4AF-7B70-4CD6-9855-7826A598B74E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{817FC4AF-7B70-4CD6-9855-7826A598B74E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{817FC4AF-7B70-4CD6-9855-7826A598B74E}.Release|x64.ActiveCfg = Release|Any CPU
+		{817FC4AF-7B70-4CD6-9855-7826A598B74E}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
