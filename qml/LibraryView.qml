@@ -70,7 +70,15 @@ Rectangle {
         //   titles.addLib(displayLib)
         //}
 
+        onScanDone: function() {
+            lib.scanDone.connect(function() {
+                console.log("message: scan done")
+                scan_notifier.hide()
+            })
+        }
+
         function rescan(path) {
+            scan_notifier.show();
             scanAsync(path)
         }
     }
@@ -269,13 +277,24 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
-                height: lib.scanning ? 50 : 0
+                height: 0
                 color: "transparent"
 
+                function show() {
+                    height = 50;
+                    now_scanning_text.visible = true
+                }
+
+                function hide() {
+                    height = 0;
+                    now_scanning_text.visible = false
+                }
+
                 TextBase {
+                    id: now_scanning_text
                     anchors.fill: parent
 
-                    visible: lib.scanning
+                    visible: false
 
                     text: "Scan in progress..."
                     color: "white"
