@@ -39,7 +39,7 @@ namespace TagReader
             x.CopyTo(z, 0);
             y.CopyTo(z, x.Length);
 
-            tags.artist = z;
+            tags.Artist = z;
             tags.comment = file.Tag.Comment;
             tags.discNumber = file.Tag.Disc;
             tags.genre = file.Tag.Genres;

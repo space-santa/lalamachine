@@ -11,7 +11,19 @@ namespace TagReader
             return title != null && title.Length > 0 && length > 0;
         }
         public string album;
-        public string[] artist;
+        private string[] artist;
+        public string[] Artist {
+            get => artist;
+            set
+            {
+                for (int i = 0; i < value.Length; ++i)
+                {
+                    value[i] = value[i].Trim();
+                }
+
+                artist = value.Distinct().ToArray();
+            }
+        }
         public string artistString
         {
             get
@@ -74,6 +86,7 @@ namespace TagReader
                 return $"{minutesValue}:{secondsString}";
             }
         }
+
         public string path;
 
         private string JoinArrayWithComma(string[] arr)
