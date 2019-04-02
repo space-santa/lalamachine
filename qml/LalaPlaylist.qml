@@ -309,7 +309,7 @@ Rectangle {
         }
 
         // First check the dbase here.
-        var tmp = musicLib.getMetadataForMrl(path)
+        var tmp = JSON.parse(musicLib.getMetadataForMrl(path))
         if (!tmp || !tmp.title) {
             // Only get the metadata from taglib if its not in the dbase
             // because it takes about forever.

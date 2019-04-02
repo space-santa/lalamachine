@@ -1,6 +1,7 @@
 ﻿using dotnet.Data;
 using Microsoft.EntityFrameworkCore;
 using Qml.Net;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace dotnet
@@ -32,9 +33,10 @@ namespace dotnet
             this.ActivateSignal("scanDone");
         }
 
-        public void getMetadataForMrl(string mrl)
+        public string getMetadataForMrl(string path)
         {
-
+            LalaTags tags = new LalaTags(_context.Tracks.Single(x => x.Path == path), _context);
+            return tags.ToJson();
         }
 
     }
