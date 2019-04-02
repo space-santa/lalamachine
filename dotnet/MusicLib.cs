@@ -17,6 +17,7 @@ namespace dotnet
             _context = new LalaContext();
             _context.Database.Migrate();
             _scannerDb = new ScannerDb(_context);
+            searchString = "";
         }
 
         public string searchString { get; set; }
