@@ -110,6 +110,13 @@ Rectangle {
                     height = libsettings.libraryTopShelveHeight
                 }
                 libsettings.isActive = true
+                updateLists()
+            }
+
+            function updateLists() {
+                genre_list.stringList = JSON.parse(lib.genreList)
+                album_list.stringList = JSON.parse(lib.albumList)
+                artist_list.stringList = JSON.parse(lib.artistList)
             }
 
             StringListView {
@@ -207,7 +214,7 @@ Rectangle {
 
                         onTextChanged: function() {
                             lib.searchString = text
-                            genre_list.stringList = JSON.parse(lib.genreList)
+                            topShelve.updateLists()
                         }
                     }
 
