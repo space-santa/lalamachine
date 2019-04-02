@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using dotnet.Data;
+using Microsoft.EntityFrameworkCore;
 using MusicScanner;
 using TagReader;
 
@@ -101,7 +102,8 @@ namespace dotnet
         public void EnsureDatabase()
         {
             _context.Database.EnsureDeleted();
-            _context.Database.EnsureCreated();
+            // Migrate is mutually exclusive with EnsureCreated. And we want to be able to migrate in the future, just in case.
+            _context.Database.Migrate();
         }
     }
 }
