@@ -1,6 +1,7 @@
 ﻿using dotnet.Data;
 using Microsoft.EntityFrameworkCore;
 using Qml.Net;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -47,7 +48,21 @@ namespace dotnet
                 return Newtonsoft.Json.JsonConvert.SerializeObject(list);
             }
         }
+        public string displayLib
+        {
+            get
+            {
+                var list = _context.Tracks.Where(x => x.Title.Contains(searchString)).ToArray();
+                var tagList = new List<LalaTags>();
 
+                foreach (var track in list)
+                {
+                    LalaTags lalaTags = new LalaTags(track, _context);
+                    tagList.Add(lalaTags);
+                }
+                return Newtonsoft.Json.JsonConvert.SerializeObject(tagList);
+            }
+        }
         public async void scanAsync(string path)
         {
             if (scanning)

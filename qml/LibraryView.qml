@@ -65,10 +65,10 @@ Rectangle {
 
         //sortAsc: titles.sortAsc
 
-        //onDisplayLibChanged: {
-        //    titles.emptyCurrentList()
-        //   titles.addLib(displayLib)
-        //}
+        function updateDisplayLib() {
+            titles.emptyCurrentList()
+            titles.addLib(JSON.parse(displayLib))
+        }
 
         onScanDone: function() {
             lib.scanDone.connect(function() {
@@ -117,6 +117,7 @@ Rectangle {
                 genre_list.stringList = JSON.parse(lib.genreList)
                 album_list.stringList = JSON.parse(lib.albumList)
                 artist_list.stringList = JSON.parse(lib.artistList)
+                lib.updateDisplayLib()
             }
 
             StringListView {
