@@ -71,10 +71,9 @@ Rectangle {
         }
 
         onScanDone: function() {
-            lib.scanDone.connect(function() {
-                console.log("message: scan done")
-                scan_notifier.hide()
-            })
+            console.log("message: scan done")
+            scan_notifier.hide()
+            topShelve.updateLists()
         }
 
         function rescan(path) {
