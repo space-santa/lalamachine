@@ -93,6 +93,7 @@ Rectangle {
 
         function exportPlaylist(destination, files) {
             exportFilesAsync(destination, JSON.stringify(files));
+            // TODO: Fix signaling.
 //                progress_window.close();
 //            onStarted: progress_window.show()
         }
