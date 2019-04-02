@@ -579,9 +579,11 @@ Rectangle {
             }
             if (tag === "genre") {
                 width = 150
+                tag = "genreString"
             }
             if (tag === "artist") {
                 width = 150
+                tag = "artistString"
             }
             if (tag === "album") {
                 width = 150
