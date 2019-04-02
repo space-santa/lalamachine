@@ -100,7 +100,8 @@ namespace dotnet
 
         public void EnsureDatabase()
         {
-            //throw new NotImplementedException();
+            _context.Database.EnsureDeleted();
+            _context.Database.EnsureCreated();
         }
     }
 }
