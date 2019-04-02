@@ -30,9 +30,9 @@ namespace TagReader.Unittests
         public void ArtistArrayDuplicatesShouldBeRemoved()
         {
             Tags tags = new Tags();
-            tags.artist = new string[2];
-            tags.artist[0] = "Therapy?";
-            tags.artist[1] = "Therapy?";
+            tags.Artist = new string[2];
+            tags.Artist[0] = "Therapy?";
+            tags.Artist[1] = "Therapy?";
             Assert.Equal("Therapy?", tags.artistString);
         }
 
@@ -41,9 +41,9 @@ namespace TagReader.Unittests
         {
             Tags tags = new Tags();
             tags.artistString = "Therapy?, Machine Head";
-            Assert.Equal(2, tags.artist.Length);
-            Assert.Equal("Therapy?", tags.artist[0]);
-            Assert.Equal("Machine Head", tags.artist[1]);
+            Assert.Equal(2, tags.Artist.Length);
+            Assert.Equal("Therapy?", tags.Artist[0]);
+            Assert.Equal("Machine Head", tags.Artist[1]);
         }
 
         [Fact]
@@ -51,8 +51,8 @@ namespace TagReader.Unittests
         {
             Tags tags = new Tags();
             tags.artistString = "Therapy?, Therapy?";
-            Assert.Single(tags.artist);
-            Assert.Equal("Therapy?", tags.artist[0]);
+            Assert.Single(tags.Artist);
+            Assert.Equal("Therapy?", tags.Artist[0]);
         }
     }
 }

@@ -18,6 +18,7 @@ namespace dotnet
                     Qml.Net.Qml.RegisterType<MusicLib>("Lala", 1, 0);
                     Qml.Net.Qml.RegisterType<SysInfo>("Lala", 1, 0);
                     Qml.Net.Qml.RegisterType<MetadataProvider>("Lala", 1, 0);
+                    Qml.Net.Qml.RegisterType<Exporter>("Lala", 1, 0);
                     engine.Load("../../../../qml/main.qml");
 
                     return app.Exec();

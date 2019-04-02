@@ -604,7 +604,7 @@ ApplicationWindow {
         onAccepted: {
             // We want to export the files into a folder 'playlist name'.
             var lalaname = currentPlaylist
-            if (lalaname === miscPlaylistName) {
+            if (lalaname === miscPlaylistName || lalaname.length < 1) {
                 lalaname = "new list"
             }
             playlist.exportPlaylist(export_dialog.folder + "/" + lalaname)
