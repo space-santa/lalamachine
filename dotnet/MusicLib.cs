@@ -31,8 +31,22 @@ namespace dotnet
                 return Newtonsoft.Json.JsonConvert.SerializeObject(list);
             }
         }
-        public string artistList { get; set; }
-        public string albumList { get; set; }
+        public string artistList
+        {
+            get
+            {
+                var list = _context.Artists.Where(x => x.Name.Contains(searchString)).Select(x => x.Name).ToArray();
+                return Newtonsoft.Json.JsonConvert.SerializeObject(list);
+            }
+        }
+        public string albumList
+        {
+            get
+            {
+                var list = _context.Albums.Where(x => x.Name.Contains(searchString)).Select(x => x.Name).ToArray();
+                return Newtonsoft.Json.JsonConvert.SerializeObject(list);
+            }
+        }
 
         public async void scanAsync(string path)
         {
