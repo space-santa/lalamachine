@@ -28,7 +28,7 @@ namespace dotnet
         {
             get
             {
-                var list = _context.Genres.Where(x => x.Name.Contains(searchString)).Select(x => x.Name).ToArray();
+                var list = _context.Genres.Where(x => x.Name.Contains(searchString, System.StringComparison.OrdinalIgnoreCase)).Select(x => x.Name).OrderBy(x => x).ToArray();
                 return Newtonsoft.Json.JsonConvert.SerializeObject(list);
             }
         }
@@ -36,7 +36,7 @@ namespace dotnet
         {
             get
             {
-                var list = _context.Artists.Where(x => x.Name.Contains(searchString)).Select(x => x.Name).ToArray();
+                var list = _context.Artists.Where(x => x.Name.Contains(searchString)).Select(x => x.Name).OrderBy(x => x).ToArray();
                 return Newtonsoft.Json.JsonConvert.SerializeObject(list);
             }
         }
@@ -44,7 +44,7 @@ namespace dotnet
         {
             get
             {
-                var list = _context.Albums.Where(x => x.Name.Contains(searchString)).Select(x => x.Name).ToArray();
+                var list = _context.Albums.Where(x => x.Name.Contains(searchString, System.StringComparison.OrdinalIgnoreCase)).Select(x => x.Name).OrderBy(x => x).ToArray();
                 return Newtonsoft.Json.JsonConvert.SerializeObject(list);
             }
         }
@@ -52,7 +52,7 @@ namespace dotnet
         {
             get
             {
-                var list = _context.Tracks.Where(x => x.Title.Contains(searchString)).ToArray();
+                var list = _context.Tracks.Where(x => x.Title.Contains(searchString, System.StringComparison.OrdinalIgnoreCase)).ToArray();
                 var tagList = new List<LalaTags>();
 
                 foreach (var track in list)
