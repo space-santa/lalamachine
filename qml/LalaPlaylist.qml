@@ -35,7 +35,7 @@ Rectangle {
 
     property int count: playlist_model.count
     property int rowPlaying: -1
-    property int currentId: -1
+    property string currentTitle: ""
     property url nowPlayingSource
     property string nowPlayingTitle: ""
     property bool repeatAll: false
@@ -161,7 +161,7 @@ Rectangle {
     // also be set in function playRow(row)
     function updateNowPlayingRow() {
         for (var i = 0; i < playlist_model.count; ++i) {
-            if (currentId == playlist_model.get(i).id) {
+            if (currentTitle == playlist_model.get(i)["title"]) {
                 rowPlaying = i
                 return
             }
@@ -350,9 +350,8 @@ Rectangle {
 
     function playRow(row) {
         rowPlaying = row
-        currentId = playlist_model.get(row).id
-        play(playlist_model.get(row)["mrl"], playlist_model.get(row)["title"],
-             playlist_model.get(row)["artist"])
+        currentTitle = playlist_model.get(row)["title"]
+        play(playlist_model.get(row)["path"], currentTitle, playlist_model.get(row)["artist"])
         playlist_view.currentRow = rowPlaying
     }
 
