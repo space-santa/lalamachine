@@ -21,65 +21,68 @@ namespace dotnet
         public void AddTagsToDatabase(Tags tags)
         {
             Track track = new Track();
-            track.TrackId = Guid.NewGuid().ToString();
 
-            foreach (var genre in tags.genre)
+            foreach (var g in tags.genre)
             {
-                string genreId;
+                Genre genre;
 
-                if (_context.Genres.Any(x => x.Name == genre))
+                if (_context.Genres.Any(x => x.Name == g))
                 {
-                    genreId = _context.Genres.Single(x => x.Name == genre).GenreId;
+                    genre = _context.Genres.Single(x => x.Name == g);
                 }
                 else
                 {
-                    var dbGenre = new Genre();
-                    dbGenre.Name = genre;
-                    dbGenre.GenreId = Guid.NewGuid().ToString();
-                    _context.Genres.Add(dbGenre);
-                    genreId = dbGenre.GenreId;
+                    genre = new Genre
+                    {
+                        Name = g
+                    };
+
+                    _context.Genres.Add(genre);
                 }
 
-                var got = new GenresOfTrack();
-                got.TrackId = track.TrackId;
-                got.GenreId = genreId;
-                _context.GenresOfTracks.Add(got);
+                GenreTrack gt = new GenreTrack
+                {
+                    Genre = genre,
+                    Track = track
+                };
+                _context.GenreTracks.Add(gt);
             }
 
-            foreach (var artist in tags.Artist)
+            foreach (var a in tags.Artist)
             {
-                string artistId ;
+                Artist artist ;
 
-                if (_context.Artists.Any(x => x.Name == artist))
+                if (_context.Artists.Any(x => x.Name == a))
                 {
-                    artistId = _context.Artists.Single(x => x.Name == artist).ArtistId;
+                    artist = _context.Artists.Single(x => x.Name == a);
                 }
                 else
                 {
-                    var dbArtist = new Artist();
-                    dbArtist.Name = artist;
-                    dbArtist.ArtistId = Guid.NewGuid().ToString();
-                    _context.Artists.Add(dbArtist);
-                    artistId = dbArtist.ArtistId;
+                    artist = new Artist
+                    {
+                        Name = a
+                    };
+                    _context.Artists.Add(artist);
                 }
 
-                var aot = new ArtistsOfTrack();
-                aot.TrackId = track.TrackId;
-                aot.ArtistId = artistId;
-                _context.ArtistsOfTracks.Add(aot);
+                ArtistTrack at = new ArtistTrack
+                {
+                    Artist = artist,
+                    Track = track
+                };
+                _context.ArtistTracks.Add(at);
             }
 
             if (_context.Albums.Any(x => x.Name == tags.album))
             {
-                track.AlbumId = _context.Albums.Single(x => x.Name == tags.album).AlbumId;
+                track.Album = _context.Albums.Single(x => x.Name == tags.album);
             }
             else
             {
-                var dbAlbum = new Album();
-                dbAlbum.Name = tags.album;
-                dbAlbum.AlbumId = Guid.NewGuid().ToString();
-                track.AlbumId = dbAlbum.AlbumId;
-                _context.Albums.Add(dbAlbum);
+                track.Album = new Album
+                {
+                    Name = tags.album
+                };
             }
 
             track.Comment = tags.comment;

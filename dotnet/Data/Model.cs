@@ -8,26 +8,31 @@ namespace dotnet.Data
 
     public class Genre
     {
-        public string GenreId { get; set; }
+        public int GenreId { get; set; }
         public string Name { get; set; }
+
+        public List<GenreTrack> GenreTracks { get; set; }
     }
 
     public class Artist
     {
-        public string ArtistId { get; set; }
+        public int ArtistId { get; set; }
         public string Name { get; set; }
 
+        public List<ArtistTrack> ArtistTracks { get; set; }
     }
 
     public class Album
     {
-        public string AlbumId { get; set; }
+        public int AlbumId { get; set; }
         public string Name { get; set; }
+
+        public List<Track> Tracks { get; set; }
     }
 
     public class Track
     {
-        public string TrackId { get; set; }
+        public int TrackId { get; set; }
         public string Title { get; set; }
         public string Comment { get; set; }
         public int TrackNumber { get; set; }
@@ -36,20 +41,32 @@ namespace dotnet.Data
         public int Year { get; set; }
         public int DiscNumber { get; set; }
 
-        public string AlbumId { get; set; }
+        public int AlbumId { get; set; }
+        public Album Album { get; set; }
+
+        public List<ArtistTrack> ArtistTracks { get; set; }
+        public List<GenreTrack> GenreTracks { get; set; }
     }
 
-    public class GenresOfTrack
+    public class GenreTrack
     {
-        public string GenresOfTrackId { get; set; }
-        public string TrackId { get; set; }
-        public string GenreId { get; set; }
+        public int GenreTrackId { get; set; }
+
+        public int TrackId { get; set; }
+        public Track Track { get; set; }
+
+        public int GenreId { get; set; }
+        public Genre Genre { get; set; }
     }
 
-    public class ArtistsOfTrack
+    public class ArtistTrack
     {
-        public string ArtistsOfTrackId { get; set; }
-        public string TrackId { get; set; }
-        public string ArtistId { get; set; }
+        public int ArtistTrackId { get; set; }
+
+        public int TrackId { get; set; }
+        public Track Track { get; set; }
+
+        public int ArtistId { get; set; }
+        public Artist Artist { get; set; }
     }
 }

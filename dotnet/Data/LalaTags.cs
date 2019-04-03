@@ -9,9 +9,9 @@ namespace dotnet.Data
     {
         public LalaTags(Track track, LalaContext context)
         {
-            album = context.Albums.Single(x => x.AlbumId == track.AlbumId).Name;
+            album = track.Album.Name;
 
-            var aots = context.ArtistsOfTracks.Where(x => x.TrackId == track.TrackId).ToArray();
+            var aots = context.ArtistTracks.Where(x => x.TrackId == track.TrackId).ToArray();
             List<string> tmpArtists = new List<string>();
             foreach (var aot in aots)
             {
@@ -23,7 +23,7 @@ namespace dotnet.Data
             comment = track.Comment;
             discNumber = (uint)track.DiscNumber;
 
-            var gots = context.GenresOfTracks.Where(x => x.TrackId == track.TrackId).ToArray();
+            var gots = context.GenreTracks.Where(x => x.TrackId == track.TrackId).ToArray();
             List<string> tmpGenres = new List<string>();
             foreach (var got in gots)
             {
