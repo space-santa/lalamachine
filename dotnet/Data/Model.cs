@@ -11,7 +11,7 @@ namespace dotnet.Data
         public int GenreId { get; set; }
         public string Name { get; set; }
 
-        public List<GenreTrack> GenreTracks { get; set; }
+        public virtual List<GenreTrack> GenreTracks { get; set; }
     }
 
     public class Artist
@@ -19,7 +19,7 @@ namespace dotnet.Data
         public int ArtistId { get; set; }
         public string Name { get; set; }
 
-        public List<ArtistTrack> ArtistTracks { get; set; }
+        public virtual List<ArtistTrack> ArtistTracks { get; set; }
     }
 
     public class Album
@@ -27,7 +27,7 @@ namespace dotnet.Data
         public int AlbumId { get; set; }
         public string Name { get; set; }
 
-        public List<Track> Tracks { get; set; }
+        public virtual List<Track> Tracks { get; set; }
     }
 
     public class Track
@@ -42,10 +42,10 @@ namespace dotnet.Data
         public int DiscNumber { get; set; }
 
         public int AlbumId { get; set; }
-        public Album Album { get; set; }
+        public virtual Album Album { get; set; }
 
-        public List<ArtistTrack> ArtistTracks { get; set; }
-        public List<GenreTrack> GenreTracks { get; set; }
+        public virtual List<ArtistTrack> ArtistTracks { get; set; }
+        public virtual List<GenreTrack> GenreTracks { get; set; }
     }
 
 
@@ -54,10 +54,10 @@ namespace dotnet.Data
         public int ArtistTrackId { get; set; }
 
         public int ArtistId { get; set; }
-        public Artist Artist { get; set; }
+        public virtual Artist Artist { get; set; }
 
         public int TrackId { get; set; }
-        public Track Track { get; set; }
+        public virtual Track Track { get; set; }
     }
 
 
@@ -66,9 +66,9 @@ namespace dotnet.Data
         public int GenreTrackId { get; set; }
 
         public int GenreId { get; set; }
-        public Genre Genre { get; set; }
+        public virtual Genre Genre { get; set; }
 
         public int TrackId { get; set; }
-        public Track Track { get; set; }
+        public virtual Track Track { get; set; }
     }
 }

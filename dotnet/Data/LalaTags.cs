@@ -9,29 +9,20 @@ namespace dotnet.Data
     {
         public LalaTags(Track track, LalaContext context)
         {
-            album = track.Album.Name;
-
-            var aots = context.ArtistTracks.Where(x => x.TrackId == track.TrackId).ToArray();
-            List<string> tmpArtists = new List<string>();
-            foreach (var aot in aots)
+            if (track.Album != null)
             {
-                var artist = context.Artists.Single(x => x.ArtistId == aot.ArtistId).Name;
-                tmpArtists.Add(artist);
+                album = track.Album.Name;
             }
-            Artist = tmpArtists.ToArray();
-
+            if (track.ArtistTracks != null)
+            {
+                Artist = track.ArtistTracks.Select(x => x.Artist.Name).ToArray();
+            }
             comment = track.Comment;
             discNumber = (uint)track.DiscNumber;
-
-            var gots = context.GenreTracks.Where(x => x.TrackId == track.TrackId).ToArray();
-            List<string> tmpGenres = new List<string>();
-            foreach (var got in gots)
+            if (track.GenreTracks != null)
             {
-                var genre = context.Genres.Single(x => x.GenreId == got.GenreId).Name;
-                tmpGenres.Add(genre);
+                genre = track.GenreTracks.Select(x => x.Genre.Name).ToArray();
             }
-            genre = tmpGenres.ToArray();
-
             length = track.Length;
             path = track.Path;
             title = track.Title;

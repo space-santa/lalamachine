@@ -16,7 +16,9 @@ namespace dotnet.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite($"Data Source={Constants.DB_PATH}");
+            optionsBuilder
+                .UseLazyLoadingProxies()
+                .UseSqlite($"Data Source={Constants.DB_PATH}");
         }
     }
 }
