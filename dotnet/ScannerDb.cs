@@ -95,9 +95,12 @@ namespace dotnet
 
         public void EnsureDatabase()
         {
-            _context.Database.EnsureDeleted();
-            // Migrate is mutually exclusive with EnsureCreated. And we want to be able to migrate in the future, just in case.
-            _context.Database.Migrate();
+            _context.Albums.RemoveRange(_context.Albums);
+            _context.Artists.RemoveRange(_context.Artists);
+            _context.ArtistTracks.RemoveRange(_context.ArtistTracks);
+            _context.Genres.RemoveRange(_context.Genres);
+            _context.GenreTracks.RemoveRange(_context.GenreTracks);
+            _context.Tracks.RemoveRange(_context.Tracks);
         }
     }
 }
