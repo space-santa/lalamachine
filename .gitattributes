@@ -72,4 +72,4 @@
 *.vcxitems   text eol=crlf
 
 # Bash scripts must not have CRLF. This is esoecially relevant when building docker images.
-*.ss text eol=lf
+*.sh text eol=lf
