@@ -40,17 +40,12 @@ namespace dotnet
                     _context.Genres.Add(genre);
                 }
 
-                GenreTrack gt = new GenreTrack
-                {
-                    Genre = genre,
-                    Track = track
-                };
-                _context.GenreTracks.Add(gt);
+                _context.GenreTracks.Add(new GenreTrack { Genre = genre, Track = track });
             }
 
             foreach (var a in tags.Artist)
             {
-                Artist artist ;
+                Artist artist;
 
                 if (_context.Artists.Any(x => x.Name == a))
                 {
@@ -65,12 +60,8 @@ namespace dotnet
                     _context.Artists.Add(artist);
                 }
 
-                ArtistTrack at = new ArtistTrack
-                {
-                    Artist = artist,
-                    Track = track
-                };
-                _context.ArtistTracks.Add(at);
+
+                _context.ArtistTracks.Add(new ArtistTrack { Artist = artist, Track = track });
             }
 
             if (_context.Albums.Any(x => x.Name == tags.album))

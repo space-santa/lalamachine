@@ -48,25 +48,27 @@ namespace dotnet.Data
         public List<GenreTrack> GenreTracks { get; set; }
     }
 
-    public class GenreTrack
-    {
-        public int GenreTrackId { get; set; }
-
-        public int TrackId { get; set; }
-        public Track Track { get; set; }
-
-        public int GenreId { get; set; }
-        public Genre Genre { get; set; }
-    }
 
     public class ArtistTrack
     {
         public int ArtistTrackId { get; set; }
 
-        public int TrackId { get; set; }
-        public Track Track { get; set; }
-
         public int ArtistId { get; set; }
         public Artist Artist { get; set; }
+
+        public int TrackId { get; set; }
+        public Track Track { get; set; }
+    }
+
+
+    public class GenreTrack
+    {
+        public int GenreTrackId { get; set; }
+
+        public int GenreId { get; set; }
+        public Genre Genre { get; set; }
+
+        public int TrackId { get; set; }
+        public Track Track { get; set; }
     }
 }

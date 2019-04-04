@@ -8,8 +8,8 @@ using dotnet.Data;
 namespace dotnet.Migrations
 {
     [DbContext(typeof(LalaContext))]
-    [Migration("20190403093340_Relations")]
-    partial class Relations
+    [Migration("20190404075102_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

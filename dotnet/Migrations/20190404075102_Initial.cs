@@ -2,7 +2,7 @@
 
 namespace dotnet.Migrations
 {
-    public partial class Relations : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -77,8 +77,8 @@ namespace dotnet.Migrations
                 {
                     ArtistTrackId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    TrackId = table.Column<int>(nullable: false),
-                    ArtistId = table.Column<int>(nullable: false)
+                    ArtistId = table.Column<int>(nullable: false),
+                    TrackId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -103,8 +103,8 @@ namespace dotnet.Migrations
                 {
                     GenreTrackId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    TrackId = table.Column<int>(nullable: false),
-                    GenreId = table.Column<int>(nullable: false)
+                    GenreId = table.Column<int>(nullable: false),
+                    TrackId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
