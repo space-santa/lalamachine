@@ -164,8 +164,7 @@ Rectangle {
                         listname = miscPlaylistName
                     }
 
-                    var albumList = musicLib.getAlbumTracks(
-                                album_list.selection)
+                    var albumList = JSON.parse(musicLib.getAlbumTracks(album_list.selection))
 
                     for (var i = 0; i < albumList.length; ++i) {
                         mainPlaylist.add(albumList[i].path)

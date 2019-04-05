@@ -84,7 +84,13 @@ namespace dotnet
         public string getAlbumTracks(string name)
         {
             var tracks = _context.Albums.Single(x => x.Name == name).Tracks;
-            return Newtonsoft.Json.JsonConvert.SerializeObject(tracks);
+            var tagList = new List<LalaTags>();
+            foreach (var track in tracks)
+            {
+                LalaTags lalaTags = new LalaTags(track, _context);
+                tagList.Add(lalaTags);
+            }
+            return Newtonsoft.Json.JsonConvert.SerializeObject(tagList);
         }
     }
 }
