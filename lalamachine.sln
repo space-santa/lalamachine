@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lalamachine", "lalamachine.vcxproj", "{44ABF7E0-5BDA-3856-88EE-F0220B024057}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lalatest", "test\lalatest\lalatest.vcxproj", "{93A618C2-8E7A-30E2-89E2-FC4D6691B744}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet", "dotnet\dotnet.csproj", "{9C2C2652-805B-4816-AA5C-1374C059C018}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaylistProvider", "PlaylistProvider\PlaylistProvider.csproj", "{918E331A-8D53-4BF7-91FD-E05D72D38BD4}"
@@ -35,18 +31,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{44ABF7E0-5BDA-3856-88EE-F0220B024057}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{44ABF7E0-5BDA-3856-88EE-F0220B024057}.Debug|x64.ActiveCfg = Debug|x64
-		{44ABF7E0-5BDA-3856-88EE-F0220B024057}.Debug|x64.Build.0 = Debug|x64
-		{44ABF7E0-5BDA-3856-88EE-F0220B024057}.Release|Any CPU.ActiveCfg = Release|x64
-		{44ABF7E0-5BDA-3856-88EE-F0220B024057}.Release|x64.ActiveCfg = Release|x64
-		{44ABF7E0-5BDA-3856-88EE-F0220B024057}.Release|x64.Build.0 = Release|x64
-		{93A618C2-8E7A-30E2-89E2-FC4D6691B744}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{93A618C2-8E7A-30E2-89E2-FC4D6691B744}.Debug|x64.ActiveCfg = Debug|x64
-		{93A618C2-8E7A-30E2-89E2-FC4D6691B744}.Debug|x64.Build.0 = Debug|x64
-		{93A618C2-8E7A-30E2-89E2-FC4D6691B744}.Release|Any CPU.ActiveCfg = Release|x64
-		{93A618C2-8E7A-30E2-89E2-FC4D6691B744}.Release|x64.ActiveCfg = Release|x64
-		{93A618C2-8E7A-30E2-89E2-FC4D6691B744}.Release|x64.Build.0 = Release|x64
 		{9C2C2652-805B-4816-AA5C-1374C059C018}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9C2C2652-805B-4816-AA5C-1374C059C018}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C2C2652-805B-4816-AA5C-1374C059C018}.Debug|x64.ActiveCfg = Debug|Any CPU
