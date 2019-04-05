@@ -81,5 +81,10 @@ namespace dotnet
             return tags.ToJson();
         }
 
+        public string getAlbumTracks(string name)
+        {
+            var tracks = _context.Albums.Single(x => x.Name == name).Tracks;
+            return Newtonsoft.Json.JsonConvert.SerializeObject(tracks);
+        }
     }
 }
