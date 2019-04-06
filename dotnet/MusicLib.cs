@@ -10,8 +10,8 @@ namespace dotnet
     [Signal("scanDone")]
     public class MusicLib
     {
-        LalaContext _context;
-        ScannerDb _scannerDb;
+        private LalaContext _context;
+        private ScannerDb _scannerDb;
 
         public MusicLib()
         {
@@ -37,7 +37,7 @@ namespace dotnet
         {
             get
             {
-                var list = _context.Artists.Where(x => x.Name.Contains(searchString)).Select(x => x.Name).OrderBy(x => x).ToArray();
+                var list = _context.Artists.Where(x => x.Name.Contains(searchString, System.StringComparison.OrdinalIgnoreCase)).Select(x => x.Name).OrderBy(x => x).ToArray();
                 list = list.Prepend(Constants.ALL).ToArray();
                 return Newtonsoft.Json.JsonConvert.SerializeObject(list);
             }
@@ -46,16 +46,48 @@ namespace dotnet
         {
             get
             {
-                var list = _context.Albums.Where(x => x.Name.Contains(searchString, System.StringComparison.OrdinalIgnoreCase)).Select(x => x.Name).OrderBy(x => x).ToArray();
+                string[] list;
+                if (searchString == "")
+                {
+                    list = _context.Albums.Select(x => x.Name).ToArray();
+                }
+                else
+                {
+                    try
+                    {
+                        list = _context.Albums.Where(x => x.Name.Contains(searchString, System.StringComparison.OrdinalIgnoreCase)).Select(x => x.Name).OrderBy(x => x).ToArray();
+                    }
+                    catch (System.NullReferenceException)
+                    {
+                        list = new string[0];
+                    }
+                }
+
                 list = list.Prepend(Constants.ALL).ToArray();
-                return Newtonsoft.Json.JsonConvert.SerializeObject(list);
+                return Newtonsoft.Json.JsonConvert.SerializeObject(list.ToArray());
             }
         }
         public string displayLib
         {
             get
             {
-                var list = _context.Tracks.Where(x => x.Title.Contains(searchString, System.StringComparison.OrdinalIgnoreCase)).ToArray();
+                Track[] list;
+                if (searchString == "")
+                {
+                    list = _context.Tracks.ToArray();
+                }
+                else
+                {
+                    try
+                    {
+                        list = _context.Tracks.Where(x => x.Title.Contains(searchString, System.StringComparison.OrdinalIgnoreCase)).ToArray();
+                    }
+                    catch (System.NullReferenceException)
+                    {
+                        return "[]";
+                    }
+                }
+
                 var tagList = new List<LalaTags>();
 
                 foreach (var track in list)
