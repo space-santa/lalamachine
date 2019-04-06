@@ -85,7 +85,20 @@ namespace dotnet
         {
             get
             {
-                var list = _context.Artists.Where(x => x.Name.Contains(searchString, System.StringComparison.OrdinalIgnoreCase)).Select(x => x.Name).OrderBy(x => x).ToArray();
+                string[] list;
+
+                if (genreFilter.Length > 0)
+                {
+                    list = _context.GenreTracks
+                                   .Where(x => x.Genre.Name == genreFilter)
+                                   .SelectMany(x => x.Track.ArtistTracks)
+                                   .Select(x => x.Artist.Name).Distinct().ToArray();
+                }
+                else
+                {
+                    list = _context.Artists.Where(x => x.Name.Contains(searchString, System.StringComparison.OrdinalIgnoreCase)).Select(x => x.Name).OrderBy(x => x).ToArray();
+                }
+
                 list = list.Prepend(Constants.ALL).ToArray();
                 return Newtonsoft.Json.JsonConvert.SerializeObject(list);
             }
@@ -96,16 +109,22 @@ namespace dotnet
             get
             {
                 string[] list;
+
                 if (artistFilter.Length > 0)
                 {
                     list = _context.ArtistTracks
                                    .Where(x => x.Artist.Name == artistFilter)
                                    .Select(x => x.Track)
                                    .Select(x => x.Album.Name).Distinct().ToArray();
-                    list = list.Prepend(Constants.ALL).ToArray();
-                    return Newtonsoft.Json.JsonConvert.SerializeObject(list.ToArray());
                 }
-                if (searchString == "")
+                else if (genreFilter.Length > 0)
+                {
+                    list = _context.GenreTracks
+                                   .Where(x => x.Genre.Name == genreFilter)
+                                   .Select(x => x.Track)
+                                   .Select(x => x.Album.Name).Distinct().ToArray();
+                }
+                else if (searchString == "")
                 {
                     list = _context.Albums.Select(x => x.Name).ToArray();
                 }

@@ -127,7 +127,9 @@ Rectangle {
 
                 onSelectionChanged: function() {
                     lib.genreFilter = selection;
-                    lib.updateDisplayLib()  
+                    artist_list.stringList = JSON.parse(lib.artistList)
+                    album_list.stringList = JSON.parse(lib.albumList)
+                    lib.updateDisplayLib()
                 }
             }
             StringListView {
