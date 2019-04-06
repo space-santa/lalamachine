@@ -37,14 +37,7 @@ namespace dotnet
             get => _genreFilter;
             set
             {
-                if (value == null || value == Constants.ALL)
-                {
-                    _genreFilter = "";
-                }
-                else
-                {
-                    _genreFilter = value;
-                }
+                _genreFilter = emptyWhenNullOrAll(value);
             }
         }
 
@@ -53,14 +46,7 @@ namespace dotnet
             get => _artistFilter;
             set
             {
-                if (value == null || value == Constants.ALL)
-                {
-                    _artistFilter = "";
-                }
-                else
-                {
-                    _artistFilter = value;
-                }
+                _artistFilter = emptyWhenNullOrAll(value);
             }
         }
 
@@ -69,15 +55,18 @@ namespace dotnet
             get => _albumFilter;
             set
             {
-                if (value == null || value == Constants.ALL)
-                {
-                    _albumFilter = "";
-                }
-                else
-                {
-                    _albumFilter = value;
-                }
+                _albumFilter = emptyWhenNullOrAll(value);
             }
+        }
+
+        private string emptyWhenNullOrAll(string value)
+        {
+            if (value == null || value == Constants.ALL)
+            {
+                return "";
+            }
+
+            return value;
         }
 
         public bool scanning { get; set; }
