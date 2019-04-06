@@ -24,6 +24,9 @@ namespace dotnet
         #region properties
 
         public string searchString { get; set; }
+        public string genreFilter { get; set; }
+        public string artistFilter { get; set; }
+        public string albumFilter { get; set; }
         public bool scanning { get; set; }
 
         public string genreList
