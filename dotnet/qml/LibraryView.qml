@@ -57,10 +57,6 @@ Rectangle {
     MusicLib {
         id: lib
 
-        //genreFilter: genre_list.selection
-        //artistFilter: artist_list.selection
-        //albumFilter: album_list.selection
-
         //titlePartialFilter: filter_text.text
 
         //sortAsc: titles.sortAsc
@@ -128,6 +124,11 @@ Rectangle {
                 allowSort: false
                 roleString: "genre"
                 stringList: lib.genreList
+
+                onSelectionChanged: function() {
+                    lib.genreFilter = selection;
+                    lib.updateDisplayLib()  
+                }
             }
             StringListView {
                 id: artist_list
@@ -139,6 +140,11 @@ Rectangle {
                 allowSort: false
                 roleString: "artist"
                 stringList: lib.artistList
+
+                onSelectionChanged: function() {
+                    lib.artistFilter = selection;
+                    lib.updateDisplayLib()
+                }
             }
             StringListView {
                 id: album_list
@@ -149,6 +155,11 @@ Rectangle {
                 allowSort: false
                 roleString: "album"
                 stringList: lib.albumList
+
+                onSelectionChanged: function() {
+                    lib.albumFilter = selection;
+                    lib.updateDisplayLib()
+                }
 
                 onRightClick: {
                     rcm.popup()

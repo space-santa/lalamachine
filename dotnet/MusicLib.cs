@@ -19,14 +19,67 @@ namespace dotnet
             _context.Database.Migrate();
             _scannerDb = new ScannerDb(_context);
             searchString = "";
+            genreFilter = "";
+            artistFilter = "";
+            albumFilter = "";
         }
 
         #region properties
 
         public string searchString { get; set; }
-        public string genreFilter { get; set; }
-        public string artistFilter { get; set; }
-        public string albumFilter { get; set; }
+
+        private string _genreFilter;
+        private string _artistFilter;
+        private string _albumFilter;
+
+        public string genreFilter
+        {
+            get => _genreFilter;
+            set
+            {
+                if (value == null || value == Constants.ALL)
+                {
+                    _genreFilter = "";
+                }
+                else
+                {
+                    _genreFilter = value;
+                }
+            }
+        }
+
+        public string artistFilter
+        {
+            get => _artistFilter;
+            set
+            {
+                if (value == null || value == Constants.ALL)
+                {
+                    _artistFilter = "";
+                }
+                else
+                {
+                    _artistFilter = value;
+                }
+            }
+        }
+
+        public string albumFilter
+        {
+            get => _albumFilter;
+            set
+            {
+                if (value == null || value == Constants.ALL)
+                {
+                    _albumFilter = "";
+                }
+                else
+                {
+                    _albumFilter = value;
+                }
+            }
+        }
+
         public bool scanning { get; set; }
 
         public string genreList
@@ -80,6 +133,25 @@ namespace dotnet
             get
             {
                 Track[] list;
+
+                if (albumFilter.Length > 0)
+                {
+                    list = _context.Albums.Single(x => x.Name == albumFilter).Tracks.ToArray();
+                    return TracksToTagListString(list);
+                }
+
+                if (artistFilter.Length > 0)
+                {
+                    list = _context.ArtistTracks.Where(x => x.Artist.Name == artistFilter).Select(x => x.Track).ToArray();
+                    return TracksToTagListString(list);
+                }
+
+                if (genreFilter.Length > 0)
+                {
+                    list = _context.GenreTracks.Where(x => x.Genre.Name == genreFilter).Select(x => x.Track).ToArray();
+                    return TracksToTagListString(list);
+                }
+
                 if (searchString == "")
                 {
                     list = _context.Tracks.ToArray();
@@ -96,15 +168,21 @@ namespace dotnet
                     }
                 }
 
-                var tagList = new List<LalaTags>();
-
-                foreach (var track in list)
-                {
-                    LalaTags lalaTags = new LalaTags(track, _context);
-                    tagList.Add(lalaTags);
-                }
-                return Newtonsoft.Json.JsonConvert.SerializeObject(tagList);
+                return TracksToTagListString(list);
             }
+        }
+
+        private string TracksToTagListString(Track[] tracks)
+        {
+            var tagList = new List<LalaTags>();
+
+            foreach (var track in tracks)
+            {
+                LalaTags lalaTags = new LalaTags(track, _context);
+                tagList.Add(lalaTags);
+            }
+
+            return Newtonsoft.Json.JsonConvert.SerializeObject(tagList);
         }
 
         #endregion properties
