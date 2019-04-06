@@ -14,5 +14,7 @@ namespace dotnet
         public static string DB_PATH = Path.Combine(LALADIR, "musiclib.db");
 
         public static string MISC_PLAYLIST_NAME = "cs1m090";
+
+        public static string ALL = "-- all --";
     }
 }

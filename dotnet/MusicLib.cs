@@ -29,6 +29,7 @@ namespace dotnet
             get
             {
                 var list = _context.Genres.Where(x => x.Name.Contains(searchString, System.StringComparison.OrdinalIgnoreCase)).Select(x => x.Name).OrderBy(x => x).ToArray();
+                list = list.Prepend(Constants.ALL).ToArray();
                 return Newtonsoft.Json.JsonConvert.SerializeObject(list);
             }
         }
@@ -37,6 +38,7 @@ namespace dotnet
             get
             {
                 var list = _context.Artists.Where(x => x.Name.Contains(searchString)).Select(x => x.Name).OrderBy(x => x).ToArray();
+                list = list.Prepend(Constants.ALL).ToArray();
                 return Newtonsoft.Json.JsonConvert.SerializeObject(list);
             }
         }
@@ -45,6 +47,7 @@ namespace dotnet
             get
             {
                 var list = _context.Albums.Where(x => x.Name.Contains(searchString, System.StringComparison.OrdinalIgnoreCase)).Select(x => x.Name).OrderBy(x => x).ToArray();
+                list = list.Prepend(Constants.ALL).ToArray();
                 return Newtonsoft.Json.JsonConvert.SerializeObject(list);
             }
         }
