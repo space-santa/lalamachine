@@ -143,6 +143,7 @@ Rectangle {
 
                 onSelectionChanged: function() {
                     lib.artistFilter = selection;
+                    album_list.stringList = JSON.parse(lib.albumList)
                     lib.updateDisplayLib()
                 }
             }

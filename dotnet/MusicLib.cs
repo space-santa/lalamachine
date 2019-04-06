@@ -107,6 +107,15 @@ namespace dotnet
             get
             {
                 string[] list;
+                if (artistFilter.Length > 0)
+                {
+                    list = _context.ArtistTracks
+                                   .Where(x => x.Artist.Name == artistFilter)
+                                   .Select(x => x.Track)
+                                   .Select(x => x.Album.Name).Distinct().ToArray();
+                    list = list.Prepend(Constants.ALL).ToArray();
+                    return Newtonsoft.Json.JsonConvert.SerializeObject(list.ToArray());
+                }
                 if (searchString == "")
                 {
                     list = _context.Albums.Select(x => x.Name).ToArray();
