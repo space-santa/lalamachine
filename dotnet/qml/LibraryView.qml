@@ -212,7 +212,7 @@ Rectangle {
                         placeholderText: "Filter..."
 
                         onTextChanged: function() {
-                            if (text.length > 2) {
+                            if (text.length > 2 || text.length < 1) {
                                 lib.searchString = text
                                 topShelve.updateLists()
                             }
