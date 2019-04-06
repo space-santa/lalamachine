@@ -21,9 +21,11 @@ namespace dotnet
             searchString = "";
         }
 
-        public string searchString { get; set; }
+        #region properties
 
+        public string searchString { get; set; }
         public bool scanning { get; set; }
+
         public string genreList
         {
             get
@@ -33,6 +35,7 @@ namespace dotnet
                 return Newtonsoft.Json.JsonConvert.SerializeObject(list);
             }
         }
+
         public string artistList
         {
             get
@@ -42,6 +45,7 @@ namespace dotnet
                 return Newtonsoft.Json.JsonConvert.SerializeObject(list);
             }
         }
+
         public string albumList
         {
             get
@@ -67,6 +71,7 @@ namespace dotnet
                 return Newtonsoft.Json.JsonConvert.SerializeObject(list.ToArray());
             }
         }
+
         public string displayLib
         {
             get
@@ -98,6 +103,9 @@ namespace dotnet
                 return Newtonsoft.Json.JsonConvert.SerializeObject(tagList);
             }
         }
+
+        #endregion properties
+
         public async void scanAsync(string path)
         {
             if (scanning)
