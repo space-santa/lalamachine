@@ -244,16 +244,10 @@ Rectangle {
                         source: "../images/edit-clear.png"
 
                         onClicked: {
-                            var ts = Date.now()
-                            lib.resetFilterAndSort()
-
-                            genre_list.reset()
-                            artist_list.reset()
-                            album_list.reset()
-
+                            // Force onTextChanged if the search box is empty.
+                            // This is to reset the genre / artist / album filter.
+                            filter_text.text = " "
                             filter_text.text = ""
-                            console.log("Reset filter duration:",
-                                        Date.now() - ts)
                         }
                     }
                 }
