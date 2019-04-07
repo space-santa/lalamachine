@@ -36,6 +36,10 @@ Rectangle {
         id: libsettings
     }
 
+    function updateColumns(columns) {
+        titles.playlistColumns = columns;
+    }
+
     function rescan(path) {
         if (!libview.scanInProgress) {
             lib.rescan(path)

@@ -267,6 +267,11 @@ ApplicationWindow {
 
     Configuration {
         id: config
+
+        onManualPlaylistColumnsChanged: function () {
+            playlist.playlistColumns = config.playlistColumns
+            libview.updateColumns(config.playlistColumns)
+        }
     }
 
     MediaPlayer {

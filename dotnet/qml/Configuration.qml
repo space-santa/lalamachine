@@ -24,10 +24,15 @@ Item {
     property alias libPath: json.libPath
     property alias lastPlaylist: json.lastPlaylist
     property alias playlistColumns: json.playlistColumns
+    signal manualPlaylistColumnsChanged()
 
     Config {
         id: json
 
         onVolumeChanged: console.log("Volume changed to", json.volume)
+
+        onPlaylistColumnsChanged: function () {
+            manualPlaylistColumnsChanged()
+        }
     }
 }

@@ -6,6 +6,7 @@ using System.IO;
 
 namespace Lalamachine
 {
+    [Signal("playlistColumnsChanged")]
     [Signal("volumeChanged")]
     public class Config : AbstractBaseSettings
     {
@@ -28,11 +29,14 @@ namespace Lalamachine
             set => SetSettingsValue("libPath", LalaUtils.Utils.RemoveFilePrefix(value));
         }
 
-        [NotifySignal("playlistColumnsChanged")]
         public string playlistColumns
         {
             get => GetStringValue("playlistColumns");
-            set => SetSettingsValue("playlistColumns", value);
+            set
+            {
+                SetSettingsValue("playlistColumns", value);
+                this.ActivateSignal("playlistColumnsChanged");
+            }
         }
 
         protected override void Init()

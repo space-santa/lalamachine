@@ -32,6 +32,7 @@ Rectangle {
     property bool isLibrary: false
 
     property string currentName
+    property var playlistColumns: config.playlistColumns
 
     property int count: playlist_model.count
     property int rowPlaying: -1
@@ -429,7 +430,7 @@ Rectangle {
         style: TableStyle {
         }
 
-        property var playlistColumns: config.playlistColumns
+        property var playlistColumns: playlist_container.playlistColumns
 
         // These values are required for drag and move. For a explanation,
         // see TableViewDelegate.qml.
