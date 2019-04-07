@@ -48,7 +48,7 @@ Rectangle {
     signal showRightClickMenu
 
     // This setter is necessary to make sure that latest changes to the list are
-    // remebered when a new playlist is loaded.
+    // remembered when a new playlist is loaded.
     function setCurrentPlaylist(name) {
         writeCurrentListIfNamed()
         currentName = name
