@@ -1,4 +1,4 @@
-﻿namespace dotnet
+﻿namespace Lalamachine
 {
     public class SysInfo
     {

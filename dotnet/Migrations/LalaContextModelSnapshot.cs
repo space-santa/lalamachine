@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using dotnet.Data;
+using Lalamachine.Data;
 
-namespace dotnet.Migrations
+namespace Lalamachine.Migrations
 {
     [DbContext(typeof(LalaContext))]
     partial class LalaContextModelSnapshot : ModelSnapshot

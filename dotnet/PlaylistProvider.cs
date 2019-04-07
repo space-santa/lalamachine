@@ -4,7 +4,7 @@ using PlaylistProvider;
 using System.IO;
 using System.Linq;
 
-namespace dotnet
+namespace Lalamachine
 {
     [Signal("playlistNamesChanged")]
     public class PlaylistProvider

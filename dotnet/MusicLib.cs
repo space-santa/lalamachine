@@ -1,11 +1,11 @@
-﻿using dotnet.Data;
+﻿using Lalamachine.Data;
 using Microsoft.EntityFrameworkCore;
 using Qml.Net;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace dotnet
+namespace Lalamachine
 {
     [Signal("scanDone")]
     public class MusicLib

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace dotnet
+namespace Lalamachine
 {
     [Signal("volumeChanged")]
     public class Config : AbstractBaseSettings

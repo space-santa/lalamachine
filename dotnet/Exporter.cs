@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace dotnet
+namespace Lalamachine
 {
     [Signal("exportFinished")]
     class Exporter

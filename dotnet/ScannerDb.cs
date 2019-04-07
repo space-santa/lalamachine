@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using dotnet.Data;
+using Lalamachine.Data;
 using Microsoft.EntityFrameworkCore;
 using MusicScanner;
 using TagReader;
 
-namespace dotnet
+namespace Lalamachine
 {
     public class ScannerDb : IMusicDatabase
     {

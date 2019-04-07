@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace dotnet
+namespace Lalamachine
 {
     public class Constants
     {

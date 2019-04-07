@@ -1,4 +1,4 @@
-﻿namespace dotnet
+﻿namespace Lalamachine
 {
     internal class LalaTypes
     {

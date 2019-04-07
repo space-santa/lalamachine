@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace dotnet.Data
+namespace Lalamachine.Data
 {
     public class LalaContext : DbContext
     {

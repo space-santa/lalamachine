@@ -1,7 +1,7 @@
 ﻿using Qml.Net;
 using System;
 
-namespace dotnet
+namespace Lalamachine
 {
     class Program
     {

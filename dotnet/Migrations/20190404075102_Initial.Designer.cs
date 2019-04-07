@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using dotnet.Data;
+using Lalamachine.Data;
 
-namespace dotnet.Migrations
+namespace Lalamachine.Migrations
 {
     [DbContext(typeof(LalaContext))]
     [Migration("20190404075102_Initial")]

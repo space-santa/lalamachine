@@ -4,7 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <ApplicationIcon>images/lalamachine-new.ico</ApplicationIcon>
-    <StartupObject>dotnet.Program</StartupObject>
+    <StartupObject>Lalamachine.Program</StartupObject>
     <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
   </PropertyGroup>
 
