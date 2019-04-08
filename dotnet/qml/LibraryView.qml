@@ -183,11 +183,7 @@ Rectangle {
                     }
 
                     var albumList = JSON.parse(musicLib.getAlbumTracks(album_list.selection))
-
-                    for (var i = 0; i < albumList.length; ++i) {
-                        mainPlaylist.add(albumList[i].path)
-                    }
-
+                    mainPlaylist.addJsonList(albumList)
                     mainPlaylist.updateAndSave()
                 }
             }
