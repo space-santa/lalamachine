@@ -1,6 +1,5 @@
-﻿using Qml.Net;
-using System.Collections.Generic;
-using PlaylistProvider;
+﻿using PlaylistProvider;
+using Qml.Net;
 using System.IO;
 using System.Linq;
 
