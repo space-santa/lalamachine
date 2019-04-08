@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Qml.Net;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -218,8 +219,16 @@ namespace Lalamachine
 
         public string getMetadataForMrl(string path)
         {
-            LalaTags tags = new LalaTags(_context.Tracks.Single(x => x.Path == path), _context);
-            return tags.ToJson();
+            try
+            {
+                path = LalaUtils.Utils.RemoveFilePrefix(path);
+                LalaTags tags = new LalaTags(_context.Tracks.Single(x => Path.GetFullPath(x.Path) == Path.GetFullPath(path)), _context);
+                return tags.ToJson();
+            }
+            catch (System.InvalidOperationException)
+            {
+                return "{}";
+            }
         }
 
         public string getAlbumTracks(string name)
