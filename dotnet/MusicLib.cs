@@ -224,6 +224,8 @@ namespace Lalamachine
 
         public string getAlbumTracks(string name)
         {
+            if (name.Length < 1 || name == Constants.ALL)
+            { return "{}"; }
             var tracks = _context.Albums.Single(x => x.Name == name).Tracks;
             var tagList = new List<LalaTags>();
             foreach (var track in tracks)
