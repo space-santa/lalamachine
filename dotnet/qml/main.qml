@@ -53,7 +53,7 @@ ApplicationWindow {
     property string miscPlaylistName: "cs1m090"
     property string currentPlaylist: playlist.currentName
     property LalaPlaylist mainPlaylist: playlist
-    property PlaylistProvider m3u: m3u
+    property LalaPlaylistProvider m3u: m3u
     property Configuration config: config
 
     // lalaplayer is globally accessible to change volume, etc
@@ -178,7 +178,7 @@ ApplicationWindow {
         visible: false
     }
 
-    PlaylistProvider {
+    LalaPlaylistProvider {
         id: m3u
     }
 

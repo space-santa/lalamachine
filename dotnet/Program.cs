@@ -13,7 +13,7 @@ namespace Lalamachine
                 {
                     Qml.Net.Qml.RegisterType<Settings>("Lala", 1, 0);
                     Qml.Net.Qml.RegisterType<LibSettings>("Lala", 1, 0);
-                    Qml.Net.Qml.RegisterType<PlaylistProvider>("Lala", 1, 0);
+                    Qml.Net.Qml.RegisterType<LalaPlaylistProvider>("Lala", 1, 0);
                     Qml.Net.Qml.RegisterType<Config>("Lala", 1, 0);
                     Qml.Net.Qml.RegisterType<MusicLib>("Lala", 1, 0);
                     Qml.Net.Qml.RegisterType<SysInfo>("Lala", 1, 0);

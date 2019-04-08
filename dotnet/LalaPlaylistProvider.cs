@@ -6,7 +6,7 @@ using System.Linq;
 namespace Lalamachine
 {
     [Signal("playlistNamesChanged")]
-    public class PlaylistProvider
+    public class LalaPlaylistProvider
     {
         public string[] playlistNames
         {
@@ -16,7 +16,7 @@ namespace Lalamachine
             }
         }
 
-        public PlaylistProvider()
+        public LalaPlaylistProvider()
         {
         }
 
