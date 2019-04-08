@@ -412,7 +412,10 @@ Rectangle {
                 append(json[i]);
             }
         }
-        function sortRole(role, order) {}
+
+        function sortRole(role, order) {
+            // TODO: Implement this
+        }
 
         function toJson() {
             let retval = []
