@@ -95,7 +95,7 @@ namespace TagReader
                 {
                     return string.Join(", ", arr);
                 }
-                catch(System.ArgumentNullException)
+                catch(ArgumentNullException)
                 {
                     return "";
                 }
