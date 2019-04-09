@@ -236,6 +236,8 @@ Rectangle {
         for (var i = rows.length - 1; i >= 0; --i) {
             playlist_model.remove(rows[i])
         }
+
+        playlist_model.updateTotalLength()
     }
 
     function deleteSelection() {
@@ -323,6 +325,8 @@ Rectangle {
         }
 
         playlist_model.append(tmp)
+        playlist_model.updateTotalLength()
+
     }
 
     function updateAndSave() {
@@ -415,6 +419,7 @@ Rectangle {
             for (var i = 0; i < json.length; ++i) {
                 append(json[i]);
             }
+            updateTotalLength()
         }
 
         function sortRole(role, order) {
@@ -456,6 +461,16 @@ Rectangle {
         function fromJson(json) {
             clear();
             setLibrary(json);
+        }
+
+        function updateTotalLength() {
+            let totalLength = 0;
+
+            for (let i = 0; i < playlist_model.count; ++i) {
+                totalLength += getTrackJsonAtIndex(i).length;
+            }
+
+            totalPlaytime = totalLength
         }
     }
 
