@@ -12,7 +12,13 @@ Menu {
     signal deletePlaylist(string listname)
     signal openExportDialog
 
+    function updatePlaylistNames(names) {
+        playlist_menu.populatePlaylistMenu(names);
+        delete_menu.populatePlaylistMenu(names);
+    }
+
     PlaylistMenu {
+        id: playlist_menu
         title: "Open"
         iconSource: "../images/open.png"
         onSelected: openPlaylist(listname)
@@ -30,6 +36,7 @@ Menu {
     MenuSeparator {
     }
     PlaylistMenu {
+        id: delete_menu
         title: "Delete"
         iconSource: "../images/delete.png"
         onSelected: deletePlaylist(listname)

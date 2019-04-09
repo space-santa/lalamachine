@@ -112,6 +112,8 @@ ApplicationWindow {
         } else {
             show_musiclib_action.trigger()
         }
+
+        m3u.updatePlaylistNames()
     }
 
     Settings {
@@ -153,6 +155,7 @@ ApplicationWindow {
             onRescanLibrary: libview.rescan(config.libPath)
         }
         MainPlaylistMenu {
+            id: main_playlist_menu
             saveAction: save_current_list_action
             onOpenPlaylist: playlist.setCurrentPlaylist(listname)
             onSaveCurrentPlaylist: playlist.writeCurrentListIfNamed()
@@ -180,6 +183,12 @@ ApplicationWindow {
 
     LalaPlaylistProvider {
         id: m3u
+
+        onPlaylistNamesChanged: updatePlaylistNames()
+
+        function updatePlaylistNames() {
+            main_playlist_menu.updatePlaylistNames(JSON.parse(m3u.getAllPlaylistNames()))
+        }
     }
 
     Action {

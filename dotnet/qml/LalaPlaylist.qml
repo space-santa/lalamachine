@@ -264,13 +264,17 @@ Rectangle {
     }
 
     function writePlaylist(name) {
-        m3u.writePlaylist(name, JSON.stringify(playlist_model.toJson()))
+        m3u.writePlaylist(name, JSON.stringify(getPathList()))
     }
 
     function readPlaylist(name) {
         // We use this function here because we want to keep the currentName.
         emptyCurrentList()
-        addJsonList(JSON.parse(m3u.readPlaylist(name)));
+        let files = JSON.parse(m3u.readPlaylist(name));
+
+        for (var file of files) {
+            add(file)
+        }
     }
 
     function createNewList() {

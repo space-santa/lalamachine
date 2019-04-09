@@ -5,10 +5,6 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lalamachine", "dotnet\Lalamachine.csproj", "{9C2C2652-805B-4816-AA5C-1374C059C018}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaylistProvider", "PlaylistProvider\PlaylistProvider.csproj", "{918E331A-8D53-4BF7-91FD-E05D72D38BD4}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaylistProvider.Unittests", "PlaylistProvider.Unittests\PlaylistProvider.Unittests.csproj", "{095F094E-B36C-45D6-98FF-C7BC66FFBC52}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicScanner", "MusicScanner\MusicScanner.csproj", "{5E8E7883-2825-4E5F-BC5A-6F2898AE6EE9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicScanner.Unittests", "MusicScanner.Unittests\MusicScanner.Unittests.csproj", "{729C6719-B0A0-4689-81AD-EBFAA96CA733}"
@@ -39,22 +35,6 @@ Global
 		{9C2C2652-805B-4816-AA5C-1374C059C018}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9C2C2652-805B-4816-AA5C-1374C059C018}.Release|x64.ActiveCfg = Release|Any CPU
 		{9C2C2652-805B-4816-AA5C-1374C059C018}.Release|x64.Build.0 = Release|Any CPU
-		{918E331A-8D53-4BF7-91FD-E05D72D38BD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{918E331A-8D53-4BF7-91FD-E05D72D38BD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{918E331A-8D53-4BF7-91FD-E05D72D38BD4}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{918E331A-8D53-4BF7-91FD-E05D72D38BD4}.Debug|x64.Build.0 = Debug|Any CPU
-		{918E331A-8D53-4BF7-91FD-E05D72D38BD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{918E331A-8D53-4BF7-91FD-E05D72D38BD4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{918E331A-8D53-4BF7-91FD-E05D72D38BD4}.Release|x64.ActiveCfg = Release|Any CPU
-		{918E331A-8D53-4BF7-91FD-E05D72D38BD4}.Release|x64.Build.0 = Release|Any CPU
-		{095F094E-B36C-45D6-98FF-C7BC66FFBC52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{095F094E-B36C-45D6-98FF-C7BC66FFBC52}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{095F094E-B36C-45D6-98FF-C7BC66FFBC52}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{095F094E-B36C-45D6-98FF-C7BC66FFBC52}.Debug|x64.Build.0 = Debug|Any CPU
-		{095F094E-B36C-45D6-98FF-C7BC66FFBC52}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{095F094E-B36C-45D6-98FF-C7BC66FFBC52}.Release|Any CPU.Build.0 = Release|Any CPU
-		{095F094E-B36C-45D6-98FF-C7BC66FFBC52}.Release|x64.ActiveCfg = Release|Any CPU
-		{095F094E-B36C-45D6-98FF-C7BC66FFBC52}.Release|x64.Build.0 = Release|Any CPU
 		{5E8E7883-2825-4E5F-BC5A-6F2898AE6EE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5E8E7883-2825-4E5F-BC5A-6F2898AE6EE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E8E7883-2825-4E5F-BC5A-6F2898AE6EE9}.Debug|x64.ActiveCfg = Debug|Any CPU

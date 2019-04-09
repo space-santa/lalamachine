@@ -24,39 +24,12 @@ import Lala 1.0
 Menu {
     id: playlist_menu
 
-    property var playlistnames: m3u.playlistNames
-
     signal selected(string listname)
 
-    onPlaylistnamesChanged: decoupler.restart()
-    // This timer is necessary to make the current model not segfault.
-    // the problem is that a trigger of a menu item in the delete menu will
-    // cause the playlist to disappear, which will trigger the menu rebuild
-    // because the playlist names changed. The problem is that at that time the
-    // signal chain still carries the original emitting object (the menu item)
-    // as the sender, because signals always have sender information.
-    // But since the first thing that happens is to destroy all menu items to
-    // rebuild the menu, the original sender no longer exists.
-    // Now the segfault: At some point the sender is dereferenced,
-    // but is has already been cleared. Introducing a timer to decouple the
-    // original sender from the receiver.
-    // And yes, this should be considered a hack.
-    Timer {
-        id: decoupler
-        interval: 100
-        repeat: false
-        running: false
-        onTriggered: populatePlaylistMenu()
-    }
-
-    Component.onCompleted: {
-        populatePlaylistMenu()
-    }
-
-    function populatePlaylistMenu() {
+    function populatePlaylistMenu(names) {
         playlist_menu.clear()
-        for (var i = 0; i < playlistnames.length; ++i) {
-            let name = playlistnames[i];
+        for (var i = 0; i < names.length; ++i) {
+            let name = names[i];
             var o = Qt.createQmlObject(generateQbjectString(name),
                                        playlist_menu, 'PlaylistMenu');
             playlist_menu.insertItem(playlist_menu.items.length, o);
