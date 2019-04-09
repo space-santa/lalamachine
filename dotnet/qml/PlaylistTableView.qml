@@ -3,8 +3,6 @@ import QtQuick.Controls 1.2
 
 TableView {
     id: playlist_view
-    anchors.fill: parent
-    model: playlist_model
     selectionMode: SelectionMode.ExtendedSelection
     backgroundVisible: true
 
@@ -91,7 +89,7 @@ TableView {
             return
         }
 
-        playlist_model.move(currentRow, newRow, 1)
+        model.move(currentRow, newRow, 1)
         // Update the currentRow so the next drag n move works.
         currentRow = newRow
         // Update the selected row to follow the drag.
@@ -182,7 +180,7 @@ TableView {
     }
 
     onModelChanged: {
-        if (playlist_model.rowCount() > 0) {
+        if (model.rowCount() > 0) {
             playlist_view.resizeColumnsToContents()
             updateNowPlayingRow()
         }
@@ -194,14 +192,10 @@ TableView {
 
     sortIndicatorVisible: true
     onSortIndicatorColumnChanged: {
-        console.log(getColumnRole(sortIndicatorColumn))
-        playlist_model.sortRole(getColumnRole(sortIndicatorColumn),
-                                sortIndicatorOrder)
+        model.sortRole(getColumnRole(sortIndicatorColumn), sortIndicatorOrder)
     }
     onSortIndicatorOrderChanged: {
-        console.log(getColumnRole(sortIndicatorColumn))
-        playlist_model.sortRole(getColumnRole(sortIndicatorColumn),
-                                sortIndicatorOrder)
+        model.sortRole(getColumnRole(sortIndicatorColumn), sortIndicatorOrder)
     }
 
     rowDelegate: TableViewDelegate {
@@ -213,14 +207,14 @@ TableView {
             playRow(row)
         }
 
-        onPressed: playlist_view.leftPressed = true
-        onReleased: playlist_view.leftPressed = false
+        onPressed: target.leftPressed = true
+        onReleased: target.leftPressed = false
 
         onMouseYChanged: {
             //console.log("MOUSE Y CHANGED", y, height, row)
-            playlist_view.mouseY = y
-            playlist_view.containerHeight = height
-            playlist_view.initialRow = row
+            target.mouseY = y
+            target.containerHeight = height
+            target.initialRow = row
         }
     }
 
