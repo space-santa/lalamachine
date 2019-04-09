@@ -1,6 +1,7 @@
 ﻿using Lalamachine.Data;
 using Microsoft.EntityFrameworkCore;
 using Qml.Net;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -154,8 +155,15 @@ namespace Lalamachine
 
                 if (albumFilter.Length > 0)
                 {
-                    list = _context.Albums.Single(x => x.Name == albumFilter).Tracks.ToArray();
-                    return TracksToTagListString(list);
+                    try
+                    {
+                        list = _context.Albums.Single(x => x.Name == albumFilter).Tracks.ToArray();
+                        return TracksToTagListString(list);
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        //
+                    }
                 }
 
                 if (artistFilter.Length > 0)
