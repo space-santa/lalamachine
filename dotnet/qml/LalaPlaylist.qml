@@ -299,13 +299,13 @@ Rectangle {
         }
     }
 
-    function addJsonList(json) {
+    function addJsonList(json, clear) {
         if (!json) {
             return
         }
 
         var d = Date.now()
-        playlist_model.fromJson(json)
+        playlist_model.fromJson(json, clear)
         updateNowPlayingRow()
         console.log("Adding the list took", Date.now() - d, "ms.")
     }
@@ -458,8 +458,10 @@ Rectangle {
             return tmp
         }
 
-        function fromJson(json) {
-            clear();
+        function fromJson(json, clearList) {
+            if (clearList) {
+                clear();
+            }
             setLibrary(json);
         }
 

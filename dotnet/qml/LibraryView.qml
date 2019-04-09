@@ -177,13 +177,16 @@ Rectangle {
                 id: rcm
 
                 onAddToPlaylist: {
+                    let clear = false;
+
                     if (listname === "") {
                         mainPlaylist.createNewList()
                         listname = miscPlaylistName
+                        clear = true
                     }
 
                     var albumList = JSON.parse(musicLib.getAlbumTracks(album_list.selection))
-                    mainPlaylist.addJsonList(albumList)
+                    mainPlaylist.addJsonList(albumList, clear)
                     mainPlaylist.updateAndSave()
                 }
             }
