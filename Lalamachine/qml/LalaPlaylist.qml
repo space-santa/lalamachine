@@ -324,7 +324,7 @@ Rectangle {
             console.log("INFO: Had to get metadate from taglib for", path)
         }
 
-        playlist_model.append(tmp)
+        playlist_model.appendTags(tmp)
         playlist_model.updateTotalLength()
 
     }
@@ -344,7 +344,7 @@ Rectangle {
     function replaceJson(json) {
         playlist_model.clear()
         for (var i in json) {
-            playlist_model.append(json[i])
+            playlist_model.appendTags(json[i])
         }
     }
 

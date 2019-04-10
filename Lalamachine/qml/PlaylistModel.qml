@@ -7,29 +7,35 @@ ListModel {
 
     function setLibrary(json){
         for (var i = 0; i < json.length; ++i) {
-            append(json[i]);
+            appendTags(json[i]);
         }
         updateTotalLength()
     }
 
-    function compare(a, b) {
-        if (a.title < b.title)
-            return -1;
-        if (a.title > b.title)
-            return 1;
-        return 0;
+    function appendTags(json) {
+        // It is abit tricky to get data in and out of the model.
+        // This is why we have to only append objects with keys that we want.
+        // In particular, artist and artistString (and the genre equivalent) would cause problems.
+        let tmp = rowDataToTrackJson(json)
+        append(tmp)
+    }
+
+    function createCompare(what, order) {
+        let how = order === 0 ? 1 : -1
+        return function(a, b) {
+            if (a[what] < b[what])
+                return -1 * how;
+            if (a[what] > b[what])
+                return 1 * how;
+            return 0;
+        }
     }
 
     function sortRole(role, order) {
         console.log(role, order)
-        var list = []
-
-        for (var i = 0; i < playlist_model.count; ++i) {
-            list.push(playlist_model.get(i))
-        }
-        list = list.sort(compare);
+        var list = toJson()
+        list = list.sort(createCompare(role, order));
         fromJson(list, true)
-        // TODO: Implement this
     }
 
     function toJson() {
@@ -47,10 +53,13 @@ ListModel {
     }
 
     function rowDataToTrackJson(rowData) {
+        // This function looks absolutely redundant.
+        // Why not just pass in the original object, right?
+        // The problem is that we must not have other keys, and for some reason `delete`ing them didn't work.
         let tmp = {}
         tmp["album"] = rowData.album
-        tmp["artist"] = rowData.artistString
-        tmp["genre"] = rowData.genreString
+        tmp["artistString"] = rowData.artistString
+        tmp["genreString"] = rowData.genreString
         tmp["comment"] = rowData.comment
         tmp["track"] = rowData.track
         tmp["title"] = rowData.title
