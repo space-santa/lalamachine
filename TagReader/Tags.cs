@@ -6,13 +6,20 @@ namespace TagReader
 {
     public class Tags
     {
+        public Tags()
+        {
+            artist = new string[0];
+            genre = new string[0];
+        }
+
         public bool isValid()
         {
             return title != null && title.Length > 0 && length > 0;
         }
         public string album;
         private string[] artist;
-        public string[] Artist {
+        public string[] Artist
+        {
             get => artist;
             set
             {
@@ -80,7 +87,8 @@ namespace TagReader
                 int seconds = duration.Seconds;
                 int minutesValue = (int)duration.TotalMinutes;
                 string secondsString = $"{seconds}";
-                if (secondsString.Length == 1) {
+                if (secondsString.Length == 1)
+                {
                     secondsString = $"0{secondsString}";
                 }
                 return $"{minutesValue}:{secondsString}";
@@ -92,13 +100,13 @@ namespace TagReader
         private string JoinArrayWithComma(string[] arr)
         {
             try
-                {
-                    return string.Join(", ", arr);
-                }
-                catch(ArgumentNullException)
-                {
-                    return "";
-                }
+            {
+                return string.Join(", ", arr);
+            }
+            catch (ArgumentNullException)
+            {
+                return "";
+            }
         }
 
         public string ToJson()
