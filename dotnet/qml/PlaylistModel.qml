@@ -12,8 +12,23 @@ ListModel {
         updateTotalLength()
     }
 
+    function compare(a, b) {
+        if (a.title < b.title)
+            return -1;
+        if (a.title > b.title)
+            return 1;
+        return 0;
+    }
+
     function sortRole(role, order) {
         console.log(role, order)
+        var list = []
+
+        for (var i = 0; i < playlist_model.count; ++i) {
+            list.push(playlist_model.get(i))
+        }
+        list = list.sort(compare);
+        fromJson(list, true)
         // TODO: Implement this
     }
 
