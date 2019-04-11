@@ -67,7 +67,7 @@ Rectangle {
 
         function updateDisplayLib() {
             titles.emptyCurrentList()
-            titles.addLib(JSON.parse(displayLib))
+            titles.addJsonList(JSON.parse(displayLib), true)
         }
 
         onScanDone: function() {

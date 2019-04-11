@@ -340,23 +340,6 @@ Rectangle {
         }
     }
 
-    function addLib(json) {
-        playlist_model.setLibrary(json)
-        if (isLibrary) {
-            playlist_model.defaultSort()
-        }
-    }
-
-    function replaceJson(json) {
-        playlist_model.clear()
-        for (var i in json) {
-            playlist_model.appendTags(json[i])
-        }
-        if (isLibrary) {
-            playlist_model.defaultSort()
-        }
-    }
-
     // returns the provided JSON with an added id field to help find the correct
     // entry in the list later, after sorting and adding more stuff.
     // This is necessary because the mrl can't be the unique id, since a track
