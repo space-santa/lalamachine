@@ -306,6 +306,7 @@ Rectangle {
 
         var d = Date.now()
         playlist_model.fromJson(json, clear)
+        playlist_model.defaultSort()
         updateNowPlayingRow()
         console.log("Adding the list took", Date.now() - d, "ms.")
     }
@@ -339,6 +340,7 @@ Rectangle {
 
     function addLib(json) {
         playlist_model.setLibrary(json)
+        playlist_model.defaultSort()
     }
 
     function replaceJson(json) {
@@ -346,6 +348,7 @@ Rectangle {
         for (var i in json) {
             playlist_model.appendTags(json[i])
         }
+        playlist_model.defaultSort()
     }
 
     // returns the provided JSON with an added id field to help find the correct

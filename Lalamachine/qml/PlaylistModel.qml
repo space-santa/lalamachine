@@ -21,6 +21,20 @@ ListModel {
     }
 
     function createCompare(what, order) {
+        if (what.length < 1) {
+            return function(a, b) {
+                if (a["album"] == b["album"] && a["discNumber"] == b["discNumber"] && a["track"] == b["track"])
+                    return 0;
+                if (a["album"] == b["album"] && a["discNumber"] == b["discNumber"] && a["track"] < b["track"])
+                    return -1;
+                if (a["album"] == b["album"] && a["discNumber"] < b["discNumber"])
+                    return -1;
+                if (a["album"] < b["album"])
+                    return -1;
+                return 1;
+            }
+        }
+
         let how = order === 0 ? 1 : -1
         return function(a, b) {
             if (a[what] < b[what])
@@ -31,8 +45,12 @@ ListModel {
         }
     }
 
+    function defaultSort() {
+        sortRole("", "");
+    }
+
     function sortRole(role, order) {
-        console.log(role, order)
+        console.log("sortRole:", role, order)
         var list = toJson()
         list = list.sort(createCompare(role, order));
         fromJson(list, true)
