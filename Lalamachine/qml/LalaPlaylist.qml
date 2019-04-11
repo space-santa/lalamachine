@@ -304,13 +304,11 @@ Rectangle {
             return
         }
 
-        var d = Date.now()
         playlist_model.fromJson(json, clear)
         if (isLibrary) {
             playlist_model.defaultSort()
         }
         updateNowPlayingRow()
-        console.log("Adding the list took", Date.now() - d, "ms.")
     }
 
     function add(path) {

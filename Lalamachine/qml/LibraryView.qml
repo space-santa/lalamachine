@@ -62,8 +62,10 @@ Rectangle {
         id: lib
 
         function updateDisplayLib() {
+            var d = Date.now()
             titles.emptyCurrentList()
             titles.addJsonList(JSON.parse(displayLib), true)
+            console.log("Adding the list took", Date.now() - d, "ms.")
         }
 
         onScanDone: function() {
