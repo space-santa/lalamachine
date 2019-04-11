@@ -61,10 +61,6 @@ Rectangle {
     MusicLib {
         id: lib
 
-        //titlePartialFilter: filter_text.text
-
-        //sortAsc: titles.sortAsc
-
         function updateDisplayLib() {
             titles.emptyCurrentList()
             titles.addJsonList(JSON.parse(displayLib), true)
