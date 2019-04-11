@@ -9,7 +9,6 @@ Makefile
 **/build/*
 **.swp
 tags
-.vscode
 test/build-*
 .vs
 GeneratedFiles
