@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Lalamachine
 {
@@ -180,7 +181,13 @@ namespace Lalamachine
 
                 if (searchString == "")
                 {
-                    list = _context.Tracks.ToArray();
+                    list = _context.Tracks
+                                .Include(track => track.Album)
+                                .Include(track => track.GenreTracks)
+                                    .ThenInclude(gt => gt.Genre)
+                                .Include(track => track.ArtistTracks)
+                                    .ThenInclude(at => at.Artist)
+                                .ToArray();
                 }
                 else
                 {
@@ -200,6 +207,9 @@ namespace Lalamachine
 
         private string TracksToTagListString(Track[] tracks)
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             var tagList = new List<LalaTags>();
 
             foreach (var track in tracks)
@@ -207,6 +217,9 @@ namespace Lalamachine
                 LalaTags lalaTags = new LalaTags(track, _context);
                 tagList.Add(lalaTags);
             }
+
+            sw.Stop();
+            Console.WriteLine($"Creating tags took {sw.Elapsed}");
 
             return Newtonsoft.Json.JsonConvert.SerializeObject(tagList);
         }
