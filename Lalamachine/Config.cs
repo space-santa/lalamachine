@@ -45,7 +45,7 @@ namespace Lalamachine
             InitSettingsValue("lastPlaylist", "");
             InitSettingsValue("libPath", "");
             InitSettingsValue(
-                "playlistColumns", 
+                "playlistColumns",
                 @"[
                     { ""key"": ""track"", ""value"": true },
                     { ""key"": ""discNumber"", ""value"": true },

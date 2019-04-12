@@ -15,7 +15,7 @@ namespace MusicScanner.Unittests
         {
             get
             {
-                List<Tags> SortedList = args.OrderBy(o=>o.comment).ToList();
+                List<Tags> SortedList = args.OrderBy(o => o.comment).ToList();
                 return SortedList;
             }
         }

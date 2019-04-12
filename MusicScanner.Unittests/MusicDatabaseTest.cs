@@ -19,7 +19,7 @@ namespace MusicScanner.Unittests
             tags.album = "the album";
             tags.title = "the title";
             tags.length = 345;
-            tags.Artist = new string[] {"the artist", "the other guy"};
+            tags.Artist = new string[] { "the artist", "the other guy" };
             tags.path = "/this/is/the/path";
             db.AddTagsToDatabase(tags);
             Tags result = db.GetTag(tags.path);

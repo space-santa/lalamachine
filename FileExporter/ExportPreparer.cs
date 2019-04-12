@@ -14,7 +14,7 @@ namespace FileExporter
 
         public static string GetNewFilename(int pos, int max, string path)
         {
-            int digits = (int) Math.Floor(Math.Log10(max) + 1);
+            int digits = (int)Math.Floor(Math.Log10(max) + 1);
             string format = $"D{digits}";
             string retval = $"{pos.ToString(format)}-{Path.GetFileName(path)}";
             return retval;
