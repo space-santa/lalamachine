@@ -16,6 +16,7 @@ TableView {
     property int mouseY
     property int containerHeight
     property int initialRow
+    property int currentRow
 
     Component.onCompleted: setColumns()
     onPlaylistColumnsChanged: setColumns()
@@ -83,18 +84,19 @@ TableView {
         }
 
         var newRow = initialRow + mouseY / containerHeight
-        console.log("Current Row", currentRow, "New Row", newRow)
+        // console.log("Current Row", currentRow, "New Row", newRow, "mouseY", mouseY, "cheight", containerHeight)
 
         if (newRow < 0) {
             return
         }
 
-        model.move(currentRow, newRow, 1)
-        // Update the currentRow so the next drag n move works.
-        currentRow = newRow
-        // Update the selected row to follow the drag.
+        if (Math.abs(newRow - initialRow) < 0.1) {
+            return
+        }
+
         selection.clear()
-        selection.select(currentRow)
+        model.move(currentRow, newRow, 1)
+        currentRow = newRow
     }
 
     onClicked: {
@@ -215,6 +217,7 @@ TableView {
             target.mouseY = y
             target.containerHeight = height
             target.initialRow = row
+            target.currentRow = row
         }
     }
 
