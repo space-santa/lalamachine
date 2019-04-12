@@ -1,10 +1,21 @@
 ﻿using Qml.Net;
 using System;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Lalamachine
 {
     class Program
     {
+        public static string GetApplicationRoot()
+        {
+            var exePath = Path.GetDirectoryName(System.Reflection
+                              .Assembly.GetExecutingAssembly().CodeBase);
+            Regex appPathMatcher = new Regex(@"(?<!fil)[A-Za-z]:\\+[\S\s]*?(?=\\+bin)");
+            var appRoot = appPathMatcher.Match(exePath).Value;
+            return appRoot;
+        }
+
         static int Main(string[] args)
         {
             using (var app = new QGuiApplication(args))
@@ -19,7 +30,7 @@ namespace Lalamachine
                     Qml.Net.Qml.RegisterType<SysInfo>("Lala", 1, 0);
                     Qml.Net.Qml.RegisterType<MetadataProvider>("Lala", 1, 0);
                     Qml.Net.Qml.RegisterType<Exporter>("Lala", 1, 0);
-                    engine.Load("qml/main.qml");
+                    engine.Load(Path.Combine(GetApplicationRoot(), "assets/qml/main.qml"));
 
                     return app.Exec();
                 }
