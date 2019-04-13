@@ -30,9 +30,7 @@ namespace TagReader.Unittests
         public void ArtistArrayDuplicatesShouldBeRemoved()
         {
             Tags tags = new Tags();
-            tags.Artist = new string[2];
-            tags.Artist[0] = "Therapy?";
-            tags.Artist[1] = "Therapy?";
+            tags.Artist = new string[2] { "Therapy?", "Therapy?" };
             Assert.Equal("Therapy?", tags.artistString);
         }
 
