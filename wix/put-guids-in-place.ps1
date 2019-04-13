@@ -1,1 +1,2 @@
-(Get-Content .\MainGroup.wxs) | ForEach-Object { $_.replace('PUT1GUIDHERE', [guid]::NewGuid()) } | Set-Content .\MainGroup.wxs
+(Get-Content .\LalaGroup.wxs) | ForEach-Object { $_.replace('PUT-GUID-HERE', [guid]::NewGuid()) } | Set-Content .\LalaGroup.wxs
+(Get-Content .\LalaGroup.wxs) | ForEach-Object { $_.replace('SourceDir', "..\Lalamachine\Release\native") } | Set-Content .\LalaGroup.wxs

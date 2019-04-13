@@ -9,26 +9,29 @@ lalamachine is just another music player. It features:
 
 ## Dependencies
 
-Qt5, LalaServer
+dotnet core 2.2
 
-## Build it
+## Run it
 
-I only support Windows. This used to be multiplattform, and will probably work without too much adjustments on Linux but I simply don't have the time to support multiple targets.
+I only support Windows. This will probably work without too many adjustments on Linux or MacOS but I simply don't have the time to support multiple targets.
 
-### MSVC
+Either install the .msi from the release section, or clone the repo and
 
-The Qt tools for Visual Studio are required. Open the solution and press play. For that to work you need to copy all the required Qt *.ddl and folders into the appropriate folder (the one where lalamachine.exe is located, probably `release` or `debug`). There must also be a folder `LalaServer` that should contain `LalaServer.exe` and all its dependencies.
+```
+cd Lalamachine
+dotnet run
+```
 
 ## Contribute
 
 If you'd like to contribute to lalamachine,
 
-* Test. Either by using the app or by adding to the qt unit test in ./test/lalatest
+* Test. Either by using the app or by adding to the unit test.
 * Create packages for other operating systems.
-* Write code and send me a pull request. [There is also a list of issues that wants to be resolved here.](https://github.com/space-santa/lalamachine/projects/1)
+* Write code and create a pull request. [There is a list of issues that wants to be resolved.](https://github.com/space-santa/lalamachine/issues)
 * Let me know how you like the app and what functionality is missing.
 
-## License
+## Licence
 
 Copyright 2015-2019 Claus Zirkel
 

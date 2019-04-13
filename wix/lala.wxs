@@ -7,7 +7,7 @@
         UpgradeCode="81575B97-6BED-4C90-B066-37A095D2C803"
         Language="1033"
         Codepage="1252"
-        Version="3.15.0"
+        Version="3.99.0"
     >
         <Package
             Id="*"
@@ -26,81 +26,6 @@
             <Directory Id="ProgramFilesFolder" Name="PFiles">
                 <Directory Id="SpaceSanta" Name="SpaceSanta">
                     <Directory Id="INSTALLDIR" Name="lalamachine">
-
-                        <Component Id="D3DCOMPILER_47.DLL" DiskId="1" Guid="547DE917-E81E-420F-A50A-2087E262DFDE">
-                            <File Id="D3DCOMPILER_47.DLL" Name="D3Dcompiler_47.dll" Source="..\release\D3Dcompiler_47.dll" />
-                        </Component>
-
-                        <Component Id="LALAMACHINE.EXE" DiskId="1" Guid="A2A4947A-EB6B-4287-AB34-11066FD01AAA">
-                            <File Id="LALAMACHINE.EXE" Name="lalamachine.exe" Source="..\release\lalamachine.exe">
-                                <Shortcut Id="ExeShortcut" Directory="ProgramMenuDir" Name="lalamachine" Advertise="yes" Icon="StartMenuIcon.exe" IconIndex="0" />
-                            </File>
-                        </Component>
-
-                        <Component Id="LIBEGL.DLL" DiskId="1" Guid="F3EEA889-F5D2-4A39-BB6C-B2B2579B76EB">
-                            <File Id="LIBEGL.DLL" Name="libEGL.dll" Source="..\release\libEGL.dll" />
-                        </Component>
-
-                        <Component Id="LIBGLESV2.DLL" DiskId="1" Guid="33F9D734-6764-47D1-AC18-3554102290E2">
-                            <File Id="LIBGLESV2.DLL" Name="libGLESV2.dll" Source="..\release\libGLESV2.dll" />
-                        </Component>
-
-                        <Component Id="MOC_PREDEFS.H" DiskId="1" Guid="CF1F2033-A4AE-47F0-AE0B-4244B5685452">
-                            <File Id="MOC_PREDEFS.H" Name="moc_predefs.h" Source="..\release\moc_predefs.h" />
-                        </Component>
-
-                        <Component Id="OPENGL32SW.DLL" DiskId="1" Guid="A36C70D3-E7EF-46AF-A29B-A2B6D6A831F2">
-                            <File Id="OPENGL32SW.DLL" Name="opengl32sw.dll" Source="..\release\opengl32sw.dll" />
-                        </Component>
-
-                        <Component Id="QT5CORE.DLL" DiskId="1" Guid="27C170AA-C9A1-47AC-8ED8-4696FC128565">
-                            <File Id="QT5CORE.DLL" Name="Qt5Core.dll" Source="..\release\Qt5Core.dll" />
-                        </Component>
-
-                        <Component Id="QT5GUI.DLL" DiskId="1" Guid="CD455074-7E9E-49D1-8B16-4544A594031A">
-                            <File Id="QT5GUI.DLL" Name="Qt5Gui.dll" Source="..\release\Qt5Gui.dll" />
-                        </Component>
-
-                        <Component Id="QT5MULTIMEDIA.DLL" DiskId="1" Guid="9CBB9467-6C19-4425-9E3C-410BFDED69ED">
-                            <File Id="QT5MULTIMEDIA.DLL" Name="Qt5Multimedia.dll" Source="..\release\Qt5Multimedia.dll" />
-                        </Component>
-
-                        <Component Id="QT5MULTIMEDIAQUICK.DLL" DiskId="1" Guid="F28BF0CB-C573-49A2-9387-EC079FA78B58">
-                            <File Id="QT5MULTIMEDIAQUICK.DLL" Name="Qt5MultimediaQuick.dll" Source="..\release\Qt5MultimediaQuick.dll" />
-                        </Component>
-
-                        <Component Id="QT5MULTIMEDIAWIDGETS.DLL" DiskId="1" Guid="2671A43F-23CF-4067-BB87-4278DB8D959F">
-                            <File Id="QT5MULTIMEDIAWIDGETS.DLL" Name="Qt5MultimediaWidgets.dll" Source="..\release\Qt5MultimediaWidgets.dll" />
-                        </Component>
-
-                        <Component Id="QT5NETWORK.DLL" DiskId="1" Guid="9D44EDA5-03F3-47D5-9046-30C265188791">
-                            <File Id="QT5NETWORK.DLL" Name="Qt5Network.dll" Source="..\release\Qt5Network.dll" />
-                        </Component>
-
-                        <Component Id="QT5QML.DLL" DiskId="1" Guid="A76CA2ED-6F34-4D98-A873-F1BD0D98E2CD">
-                            <File Id="QT5QML.DLL" Name="Qt5Qml.dll" Source="..\release\Qt5Qml.dll" />
-                        </Component>
-
-                        <Component Id="QT5QUICK.DLL" DiskId="1" Guid="520BAA11-A655-4796-8586-313CF1D04E34">
-                            <File Id="QT5QUICK.DLL" Name="Qt5Quick.dll" Source="..\release\Qt5Quick.dll" />
-                        </Component>
-
-                        <Component Id="QT5SQL.DLL" DiskId="1" Guid="A8D947A7-A0C4-48CC-AF3E-A5FD5999769A">
-                            <File Id="QT5SQL.DLL" Name="Qt5Sql.dll" Source="..\release\Qt5Sql.dll" />
-                        </Component>
-
-                        <Component Id="QT5SVG.DLL" DiskId="1" Guid="1290FC64-A122-4247-B6EA-B7342EA7A02C">
-                            <File Id="QT5SVG.DLL" Name="Qt5Svg.dll" Source="..\release\Qt5Svg.dll" />
-                        </Component>
-
-                        <Component Id="QT5WIDGETS.DLL" DiskId="1" Guid="0E49D60A-A7AF-4470-B495-41B062C17D6E">
-                            <File Id="QT5WIDGETS.DLL" Name="Qt5Widgets.dll" Source="..\release\Qt5Widgets.dll" />
-                        </Component>
-
-                        <Component Id="VC_REDIST.X64.EXE" DiskId="1" Guid="C1F050CC-80C1-4210-A58D-2D61671A7E72">
-                            <File Id="VC_REDIST.X64.EXE" Name="vc_redist.x64.exe" Source="..\release\vc_redist.x64.exe" />
-                        </Component>
-
                     </Directory>
                 </Directory>
             </Directory>
@@ -124,34 +49,16 @@
         >
 
             <Feature Id="DefaultFeature" Title="Main Feature" Level="1">
-                <ComponentRef Id="D3DCOMPILER_47.DLL" />
-                <ComponentRef Id="LALAMACHINE.EXE" />
-                <ComponentRef Id="LIBEGL.DLL" />
-                <ComponentRef Id="LIBGLESV2.DLL" />
-                <ComponentRef Id="MOC_PREDEFS.H" />
-                <ComponentRef Id="OPENGL32SW.DLL" />
-                <ComponentRef Id="QT5CORE.DLL" />
-                <ComponentRef Id="QT5GUI.DLL" />
-                <ComponentRef Id="QT5MULTIMEDIA.DLL" />
-                <ComponentRef Id="QT5MULTIMEDIAQUICK.DLL" />
-                <ComponentRef Id="QT5MULTIMEDIAWIDGETS.DLL" />
-                <ComponentRef Id="QT5NETWORK.DLL" />
-                <ComponentRef Id="QT5QML.DLL" />
-                <ComponentRef Id="QT5QUICK.DLL" />
-                <ComponentRef Id="QT5SQL.DLL" />
-                <ComponentRef Id="QT5SVG.DLL" />
-                <ComponentRef Id="QT5WIDGETS.DLL" />
-                <ComponentRef Id="VC_REDIST.X64.EXE" />
                 <ComponentRef Id="StartMenuShortcuts" />
             </Feature>
 
             <Feature Id='Dependencies' Title='Dependencies' Description='The dependency folders.' Level='1'>
-                <ComponentGroupRef Id='MainGroup' />
+                <ComponentGroupRef Id='LalaGroup' />
             </Feature>
 
         </Feature>
 
-        <Icon Id="StartMenuIcon.exe" SourceFile="..\release\lalamachine.exe" />
+        <Icon Id="StartMenuIcon.exe" SourceFile="..\Lalamachine\Release\native\assets\images\lalamachine-new.ico" />
 
     </Product>
 </Wix>
