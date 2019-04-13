@@ -36,7 +36,6 @@ namespace MusicScanner.Unittests
 
         public void SaveChanges()
         {
-            throw new NotImplementedException();
         }
     }
     public class MusicScannerTest
