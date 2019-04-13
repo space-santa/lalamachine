@@ -3,7 +3,7 @@
     <Product
         Name="lalamachine"
         Manufacturer="SpaceSanta"
-        Id="*"
+        Id="e38b5f9d-c234-4c94-b472-94998cf35d74"
         UpgradeCode="81575B97-6BED-4C90-B066-37A095D2C803"
         Language="1033"
         Codepage="1252"
@@ -19,9 +19,20 @@
             Compressed="yes"
             SummaryCodepage="1252"
         />
-        <InstallExecuteSequence>
-            <RemoveExistingProducts Before='InstallInitialize' />
-        </InstallExecuteSequence>
+
+        <Upgrade Id='81575B97-6BED-4C90-B066-37A095D2C803'>
+            <UpgradeVersion OnlyDetect='no' Property='PREVIOUSFOUND'
+                Minimum='0.0.0' IncludeMinimum='yes'
+                Maximum='4.0.0' IncludeMaximum='no' />
+            <UpgradeVersion OnlyDetect='yes' Property='SELFFOUND'
+                Minimum='4.0.0' IncludeMinimum='yes' Maximum='4.0.0' IncludeMaximum='yes' />
+            <UpgradeVersion OnlyDetect='yes' Property='NEWERFOUND'
+                Minimum='4.0.0' IncludeMinimum='no' />
+        </Upgrade>
+
+        <CustomAction Id='AlreadyUpdated' Error='[ProductName] is already installed.' />
+        <CustomAction Id='NoDowngrade' Error='A later version of [ProductName] is already installed.' />
+
         <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" DiskPrompt="CD-ROM #1" />
         <Property Id='DiskPrompt' Value="lalamachine Installation [1]" />
 
@@ -55,6 +66,15 @@
             <ComponentRef Id="StartMenuShortcuts" />
 
         </Feature>
+
+        <InstallExecuteSequence>
+            <RemoveExistingProducts Before="InstallInitialize" />
+            <Custom Action='AlreadyUpdated' After='FindRelatedProducts'>SELFFOUND</Custom>
+            <Custom Action='NoDowngrade' After='FindRelatedProducts'>NEWERFOUND</Custom>
+        </InstallExecuteSequence>
+        
+        <UIRef Id="WixUI_Minimal" />
+        <WixVariable Id="WixUILicenseRtf" Value="..\gpl-3.0.rtf" />
 
         <Icon Id="StartMenuIcon.exe" SourceFile="..\Lalamachine\Release\native\assets\images\lalamachine-new.ico" />
 
