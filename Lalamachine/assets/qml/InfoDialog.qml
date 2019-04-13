@@ -68,14 +68,14 @@ Dialog {
             }
             KeyValueText {
                 labelText: "License: "
-                valueText: "GPL v3"
+                valueText: sysinfo.license()
                 labelWidth: mainLabelWidth
                 width: mainWidth
                 height: col.childHeight
             }
             KeyValueText {
                 labelText: "Copyright: "
-                valueText: "2015-2018 Claus Zirkel"
+                valueText: sysinfo.copyright()
                 labelWidth: mainLabelWidth
                 width: mainWidth
                 height: col.childHeight

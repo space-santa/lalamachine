@@ -4,7 +4,7 @@
     {
         public string appVersion()
         {
-            return "3.15.0";
+            return "4.0.0";
         }
         public string appName()
         {
@@ -13,6 +13,14 @@
         public string lalaDir()
         {
             return Constants.LALADIR;
+        }
+        public string license()
+        {
+            return "GPL v3";
+        }
+        public string copyright()
+        {
+            return "2015-2019 Claus Zirkel";
         }
     }
 }
