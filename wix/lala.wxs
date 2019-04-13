@@ -51,13 +51,8 @@
             Display='expand' Level='1' ConfigurableDirectory='INSTALLDIR'
         >
 
-            <Feature Id="DefaultFeature" Title="Main Feature" Level="1">
-                <ComponentRef Id="StartMenuShortcuts" />
-            </Feature>
-
-            <Feature Id='Dependencies' Title='Dependencies' Description='The dependency folders.' Level='1'>
-                <ComponentGroupRef Id='LalaGroup' />
-            </Feature>
+            <ComponentGroupRef Id='LalaGroup' />
+            <ComponentRef Id="StartMenuShortcuts" />
 
         </Feature>
 
