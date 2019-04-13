@@ -3,7 +3,7 @@
     <Product
         Name="lalamachine"
         Manufacturer="SpaceSanta"
-        Id="475D6740-95A9-4AD6-8223-4A261CC4C092"
+        Id="*"
         UpgradeCode="81575B97-6BED-4C90-B066-37A095D2C803"
         Language="1033"
         Codepage="1252"
@@ -19,6 +19,9 @@
             Compressed="yes"
             SummaryCodepage="1252"
         />
+        <InstallExecuteSequence>
+            <RemoveExistingProducts Before='InstallInitialize' />
+        </InstallExecuteSequence>
         <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" DiskPrompt="CD-ROM #1" />
         <Property Id='DiskPrompt' Value="lalamachine Installation [1]" />
 
