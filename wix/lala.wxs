@@ -7,7 +7,7 @@
         UpgradeCode="81575B97-6BED-4C90-B066-37A095D2C803"
         Language="1033"
         Codepage="1252"
-        Version="3.99.0"
+        Version="4.0.0"
     >
         <Package
             Id="*"
