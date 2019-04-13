@@ -11,25 +11,19 @@ pipelines:
           - dotnet restore $PROJECT_NAME
           - dotnet build $PROJECT_NAME
           - dotnet test $TEST_NAME
-          # 
+          #
           - export PROJECT_NAME=LalaServer/LalaServer.csproj
           - export TEST_NAME=LalaServer.Unittests/LalaServer.Unittests.csproj
           - dotnet restore $PROJECT_NAME
           - dotnet build $PROJECT_NAME
           - dotnet test $TEST_NAME
-          # 
+          #
           - export PROJECT_NAME=MusicScanner/MusicScanner.csproj
           - export TEST_NAME=MusicScanner.Unittests/MusicScanner.Unittests.csproj
           - dotnet restore $PROJECT_NAME
           - dotnet build $PROJECT_NAME
           - dotnet test $TEST_NAME
-          # 
-          - export PROJECT_NAME=PlaylistProvider/PlaylistProvider.csproj
-          - export TEST_NAME=PlaylistProvider.Unittests/PlaylistProvider.Unittests.csproj
-          - dotnet restore $PROJECT_NAME
-          - dotnet build $PROJECT_NAME
-          - dotnet test $TEST_NAME
-          # 
+          #
           - export PROJECT_NAME=TagReader/TagReader.csproj
           - export TEST_NAME=TagReader.Unittests/TagReader.Unittests.csproj
           - dotnet restore $PROJECT_NAME
