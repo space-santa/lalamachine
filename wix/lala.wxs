@@ -7,7 +7,7 @@
         UpgradeCode="81575B97-6BED-4C90-B066-37A095D2C803"
         Language="1033"
         Codepage="1252"
-        Version="4.0.0"
+        Version="4.0.1"
     >
         <Package
             Id="*"
@@ -72,7 +72,7 @@
             <Custom Action='AlreadyUpdated' After='FindRelatedProducts'>SELFFOUND</Custom>
             <Custom Action='NoDowngrade' After='FindRelatedProducts'>NEWERFOUND</Custom>
         </InstallExecuteSequence>
-        
+
         <UIRef Id="WixUI_Minimal" />
         <WixVariable Id="WixUILicenseRtf" Value="..\gpl-3.0.rtf" />
 
