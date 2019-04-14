@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Lalamachine/bin/Debug/netcoreapp2.2/win10-x64/Lalamachine.dll",
+            "program": "${workspaceFolder}/Lalamachine/bin/Debug/netcoreapp3.0/Lalamachine.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Lalamachine",
             "stopAtEntry": false,
