@@ -9,7 +9,7 @@ lalamachine is just another music player. It features:
 
 ## Dependencies
 
-dotnet core 2.2
+dotnet core 3.0
 
 ## Run it
 
