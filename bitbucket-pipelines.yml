@@ -1,4 +1,4 @@
-image: microsoft/dotnet:sdk
+image: mcr.microsoft.com/dotnet/core-nightly/sdk
 
 pipelines:
   default:
