@@ -16,6 +16,7 @@ GeneratedFiles
 **.wixobj
 **.wixpdb
 **.aps
+DependencyGroup.wxs
 packages
 **obj
 **bin

@@ -34,7 +34,7 @@ namespace Lalamachine
 #if DEBUG
                     engine.Load(Path.Combine(GetApplicationRoot(), "assets/qml/main.qml"));
 #else
-                    engine.Load("C:/Program Files (x86)/SpaceSanta/lalamachine/assets/qml/main.qml");
+                    engine.Load("C:/Program Files (x86)/SpaceSanta/lalamachine/publish/assets/qml/main.qml");
 #endif
 
                     return app.Exec();

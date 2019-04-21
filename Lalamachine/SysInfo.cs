@@ -4,7 +4,7 @@
     {
         public string appVersion()
         {
-            return "4.0.1";
+            return "4.0.2";
         }
         public string appName()
         {
