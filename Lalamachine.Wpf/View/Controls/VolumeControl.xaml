@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
+        <local:VolumeSizeConverter x:Key="volumeSizeConverter" />
         <local:MutedDisplayConverter x:Key="mutedDisplayConverter" />
         <local:VolumeModel x:Key="volumeModel" />
     </UserControl.Resources>
@@ -16,8 +17,10 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <ToggleButton Grid.Row="0" Grid.Column="0" x:Name="MutedButton"
+                      FontSize="{Binding Path=Value, ElementName=VolumeSlider, Converter={StaticResource volumeSizeConverter}}"
                       IsChecked="{Binding Path=Muted, Source={StaticResource volumeModel}, Mode=TwoWay}"
                       Content="{Binding Path=Muted, Source={StaticResource volumeModel}, Converter={StaticResource mutedDisplayConverter}}" />
-        <Slider Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+        <Slider x:Name="VolumeSlider" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                Minimum="0" Maximum="100" />
     </Grid>
 </UserControl>
