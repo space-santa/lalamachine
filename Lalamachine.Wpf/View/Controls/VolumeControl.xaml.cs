@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -30,35 +31,32 @@ namespace Lalamachine.Wpf.View.Controls
         }
     }
 
-    public partial class VolumeControl : UserControl, INotifyPropertyChanged
+    public class VolumeModel : INotifyPropertyChanged
     {
         private bool muted;
-        public bool Muted
-        {
+
+        public bool Muted {
             get => muted;
             set
             {
                 muted = value;
-                OnPropertyChanged("Muted");
+                NotifyPropertyChanged();
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    public partial class VolumeControl : UserControl
+    {
         public VolumeControl()
         {
             InitializeComponent();
-            Muted = false;
-        }
-
-
-        private void MutedButton_Click(object sender, RoutedEventArgs e)
-        {
-            Muted = !Muted;
-        }
-        protected void OnPropertyChanged(string name)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }
