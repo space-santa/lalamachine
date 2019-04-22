@@ -6,4 +6,14 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="View\Controls\VolumeControl.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="View\Controls\VolumeControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>
