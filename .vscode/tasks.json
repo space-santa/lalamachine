@@ -12,6 +12,16 @@
             "problemMatcher": "$tsc"
         },
         {
+            "label": "build-wpf",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Lalamachine.Wpf/Lalamachine.Wpf.csproj"
+            ],
+            "problemMatcher": "$tsc"
+        },
+        {
             "label": "publish",
             "command": "dotnet",
             "type": "process",
