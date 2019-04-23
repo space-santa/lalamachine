@@ -28,7 +28,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Row="0" Grid.Column="0" Content="🔀🔁🔂" />
+                <controls:ShuffleRepeatControl Grid.Row="0" Grid.Column="0" />
                 <Slider Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
             </Grid>
 

@@ -7,10 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="View\Controls\ShuffleRepeatControl.xaml" />
     <None Remove="View\Controls\VolumeControl.xaml" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="View\Controls\ShuffleRepeatControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\Controls\VolumeControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
