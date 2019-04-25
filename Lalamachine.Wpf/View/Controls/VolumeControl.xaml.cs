@@ -5,8 +5,7 @@ using System.Windows.Controls;
 
 namespace Lalamachine.Wpf.View.Controls
 {
-
-    public class VolumeModel : INotifyPropertyChanged
+    public partial class VolumeControl : UserControl, INotifyPropertyChanged
     {
         private bool muted;
         public bool Muted
@@ -19,19 +18,35 @@ namespace Lalamachine.Wpf.View.Controls
             }
         }
 
+        private int volume;
+        public int Volume
+        {
+            get => volume;
+        }
+
+        public VolumeControl()
+        {
+            DataContext = this;
+            InitializeComponent();
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-    }
 
-    public partial class VolumeControl : UserControl
-    {
-        public VolumeControl()
+        private void MutedButton_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
-            InitializeComponent();
+            if (e.Delta > 0)
+            {
+                VolumeSlider.Value += 5;
+            }
+            else
+            {
+                VolumeSlider.Value -= 5;
+            }
         }
     }
 }
