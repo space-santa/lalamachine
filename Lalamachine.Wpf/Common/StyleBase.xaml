@@ -64,7 +64,7 @@
         <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}" />
         <Setter Property="MinHeight" Value="56" />
         <Setter Property="MinWidth" Value="88" />
-        <Setter Property="FontSize" Value="36" />
+        <Setter Property="FontSize" Value="28" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Template">
@@ -146,7 +146,7 @@
         <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}" />
         <Setter Property="MinHeight" Value="56" />
         <Setter Property="MinWidth" Value="88" />
-        <Setter Property="FontSize" Value="36" />
+        <Setter Property="FontSize" Value="28" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Template">

@@ -10,7 +10,7 @@ namespace Lalamachine.Wpf.View.Converter
         {
             double size = (double)value;
             double fraction = 16.0 / 100;
-            double displaySize = fraction * size + 20;
+            double displaySize = fraction * size + 12;
             return (int)displaySize;
         }
 
