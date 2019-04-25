@@ -40,12 +40,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
-                    <Button Content="⏮" />
-                    <Button Content="▶" />
-                    <Button Content="⏏" />
-                    <Button Content="⏭" />
-                </StackPanel>
+                <controls:PlayerButtonsControl Grid.Row="0" Grid.Column="0" />
 
                 <controls:VolumeControl Grid.Column="1" />
             </Grid>
