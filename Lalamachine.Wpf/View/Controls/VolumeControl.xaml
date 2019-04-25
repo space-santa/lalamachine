@@ -22,6 +22,6 @@
                       IsChecked="{Binding Path=Muted, Mode=TwoWay}"
                       Content="{Binding Path=Muted, Converter={StaticResource mutedDisplayConverter}}" />
         <Slider x:Name="VolumeSlider" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                Minimum="0" Maximum="100" />
+                Minimum="0" Maximum="100" Value="{Binding Path=Volume, Mode=OneWayToSource}" />
     </Grid>
 </UserControl>
