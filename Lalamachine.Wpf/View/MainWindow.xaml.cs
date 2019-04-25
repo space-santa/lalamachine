@@ -24,10 +24,5 @@ namespace Lalamachine.Wpf.View
         {
             InitializeComponent();
         }
-
-        private void ButtonExit_Click(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Shutdown();
-        }
     }
 }
