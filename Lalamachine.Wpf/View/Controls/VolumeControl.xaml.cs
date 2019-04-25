@@ -18,12 +18,6 @@ namespace Lalamachine.Wpf.View.Controls
             }
         }
 
-        private int volume;
-        public int Volume
-        {
-            get => volume;
-        }
-
         public VolumeControl()
         {
             DataContext = this;
