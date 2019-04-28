@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Lalamachine.Wpf.View.Controls"
              xmlns:converter="clr-namespace:Lalamachine.Wpf.View.Converter"
              mc:Ignorable="d" 
+             x:Name="uc"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converter:VolumeSizeConverter x:Key="volumeSizeConverter" />
@@ -18,12 +19,12 @@
         </Grid.ColumnDefinitions>
         <ToggleButton Grid.Row="0" Grid.Column="0" x:Name="MutedButton"
                       MouseWheel="MutedButton_MouseWheel"
-                      FontSize="{Binding Path=Value, ElementName=VolumeSlider, Converter={StaticResource volumeSizeConverter}}"
-                      IsChecked="{Binding Path=Muted, Mode=TwoWay}"
-                      Content="{Binding Path=Muted, Converter={StaticResource mutedDisplayConverter}}" />
+                      FontSize="{Binding Path=Volume, ElementName=uc, Converter={StaticResource volumeSizeConverter}}"
+                      IsChecked="{Binding Path=Muted, ElementName=uc, Mode=TwoWay}"
+                      Content="{Binding Path=Muted, ElementName=uc, Converter={StaticResource mutedDisplayConverter}}" />
         <Slider x:Name="VolumeSlider" 
                 Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                Minimum="0" Maximum="100" Value="{Binding Path=Volume, Mode=TwoWay}"
+                Minimum="0" Maximum="100" Value="{Binding Path=Volume, ElementName=uc, Mode=TwoWay}"
                 MouseWheel="MutedButton_MouseWheel"/>
     </Grid>
 </UserControl>
