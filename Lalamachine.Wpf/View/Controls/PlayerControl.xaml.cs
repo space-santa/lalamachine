@@ -13,6 +13,7 @@ namespace Lalamachine.Wpf.View.Controls
     {
         public PlayerControl()
         {
+            DataContext = this;
             mediaPlayer = new MediaPlayer();
             InitializeComponent();
         }
