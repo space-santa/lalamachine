@@ -13,7 +13,11 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <local:PlayerButtonsControl Grid.Row="0" Grid.Column="0" />
+        <local:PlayerButtonsControl 
+            Grid.Row="0" 
+            Grid.Column="0" 
+            Load="PlayerButtonsControl_Load" 
+            PlayPause="PlayerButtonsControl_PlayPause" />
         <local:VolumeControl
             x:Name="volumeControl"
             Grid.Column="1"

@@ -51,5 +51,34 @@ namespace Lalamachine.Wpf.View.Controls
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        private void PlayerButtonsControl_Load(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var source = (PlayerButtonsControl)e.Source;
+            System.Diagnostics.Debug.WriteLine("a;sdfj;aslf");
+            var dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.Filter = "Music | *.mp3; *.m4a";
+
+            bool? result = dlg.ShowDialog();
+
+            if (result == true)
+            {
+                var path = dlg.FileName;
+                mediaPlayer.Open(new System.Uri(path));
+            }
+        }
+
+        private void PlayerButtonsControl_PlayPause(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var source = (PlayerButtonsControl)e.Source;
+            if (source.PlayPauseButton.IsChecked == true)
+            {
+                mediaPlayer.Play();
+            }
+            else
+            {
+                mediaPlayer.Pause();
+            }
+        }
     }
 }
