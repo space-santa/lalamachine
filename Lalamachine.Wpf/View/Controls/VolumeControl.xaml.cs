@@ -1,45 +1,38 @@
-﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace Lalamachine.Wpf.View.Controls
 {
-    public partial class VolumeControl : UserControl, INotifyPropertyChanged
+    public partial class VolumeControl : UserControl
     {
-        private bool muted;
+        public static DependencyProperty MutedProperty =
+           DependencyProperty.Register("Muted", typeof(bool), typeof(VolumeControl));
         public bool Muted
         {
-            get => muted;
+            get => (bool)GetValue(MutedProperty);
             set
             {
-                muted = value;
-                NotifyPropertyChanged();
+                SetValue(MutedProperty, value);
+                System.Diagnostics.Debug.WriteLine($"muted in volumecontrol {value}");
             }
         }
 
-        private int volume;
-        public int Volume
+        public static DependencyProperty VolumeProperty =
+           DependencyProperty.Register("Volume", typeof(double), typeof(VolumeControl));
+        public double Volume
         {
-            get => volume;
+            get => (double)GetValue(VolumeProperty);
             set
             {
-                volume = value;
-                NotifyPropertyChanged();
+                SetValue(VolumeProperty, value);
+                System.Diagnostics.Debug.WriteLine($"volume in volumecontrol {value}");
             }
         }
+
 
         public VolumeControl()
         {
-            DataContext = this;
             InitializeComponent();
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private void MutedButton_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
