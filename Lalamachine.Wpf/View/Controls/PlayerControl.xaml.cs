@@ -13,17 +13,17 @@ namespace Lalamachine.Wpf.View.Controls
     {
         public PlayerControl()
         {
-            InitializeComponent();
             mediaPlayer = new MediaPlayer();
+            InitializeComponent();
         }
 
         private MediaPlayer mediaPlayer;
 
-        public int PlayerVolume
+        public double PlayerVolume
         {
             get
             {
-                return (int) (mediaPlayer.Volume * 100);
+                return mediaPlayer.Volume * 100;
             }
             set
             {
