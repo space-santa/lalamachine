@@ -40,9 +40,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <controls:PlayerButtonsControl Grid.Row="0" Grid.Column="0" />
-
-                <controls:VolumeControl Grid.Column="1" />
+                <controls:PlayerControl Grid.Column="0" />
             </Grid>
         </Grid>
     </Grid>
