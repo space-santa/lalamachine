@@ -28,7 +28,7 @@ namespace Lalamachine.Wpf.View.Controls
             set
             {
                 mediaPlayer.Volume = value / 100;
-                System.Diagnostics.Debug.WriteLine($"Player - {mediaPlayer.Volume}");
+                System.Diagnostics.Debug.WriteLine($"Player: value = {value} - mediaPlayer.Volume = {mediaPlayer.Volume}");
                 NotifyPropertyChanged();
             }
         }
