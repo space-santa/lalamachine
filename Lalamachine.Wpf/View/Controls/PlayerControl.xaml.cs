@@ -42,6 +42,17 @@ namespace Lalamachine.Wpf.View.Controls
             }
         }
 
+        public bool PlayerMuted
+        {
+            get => mediaPlayer.IsMuted;
+            set
+            {
+                mediaPlayer.IsMuted = value;
+                System.Diagnostics.Debug.WriteLine($"Player - {mediaPlayer.IsMuted}");
+                NotifyPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")

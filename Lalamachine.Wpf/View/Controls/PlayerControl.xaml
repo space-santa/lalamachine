@@ -13,6 +13,10 @@
         </Grid.ColumnDefinitions>
 
         <local:PlayerButtonsControl Grid.Row="0" Grid.Column="0" />
-        <local:VolumeControl x:Name="volumeControl" Grid.Column="1"  Volume="{Binding Path=PlayerVolume, Mode=TwoWay}" />
+        <local:VolumeControl
+            x:Name="volumeControl"
+            Grid.Column="1"
+            Volume="{Binding Path=PlayerVolume, Mode=TwoWay}"
+            Muted="{Binding Path=PlayerMuted, Mode=TwoWay}" />
     </Grid>
 </UserControl>
