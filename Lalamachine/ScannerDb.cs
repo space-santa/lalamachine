@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Lalamachine.Data;
 using Microsoft.EntityFrameworkCore;
-using MusicScanner;
+using LibLala.MusicScanner;
 
 namespace Lalamachine
 {

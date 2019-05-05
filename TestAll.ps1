@@ -1,4 +1,4 @@
-$projects = @("LibLala", "MusicScanner")
+$projects = @("LibLala")
 
 $projects | ForEach-Object {
     dotnet build "$($_)/$($_).csproj"

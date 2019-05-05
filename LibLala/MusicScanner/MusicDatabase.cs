@@ -4,7 +4,7 @@ using System.IO;
 using System;
 using System.Data;
 
-namespace MusicScanner
+namespace LibLala.MusicScanner
 {
     public interface IMusicDatabase
     {

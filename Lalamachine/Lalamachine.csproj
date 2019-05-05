@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MusicScanner\MusicScanner.csproj" />
     <ProjectReference Include="..\LibLala\LibLala.csproj" />
   </ItemGroup>
 </Project>

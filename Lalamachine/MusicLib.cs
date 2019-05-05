@@ -233,7 +233,7 @@ namespace Lalamachine
                 return;
             }
             scanning = true;
-            await Task.Run(() => MusicScanner.MusicScanner.ProcessDirectory(path, _scannerDb));
+            await Task.Run(() => LibLala.MusicScanner.MusicScanner.ProcessDirectory(path, _scannerDb));
             scanning = false;
             this.ActivateSignal("scanDone");
         }

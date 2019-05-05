@@ -5,10 +5,6 @@ VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lalamachine", "Lalamachine\Lalamachine.csproj", "{9C2C2652-805B-4816-AA5C-1374C059C018}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicScanner", "MusicScanner\MusicScanner.csproj", "{5E8E7883-2825-4E5F-BC5A-6F2898AE6EE9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicScanner.Unittests", "MusicScanner.Unittests\MusicScanner.Unittests.csproj", "{729C6719-B0A0-4689-81AD-EBFAA96CA733}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibLala", "LibLala\LibLala.csproj", "{7950C86E-D622-4DEF-A5C3-B8F22BDE3D80}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibLala.Unittests", "LibLala.Unittests\LibLala.Unittests.csproj", "{37D6A616-A5BC-4428-9DCF-DFBB740A9E4A}"
@@ -29,22 +25,6 @@ Global
 		{9C2C2652-805B-4816-AA5C-1374C059C018}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9C2C2652-805B-4816-AA5C-1374C059C018}.Release|x64.ActiveCfg = Release|Any CPU
 		{9C2C2652-805B-4816-AA5C-1374C059C018}.Release|x64.Build.0 = Release|Any CPU
-		{5E8E7883-2825-4E5F-BC5A-6F2898AE6EE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5E8E7883-2825-4E5F-BC5A-6F2898AE6EE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5E8E7883-2825-4E5F-BC5A-6F2898AE6EE9}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{5E8E7883-2825-4E5F-BC5A-6F2898AE6EE9}.Debug|x64.Build.0 = Debug|Any CPU
-		{5E8E7883-2825-4E5F-BC5A-6F2898AE6EE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5E8E7883-2825-4E5F-BC5A-6F2898AE6EE9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5E8E7883-2825-4E5F-BC5A-6F2898AE6EE9}.Release|x64.ActiveCfg = Release|Any CPU
-		{5E8E7883-2825-4E5F-BC5A-6F2898AE6EE9}.Release|x64.Build.0 = Release|Any CPU
-		{729C6719-B0A0-4689-81AD-EBFAA96CA733}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{729C6719-B0A0-4689-81AD-EBFAA96CA733}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{729C6719-B0A0-4689-81AD-EBFAA96CA733}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{729C6719-B0A0-4689-81AD-EBFAA96CA733}.Debug|x64.Build.0 = Debug|Any CPU
-		{729C6719-B0A0-4689-81AD-EBFAA96CA733}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{729C6719-B0A0-4689-81AD-EBFAA96CA733}.Release|Any CPU.Build.0 = Release|Any CPU
-		{729C6719-B0A0-4689-81AD-EBFAA96CA733}.Release|x64.ActiveCfg = Release|Any CPU
-		{729C6719-B0A0-4689-81AD-EBFAA96CA733}.Release|x64.Build.0 = Release|Any CPU
 		{7950C86E-D622-4DEF-A5C3-B8F22BDE3D80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7950C86E-D622-4DEF-A5C3-B8F22BDE3D80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7950C86E-D622-4DEF-A5C3-B8F22BDE3D80}.Debug|x64.ActiveCfg = Debug|Any CPU

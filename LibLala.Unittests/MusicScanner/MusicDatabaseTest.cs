@@ -1,14 +1,14 @@
 using System.IO;
-using Xunit;
+using NUnit.Framework;
 
-namespace MusicScanner.Unittests
+namespace LibLala.Unittests.MusicScanner
 {
     public class MusicDatabaseTest
     {
-        [Fact]
+        [Test]
         public void TestShouldCreateDatabase()
         {
-            var db = new MusicDatabase();
+            var db = new LibLala.MusicScanner.MusicDatabase();
             File.Delete(db.DbPath);
             Assert.False(File.Exists(db.DbPath));
             db.Connect("");
@@ -22,7 +22,7 @@ namespace MusicScanner.Unittests
             tags.path = "/this/is/the/path";
             db.AddTagsToDatabase(tags);
             var result = db.GetTag(tags.path);
-            Assert.Equal(tags.Artist[0], result.Artist[0]);
+            Assert.AreEqual(tags.Artist[0], result.Artist[0]);
         }
     }
 }
