@@ -242,7 +242,7 @@ namespace Lalamachine
         {
             try
             {
-                path = LalaUtils.Utils.RemoveFilePrefix(path);
+                path = LibLala.Utils.RemoveFilePrefix(path);
                 LalaTags tags = new LalaTags(_context.Tracks.Single(x => Path.GetFullPath(x.Path) == Path.GetFullPath(path)), _context);
                 return tags.ToJson();
             }

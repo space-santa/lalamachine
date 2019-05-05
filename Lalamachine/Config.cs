@@ -26,7 +26,7 @@ namespace Lalamachine
         public string libPath
         {
             get => GetStringValue("libPath");
-            set => SetSettingsValue("libPath", LalaUtils.Utils.RemoveFilePrefix(value));
+            set => SetSettingsValue("libPath", LibLala.Utils.RemoveFilePrefix(value));
         }
 
         public string playlistColumns

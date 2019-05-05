@@ -13,7 +13,7 @@ namespace TagReader
     {
         public static Tags Read(string path)
         {
-            path = LalaUtils.Utils.RemoveFilePrefix(path);
+            path = LibLala.Utils.RemoveFilePrefix(path);
 
             if (path.Length == 0)
             {

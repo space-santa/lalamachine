@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LalaUtils
+namespace LibLala
 {
     public static class Utils
     {
