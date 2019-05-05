@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Lalamachine.Data
 {
-    public class LalaTags : TagReader.Tags
+    public class LalaTags : LibLala.TagReader.Tags
     {
         public LalaTags(Track track, LalaContext context)
         {
@@ -27,7 +27,7 @@ namespace Lalamachine.Data
             path = track.Path;
             title = track.Title;
             this.track = (uint)track.TrackNumber;
-            year = (uint) track.Year;
+            year = (uint)track.Year;
         }
     }
 }

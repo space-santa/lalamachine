@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace TagReader
+namespace LibLala.TagReader
 {
     public class Tags
     {

@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TagReader\TagReader.csproj" />
+    <ProjectReference Include="..\LibLala\LibLala.csproj" />
   </ItemGroup>
 
   <ItemGroup>

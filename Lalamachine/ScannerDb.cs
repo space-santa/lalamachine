@@ -5,7 +5,6 @@ using System.Text;
 using Lalamachine.Data;
 using Microsoft.EntityFrameworkCore;
 using MusicScanner;
-using TagReader;
 
 namespace Lalamachine
 {
@@ -18,7 +17,7 @@ namespace Lalamachine
             _context = Context;
         }
 
-        public void AddTagsToDatabase(Tags tags)
+        public void AddTagsToDatabase(LibLala.TagReader.Tags tags)
         {
             Track track = new Track();
 

@@ -2,7 +2,7 @@ using System;
 using Xunit;
 using MusicScanner;
 using System.Collections.Generic;
-using TagReader;
+using LibLala.TagReader;
 using System.Linq;
 
 namespace MusicScanner.Unittests

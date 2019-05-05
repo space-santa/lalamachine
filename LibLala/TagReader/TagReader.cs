@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TagReader
+namespace LibLala.TagReader
 {
     public class TagReaderException : Exception
     {

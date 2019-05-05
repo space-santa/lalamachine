@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using TagReader;
 using System.Data.SQLite;
 using System.IO;
 using System;
@@ -10,7 +9,7 @@ namespace MusicScanner
     public interface IMusicDatabase
     {
         void EnsureDatabase();
-        void AddTagsToDatabase(Tags tags);
+        void AddTagsToDatabase(LibLala.TagReader.Tags tags);
         void SaveChanges();
     }
 
@@ -104,7 +103,7 @@ namespace MusicScanner
             m_dbConnection.Close();
         }
 
-        private SQLiteCommand GetTagsInsertCommand(Tags tags)
+        private SQLiteCommand GetTagsInsertCommand(LibLala.TagReader.Tags tags)
         {
             string sql = "INSERT into `musiclib` (`album`, `artist`, `comment`, `genre`, " +
                 "`length`, `lengthString`, `mrl`, `path`, `title`, `track`, `year`, `discNumber`) " +
@@ -129,7 +128,7 @@ namespace MusicScanner
             return command;
         }
 
-        public void AddTagsToDatabase(Tags tags)
+        public void AddTagsToDatabase(LibLala.TagReader.Tags tags)
         {
             if (!tags.isValid())
             {
@@ -142,7 +141,7 @@ namespace MusicScanner
             m_dbConnection.Close();
         }
 
-        public Tags GetTag(string path)
+        public LibLala.TagReader.Tags GetTag(string path)
         {
             m_dbConnection.Open();
             string sql = $"SELECT * FROM `musiclib` WHERE path='{path}';";
@@ -154,13 +153,13 @@ namespace MusicScanner
             return tags;
         }
 
-        private static List<Tags> TagsFromReader(SQLiteDataReader reader)
+        private static List<LibLala.TagReader.Tags> TagsFromReader(SQLiteDataReader reader)
         {
-            List<Tags> tagList = new List<Tags>();
+            var tagList = new List<LibLala.TagReader.Tags>();
 
             while (reader.Read())
             {
-                Tags tags = new Tags();
+                var tags = new LibLala.TagReader.Tags();
                 tags.album = reader.GetString(0);
                 tags.artistString = reader.GetString(1);
                 try

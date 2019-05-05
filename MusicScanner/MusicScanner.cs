@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using TagReader;
 
 namespace MusicScanner
 {
@@ -14,7 +13,7 @@ namespace MusicScanner
 
             foreach (string file in DirSearch(path))
             {
-                var tags = TagReader.TagReader.Read(file);
+                var tags = LibLala.TagReader.TagReader.Read(file);
                 db.AddTagsToDatabase(tags);
             }
 
