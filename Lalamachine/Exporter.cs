@@ -17,7 +17,7 @@ namespace Lalamachine
             {
                 files[i] = LibLala.Utils.RemoveFilePrefix(files[i]);
             }
-            await Task.Run(() => FileExporter.FileExporter.ExportPlaylist(destination, files));
+            await Task.Run(() => LibLala.FileExporter.FileExporter.ExportPlaylist(destination, files));
             this.ActivateSignal("exportFinished");
         }
     }

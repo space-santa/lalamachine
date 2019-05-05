@@ -1,7 +1,8 @@
 using System;
-using Xunit;
+using LibLala.FileExporter;
+using NUnit.Framework;
 
-namespace FileExporter.Unittest
+namespace LibLala.Unittest.FileExporter
 {
     public class MockExporterDirectory : IExporterDirectory
     {
@@ -25,7 +26,7 @@ namespace FileExporter.Unittest
     }
     public class DirectoryPreparerTest
     {
-        [Fact]
+        [Test]
         public void PrepareDirectory_DoesNotExist_IsCreated()
         {
             var mock = new MockExporterDirectory();
@@ -33,10 +34,10 @@ namespace FileExporter.Unittest
             var directroyPreparer = new DirectoryPreparer(mock);
             string destination = @"C:\the\path";
             directroyPreparer.PrepareDestination(destination);
-            Assert.Equal(destination, mock.ArgOfCreateDirectory);
+            Assert.AreEqual(destination, mock.ArgOfCreateDirectory);
         }
 
-        [Fact]
+        [Test]
         public void PrepareDirectory_DoesExist_IsCreated()
         {
             var mock = new MockExporterDirectory();
@@ -45,15 +46,15 @@ namespace FileExporter.Unittest
             string destination = @"C:\the\path";
             string expected = @"C:\the\path-20180304_112233";
             directroyPreparer.PrepareDestination(destination);
-            Assert.Equal(expected, mock.ArgOfCreateDirectory);
+            Assert.AreEqual(expected, mock.ArgOfCreateDirectory);
         }
 
-        [Fact]
+        [Test]
         public void ExporterDirectory_GetDirectorySuffix_IsProperlyFormattedCurrentDateTime()
         {
             var expected = DateTime.Now.ToString("-yyyyMMdd_HHmmss");
             var exporterDirectory = new ExporterDirectory();
-            Assert.Equal(expected, exporterDirectory.GetDirectorySuffix());
+            Assert.AreEqual(expected, exporterDirectory.GetDirectorySuffix());
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace FileExporter
+namespace LibLala.FileExporter
 {
     public class FileExporter
     {

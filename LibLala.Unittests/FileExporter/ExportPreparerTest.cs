@@ -1,7 +1,8 @@
 using System;
-using Xunit;
+using LibLala.FileExporter;
+using NUnit.Framework;
 
-namespace FileExporter.Unittest
+namespace LibLala.Unittest.FileExporter
 {
     public class ExportPreparerTest
     {
@@ -17,28 +18,28 @@ namespace FileExporter.Unittest
             }
         }
 
-        [Fact]
+        [Test]
         public void GetNewFilename_9Tracks_NoLeadingZeroInFilename()
         {
             string result = ExportPreparer.GetNewFilename(3, 9, GetPath());
             string expected = "3-lala.mp3";
-            Assert.Equal(expected, result);
+            Assert.AreEqual(expected, result);
         }
 
-        [Fact]
+        [Test]
         public void GetNewFilename_12Tracks_LeadingZeroInFilename()
         {
             string result = ExportPreparer.GetNewFilename(3, 12, GetPath());
             string expected = "03-lala.mp3";
-            Assert.Equal(expected, result);
+            Assert.AreEqual(expected, result);
         }
 
-        [Fact]
+        [Test]
         public void GetNewFilename_120Tracks_LeadingZerosInFilename()
         {
             string result = ExportPreparer.GetNewFilename(3, 120, GetPath());
             string expected = "003-lala.mp3";
-            Assert.Equal(expected, result);
+            Assert.AreEqual(expected, result);
         }
     }
 }
