@@ -10,7 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LalaUtils\LalaUtils.csproj" />
     <ProjectReference Include="..\LibLala\LibLala.csproj" />
   </ItemGroup>
 
