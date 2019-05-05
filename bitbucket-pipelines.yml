@@ -6,12 +6,6 @@ pipelines:
         caches:
           - dotnetcore
         script:
-          - export PROJECT_NAME=FileExporter/FileExporter.csproj
-          - export TEST_NAME=FileExporter.Unittests/FileExporter.Unittests.csproj
-          - dotnet restore $PROJECT_NAME
-          - dotnet build $PROJECT_NAME
-          - dotnet test $TEST_NAME
-          #
           - export PROJECT_NAME=MusicScanner/MusicScanner.csproj
           - export TEST_NAME=MusicScanner.Unittests/MusicScanner.Unittests.csproj
           - dotnet restore $PROJECT_NAME
