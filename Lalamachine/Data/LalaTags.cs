@@ -7,7 +7,7 @@ namespace Lalamachine.Data
 {
     public class LalaTags : LibLala.TagReader.Tags
     {
-        public LalaTags(Track track, LalaContext context)
+        public LalaTags(Track track)
         {
             if (track.Album != null)
             {
