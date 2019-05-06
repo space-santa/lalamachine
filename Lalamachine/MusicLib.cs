@@ -13,14 +13,11 @@ namespace Lalamachine
     [Signal("scanDone")]
     public class MusicLib
     {
-        private LalaContext _context;
-        private ScannerDb _scannerDb;
+        private Model.MusicLibModel _model;
 
         public MusicLib()
         {
-            _context = new LalaContext();
-            _context.Database.Migrate();
-            _scannerDb = new ScannerDb(_context);
+            _model = new Model.MusicLibModel();
             searchString = "";
             genreFilter = "";
             artistFilter = "";
@@ -72,13 +69,13 @@ namespace Lalamachine
             return value;
         }
 
-        public bool scanning { get; set; }
+        public bool scanning { get => _model.Scanning; }
 
         public string genreList
         {
             get
             {
-                var list = _context.Genres.Where(x => x.Name.Contains(searchString, System.StringComparison.OrdinalIgnoreCase)).Select(x => x.Name).OrderBy(x => x).ToArray();
+                var list = _model.genreList(searchString);
                 list = list.Prepend(Constants.ALL).ToArray();
                 return Newtonsoft.Json.JsonConvert.SerializeObject(list);
             }
@@ -89,19 +86,7 @@ namespace Lalamachine
             get
             {
                 string[] list;
-
-                if (genreFilter.Length > 0)
-                {
-                    list = _context.GenreTracks
-                                   .Where(x => x.Genre.Name == genreFilter)
-                                   .SelectMany(x => x.Track.ArtistTracks)
-                                   .Select(x => x.Artist.Name).Distinct().ToArray();
-                }
-                else
-                {
-                    list = _context.Artists.Where(x => x.Name.Contains(searchString, System.StringComparison.OrdinalIgnoreCase)).Select(x => x.Name).OrderBy(x => x).ToArray();
-                }
-
+                list = _model.artistList(genreFilter, searchString);
                 list = list.Prepend(Constants.ALL).ToArray();
                 return Newtonsoft.Json.JsonConvert.SerializeObject(list);
             }
@@ -112,37 +97,7 @@ namespace Lalamachine
             get
             {
                 string[] list;
-
-                if (artistFilter.Length > 0)
-                {
-                    list = _context.ArtistTracks
-                                   .Where(x => x.Artist.Name == artistFilter)
-                                   .Select(x => x.Track)
-                                   .Select(x => x.Album.Name).Distinct().ToArray();
-                }
-                else if (genreFilter.Length > 0)
-                {
-                    list = _context.GenreTracks
-                                   .Where(x => x.Genre.Name == genreFilter)
-                                   .Select(x => x.Track)
-                                   .Select(x => x.Album.Name).Distinct().ToArray();
-                }
-                else if (searchString == "")
-                {
-                    list = _context.Albums.Select(x => x.Name).ToArray();
-                }
-                else
-                {
-                    try
-                    {
-                        list = _context.Albums.Where(x => x.Name.Contains(searchString, System.StringComparison.OrdinalIgnoreCase)).Select(x => x.Name).OrderBy(x => x).ToArray();
-                    }
-                    catch (System.NullReferenceException)
-                    {
-                        list = new string[0];
-                    }
-                }
-
+                list = _model.albumList(artistFilter, genreFilter, searchString);
                 list = list.Prepend(Constants.ALL).ToArray();
                 return Newtonsoft.Json.JsonConvert.SerializeObject(list.ToArray());
             }
@@ -153,54 +108,7 @@ namespace Lalamachine
             get
             {
                 Track[] list;
-
-                if (albumFilter.Length > 0)
-                {
-                    try
-                    {
-                        list = _context.Albums.Single(x => x.Name == albumFilter).Tracks.ToArray();
-                        return TracksToTagListString(list);
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        //
-                    }
-                }
-
-                if (artistFilter.Length > 0)
-                {
-                    list = _context.ArtistTracks.Where(x => x.Artist.Name == artistFilter).Select(x => x.Track).ToArray();
-                    return TracksToTagListString(list);
-                }
-
-                if (genreFilter.Length > 0)
-                {
-                    list = _context.GenreTracks.Where(x => x.Genre.Name == genreFilter).Select(x => x.Track).ToArray();
-                    return TracksToTagListString(list);
-                }
-
-                if (searchString == "")
-                {
-                    list = _context.Tracks
-                                .Include(track => track.Album)
-                                .Include(track => track.GenreTracks)
-                                    .ThenInclude(gt => gt.Genre)
-                                .Include(track => track.ArtistTracks)
-                                    .ThenInclude(at => at.Artist)
-                                .ToArray();
-                }
-                else
-                {
-                    try
-                    {
-                        list = _context.Tracks.Where(x => x.Title.Contains(searchString, System.StringComparison.OrdinalIgnoreCase)).ToArray();
-                    }
-                    catch (System.NullReferenceException)
-                    {
-                        return "[]";
-                    }
-                }
-
+                list = _model.displayLib(albumFilter, artistFilter, genreFilter, searchString);
                 return TracksToTagListString(list);
             }
         }
@@ -214,7 +122,7 @@ namespace Lalamachine
 
             foreach (var track in tracks)
             {
-                LalaTags lalaTags = new LalaTags(track, _context);
+                LalaTags lalaTags = new LalaTags(track);
                 tagList.Add(lalaTags);
             }
 
@@ -228,13 +136,8 @@ namespace Lalamachine
 
         public async void scanAsync(string path)
         {
-            if (scanning)
-            {
-                return;
-            }
-            scanning = true;
-            await Task.Run(() => LibLala.MusicScanner.MusicScanner.ProcessDirectory(path, _scannerDb));
-            scanning = false;
+            if (scanning) { return; }
+            await _model.scanAsync(path);
             this.ActivateSignal("scanDone");
         }
 
@@ -242,8 +145,7 @@ namespace Lalamachine
         {
             try
             {
-                path = LibLala.Utils.RemoveFilePrefix(path);
-                LalaTags tags = new LalaTags(_context.Tracks.Single(x => Path.GetFullPath(x.Path) == Path.GetFullPath(path)), _context);
+                LalaTags tags = _model.getMetadataForMrl(path);
                 return tags.ToJson();
             }
             catch (System.InvalidOperationException)
@@ -254,15 +156,7 @@ namespace Lalamachine
 
         public string getAlbumTracks(string name)
         {
-            if (name.Length < 1 || name == Constants.ALL)
-            { return "{}"; }
-            var tracks = _context.Albums.Single(x => x.Name == name).Tracks;
-            var tagList = new List<LalaTags>();
-            foreach (var track in tracks)
-            {
-                LalaTags lalaTags = new LalaTags(track, _context);
-                tagList.Add(lalaTags);
-            }
+            var tagList = _model.getAlbumTracks(name);
             return Newtonsoft.Json.JsonConvert.SerializeObject(tagList);
         }
     }
