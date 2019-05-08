@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Lalamachine.Data;
 using Microsoft.EntityFrameworkCore;
 using LibLala.MusicScanner;
 
-namespace Lalamachine
+namespace Lalamachine.Data
 {
     public class ScannerDb : IMusicDatabase
     {
