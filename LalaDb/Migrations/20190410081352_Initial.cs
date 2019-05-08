@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Lalamachine.Migrations
+namespace LalaDb.Migrations
 {
     public partial class Initial : Migration
     {

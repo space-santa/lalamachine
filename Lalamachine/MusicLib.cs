@@ -1,11 +1,7 @@
-﻿using Lalamachine.Data;
-using Microsoft.EntityFrameworkCore;
-using Qml.Net;
+﻿using Qml.Net;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Diagnostics;
 using LibLala;
 

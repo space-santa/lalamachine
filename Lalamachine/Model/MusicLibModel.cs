@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Lalamachine.Data;
+using LalaDb.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lalamachine.Model
