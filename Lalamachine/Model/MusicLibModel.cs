@@ -143,7 +143,7 @@ namespace Lalamachine.Model
 
         public List<LalaTags> getAlbumTracks(string name)
         {
-            if (name.Length < 1 || name == Constants.ALL)
+            if (name.Length < 1 || name == LibLala.Constants.ALL)
             { return new List<LalaTags>(); }
             var tracks = _context.Albums.Single(x => x.Name == name).Tracks;
             var tagList = new List<LalaTags>();

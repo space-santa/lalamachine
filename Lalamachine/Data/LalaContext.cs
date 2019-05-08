@@ -18,7 +18,7 @@ namespace Lalamachine.Data
         {
             optionsBuilder
                 .UseLazyLoadingProxies()
-                .UseSqlite($"Data Source={Constants.DB_PATH}");
+                .UseSqlite($"Data Source={LibLala.Constants.DB_PATH}");
         }
     }
 }

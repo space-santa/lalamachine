@@ -25,7 +25,7 @@ namespace Lalamachine
 
         protected override string targetPath()
         {
-            return Constants.SETTINGS_PATH;
+            return LibLala.Constants.SETTINGS_PATH;
         }
     }
 }

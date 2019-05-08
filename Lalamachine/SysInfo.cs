@@ -12,7 +12,7 @@
         }
         public string lalaDir()
         {
-            return Constants.LALADIR;
+            return LibLala.Constants.LALADIR;
         }
         public string license()
         {
