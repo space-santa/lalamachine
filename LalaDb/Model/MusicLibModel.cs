@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using LalaDb.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Lalamachine.Model
+namespace LalaDb.Model
 {
     public class MusicLibModel
     {

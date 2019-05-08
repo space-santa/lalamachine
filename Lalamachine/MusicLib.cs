@@ -5,17 +5,18 @@ using System.Linq;
 using System.Diagnostics;
 using LibLala;
 using LalaDb.Data;
+using LalaDb.Model;
 
 namespace Lalamachine
 {
     [Signal("scanDone")]
     public class MusicLib
     {
-        private Model.MusicLibModel _model;
+        private MusicLibModel _model;
 
         public MusicLib()
         {
-            _model = new Model.MusicLibModel();
+            _model = new MusicLibModel();
             searchString = "";
             genreFilter = "";
             artistFilter = "";

@@ -1,7 +1,8 @@
 ﻿using System.Linq;
+using LalaDb.Data;
 using LibLala.MusicScanner;
 
-namespace LalaDb.Data
+namespace LalaDb.Model
 {
     public class ScannerDb : IMusicDatabase
     {
