@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
 using LibLala;
+using LalaDb.Data;
 
 namespace Lalamachine
 {
