@@ -12,7 +12,7 @@ namespace Lalamachine
     {
         public string getAllPlaylistNames()
         {
-            var names = AllPlaylistNames.Where(x => x != Constants.MISC_PLAYLIST_NAME).ToArray();
+            var names = AllPlaylistNames.Where(x => x != LibLala.Constants.MISC_PLAYLIST_NAME).ToArray();
             return JsonConvert.SerializeObject(names);
         }
 

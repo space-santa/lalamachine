@@ -42,7 +42,7 @@ namespace Lalamachine
 
         private static void CreateLaladir()
         {
-            Directory.CreateDirectory(Constants.LALADIR);
+            Directory.CreateDirectory(LibLala.Constants.LALADIR);
         }
 
         protected void SetSettingsValue(string key, int value)
