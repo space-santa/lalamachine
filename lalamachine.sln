@@ -11,10 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibLala.Unittests", "LibLal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lalamachine.Wpf", "Lalamachine.Wpf\Lalamachine.Wpf.csproj", "{5DE674BB-BDEC-4898-AC73-AA9FC43DB549}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibLala", "LibLala\LibLala.csproj", "{E0EA1FB0-8246-47F1-8FA3-C6F4C0276861}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibLala.Unittests", "LibLala.Unittests\LibLala.Unittests.csproj", "{CF393E2C-0263-4422-BC9F-3A4C1487743B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +43,14 @@ Global
 		{37D6A616-A5BC-4428-9DCF-DFBB740A9E4A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{37D6A616-A5BC-4428-9DCF-DFBB740A9E4A}.Release|x64.ActiveCfg = Release|Any CPU
 		{37D6A616-A5BC-4428-9DCF-DFBB740A9E4A}.Release|x64.Build.0 = Release|Any CPU
+		{5DE674BB-BDEC-4898-AC73-AA9FC43DB549}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DE674BB-BDEC-4898-AC73-AA9FC43DB549}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DE674BB-BDEC-4898-AC73-AA9FC43DB549}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5DE674BB-BDEC-4898-AC73-AA9FC43DB549}.Debug|x64.Build.0 = Debug|Any CPU
+		{5DE674BB-BDEC-4898-AC73-AA9FC43DB549}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DE674BB-BDEC-4898-AC73-AA9FC43DB549}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DE674BB-BDEC-4898-AC73-AA9FC43DB549}.Release|x64.ActiveCfg = Release|Any CPU
+		{5DE674BB-BDEC-4898-AC73-AA9FC43DB549}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
