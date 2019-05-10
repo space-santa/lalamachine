@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Lalamachine
 {
@@ -9,7 +6,7 @@ namespace Lalamachine
     {
         public string metaDataAsJsonString(string path)
         {
-            var tags = TagReader.TagReader.Read(path);
+            var tags = LibLala.TagReader.TagReader.Read(path);
             return JsonConvert.SerializeObject(tags);
         }
     }

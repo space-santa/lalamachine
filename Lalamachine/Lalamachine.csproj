@@ -8,17 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.2.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.3" />
     <PackageReference Include="Qml.Net" Version="0.7.0" />
     <PackageReference Include="Qml.Net.WindowsBinaries" Version="0.7.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MusicScanner\MusicScanner.csproj" />
-    <ProjectReference Include="..\TagReader\TagReader.csproj" />
-    <ProjectReference Include="..\LalaUtils\LalaUtils.csproj" />
-    <ProjectReference Include="..\FileExporter\FileExporter.csproj" />
+    <ProjectReference Include="..\LibLala\LibLala.csproj" />
+    <ProjectReference Include="..\LalaDb\LalaDb.csproj" />
   </ItemGroup>
 </Project>

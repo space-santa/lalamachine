@@ -6,20 +6,8 @@ pipelines:
         caches:
           - dotnetcore
         script:
-          - export PROJECT_NAME=FileExporter/FileExporter.csproj
-          - export TEST_NAME=FileExporter.Unittests/FileExporter.Unittests.csproj
+          - export PROJECT_NAME=LibLala/LibLala.csproj
+          - export TEST_NAME=LibLala.Unittests/LibLala.Unittests.csproj
           - dotnet restore $PROJECT_NAME
           - dotnet build $PROJECT_NAME
-          - dotnet test $TEST_NAME
-          #
-          - export PROJECT_NAME=MusicScanner/MusicScanner.csproj
-          - export TEST_NAME=MusicScanner.Unittests/MusicScanner.Unittests.csproj
-          - dotnet restore $PROJECT_NAME
-          - dotnet build $PROJECT_NAME
-          - dotnet test $TEST_NAME
-          #
-          - export PROJECT_NAME=TagReader/TagReader.csproj
-          - export TEST_NAME=TagReader.Unittests/TagReader.Unittests.csproj
-          - dotnet restore $PROJECT_NAME
-          - dotnet build $PROJECT_NAME
-          - dotnet test $TEST_NAME
+          - dotnet test $TEST_NAME --filter Category!=Integration

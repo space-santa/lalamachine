@@ -1,10 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-
-namespace Lalamachine
+﻿namespace Lalamachine
 {
     public class Settings : AbstractBaseSettings
     {
@@ -25,7 +19,7 @@ namespace Lalamachine
 
         protected override string targetPath()
         {
-            return Constants.SETTINGS_PATH;
+            return LibLala.Constants.SETTINGS_PATH;
         }
     }
 }

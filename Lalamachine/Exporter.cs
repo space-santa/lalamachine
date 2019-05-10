@@ -1,7 +1,4 @@
 ﻿using Qml.Net;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Lalamachine
@@ -12,12 +9,12 @@ namespace Lalamachine
         public async void exportFilesAsync(string destination, string fileJson)
         {
             var files = Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(fileJson);
-            destination = LalaUtils.Utils.RemoveFilePrefix(destination);
+            destination = LibLala.Utils.RemoveFilePrefix(destination);
             for (int i = 0; i < files.Length; ++i)
             {
-                files[i] = LalaUtils.Utils.RemoveFilePrefix(files[i]);
+                files[i] = LibLala.Utils.RemoveFilePrefix(files[i]);
             }
-            await Task.Run(() => FileExporter.FileExporter.ExportPlaylist(destination, files));
+            await Task.Run(() => LibLala.FileExporter.FileExporter.ExportPlaylist(destination, files));
             this.ActivateSignal("exportFinished");
         }
     }
