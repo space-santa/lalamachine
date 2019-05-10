@@ -21,6 +21,7 @@ namespace LibLala.Unittests.Tagreader
         }
 
         [Test]
+        [Category("Integration")]
         public void BadMp3ShouldThrowTagReaderException()
         {
             var ex = Assert.Throws<TagReaderException>(() => TagReader.TagReader.Read("../../../TagReader/testdata/bad.mp3"));
@@ -28,14 +29,15 @@ namespace LibLala.Unittests.Tagreader
         }
 
         [Test]
+        [Category("Integration")]
         public void Mp3PathShouldReturnTags()
         {
-            // ./bin/Debug/netcoreapp2.1 -> ./testdata/2.06_Finale.mp3
             var tags = TagReader.TagReader.Read("../../../TagReader/testdata/2-06_Finale.mp3");
             Assert.AreEqual(2, tags.discNumber);
         }
 
         [Test]
+        [Category("Integration")]
         public void Mp3PathShouldReturnTagsLength()
         {
             var tags = TagReader.TagReader.Read("../../../TagReader/testdata/rip.mp3");
@@ -45,6 +47,7 @@ namespace LibLala.Unittests.Tagreader
         }
 
         [Test]
+        [Category("Integration")]
         public void Mp3PathShouldReturnTagsArtist()
         {
             var tags = TagReader.TagReader.Read("../../../TagReader/testdata/left.mp3");
@@ -52,9 +55,9 @@ namespace LibLala.Unittests.Tagreader
         }
 
         [Test]
+        [Category("Integration")]
         public void M4aPathShouldReturnTags()
         {
-            // ./bin/Debug/netcoreapp2.1 -> ./testdata/down_under.m4a
             var path = "../../../TagReader/testdata/down_under.m4a";
             var tags = TagReader.TagReader.Read(path);
             Assert.AreEqual(1, tags.discNumber);

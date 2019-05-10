@@ -42,6 +42,7 @@ namespace LibLala.Unittests.MusicScanner
     {
 
         [Test]
+        [Category("Integration")]
         public void Test1()
         {
             var tester = new MusicDatabaseMock();

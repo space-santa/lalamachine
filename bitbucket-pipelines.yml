@@ -10,4 +10,4 @@ pipelines:
           - export TEST_NAME=LibLala.Unittests/LibLala.Unittests.csproj
           - dotnet restore $PROJECT_NAME
           - dotnet build $PROJECT_NAME
-          - dotnet test $TEST_NAME
+          - dotnet test $TEST_NAME --filter Category!=Integration
