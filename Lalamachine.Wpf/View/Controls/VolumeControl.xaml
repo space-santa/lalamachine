@@ -19,12 +19,12 @@
         </Grid.ColumnDefinitions>
         <ToggleButton Grid.Row="0" Grid.Column="0" x:Name="MutedButton"
                       MouseWheel="MutedButton_MouseWheel"
-                      FontSize="{Binding Path=Volume, ElementName=uc, Converter={StaticResource volumeSizeConverter}}"
-                      IsChecked="{Binding Path=Muted, ElementName=uc, Mode=TwoWay}"
-                      Content="{Binding Path=Muted, ElementName=uc, Converter={StaticResource mutedDisplayConverter}}" />
+                      FontSize="{Binding Path=Volume, Converter={StaticResource volumeSizeConverter}}"
+                      IsChecked="{Binding Path=IsMuted, Mode=TwoWay}"
+                      Content="{Binding Path=IsMuted, Converter={StaticResource mutedDisplayConverter}}" />
         <Slider x:Name="VolumeSlider" 
                 Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                Minimum="0" Maximum="100" Value="{Binding Path=Volume, ElementName=uc, Mode=TwoWay}"
+                Minimum="0" Maximum="100" Value="{Binding Path=Volume, Mode=TwoWay}"
                 MouseWheel="MutedButton_MouseWheel"/>
     </Grid>
 </UserControl>

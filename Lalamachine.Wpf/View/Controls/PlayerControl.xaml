@@ -18,10 +18,6 @@
             Grid.Column="0" 
             Load="PlayerButtonsControl_Load" 
             PlayPause="PlayerButtonsControl_PlayPause" />
-        <local:VolumeControl
-            x:Name="volumeControl"
-            Grid.Column="1"
-            Volume="{Binding Path=PlayerVolume, ElementName=uc , Mode=TwoWay}"
-            Muted="{Binding Path=PlayerMuted, ElementName=uc , Mode=TwoWay}" />
+        <local:VolumeControl x:Name="volumeControl" Grid.Column="1" />
     </Grid>
 </UserControl>
