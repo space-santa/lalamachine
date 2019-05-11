@@ -15,7 +15,7 @@
         </Grid.ColumnDefinitions>
         
         <Button Grid.Column="0" x:Name="BackButton" Content="⏮" Click="BackButton_Click" />
-        <ToggleButton Grid.Column="1" x:Name="PlayPauseButton" Content="▶" Click="PlayPauseButton_Click" />
+        <ToggleButton Grid.Column="1" x:Name="PlayPauseButton" Content="▶" Command="{Binding Path=ChangePlayPauseCommand}" />
         <Button Grid.Column="2" x:Name="LoadButton" Content="⏏" Click="LoadButton_Click" />
         <Button Grid.Column="3" x:Name="ForwardButton" Content="⏭" Click="ForwardButton_Click" />
     </Grid>

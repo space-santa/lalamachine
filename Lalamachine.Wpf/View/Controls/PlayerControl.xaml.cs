@@ -34,18 +34,5 @@ namespace Lalamachine.Wpf.View.Controls
                 _player.Open(path);
             }
         }
-
-        private void PlayerButtonsControl_PlayPause(object sender, System.Windows.RoutedEventArgs e)
-        {
-            var source = (PlayerButtonsControl)e.Source;
-            if (source.PlayPauseButton.IsChecked == true)
-            {
-                _player.Play();
-            }
-            else
-            {
-                _player.Pause();
-            }
-        }
     }
 }
