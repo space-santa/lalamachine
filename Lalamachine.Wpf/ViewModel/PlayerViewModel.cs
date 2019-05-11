@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
@@ -17,7 +18,17 @@ namespace Lalamachine.Wpf.ViewModel
 
         public string Source
         {
-            get => _mediaPlayer.Source.AbsolutePath;
+            get
+            {
+                try
+                {
+                    return _mediaPlayer.Source.AbsolutePath;
+                }
+                catch (NullReferenceException)
+                {
+                    return "";
+                }
+            }
             set => Open(value);
         }
 
@@ -78,6 +89,11 @@ namespace Lalamachine.Wpf.ViewModel
 
         private bool CanChangePlayPause(object commandParameter)
         {
+            if (Source.Length < 1 && !IsPlaying)
+            {
+                return false;
+            }
+
             return true;
         }
 
@@ -104,6 +120,7 @@ namespace Lalamachine.Wpf.ViewModel
         {
             _mediaPlayer.Open(new System.Uri(path));
             NotifyPropertyChanged("Source");
+            _changePlayPauseCommand.InvokeCanExecuteChanged();
         }
 
         public void Play()
