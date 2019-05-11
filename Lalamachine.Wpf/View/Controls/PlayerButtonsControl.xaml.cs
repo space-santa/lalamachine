@@ -23,19 +23,6 @@ namespace Lalamachine.Wpf.View.Controls
             InitializeComponent();
         }
 
-        public static readonly RoutedEvent LoadEvent = EventManager.RegisterRoutedEvent(
-            "Load", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(PlayerButtonsControl));
-        public event RoutedEventHandler Load
-        {
-            add { AddHandler(LoadEvent, value); }
-            remove { RemoveHandler(LoadEvent, value); }
-        }
-        void RaiseLoadEvent()
-        {
-            RoutedEventArgs newEventArgs = new RoutedEventArgs(PlayerButtonsControl.LoadEvent);
-            RaiseEvent(newEventArgs);
-        }
-
         public static readonly RoutedEvent BackEvent = EventManager.RegisterRoutedEvent(
             "Back", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(PlayerButtonsControl));
         public event RoutedEventHandler Back
@@ -60,11 +47,6 @@ namespace Lalamachine.Wpf.View.Controls
         {
             RoutedEventArgs newEventArgs = new RoutedEventArgs(PlayerButtonsControl.ForwardEvent);
             RaiseEvent(newEventArgs);
-        }
-
-        private void LoadButton_Click(object sender, RoutedEventArgs e)
-        {
-            RaiseLoadEvent();
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

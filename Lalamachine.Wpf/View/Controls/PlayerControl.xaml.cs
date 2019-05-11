@@ -19,20 +19,5 @@ namespace Lalamachine.Wpf.View.Controls
             DataContext = _player;
             InitializeComponent();
         }
-
-        private void PlayerButtonsControl_Load(object sender, System.Windows.RoutedEventArgs e)
-        {
-            var source = (PlayerButtonsControl)e.Source;
-            var dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.Filter = "Music | *.mp3; *.m4a";
-
-            bool? result = dlg.ShowDialog();
-
-            if (result == true)
-            {
-                var path = dlg.FileName;
-                _player.Open(path);
-            }
-        }
     }
 }

@@ -51,6 +51,8 @@ namespace Lalamachine.Wpf.ViewModel
 
         private readonly DelegateCommand _changePlayPauseCommand;
         public ICommand ChangePlayPauseCommand => _changePlayPauseCommand;
+        private readonly DelegateCommand _loadCommand;
+        public ICommand LoadCommand => _loadCommand;
 
         public PlayerViewModel()
         {
@@ -59,6 +61,7 @@ namespace Lalamachine.Wpf.ViewModel
             Volume = 50;
 
             _changePlayPauseCommand = new DelegateCommand(OnChangePlayPause, CanChangePlayPause);
+            _loadCommand = new DelegateCommand(OnLoad, CanLoad);
         }
 
         private void OnChangePlayPause(object commandParameter)
@@ -77,6 +80,26 @@ namespace Lalamachine.Wpf.ViewModel
         {
             return true;
         }
+
+        private void OnLoad(object commandParameter)
+        {
+            var dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.Filter = "Music | *.mp3; *.m4a";
+
+            bool? result = dlg.ShowDialog();
+
+            if (result == true)
+            {
+                var path = dlg.FileName;
+                Open(path);
+            }
+        }
+
+        private bool CanLoad(object commandParameter)
+        {
+            return true;
+        }
+
         public void Open(string path)
         {
             _mediaPlayer.Open(new System.Uri(path));
