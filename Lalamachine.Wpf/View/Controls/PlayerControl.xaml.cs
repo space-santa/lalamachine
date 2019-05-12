@@ -1,8 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Controls;
-using System.Windows.Media;
+﻿using System.Windows.Controls;
 using Lalamachine.Wpf.ViewModel;
 
 namespace Lalamachine.Wpf.View.Controls
@@ -12,7 +8,7 @@ namespace Lalamachine.Wpf.View.Controls
     /// </summary>
     public partial class PlayerControl : UserControl
     {
-        private PlayerViewModel _player;
+        private readonly PlayerViewModel _player;
         public PlayerControl()
         {
             _player = new PlayerViewModel();
