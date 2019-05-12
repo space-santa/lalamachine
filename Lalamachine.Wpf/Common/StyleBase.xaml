@@ -24,7 +24,7 @@
     <Style TargetType="Label">
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="FontFamily" Value="Consolas" />
+        <Setter Property="FontFamily" Value="Calibri" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="VerticalAlignment" Value="Center" />

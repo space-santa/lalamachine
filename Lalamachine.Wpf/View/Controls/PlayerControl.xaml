@@ -4,10 +4,32 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Lalamachine.Wpf.View.Controls"
+             xmlns:converter="clr-namespace:Lalamachine.Wpf.View.Converter"
              mc:Ignorable="d"
              x:Name="uc"
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converter:SecondsToTimeSpanConverter x:Key="secondsToTimeSpanConverter" />
+    </UserControl.Resources>
+    
     <StackPanel Orientation="Vertical">
+        
+        <Separator Height="8" />
+
+        <Grid >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Content="{Binding Path=Source}" Grid.Column="0" />
+            <Label Content="{Binding Path=Position, Converter={StaticResource secondsToTimeSpanConverter}}" Grid.Column="1" />
+            <Label Content="/" Grid.Column="2" />
+            <Label Content="{Binding Path=Duration, Converter={StaticResource secondsToTimeSpanConverter}}" Grid.Column="3" />
+        </Grid>
+        
         <Grid >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -18,9 +40,7 @@
             <Slider Grid.Column="1" Minimum="0" Maximum="{Binding Path=Duration}" Value="{Binding Path=Position}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
         </Grid>
 
-        <Label Content="{Binding Path=Source}" />
-
-        <Separator Height="16" />
+        <Separator Height="8" />
         
         <Grid>
             <Grid.ColumnDefinitions>
