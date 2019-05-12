@@ -7,13 +7,29 @@
              mc:Ignorable="d"
              x:Name="uc"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+    <StackPanel Orientation="Vertical">
+        <Grid >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <local:PlayerButtonsControl Grid.Row="0" Grid.Column="0" />
-        <local:VolumeControl x:Name="volumeControl" Grid.Column="1" />
-    </Grid>
+            <local:ShuffleRepeatControl Grid.Column="0" />
+            <Slider Grid.Column="1" Minimum="0" Maximum="{Binding Path=Duration}" Value="{Binding Path=Position}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+        </Grid>
+
+        <Label Content="{Binding Path=Source}" />
+
+        <Separator Height="16" />
+        
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <local:PlayerButtonsControl Grid.Column="0" />
+            <local:VolumeControl x:Name="volumeControl" Grid.Column="1" />
+        </Grid>
+    </StackPanel>
 </UserControl>
