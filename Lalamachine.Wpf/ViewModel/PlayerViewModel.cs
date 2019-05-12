@@ -3,12 +3,14 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace Lalamachine.Wpf.ViewModel
 {
     public class PlayerViewModel : INotifyPropertyChanged
     {
         private MediaPlayer _mediaPlayer;
+        private DispatcherTimer _dispatcherTimer;
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
@@ -60,6 +62,31 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
+        public double Duration
+        {
+            get
+            {
+                if (_mediaPlayer.NaturalDuration.HasTimeSpan)
+                {
+                    return _mediaPlayer.NaturalDuration.TimeSpan.TotalSeconds;
+                }
+
+                return 0;
+            }
+        }
+
+        public double Position
+        {
+            get
+            {
+                return _mediaPlayer.Position.TotalSeconds;
+            }
+            set
+            {
+                _mediaPlayer.Position = new TimeSpan(0, 0, (int)value);
+            }
+        }
+
         private readonly DelegateCommand _changePlayPauseCommand;
         public ICommand ChangePlayPauseCommand => _changePlayPauseCommand;
         private readonly DelegateCommand _loadCommand;
@@ -70,9 +97,30 @@ namespace Lalamachine.Wpf.ViewModel
             _mediaPlayer = new MediaPlayer();
             IsMuted = false;
             Volume = 50;
+            _mediaPlayer.MediaOpened += _mediaPlayer_MediaOpened;
 
             _changePlayPauseCommand = new DelegateCommand(OnChangePlayPause, CanChangePlayPause);
             _loadCommand = new DelegateCommand(OnLoad, CanLoad);
+
+            SetupTimer();
+            _dispatcherTimer.Start();
+        }
+
+        private void _mediaPlayer_MediaOpened(object sender, EventArgs e)
+        {
+            NotifyPropertyChanged("Duration");
+        }
+
+        private void SetupTimer()
+        {
+            _dispatcherTimer = new DispatcherTimer();
+            _dispatcherTimer.Tick += new EventHandler(DispatcherTimerTick);
+            _dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 200);
+        }
+
+        private void DispatcherTimerTick(object sender, EventArgs e)
+        {
+            NotifyPropertyChanged("Position");
         }
 
         private void OnChangePlayPause(object commandParameter)
