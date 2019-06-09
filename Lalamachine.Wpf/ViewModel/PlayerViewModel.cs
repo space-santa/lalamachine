@@ -168,7 +168,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void Open(string path)
         {
-            _mediaPlayer.Open(new System.Uri(path));
+            _mediaPlayer.Open(new Uri(path));
             NotifyPropertyChanged("Source");
             _changePlayPauseCommand.InvokeCanExecuteChanged();
         }
