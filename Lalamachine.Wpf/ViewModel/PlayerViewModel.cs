@@ -35,13 +35,15 @@ namespace Lalamachine.Wpf.ViewModel
         }
 
         private bool _isPlaying;
-        private void SetIsPlaying(bool value)
+        public bool IsPlaying
         {
-            _isPlaying = value;
-            NotifyPropertyChanged("IsPlaying");
+            get => _isPlaying;
+            set
+            {
+                _isPlaying = value;
+                NotifyPropertyChanged("IsPlaying");
+            }
         }
-        public bool IsPlaying { get => _isPlaying; }
-
         public bool IsMuted
         {
             get => _mediaPlayer.IsMuted;
@@ -174,19 +176,19 @@ namespace Lalamachine.Wpf.ViewModel
         public void Play()
         {
             _mediaPlayer.Play();
-            SetIsPlaying(true);
+            IsPlaying = true;
         }
 
         public void Pause()
         {
             _mediaPlayer.Pause();
-            SetIsPlaying(false);
+            IsPlaying = false;
         }
 
         public void Stop()
         {
             _mediaPlayer.Stop();
-            SetIsPlaying(false);
+            IsPlaying = false;
         }
     }
 }
