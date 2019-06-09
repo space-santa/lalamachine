@@ -14,18 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="View\Controls\PlayerControl.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="View\Controls\PlayerButtonsControl.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="View\Controls\ShuffleRepeatControl.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="View\Controls\VolumeControl.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Update="View\Controls\PlayerControl.xaml.cs" />
+    <Compile Update="View\Controls\PlayerButtonsControl.xaml.cs" />
+    <Compile Update="View\Controls\ShuffleRepeatControl.xaml.cs" />
+    <Compile Update="View\Controls\VolumeControl.xaml.cs" />
   </ItemGroup>
 
 </Project>
