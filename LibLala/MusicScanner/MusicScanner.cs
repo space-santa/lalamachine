@@ -13,7 +13,7 @@ namespace LibLala.MusicScanner
 
             foreach (string file in DirSearch(path))
             {
-                var tags = LibLala.TagReader.TagReader.Read(file);
+                var tags = new LibLala.TagReader.TagReader().Read(file);
                 db.AddTagsToDatabase(tags);
             }
 

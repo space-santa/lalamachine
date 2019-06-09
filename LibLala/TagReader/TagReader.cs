@@ -9,49 +9,49 @@ namespace LibLala.TagReader
         }
     }
 
-    public static class TagReader
+    public abstract class ITagCreator
     {
-        public static Tags Read(string path)
+        public abstract Tags Create(string path);
+    }
+
+    public class TagCreator : ITagCreator
+    {
+        public override Tags Create(string path)
         {
-            path = LibLala.Utils.RemoveFilePrefix(path);
+            var tags = new Tags();
+            tags.FromTagLibFile(TagLib.File.Create(path));
+            return tags;
+        }
+    }
+
+    public class TagReader
+    {
+        public TagReader()
+        {
+            TagCreator = new TagCreator();
+        }
+
+        public ITagCreator TagCreator { get; set; }
+
+        public Tags Read(string path)
+        {
+            path = Uri.UnescapeDataString(path);
+            path = Utils.RemoveFilePrefix(path);
 
             if (path.Length == 0)
             {
                 throw new TagReaderException("You must give a value for path.");
             }
 
-            TagLib.File file;
-
             try
             {
-                file = TagLib.File.Create(path);
+                return TagCreator.Create(path);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                throw new TagReaderException($"Can't open {path}.");
+                throw new TagReaderException($"Can't open `{path}`.");
             }
-
-            var tags = new Tags();
-            tags.album = file.Tag.Album;
-            var x = file.Tag.AlbumArtists;
-            var y = file.Tag.Performers;
-
-            var z = new string[x.Length + y.Length];
-            x.CopyTo(z, 0);
-            y.CopyTo(z, x.Length);
-
-            tags.Artist = z;
-            tags.comment = file.Tag.Comment;
-            tags.discNumber = file.Tag.Disc;
-            tags.genre = file.Tag.Genres;
-            tags.duration = file.Properties.Duration;
-            tags.path = System.IO.Path.GetFullPath(path);
-            tags.title = file.Tag.Title;
-            tags.track = file.Tag.Track;
-            tags.year = file.Tag.Year;
-
-            return tags;
         }
     }
 }

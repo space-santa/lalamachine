@@ -12,6 +12,27 @@ namespace LibLala.TagReader
             genre = new string[0];
         }
 
+        public void FromTagLibFile(TagLib.File file)
+        {
+            album = file.Tag.Album;
+            var x = file.Tag.AlbumArtists;
+            var y = file.Tag.Performers;
+
+            var z = new string[x.Length + y.Length];
+            x.CopyTo(z, 0);
+            y.CopyTo(z, x.Length);
+
+            Artist = z;
+            comment = file.Tag.Comment;
+            discNumber = file.Tag.Disc;
+            genre = file.Tag.Genres;
+            duration = file.Properties.Duration;
+            path = System.IO.Path.GetFullPath(path);
+            title = file.Tag.Title;
+            track = file.Tag.Track;
+            year = file.Tag.Year;
+        }
+
         public bool isValid()
         {
             return title != null && title.Length > 0 && length > 0;

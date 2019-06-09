@@ -6,7 +6,7 @@ namespace Lalamachine
     {
         public string metaDataAsJsonString(string path)
         {
-            var tags = LibLala.TagReader.TagReader.Read(path);
+            var tags = new LibLala.TagReader.TagReader().Read(path);
             return JsonConvert.SerializeObject(tags);
         }
     }

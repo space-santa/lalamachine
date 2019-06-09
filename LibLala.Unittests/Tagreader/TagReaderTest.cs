@@ -1,6 +1,9 @@
 using System;
 using LibLala.TagReader;
+using NSubstitute;
+using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
+using TagLib;
 
 namespace LibLala.Unittests.Tagreader
 {
@@ -9,59 +12,39 @@ namespace LibLala.Unittests.Tagreader
         [Test]
         public void EmptyPathShouldThrowTagReaderException()
         {
-            var ex = Assert.Throws<TagReaderException>(() => TagReader.TagReader.Read(""));
+            var ex = Assert.Throws<TagReaderException>(() => new TagReader.TagReader().Read(""));
             Assert.AreEqual("You must give a value for path.", ex.Message);
         }
 
         [Test]
         public void BadPathShouldThrowTagReaderException()
         {
-            var ex = Assert.Throws<TagReaderException>(() => TagReader.TagReader.Read("lalalala"));
-            Assert.AreEqual("Can't open lalalala.", ex.Message);
+            var ex = Assert.Throws<TagReaderException>(() => new TagReader.TagReader().Read("lalalala"));
+            Assert.AreEqual("Can't open `lalalala`.", ex.Message);
         }
 
         [Test]
-        [Category("Integration")]
+        public void EncodedPathShouldReturnTags()
+        {
+            string dirtyPath = "D:/OneDrive/musiclib/Various%20Artists/Ant-Man%20(Original%20Motion%20Picture%20Soundtr/Various%20Artists%20-%2007.%20I'll%20Call%20Him%20Antony.mp3";
+            string cleanPath = "D:/OneDrive/musiclib/Various Artists/Ant-Man (Original Motion Picture Soundtr/Various Artists - 07. I'll Call Him Antony.mp3";
+            var tagReader = new TagReader.TagReader();
+            var tagCreatorMock = Substitute.For<ITagCreator>();
+            tagReader.TagCreator = tagCreatorMock;
+            tagReader.Read(dirtyPath);
+            tagCreatorMock.Received().Create(cleanPath);
+        }
+
+        [Test]
         public void BadMp3ShouldThrowTagReaderException()
         {
-            var ex = Assert.Throws<TagReaderException>(() => TagReader.TagReader.Read("../../../TagReader/testdata/bad.mp3"));
-            Assert.AreEqual("Can't open ../../../TagReader/testdata/bad.mp3.", ex.Message);
-        }
-
-        [Test]
-        [Category("Integration")]
-        public void Mp3PathShouldReturnTags()
-        {
-            var tags = TagReader.TagReader.Read("../../../TagReader/testdata/2-06_Finale.mp3");
-            Assert.AreEqual(2, tags.discNumber);
-        }
-
-        [Test]
-        [Category("Integration")]
-        public void Mp3PathShouldReturnTagsLength()
-        {
-            var tags = TagReader.TagReader.Read("../../../TagReader/testdata/rip.mp3");
-            Assert.AreEqual(59, tags.duration.Seconds);
-            Assert.AreEqual(4, tags.duration.Minutes);
-            Assert.AreEqual("Varieté", tags.album);
-        }
-
-        [Test]
-        [Category("Integration")]
-        public void Mp3PathShouldReturnTagsArtist()
-        {
-            var tags = TagReader.TagReader.Read("../../../TagReader/testdata/left.mp3");
-            Assert.AreEqual(1, tags.discNumber);
-        }
-
-        [Test]
-        [Category("Integration")]
-        public void M4aPathShouldReturnTags()
-        {
-            var path = "../../../TagReader/testdata/down_under.m4a";
-            var tags = TagReader.TagReader.Read(path);
-            Assert.AreEqual(1, tags.discNumber);
-            Assert.AreEqual(System.IO.Path.GetFullPath(path), tags.path);
+            string testPath = "bad.mp3";
+            var tagReader = new TagReader.TagReader();
+            var tagCreatorMock = Substitute.For<ITagCreator>();
+            tagCreatorMock.Create(testPath).Returns(x => { throw new Exception(); });
+            tagReader.TagCreator = tagCreatorMock;
+            var ex = Assert.Throws<TagReaderException>(() => { tagReader.Read(testPath); });
+            Assert.AreEqual("Can't open `bad.mp3`.", ex.Message);
         }
     }
 }
