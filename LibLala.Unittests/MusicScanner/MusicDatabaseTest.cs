@@ -16,7 +16,7 @@ namespace LibLala.Unittests.MusicScanner
             Assert.True(File.Exists(db.DbPath));
             var tags = new LibLala.TagReader.Tags();
             tags.album = "the album";
-            tags.title = "the title";
+            tags.Title = "the title";
             tags.length = 345;
             tags.Artist = new string[] { "the artist", "the other guy" };
             tags.path = "/this/is/the/path";

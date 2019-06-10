@@ -27,14 +27,14 @@ namespace LibLala.TagReader
             discNumber = file.Tag.Disc;
             genre = file.Tag.Genres;
             duration = file.Properties.Duration;
-            title = file.Tag.Title;
-            track = file.Tag.Track;
+            Title = file.Tag.Title;
+            Track = file.Tag.Track;
             year = file.Tag.Year;
         }
 
         public bool isValid()
         {
-            return title != null && title.Length > 0 && length > 0;
+            return Title != null && Title.Length > 0 && length > 0;
         }
         public string album;
         private string[] artist;
@@ -82,8 +82,7 @@ namespace LibLala.TagReader
                 genre = value.Split(',');
             }
         }
-        public string title;
-        public uint track;
+
         public uint year;
         public uint discNumber;
         public TimeSpan duration;
@@ -114,6 +113,9 @@ namespace LibLala.TagReader
                 return $"{minutesValue}:{secondsString}";
             }
         }
+
+        public string Title { get; set; }
+        public uint Track { get; set; }
 
         public string path;
 

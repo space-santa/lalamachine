@@ -75,8 +75,8 @@ namespace LalaDb.Model
             track.DiscNumber = (int)tags.discNumber;
             track.Length = tags.length;
             track.Path = tags.path;
-            track.Title = tags.title;
-            track.TrackNumber = (int)tags.track;
+            track.Title = tags.Title;
+            track.TrackNumber = (int)tags.Track;
             track.Year = (int)tags.year;
 
             _context.Tracks.Add(track);

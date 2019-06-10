@@ -9,6 +9,7 @@
   <ItemGroup>
     <None Remove="View\Controls\PlayerButtonsControl.xaml" />
     <None Remove="View\Controls\PlayerControl.xaml" />
+    <None Remove="View\Controls\PlaylistControl.xaml" />
     <None Remove="View\Controls\ShuffleRepeatControl.xaml" />
     <None Remove="View\Controls\VolumeControl.xaml" />
   </ItemGroup>

@@ -12,14 +12,14 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Label Content="Hello .NET Core!" HorizontalAlignment="Center" VerticalAlignment="Center"
-               FontSize="40"/>
+
+        <controls:PlaylistControl x:Name="MainPlaylist" Grid.Row="0"></controls:PlaylistControl>
 
         <Grid Grid.Row="1" Style="{StaticResource GradientGrid}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <controls:PlayerControl Grid.Column="0" />
+            <controls:PlayerControl x:Name="Player" Grid.Column="0" />
         </Grid>
     </Grid>
 </Window>

@@ -8,11 +8,8 @@ namespace Lalamachine.Wpf.View.Controls
     /// </summary>
     public partial class PlayerControl : UserControl
     {
-        private readonly PlayerViewModel _player;
         public PlayerControl()
         {
-            _player = new PlayerViewModel();
-            DataContext = _player;
             InitializeComponent();
         }
     }

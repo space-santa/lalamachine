@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lalamachine.Wpf.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,16 @@ namespace Lalamachine.Wpf.View
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly PlayerViewModel _player;
+        private PlaylistViewModel _playlistViewModel;
         public MainWindow()
         {
             InitializeComponent();
+            _player = new PlayerViewModel();
+            _playlistViewModel = new PlaylistViewModel();
+            _player.ManualLoadEvent += _playlistViewModel.ManualLoadEventHandler;
+            Player.DataContext = _player;
+            MainPlaylist.DataContext = _playlistViewModel;
         }
     }
 }

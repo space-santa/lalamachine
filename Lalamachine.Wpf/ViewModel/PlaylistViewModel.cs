@@ -1,6 +1,7 @@
 ﻿using LibLala.TagReader;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -9,7 +10,12 @@ namespace Lalamachine.Wpf.ViewModel
 {
     class PlaylistViewModel : INotifyPropertyChanged
     {
-        private List<Tags> _playlist;
+        public PlaylistViewModel()
+        {
+            _playlist = new ObservableCollection<Tags>();
+        }
+
+        private ObservableCollection<Tags> _playlist;
 
         private int _currentIndex;
         public int CurrentIndex
@@ -46,7 +52,7 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
-        public List<Tags> Playlist
+        public ObservableCollection<Tags> Playlist
         {
             get => _playlist;
             set
@@ -62,9 +68,12 @@ namespace Lalamachine.Wpf.ViewModel
             NotifyPropertyChanged("Playlist");
         }
 
-        public void AddTracks(List<Tags> tags)
+        public void AddTracks(List<Tags> tagsRange)
         {
-            Playlist.AddRange(tags);
+            foreach (var tags in tagsRange)
+            {
+                AddTrack(tags);
+            }
             NotifyPropertyChanged("Playlist");
         }
 
@@ -76,7 +85,10 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void DeleteTracks(int startIndex, int numberOfTracks)
         {
-            Playlist.RemoveRange(startIndex, numberOfTracks);
+            for (int i = 0; i < numberOfTracks; ++i)
+            {
+                DeleteTrack(startIndex);
+            }
             NotifyPropertyChanged("Playlist");
         }
 
@@ -84,6 +96,13 @@ namespace Lalamachine.Wpf.ViewModel
         {
             Playlist.Clear();
             NotifyPropertyChanged("Playlist");
+        }
+
+        public void ManualLoadEventHandler(object sender, ManualLoadEventArgs e)
+        {
+            var path = e.Path;
+            var tags = new TagReader().Read(path);
+            AddTrack(tags);
         }
     }
 }

@@ -7,10 +7,20 @@ using System.Windows.Threading;
 
 namespace Lalamachine.Wpf.ViewModel
 {
+    public class ManualLoadEventArgs : EventArgs
+    {
+        public string Path { get; set; }
+    }
     public class PlayerViewModel : INotifyPropertyChanged
     {
         private MediaPlayer _mediaPlayer;
         private DispatcherTimer _dispatcherTimer;
+
+        public event EventHandler<ManualLoadEventArgs> ManualLoadEvent;
+        protected virtual void OnManualLoad(ManualLoadEventArgs e)
+        {
+            ManualLoadEvent?.Invoke(this, e);
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
@@ -169,6 +179,7 @@ namespace Lalamachine.Wpf.ViewModel
         public void Open(string path)
         {
             _mediaPlayer.Open(new Uri(path));
+            OnManualLoad(new ManualLoadEventArgs { Path = path });
             NotifyPropertyChanged("Source");
             _changePlayPauseCommand.InvokeCanExecuteChanged();
         }

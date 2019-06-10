@@ -121,8 +121,8 @@ namespace LibLala.MusicScanner
             command.Parameters.Add(new SQLiteParameter("@lengthString", tags.lengthString));
             command.Parameters.Add(new SQLiteParameter("@mrl", tags.path));
             command.Parameters.Add(new SQLiteParameter("@path", tags.path));
-            command.Parameters.Add(new SQLiteParameter("@title", tags.title));
-            command.Parameters.Add(new SQLiteParameter("@track", tags.track));
+            command.Parameters.Add(new SQLiteParameter("@title", tags.Title));
+            command.Parameters.Add(new SQLiteParameter("@track", tags.Track));
             command.Parameters.Add(new SQLiteParameter("@year", tags.year));
             command.Parameters.Add(new SQLiteParameter("@discNumber", tags.discNumber));
             return command;
@@ -179,8 +179,8 @@ namespace LibLala.MusicScanner
                 }
                 tags.length = reader.GetInt32(4);
                 tags.path = reader.GetString(7);
-                tags.title = reader.GetString(8);
-                tags.track = (uint)reader.GetInt32(9);
+                tags.Title = reader.GetString(8);
+                tags.Track = (uint)reader.GetInt32(9);
                 tags.year = (uint)reader.GetInt32(10);
                 tags.discNumber = (uint)reader.GetInt32(11);
                 tagList.Add(tags);

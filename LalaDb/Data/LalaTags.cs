@@ -25,8 +25,8 @@ namespace LalaDb.Data
             }
             length = track.Length;
             path = track.Path;
-            title = track.Title;
-            this.track = (uint)track.TrackNumber;
+            Title = track.Title;
+            this.Track = (uint)track.TrackNumber;
             year = (uint)track.Year;
         }
     }
