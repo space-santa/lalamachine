@@ -27,7 +27,6 @@ namespace LibLala.TagReader
             discNumber = file.Tag.Disc;
             genre = file.Tag.Genres;
             duration = file.Properties.Duration;
-            path = System.IO.Path.GetFullPath(path);
             title = file.Tag.Title;
             track = file.Tag.Track;
             year = file.Tag.Year;

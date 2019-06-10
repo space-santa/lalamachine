@@ -18,8 +18,10 @@ namespace LibLala.TagReader
     {
         public override Tags Create(string path)
         {
+            var file = TagLib.File.Create(path);
             var tags = new Tags();
-            tags.FromTagLibFile(TagLib.File.Create(path));
+            tags.FromTagLibFile(file);
+            tags.path = System.IO.Path.GetFullPath(path);
             return tags;
         }
     }
