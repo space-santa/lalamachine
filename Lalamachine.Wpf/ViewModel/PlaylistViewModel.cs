@@ -17,6 +17,7 @@ namespace Lalamachine.Wpf.ViewModel
         public PlaylistViewModel()
         {
             _playlist = new ObservableCollection<Tags>();
+            CurrentIndex = -1;
         }
 
         private ObservableCollection<Tags> _playlist;
@@ -49,15 +50,21 @@ namespace Lalamachine.Wpf.ViewModel
         {
             get
             {
-                CurrentIndex += 1;
-                return CurrentTrack;
+                if (CurrentIndex < Playlist.Count - 1)
+                {
+                    CurrentIndex += 1;
+                }
+                return CurrentTrack; // TODO: This must be conditional. E.g. if repeat all, return first track.
             }
         }
         public Tags PreviousTrack
         {
             get
             {
-                CurrentIndex -= 1;
+                if (CurrentIndex > 0)
+                {
+                    CurrentIndex -= 1;
+                }
                 return CurrentTrack;
             }
         }
@@ -99,12 +106,25 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 DeleteTrack(startIndex);
             }
+
+            if (CurrentIndex >= startIndex)
+            {
+                if (CurrentIndex < startIndex + numberOfTracks)
+                {
+                    CurrentIndex = startIndex - 1;
+                }
+                else
+                {
+                    CurrentIndex -= numberOfTracks;
+                }
+            }
             NotifyPropertyChanged("Playlist");
         }
 
         public void DeleteAllTracks()
         {
             Playlist.Clear();
+            CurrentIndex = -1;
             NotifyPropertyChanged("Playlist");
         }
 

@@ -17,13 +17,13 @@ namespace Lalamachine.Wpf.ViewModel
         private DispatcherTimer _dispatcherTimer;
 
         public event EventHandler PlayNextTrackEvent;
-        protected virtual void OnPlayNextTrack()
+        protected virtual void OnPlayNextTrack(object commandParameter)
         {
             PlayNextTrackEvent?.Invoke(this, EventArgs.Empty);
         }
 
         public event EventHandler PlayLastTrackEvent;
-        protected virtual void OnPlayLastTrack()
+        protected virtual void OnPlayLastTrack(object commandParameter)
         {
             PlayLastTrackEvent?.Invoke(this, EventArgs.Empty);
         }
@@ -122,6 +122,12 @@ namespace Lalamachine.Wpf.ViewModel
         private readonly DelegateCommand _loadCommand;
         public ICommand LoadCommand => _loadCommand;
 
+        private readonly DelegateCommand _nextCommand;
+        public ICommand NextCommand => _nextCommand;
+
+        private readonly DelegateCommand _lastCommand;
+        public ICommand LastCommand => _lastCommand;
+
         public PlayerViewModel()
         {
             _mediaPlayer = new MediaPlayer();
@@ -131,6 +137,8 @@ namespace Lalamachine.Wpf.ViewModel
 
             _changePlayPauseCommand = new DelegateCommand(OnChangePlayPause, CanChangePlayPause);
             _loadCommand = new DelegateCommand(OnLoad, CanLoad);
+            _nextCommand = new DelegateCommand(OnPlayNextTrack, (object commandParameter) => { return true; } );
+            _lastCommand = new DelegateCommand(OnPlayLastTrack, (object commandParameter) => { return true; } );
 
             SetupTimer();
             _dispatcherTimer.Start();
