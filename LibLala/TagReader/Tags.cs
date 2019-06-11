@@ -14,7 +14,7 @@ namespace LibLala.TagReader
 
         public void FromTagLibFile(TagLib.File file)
         {
-            album = file.Tag.Album;
+            Album = file.Tag.Album;
             var x = file.Tag.AlbumArtists;
             var y = file.Tag.Performers;
 
@@ -23,20 +23,20 @@ namespace LibLala.TagReader
             y.CopyTo(z, x.Length);
 
             Artist = z;
-            comment = file.Tag.Comment;
-            discNumber = file.Tag.Disc;
+            Comment = file.Tag.Comment;
+            DiscNumber = file.Tag.Disc;
             genre = file.Tag.Genres;
             duration = file.Properties.Duration;
             Title = file.Tag.Title;
             Track = file.Tag.Track;
-            year = file.Tag.Year;
+            Year = file.Tag.Year;
         }
 
         public bool isValid()
         {
             return Title != null && Title.Length > 0 && length > 0;
         }
-        public string album;
+
         private string[] artist;
         public string[] Artist
         {
@@ -51,7 +51,7 @@ namespace LibLala.TagReader
                 artist = value.Distinct().ToArray();
             }
         }
-        public string artistString
+        public string ArtistString
         {
             get
             {
@@ -69,9 +69,9 @@ namespace LibLala.TagReader
                 artist = localArtist.Distinct().ToArray();
             }
         }
-        public string comment;
+
         public string[] genre;
-        public string genreString
+        public string GenreString
         {
             get
             {
@@ -83,8 +83,6 @@ namespace LibLala.TagReader
             }
         }
 
-        public uint year;
-        public uint discNumber;
         public TimeSpan duration;
 
         public int length
@@ -99,7 +97,7 @@ namespace LibLala.TagReader
             }
         }
 
-        public string lengthString
+        public string LengthString
         {
             get
             {
@@ -116,6 +114,10 @@ namespace LibLala.TagReader
 
         public string Title { get; set; }
         public uint Track { get; set; }
+        public string Comment { get; set; }
+        public string Album { get; set; }
+        public uint Year { get; set; }
+        public uint DiscNumber { get; set; }
 
         public string path;
 

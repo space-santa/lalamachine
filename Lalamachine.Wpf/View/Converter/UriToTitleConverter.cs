@@ -15,7 +15,7 @@ namespace Lalamachine.Wpf.View.Converter
             if (source.Length < 1) return "";
 
             Tags tags = new TagReader().Read(source);
-            return $"{tags.artistString} - {tags.Title}";
+            return $"{tags.ArtistString} - {tags.Title}";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

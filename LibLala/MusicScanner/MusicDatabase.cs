@@ -113,18 +113,18 @@ namespace LibLala.MusicScanner
             SQLiteCommand command = m_dbConnection.CreateCommand();
             command.CommandType = CommandType.Text;
             command.CommandText = sql;
-            command.Parameters.Add(new SQLiteParameter("@album", tags.album));
-            command.Parameters.Add(new SQLiteParameter("@artist", tags.artistString));
-            command.Parameters.Add(new SQLiteParameter("@comment", tags.comment));
-            command.Parameters.Add(new SQLiteParameter("@genre", tags.genreString));
+            command.Parameters.Add(new SQLiteParameter("@album", tags.Album));
+            command.Parameters.Add(new SQLiteParameter("@artist", tags.ArtistString));
+            command.Parameters.Add(new SQLiteParameter("@comment", tags.Comment));
+            command.Parameters.Add(new SQLiteParameter("@genre", tags.GenreString));
             command.Parameters.Add(new SQLiteParameter("@length", tags.length));
-            command.Parameters.Add(new SQLiteParameter("@lengthString", tags.lengthString));
+            command.Parameters.Add(new SQLiteParameter("@lengthString", tags.LengthString));
             command.Parameters.Add(new SQLiteParameter("@mrl", tags.path));
             command.Parameters.Add(new SQLiteParameter("@path", tags.path));
             command.Parameters.Add(new SQLiteParameter("@title", tags.Title));
             command.Parameters.Add(new SQLiteParameter("@track", tags.Track));
-            command.Parameters.Add(new SQLiteParameter("@year", tags.year));
-            command.Parameters.Add(new SQLiteParameter("@discNumber", tags.discNumber));
+            command.Parameters.Add(new SQLiteParameter("@year", tags.Year));
+            command.Parameters.Add(new SQLiteParameter("@discNumber", tags.DiscNumber));
             return command;
         }
 
@@ -160,19 +160,19 @@ namespace LibLala.MusicScanner
             while (reader.Read())
             {
                 var tags = new LibLala.TagReader.Tags();
-                tags.album = reader.GetString(0);
-                tags.artistString = reader.GetString(1);
+                tags.Album = reader.GetString(0);
+                tags.ArtistString = reader.GetString(1);
                 try
                 {
-                    tags.comment = reader.GetString(2);
+                    tags.Comment = reader.GetString(2);
                 }
                 catch
                 {
-                    tags.comment = "";
+                    tags.Comment = "";
                 }
                 try
                 {
-                    tags.genreString = reader.GetString(3);
+                    tags.GenreString = reader.GetString(3);
                 }
                 catch
                 {
@@ -181,8 +181,8 @@ namespace LibLala.MusicScanner
                 tags.path = reader.GetString(7);
                 tags.Title = reader.GetString(8);
                 tags.Track = (uint)reader.GetInt32(9);
-                tags.year = (uint)reader.GetInt32(10);
-                tags.discNumber = (uint)reader.GetInt32(11);
+                tags.Year = (uint)reader.GetInt32(10);
+                tags.DiscNumber = (uint)reader.GetInt32(11);
                 tagList.Add(tags);
             }
 

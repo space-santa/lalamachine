@@ -11,14 +11,14 @@ namespace LalaDb.Data
         {
             if (track.Album != null)
             {
-                album = track.Album.Name;
+                Album = track.Album.Name;
             }
             if (track.ArtistTracks != null)
             {
                 Artist = track.ArtistTracks.Select(x => x.Artist.Name).ToArray();
             }
-            comment = track.Comment;
-            discNumber = (uint)track.DiscNumber;
+            Comment = track.Comment;
+            DiscNumber = (uint)track.DiscNumber;
             if (track.GenreTracks != null)
             {
                 genre = track.GenreTracks.Select(x => x.Genre.Name).ToArray();
@@ -27,7 +27,7 @@ namespace LalaDb.Data
             path = track.Path;
             Title = track.Title;
             this.Track = (uint)track.TrackNumber;
-            year = (uint)track.Year;
+            Year = (uint)track.Year;
         }
     }
 }

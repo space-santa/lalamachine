@@ -59,25 +59,25 @@ namespace LalaDb.Model
                 _context.ArtistTracks.Add(new ArtistTrack { Artist = artist, Track = track });
             }
 
-            if (_context.Albums.Any(x => x.Name == tags.album))
+            if (_context.Albums.Any(x => x.Name == tags.Album))
             {
-                track.Album = _context.Albums.Single(x => x.Name == tags.album);
+                track.Album = _context.Albums.Single(x => x.Name == tags.Album);
             }
             else
             {
                 track.Album = new Album
                 {
-                    Name = tags.album
+                    Name = tags.Album
                 };
             }
 
-            track.Comment = tags.comment;
-            track.DiscNumber = (int)tags.discNumber;
+            track.Comment = tags.Comment;
+            track.DiscNumber = (int)tags.DiscNumber;
             track.Length = tags.length;
             track.Path = tags.path;
             track.Title = tags.Title;
             track.TrackNumber = (int)tags.Track;
-            track.Year = (int)tags.year;
+            track.Year = (int)tags.Year;
 
             _context.Tracks.Add(track);
             _context.SaveChanges();
