@@ -16,6 +16,18 @@ namespace Lalamachine.Wpf.ViewModel
         private MediaPlayer _mediaPlayer;
         private DispatcherTimer _dispatcherTimer;
 
+        public event EventHandler PlayNextTrackEvent;
+        protected virtual void OnPlayNextTrack()
+        {
+            PlayNextTrackEvent?.Invoke(this, EventArgs.Empty);
+        }
+
+        public event EventHandler PlayLastTrackEvent;
+        protected virtual void OnPlayLastTrack()
+        {
+            PlayLastTrackEvent?.Invoke(this, EventArgs.Empty);
+        }
+
         public event EventHandler<ManualLoadEventArgs> ManualLoadEvent;
         protected virtual void OnManualLoad(ManualLoadEventArgs e)
         {
@@ -26,6 +38,12 @@ namespace Lalamachine.Wpf.ViewModel
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void PlayTrackHandler(object sender, PlayTrackEventArgs e)
+        {
+            Source = e.Path;
+            Play();
         }
 
         public string Source
@@ -167,7 +185,7 @@ namespace Lalamachine.Wpf.ViewModel
             if (result == true)
             {
                 var path = dlg.FileName;
-                Open(path);
+                OnManualLoad(new ManualLoadEventArgs { Path = path });
             }
         }
 
@@ -179,7 +197,6 @@ namespace Lalamachine.Wpf.ViewModel
         public void Open(string path)
         {
             _mediaPlayer.Open(new Uri(path));
-            OnManualLoad(new ManualLoadEventArgs { Path = path });
             NotifyPropertyChanged("Source");
             _changePlayPauseCommand.InvokeCanExecuteChanged();
         }

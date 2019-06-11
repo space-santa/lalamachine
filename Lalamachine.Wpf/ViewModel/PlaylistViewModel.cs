@@ -8,6 +8,10 @@ using System.Text;
 
 namespace Lalamachine.Wpf.ViewModel
 {
+    public class PlayTrackEventArgs : EventArgs
+    {
+        public string Path { get; set; }
+    }
     class PlaylistViewModel : INotifyPropertyChanged
     {
         public PlaylistViewModel()
@@ -26,6 +30,12 @@ namespace Lalamachine.Wpf.ViewModel
                 _currentIndex = value;
                 NotifyPropertyChanged();
             }
+        }
+
+        public event EventHandler<PlayTrackEventArgs> PlayTrackEvent;
+        protected virtual void OnPlayTrack(string path)
+        {
+            PlayTrackEvent?.Invoke(this, new PlayTrackEventArgs { Path = path });
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -98,11 +108,21 @@ namespace Lalamachine.Wpf.ViewModel
             NotifyPropertyChanged("Playlist");
         }
 
-        public void ManualLoadEventHandler(object sender, ManualLoadEventArgs e)
+        public void ManualLoadHandler(object sender, ManualLoadEventArgs e)
         {
             var path = e.Path;
             var tags = new TagReader().Read(path);
             AddTrack(tags);
+        }
+
+        public void PlayNextTrackHandler(object sender, EventArgs e)
+        {
+            OnPlayTrack(NextTrack.path);
+        }
+
+        public void PlayLastTrackHandler(object sender, EventArgs e)
+        {
+            OnPlayTrack(PreviousTrack.path);
         }
     }
 }

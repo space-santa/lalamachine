@@ -28,7 +28,10 @@ namespace Lalamachine.Wpf.View
             InitializeComponent();
             _player = new PlayerViewModel();
             _playlistViewModel = new PlaylistViewModel();
-            _player.ManualLoadEvent += _playlistViewModel.ManualLoadEventHandler;
+            _player.ManualLoadEvent += _playlistViewModel.ManualLoadHandler;
+            _player.PlayNextTrackEvent += _playlistViewModel.PlayNextTrackHandler;
+            _player.PlayLastTrackEvent += _playlistViewModel.PlayLastTrackHandler;
+            _playlistViewModel.PlayTrackEvent += _player.PlayTrackHandler;
             Player.DataContext = _player;
             MainPlaylist.DataContext = _playlistViewModel;
         }
