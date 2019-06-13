@@ -30,6 +30,7 @@ namespace Lalamachine.Wpf.View
             _player = new PlayerViewModel();
             _playlistViewModel = new PlaylistViewModel();
             _shuffleRepeatViewModel = new ShuffleRepeatViewModel();
+            _shuffleRepeatViewModel.ShuffleRepeatChanged += _playlistViewModel.ShuffleRepeatChangedHandler;
             _player.ManualLoadEvent += _playlistViewModel.ManualLoadHandler;
             _player.PlayNextTrackEvent += _playlistViewModel.PlayNextTrackHandler;
             _player.PlayLastTrackEvent += _playlistViewModel.PlayLastTrackHandler;

@@ -79,6 +79,8 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
+        public ShuffleRepeatState ShuffleRepeatState { get; set; }
+
         public void AddTrack(Tags tags)
         {
             Playlist.Add(tags);
@@ -143,6 +145,11 @@ namespace Lalamachine.Wpf.ViewModel
         public void PlayLastTrackHandler(object sender, EventArgs e)
         {
             OnPlayTrack(PreviousTrack.path);
+        }
+
+        public void ShuffleRepeatChangedHandler(object sender, ChangeShuffleRepeatEventArgs e)
+        {
+            ShuffleRepeatState = e.ShuffleRepeatState;
         }
     }
 }
