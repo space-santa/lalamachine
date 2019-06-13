@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Data;
-using Lalamachine.Wpf.View.Controls;
+using Lalamachine.Wpf.ViewModel;
 
 namespace Lalamachine.Wpf.View.Converter
 {

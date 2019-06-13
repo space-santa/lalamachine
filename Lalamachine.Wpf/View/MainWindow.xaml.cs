@@ -23,16 +23,19 @@ namespace Lalamachine.Wpf.View
     {
         private readonly PlayerViewModel _player;
         private PlaylistViewModel _playlistViewModel;
+        private ShuffleRepeatViewModel _shuffleRepeatViewModel;
         public MainWindow()
         {
             InitializeComponent();
             _player = new PlayerViewModel();
             _playlistViewModel = new PlaylistViewModel();
+            _shuffleRepeatViewModel = new ShuffleRepeatViewModel();
             _player.ManualLoadEvent += _playlistViewModel.ManualLoadHandler;
             _player.PlayNextTrackEvent += _playlistViewModel.PlayNextTrackHandler;
             _player.PlayLastTrackEvent += _playlistViewModel.PlayLastTrackHandler;
             _playlistViewModel.PlayTrackEvent += _player.PlayTrackHandler;
             Player.DataContext = _player;
+            Player.ShuffleRepeatControl.DataContext = _shuffleRepeatViewModel;
             MainPlaylist.DataContext = _playlistViewModel;
         }
     }

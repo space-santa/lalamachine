@@ -37,7 +37,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <local:ShuffleRepeatControl Grid.Column="0" />
+            <local:ShuffleRepeatControl x:Name="ShuffleRepeatControl" Grid.Column="0" />
             <Slider Grid.Column="1" 
                     Minimum="0" Maximum="{Binding Path=Duration}" Value="{Binding Path=Position}" 
                     VerticalAlignment="Center" HorizontalAlignment="Stretch" 

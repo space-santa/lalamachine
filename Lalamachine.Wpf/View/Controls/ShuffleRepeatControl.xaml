@@ -10,5 +10,8 @@
         <local:ShuffleRepeatContentConverter x:Key="shuffleRepeatConverter" />
     </UserControl.Resources>
 
-    <Button x:Name="ShuffleRepeatButton" Click="Button_Click" Content="{Binding Path=State, Converter={StaticResource shuffleRepeatConverter}}" />
+    <Button 
+        x:Name="ShuffleRepeatButton" 
+        Command="{Binding Path=ChangeShuffleRepeatCommand}" 
+        Content="{Binding Path=State, Converter={StaticResource shuffleRepeatConverter}}" />
 </UserControl>
