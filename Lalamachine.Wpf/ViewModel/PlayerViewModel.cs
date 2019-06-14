@@ -196,14 +196,17 @@ namespace Lalamachine.Wpf.ViewModel
         private void OnLoad(object commandParameter)
         {
             var dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.Multiselect = true;
             dlg.Filter = "Music | *.mp3; *.m4a";
 
             bool? result = dlg.ShowDialog();
 
             if (result == true)
             {
-                var path = dlg.FileName;
-                OnManualLoad(new ManualLoadEventArgs { Path = path });
+                foreach (var path in dlg.FileNames)
+                {
+                    OnManualLoad(new ManualLoadEventArgs { Path = path });
+                }
             }
         }
 
