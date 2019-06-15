@@ -8,7 +8,7 @@
     <Grid>
         <ListView ItemsSource="{Binding Path=Playlist}">
             <ListView.View>
-                <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Track Information">
+                <GridView AllowsColumnReorder="true">
                     <GridViewColumn Header="Track" DisplayMemberBinding="{Binding Path=Track}" />
                     <GridViewColumn Header="Disc" DisplayMemberBinding="{Binding Path=DiscNumber}" />
                     <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Path=Title}" />
