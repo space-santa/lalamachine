@@ -29,7 +29,7 @@
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="FontFamily" Value="Calibri" />
-        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontSize" Value="22" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
@@ -37,18 +37,87 @@
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="FontFamily" Value="Calibri" />
-        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontSize" Value="20" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
     <Style TargetType="ListBoxItem">
         <Setter Property="FontFamily" Value="Calibri" />
-        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontSize" Value="20" />
         <Setter Property="Foreground" Value="White" />
+    </Style>
+    <Style TargetType="GridViewColumnHeader">
+        <Setter Property="FontFamily" Value="Calibri" />
+        <Setter Property="FontSize" Value="20" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="GridViewColumnHeader">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).
+                    (GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                                Storyboard.TargetName="HeaderBorder">
+                                            <EasingColorKeyFrame KeyTime="0"
+                                         Value="{StaticResource ControlMouseOverColor}" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed" />
+                                <VisualState x:Name="Disabled" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Border x:Name="HeaderBorder"
+                  BorderThickness="0,1,0,1"
+                  Padding="2,0,2,0">
+                            <Border.BorderBrush>
+                                <LinearGradientBrush StartPoint="0,0"
+                                   EndPoint="0,1">
+                                    <LinearGradientBrush.GradientStops>
+                                        <GradientStopCollection>
+                                            <GradientStop Color="{DynamicResource BorderLightColor}"
+                                  Offset="0.0" />
+                                            <GradientStop Color="{DynamicResource BorderDarkColor}"
+                                  Offset="1.0" />
+                                        </GradientStopCollection>
+                                    </LinearGradientBrush.GradientStops>
+                                </LinearGradientBrush>
+
+                            </Border.BorderBrush>
+                            <Border.Background>
+
+                                <LinearGradientBrush StartPoint="0,0"
+                                   EndPoint="0,1">
+                                    <LinearGradientBrush.GradientStops>
+                                        <GradientStopCollection>
+                                            <GradientStop Color="{DynamicResource ControlLightColor}"
+                                  Offset="0.0" />
+                                            <GradientStop Color="{DynamicResource ControlMediumColor}"
+                                  Offset="1.0" />
+                                        </GradientStopCollection>
+                                    </LinearGradientBrush.GradientStops>
+                                </LinearGradientBrush>
+
+                            </Border.Background>
+                            <ContentPresenter x:Name="HeaderContent"
+                              Margin="0,0,0,1"
+                              RecognizesAccessKey="True"
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
     <Style TargetType="ListViewItem">
         <Setter Property="FontFamily" Value="Calibri" />
-        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontSize" Value="20" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="Template">
             <Setter.Value>
