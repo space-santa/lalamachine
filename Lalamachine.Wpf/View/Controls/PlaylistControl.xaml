@@ -6,18 +6,20 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <DataGrid Name="PlaylistGrid" ItemsSource="{Binding Path=Playlist}" AutoGenerateColumns="False" >
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Track" Binding="{Binding Path=Track}" />
-                <DataGridTextColumn Header="Disc" Binding="{Binding Path=DiscNumber}" />
-                <DataGridTextColumn Header="Title" Binding="{Binding Path=Title}" />
-                <DataGridTextColumn Header="Length" Binding="{Binding Path=LengthString}" />
-                <DataGridTextColumn Header="Comment" Binding="{Binding Path=Comment}" />
-                <DataGridTextColumn Header="Album" Binding="{Binding Path=Album}" />
-                <DataGridTextColumn Header="Artist" Binding="{Binding Path=ArtistString}" />
-                <DataGridTextColumn Header="Genre" Binding="{Binding Path=GenreString}" />
-                <DataGridTextColumn Header="Year" Binding="{Binding Path=Year}" />
-            </DataGrid.Columns>
-        </DataGrid>
+        <ListView ItemsSource="{Binding Path=Playlist}">
+            <ListView.View>
+                <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Track Information">
+                    <GridViewColumn Header="Track" DisplayMemberBinding="{Binding Path=Track}" />
+                    <GridViewColumn Header="Disc" DisplayMemberBinding="{Binding Path=DiscNumber}" />
+                    <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Path=Title}" />
+                    <GridViewColumn Header="Length" DisplayMemberBinding="{Binding Path=LengthString}" />
+                    <GridViewColumn Header="Comment" DisplayMemberBinding="{Binding Path=Comment}" />
+                    <GridViewColumn Header="Album" DisplayMemberBinding="{Binding Path=Album}" />
+                    <GridViewColumn Header="Artist" DisplayMemberBinding="{Binding Path=ArtistString}" />
+                    <GridViewColumn Header="Genre" DisplayMemberBinding="{Binding Path=GenreString}" />
+                    <GridViewColumn Header="Year" DisplayMemberBinding="{Binding Path=Year}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </UserControl>
