@@ -11,7 +11,7 @@
     <Color x:Key="DisabledControlDarkColor">#FFC5CBF9</Color>
     <Color x:Key="DisabledForegroundColor">#FF888888</Color>
 
-    <Color x:Key="SelectedBackgroundColor">#FFC5CBF9</Color>
+    <Color x:Key="SelectedBackgroundColor">DarkOrange</Color>
     <Color x:Key="SelectedUnfocusedColor">#FFDDDDDD</Color>
 
     <Color x:Key="ControlLightColor">White</Color>
