@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Windows.Input;
 
 namespace Lalamachine.Wpf.ViewModel
 {
@@ -18,10 +19,18 @@ namespace Lalamachine.Wpf.ViewModel
         {
             _playlist = new ObservableCollection<Tags>();
             CurrentIndex = -1;
+            _playTrackCommand = new DelegateCommand(OnPlayTrackCommandHandler, (object commandParameter) => { return true; } );
+        }
+
+        private void OnPlayTrackCommandHandler(object obj)
+        {
+            Tags track = (Tags)obj;
+            OnPlayTrack(track.path);
         }
 
         private ObservableCollection<Tags> _playlist;
 
+        // TODO: Replace the current index with a way to get the currently playing track and a way to look for its index. This current index thing is fragile and breaks when sorting/re-ordering etc
         private int _currentIndex;
         public int CurrentIndex
         {
@@ -32,6 +41,9 @@ namespace Lalamachine.Wpf.ViewModel
                 NotifyPropertyChanged();
             }
         }
+
+        private readonly DelegateCommand _playTrackCommand;
+        public ICommand PlayTrackCommand => _playTrackCommand;
 
         public event EventHandler<PlayTrackEventArgs> PlayTrackEvent;
         protected virtual void OnPlayTrack(string path)

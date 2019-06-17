@@ -6,7 +6,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <ListView ItemsSource="{Binding Path=Playlist}">
+        <ListView x:Name="PlaylistView" ItemsSource="{Binding Path=Playlist}">
+            <ListView.Resources>
+                <Style BasedOn="{StaticResource MainListViewItem}" TargetType="{x:Type ListViewItem}">
+                    <EventSetter Event="MouseDoubleClick" Handler="ListView_MouseDoubleClick" />
+                </Style>
+            </ListView.Resources>
             <ListView.View>
                 <GridView AllowsColumnReorder="true">
                     <GridViewColumn Header="Track" DisplayMemberBinding="{Binding Path=Track}" />

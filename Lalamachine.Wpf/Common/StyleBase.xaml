@@ -149,7 +149,7 @@
         </Setter>
     </Style>
 
-    <Style TargetType="ListViewItem">
+    <Style x:Key="MainListViewItem"  TargetType="ListViewItem">
         <Setter Property="FontFamily" Value="Calibri" />
         <Setter Property="FontSize" Value="20" />
         <Setter Property="Foreground" Value="White" />
