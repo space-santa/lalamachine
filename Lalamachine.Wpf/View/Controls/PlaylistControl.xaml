@@ -12,6 +12,12 @@
                     <EventSetter Event="MouseDoubleClick" Handler="ListView_MouseDoubleClick" />
                 </Style>
             </ListView.Resources>
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Remove" Command="{Binding RemoveTrackCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />
+                    <MenuItem Header="Remove All" Command="{Binding RemoveAllTracksCommand}" />
+                </ContextMenu>
+            </ListView.ContextMenu>
             <ListView.View>
                 <GridView AllowsColumnReorder="true">
                     <GridViewColumn Header="Track" DisplayMemberBinding="{Binding Path=Track}" />

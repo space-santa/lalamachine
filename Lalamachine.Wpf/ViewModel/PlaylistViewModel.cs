@@ -20,6 +20,19 @@ namespace Lalamachine.Wpf.ViewModel
             _playlist = new ObservableCollection<Tags>();
             CurrentIndex = -1;
             _playTrackCommand = new DelegateCommand(OnPlayTrackCommandHandler, (object commandParameter) => { return true; } );
+            _removeTrackCommand = new DelegateCommand(OnRemoveTrackCommandHandler, (object commandParameter) => { return true; } );
+            _removeAllTracksCommand = new DelegateCommand(OnRemoveAllTrackCommandHandler, (object commandParameter) => { return true; } );
+        }
+
+        private void OnRemoveAllTrackCommandHandler(object obj)
+        {
+            DeleteAllTracks();
+        }
+
+        private void OnRemoveTrackCommandHandler(object obj)
+        {
+            Tags selectedItem = (Tags)obj;
+            _playlist.Remove(selectedItem);
         }
 
         private void OnPlayTrackCommandHandler(object obj)
@@ -44,6 +57,12 @@ namespace Lalamachine.Wpf.ViewModel
 
         private readonly DelegateCommand _playTrackCommand;
         public ICommand PlayTrackCommand => _playTrackCommand;
+
+        private readonly DelegateCommand _removeTrackCommand;
+        public ICommand RemoveTrackCommand => _removeTrackCommand;
+
+        private readonly DelegateCommand _removeAllTracksCommand;
+        public ICommand RemoveAllTracksCommand => _removeAllTracksCommand;
 
         public event EventHandler<PlayTrackEventArgs> PlayTrackEvent;
         protected virtual void OnPlayTrack(string path)
