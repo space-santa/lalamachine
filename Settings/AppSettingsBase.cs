@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 namespace Settings
 {
+    public class AppSettings : AppSettingsBase<SettingsFile>
+    {
+        public AppSettings(string appName, string settingsName) : base(appName, settingsName) { }
+    }
+
     public abstract class AppSettingsBase<T> where T : ISettingsFile, new()
     {
         private Dictionary<string, string> _settings;

@@ -8,11 +8,9 @@ using System.Windows.Threading;
 
 namespace Lalamachine.Wpf.ViewModel
 {
-    public class PlayerSettings : AppSettingsBase<SettingsFile>
+    public class PlayerSettings : AppSettings
     {
-        public PlayerSettings() : base("Lalamachine.Wpf", "PlayerSettings")
-        {
-        }
+        public PlayerSettings() : base("Lalamachine.Wpf", "PlayerSettings") { }
 
         public double Volume { get => GetDouble("Volume", 50); set { Set("Volume", value); Save(); } }
         public bool IsMuted { get => GetBool("IsMuted", false); set { Set("IsMuted", value); Save(); } }
