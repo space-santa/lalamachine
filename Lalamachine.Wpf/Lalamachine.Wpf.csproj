@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LibLala\LibLala.csproj" />
+    <ProjectReference Include="..\Settings\Settings.csproj" />
   </ItemGroup>
 
   <ItemGroup>

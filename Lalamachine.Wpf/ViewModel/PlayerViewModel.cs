@@ -1,3 +1,4 @@
+using Settings;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -7,14 +8,44 @@ using System.Windows.Threading;
 
 namespace Lalamachine.Wpf.ViewModel
 {
+    public class PlayerSettings : AppSettingsBase<SettingsFile>
+    {
+        public PlayerSettings() : base("Lalamachine.Wpf", "PlayerSettings")
+        {
+        }
+
+        public double Volume { get => GetDouble("Volume", 50); set { Set("Volume", value); Save(); } }
+        public bool IsMuted { get => GetBool("IsMuted", false); set { Set("IsMuted", value); Save(); } }
+    }
+
     public class ManualLoadEventArgs : EventArgs
     {
         public string Path { get; set; }
     }
+
     public class PlayerViewModel : INotifyPropertyChanged
     {
         private MediaPlayer _mediaPlayer;
         private DispatcherTimer _dispatcherTimer;
+        private PlayerSettings _playerSettings;
+
+        public PlayerViewModel()
+        {
+            _playerSettings = new PlayerSettings();
+            _mediaPlayer = new MediaPlayer();
+            IsMuted = _playerSettings.IsMuted;
+            Volume = _playerSettings.Volume;
+            _mediaPlayer.MediaOpened += _mediaPlayer_MediaOpened;
+            _mediaPlayer.MediaEnded += _mediaPlayer_MediaEnded;
+
+            _changePlayPauseCommand = new DelegateCommand(OnChangePlayPause, CanChangePlayPause);
+            _loadCommand = new DelegateCommand(OnLoad, CanLoad);
+            _nextCommand = new DelegateCommand(OnPlayNextTrack, (object commandParameter) => { return true; });
+            _lastCommand = new DelegateCommand(OnPlayLastTrack, (object commandParameter) => { return true; });
+
+            SetupTimer();
+            _dispatcherTimer.Start();
+        }
 
         public event EventHandler PlayNextTrackEvent;
         protected virtual void InvokePlayNextTrackEvent()
@@ -82,6 +113,7 @@ namespace Lalamachine.Wpf.ViewModel
             set
             {
                 _mediaPlayer.IsMuted = value;
+                _playerSettings.IsMuted = _mediaPlayer.IsMuted;
                 NotifyPropertyChanged();
             }
         }
@@ -92,6 +124,7 @@ namespace Lalamachine.Wpf.ViewModel
             set
             {
                 _mediaPlayer.Volume = value / 100;
+                _playerSettings.Volume = value;
                 NotifyPropertyChanged();
             }
         }
@@ -131,23 +164,6 @@ namespace Lalamachine.Wpf.ViewModel
 
         private readonly DelegateCommand _lastCommand;
         public ICommand LastCommand => _lastCommand;
-
-        public PlayerViewModel()
-        {
-            _mediaPlayer = new MediaPlayer();
-            IsMuted = false;
-            Volume = 50;
-            _mediaPlayer.MediaOpened += _mediaPlayer_MediaOpened;
-            _mediaPlayer.MediaEnded += _mediaPlayer_MediaEnded;
-
-            _changePlayPauseCommand = new DelegateCommand(OnChangePlayPause, CanChangePlayPause);
-            _loadCommand = new DelegateCommand(OnLoad, CanLoad);
-            _nextCommand = new DelegateCommand(OnPlayNextTrack, (object commandParameter) => { return true; } );
-            _lastCommand = new DelegateCommand(OnPlayLastTrack, (object commandParameter) => { return true; } );
-
-            SetupTimer();
-            _dispatcherTimer.Start();
-        }
 
         private void _mediaPlayer_MediaEnded(object sender, EventArgs e)
         {
