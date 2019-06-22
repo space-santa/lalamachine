@@ -36,10 +36,10 @@ namespace Lalamachine.Wpf.ViewModel
             _mediaPlayer.MediaOpened += _mediaPlayer_MediaOpened;
             _mediaPlayer.MediaEnded += _mediaPlayer_MediaEnded;
 
-            _changePlayPauseCommand = new DelegateCommand(OnChangePlayPause, CanChangePlayPause);
-            _loadCommand = new DelegateCommand(OnLoad, CanLoad);
-            _nextCommand = new DelegateCommand(OnPlayNextTrack, (object commandParameter) => { return true; });
-            _lastCommand = new DelegateCommand(OnPlayLastTrack, (object commandParameter) => { return true; });
+            _changePlayPauseCommand = new DelegateCommand(OnChangePlayPause);
+            _loadCommand = new DelegateCommand(OnLoad);
+            _nextCommand = new DelegateCommand(OnPlayNextTrack);
+            _lastCommand = new DelegateCommand(OnPlayLastTrack);
 
             SetupTimer();
             _dispatcherTimer.Start();
@@ -197,16 +197,6 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
-        private bool CanChangePlayPause(object commandParameter)
-        {
-            if (Source.Length < 1 && !IsPlaying)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
         private void OnLoad(object commandParameter)
         {
             var dlg = new Microsoft.Win32.OpenFileDialog();
@@ -224,11 +214,6 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
-        private bool CanLoad(object commandParameter)
-        {
-            return true;
-        }
-
         public void Open(string path)
         {
             _mediaPlayer.Open(new Uri(path));
@@ -238,8 +223,15 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void Play()
         {
-            _mediaPlayer.Play();
-            IsPlaying = true;
+            if (_mediaPlayer.HasAudio)
+            {
+                _mediaPlayer.Play();
+                IsPlaying = true;
+            }
+            else
+            {
+                _nextCommand.Execute(null);
+            }
         }
 
         public void Pause()

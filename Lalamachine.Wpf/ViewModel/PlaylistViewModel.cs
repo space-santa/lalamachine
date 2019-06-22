@@ -19,9 +19,9 @@ namespace Lalamachine.Wpf.ViewModel
         {
             _playlist = new ObservableCollection<Tags>();
             CurrentIndex = -1;
-            _playTrackCommand = new DelegateCommand(OnPlayTrackCommandHandler, (object commandParameter) => { return true; });
-            _removeTrackCommand = new DelegateCommand(OnRemoveTrackCommandHandler, (object commandParameter) => { return true; });
-            _removeAllTracksCommand = new DelegateCommand(OnRemoveAllTrackCommandHandler, (object commandParameter) => { return true; });
+            _playTrackCommand = new DelegateCommand(OnPlayTrackCommandHandler);
+            _removeTrackCommand = new DelegateCommand(OnRemoveTrackCommandHandler);
+            _removeAllTracksCommand = new DelegateCommand(OnRemoveAllTrackCommandHandler);
         }
 
         private void OnRemoveAllTrackCommandHandler(object obj)
@@ -85,7 +85,13 @@ namespace Lalamachine.Wpf.ViewModel
                 {
                     CurrentIndex += 1;
                 }
-                return CurrentTrack; // TODO: This must be conditional. E.g. if repeat all, return first track.
+                else
+                {
+                    // This is set to "repeat all".
+                    // TODO: Make this do what the shufflerepeat setting says.
+                    CurrentIndex = 0;
+                }
+                return CurrentTrack;
             }
         }
         public Tags PreviousTrack
