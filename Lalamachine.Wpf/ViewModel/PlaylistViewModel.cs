@@ -40,6 +40,7 @@ namespace Lalamachine.Wpf.ViewModel
         private void OnPlayTrackCommandHandler(object obj)
         {
             Tags track = (Tags)obj;
+            CurrentIndex = _playlist.IndexOf(track);
             OnPlayTrack(track.path);
         }
 
