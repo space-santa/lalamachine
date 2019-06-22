@@ -9,7 +9,7 @@ namespace Lalamachine.Wpf.ViewModel
 {
     public enum ShuffleRepeatState { None, RepeatOne, RepeatAll, Shuffle };
 
-    class ChangeShuffleRepeatEventArgs : EventArgs
+    public class ChangeShuffleRepeatEventArgs : EventArgs
     {
         public ChangeShuffleRepeatEventArgs(ShuffleRepeatState shuffleRepeatState)
         {
@@ -18,7 +18,7 @@ namespace Lalamachine.Wpf.ViewModel
         public ShuffleRepeatState ShuffleRepeatState { get; }
     }
 
-    class ShuffleRepeatViewModel : INotifyPropertyChanged
+    public class ShuffleRepeatViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")

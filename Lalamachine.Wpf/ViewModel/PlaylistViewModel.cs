@@ -13,15 +13,15 @@ namespace Lalamachine.Wpf.ViewModel
     {
         public string Path { get; set; }
     }
-    class PlaylistViewModel : INotifyPropertyChanged
+    public class PlaylistViewModel : INotifyPropertyChanged
     {
         public PlaylistViewModel()
         {
             _playlist = new ObservableCollection<Tags>();
             CurrentIndex = -1;
-            _playTrackCommand = new DelegateCommand(OnPlayTrackCommandHandler, (object commandParameter) => { return true; } );
-            _removeTrackCommand = new DelegateCommand(OnRemoveTrackCommandHandler, (object commandParameter) => { return true; } );
-            _removeAllTracksCommand = new DelegateCommand(OnRemoveAllTrackCommandHandler, (object commandParameter) => { return true; } );
+            _playTrackCommand = new DelegateCommand(OnPlayTrackCommandHandler, (object commandParameter) => { return true; });
+            _removeTrackCommand = new DelegateCommand(OnRemoveTrackCommandHandler, (object commandParameter) => { return true; });
+            _removeAllTracksCommand = new DelegateCommand(OnRemoveAllTrackCommandHandler, (object commandParameter) => { return true; });
         }
 
         private void OnRemoveAllTrackCommandHandler(object obj)
@@ -95,6 +95,10 @@ namespace Lalamachine.Wpf.ViewModel
                 if (CurrentIndex > 0)
                 {
                     CurrentIndex -= 1;
+                }
+                else if(CurrentIndex < 0)
+                {
+                    CurrentIndex = 0;
                 }
                 return CurrentTrack;
             }
@@ -170,13 +174,21 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void PlayNextTrackHandler(object sender, EventArgs e)
         {
-            OnPlayTrack(NextTrack.path);
+            if (HasTracks)
+            {
+                OnPlayTrack(NextTrack.path);
+            }
         }
 
         public void PlayLastTrackHandler(object sender, EventArgs e)
         {
-            OnPlayTrack(PreviousTrack.path);
+            if (HasTracks)
+            {
+                OnPlayTrack(PreviousTrack.path);
+            }
         }
+
+        public bool HasTracks { get => _playlist.Count > 0; }
 
         public void ShuffleRepeatChangedHandler(object sender, ChangeShuffleRepeatEventArgs e)
         {
