@@ -40,6 +40,7 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 state = value;
                 NotifyPropertyChanged();
+                InvokeShuffleRepeatChanged();
             }
         }
 
