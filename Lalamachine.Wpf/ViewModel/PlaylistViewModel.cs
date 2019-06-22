@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Windows.Input;
 
@@ -13,6 +14,7 @@ namespace Lalamachine.Wpf.ViewModel
     {
         public string Path { get; set; }
     }
+
     public class PlaylistViewModel : INotifyPropertyChanged
     {
         public PlaylistViewModel()
@@ -81,17 +83,30 @@ namespace Lalamachine.Wpf.ViewModel
         {
             get
             {
+                if (PlaylistShuffleRepeatState == ShuffleRepeatState.RepeatOne)
+                {
+                    return CurrentTrack;
+                }
+
+                if (PlaylistShuffleRepeatState == ShuffleRepeatState.Shuffle)
+                {
+                    CurrentIndex = new Random().Next(0, _playlist.Count - 1);
+                    return CurrentTrack;
+                }
+
                 if (CurrentIndex < Playlist.Count - 1)
                 {
                     CurrentIndex += 1;
+                    return CurrentTrack;
                 }
-                else
+
+                if (PlaylistShuffleRepeatState == ShuffleRepeatState.RepeatAll)
                 {
-                    // This is set to "repeat all".
-                    // TODO: Make this do what the shufflerepeat setting says.
                     CurrentIndex = 0;
+                    return CurrentTrack;
                 }
-                return CurrentTrack;
+
+                throw new EndOfPlaylistException();
             }
         }
         public Tags PreviousTrack
@@ -102,7 +117,7 @@ namespace Lalamachine.Wpf.ViewModel
                 {
                     CurrentIndex -= 1;
                 }
-                else if(CurrentIndex < 0)
+                else if (CurrentIndex < 0)
                 {
                     CurrentIndex = 0;
                 }
@@ -120,7 +135,7 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
-        public ShuffleRepeatState ShuffleRepeatState { get; set; }
+        public ShuffleRepeatState PlaylistShuffleRepeatState { get; set; }
 
         public void AddTrack(Tags tags)
         {
@@ -182,7 +197,14 @@ namespace Lalamachine.Wpf.ViewModel
         {
             if (HasTracks)
             {
-                OnPlayTrack(NextTrack.path);
+                try
+                {
+                    OnPlayTrack(NextTrack.path);
+                }
+                catch (EndOfPlaylistException)
+                {
+                    // Nothing really.
+                }
             }
         }
 
@@ -198,7 +220,27 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void ShuffleRepeatChangedHandler(object sender, ChangeShuffleRepeatEventArgs e)
         {
-            ShuffleRepeatState = e.ShuffleRepeatState;
+            PlaylistShuffleRepeatState = e.ShuffleRepeatState;
+        }
+    }
+
+    [Serializable]
+    internal class EndOfPlaylistException : Exception
+    {
+        public EndOfPlaylistException()
+        {
+        }
+
+        public EndOfPlaylistException(string message) : base(message)
+        {
+        }
+
+        public EndOfPlaylistException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        protected EndOfPlaylistException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
     }
 }
