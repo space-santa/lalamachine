@@ -218,12 +218,11 @@ namespace Lalamachine.Wpf.ViewModel
         {
             _mediaPlayer.Open(new Uri(path));
             NotifyPropertyChanged("Source");
-            _changePlayPauseCommand.InvokeCanExecuteChanged();
         }
 
         public void Play()
         {
-            if (_mediaPlayer.HasAudio)
+            if (Source.Length > 0)
             {
                 _mediaPlayer.Play();
                 IsPlaying = true;
