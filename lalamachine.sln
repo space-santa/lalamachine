@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lalamachine.Wpf", "Lalamach
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LalaDb", "LalaDb\LalaDb.csproj", "{CFF287E1-5A1C-418D-8EF5-A58F994A76AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Settings", "Settings\Settings.csproj", "{FF680A7D-EBAC-4422-9F61-2E37E96A6417}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Settings", "Settings\Settings.csproj", "{FF680A7D-EBAC-4422-9F61-2E37E96A6417}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Settings.Unittests", "Settings,Unittests\Settings.Unittests.csproj", "{0DC08FBA-B1F7-4E00-89EF-C4232CB06378}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +73,14 @@ Global
 		{FF680A7D-EBAC-4422-9F61-2E37E96A6417}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FF680A7D-EBAC-4422-9F61-2E37E96A6417}.Release|x64.ActiveCfg = Release|Any CPU
 		{FF680A7D-EBAC-4422-9F61-2E37E96A6417}.Release|x64.Build.0 = Release|Any CPU
+		{0DC08FBA-B1F7-4E00-89EF-C4232CB06378}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DC08FBA-B1F7-4E00-89EF-C4232CB06378}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DC08FBA-B1F7-4E00-89EF-C4232CB06378}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0DC08FBA-B1F7-4E00-89EF-C4232CB06378}.Debug|x64.Build.0 = Debug|Any CPU
+		{0DC08FBA-B1F7-4E00-89EF-C4232CB06378}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DC08FBA-B1F7-4E00-89EF-C4232CB06378}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DC08FBA-B1F7-4E00-89EF-C4232CB06378}.Release|x64.ActiveCfg = Release|Any CPU
+		{0DC08FBA-B1F7-4E00-89EF-C4232CB06378}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

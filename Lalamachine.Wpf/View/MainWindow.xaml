@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Lalamachine.Wpf"
         xmlns:controls="clr-namespace:Lalamachine.Wpf.View.Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" Closed="Window_Closed">
     <Grid Style="{StaticResource MainGrid}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

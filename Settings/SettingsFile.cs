@@ -5,20 +5,12 @@ using System.IO;
 
 namespace Settings
 {
-    public abstract class ISettingsFile
+    public class SettingsFile
     {
-        public abstract string AppName { get; set; }
-        public abstract string SettingsName { get; set; }
-        public abstract Dictionary<string, string> Load();
-        public abstract void Save(Dictionary<string, string> settings);
-    }
+        public string AppName { get; set; }
+        public string SettingsName { get; set; }
 
-    public class SettingsFile : ISettingsFile
-    {
-        public override string AppName { get; set; }
-        public override string SettingsName { get; set; }
-
-        public override Dictionary<string, string> Load()
+        public virtual Dictionary<string, string> Load()
         {
             try
             {
@@ -40,7 +32,7 @@ namespace Settings
             return new Dictionary<string, string>();
         }
 
-        public override void Save(Dictionary<string, string> settings)
+        public virtual void Save(Dictionary<string, string> settings)
         {
             using (StreamWriter file = File.CreateText(SettingsPath))
             {

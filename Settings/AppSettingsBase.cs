@@ -1,56 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Settings
 {
-    public class AppSettings : AppSettingsBase<SettingsFile>
+    public class AppSettings : AppSettingsBase
     {
-        public AppSettings(string appName, string settingsName) : base(appName, settingsName) { }
+        public AppSettings(string appName, string settingsName) : base(new SettingsFile { AppName = appName, SettingsName = settingsName })
+        { }
     }
 
-    public abstract class AppSettingsBase<T> where T : ISettingsFile, new()
+    public abstract class AppSettingsBase
     {
         private Dictionary<string, string> _settings;
 
-        public AppSettingsBase(string appName, string settingsName)
+        public AppSettingsBase(SettingsFile settingsFile)
         {
-            SettingsFile = new T
-            {
-                AppName = appName,
-                SettingsName = settingsName
-            };
-            _settings = new Dictionary<string, string>();
+            SettingsFile = settingsFile;
             _settings = SettingsFile.Load();
         }
 
-        ISettingsFile SettingsFile { get; set; }
+        SettingsFile SettingsFile { get; set; }
 
         public void Save()
         {
             SettingsFile.Save(_settings);
         }
 
-        protected void Set(string key, int value)
+        protected void Set(int value, [CallerMemberName] string key = "defaultInt")
         {
-            Set(key, value.ToString());
+            Set(value.ToString(), key);
         }
 
-        protected void Set(string key, double value)
+        protected void Set(double value, [CallerMemberName] string key = "defaultDouble")
         {
-            Set(key, value.ToString());
+            Set(value.ToString(), key);
         }
 
-        protected void Set(string key, bool value)
+        protected void Set(bool value, [CallerMemberName] string key = "defaultBool")
         {
-            Set(key, value.ToString());
+            Set(value.ToString(), key);
         }
 
-        protected void Set(string key, string value)
+        protected void Set(string value, [CallerMemberName] string key = "defaultString")
         {
             _settings[key] = value;
+            Save();
         }
 
-        protected int GetInt(string key, int initial_value)
+        protected int GetInt(int initial_value = 0, [CallerMemberName] string key = "defaultInt")
         {
             try
             {
@@ -62,7 +60,7 @@ namespace Settings
             }
         }
 
-        protected double GetDouble(string key, double initial_value)
+        protected double GetDouble(double initial_value = 0.0, [CallerMemberName] string key = "defaultDouble")
         {
             try
             {
@@ -74,7 +72,7 @@ namespace Settings
             }
         }
 
-        protected bool GetBool(string key, bool initial_value)
+        protected bool GetBool(bool initial_value = false, [CallerMemberName] string key = "defaultBool")
         {
             try
             {
@@ -86,9 +84,16 @@ namespace Settings
             }
         }
 
-        protected string GetString(string key)
+        protected string GetString(string initial_value = "", [CallerMemberName] string key = "defaultString")
         {
-            return _settings[key];
+            try
+            {
+                return _settings[key];
+            }
+            catch (KeyNotFoundException)
+            {
+                return initial_value;
+            }
         }
     }
 }
