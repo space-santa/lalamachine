@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Windows.Input;
 
 namespace Lalamachine.Wpf.ViewModel
@@ -37,7 +37,6 @@ namespace Lalamachine.Wpf.ViewModel
         public PlaylistViewModel()
         {
             _playlist = new ObservableCollection<PlaylistTags>();
-            CurrentIndex = -1;
             _playTrackCommand = new DelegateCommand(OnPlayTrackCommandHandler);
             _removeTrackCommand = new DelegateCommand(OnRemoveTrackCommandHandler);
             _removeAllTracksCommand = new DelegateCommand(OnRemoveAllTrackCommandHandler);
@@ -57,21 +56,16 @@ namespace Lalamachine.Wpf.ViewModel
         private void OnPlayTrackCommandHandler(object obj)
         {
             PlaylistTags track = (PlaylistTags)obj;
-            CurrentIndex = _playlist.IndexOf(track);
             OnPlayTrack(track);
         }
 
         private ObservableCollection<PlaylistTags> _playlist;
 
-        // TODO: Replace the current index with a way to get the currently playing track and a way to look for its index. This current index thing is fragile and breaks when sorting/re-ordering etc
-        private int _currentIndex;
         public int CurrentIndex
         {
-            get => _currentIndex;
-            set
+            get
             {
-                _currentIndex = value;
-                NotifyPropertyChanged();
+                return Playlist.IndexOf(Playlist.FirstOrDefault(x => x.IsPlaying));
             }
         }
 
@@ -92,6 +86,7 @@ namespace Lalamachine.Wpf.ViewModel
                 item.IsPlaying = false;
             }
             tags.IsPlaying = true;
+            NotifyPropertyChanged("CurrentIndex");
             PlayTrackEvent?.Invoke(this, new PlayTrackEventArgs { Path = tags.path });
         }
 
@@ -108,25 +103,27 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 if (PlaylistShuffleRepeatState == ShuffleRepeatState.RepeatOne)
                 {
-                    return CurrentTrack;
+                    return Playlist[CurrentIndex];
                 }
 
                 if (PlaylistShuffleRepeatState == ShuffleRepeatState.Shuffle)
                 {
-                    CurrentIndex = new Random().Next(0, _playlist.Count - 1);
-                    return CurrentTrack;
+                    var newIndex = new Random().Next(0, _playlist.Count - 1);
+                    return Playlist[newIndex];
                 }
 
                 if (CurrentIndex < Playlist.Count - 1)
                 {
-                    CurrentIndex += 1;
-                    return CurrentTrack;
+                    return Playlist[CurrentIndex + 1];
                 }
 
+                if (CurrentIndex != Playlist.Count -1)
+                {
+                    throw new InvalidOperationException("Playlist must be at the end to get here.");
+                }
                 if (PlaylistShuffleRepeatState == ShuffleRepeatState.RepeatAll)
                 {
-                    CurrentIndex = 0;
-                    return CurrentTrack;
+                    return Playlist[0];
                 }
 
                 throw new EndOfPlaylistException();
@@ -136,15 +133,12 @@ namespace Lalamachine.Wpf.ViewModel
         {
             get
             {
+                int previousIndex = 0;
                 if (CurrentIndex > 0)
                 {
-                    CurrentIndex -= 1;
+                    previousIndex = CurrentIndex - 1;
                 }
-                else if (CurrentIndex < 0)
-                {
-                    CurrentIndex = 0;
-                }
-                return CurrentTrack;
+                return Playlist[previousIndex];
             }
         }
 
@@ -199,25 +193,12 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 DeleteTrack(startIndex);
             }
-
-            if (CurrentIndex >= startIndex)
-            {
-                if (CurrentIndex < startIndex + numberOfTracks)
-                {
-                    CurrentIndex = startIndex - 1;
-                }
-                else
-                {
-                    CurrentIndex -= numberOfTracks;
-                }
-            }
             NotifyPropertyChanged("Playlist");
         }
 
         public void DeleteAllTracks()
         {
             Playlist.Clear();
-            CurrentIndex = -1;
             NotifyPropertyChanged("Playlist");
         }
 
