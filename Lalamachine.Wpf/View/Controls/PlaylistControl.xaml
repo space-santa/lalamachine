@@ -24,16 +24,16 @@
             </ListView.ContextMenu>
             <ListView.View>
                 <GridView AllowsColumnReorder="true">
-                    <GridViewColumn Header="" DisplayMemberBinding="{Binding Path=IsPlaying, Converter={StaticResource isPlayingDisplayConverter}}" />
-                    <GridViewColumn Header="Track" DisplayMemberBinding="{Binding Path=Track}" />
-                    <GridViewColumn Header="Disc" DisplayMemberBinding="{Binding Path=DiscNumber}" />
-                    <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Path=Title}" />
-                    <GridViewColumn Header="Length" DisplayMemberBinding="{Binding Path=LengthString}" />
-                    <GridViewColumn Header="Comment" DisplayMemberBinding="{Binding Path=Comment}" />
-                    <GridViewColumn Header="Album" DisplayMemberBinding="{Binding Path=Album}" />
-                    <GridViewColumn Header="Artist" DisplayMemberBinding="{Binding Path=ArtistString}" />
-                    <GridViewColumn Header="Genre" DisplayMemberBinding="{Binding Path=GenreString}" />
-                    <GridViewColumn Header="Year" DisplayMemberBinding="{Binding Path=Year}" />
+                    <GridViewColumn Header=" 🔊 " DisplayMemberBinding="{Binding Path=IsPlaying, Converter={StaticResource isPlayingDisplayConverter}}" />
+                    <GridViewColumn Header=" Track " DisplayMemberBinding="{Binding Path=Track}" />
+                    <GridViewColumn Header=" Disc " DisplayMemberBinding="{Binding Path=DiscNumber}" />
+                    <GridViewColumn Header=" Title " DisplayMemberBinding="{Binding Path=Title}" />
+                    <GridViewColumn Header=" Length " DisplayMemberBinding="{Binding Path=LengthString}" />
+                    <GridViewColumn Header=" Comment " DisplayMemberBinding="{Binding Path=Comment}" />
+                    <GridViewColumn Header=" Album " DisplayMemberBinding="{Binding Path=Album}" />
+                    <GridViewColumn Header=" Artist " DisplayMemberBinding="{Binding Path=ArtistString}" />
+                    <GridViewColumn Header=" Genre " DisplayMemberBinding="{Binding Path=GenreString}" />
+                    <GridViewColumn Header=" Year " DisplayMemberBinding="{Binding Path=Year}" />
                 </GridView>
             </ListView.View>
         </ListView>

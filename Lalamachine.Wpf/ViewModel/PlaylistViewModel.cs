@@ -15,11 +15,28 @@ namespace Lalamachine.Wpf.ViewModel
         public string Path { get; set; }
     }
 
+    public class PlaylistTags : Tags, INotifyPropertyChanged
+    {
+        public PlaylistTags() : base() { }
+        public PlaylistTags(Tags other) : base(other) { }
+        public PlaylistTags(PlaylistTags other) : base(other) { IsPlaying = other.IsPlaying; }
+
+        private bool isPlaying;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public bool IsPlaying { get => isPlaying; set { isPlaying = value; NotifyPropertyChanged(); } }
+    }
+
     public class PlaylistViewModel : INotifyPropertyChanged
     {
         public PlaylistViewModel()
         {
-            _playlist = new ObservableCollection<Tags>();
+            _playlist = new ObservableCollection<PlaylistTags>();
             CurrentIndex = -1;
             _playTrackCommand = new DelegateCommand(OnPlayTrackCommandHandler);
             _removeTrackCommand = new DelegateCommand(OnRemoveTrackCommandHandler);
@@ -33,18 +50,18 @@ namespace Lalamachine.Wpf.ViewModel
 
         private void OnRemoveTrackCommandHandler(object obj)
         {
-            Tags selectedItem = (Tags)obj;
+            PlaylistTags selectedItem = (PlaylistTags)obj;
             _playlist.Remove(selectedItem);
         }
 
         private void OnPlayTrackCommandHandler(object obj)
         {
-            Tags track = (Tags)obj;
+            PlaylistTags track = (PlaylistTags)obj;
             CurrentIndex = _playlist.IndexOf(track);
-            OnPlayTrack(track.path);
+            OnPlayTrack(track);
         }
 
-        private ObservableCollection<Tags> _playlist;
+        private ObservableCollection<PlaylistTags> _playlist;
 
         // TODO: Replace the current index with a way to get the currently playing track and a way to look for its index. This current index thing is fragile and breaks when sorting/re-ordering etc
         private int _currentIndex;
@@ -68,9 +85,14 @@ namespace Lalamachine.Wpf.ViewModel
         public ICommand RemoveAllTracksCommand => _removeAllTracksCommand;
 
         public event EventHandler<PlayTrackEventArgs> PlayTrackEvent;
-        protected virtual void OnPlayTrack(string path)
+        protected virtual void OnPlayTrack(PlaylistTags tags)
         {
-            PlayTrackEvent?.Invoke(this, new PlayTrackEventArgs { Path = path });
+            foreach (var item in _playlist)
+            {
+                item.IsPlaying = false;
+            }
+            tags.IsPlaying = true;
+            PlayTrackEvent?.Invoke(this, new PlayTrackEventArgs { Path = tags.path });
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -79,8 +101,8 @@ namespace Lalamachine.Wpf.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public Tags CurrentTrack => Playlist[CurrentIndex];
-        public Tags NextTrack
+        public PlaylistTags CurrentTrack => Playlist[CurrentIndex];
+        public PlaylistTags NextTrack
         {
             get
             {
@@ -110,7 +132,7 @@ namespace Lalamachine.Wpf.ViewModel
                 throw new EndOfPlaylistException();
             }
         }
-        public Tags PreviousTrack
+        public PlaylistTags PreviousTrack
         {
             get
             {
@@ -126,7 +148,7 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
-        public ObservableCollection<Tags> Playlist
+        public ObservableCollection<PlaylistTags> Playlist
         {
             get => _playlist;
             set
@@ -140,11 +162,23 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void AddTrack(Tags tags)
         {
+            AddTrack(new PlaylistTags(tags));
+        }
+        public void AddTrack(PlaylistTags tags)
+        {
             Playlist.Add(tags);
             NotifyPropertyChanged("Playlist");
         }
 
         public void AddTracks(List<Tags> tagsRange)
+        {
+            foreach (var tags in tagsRange)
+            {
+                AddTrack(tags);
+            }
+            NotifyPropertyChanged("Playlist");
+        }
+        public void AddTracks(List<PlaylistTags> tagsRange)
         {
             foreach (var tags in tagsRange)
             {
@@ -200,7 +234,7 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 try
                 {
-                    OnPlayTrack(NextTrack.path);
+                    OnPlayTrack(NextTrack);
                 }
                 catch (EndOfPlaylistException)
                 {
@@ -213,7 +247,7 @@ namespace Lalamachine.Wpf.ViewModel
         {
             if (HasTracks)
             {
-                OnPlayTrack(PreviousTrack.path);
+                OnPlayTrack(PreviousTrack);
             }
         }
 

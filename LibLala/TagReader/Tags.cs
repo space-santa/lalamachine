@@ -12,6 +12,22 @@ namespace LibLala.TagReader
             genre = new string[0];
         }
 
+        public Tags(Tags other)
+        {
+            artist = new string[0];
+            genre = new string[0];
+            Album = other.Album;
+            Artist = other.Artist;
+            Comment = other.Comment;
+            DiscNumber = other.DiscNumber;
+            genre = other.genre;
+            duration = other.duration;
+            Title = other.Title;
+            Track = other.Track;
+            Year = other.Year;
+            path = other.path;
+        }
+
         public void FromTagLibFile(TagLib.File file)
         {
             Album = file.Tag.Album;
