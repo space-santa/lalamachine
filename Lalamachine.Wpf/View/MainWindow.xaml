@@ -12,8 +12,14 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-
-        <controls:PlaylistControl x:Name="MainPlaylist" Grid.Row="0"></controls:PlaylistControl>
+        <TabControl x:Name="ListTabs" Grid.Row="0" Background="Transparent">
+            <TabItem Header="Playlist">
+                <controls:PlaylistControl x:Name="MainPlaylist"></controls:PlaylistControl>
+            </TabItem>
+            <TabItem Header="Library">
+                //
+            </TabItem>
+        </TabControl>
 
         <Grid Grid.Row="1" Style="{StaticResource GradientGrid}">
             <Grid.RowDefinitions>

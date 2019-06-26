@@ -8,6 +8,7 @@ namespace Lalamachine.Wpf.View
     {
         public MainWindowSettings() : base("Lalamachine.Wpf", "MainWindowSettings") { }
 
+        public int ActiveTab { get => GetInt(0); set => Set(value); }
         public double Width { get => GetDouble(800); set { Set(value); } }
         public double Height { get => GetDouble(800); set { Set(value); } }
         public double Left { get => GetDouble(255); set { Set(value); } }
@@ -41,6 +42,7 @@ namespace Lalamachine.Wpf.View
             MainPlaylist.DataContext = _playlistViewModel;
 
             _settings = new MainWindowSettings();
+            ListTabs.SelectedIndex = _settings.ActiveTab;
             Top = _settings.Top;
             Left = _settings.Left;
             Width = _settings.Width;
@@ -50,6 +52,7 @@ namespace Lalamachine.Wpf.View
 
         private void Window_Closed(object sender, System.EventArgs e)
         {
+            _settings.ActiveTab = ListTabs.SelectedIndex;
             _settings.Top = Top;
             _settings.Left = Left;
             _settings.Width = Width;
