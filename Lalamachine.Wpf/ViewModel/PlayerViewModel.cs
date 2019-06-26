@@ -40,6 +40,7 @@ namespace Lalamachine.Wpf.ViewModel
             _loadCommand = new DelegateCommand(OnLoad);
             _nextCommand = new DelegateCommand(OnPlayNextTrack);
             _lastCommand = new DelegateCommand(OnPlayLastTrack);
+            _muteCommand = new DelegateCommand(OnMute);
 
             SetupTimer();
             _dispatcherTimer.Start();
@@ -101,8 +102,11 @@ namespace Lalamachine.Wpf.ViewModel
             get => _isPlaying;
             set
             {
-                _isPlaying = value;
-                NotifyPropertyChanged("IsPlaying");
+                if (Source.Length > 0)
+                {
+                    _isPlaying = value;
+                    NotifyPropertyChanged("IsPlaying");
+                }
             }
         }
         public bool IsMuted
@@ -163,6 +167,9 @@ namespace Lalamachine.Wpf.ViewModel
         private readonly DelegateCommand _lastCommand;
         public ICommand LastCommand => _lastCommand;
 
+        private readonly DelegateCommand _muteCommand;
+        public ICommand MuteCommand => _muteCommand;
+
         private void _mediaPlayer_MediaEnded(object sender, EventArgs e)
         {
             InvokePlayNextTrackEvent();
@@ -212,6 +219,11 @@ namespace Lalamachine.Wpf.ViewModel
                     OnManualLoad(new ManualLoadEventArgs { Path = path });
                 }
             }
+        }
+
+        private void OnMute(object commandParameter)
+        {
+            IsMuted = !IsMuted;
         }
 
         public void Open(string path)

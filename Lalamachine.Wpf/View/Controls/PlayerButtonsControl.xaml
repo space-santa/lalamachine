@@ -20,7 +20,7 @@
         </Grid.ColumnDefinitions>
 
         <Button Grid.Column="0" x:Name="BackButton" Content="⏮" Command="{Binding Path=LastCommand}" />
-        <ToggleButton 
+        <Button 
             Grid.Column="1" 
             x:Name="PlayPauseButton" 
             Content="{Binding Path=IsPlaying, Converter={StaticResource isPlayingDisplayConverter}}" 
