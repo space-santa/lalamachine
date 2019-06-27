@@ -1,10 +1,8 @@
 ﻿using LalaDb.Model;
 using LibLala;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
+using System.Windows.Input;
 
 namespace Lalamachine.Wpf.ViewModel
 {
@@ -19,7 +17,28 @@ namespace Lalamachine.Wpf.ViewModel
             GenreFilter = "";
             ArtistFilter = "";
             AlbumFilter = "";
+
+            _setGenreFilterCommand = new DelegateCommand(OnSetGenreFilter);
+            _setArtistFilterCommand = new DelegateCommand(OnSetArtistFilter);
+            _setAlbumFilterCommand = new DelegateCommand(OnSetAlbumFilter);
+            _startScanCommand = new DelegateCommand(OnStartScanFilter);
         }
+
+        private readonly DelegateCommand _setGenreFilterCommand;
+        public ICommand SetGenreFilterCommand => _setGenreFilterCommand;
+        private void OnSetGenreFilter(object obj) { GenreFilter = (string)obj; }
+
+        private readonly DelegateCommand _setArtistFilterCommand;
+        public ICommand SetArtistFilterCommand => _setArtistFilterCommand;
+        private void OnSetArtistFilter(object obj) { ArtistFilter = (string)obj; }
+
+        private readonly DelegateCommand _setAlbumFilterCommand;
+        public ICommand SetAlbumFilterCommand => _setAlbumFilterCommand;
+        private void OnSetAlbumFilter(object obj) { AlbumFilter = (string)obj; }
+
+        private readonly DelegateCommand _startScanCommand;
+        public ICommand StartScanCommand => _startScanCommand;
+        private void OnStartScanFilter(object obj) { ScanAsync((string)obj); }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
