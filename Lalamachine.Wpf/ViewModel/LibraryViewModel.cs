@@ -13,6 +13,7 @@ namespace Lalamachine.Wpf.ViewModel
         public LibraryViewModel()
         {
             _model = new MusicLibModel();
+            Scanning = false;
             SearchString = "";
             GenreFilter = "";
             ArtistFilter = "";
@@ -46,13 +47,14 @@ namespace Lalamachine.Wpf.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public bool Scanning { get => _model.Scanning; }
-
-        public string SearchString { get; set; }
-
+        private bool _scanning;
+        private string _searchString;
         private string _genreFilter;
         private string _artistFilter;
         private string _albumFilter;
+
+        public bool Scanning { get => _scanning; set { _scanning = value; NotifyPropertyChanged(); } }
+        public string SearchString { get => _searchString; set { _searchString = value; NotifyPropertyChanged(); } }
 
         public string GenreFilter
         {
@@ -60,6 +62,7 @@ namespace Lalamachine.Wpf.ViewModel
             set
             {
                 _genreFilter = EmptyWhenNullOrAll(value);
+                NotifyPropertyChanged();
             }
         }
 
@@ -69,6 +72,7 @@ namespace Lalamachine.Wpf.ViewModel
             set
             {
                 _artistFilter = EmptyWhenNullOrAll(value);
+                NotifyPropertyChanged();
             }
         }
 
@@ -78,6 +82,7 @@ namespace Lalamachine.Wpf.ViewModel
             set
             {
                 _albumFilter = EmptyWhenNullOrAll(value);
+                NotifyPropertyChanged();
             }
         }
 
@@ -90,11 +95,13 @@ namespace Lalamachine.Wpf.ViewModel
 
             return value;
         }
+
         public async void ScanAsync(string path)
         {
             if (Scanning) { return; }
+            Scanning = true;
             await _model.scanAsync(path);
-            NotifyPropertyChanged("Scanning");
+            Scanning = false;
         }
     }
 }
