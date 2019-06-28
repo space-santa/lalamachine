@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="View\Controls\LibraryControl.xaml" />
     <None Remove="View\Controls\PlayerButtonsControl.xaml" />
     <None Remove="View\Controls\PlayerControl.xaml" />
     <None Remove="View\Controls\PlaylistControl.xaml" />

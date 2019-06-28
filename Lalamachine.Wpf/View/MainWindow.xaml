@@ -17,7 +17,7 @@
                 <controls:PlaylistControl x:Name="MainPlaylist"></controls:PlaylistControl>
             </TabItem>
             <TabItem Header="Library">
-                //
+                <controls:LibraryControl x:Name="Library"></controls:LibraryControl>
             </TabItem>
         </TabControl>
 
