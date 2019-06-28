@@ -1,6 +1,9 @@
-﻿using LalaDb.Model;
+﻿using LalaDb.Data;
+using LalaDb.Model;
 using LibLala;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
@@ -54,7 +57,19 @@ namespace Lalamachine.Wpf.ViewModel
         private string _albumFilter;
 
         public bool Scanning { get => _scanning; set { _scanning = value; NotifyPropertyChanged(); } }
-        public string SearchString { get => _searchString; set { _searchString = value; NotifyPropertyChanged(); } }
+        public string SearchString
+        {
+            get => _searchString;
+            set
+            {
+                _searchString = value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged("DisplayLib");
+                NotifyPropertyChanged("GenreList");
+                NotifyPropertyChanged("ArtistList");
+                NotifyPropertyChanged("AlbumList");
+            }
+        }
 
         public string GenreFilter
         {
@@ -63,6 +78,10 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 _genreFilter = EmptyWhenNullOrAll(value);
                 NotifyPropertyChanged();
+                NotifyPropertyChanged("DisplayLib");
+                NotifyPropertyChanged("GenreList");
+                NotifyPropertyChanged("ArtistList");
+                NotifyPropertyChanged("AlbumList");
             }
         }
 
@@ -73,6 +92,9 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 _artistFilter = EmptyWhenNullOrAll(value);
                 NotifyPropertyChanged();
+                NotifyPropertyChanged("DisplayLib");
+                NotifyPropertyChanged("ArtistList");
+                NotifyPropertyChanged("AlbumList");
             }
         }
 
@@ -83,6 +105,8 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 _albumFilter = EmptyWhenNullOrAll(value);
                 NotifyPropertyChanged();
+                NotifyPropertyChanged("DisplayLib");
+                NotifyPropertyChanged("AlbumList");
             }
         }
 
@@ -102,6 +126,54 @@ namespace Lalamachine.Wpf.ViewModel
             Scanning = true;
             await _model.scanAsync(path);
             Scanning = false;
+        }
+
+        public ObservableCollection<string> GenreList
+        {
+            get
+            {
+                var list = _model.genreList(SearchString);
+                list = list.Prepend(Constants.ALL).ToArray();
+                return new ObservableCollection<string>(list);
+            }
+        }
+
+        public ObservableCollection<string> ArtistList
+        {
+            get
+            {
+                string[] list;
+                list = _model.artistList(GenreFilter, SearchString);
+                list = list.Prepend(Constants.ALL).ToArray();
+                return new ObservableCollection<string>(list);
+            }
+        }
+
+        public ObservableCollection<string> AlbumList
+        {
+            get
+            {
+                string[] list;
+                list = _model.albumList(ArtistFilter, GenreFilter, SearchString);
+                list = list.Prepend(Constants.ALL).ToArray();
+                return new ObservableCollection<string>(list);
+            }
+        }
+
+        public ObservableCollection<PlaylistTags> DisplayLib
+        {
+            get
+            {
+                ObservableCollection<PlaylistTags> displayLib = new ObservableCollection<PlaylistTags>();
+
+                Track[] list = _model.displayLib(AlbumFilter, ArtistFilter, GenreFilter, SearchString);
+                foreach (Track track in list)
+                {
+                    displayLib.Add(new PlaylistTags(new LalaTags(track)));
+                }
+
+                return displayLib;
+            }
         }
     }
 }
