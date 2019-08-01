@@ -1,10 +1,10 @@
+using LalaDb.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using LalaDb.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace LalaDb.Model
 {
@@ -78,7 +78,7 @@ namespace LalaDb.Model
                 {
                     list = _context.Albums.Where(x => x.Name.Contains(searchString, System.StringComparison.OrdinalIgnoreCase)).Select(x => x.Name).OrderBy(x => x).ToArray();
                 }
-                catch (System.NullReferenceException)
+                catch (NullReferenceException)
                 {
                     list = new string[0];
                 }

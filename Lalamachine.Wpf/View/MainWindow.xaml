@@ -19,6 +19,9 @@
             <TabItem Header="Library">
                 <controls:LibraryControl x:Name="Library"></controls:LibraryControl>
             </TabItem>
+            <TabItem Header="🛠">
+                <controls:SettingsControl x:Name="Settings"></controls:SettingsControl>
+            </TabItem>
         </TabControl>
 
         <Grid Grid.Row="1" Style="{StaticResource GradientGrid}">
