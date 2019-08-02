@@ -26,6 +26,7 @@ namespace Lalamachine.Wpf.View
         private ShuffleRepeatViewModel _shuffleRepeatViewModel;
         private MainWindowSettings _settings;
         private SettingsViewModel _settingsViewModel;
+        private LibraryViewModel _libraryViewModel;
 
         public MainWindow()
         {
@@ -34,15 +35,20 @@ namespace Lalamachine.Wpf.View
             _playlistViewModel = new PlaylistViewModel();
             _shuffleRepeatViewModel = new ShuffleRepeatViewModel();
             _settingsViewModel = new SettingsViewModel();
+            _libraryViewModel = new LibraryViewModel();
+
             _shuffleRepeatViewModel.ShuffleRepeatChanged += _playlistViewModel.ShuffleRepeatChangedHandler;
             _player.ManualLoadEvent += _playlistViewModel.ManualLoadHandler;
             _player.PlayNextTrackEvent += _playlistViewModel.PlayNextTrackHandler;
             _player.PlayLastTrackEvent += _playlistViewModel.PlayLastTrackHandler;
             _playlistViewModel.PlayTrackEvent += _player.PlayTrackHandler;
+            _settingsViewModel.StartScanEvent += _libraryViewModel.StartScanHandler;
+
             Player.DataContext = _player;
             Player.ShuffleRepeatControl.DataContext = _shuffleRepeatViewModel;
             MainPlaylist.DataContext = _playlistViewModel;
             Settings.DataContext = _settingsViewModel;
+            Library.DataContext = _libraryViewModel;
 
             _settings = new MainWindowSettings();
             ListTabs.SelectedIndex = _settings.ActiveTab;

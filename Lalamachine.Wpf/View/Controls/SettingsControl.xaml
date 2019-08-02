@@ -8,6 +8,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal">
+            <Button x:Name="RescanButton" Content="⚙" Command="{Binding Path=ScanCommand}" />
             <Button x:Name="LibraryLoadButton" Content="📂" Command="{Binding Path=LoadCommand}" />
             <Label Content="{Binding Path=LibraryPath}" />
         </StackPanel>

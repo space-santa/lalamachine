@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Settings;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -8,12 +9,29 @@ using System.Windows.Input;
 
 namespace Lalamachine.Wpf.ViewModel
 {
+    public class SettingsSettings : AppSettings
+    {
+        public SettingsSettings() : base("Lalamachine.Wpf", "SettingsSettings") { }
+
+        public string LibraryPath { get => GetString(""); set { Set(value); } }
+    }
+
+    public class StartScanEventArgs : EventArgs
+    {
+        public string Path { get; set; }
+    }
+
     public class SettingsViewModel : INotifyPropertyChanged
     {
         public SettingsViewModel()
         {
             _loadCommand = new DelegateCommand(OnLoad);
+            _scanCommand = new DelegateCommand(OnScan);
+            _settings = new SettingsSettings();
+            LibraryPath = _settings.LibraryPath;
         }
+
+        private SettingsSettings _settings;
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
@@ -28,9 +46,13 @@ namespace Lalamachine.Wpf.ViewModel
             set
             {
                 libraryPath = value;
+                _settings.LibraryPath = libraryPath;
                 NotifyPropertyChanged();
             }
         }
+
+        private readonly DelegateCommand _scanCommand;
+        public ICommand ScanCommand => _scanCommand;
 
         private readonly DelegateCommand _loadCommand;
         public ICommand LoadCommand => _loadCommand;
@@ -46,6 +68,24 @@ namespace Lalamachine.Wpf.ViewModel
                     LibraryPath = fbd.SelectedPath;
                 }
             }
+        }
+
+        private void OnScan(object commandParameters)
+        {
+            if (LibraryPath.Length > 0)
+            {
+                InvokeStartScanEvent();
+            }
+        }
+
+        public event EventHandler<StartScanEventArgs> StartScanEvent;
+        protected virtual void InvokeStartScanEvent()
+        {
+            var args = new StartScanEventArgs
+            {
+                Path = LibraryPath
+            };
+            StartScanEvent?.Invoke(this, args);
         }
     }
 }

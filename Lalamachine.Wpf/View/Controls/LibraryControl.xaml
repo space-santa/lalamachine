@@ -26,33 +26,41 @@
                 SelectionChanged="GenreListView_SelectionChanged">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header=" Genre " DisplayMemberBinding="{Binding Path=Value}" />
+                        <GridViewColumn Header=" Genre " DisplayMemberBinding="{Binding}" />
                     </GridView>
                 </ListView.View>
             </ListView>
             <ListView 
                 x:Name="ArtistListView" 
                 Grid.Column="1" 
-                ItemsSource="{Binding Path=GenreList}" 
+                ItemsSource="{Binding Path=ArtistList}" 
                 SelectionChanged="GenreListView_SelectionChanged">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header=" Artist " DisplayMemberBinding="{Binding Path=Value}" />
+                        <GridViewColumn Header=" Artist " DisplayMemberBinding="{Binding}" />
                     </GridView>
                 </ListView.View>
             </ListView>
             <ListView 
                 x:Name="AlbumListView" 
                 Grid.Column="2" 
-                ItemsSource="{Binding Path=GenreList}" 
+                ItemsSource="{Binding Path=AlbumList}" 
                 SelectionChanged="GenreListView_SelectionChanged">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header=" Album " DisplayMemberBinding="{Binding Path=Value}" />
+                        <GridViewColumn Header=" Album " DisplayMemberBinding="{Binding}" />
                     </GridView>
                 </ListView.View>
             </ListView>
         </Grid>
-
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="SearchBox" Grid.Column="0" Text="{Binding Path=SearchString}" />
+            <Button Grid.Column="1" Content="🧹" Command="{Binding Path=ClearSearchCommand}" />
+        </Grid>
+        <local:PlaylistControl Grid.Row="2" DataContext="{Binding Path=DisplayLib}" />
     </Grid>
 </UserControl>

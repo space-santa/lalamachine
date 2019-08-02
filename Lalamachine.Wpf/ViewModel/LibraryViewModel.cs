@@ -26,6 +26,7 @@ namespace Lalamachine.Wpf.ViewModel
             _setArtistFilterCommand = new DelegateCommand(OnSetArtistFilter);
             _setAlbumFilterCommand = new DelegateCommand(OnSetAlbumFilter);
             _startScanCommand = new DelegateCommand(OnStartScanFilter);
+            _clearSearchCommand = new DelegateCommand(ClearSearch);
         }
 
         private readonly DelegateCommand _setGenreFilterCommand;
@@ -40,6 +41,10 @@ namespace Lalamachine.Wpf.ViewModel
         public ICommand SetAlbumFilterCommand => _setAlbumFilterCommand;
         private void OnSetAlbumFilter(object obj) { AlbumFilter = (string)obj; }
 
+        private readonly DelegateCommand _clearSearchCommand;
+        public ICommand ClearSearchCommand => _clearSearchCommand;
+        private void ClearSearch(object obj) { SearchString = ""; }
+
         private readonly DelegateCommand _startScanCommand;
         public ICommand StartScanCommand => _startScanCommand;
         private void OnStartScanFilter(object obj) { ScanAsync((string)obj); }
@@ -48,6 +53,11 @@ namespace Lalamachine.Wpf.ViewModel
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        internal void StartScanHandler(object sender, StartScanEventArgs e)
+        {
+            ScanAsync(e.Path);
         }
 
         private bool _scanning;
