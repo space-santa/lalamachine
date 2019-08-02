@@ -24,6 +24,11 @@
                 Grid.Column="0" 
                 ItemsSource="{Binding Path=GenreList}" 
                 SelectionChanged="GenreListView_SelectionChanged">
+                <ListView.Resources>
+                    <Style BasedOn="{StaticResource MainListViewItem}" TargetType="{x:Type ListViewItem}">
+                        <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
+                    </Style>
+                </ListView.Resources>
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header=" Genre " DisplayMemberBinding="{Binding}" />
@@ -35,6 +40,11 @@
                 Grid.Column="1" 
                 ItemsSource="{Binding Path=ArtistList}" 
                 SelectionChanged="GenreListView_SelectionChanged">
+                <ListView.Resources>
+                    <Style BasedOn="{StaticResource MainListViewItem}" TargetType="{x:Type ListViewItem}">
+                        <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
+                    </Style>
+                </ListView.Resources>
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header=" Artist " DisplayMemberBinding="{Binding}" />
@@ -46,6 +56,11 @@
                 Grid.Column="2" 
                 ItemsSource="{Binding Path=AlbumList}" 
                 SelectionChanged="GenreListView_SelectionChanged">
+                <ListView.Resources>
+                    <Style BasedOn="{StaticResource MainListViewItem}" TargetType="{x:Type ListViewItem}">
+                        <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
+                    </Style>
+                </ListView.Resources>
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header=" Album " DisplayMemberBinding="{Binding}" />
@@ -55,11 +70,11 @@
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBox x:Name="SearchBox" Grid.Column="0" Text="{Binding Path=SearchString}" />
-            <Button Grid.Column="1" Content="🧹" Command="{Binding Path=ClearSearchCommand}" />
+            <Button Grid.Column="0" Content="🧹" Command="{Binding Path=ClearSearchCommand}" />
+            <TextBox x:Name="SearchBox" Grid.Column="1" BorderBrush="White" Text="{Binding Path=SearchString}" />
         </Grid>
         <local:PlaylistControl Grid.Row="2" DataContext="{Binding Path=DisplayLib}" />
     </Grid>

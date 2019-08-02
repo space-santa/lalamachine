@@ -27,5 +27,10 @@ namespace Lalamachine.Wpf.View.Controls
         {
 
         }
+
+        private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+
+        }
     }
 }
