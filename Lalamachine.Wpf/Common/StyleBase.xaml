@@ -28,6 +28,10 @@
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="Background" Value="Transparent" />
     </Style>
+
+    <Style TargetType="TabItem">
+        <Setter Property="FontSize" Value="24" />
+    </Style>
     
     <Style TargetType="Label">
         <Setter Property="BorderBrush" Value="Transparent" />
@@ -210,9 +214,9 @@
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}" />
-        <Setter Property="MinHeight" Value="56" />
-        <Setter Property="MinWidth" Value="88" />
-        <Setter Property="FontSize" Value="28" />
+        <Setter Property="MinHeight" Value="48" />
+        <Setter Property="MinWidth" Value="64" />
+        <Setter Property="FontSize" Value="24" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Template">
