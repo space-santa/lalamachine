@@ -76,6 +76,6 @@
             <Button Grid.Column="0" Content="🧹" Command="{Binding Path=ClearSearchCommand}" />
             <TextBox x:Name="SearchBox" Grid.Column="1" BorderBrush="White" Text="{Binding Path=SearchString}" />
         </Grid>
-        <local:PlaylistControl Grid.Row="2" DataContext="{Binding Path=DisplayLib}" />
+        <local:PlaylistControl Grid.Row="2" x:Name="LibraryPlaylist" />
     </Grid>
 </UserControl>

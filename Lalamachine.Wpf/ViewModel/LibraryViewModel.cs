@@ -1,6 +1,7 @@
 ﻿using LalaDb.Data;
 using LalaDb.Model;
 using LibLala;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -9,6 +10,11 @@ using System.Windows.Input;
 
 namespace Lalamachine.Wpf.ViewModel
 {
+    public class DisplayLibChangedEventArgs : EventArgs
+    {
+        public ObservableCollection<PlaylistTags> Tracks { get; set; }
+    }
+
     class LibraryViewModel : INotifyPropertyChanged
     {
         private MusicLibModel _model;
@@ -25,10 +31,13 @@ namespace Lalamachine.Wpf.ViewModel
             _setGenreFilterCommand = new DelegateCommand(OnSetGenreFilter);
             _setArtistFilterCommand = new DelegateCommand(OnSetArtistFilter);
             _setAlbumFilterCommand = new DelegateCommand(OnSetAlbumFilter);
-            _startScanCommand = new DelegateCommand(OnStartScanFilter);
+            _startScanCommand = new DelegateCommand(OnStartScan);
             _clearSearchCommand = new DelegateCommand(ClearSearch);
+
+            NotifyDisplayLibChanged();
         }
 
+        #region Commands
         private readonly DelegateCommand _setGenreFilterCommand;
         public ICommand SetGenreFilterCommand => _setGenreFilterCommand;
         private void OnSetGenreFilter(object obj) { GenreFilter = (string)obj; }
@@ -47,13 +56,22 @@ namespace Lalamachine.Wpf.ViewModel
 
         private readonly DelegateCommand _startScanCommand;
         public ICommand StartScanCommand => _startScanCommand;
-        private void OnStartScanFilter(object obj) { ScanAsync((string)obj); }
+        private void OnStartScan(object obj) { ScanAsync((string)obj); }
+        #endregion
 
+        #region Events
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public event EventHandler<DisplayLibChangedEventArgs> DisplayLibChanged;
+        private void NotifyDisplayLibChanged()
+        {
+            DisplayLibChanged?.Invoke(this, new DisplayLibChangedEventArgs { Tracks = DisplayLib });
+        }
+        #endregion
 
         internal void StartScanHandler(object sender, StartScanEventArgs e)
         {
@@ -78,6 +96,7 @@ namespace Lalamachine.Wpf.ViewModel
                 NotifyPropertyChanged("GenreList");
                 NotifyPropertyChanged("ArtistList");
                 NotifyPropertyChanged("AlbumList");
+                NotifyDisplayLibChanged();
             }
         }
 
@@ -92,6 +111,7 @@ namespace Lalamachine.Wpf.ViewModel
                 NotifyPropertyChanged("GenreList");
                 NotifyPropertyChanged("ArtistList");
                 NotifyPropertyChanged("AlbumList");
+                NotifyDisplayLibChanged();
             }
         }
 
@@ -105,6 +125,7 @@ namespace Lalamachine.Wpf.ViewModel
                 NotifyPropertyChanged("DisplayLib");
                 NotifyPropertyChanged("ArtistList");
                 NotifyPropertyChanged("AlbumList");
+                NotifyDisplayLibChanged();
             }
         }
 
@@ -117,6 +138,7 @@ namespace Lalamachine.Wpf.ViewModel
                 NotifyPropertyChanged();
                 NotifyPropertyChanged("DisplayLib");
                 NotifyPropertyChanged("AlbumList");
+                NotifyDisplayLibChanged();
             }
         }
 
