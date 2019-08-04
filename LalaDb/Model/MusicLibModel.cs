@@ -24,6 +24,8 @@ namespace LalaDb.Model
 
         public string[] genreList(string searchString)
         {
+            if (Scanning) { return new string[0]; }
+
             var list = _context.Genres
                 .Where(x => x.Name.Contains(searchString, System.StringComparison.OrdinalIgnoreCase))
                 .Select(x => x.Name)
@@ -33,6 +35,8 @@ namespace LalaDb.Model
         }
         public string[] artistList(string genreFilter, string searchString)
         {
+            if (Scanning) { return new string[0]; }
+
             string[] list;
 
             if (genreFilter.Length > 0)
@@ -52,6 +56,8 @@ namespace LalaDb.Model
 
         public string[] albumList(string artistFilter, string genreFilter, string searchString)
         {
+            if (Scanning) { return new string[0]; }
+
             string[] list;
 
             if (artistFilter.Length > 0)
@@ -89,6 +95,8 @@ namespace LalaDb.Model
 
         public Track[] displayLib(string albumFilter, string artistFilter, string genreFilter, string searchString)
         {
+            if (Scanning) { return new Track[0]; }
+
             Track[] list;
 
             if (albumFilter.Length > 0)
