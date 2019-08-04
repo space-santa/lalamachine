@@ -66,6 +66,7 @@ namespace Lalamachine.Wpf.ViewModel
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
                     LibraryPath = fbd.SelectedPath;
+                    ScanCommand.Execute(null);
                 }
             }
         }
