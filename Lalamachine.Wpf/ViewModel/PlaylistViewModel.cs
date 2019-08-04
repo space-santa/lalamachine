@@ -71,7 +71,8 @@ namespace Lalamachine.Wpf.ViewModel
 
         internal void DisplayChangedHandler(object sender, DisplayLibChangedEventArgs e)
         {
-            this.AddTracks(e.Tracks.ToList());
+            DeleteAllTracks();
+            AddTracks(e.Tracks.ToList());
         }
 
         private readonly DelegateCommand _playTrackCommand;
