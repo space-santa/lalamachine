@@ -33,6 +33,7 @@ namespace Lalamachine.Wpf.ViewModel
             _setAlbumFilterCommand = new DelegateCommand(OnSetAlbumFilter);
             _startScanCommand = new DelegateCommand(OnStartScan);
             _clearSearchCommand = new DelegateCommand(ClearSearch);
+            _updateListsCommand = new DelegateCommand(OnUpdateLists);
 
             NotifyDisplayLibChanged();
         }
@@ -57,6 +58,10 @@ namespace Lalamachine.Wpf.ViewModel
         private readonly DelegateCommand _startScanCommand;
         public ICommand StartScanCommand => _startScanCommand;
         private void OnStartScan(object obj) { ScanAsync((string)obj); }
+
+        private readonly DelegateCommand _updateListsCommand;
+        public ICommand UpdateListsCommand => _updateListsCommand;
+        private void OnUpdateLists(object obj) { NotifyListsChanged(); }
         #endregion
 
         #region Events
@@ -84,7 +89,42 @@ namespace Lalamachine.Wpf.ViewModel
         private string _artistFilter;
         private string _albumFilter;
 
-        public bool Scanning { get => _scanning; set { _scanning = value; NotifyPropertyChanged(); } }
+        public bool Scanning
+        {
+            get => _scanning;
+            set
+            {
+                _scanning = value;
+                NotifyPropertyChanged();
+                NotifyListsChanged();
+                NotifyPropertyChanged("ScanVisible");
+            }
+        }
+
+        public string ScanVisible
+        {
+            get
+            {
+                if (Scanning)
+                {
+                    return "Visible";
+                }
+                else
+                {
+                    return "Collapsed";
+                }
+            }
+        }
+
+        private void NotifyListsChanged()
+        {
+            NotifyPropertyChanged("DisplayLib");
+            NotifyPropertyChanged("GenreList");
+            NotifyPropertyChanged("ArtistList");
+            NotifyPropertyChanged("AlbumList");
+            NotifyDisplayLibChanged();
+        }
+
         public string SearchString
         {
             get => _searchString;
@@ -92,10 +132,7 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 _searchString = value;
                 NotifyPropertyChanged();
-                NotifyPropertyChanged("DisplayLib");
-                NotifyPropertyChanged("GenreList");
-                NotifyPropertyChanged("ArtistList");
-                NotifyPropertyChanged("AlbumList");
+                NotifyListsChanged();
                 NotifyDisplayLibChanged();
             }
         }
@@ -107,10 +144,7 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 _genreFilter = EmptyWhenNullOrAll(value);
                 NotifyPropertyChanged();
-                NotifyPropertyChanged("DisplayLib");
-                NotifyPropertyChanged("GenreList");
-                NotifyPropertyChanged("ArtistList");
-                NotifyPropertyChanged("AlbumList");
+                NotifyListsChanged();
                 NotifyDisplayLibChanged();
             }
         }

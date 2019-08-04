@@ -11,6 +11,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
@@ -77,5 +78,6 @@
             <TextBox x:Name="SearchBox" Grid.Column="1" BorderBrush="White" Text="{Binding Path=SearchString}" />
         </Grid>
         <local:PlaylistControl Grid.Row="2" x:Name="LibraryPlaylist" />
+        <Label Grid.Row="3" Visibility="{Binding Path=ScanVisible}" HorizontalAlignment="Center" FontSize="24" Content="Scanning..." />
     </Grid>
 </UserControl>
