@@ -1,9 +1,9 @@
-$version = "4.0.2"
-$PathToPublish = "..\Lalamachine\bin\Release\netcoreapp3.0\publish"
+$version = "5.0.0"
+$PathToPublish = "..\Lalamachine.Wpf\bin\Release\netcoreapp3.0\publish"
 
-dotnet publish ../Lalamachine/Lalamachine.csproj -c Release
+dotnet publish ../Lalamachine.Wpf/Lalamachine.Wpf.csproj -c Release
 Remove-Item "${PathToPublish}\\assets" -Recurse -Force
-Copy-Item ..\Lalamachine\assets $PathToPublish -Recurse -Force
+Copy-Item ..\Lalamachine.Wpf\assets $PathToPublish -Recurse -Force
 
 [XML]$xml = Get-Content "$pwd\\main.wxs"
 $xml.Wix.Product.SetAttribute("Version", $version)
