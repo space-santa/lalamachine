@@ -13,6 +13,7 @@ namespace Lalamachine.Wpf.ViewModel
     public class PlayTrackEventArgs : EventArgs
     {
         public string Path { get; set; }
+        public string ListName { get; set; }
     }
 
     public class PlaylistTags : Tags, INotifyPropertyChanged
@@ -34,8 +35,9 @@ namespace Lalamachine.Wpf.ViewModel
 
     public class PlaylistViewModel : INotifyPropertyChanged
     {
-        public PlaylistViewModel()
+        public PlaylistViewModel(string name = "MAIN")
         {
+            Name = name;
             _playlist = new ObservableCollection<PlaylistTags>();
             _playTrackCommand = new DelegateCommand(OnPlayTrackCommandHandler);
             _removeTrackCommand = new DelegateCommand(OnRemoveTrackCommandHandler);
@@ -93,7 +95,7 @@ namespace Lalamachine.Wpf.ViewModel
             }
             tags.IsPlaying = true;
             NotifyPropertyChanged("CurrentIndex");
-            PlayTrackEvent?.Invoke(this, new PlayTrackEventArgs { Path = tags.path });
+            PlayTrackEvent?.Invoke(this, new PlayTrackEventArgs { Path = tags.path, ListName = Name });
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -123,7 +125,7 @@ namespace Lalamachine.Wpf.ViewModel
                     return Playlist[CurrentIndex + 1];
                 }
 
-                if (CurrentIndex != Playlist.Count -1)
+                if (CurrentIndex != Playlist.Count - 1)
                 {
                     throw new InvalidOperationException("Playlist must be at the end to get here.");
                 }
@@ -239,6 +241,7 @@ namespace Lalamachine.Wpf.ViewModel
         }
 
         public bool HasTracks { get => _playlist.Count > 0; }
+        public string Name { get; private set; }
 
         public void ShuffleRepeatChangedHandler(object sender, ChangeShuffleRepeatEventArgs e)
         {
