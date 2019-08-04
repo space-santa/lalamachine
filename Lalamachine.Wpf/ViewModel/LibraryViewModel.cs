@@ -53,7 +53,14 @@ namespace Lalamachine.Wpf.ViewModel
 
         private readonly DelegateCommand _clearSearchCommand;
         public ICommand ClearSearchCommand => _clearSearchCommand;
-        private void ClearSearch(object obj) { SearchString = ""; }
+        private void ClearSearch(object obj)
+        {
+            SearchString = "";
+            _genreFilter = "";
+            _albumFilter = "";
+            _artistFilter = "";
+            NotifyListsChanged();
+        }
 
         private readonly DelegateCommand _startScanCommand;
         public ICommand StartScanCommand => _startScanCommand;

@@ -40,7 +40,7 @@
                 x:Name="ArtistListView" 
                 Grid.Column="1" 
                 ItemsSource="{Binding Path=ArtistList}" 
-                SelectionChanged="GenreListView_SelectionChanged">
+                SelectionChanged="ArtistListView_SelectionChanged">
                 <ListView.Resources>
                     <Style BasedOn="{StaticResource MainListViewItem}" TargetType="{x:Type ListViewItem}">
                         <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
@@ -56,7 +56,7 @@
                 x:Name="AlbumListView" 
                 Grid.Column="2" 
                 ItemsSource="{Binding Path=AlbumList}" 
-                SelectionChanged="GenreListView_SelectionChanged">
+                SelectionChanged="AlbumListView_SelectionChanged">
                 <ListView.Resources>
                     <Style BasedOn="{StaticResource MainListViewItem}" TargetType="{x:Type ListViewItem}">
                         <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />

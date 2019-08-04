@@ -16,7 +16,20 @@ namespace Lalamachine.Wpf.View.Controls
 
         private void GenreListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            LibraryViewModel context = (LibraryViewModel)DataContext;
+            context.SetGenreFilterCommand.Execute(GenreListView.SelectedItem);
+        }
 
+        private void ArtistListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            LibraryViewModel context = (LibraryViewModel)DataContext;
+            context.SetArtistFilterCommand.Execute(ArtistListView.SelectedItem);
+        }
+
+        private void AlbumListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            LibraryViewModel context = (LibraryViewModel)DataContext;
+            context.SetAlbumFilterCommand.Execute(AlbumListView.SelectedItem);
         }
 
         private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
