@@ -75,7 +75,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Content="🧹" Command="{Binding Path=ClearSearchCommand}" />
-            <TextBox x:Name="SearchBox" Grid.Column="1" BorderBrush="White" Text="{Binding Path=SearchString}" />
+            <TextBox x:Name="SearchBox" Grid.Column="1" BorderBrush="White" TextChanged="SearchBox_TextChanged" Text="{Binding Path=SearchString}" />
         </Grid>
         <local:PlaylistControl Grid.Row="2" x:Name="LibraryPlaylist" />
         <Label Grid.Row="3" Visibility="{Binding Path=ScanVisible}" HorizontalAlignment="Center" FontSize="24" Content="Scanning..." />
