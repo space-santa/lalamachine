@@ -43,5 +43,11 @@ namespace Lalamachine.Wpf.View.Controls
             LibraryViewModel context = (LibraryViewModel)DataContext;
             context.UpdateListsCommand.Execute(null);
         }
+
+        private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            LibraryViewModel context = (LibraryViewModel)DataContext;
+            context.UpdateListsCommand.Execute(null);
+        }
     }
 }
