@@ -93,6 +93,7 @@
     <Style TargetType="GridViewColumnHeader">
         <Setter Property="FontFamily" Value="Calibri" />
         <Setter Property="FontSize" Value="20" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
 
         <Setter Property="Template">
             <Setter.Value>
