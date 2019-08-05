@@ -39,9 +39,19 @@ namespace Lalamachine.Wpf.View.Controls
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (SearchBox.Text.Length < 3) { return; }
             LibraryViewModel context = (LibraryViewModel)DataContext;
-            context.SearchString = SearchBox.Text;
+            if (SearchBox.Text.Length > 2)
+            {
+                context.SearchString = SearchBox.Text;
+            }
+            else if (SearchBox.Text.Length == 0)
+            {
+                context.ClearSearchCommand.Execute(null);
+            }
+            else
+            {
+                return;
+            }
         }
 
         private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
