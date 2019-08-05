@@ -14,6 +14,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         public double Volume { get => GetDouble(50); set { Set(value); } }
         public bool IsMuted { get => GetBool(false); set { Set(value); } }
+        public string LastActivePlaylist { get => GetString("MAIN"); set { Set(value); } }
     }
 
     public class ManualLoadEventArgs : EventArgs
@@ -47,9 +48,17 @@ namespace Lalamachine.Wpf.ViewModel
         }
 
         public event EventHandler PlayNextTrackEvent;
+        public event EventHandler PlayNextLibraryTrackEvent;
         protected virtual void InvokePlayNextTrackEvent()
         {
-            PlayNextTrackEvent?.Invoke(this, EventArgs.Empty);
+            if (LastActivePlaylist == "MAIN")
+            {
+                PlayNextTrackEvent?.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+                PlayNextLibraryTrackEvent?.Invoke(this, EventArgs.Empty);
+            }
         }
         protected virtual void OnPlayNextTrack(object commandParameter)
         {
@@ -57,9 +66,17 @@ namespace Lalamachine.Wpf.ViewModel
         }
 
         public event EventHandler PlayLastTrackEvent;
+        public event EventHandler PlayLastLibraryTrackEvent;
         protected virtual void OnPlayLastTrack(object commandParameter)
         {
-            PlayLastTrackEvent?.Invoke(this, EventArgs.Empty);
+            if (LastActivePlaylist == "MAIN")
+            {
+                PlayLastTrackEvent?.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+                PlayLastLibraryTrackEvent?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public event EventHandler<ManualLoadEventArgs> ManualLoadEvent;
@@ -77,6 +94,7 @@ namespace Lalamachine.Wpf.ViewModel
         public void PlayTrackHandler(object sender, PlayTrackEventArgs e)
         {
             Source = e.Path;
+            LastActivePlaylist = e.ListName;
             Play();
         }
 
@@ -94,6 +112,12 @@ namespace Lalamachine.Wpf.ViewModel
                 }
             }
             set => Open(value);
+        }
+
+        public string LastActivePlaylist
+        {
+            get => _playerSettings.LastActivePlaylist;
+            set => _playerSettings.LastActivePlaylist = value;
         }
 
         private bool _isPlaying;

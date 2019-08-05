@@ -37,13 +37,19 @@ namespace Lalamachine.Wpf.View
             _shuffleRepeatViewModel = new ShuffleRepeatViewModel();
             _settingsViewModel = new SettingsViewModel();
             _libraryViewModel = new LibraryViewModel();
-            _libraryPlaylistViewModel = new PlaylistViewModel();
+            _libraryPlaylistViewModel = new PlaylistViewModel("LIBRARY");
 
             _shuffleRepeatViewModel.ShuffleRepeatChanged += _playlistViewModel.ShuffleRepeatChangedHandler;
             _player.ManualLoadEvent += _playlistViewModel.ManualLoadHandler;
+
             _player.PlayNextTrackEvent += _playlistViewModel.PlayNextTrackHandler;
             _player.PlayLastTrackEvent += _playlistViewModel.PlayLastTrackHandler;
+            _player.PlayNextLibraryTrackEvent += _libraryPlaylistViewModel.PlayNextTrackHandler;
+            _player.PlayLastLibraryTrackEvent += _libraryPlaylistViewModel.PlayLastTrackHandler;
+
             _playlistViewModel.PlayTrackEvent += _player.PlayTrackHandler;
+            _libraryPlaylistViewModel.PlayTrackEvent += _player.PlayTrackHandler;
+
             _settingsViewModel.StartScanEvent += _libraryViewModel.StartScanHandler;
             _libraryViewModel.DisplayLibChanged += _libraryPlaylistViewModel.DisplayChangedHandler;
 
