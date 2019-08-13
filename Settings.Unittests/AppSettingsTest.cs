@@ -1,7 +1,6 @@
 using NUnit.Framework;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
-using Settings;
 using System.Collections.Generic;
 
 namespace Settings.Unittests

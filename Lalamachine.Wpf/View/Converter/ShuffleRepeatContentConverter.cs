@@ -10,7 +10,7 @@ namespace Lalamachine.Wpf.View.Converter
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             var state = (ShuffleRepeatState)value;
-            
+
             switch (state)
             {
                 case ShuffleRepeatState.RepeatOne:
