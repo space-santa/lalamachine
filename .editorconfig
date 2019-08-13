@@ -12,7 +12,12 @@ indent_style = space
 [*.{cs,csx,vb,vbx}]
 indent_size = 4
 insert_final_newline = true
+end_of_line = crlf
 charset = utf-8-bom
+
+# Bash scripts
+[*.sh]
+end_of_line = lf
 
 ###############################
 # .NET Coding Conventions     #
