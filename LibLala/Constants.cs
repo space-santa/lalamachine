@@ -16,5 +16,7 @@ namespace LibLala
         public static string MISC_PLAYLIST_NAME = "cs1m090";
 
         public static string ALL = "-- all --";
+
+        public static void EnsureLaladir() => Directory.CreateDirectory(path: LALADIR);
     }
 }

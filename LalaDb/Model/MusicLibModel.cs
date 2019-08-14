@@ -1,4 +1,4 @@
-using LalaDb.Data;
+﻿using LalaDb.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,6 +16,7 @@ namespace LalaDb.Model
 
         public MusicLibModel()
         {
+            LibLala.Constants.EnsureLaladir();
             _context = new LalaContext();
             _context.Database.Migrate();
             _scannerDb = new ScannerDb(_context);

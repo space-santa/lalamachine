@@ -22,7 +22,7 @@ namespace Settings
             }
             catch (DirectoryNotFoundException)
             {
-                CreateSettingsdir();
+                LibLala.Constants.EnsureLaladir();
             }
             catch (FileNotFoundException)
             {
@@ -41,12 +41,7 @@ namespace Settings
             }
         }
 
-        private string SettingsDir { get => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), AppName); }
+        private string SettingsDir { get => LibLala.Constants.LALADIR; }
         private string SettingsPath { get => Path.Combine(SettingsDir, $"{SettingsName}.json"); }
-
-        private void CreateSettingsdir()
-        {
-            Directory.CreateDirectory(SettingsDir);
-        }
     }
 }
