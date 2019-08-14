@@ -1,0 +1,84 @@
+﻿<UserControl x:Class="Lalamachine.Wpf.View.Controls.LibraryControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Lalamachine.Wpf.View.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             Loaded="UserControl_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <ListView 
+                x:Name="GenreListView" 
+                Grid.Column="0" 
+                ItemsSource="{Binding Path=GenreList}" 
+                SelectionChanged="GenreListView_SelectionChanged">
+                <ListView.Resources>
+                    <Style BasedOn="{StaticResource MainListViewItem}" TargetType="{x:Type ListViewItem}">
+                        <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
+                    </Style>
+                </ListView.Resources>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header=" Genre " DisplayMemberBinding="{Binding}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <ListView 
+                x:Name="ArtistListView" 
+                Grid.Column="1" 
+                ItemsSource="{Binding Path=ArtistList}" 
+                SelectionChanged="ArtistListView_SelectionChanged">
+                <ListView.Resources>
+                    <Style BasedOn="{StaticResource MainListViewItem}" TargetType="{x:Type ListViewItem}">
+                        <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
+                    </Style>
+                </ListView.Resources>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header=" Artist " DisplayMemberBinding="{Binding}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <ListView 
+                x:Name="AlbumListView" 
+                Grid.Column="2" 
+                ItemsSource="{Binding Path=AlbumList}" 
+                SelectionChanged="AlbumListView_SelectionChanged">
+                <ListView.Resources>
+                    <Style BasedOn="{StaticResource MainListViewItem}" TargetType="{x:Type ListViewItem}">
+                        <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
+                    </Style>
+                </ListView.Resources>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header=" Album " DisplayMemberBinding="{Binding}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="🧹" Command="{Binding Path=ClearSearchCommand}" />
+            <TextBox x:Name="SearchBox" Grid.Column="1" BorderBrush="White" TextChanged="SearchBox_TextChanged" Text="{Binding Path=SearchString}" />
+        </Grid>
+        <local:PlaylistControl Grid.Row="2" x:Name="LibraryPlaylist" />
+        <Label Grid.Row="3" Visibility="{Binding Path=ScanVisible}" HorizontalAlignment="Center" FontSize="24" Content="Scanning..." />
+    </Grid>
+</UserControl>

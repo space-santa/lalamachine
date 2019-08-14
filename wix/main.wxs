@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Name="lalamachine" Manufacturer="SpaceSanta" Id="e38b5f9d-c234-4c94-b472-94998cf35d74" UpgradeCode="81575B97-6BED-4C90-B066-37A095D2C803" Language="1033" Codepage="1252" Version="4.0.2">
+  <Product Name="lalamachine" Manufacturer="SpaceSanta" Id="e38b5f9d-c234-4c94-b472-94998cf35d74" UpgradeCode="81575B97-6BED-4C90-B066-37A095D2C803" Language="1033" Codepage="1252" Version="4.99.2">
     <Package Id="*" Description="lalamachine installer" Comments="SpaceSanta is the best" Manufacturer="SpaceSanta" InstallerVersion="100" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
     <Upgrade Id="81575B97-6BED-4C90-B066-37A095D2C803">
       <UpgradeVersion OnlyDetect="no" Property="PREVIOUSFOUND" Minimum="0.0.0" IncludeMinimum="yes" Maximum="4.0.0" IncludeMaximum="no" />
@@ -21,7 +21,7 @@
       <Directory Id="ProgramMenuFolder">
         <Directory Id="ProgramMenuDir" Name="lalamachine">
           <Component Id="StartMenuShortcuts" Guid="82FC59C2-7E68-425D-88EA-E1EE6ECDB3B2">
-            <Shortcut Id="AppShortcut" Name="lalamachine" Description="My Application Description" Icon="StartMenuIcon.exe" IconIndex="0" Target="[INSTALLDIR]publish\Lalamachine.exe" WorkingDirectory="APPLICATIONROOTDIRECTORY" />
+            <Shortcut Id="AppShortcut" Name="lalamachine" Description="My Application Description" Icon="StartMenuIcon.exe" IconIndex="0" Target="[INSTALLDIR]publish\Lalamachine.Wpf.exe" WorkingDirectory="APPLICATIONROOTDIRECTORY" />
             <RemoveFolder Id="ProgramMenuDir" On="uninstall" />
             <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="" />
             <Shortcut Id="UninstallProduct" Name="Uninstall" Description="Uninstalls the application" Target="[System64Folder]msiexec.exe" Arguments="/x [ProductCode]" />
@@ -41,6 +41,6 @@
     </InstallExecuteSequence>
     <UIRef Id="WixUI_Minimal" />
     <WixVariable Id="WixUILicenseRtf" Value="..\gpl-3.0.rtf" />
-    <Icon Id="StartMenuIcon.exe" SourceFile="..\Lalamachine\assets\images\lalamachine-new.ico" />
+    <Icon Id="StartMenuIcon.exe" SourceFile="..\Lalamachine.Wpf\assets\images\lalamachine-new.ico" />
   </Product>
 </Wix>

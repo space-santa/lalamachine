@@ -4,16 +4,14 @@
 
 lalamachine is just another music player. It features:
 
-* A library with nice filter and search functionality.
-* Playlists which can be exported into a folder.
+- A library with nice filter and search functionality.
+- Playlists which can be exported into a folder.
 
 ## Dependencies
 
 dotnet core 3.0
 
 ## Run it
-
-I only support Windows. This will probably work without too many adjustments on Linux or MacOS but I simply don't have the time to support multiple targets.
 
 Either install the .msi from the release section, or clone the repo and
 
@@ -26,10 +24,9 @@ dotnet run
 
 If you'd like to contribute to lalamachine,
 
-* Test. Either by using the app or by adding to the unit test.
-* Create packages for other operating systems.
-* Write code and create a pull request. [There is a list of issues that wants to be resolved.](https://github.com/space-santa/lalamachine/issues)
-* Let me know how you like the app and what functionality is missing.
+- Test. Either by using the app or by adding to the unit tests.
+- Write code and create a pull request. [There is a list of issues that wants to be resolved.](https://github.com/space-santa/lalamachine/issues)
+- Let me know how you like the app and what functionality is missing.
 
 ## Licence
 
@@ -42,8 +39,8 @@ the Free Software Foundation, either version 3 of the License, or
 
 Lalamachine is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
+along with lalamachine. If not, see <http://www.gnu.org/licenses/>.

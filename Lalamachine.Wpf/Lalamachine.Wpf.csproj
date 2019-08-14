@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="View\Controls\LibraryControl.xaml" />
+    <None Remove="View\Controls\PlayerButtonsControl.xaml" />
+    <None Remove="View\Controls\PlayerControl.xaml" />
+    <None Remove="View\Controls\PlaylistControl.xaml" />
+    <None Remove="View\Controls\SettingsControl.xaml" />
+    <None Remove="View\Controls\ShuffleRepeatControl.xaml" />
+    <None Remove="View\Controls\VolumeControl.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LalaDb\LalaDb.csproj" />
+    <ProjectReference Include="..\LibLala\LibLala.csproj" />
+    <ProjectReference Include="..\Settings\Settings.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="View\Controls\PlayerControl.xaml.cs" />
+    <Compile Update="View\Controls\PlayerButtonsControl.xaml.cs" />
+    <Compile Update="View\Controls\ShuffleRepeatControl.xaml.cs" />
+    <Compile Update="View\Controls\VolumeControl.xaml.cs" />
+  </ItemGroup>
+
+</Project>
