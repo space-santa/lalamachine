@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Settings
 {
@@ -14,9 +13,9 @@ namespace Settings
         {
             try
             {
-                using (StreamReader file = File.OpenText(SettingsPath))
+                using (var file = File.OpenText(SettingsPath))
                 {
-                    JsonSerializer serializer = new JsonSerializer();
+                    var serializer = new JsonSerializer();
                     return (Dictionary<string, string>)serializer.Deserialize(file, typeof(Dictionary<string, string>));
                 }
             }
@@ -34,14 +33,14 @@ namespace Settings
 
         public virtual void Save(Dictionary<string, string> settings)
         {
-            using (StreamWriter file = File.CreateText(SettingsPath))
+            using (var file = File.CreateText(SettingsPath))
             {
-                JsonSerializer serializer = new JsonSerializer();
+                var serializer = new JsonSerializer();
                 serializer.Serialize(file, settings);
             }
         }
 
-        private string SettingsDir { get => LibLala.Constants.LALADIR; }
-        private string SettingsPath { get => Path.Combine(SettingsDir, $"{SettingsName}.json"); }
+        private string SettingsDir => LibLala.Constants.LALADIR;
+        private string SettingsPath => Path.Combine(SettingsDir, $"{SettingsName}.json");
     }
 }

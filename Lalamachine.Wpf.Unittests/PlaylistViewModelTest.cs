@@ -1,8 +1,6 @@
-using NUnit.Framework;
 using Lalamachine.Wpf.ViewModel;
-using NSubstitute;
-using NSubstitute.Extensions;
 using LibLala.TagReader;
+using NUnit.Framework;
 
 namespace Lalamachine.Wpf.Unittests
 {
@@ -12,7 +10,7 @@ namespace Lalamachine.Wpf.Unittests
         public void PlayNextTrackHandler_NoTracks_DoesNothing()
         {
             var wasCalled = false;
-            PlaylistViewModel viewModel = new PlaylistViewModel();
+            var viewModel = new PlaylistViewModel();
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayNextTrackHandler(null, null);
             Assert.IsFalse(wasCalled);
@@ -22,7 +20,7 @@ namespace Lalamachine.Wpf.Unittests
         public void PlayNextTrackHandler_HasTracks_PlayNext()
         {
             var wasCalled = false;
-            PlaylistViewModel viewModel = new PlaylistViewModel();
+            var viewModel = new PlaylistViewModel();
             viewModel.AddTrack(new Tags());
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayNextTrackHandler(null, null);
@@ -33,7 +31,7 @@ namespace Lalamachine.Wpf.Unittests
         public void PlayPreviousTrackHandler_NoTracks_DoesNothing()
         {
             var wasCalled = false;
-            PlaylistViewModel viewModel = new PlaylistViewModel();
+            var viewModel = new PlaylistViewModel();
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayLastTrackHandler(null, null);
             Assert.IsFalse(wasCalled);
@@ -43,7 +41,7 @@ namespace Lalamachine.Wpf.Unittests
         public void PlayPreviousTrackHandler_HasTracks_PlayPrevious()
         {
             var wasCalled = false;
-            PlaylistViewModel viewModel = new PlaylistViewModel();
+            var viewModel = new PlaylistViewModel();
             viewModel.AddTrack(new Tags());
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayLastTrackHandler(null, null);

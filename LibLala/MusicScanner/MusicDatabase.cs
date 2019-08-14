@@ -1,8 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SQLite;
 using System.IO;
-using System;
-using System.Data;
 
 namespace LibLala.MusicScanner
 {
@@ -24,14 +24,8 @@ namespace LibLala.MusicScanner
             //
         }
 
-        SQLiteConnection m_dbConnection;
-        public string DbPath
-        {
-            get
-            {
-                return dbPath;
-            }
-        }
+        private SQLiteConnection m_dbConnection;
+        public string DbPath => dbPath;
 
         public void Connect(string path)
         {
@@ -54,8 +48,8 @@ namespace LibLala.MusicScanner
                 catch (IOException)
                 {
                     m_dbConnection.Open();
-                    string sql = "DELETE FROM musiclib";
-                    SQLiteCommand tableCommand = new SQLiteCommand(sql, m_dbConnection);
+                    var sql = "DELETE FROM musiclib";
+                    var tableCommand = new SQLiteCommand(sql, m_dbConnection);
                     try
                     {
                         tableCommand.ExecuteNonQuery();
@@ -77,7 +71,7 @@ namespace LibLala.MusicScanner
         {
             ReplaceOldDatabaseFile();
             m_dbConnection.Open();
-            string tableSql = "CREATE TABLE `musiclib` (\n" +
+            var tableSql = "CREATE TABLE `musiclib` (\n" +
                 "`album` TEXT,\n" +
                 "`artist` TEXT,\n" +
                 "`comment` TEXT,\n" +
@@ -91,7 +85,7 @@ namespace LibLala.MusicScanner
                 "`year` int,\n" +
                 "`discNumber` int NOT NULL DEFAULT 1\n" +
                 ")";
-            SQLiteCommand tableCommand = new SQLiteCommand(tableSql, m_dbConnection);
+            var tableCommand = new SQLiteCommand(tableSql, m_dbConnection);
             try
             {
                 tableCommand.ExecuteNonQuery();
@@ -105,12 +99,12 @@ namespace LibLala.MusicScanner
 
         private SQLiteCommand GetTagsInsertCommand(LibLala.TagReader.Tags tags)
         {
-            string sql = "INSERT into `musiclib` (`album`, `artist`, `comment`, `genre`, " +
+            var sql = "INSERT into `musiclib` (`album`, `artist`, `comment`, `genre`, " +
                 "`length`, `lengthString`, `mrl`, `path`, `title`, `track`, `year`, `discNumber`) " +
                 "VALUES (@album, @artist, @comment, @genre, " +
                 "@length, @lengthString, @mrl, @path, " +
                 "@title, @track, @year, @discNumber)";
-            SQLiteCommand command = m_dbConnection.CreateCommand();
+            var command = m_dbConnection.CreateCommand();
             command.CommandType = CommandType.Text;
             command.CommandText = sql;
             command.Parameters.Add(new SQLiteParameter("@album", tags.Album));
@@ -136,7 +130,7 @@ namespace LibLala.MusicScanner
             }
 
             m_dbConnection.Open();
-            SQLiteCommand command = GetTagsInsertCommand(tags);
+            var command = GetTagsInsertCommand(tags);
             command.ExecuteNonQuery();
             m_dbConnection.Close();
         }
@@ -144,9 +138,9 @@ namespace LibLala.MusicScanner
         public LibLala.TagReader.Tags GetTag(string path)
         {
             m_dbConnection.Open();
-            string sql = $"SELECT * FROM `musiclib` WHERE path='{path}';";
-            SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
-            SQLiteDataReader reader = command.ExecuteReader();
+            var sql = $"SELECT * FROM `musiclib` WHERE path='{path}';";
+            var command = new SQLiteCommand(sql, m_dbConnection);
+            var reader = command.ExecuteReader();
 
             var tags = TagsFromReader(reader)[0];
             m_dbConnection.Close();
@@ -159,9 +153,11 @@ namespace LibLala.MusicScanner
 
             while (reader.Read())
             {
-                var tags = new LibLala.TagReader.Tags();
-                tags.Album = reader.GetString(0);
-                tags.ArtistString = reader.GetString(1);
+                var tags = new LibLala.TagReader.Tags
+                {
+                    Album = reader.GetString(0),
+                    ArtistString = reader.GetString(1)
+                };
                 try
                 {
                     tags.Comment = reader.GetString(2);

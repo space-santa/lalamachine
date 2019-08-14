@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 
 namespace LalaDb.Data
 {
@@ -26,7 +23,7 @@ namespace LalaDb.Data
             length = track.Length;
             path = track.Path;
             Title = track.Title;
-            this.Track = (uint)track.TrackNumber;
+            Track = (uint)track.TrackNumber;
             Year = (uint)track.Year;
         }
     }

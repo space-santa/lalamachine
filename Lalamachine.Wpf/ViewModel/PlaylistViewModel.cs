@@ -63,13 +63,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         private ObservableCollection<PlaylistTags> _playlist;
 
-        public int CurrentIndex
-        {
-            get
-            {
-                return Playlist.IndexOf(Playlist.FirstOrDefault(x => x.IsPlaying));
-            }
-        }
+        public int CurrentIndex => Playlist.IndexOf(Playlist.FirstOrDefault(x => x.IsPlaying));
 
         internal void DisplayChangedHandler(object sender, DisplayLibChangedEventArgs e)
         {
@@ -89,7 +83,7 @@ namespace Lalamachine.Wpf.ViewModel
         public event EventHandler<PlayTrackEventArgs> PlayTrackEvent;
         protected virtual void OnPlayTrack(PlaylistTags tags)
         {
-            foreach (var item in _playlist)
+            foreach (PlaylistTags item in _playlist)
             {
                 item.IsPlaying = false;
             }
@@ -116,7 +110,7 @@ namespace Lalamachine.Wpf.ViewModel
 
                 if (PlaylistShuffleRepeatState == ShuffleRepeatState.Shuffle)
                 {
-                    var newIndex = new Random().Next(0, _playlist.Count - 1);
+                    int newIndex = new Random().Next(0, _playlist.Count - 1);
                     return Playlist[newIndex];
                 }
 
@@ -174,7 +168,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void AddTracks(List<Tags> tagsRange)
         {
-            foreach (var tags in tagsRange)
+            foreach (Tags tags in tagsRange)
             {
                 AddTrack(tags);
             }
@@ -182,7 +176,7 @@ namespace Lalamachine.Wpf.ViewModel
         }
         public void AddTracks(List<PlaylistTags> tagsRange)
         {
-            foreach (var tags in tagsRange)
+            foreach (PlaylistTags tags in tagsRange)
             {
                 AddTrack(tags);
             }
@@ -212,8 +206,8 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void ManualLoadHandler(object sender, ManualLoadEventArgs e)
         {
-            var path = e.Path;
-            var tags = new TagReader().Read(path);
+            string path = e.Path;
+            Tags tags = new TagReader().Read(path);
             AddTrack(tags);
         }
 
@@ -240,7 +234,7 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
-        public bool HasTracks { get => _playlist.Count > 0; }
+        public bool HasTracks => _playlist.Count > 0;
         public string Name { get; private set; }
 
         public void ShuffleRepeatChangedHandler(object sender, ChangeShuffleRepeatEventArgs e)

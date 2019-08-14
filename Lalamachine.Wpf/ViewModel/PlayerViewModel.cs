@@ -12,9 +12,9 @@ namespace Lalamachine.Wpf.ViewModel
     {
         public PlayerSettings() : base("Lalamachine.Wpf", "PlayerSettings") { }
 
-        public double Volume { get => GetDouble(50); set { Set(value); } }
-        public bool IsMuted { get => GetBool(false); set { Set(value); } }
-        public string LastActivePlaylist { get => GetString("MAIN"); set { Set(value); } }
+        public double Volume { get => GetDouble(50); set => Set(value); }
+        public bool IsMuted { get => GetBool(false); set => Set(value); }
+        public string LastActivePlaylist { get => GetString("MAIN"); set => Set(value); }
     }
 
     public class ManualLoadEventArgs : EventArgs
@@ -24,9 +24,9 @@ namespace Lalamachine.Wpf.ViewModel
 
     public class PlayerViewModel : INotifyPropertyChanged
     {
-        private MediaPlayer _mediaPlayer;
+        private readonly MediaPlayer _mediaPlayer;
         private DispatcherTimer _dispatcherTimer;
-        private PlayerSettings _playerSettings;
+        private readonly PlayerSettings _playerSettings;
 
         public PlayerViewModel()
         {
@@ -170,14 +170,8 @@ namespace Lalamachine.Wpf.ViewModel
 
         public double Position
         {
-            get
-            {
-                return _mediaPlayer.Position.TotalSeconds;
-            }
-            set
-            {
-                _mediaPlayer.Position = new TimeSpan(0, 0, (int)value);
-            }
+            get => _mediaPlayer.Position.TotalSeconds;
+            set => _mediaPlayer.Position = new TimeSpan(0, 0, (int)value);
         }
 
         private readonly DelegateCommand _changePlayPauseCommand;
@@ -230,15 +224,17 @@ namespace Lalamachine.Wpf.ViewModel
 
         private void OnLoad(object commandParameter)
         {
-            var dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.Multiselect = true;
-            dlg.Filter = "Music | *.mp3; *.m4a";
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
+            {
+                Multiselect = true,
+                Filter = "Music | *.mp3; *.m4a"
+            };
 
             bool? result = dlg.ShowDialog();
 
             if (result == true)
             {
-                foreach (var path in dlg.FileNames)
+                foreach (string path in dlg.FileNames)
                 {
                     OnManualLoad(new ManualLoadEventArgs { Path = path });
                 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -11,7 +10,7 @@ namespace LibLala.MusicScanner
         {
             db.EnsureDatabase();
 
-            foreach (string file in DirSearch(path))
+            foreach (var file in DirSearch(path))
             {
                 var tags = new LibLala.TagReader.TagReader().Read(file);
                 db.AddTagsToDatabase(tags);

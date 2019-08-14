@@ -4,16 +4,16 @@ using System.Windows;
 
 namespace Lalamachine.Wpf.View
 {
-    class MainWindowSettings : AppSettings
+    internal class MainWindowSettings : AppSettings
     {
         public MainWindowSettings() : base("Lalamachine.Wpf", "MainWindowSettings") { }
 
         public int ActiveTab { get => GetInt(0); set => Set(value); }
-        public double Width { get => GetDouble(800); set { Set(value); } }
-        public double Height { get => GetDouble(800); set { Set(value); } }
-        public double Left { get => GetDouble(255); set { Set(value); } }
-        public double Top { get => GetDouble(255); set { Set(value); } }
-        public bool Maximized { get => GetBool(false); set { Set(value); } }
+        public double Width { get => GetDouble(800); set => Set(value); }
+        public double Height { get => GetDouble(800); set => Set(value); }
+        public double Left { get => GetDouble(255); set => Set(value); }
+        public double Top { get => GetDouble(255); set => Set(value); }
+        public bool Maximized { get => GetBool(false); set => Set(value); }
     }
 
     /// <summary>
@@ -22,12 +22,12 @@ namespace Lalamachine.Wpf.View
     public partial class MainWindow : Window
     {
         private readonly PlayerViewModel _player;
-        private PlaylistViewModel _playlistViewModel;
-        private ShuffleRepeatViewModel _shuffleRepeatViewModel;
-        private MainWindowSettings _settings;
-        private SettingsViewModel _settingsViewModel;
-        private LibraryViewModel _libraryViewModel;
-        private PlaylistViewModel _libraryPlaylistViewModel;
+        private readonly PlaylistViewModel _playlistViewModel;
+        private readonly ShuffleRepeatViewModel _shuffleRepeatViewModel;
+        private readonly MainWindowSettings _settings;
+        private readonly SettingsViewModel _settingsViewModel;
+        private readonly LibraryViewModel _libraryViewModel;
+        private readonly PlaylistViewModel _libraryPlaylistViewModel;
 
         public MainWindow()
         {

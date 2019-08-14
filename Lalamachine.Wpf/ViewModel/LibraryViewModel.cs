@@ -15,9 +15,9 @@ namespace Lalamachine.Wpf.ViewModel
         public ObservableCollection<PlaylistTags> Tracks { get; set; }
     }
 
-    class LibraryViewModel : INotifyPropertyChanged
+    internal class LibraryViewModel : INotifyPropertyChanged
     {
-        private MusicLibModel _model;
+        private readonly MusicLibModel _model;
 
         public LibraryViewModel()
         {
@@ -205,7 +205,7 @@ namespace Lalamachine.Wpf.ViewModel
         {
             get
             {
-                var list = _model.genreList(SearchString);
+                string[] list = _model.genreList(SearchString);
                 list = list.Prepend(Constants.ALL).ToArray();
                 return new ObservableCollection<string>(list);
             }

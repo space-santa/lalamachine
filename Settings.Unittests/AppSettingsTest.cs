@@ -1,11 +1,11 @@
-using NUnit.Framework;
+using System.Collections.Generic;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
-using System.Collections.Generic;
+using NUnit.Framework;
 
 namespace Settings.Unittests
 {
-    class TestSettings : AppSettingsBase
+    internal class TestSettings : AppSettingsBase
     {
         public TestSettings(SettingsFile settingsFile) : base(settingsFile) { }
 
@@ -20,9 +20,9 @@ namespace Settings.Unittests
         [Test]
         public void TestIntShouldSave()
         {
-            SettingsFile SettingsFile = Substitute.For<SettingsFile>();
+            var SettingsFile = Substitute.For<SettingsFile>();
             SettingsFile.Load().Returns(new Dictionary<string, string>());
-            TestSettings settings = new TestSettings(SettingsFile)
+            var settings = new TestSettings(SettingsFile)
             {
                 TestInt = 5
             };
@@ -32,9 +32,9 @@ namespace Settings.Unittests
         [Test]
         public void TestBoolShouldSave()
         {
-            SettingsFile SettingsFile = Substitute.For<SettingsFile>();
+            var SettingsFile = Substitute.For<SettingsFile>();
             SettingsFile.Load().Returns(new Dictionary<string, string>());
-            TestSettings settings = new TestSettings(SettingsFile)
+            var settings = new TestSettings(SettingsFile)
             {
                 TestBool = true
             };
@@ -44,9 +44,9 @@ namespace Settings.Unittests
         [Test]
         public void TestDoubleShouldSave()
         {
-            SettingsFile SettingsFile = Substitute.For<SettingsFile>();
+            var SettingsFile = Substitute.For<SettingsFile>();
             SettingsFile.Load().Returns(new Dictionary<string, string>());
-            TestSettings settings = new TestSettings(SettingsFile)
+            var settings = new TestSettings(SettingsFile)
             {
                 TestDouble = 5.5
             };
@@ -56,9 +56,9 @@ namespace Settings.Unittests
         [Test]
         public void TestStringShouldSave()
         {
-            SettingsFile SettingsFile = Substitute.For<SettingsFile>();
+            var SettingsFile = Substitute.For<SettingsFile>();
             SettingsFile.Load().Returns(new Dictionary<string, string>());
-            TestSettings settings = new TestSettings(SettingsFile)
+            var settings = new TestSettings(SettingsFile)
             {
                 TestString = "Bob goes to town."
             };

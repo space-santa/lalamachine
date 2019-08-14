@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Lalamachine.Wpf.ViewModel;
+using System;
 using System.Windows.Data;
-using Lalamachine.Wpf.ViewModel;
 
 namespace Lalamachine.Wpf.View.Converter
 {
     [ValueConversion(typeof(ShuffleRepeatState), typeof(string))]
-    class ShuffleRepeatContentConverter : IValueConverter
+    internal class ShuffleRepeatContentConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            var state = (ShuffleRepeatState)value;
+            ShuffleRepeatState state = (ShuffleRepeatState)value;
 
             switch (state)
             {

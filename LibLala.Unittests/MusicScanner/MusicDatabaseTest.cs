@@ -14,12 +14,14 @@ namespace LibLala.Unittests.MusicScanner
             db.Connect("");
             db.EnsureDatabase();
             Assert.True(File.Exists(db.DbPath));
-            var tags = new LibLala.TagReader.Tags();
-            tags.Album = "the album";
-            tags.Title = "the title";
-            tags.length = 345;
-            tags.Artist = new string[] { "the artist", "the other guy" };
-            tags.path = "/this/is/the/path";
+            var tags = new LibLala.TagReader.Tags
+            {
+                Album = "the album",
+                Title = "the title",
+                length = 345,
+                Artist = new string[] { "the artist", "the other guy" },
+                path = "/this/is/the/path"
+            };
             db.AddTagsToDatabase(tags);
             var result = db.GetTag(tags.path);
             Assert.AreEqual(tags.Artist[0], result.Artist[0]);

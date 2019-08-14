@@ -6,7 +6,7 @@ namespace LalaDb.Model
 {
     public class ScannerDb : IMusicDatabase
     {
-        LalaContext _context;
+        private readonly LalaContext _context;
 
         public ScannerDb(LalaContext Context)
         {
@@ -15,7 +15,7 @@ namespace LalaDb.Model
 
         public void AddTagsToDatabase(LibLala.TagReader.Tags tags)
         {
-            Track track = new Track();
+            var track = new Track();
 
             foreach (var g in tags.genre)
             {

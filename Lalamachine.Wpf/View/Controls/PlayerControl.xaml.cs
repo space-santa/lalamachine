@@ -1,5 +1,4 @@
 ﻿using System.Windows.Controls;
-using Lalamachine.Wpf.ViewModel;
 
 namespace Lalamachine.Wpf.View.Controls
 {

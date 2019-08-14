@@ -1,17 +1,17 @@
-﻿using LalaDb.Data;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using LalaDb.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace LalaDb.Model
 {
     public class MusicLibModel
     {
-        private LalaContext _context;
-        private ScannerDb _scannerDb;
+        private readonly LalaContext _context;
+        private readonly ScannerDb _scannerDb;
         public bool Scanning { get; set; }
 
         public MusicLibModel()
@@ -158,7 +158,7 @@ namespace LalaDb.Model
             var tagList = new List<LalaTags>();
             foreach (var track in tracks)
             {
-                LalaTags lalaTags = new LalaTags(track);
+                var lalaTags = new LalaTags(track);
                 tagList.Add(lalaTags);
             }
             return tagList;
@@ -167,7 +167,7 @@ namespace LalaDb.Model
         public LalaTags getMetadataForMrl(string path)
         {
             path = LibLala.Utils.RemoveFilePrefix(path);
-            LalaTags tags = new LalaTags(_context.Tracks.Single(x => Path.GetFullPath(x.Path) == Path.GetFullPath(path)));
+            var tags = new LalaTags(_context.Tracks.Single(x => Path.GetFullPath(x.Path) == Path.GetFullPath(path)));
             return tags;
         }
 

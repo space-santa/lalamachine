@@ -29,10 +29,12 @@ namespace LibLala.Unittest.FileExporter
         [Test]
         public void PrepareDirectory_DoesNotExist_IsCreated()
         {
-            var mock = new MockExporterDirectory();
-            mock.ReplyOfExists = false;
+            var mock = new MockExporterDirectory
+            {
+                ReplyOfExists = false
+            };
             var directroyPreparer = new DirectoryPreparer(mock);
-            string destination = @"C:\the\path";
+            var destination = @"C:\the\path";
             directroyPreparer.PrepareDestination(destination);
             Assert.AreEqual(destination, mock.ArgOfCreateDirectory);
         }
@@ -40,11 +42,13 @@ namespace LibLala.Unittest.FileExporter
         [Test]
         public void PrepareDirectory_DoesExist_IsCreated()
         {
-            var mock = new MockExporterDirectory();
-            mock.ReplyOfExists = true;
+            var mock = new MockExporterDirectory
+            {
+                ReplyOfExists = true
+            };
             var directroyPreparer = new DirectoryPreparer(mock);
-            string destination = @"C:\the\path";
-            string expected = @"C:\the\path-20180304_112233";
+            var destination = @"C:\the\path";
+            var expected = @"C:\the\path-20180304_112233";
             directroyPreparer.PrepareDestination(destination);
             Assert.AreEqual(expected, mock.ArgOfCreateDirectory);
         }

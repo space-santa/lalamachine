@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace LibLala
 {
@@ -17,6 +15,9 @@ namespace LibLala
 
         public static string ALL = "-- all --";
 
-        public static void EnsureLaladir() => Directory.CreateDirectory(path: LALADIR);
+        public static void EnsureLaladir()
+        {
+            Directory.CreateDirectory(path: LALADIR);
+        }
     }
 }

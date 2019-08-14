@@ -3,7 +3,6 @@ using LibLala.TagReader;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
-using TagLib;
 
 namespace LibLala.Unittests.Tagreader
 {
@@ -26,8 +25,8 @@ namespace LibLala.Unittests.Tagreader
         [Test]
         public void EncodedPathShouldReturnTags()
         {
-            string dirtyPath = "D:/OneDrive/musiclib/Various%20Artists/Ant-Man%20(Original%20Motion%20Picture%20Soundtr/Various%20Artists%20-%2007.%20I'll%20Call%20Him%20Antony.mp3";
-            string cleanPath = "D:/OneDrive/musiclib/Various Artists/Ant-Man (Original Motion Picture Soundtr/Various Artists - 07. I'll Call Him Antony.mp3";
+            var dirtyPath = "D:/OneDrive/musiclib/Various%20Artists/Ant-Man%20(Original%20Motion%20Picture%20Soundtr/Various%20Artists%20-%2007.%20I'll%20Call%20Him%20Antony.mp3";
+            var cleanPath = "D:/OneDrive/musiclib/Various Artists/Ant-Man (Original Motion Picture Soundtr/Various Artists - 07. I'll Call Him Antony.mp3";
             var tagReader = new TagReader.TagReader();
             var tagCreatorMock = Substitute.For<ITagCreator>();
             tagReader.TagCreator = tagCreatorMock;
@@ -38,7 +37,7 @@ namespace LibLala.Unittests.Tagreader
         [Test]
         public void BadMp3ShouldThrowTagReaderException()
         {
-            string testPath = "bad.mp3";
+            var testPath = "bad.mp3";
             var tagReader = new TagReader.TagReader();
             var tagCreatorMock = Substitute.For<ITagCreator>();
             tagCreatorMock.Create(testPath).Returns(x => { throw new Exception(); });

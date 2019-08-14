@@ -21,24 +21,24 @@ namespace LibLala.Unittest.FileExporter
         [Test]
         public void GetNewFilename_9Tracks_NoLeadingZeroInFilename()
         {
-            string result = ExportPreparer.GetNewFilename(3, 9, GetPath());
-            string expected = "3-lala.mp3";
+            var result = ExportPreparer.GetNewFilename(3, 9, GetPath());
+            var expected = "3-lala.mp3";
             Assert.AreEqual(expected, result);
         }
 
         [Test]
         public void GetNewFilename_12Tracks_LeadingZeroInFilename()
         {
-            string result = ExportPreparer.GetNewFilename(3, 12, GetPath());
-            string expected = "03-lala.mp3";
+            var result = ExportPreparer.GetNewFilename(3, 12, GetPath());
+            var expected = "03-lala.mp3";
             Assert.AreEqual(expected, result);
         }
 
         [Test]
         public void GetNewFilename_120Tracks_LeadingZerosInFilename()
         {
-            string result = ExportPreparer.GetNewFilename(3, 120, GetPath());
-            string expected = "003-lala.mp3";
+            var result = ExportPreparer.GetNewFilename(3, 120, GetPath());
+            var expected = "003-lala.mp3";
             Assert.AreEqual(expected, result);
         }
     }

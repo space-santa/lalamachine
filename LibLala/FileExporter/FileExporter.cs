@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace LibLala.FileExporter
 {
@@ -8,10 +7,10 @@ namespace LibLala.FileExporter
         public static void ExportPlaylist(string destination, string[] files)
         {
             var actualDestination = ExportPreparer.PrepareDestinationDirectory(destination);
-            int position = 1;
-            int totalNumber = files.Length;
+            var position = 1;
+            var totalNumber = files.Length;
 
-            foreach (string file in files)
+            foreach (var file in files)
             {
                 var targetName = ExportPreparer.GetNewFilename(position, totalNumber, file);
                 var fullTargetPath = Path.Combine(actualDestination, targetName);

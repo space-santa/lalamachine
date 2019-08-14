@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace LibLala
+﻿namespace LibLala
 {
     public static class Utils
     {

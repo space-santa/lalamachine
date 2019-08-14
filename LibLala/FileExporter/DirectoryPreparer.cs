@@ -1,11 +1,8 @@
-using System;
-using System.IO;
-
 namespace LibLala.FileExporter
 {
     public class DirectoryPreparer
     {
-        private IExporterDirectory _exporterDirectory;
+        private readonly IExporterDirectory _exporterDirectory;
 
         public DirectoryPreparer(IExporterDirectory exporterDirectory)
         {

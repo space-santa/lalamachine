@@ -1,9 +1,7 @@
 ﻿using Settings;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -13,7 +11,7 @@ namespace Lalamachine.Wpf.ViewModel
     {
         public SettingsSettings() : base("Lalamachine.Wpf", "SettingsSettings") { }
 
-        public string LibraryPath { get => GetString(""); set { Set(value); } }
+        public string LibraryPath { get => GetString(""); set => Set(value); }
     }
 
     public class StartScanEventArgs : EventArgs
@@ -31,7 +29,7 @@ namespace Lalamachine.Wpf.ViewModel
             LibraryPath = _settings.LibraryPath;
         }
 
-        private SettingsSettings _settings;
+        private readonly SettingsSettings _settings;
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
@@ -59,7 +57,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         private void OnLoad(object commandParameter)
         {
-            using (var fbd = new FolderBrowserDialog())
+            using (FolderBrowserDialog fbd = new FolderBrowserDialog())
             {
                 DialogResult result = fbd.ShowDialog();
 
@@ -82,7 +80,7 @@ namespace Lalamachine.Wpf.ViewModel
         public event EventHandler<StartScanEventArgs> StartScanEvent;
         protected virtual void InvokeStartScanEvent()
         {
-            var args = new StartScanEventArgs
+            StartScanEventArgs args = new StartScanEventArgs
             {
                 Path = LibraryPath
             };

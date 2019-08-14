@@ -59,7 +59,7 @@ namespace LibLala.TagReader
             get => artist;
             set
             {
-                for (int i = 0; i < value.Length; ++i)
+                for (var i = 0; i < value.Length; ++i)
                 {
                     value[i] = value[i].Trim();
                 }
@@ -69,15 +69,12 @@ namespace LibLala.TagReader
         }
         public string ArtistString
         {
-            get
-            {
-                return JoinArrayWithComma(artist.Distinct().ToArray());
-            }
+            get => JoinArrayWithComma(artist.Distinct().ToArray());
             set
             {
                 var localArtist = value.Split(',');
 
-                for (int i = 0; i < localArtist.Length; ++i)
+                for (var i = 0; i < localArtist.Length; ++i)
                 {
                     localArtist[i] = localArtist[i].Trim();
                 }
@@ -89,37 +86,25 @@ namespace LibLala.TagReader
         public string[] genre;
         public string GenreString
         {
-            get
-            {
-                return JoinArrayWithComma(genre);
-            }
-            set
-            {
-                genre = value.Split(',');
-            }
+            get => JoinArrayWithComma(genre);
+            set => genre = value.Split(',');
         }
 
         public TimeSpan duration;
 
         public int length
         {
-            get
-            {
-                return (int)duration.TotalSeconds;
-            }
-            set
-            {
-                duration = new TimeSpan(0, 0, value);
-            }
+            get => (int)duration.TotalSeconds;
+            set => duration = new TimeSpan(0, 0, value);
         }
 
         public string LengthString
         {
             get
             {
-                int seconds = duration.Seconds;
-                int minutesValue = (int)duration.TotalMinutes;
-                string secondsString = $"{seconds}";
+                var seconds = duration.Seconds;
+                var minutesValue = (int)duration.TotalMinutes;
+                var secondsString = $"{seconds}";
                 if (secondsString.Length == 1)
                 {
                     secondsString = $"0{secondsString}";
@@ -151,7 +136,7 @@ namespace LibLala.TagReader
 
         public string ToJson()
         {
-            string output = JsonConvert.SerializeObject(this);
+            var output = JsonConvert.SerializeObject(this);
             return output;
         }
     }

@@ -12,7 +12,7 @@ namespace Settings
 
     public abstract class AppSettingsBase
     {
-        private Dictionary<string, string> _settings;
+        private readonly Dictionary<string, string> _settings;
 
         public AppSettingsBase(SettingsFile settingsFile)
         {
@@ -20,7 +20,7 @@ namespace Settings
             _settings = SettingsFile.Load();
         }
 
-        SettingsFile SettingsFile { get; set; }
+        private SettingsFile SettingsFile { get; set; }
 
         public void Save()
         {
