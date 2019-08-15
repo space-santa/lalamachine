@@ -1,6 +1,6 @@
-﻿using LibLala.TagReader;
-using System;
+﻿using System;
 using System.Windows.Data;
+using LibLala.TagReader;
 
 namespace Lalamachine.Wpf.View.Converter
 {
@@ -9,13 +9,13 @@ namespace Lalamachine.Wpf.View.Converter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            string source = (string)value;
+            var source = (string)value;
             if (source.Length < 1)
             {
                 return "";
             }
 
-            Tags tags = new TagReader().Read(source);
+            var tags = new TagReader().Read(source);
             return $"{tags.ArtistString} - {tags.Title}";
         }
 

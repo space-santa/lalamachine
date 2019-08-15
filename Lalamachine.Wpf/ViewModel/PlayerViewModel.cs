@@ -1,10 +1,10 @@
-using Settings;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using Settings;
 
 namespace Lalamachine.Wpf.ViewModel
 {
@@ -224,17 +224,17 @@ namespace Lalamachine.Wpf.ViewModel
 
         private void OnLoad(object commandParameter)
         {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
+            var dlg = new Microsoft.Win32.OpenFileDialog
             {
                 Multiselect = true,
                 Filter = "Music | *.mp3; *.m4a"
             };
 
-            bool? result = dlg.ShowDialog();
+            var result = dlg.ShowDialog();
 
             if (result == true)
             {
-                foreach (string path in dlg.FileNames)
+                foreach (var path in dlg.FileNames)
                 {
                     OnManualLoad(new ManualLoadEventArgs { Path = path });
                 }

@@ -8,8 +8,8 @@ namespace Lalamachine.Wpf.View.Converter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            double seconds = (double)value;
-            TimeSpan timeSpan = new TimeSpan(0, 0, (int)seconds);
+            var seconds = (double)value;
+            var timeSpan = new TimeSpan(0, 0, (int)seconds);
             return timeSpan.ToString(@"m\:ss");
         }
 

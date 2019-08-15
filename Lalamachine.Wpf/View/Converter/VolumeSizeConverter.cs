@@ -8,9 +8,9 @@ namespace Lalamachine.Wpf.View.Converter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            double size = (double)value;
-            double fraction = 16.0 / 100;
-            double displaySize = fraction * size + 12;
+            var size = (double)value;
+            var fraction = 16.0 / 100;
+            var displaySize = fraction * size + 12;
             return (int)displaySize;
         }
 

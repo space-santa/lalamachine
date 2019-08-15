@@ -1,6 +1,6 @@
-﻿using Lalamachine.Wpf.ViewModel;
+﻿using System.Windows;
+using Lalamachine.Wpf.ViewModel;
 using Settings;
-using System.Windows;
 
 namespace Lalamachine.Wpf.View
 {

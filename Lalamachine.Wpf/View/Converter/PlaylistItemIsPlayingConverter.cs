@@ -8,7 +8,7 @@ namespace Lalamachine.Wpf.View.Converter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            bool isPlaying = (bool)value;
+            var isPlaying = (bool)value;
             return isPlaying ? "🔊" : "";
         }
 

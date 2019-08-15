@@ -16,7 +16,7 @@ namespace LalaDb.Model
 
         public MusicLibModel()
         {
-            LibLala.Constants.EnsureLaladir();
+            LibLala.Utils.EnsureLaladir();
             _context = new LalaContext();
             _context.Database.Migrate();
             _scannerDb = new ScannerDb(_context);

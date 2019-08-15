@@ -1,5 +1,4 @@
-﻿using LibLala.TagReader;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -7,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Windows.Input;
+using LibLala.TagReader;
 
 namespace Lalamachine.Wpf.ViewModel
 {
@@ -51,13 +51,13 @@ namespace Lalamachine.Wpf.ViewModel
 
         private void OnRemoveTrackCommandHandler(object obj)
         {
-            PlaylistTags selectedItem = (PlaylistTags)obj;
+            var selectedItem = (PlaylistTags)obj;
             _playlist.Remove(selectedItem);
         }
 
         private void OnPlayTrackCommandHandler(object obj)
         {
-            PlaylistTags track = (PlaylistTags)obj;
+            var track = (PlaylistTags)obj;
             OnPlayTrack(track);
         }
 
@@ -83,7 +83,7 @@ namespace Lalamachine.Wpf.ViewModel
         public event EventHandler<PlayTrackEventArgs> PlayTrackEvent;
         protected virtual void OnPlayTrack(PlaylistTags tags)
         {
-            foreach (PlaylistTags item in _playlist)
+            foreach (var item in _playlist)
             {
                 item.IsPlaying = false;
             }
@@ -110,7 +110,7 @@ namespace Lalamachine.Wpf.ViewModel
 
                 if (PlaylistShuffleRepeatState == ShuffleRepeatState.Shuffle)
                 {
-                    int newIndex = new Random().Next(0, _playlist.Count - 1);
+                    var newIndex = new Random().Next(0, _playlist.Count - 1);
                     return Playlist[newIndex];
                 }
 
@@ -135,7 +135,7 @@ namespace Lalamachine.Wpf.ViewModel
         {
             get
             {
-                int previousIndex = 0;
+                var previousIndex = 0;
                 if (CurrentIndex > 0)
                 {
                     previousIndex = CurrentIndex - 1;
@@ -168,7 +168,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void AddTracks(List<Tags> tagsRange)
         {
-            foreach (Tags tags in tagsRange)
+            foreach (var tags in tagsRange)
             {
                 AddTrack(tags);
             }
@@ -176,7 +176,7 @@ namespace Lalamachine.Wpf.ViewModel
         }
         public void AddTracks(List<PlaylistTags> tagsRange)
         {
-            foreach (PlaylistTags tags in tagsRange)
+            foreach (var tags in tagsRange)
             {
                 AddTrack(tags);
             }
@@ -191,7 +191,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void DeleteTracks(int startIndex, int numberOfTracks)
         {
-            for (int i = 0; i < numberOfTracks; ++i)
+            for (var i = 0; i < numberOfTracks; ++i)
             {
                 DeleteTrack(startIndex);
             }
@@ -206,8 +206,8 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void ManualLoadHandler(object sender, ManualLoadEventArgs e)
         {
-            string path = e.Path;
-            Tags tags = new TagReader().Read(path);
+            var path = e.Path;
+            var tags = new TagReader().Read(path);
             AddTrack(tags);
         }
 

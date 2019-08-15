@@ -21,7 +21,7 @@ namespace Settings
             }
             catch (DirectoryNotFoundException)
             {
-                LibLala.Constants.EnsureLaladir();
+                LibLala.Utils.EnsureLaladir();
             }
             catch (FileNotFoundException)
             {

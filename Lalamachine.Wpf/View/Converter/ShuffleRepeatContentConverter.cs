@@ -1,6 +1,6 @@
-﻿using Lalamachine.Wpf.ViewModel;
-using System;
+﻿using System;
 using System.Windows.Data;
+using Lalamachine.Wpf.ViewModel;
 
 namespace Lalamachine.Wpf.View.Converter
 {
@@ -9,7 +9,7 @@ namespace Lalamachine.Wpf.View.Converter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            ShuffleRepeatState state = (ShuffleRepeatState)value;
+            var state = (ShuffleRepeatState)value;
 
             switch (state)
             {

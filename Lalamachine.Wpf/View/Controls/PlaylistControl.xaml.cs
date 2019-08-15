@@ -1,6 +1,6 @@
-﻿using Lalamachine.Wpf.ViewModel;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Input;
+using Lalamachine.Wpf.ViewModel;
 
 namespace Lalamachine.Wpf.View.Controls
 {
@@ -16,7 +16,7 @@ namespace Lalamachine.Wpf.View.Controls
 
         private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            PlaylistViewModel viewModel = (PlaylistViewModel)DataContext;
+            var viewModel = (PlaylistViewModel)DataContext;
             viewModel.PlayTrackCommand.Execute(PlaylistView.SelectedItem);
         }
     }
