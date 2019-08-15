@@ -1,6 +1,6 @@
-﻿using Lalamachine.Wpf.ViewModel;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Input;
+using Lalamachine.Wpf.ViewModel;
 
 namespace Lalamachine.Wpf.View.Controls
 {
@@ -16,19 +16,19 @@ namespace Lalamachine.Wpf.View.Controls
 
         private void GenreListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            LibraryViewModel context = (LibraryViewModel)DataContext;
+            var context = (LibraryViewModel)DataContext;
             context.SetGenreFilterCommand.Execute(GenreListView.SelectedItem);
         }
 
         private void ArtistListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            LibraryViewModel context = (LibraryViewModel)DataContext;
+            var context = (LibraryViewModel)DataContext;
             context.SetArtistFilterCommand.Execute(ArtistListView.SelectedItem);
         }
 
         private void AlbumListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            LibraryViewModel context = (LibraryViewModel)DataContext;
+            var context = (LibraryViewModel)DataContext;
             context.SetAlbumFilterCommand.Execute(AlbumListView.SelectedItem);
         }
 
@@ -39,7 +39,7 @@ namespace Lalamachine.Wpf.View.Controls
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            LibraryViewModel context = (LibraryViewModel)DataContext;
+            var context = (LibraryViewModel)DataContext;
             if (SearchBox.Text.Length > 2)
             {
                 context.SearchString = SearchBox.Text;
@@ -56,7 +56,7 @@ namespace Lalamachine.Wpf.View.Controls
 
         private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            LibraryViewModel context = (LibraryViewModel)DataContext;
+            var context = (LibraryViewModel)DataContext;
             context.UpdateListsCommand.Execute(null);
         }
     }

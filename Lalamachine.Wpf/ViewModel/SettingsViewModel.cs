@@ -1,9 +1,9 @@
-﻿using Settings;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using System.Windows.Input;
+using Settings;
 
 namespace Lalamachine.Wpf.ViewModel
 {
@@ -57,9 +57,9 @@ namespace Lalamachine.Wpf.ViewModel
 
         private void OnLoad(object commandParameter)
         {
-            using (FolderBrowserDialog fbd = new FolderBrowserDialog())
+            using (var fbd = new FolderBrowserDialog())
             {
-                DialogResult result = fbd.ShowDialog();
+                var result = fbd.ShowDialog();
 
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
@@ -80,7 +80,7 @@ namespace Lalamachine.Wpf.ViewModel
         public event EventHandler<StartScanEventArgs> StartScanEvent;
         protected virtual void InvokeStartScanEvent()
         {
-            StartScanEventArgs args = new StartScanEventArgs
+            var args = new StartScanEventArgs
             {
                 Path = LibraryPath
             };

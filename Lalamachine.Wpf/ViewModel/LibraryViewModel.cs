@@ -1,12 +1,12 @@
-﻿using LalaDb.Data;
-using LalaDb.Model;
-using LibLala;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using LalaDb.Data;
+using LalaDb.Model;
+using LibLala;
 
 namespace Lalamachine.Wpf.ViewModel
 {
@@ -205,7 +205,7 @@ namespace Lalamachine.Wpf.ViewModel
         {
             get
             {
-                string[] list = _model.genreList(SearchString);
+                var list = _model.genreList(SearchString);
                 list = list.Prepend(Constants.ALL).ToArray();
                 return new ObservableCollection<string>(list);
             }
@@ -237,10 +237,10 @@ namespace Lalamachine.Wpf.ViewModel
         {
             get
             {
-                ObservableCollection<PlaylistTags> displayLib = new ObservableCollection<PlaylistTags>();
+                var displayLib = new ObservableCollection<PlaylistTags>();
 
-                Track[] list = _model.displayLib(AlbumFilter, ArtistFilter, GenreFilter, SearchString);
-                foreach (Track track in list)
+                var list = _model.displayLib(AlbumFilter, ArtistFilter, GenreFilter, SearchString);
+                foreach (var track in list)
                 {
                     displayLib.Add(new PlaylistTags(new LalaTags(track)));
                 }
