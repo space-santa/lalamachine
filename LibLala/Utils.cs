@@ -1,4 +1,6 @@
-﻿namespace LibLala
+﻿using System.IO;
+
+namespace LibLala
 {
     public static class Utils
     {
@@ -9,6 +11,11 @@
                 path = path.Remove(0, 8);
             }
             return path;
+        }
+
+        public static void EnsureLaladir()
+        {
+            Directory.CreateDirectory(path: Constants.LALADIR);
         }
     }
 }
