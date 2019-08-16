@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using LibLala.Utils;
 
 namespace LibLala.Unittests
 {

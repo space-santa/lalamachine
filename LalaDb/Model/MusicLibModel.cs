@@ -166,7 +166,7 @@ namespace LalaDb.Model
 
         public LalaTags getMetadataForMrl(string path)
         {
-            path = LibLala.Utils.RemoveFilePrefix(path);
+            path = LibLala.Utils.Utils.RemoveFilePrefix(path);
             var tags = new LalaTags(_context.Tracks.Single(x => Path.GetFullPath(x.Path) == Path.GetFullPath(path)));
             return tags;
         }
