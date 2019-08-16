@@ -38,7 +38,7 @@ namespace LibLala.TagReader
         public Tags Read(string path)
         {
             path = Uri.UnescapeDataString(path);
-            path = Utils.RemoveFilePrefix(path);
+            path = Utils.Utils.RemoveFilePrefix(path);
 
             if (path.Length == 0)
             {

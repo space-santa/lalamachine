@@ -19,10 +19,6 @@ namespace Settings
                     return (Dictionary<string, string>)serializer.Deserialize(file, typeof(Dictionary<string, string>));
                 }
             }
-            catch (DirectoryNotFoundException)
-            {
-                LibLala.Utils.EnsureLaladir();
-            }
             catch (FileNotFoundException)
             {
                 // Nothing to worry about, file just doesn't exist.
