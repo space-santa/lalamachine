@@ -77,6 +77,7 @@ namespace Lalamachine.Wpf.View
 
         private void Window_Closed(object sender, System.EventArgs e)
         {
+            _playlistViewModel.SavePlaylist();
             _settings.ActiveTab = ListTabs.SelectedIndex;
             _settings.Top = Top;
             _settings.Left = Left;

@@ -122,11 +122,10 @@ namespace Lalamachine.Wpf.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
-            if (propertyName == "Playlist") { SavePlaylist(); }
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void SavePlaylist()
+        public void SavePlaylist()
         {
             if (_playlistModel != null)
             {
