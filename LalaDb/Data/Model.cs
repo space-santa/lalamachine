@@ -27,6 +27,13 @@ namespace LalaDb.Data
         public virtual List<Track> Tracks { get; set; }
     }
 
+    public class Playlist
+    {
+        public int PlaylistId { get; set; }
+        public string Name { get; set; }
+        public virtual List<PlaylistTrack> Tracks { get; set; }
+    }
+
     public class Track
     {
         public int TrackId { get; set; }
@@ -67,5 +74,18 @@ namespace LalaDb.Data
 
         public int TrackId { get; set; }
         public virtual Track Track { get; set; }
+    }
+
+    public class PlaylistTrack
+    {
+        public int PlaylistTrackId { get; set; }
+
+        public int PlaylistId { get; set; }
+        public virtual Playlist Playlist { get; set; }
+
+        // Because SQLite doesn't agree with adding or dropping Foreign Keys, we only have the TrackId here, not the virtual Track.
+        public int TrackId { get; set; }
+
+        public int Order { get; set; }
     }
 }

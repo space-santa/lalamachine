@@ -25,6 +25,7 @@ namespace LalaDb.Data
             Title = track.Title;
             Track = (uint)track.TrackNumber;
             Year = (uint)track.Year;
+            TrackId = track.TrackId;
         }
     }
 }

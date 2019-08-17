@@ -26,9 +26,9 @@ namespace Lalamachine.Wpf.ViewModel
     {
         private readonly MusicLibModel _model;
 
-        public LibraryViewModel()
+        public LibraryViewModel(LalaContext context)
         {
-            _model = new MusicLibModel();
+            _model = new MusicLibModel(context);
             Scanning = false;
             SearchString = "";
             GenreFilter = "";

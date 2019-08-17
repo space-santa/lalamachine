@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using Newtonsoft.Json;
 
@@ -26,6 +26,7 @@ namespace LibLala.TagReader
             Track = other.Track;
             Year = other.Year;
             path = other.path;
+            TrackId = other.TrackId;
         }
 
         public void FromTagLibFile(TagLib.File file)
@@ -119,6 +120,7 @@ namespace LibLala.TagReader
         public string Album { get; set; }
         public uint Year { get; set; }
         public uint DiscNumber { get; set; }
+        public int TrackId { get; set; }
 
         public string path;
 
