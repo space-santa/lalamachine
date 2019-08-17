@@ -1,7 +1,7 @@
-$version = "4.99.2"
+$version = "4.99.3"
 $PathToPublish = "..\Lalamachine.Wpf\bin\Release\netcoreapp3.0\win-x64\publish"
 
-dotnet publish ../Lalamachine.Wpf/Lalamachine.Wpf.csproj -r win10-x64 -c Release -p:PublishSingleFile=true
+dotnet publish ../Lalamachine.Wpf/Lalamachine.Wpf.csproj -r win-x64 -c Release -p:PublishSingleFile=true
 Remove-Item "${PathToPublish}\\assets" -Recurse -Force
 Copy-Item ..\Lalamachine.Wpf\assets $PathToPublish -Recurse -Force
 

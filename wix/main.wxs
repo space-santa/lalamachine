@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Name="lalamachine" Manufacturer="SpaceSanta" Id="e38b5f9d-c234-4c94-b472-94998cf35d74" UpgradeCode="81575B97-6BED-4C90-B066-37A095D2C803" Language="1033" Codepage="1252" Version="4.99.2">
+  <Product Name="lalamachine" Manufacturer="SpaceSanta" Id="e38b5f9d-c234-4c94-b472-94998cf35d74" UpgradeCode="81575B97-6BED-4C90-B066-37A095D2C803" Language="1033" Codepage="1252" Version="4.99.3">
     <Package Id="*" Description="lalamachine installer" Comments="SpaceSanta is the best" Manufacturer="SpaceSanta" InstallerVersion="100" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
     <Upgrade Id="81575B97-6BED-4C90-B066-37A095D2C803">
       <UpgradeVersion OnlyDetect="no" Property="PREVIOUSFOUND" Minimum="0.0.0" IncludeMinimum="yes" Maximum="4.0.0" IncludeMaximum="no" />
