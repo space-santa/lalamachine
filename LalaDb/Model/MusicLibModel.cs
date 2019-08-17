@@ -14,10 +14,9 @@ namespace LalaDb.Model
         private readonly ScannerDb _scannerDb;
         public bool Scanning { get; set; }
 
-        public MusicLibModel()
+        public MusicLibModel(LalaContext context)
         {
-            _context = new LalaContext();
-            _context.Database.Migrate();
+            _context = context;
             _scannerDb = new ScannerDb(_context);
             Scanning = false;
         }

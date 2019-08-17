@@ -27,6 +27,13 @@ namespace LalaDb.Data
         public virtual List<Track> Tracks { get; set; }
     }
 
+    public class Playlist
+    {
+        public int PlaylistId { get; set; }
+        public string Name { get; set; }
+        public virtual List<PlaylistTrack> Tracks { get; set; }
+    }
+
     public class Track
     {
         public int TrackId { get; set; }
@@ -43,6 +50,7 @@ namespace LalaDb.Data
 
         public virtual List<ArtistTrack> ArtistTracks { get; set; }
         public virtual List<GenreTrack> GenreTracks { get; set; }
+        public virtual List<PlaylistTrack> PlaylistTracks { get; set; }
     }
 
 
@@ -64,6 +72,17 @@ namespace LalaDb.Data
 
         public int GenreId { get; set; }
         public virtual Genre Genre { get; set; }
+
+        public int TrackId { get; set; }
+        public virtual Track Track { get; set; }
+    }
+
+    public class PlaylistTrack
+    {
+        public int PlaylistTrackId { get; set; }
+
+        public int PlaylistId { get; set; }
+        public virtual Playlist Playlist { get; set; }
 
         public int TrackId { get; set; }
         public virtual Track Track { get; set; }

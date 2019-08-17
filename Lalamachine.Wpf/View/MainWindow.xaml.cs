@@ -1,5 +1,7 @@
 ﻿using System.Windows;
+using LalaDb.Data;
 using Lalamachine.Wpf.ViewModel;
+using Microsoft.EntityFrameworkCore;
 using Settings;
 
 namespace Lalamachine.Wpf.View
@@ -32,11 +34,14 @@ namespace Lalamachine.Wpf.View
         public MainWindow()
         {
             InitializeComponent();
+            var context = new LalaContext();
+            context.Database.Migrate();
+
             _player = new PlayerViewModel();
             _playlistViewModel = new PlaylistViewModel();
             _shuffleRepeatViewModel = new ShuffleRepeatViewModel();
             _settingsViewModel = new SettingsViewModel();
-            _libraryViewModel = new LibraryViewModel();
+            _libraryViewModel = new LibraryViewModel(context);
             _libraryPlaylistViewModel = new PlaylistViewModel("LIBRARY");
 
             _shuffleRepeatViewModel.ShuffleRepeatChanged += _playlistViewModel.ShuffleRepeatChangedHandler;
