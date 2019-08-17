@@ -83,6 +83,7 @@ namespace LalaDb.Data
         public int PlaylistId { get; set; }
         public virtual Playlist Playlist { get; set; }
 
+        // Because SQLite doesn't agree with adding or dropping Foreign Keys, we only have the TrackId here, not the virtual Track.
         public int TrackId { get; set; }
 
         public int Order { get; set; }
