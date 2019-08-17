@@ -38,11 +38,11 @@ namespace Lalamachine.Wpf.View
             context.Database.Migrate();
 
             _player = new PlayerViewModel();
-            _playlistViewModel = new PlaylistViewModel();
+            _playlistViewModel = new PlaylistViewModel(context);
             _shuffleRepeatViewModel = new ShuffleRepeatViewModel();
             _settingsViewModel = new SettingsViewModel();
             _libraryViewModel = new LibraryViewModel(context);
-            _libraryPlaylistViewModel = new PlaylistViewModel("LIBRARY");
+            _libraryPlaylistViewModel = new PlaylistViewModel();
 
             _shuffleRepeatViewModel.ShuffleRepeatChanged += _playlistViewModel.ShuffleRepeatChangedHandler;
             _player.ManualLoadEvent += _playlistViewModel.ManualLoadHandler;

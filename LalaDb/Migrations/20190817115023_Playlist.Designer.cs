@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LalaDb.Migrations
 {
     [DbContext(typeof(LalaContext))]
-    [Migration("20190817085923_Playlist")]
+    [Migration("20190817115023_Playlist")]
     partial class Playlist
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -106,6 +106,8 @@ namespace LalaDb.Migrations
                     b.Property<int>("PlaylistTrackId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("Order");
+
                     b.Property<int>("PlaylistId");
 
                     b.Property<int>("TrackId");
@@ -114,9 +116,7 @@ namespace LalaDb.Migrations
 
                     b.HasIndex("PlaylistId");
 
-                    b.HasIndex("TrackId");
-
-                    b.ToTable("PlaylistTrack");
+                    b.ToTable("PlaylistTracks");
                 });
 
             modelBuilder.Entity("LalaDb.Data.Track", b =>
@@ -178,11 +178,6 @@ namespace LalaDb.Migrations
                     b.HasOne("LalaDb.Data.Playlist", "Playlist")
                         .WithMany("Tracks")
                         .HasForeignKey("PlaylistId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("LalaDb.Data.Track", "Track")
-                        .WithMany("PlaylistTracks")
-                        .HasForeignKey("TrackId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

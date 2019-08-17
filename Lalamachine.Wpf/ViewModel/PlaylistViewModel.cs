@@ -6,6 +6,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Windows.Input;
+using LalaDb.Data;
+using LalaDb.Model;
 using LibLala.TagReader;
 
 namespace Lalamachine.Wpf.ViewModel
@@ -35,13 +37,32 @@ namespace Lalamachine.Wpf.ViewModel
 
     public class PlaylistViewModel : INotifyPropertyChanged
     {
-        public PlaylistViewModel(string name = "MAIN")
+        private readonly PlaylistModel _playlistModel;
+        public PlaylistViewModel()
+        {
+            SetUp("LIBRARY");
+        }
+
+        public PlaylistViewModel(LalaContext context)
+        {
+            _playlistModel = new PlaylistModel(context);
+            SetUp("MAIN");
+            LoadLastPlaylist();
+        }
+
+        private void SetUp(string name)
         {
             Name = name;
             _playlist = new ObservableCollection<PlaylistTags>();
             _playTrackCommand = new DelegateCommand(OnPlayTrackCommandHandler);
             _removeTrackCommand = new DelegateCommand(OnRemoveTrackCommandHandler);
             _removeAllTracksCommand = new DelegateCommand(OnRemoveAllTrackCommandHandler);
+        }
+
+        private void LoadLastPlaylist()
+        {
+            var tracks = _playlistModel.getPlaylistTracks(LibLala.Constants.MISC_PLAYLIST_NAME);
+            AddTracks(tracks);
         }
 
         private void OnRemoveAllTrackCommandHandler(object obj)
@@ -71,19 +92,19 @@ namespace Lalamachine.Wpf.ViewModel
             AddTracks(e.Tracks.ToList());
         }
 
-        private readonly DelegateCommand _playTrackCommand;
+        private DelegateCommand _playTrackCommand;
         public ICommand PlayTrackCommand => _playTrackCommand;
 
-        private readonly DelegateCommand _removeTrackCommand;
+        private DelegateCommand _removeTrackCommand;
         public ICommand RemoveTrackCommand => _removeTrackCommand;
 
         internal void AddTracksToPlaylistHandler(object sender, AddTracksToPlaylistEventArgs e)
         {
             if (e.NewPlaylist) { DeleteAllTracks(); }
-            foreach (var tags in e.Tracks) { AddTrack(tags); }
+            AddTracks(e.Tracks);
         }
 
-        private readonly DelegateCommand _removeAllTracksCommand;
+        private DelegateCommand _removeAllTracksCommand;
         public ICommand RemoveAllTracksCommand => _removeAllTracksCommand;
 
         public event EventHandler<PlayTrackEventArgs> PlayTrackEvent;
@@ -101,7 +122,18 @@ namespace Lalamachine.Wpf.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
+            if (propertyName == "Playlist") { SavePlaylist(); }
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void SavePlaylist()
+        {
+            if (_playlistModel != null)
+            {
+                var tagsList = new List<Tags>();
+                foreach (var item in Playlist) { tagsList.Add(item); }
+                _playlistModel.savePlaylist(LibLala.Constants.MISC_PLAYLIST_NAME, tagsList);
+            }
         }
 
         public PlaylistTags CurrentTrack => Playlist[CurrentIndex];
@@ -169,6 +201,15 @@ namespace Lalamachine.Wpf.ViewModel
         public void AddTrack(PlaylistTags tags)
         {
             Playlist.Add(tags);
+            NotifyPropertyChanged("Playlist");
+        }
+
+        public void AddTracks(List<LalaTags> tagsRange)
+        {
+            foreach (var tags in tagsRange)
+            {
+                AddTrack(tags);
+            }
             NotifyPropertyChanged("Playlist");
         }
 

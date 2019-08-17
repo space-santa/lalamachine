@@ -11,6 +11,7 @@ namespace LalaDb.Data
         public DbSet<Track> Tracks { get; set; }
         public DbSet<ArtistTrack> ArtistTracks { get; set; }
         public DbSet<GenreTrack> GenreTracks { get; set; }
+        public DbSet<PlaylistTrack> PlaylistTracks { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

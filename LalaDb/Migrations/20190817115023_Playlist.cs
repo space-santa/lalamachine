@@ -20,46 +20,36 @@ namespace LalaDb.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PlaylistTrack",
+                name: "PlaylistTracks",
                 columns: table => new
                 {
                     PlaylistTrackId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     PlaylistId = table.Column<int>(nullable: false),
-                    TrackId = table.Column<int>(nullable: false)
+                    TrackId = table.Column<int>(nullable: false),
+                    Order = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PlaylistTrack", x => x.PlaylistTrackId);
+                    table.PrimaryKey("PK_PlaylistTracks", x => x.PlaylistTrackId);
                     table.ForeignKey(
-                        name: "FK_PlaylistTrack_Playlists_PlaylistId",
+                        name: "FK_PlaylistTracks_Playlists_PlaylistId",
                         column: x => x.PlaylistId,
                         principalTable: "Playlists",
                         principalColumn: "PlaylistId",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PlaylistTrack_Tracks_TrackId",
-                        column: x => x.TrackId,
-                        principalTable: "Tracks",
-                        principalColumn: "TrackId",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PlaylistTrack_PlaylistId",
-                table: "PlaylistTrack",
+                name: "IX_PlaylistTracks_PlaylistId",
+                table: "PlaylistTracks",
                 column: "PlaylistId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PlaylistTrack_TrackId",
-                table: "PlaylistTrack",
-                column: "TrackId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "PlaylistTrack");
+                name: "PlaylistTracks");
 
             migrationBuilder.DropTable(
                 name: "Playlists");

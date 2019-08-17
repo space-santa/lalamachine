@@ -50,7 +50,6 @@ namespace LalaDb.Data
 
         public virtual List<ArtistTrack> ArtistTracks { get; set; }
         public virtual List<GenreTrack> GenreTracks { get; set; }
-        public virtual List<PlaylistTrack> PlaylistTracks { get; set; }
     }
 
 
@@ -85,6 +84,7 @@ namespace LalaDb.Data
         public virtual Playlist Playlist { get; set; }
 
         public int TrackId { get; set; }
-        public virtual Track Track { get; set; }
+
+        public int Order { get; set; }
     }
 }

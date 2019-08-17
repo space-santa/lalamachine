@@ -104,6 +104,8 @@ namespace LalaDb.Migrations
                     b.Property<int>("PlaylistTrackId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("Order");
+
                     b.Property<int>("PlaylistId");
 
                     b.Property<int>("TrackId");
@@ -112,9 +114,7 @@ namespace LalaDb.Migrations
 
                     b.HasIndex("PlaylistId");
 
-                    b.HasIndex("TrackId");
-
-                    b.ToTable("PlaylistTrack");
+                    b.ToTable("PlaylistTracks");
                 });
 
             modelBuilder.Entity("LalaDb.Data.Track", b =>
@@ -176,11 +176,6 @@ namespace LalaDb.Migrations
                     b.HasOne("LalaDb.Data.Playlist", "Playlist")
                         .WithMany("Tracks")
                         .HasForeignKey("PlaylistId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("LalaDb.Data.Track", "Track")
-                        .WithMany("PlaylistTracks")
-                        .HasForeignKey("TrackId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
