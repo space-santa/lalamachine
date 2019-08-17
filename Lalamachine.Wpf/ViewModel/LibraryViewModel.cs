@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -13,6 +14,12 @@ namespace Lalamachine.Wpf.ViewModel
     public class DisplayLibChangedEventArgs : EventArgs
     {
         public ObservableCollection<PlaylistTags> Tracks { get; set; }
+    }
+
+    public class AddTracksToPlaylistEventArgs : EventArgs
+    {
+        public List<LalaTags> Tracks { get; set; }
+        public bool NewPlaylist { get; set; }
     }
 
     internal class LibraryViewModel : INotifyPropertyChanged
@@ -34,6 +41,8 @@ namespace Lalamachine.Wpf.ViewModel
             _startScanCommand = new DelegateCommand(OnStartScan);
             _clearSearchCommand = new DelegateCommand(ClearSearch);
             _updateListsCommand = new DelegateCommand(OnUpdateLists);
+            _createNewPlaylistFromAlbumCommand = new DelegateCommand(OnCreateNewPlaylistFromAlbumCommand);
+            _addTracksFromAlbumCommand = new DelegateCommand(OnAddTracksFromAlbumCommand);
 
             NotifyDisplayLibChanged();
         }
@@ -69,9 +78,30 @@ namespace Lalamachine.Wpf.ViewModel
         private readonly DelegateCommand _updateListsCommand;
         public ICommand UpdateListsCommand => _updateListsCommand;
         private void OnUpdateLists(object obj) { NotifyListsChanged(); }
+
+        private readonly DelegateCommand _createNewPlaylistFromAlbumCommand;
+        public ICommand CreateNewPlaylistFromAlbumCommand => _createNewPlaylistFromAlbumCommand;
+        private void OnCreateNewPlaylistFromAlbumCommand(object obj)
+        {
+            InvokeAddTrackToPlaylistEvent((string)obj, true);
+        }
+
+        private readonly DelegateCommand _addTracksFromAlbumCommand;
+        public ICommand AddTracksFromAlbumCommand => _addTracksFromAlbumCommand;
+        private void OnAddTracksFromAlbumCommand(object obj)
+        {
+            InvokeAddTrackToPlaylistEvent((string)obj, false);
+        }
         #endregion
 
         #region Events
+        public event EventHandler<AddTracksToPlaylistEventArgs> AddTracksToPlaylistEvent;
+        private void InvokeAddTrackToPlaylistEvent(string name, bool newPlaylist)
+        {
+            var args = new AddTracksToPlaylistEventArgs { Tracks = _model.getAlbumTracks(name), NewPlaylist = newPlaylist };
+            AddTracksToPlaylistEvent?.Invoke(this, args);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {

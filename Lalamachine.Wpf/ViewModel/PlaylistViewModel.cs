@@ -77,6 +77,12 @@ namespace Lalamachine.Wpf.ViewModel
         private readonly DelegateCommand _removeTrackCommand;
         public ICommand RemoveTrackCommand => _removeTrackCommand;
 
+        internal void AddTracksToPlaylistHandler(object sender, AddTracksToPlaylistEventArgs e)
+        {
+            if (e.NewPlaylist) { DeleteAllTracks(); }
+            foreach (var tags in e.Tracks) { AddTrack(tags); }
+        }
+
         private readonly DelegateCommand _removeAllTracksCommand;
         public ICommand RemoveAllTracksCommand => _removeAllTracksCommand;
 

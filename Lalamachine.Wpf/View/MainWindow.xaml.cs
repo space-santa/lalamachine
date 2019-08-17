@@ -52,6 +52,7 @@ namespace Lalamachine.Wpf.View
 
             _settingsViewModel.StartScanEvent += _libraryViewModel.StartScanHandler;
             _libraryViewModel.DisplayLibChanged += _libraryPlaylistViewModel.DisplayChangedHandler;
+            _libraryViewModel.AddTracksToPlaylistEvent += _playlistViewModel.AddTracksToPlaylistHandler;
 
             Player.DataContext = _player;
             Player.ShuffleRepeatControl.DataContext = _shuffleRepeatViewModel;
