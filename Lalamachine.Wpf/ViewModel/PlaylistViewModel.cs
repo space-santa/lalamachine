@@ -57,6 +57,8 @@ namespace Lalamachine.Wpf.ViewModel
             _playTrackCommand = new DelegateCommand(OnPlayTrackCommandHandler);
             _removeTrackCommand = new DelegateCommand(OnRemoveTrackCommandHandler);
             _removeAllTracksCommand = new DelegateCommand(OnRemoveAllTrackCommandHandler);
+            _createNewPlaylistFromSelectionCommand = new DelegateCommand(OnCreateNewPlaylistFromSelectionCommand);
+            _addSelectionToPlaylistCommand = new DelegateCommand(OnAddSelectionToPlaylistCommand);
         }
 
         private void LoadLastPlaylist()
@@ -65,50 +67,55 @@ namespace Lalamachine.Wpf.ViewModel
             AddTracks(tracks);
         }
 
-        private void OnRemoveAllTrackCommandHandler(object obj)
+        #region Commands
+        private DelegateCommand _playTrackCommand;
+        public ICommand PlayTrackCommand => _playTrackCommand;
+        private void OnPlayTrackCommandHandler(object obj)
         {
-            DeleteAllTracks();
+            var track = (PlaylistTags)obj;
+            InvokePlayTrackEvent(track);
         }
 
+        private DelegateCommand _removeTrackCommand;
+        public ICommand RemoveTrackCommand => _removeTrackCommand;
         private void OnRemoveTrackCommandHandler(object obj)
         {
             var selectedItem = (PlaylistTags)obj;
             _playlist.Remove(selectedItem);
         }
 
-        private void OnPlayTrackCommandHandler(object obj)
-        {
-            var track = (PlaylistTags)obj;
-            OnPlayTrack(track);
-        }
-
-        private ObservableCollection<PlaylistTags> _playlist;
-
-        public int CurrentIndex => Playlist.IndexOf(Playlist.FirstOrDefault(x => x.IsPlaying));
-
-        internal void DisplayChangedHandler(object sender, DisplayLibChangedEventArgs e)
-        {
-            DeleteAllTracks();
-            AddTracks(e.Tracks.ToList());
-        }
-
-        private DelegateCommand _playTrackCommand;
-        public ICommand PlayTrackCommand => _playTrackCommand;
-
-        private DelegateCommand _removeTrackCommand;
-        public ICommand RemoveTrackCommand => _removeTrackCommand;
-
-        internal void AddTracksToPlaylistHandler(object sender, AddTracksToPlaylistEventArgs e)
-        {
-            if (e.NewPlaylist) { DeleteAllTracks(); }
-            AddTracks(e.Tracks);
-        }
-
         private DelegateCommand _removeAllTracksCommand;
         public ICommand RemoveAllTracksCommand => _removeAllTracksCommand;
+        private void OnRemoveAllTrackCommandHandler(object obj)
+        {
+            DeleteAllTracks();
+        }
+
+        private DelegateCommand _createNewPlaylistFromSelectionCommand;
+        public ICommand CreateNewPlaylistFromSelectionCommand => _createNewPlaylistFromSelectionCommand;
+        private void OnCreateNewPlaylistFromSelectionCommand(object obj)
+        {
+            InvokeAddLibraryTracksToPlaylistEvent(true, ConvertSelectedItemsToTagsList(obj));
+        }
+
+        private DelegateCommand _addSelectionToPlaylistCommand;
+        public ICommand AddSelectionToPlaylistCommand => _addSelectionToPlaylistCommand;
+        private void OnAddSelectionToPlaylistCommand(object obj)
+        {
+            InvokeAddLibraryTracksToPlaylistEvent(false, ConvertSelectedItemsToTagsList(obj));
+        }
+        #endregion
+
+        #region events
+        public event EventHandler<AddTracksToPlaylistEventArgs> AddLibraryTracksToPlaylistEvent;
+        private void InvokeAddLibraryTracksToPlaylistEvent(bool newPlaylist, List<Tags> tags)
+        {
+            var args = new AddTracksToPlaylistEventArgs { NewPlaylist = newPlaylist, Tracks = tags };
+            AddLibraryTracksToPlaylistEvent?.Invoke(this, args);
+        }
 
         public event EventHandler<PlayTrackEventArgs> PlayTrackEvent;
-        protected virtual void OnPlayTrack(PlaylistTags tags)
+        protected virtual void InvokePlayTrackEvent(PlaylistTags tags)
         {
             foreach (var item in _playlist)
             {
@@ -123,6 +130,34 @@ namespace Lalamachine.Wpf.ViewModel
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        #endregion
+
+        private List<Tags> ConvertSelectedItemsToTagsList(object obj)
+        {
+            var items = (System.Collections.IList)obj;
+            var tagsList = new List<Tags>();
+            foreach (PlaylistTags tags in items)
+            {
+                tagsList.Add(tags);
+            }
+            return tagsList;
+        }
+
+        private ObservableCollection<PlaylistTags> _playlist;
+
+        public int CurrentIndex => Playlist.IndexOf(Playlist.FirstOrDefault(x => x.IsPlaying));
+
+        internal void DisplayChangedHandler(object sender, DisplayLibChangedEventArgs e)
+        {
+            DeleteAllTracks();
+            AddTracks(e.Tracks.ToList());
+        }
+
+        internal void AddTracksToPlaylistHandler(object sender, AddTracksToPlaylistEventArgs e)
+        {
+            if (e.NewPlaylist) { DeleteAllTracks(); }
+            AddTracks(e.Tracks);
         }
 
         public void SavePlaylist()
@@ -263,7 +298,7 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 try
                 {
-                    OnPlayTrack(NextTrack);
+                    InvokePlayTrackEvent(NextTrack);
                 }
                 catch (EndOfPlaylistException)
                 {
@@ -276,7 +311,7 @@ namespace Lalamachine.Wpf.ViewModel
         {
             if (HasTracks)
             {
-                OnPlayTrack(PreviousTrack);
+                InvokePlayTrackEvent(PreviousTrack);
             }
         }
 

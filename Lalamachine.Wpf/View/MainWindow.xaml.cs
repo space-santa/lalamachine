@@ -54,6 +54,7 @@ namespace Lalamachine.Wpf.View
 
             _playlistViewModel.PlayTrackEvent += _player.PlayTrackHandler;
             _libraryPlaylistViewModel.PlayTrackEvent += _player.PlayTrackHandler;
+            _libraryPlaylistViewModel.AddLibraryTracksToPlaylistEvent += _playlistViewModel.AddTracksToPlaylistHandler;
 
             _settingsViewModel.StartScanEvent += _libraryViewModel.StartScanHandler;
             _libraryViewModel.DisplayLibChanged += _libraryPlaylistViewModel.DisplayChangedHandler;
