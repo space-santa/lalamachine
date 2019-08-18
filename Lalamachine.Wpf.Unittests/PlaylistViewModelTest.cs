@@ -1,5 +1,8 @@
+﻿using System;
+using LalaDb.Data;
 using Lalamachine.Wpf.ViewModel;
 using LibLala.TagReader;
+using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
 namespace Lalamachine.Wpf.Unittests
@@ -46,6 +49,22 @@ namespace Lalamachine.Wpf.Unittests
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayLastTrackHandler(null, null);
             Assert.IsTrue(wasCalled);
+        }
+
+        [Test]
+        public void Instance_NoContext_HasNameLibrary()
+        {
+            var viewModel = new PlaylistViewModel();
+            Assert.AreEqual(viewModel.Name, "LIBRARY");
+        }
+
+        [Test]
+        public void Instance_WithContext_HasNameMain()
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<LalaContext>().UseInMemoryDatabase(Guid.NewGuid().ToString());
+            var contextMock = new LalaContext(optionsBuilder.Options);
+            var viewModel = new PlaylistViewModel(contextMock);
+            Assert.AreEqual(viewModel.Name, "MAIN");
         }
     }
 }
