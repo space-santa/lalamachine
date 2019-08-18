@@ -57,6 +57,8 @@ namespace Lalamachine.Wpf.ViewModel
             _playTrackCommand = new DelegateCommand(OnPlayTrackCommandHandler);
             _removeTrackCommand = new DelegateCommand(OnRemoveTrackCommandHandler);
             _removeAllTracksCommand = new DelegateCommand(OnRemoveAllTrackCommandHandler);
+            _createNewPlaylistFromSelectionCommand = new DelegateCommand(OnCreateNewPlaylistFromSelectionCommand);
+            _addSelectionToPlaylistCommand = new DelegateCommand(OnAddSelectionToPlaylistCommand);
         }
 
         private void LoadLastPlaylist()
@@ -65,6 +67,41 @@ namespace Lalamachine.Wpf.ViewModel
             AddTracks(tracks);
         }
 
+        #region Commands
+        private DelegateCommand _createNewPlaylistFromSelectionCommand;
+        public ICommand CreateNewPlaylistFromSelectionCommand => _createNewPlaylistFromSelectionCommand;
+        private void OnCreateNewPlaylistFromSelectionCommand(object obj)
+        {
+            InvokeAddLibraryTracksToPlaylistEvent(true, ConvertSelectedItemsToTagsList(obj));
+        }
+
+        private DelegateCommand _addSelectionToPlaylistCommand;
+        public ICommand AddSelectionToPlaylistCommand => _addSelectionToPlaylistCommand;
+        private void OnAddSelectionToPlaylistCommand(object obj)
+        {
+            InvokeAddLibraryTracksToPlaylistEvent(false, ConvertSelectedItemsToTagsList(obj));
+        }
+        #endregion
+
+        private List<Tags> ConvertSelectedItemsToTagsList(object obj)
+        {
+            var items = (System.Collections.IList)obj;
+            var tagsList = new List<Tags>();
+            foreach (PlaylistTags tags in items)
+            {
+                tagsList.Add(tags);
+            }
+            return tagsList;
+        }
+
+        #region events
+        public event EventHandler<AddTracksToPlaylistEventArgs> AddLibraryTracksToPlaylistEvent;
+        private void InvokeAddLibraryTracksToPlaylistEvent(bool newPlaylist, List<Tags> tags)
+        {
+            var args = new AddTracksToPlaylistEventArgs { NewPlaylist = newPlaylist, Tracks = tags };
+            AddLibraryTracksToPlaylistEvent?.Invoke(this, args);
+        }
+        #endregion
         private void OnRemoveAllTrackCommandHandler(object obj)
         {
             DeleteAllTracks();

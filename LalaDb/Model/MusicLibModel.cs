@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using LalaDb.Data;
+using LibLala.TagReader;
 using Microsoft.EntityFrameworkCore;
 
 namespace LalaDb.Model
@@ -148,12 +149,12 @@ namespace LalaDb.Model
             return list;
         }
 
-        public List<LalaTags> getAlbumTracks(string name)
+        public List<Tags> getAlbumTracks(string name)
         {
             if (name.Length < 1 || name == LibLala.Constants.ALL)
-            { return new List<LalaTags>(); }
+            { return new List<Tags>(); }
             var tracks = _context.Albums.Single(x => x.Name == name).Tracks;
-            var tagList = new List<LalaTags>();
+            var tagList = new List<Tags>();
             foreach (var track in tracks)
             {
                 var lalaTags = new LalaTags(track);

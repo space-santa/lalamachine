@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -14,12 +13,6 @@ namespace Lalamachine.Wpf.ViewModel
     public class DisplayLibChangedEventArgs : EventArgs
     {
         public ObservableCollection<PlaylistTags> Tracks { get; set; }
-    }
-
-    public class AddTracksToPlaylistEventArgs : EventArgs
-    {
-        public List<LalaTags> Tracks { get; set; }
-        public bool NewPlaylist { get; set; }
     }
 
     internal class LibraryViewModel : INotifyPropertyChanged
