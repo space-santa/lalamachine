@@ -34,7 +34,11 @@ namespace Lalamachine.Wpf.View
         public MainWindow()
         {
             InitializeComponent();
-            var context = new LalaContext();
+            var optionsBuilder = new DbContextOptionsBuilder<LalaContext>();
+            optionsBuilder
+                .UseLazyLoadingProxies()
+                    .UseSqlite($"Data Source={LibLala.Constants.DB_PATH}");
+            var context = new LalaContext(optionsBuilder.Options);
             context.Database.Migrate();
 
             _player = new PlayerViewModel();
