@@ -18,23 +18,6 @@ namespace Lalamachine.Wpf.ViewModel
         public string ListName { get; set; }
     }
 
-    public class PlaylistTags : Tags, INotifyPropertyChanged
-    {
-        public PlaylistTags() : base() { }
-        public PlaylistTags(Tags other) : base(other) { }
-        public PlaylistTags(PlaylistTags other) : base(other) { IsPlaying = other.IsPlaying; }
-
-        private bool isPlaying;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public bool IsPlaying { get => isPlaying; set { isPlaying = value; NotifyPropertyChanged(); } }
-    }
-
     public class PlaylistViewModel : INotifyPropertyChanged
     {
         private readonly PlaylistModel _playlistModel;
@@ -228,6 +211,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         public ShuffleRepeatState PlaylistShuffleRepeatState { get; set; }
 
+        #region AddTrack(s)
         public void AddTrack(Tags tags)
         {
             AddTrack(new PlaylistTags(tags));
@@ -263,7 +247,9 @@ namespace Lalamachine.Wpf.ViewModel
             }
             NotifyPropertyChanged("Playlist");
         }
+        #endregion
 
+        #region DeleteTrack(s)
         public void DeleteTrack(int index)
         {
             Playlist.RemoveAt(index);
@@ -284,6 +270,7 @@ namespace Lalamachine.Wpf.ViewModel
             Playlist.Clear();
             NotifyPropertyChanged("Playlist");
         }
+        #endregion
 
         public void ManualLoadHandler(object sender, ManualLoadEventArgs e)
         {
