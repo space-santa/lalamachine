@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using LalaDb.Data;
 using LibLala.TagReader;
 
 namespace Lalamachine.Wpf.ViewModel
