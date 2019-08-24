@@ -112,9 +112,19 @@ namespace Lalamachine.Wpf.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
+            if (propertyName == "Playlist")
+            {
+                UpdatePlaylistInfo();
+            }
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
+
+        private void UpdatePlaylistInfo()
+        {
+            NotifyPropertyChanged("NumberOfTracks");
+            NotifyPropertyChanged("TotalPlaytime");
+        }
 
         private List<Tags> ConvertSelectedItemsToTagsList(object obj)
         {
@@ -130,6 +140,8 @@ namespace Lalamachine.Wpf.ViewModel
         private ObservableCollection<PlaylistTags> _playlist;
 
         public int CurrentIndex => Playlist.IndexOf(Playlist.FirstOrDefault(x => x.IsPlaying));
+        public int NumberOfTracks => _playlist.Count;
+        public int TotalPlaytime => _playlist.Sum(track => track.length);
 
         internal void DisplayChangedHandler(object sender, DisplayLibChangedEventArgs e)
         {
