@@ -118,6 +118,9 @@ namespace Lalamachine.Wpf.ViewModel
         private string _genreFilter;
         private string _artistFilter;
         private string _albumFilter;
+        private int _numberOfGenres;
+        private int _numberOfArtists;
+        private int _numberOfAlbums;
 
         public bool Scanning
         {
@@ -229,10 +232,23 @@ namespace Lalamachine.Wpf.ViewModel
             get
             {
                 var list = _model.genreList(SearchString);
+                NumberOfGenres = list.Length;
                 list = list.Prepend(Constants.ALL).ToArray();
                 return new ObservableCollection<string>(list);
             }
         }
+
+        public int NumberOfGenres
+        {
+            get => _numberOfGenres;
+            set
+            {
+                _numberOfGenres = value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged("GenreHeader");
+            }
+        }
+        public string GenreHeader => $" Genre ({NumberOfGenres}) ";
 
         public ObservableCollection<string> ArtistList
         {
@@ -240,10 +256,23 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 string[] list;
                 list = _model.artistList(GenreFilter, SearchString);
+                NumberOfArtists = list.Length;
                 list = list.Prepend(Constants.ALL).ToArray();
                 return new ObservableCollection<string>(list);
             }
         }
+
+        public int NumberOfArtists
+        {
+            get => _numberOfArtists;
+            set
+            {
+                _numberOfArtists = value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged("ArtistHeader");
+            }
+        }
+        public string ArtistHeader => $" Artist ({NumberOfArtists}) ";
 
         public ObservableCollection<string> AlbumList
         {
@@ -251,10 +280,23 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 string[] list;
                 list = _model.albumList(ArtistFilter, GenreFilter, SearchString);
+                NumberOfAlbums = list.Length;
                 list = list.Prepend(Constants.ALL).ToArray();
                 return new ObservableCollection<string>(list);
             }
         }
+
+        public int NumberOfAlbums
+        {
+            get => _numberOfAlbums;
+            set
+            {
+                _numberOfAlbums = value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged("AlbumHeader");
+            }
+        }
+        public string AlbumHeader => $" Album ({NumberOfAlbums}) ";
 
         public ObservableCollection<PlaylistTags> DisplayLib
         {
