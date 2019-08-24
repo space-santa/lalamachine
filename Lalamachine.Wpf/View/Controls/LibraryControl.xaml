@@ -33,7 +33,7 @@
                 </ListView.Resources>
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header=" Genre " DisplayMemberBinding="{Binding}" />
+                        <GridViewColumn Header="{Binding Path=GenreHeader}" DisplayMemberBinding="{Binding}" />
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -49,7 +49,7 @@
                 </ListView.Resources>
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header=" Artist " DisplayMemberBinding="{Binding}" />
+                        <GridViewColumn Header="{Binding Path=ArtistHeader}" DisplayMemberBinding="{Binding}" />
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -71,7 +71,7 @@
                 </ListView.ContextMenu>
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header=" Album " DisplayMemberBinding="{Binding}" />
+                        <GridViewColumn Header="{Binding Path=AlbumHeader}" DisplayMemberBinding="{Binding}" />
                     </GridView>
                 </ListView.View>
             </ListView>
