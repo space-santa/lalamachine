@@ -2,14 +2,16 @@
 using LalaDb.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LalaDb.Migrations
 {
     [DbContext(typeof(LalaContext))]
-    partial class LalaContextModelSnapshot : ModelSnapshot
+    [Migration("20190824011127_PlaylistUsePath")]
+    partial class PlaylistUsePath
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

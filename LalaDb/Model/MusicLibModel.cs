@@ -153,7 +153,7 @@ namespace LalaDb.Model
         {
             if (name.Length < 1 || name == LibLala.Constants.ALL)
             { return new List<Tags>(); }
-            var tracks = _context.Albums.Single(x => x.Name == name).Tracks;
+            var tracks = _context.Albums.Single(x => x.Name == name).Tracks.OrderBy(x => x.DiscNumber).ThenBy(x => x.TrackNumber);
             var tagList = new List<Tags>();
             foreach (var track in tracks)
             {

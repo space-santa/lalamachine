@@ -41,7 +41,7 @@ namespace LalaDb.Model
                     new PlaylistTrack
                     {
                         Playlist = playlist.Entity,
-                        TrackId = track.TrackId,
+                        TrackPath = track.path,
                         Order = ++i
                     }
                 ); ; ;
@@ -51,13 +51,20 @@ namespace LalaDb.Model
 
         public List<LalaTags> getPlaylistTracks(string name)
         {
-            var trackIds = _context.PlaylistTracks.Where(x => x.Playlist.Name == name).OrderBy(x => x.Order).Select(x => x.TrackId).ToArray();
+            var trackPaths = _context.PlaylistTracks.Where(x => x.Playlist.Name == name).OrderBy(x => x.Order).Select(x => x.TrackPath).ToArray();
             var tagList = new List<LalaTags>();
-            foreach (var trackId in trackIds)
+            foreach (var trackPath in trackPaths)
             {
-                var track = _context.Tracks.Single(x => x.TrackId == trackId);
-                var lalaTags = new LalaTags(track);
-                tagList.Add(lalaTags);
+                try
+                {
+                    var track = _context.Tracks.Single(x => x.Path == trackPath);
+                    var lalaTags = new LalaTags(track);
+                    tagList.Add(lalaTags);
+                }
+                catch (System.InvalidOperationException)
+                {
+                    // Empty playlist, database upgraded, whatever reason, no harm but also nothing else to do here.
+                }
             }
             return tagList;
         }
