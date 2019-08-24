@@ -8,9 +8,20 @@ namespace Lalamachine.Wpf.View.Converter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            var seconds = (double)value;
+            var seconds = value is double ? (double)value : (int)value;
             var timeSpan = new TimeSpan(0, 0, (int)seconds);
-            return timeSpan.ToString(@"m\:ss");
+            if (timeSpan.TotalDays >= 1)
+            {
+                return timeSpan.ToString(@"d' days, 'h\:mm\:ss");
+            }
+            else if (timeSpan.TotalMinutes > 59)
+            {
+                return timeSpan.ToString(@"h\:mm\:ss");
+            }
+            else
+            {
+                return timeSpan.ToString(@"m\:ss");
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

@@ -8,9 +8,14 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converter:PlaylistItemIsPlayingConverter x:Key="isPlayingDisplayConverter" />
+        <converter:SecondsToTimeSpanConverter x:Key="secondsToTimeSpanConverter" />
     </UserControl.Resources>
     <Grid>
-        <ListView x:Name="PlaylistView" ItemsSource="{Binding Path=Playlist}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ListView x:Name="PlaylistView" ItemsSource="{Binding Path=Playlist}" Grid.Row="0">
             <ListView.Resources>
                 <Style BasedOn="{StaticResource MainListViewItem}" TargetType="{x:Type ListViewItem}">
                     <EventSetter Event="MouseDoubleClick" Handler="ListView_MouseDoubleClick" />
@@ -37,5 +42,10 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <Label Content="{Binding Path=NumberOfTracks}" />
+            <Label Content="Tracks, Total Playtime:" />
+            <Label Content="{Binding Path=TotalPlaytime, Converter={StaticResource secondsToTimeSpanConverter}}" />
+        </StackPanel>
     </Grid>
 </UserControl>
