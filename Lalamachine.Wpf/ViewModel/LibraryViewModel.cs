@@ -231,14 +231,14 @@ namespace Lalamachine.Wpf.ViewModel
             Scanning = false;
         }
 
-        public ObservableCollection<string> GenreList
+        public ObservableCollection<string?> GenreList
         {
             get
             {
                 var list = _model.genreList(SearchString);
                 NumberOfGenres = list.Length;
                 list = list.Prepend(Constants.ALL).ToArray();
-                return new ObservableCollection<string>(list);
+                return new ObservableCollection<string?>(list);
             }
         }
 
@@ -254,15 +254,14 @@ namespace Lalamachine.Wpf.ViewModel
         }
         public string GenreHeader => $" Genre ({NumberOfGenres}) ";
 
-        public ObservableCollection<string> ArtistList
+        public ObservableCollection<string?> ArtistList
         {
             get
             {
-                string[] list;
-                list = _model.artistList(GenreFilter, SearchString);
+                var list = _model.artistList(GenreFilter, SearchString);
                 NumberOfArtists = list.Length;
                 list = list.Prepend(Constants.ALL).ToArray();
-                return new ObservableCollection<string>(list);
+                return new ObservableCollection<string?>(list);
             }
         }
 
@@ -278,15 +277,14 @@ namespace Lalamachine.Wpf.ViewModel
         }
         public string ArtistHeader => $" Artist ({NumberOfArtists}) ";
 
-        public ObservableCollection<string> AlbumList
+        public ObservableCollection<string?> AlbumList
         {
             get
             {
-                string[] list;
-                list = _model.albumList(ArtistFilter, GenreFilter, SearchString);
+                var list = _model.albumList(ArtistFilter, GenreFilter, SearchString);
                 NumberOfAlbums = list.Length;
                 list = list.Prepend(Constants.ALL).ToArray();
-                return new ObservableCollection<string>(list);
+                return new ObservableCollection<string?>(list);
             }
         }
 
@@ -311,7 +309,7 @@ namespace Lalamachine.Wpf.ViewModel
                 var list = _model.displayLib(AlbumFilter, ArtistFilter, GenreFilter, SearchString);
                 foreach (var track in list)
                 {
-                    displayLib.Add(new PlaylistTags(new LalaTags(track)));
+                    if (track is { }) displayLib.Add(new PlaylistTags(new LalaTags(track)));
                 }
 
                 return displayLib;

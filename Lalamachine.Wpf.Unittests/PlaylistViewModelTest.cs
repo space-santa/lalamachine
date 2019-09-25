@@ -1,8 +1,5 @@
-﻿using System;
-using LalaDb.Data;
-using Lalamachine.Wpf.ViewModel;
+﻿using Lalamachine.Wpf.ViewModel;
 using LibLala.TagReader;
-using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
 namespace Lalamachine.Wpf.Unittests

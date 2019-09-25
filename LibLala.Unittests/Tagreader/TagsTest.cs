@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using LibLala.TagReader;
 using NUnit.Framework;
 
@@ -35,7 +36,7 @@ namespace LibLala.Unittests.Tagreader
         {
             var tags = new Tags("bob", "/path/tp/bob")
             {
-                Artist = new string[2] { "Therapy?", "Therapy?" }
+                Artist = new List<string> { "Therapy?", "Therapy?" }
             };
             Assert.AreEqual("Therapy?", tags.ArtistString);
         }
@@ -47,7 +48,7 @@ namespace LibLala.Unittests.Tagreader
             {
                 ArtistString = "Therapy?, Machine Head"
             };
-            Assert.AreEqual(2, tags.Artist.Length);
+            Assert.AreEqual(2, tags.Artist.Count);
             Assert.AreEqual("Therapy?", tags.Artist[0]);
             Assert.AreEqual("Machine Head", tags.Artist[1]);
         }
@@ -59,7 +60,7 @@ namespace LibLala.Unittests.Tagreader
             {
                 ArtistString = "Therapy?, Therapy?"
             };
-            Assert.AreEqual(tags.Artist.Length, 1);
+            Assert.AreEqual(tags.Artist.Count, 1);
             Assert.AreEqual("Therapy?", tags.Artist[0]);
         }
     }

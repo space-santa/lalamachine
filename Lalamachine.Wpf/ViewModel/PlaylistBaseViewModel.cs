@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using LalaDb.Data;
-using LalaDb.Model;
 using LibLala.TagReader;
 
 namespace Lalamachine.Wpf.ViewModel

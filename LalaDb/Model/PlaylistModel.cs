@@ -18,7 +18,7 @@ namespace LalaDb.Model
         {
             try
             {
-                _context.PlaylistTracks.RemoveRange(_context.PlaylistTracks.Where(x => x.Playlist.Name == name));
+                _context.PlaylistTracks.RemoveRange(_context.PlaylistTracks.AsEnumerable().Where(x => x.Playlist?.Name == name));
                 _context.Playlists.Remove(_context.Playlists.Single(x => x.Name == name));
                 _context.SaveChanges();
             }
@@ -51,7 +51,7 @@ namespace LalaDb.Model
 
         public List<LalaTags> getPlaylistTracks(string name)
         {
-            var trackPaths = _context.PlaylistTracks.Where(x => x.Playlist.Name == name).OrderBy(x => x.Order).Select(x => x.TrackPath).ToArray();
+            var trackPaths = _context.PlaylistTracks.AsEnumerable().Where(x => x.Playlist?.Name == name).OrderBy(x => x.Order).Select(x => x.TrackPath).ToArray();
             var tagList = new List<LalaTags>();
             foreach (var trackPath in trackPaths)
             {
