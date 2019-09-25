@@ -26,8 +26,8 @@ namespace LalaDb.Model
         {
             if (Scanning) { return new string[0]; }
 
-            var list = _context.Genres
-                .Where(x => x.Name.Contains(searchString, System.StringComparison.OrdinalIgnoreCase))
+            var list = _context.Genres.AsEnumerable()
+                .Where(x => x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 .Select(x => x.Name)
                 .OrderBy(x => x)
                 .ToArray();
@@ -48,7 +48,11 @@ namespace LalaDb.Model
             }
             else
             {
-                list = _context.Artists.Where(x => x.Name.Contains(searchString, System.StringComparison.OrdinalIgnoreCase)).Select(x => x.Name).OrderBy(x => x).ToArray();
+                list = _context.Artists.AsEnumerable()
+                    .Where(x => x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                    .Select(x => x.Name)
+                    .OrderBy(x => x)
+                    .ToArray();
             }
 
             return list;
@@ -80,14 +84,11 @@ namespace LalaDb.Model
             }
             else
             {
-                try
-                {
-                    list = _context.Albums.Where(x => x.Name.Contains(searchString, System.StringComparison.OrdinalIgnoreCase)).Select(x => x.Name).OrderBy(x => x).ToArray();
-                }
-                catch (NullReferenceException)
-                {
-                    list = new string[0];
-                }
+                list = _context.Albums.AsEnumerable()
+                    .Where(x => x.Name is { })
+                    .Where(x => x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                    .Select(x => x.Name)
+                    .OrderBy(x => x).ToArray();
             }
 
             return list;
@@ -138,9 +139,10 @@ namespace LalaDb.Model
             {
                 try
                 {
-                    list = _context.Tracks.Where(x => x.Title.Contains(searchString, System.StringComparison.OrdinalIgnoreCase)).ToArray();
+                    list = _context.Tracks.AsEnumerable()
+                        .Where(x => x.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToArray();
                 }
-                catch (System.NullReferenceException)
+                catch (NullReferenceException)
                 {
                     return new Track[0];
                 }
