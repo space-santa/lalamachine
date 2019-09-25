@@ -7,10 +7,11 @@
     <PublishSingleFile>true</PublishSingleFile>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <UseWindowsForms>true</UseWindowsForms>
-    <AssemblyVersion>4.99.6</AssemblyVersion>
-    <FileVersion>4.99.6</FileVersion>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AssemblyVersion>4.99.6</AssemblyVersion>
+    <FileVersion>4.99.6</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
