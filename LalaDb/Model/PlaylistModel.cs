@@ -41,7 +41,7 @@ namespace LalaDb.Model
                     new PlaylistTrack
                     {
                         Playlist = playlist.Entity,
-                        TrackPath = track.path,
+                        TrackPath = track.Path,
                         Order = ++i
                     }
                 ); ; ;

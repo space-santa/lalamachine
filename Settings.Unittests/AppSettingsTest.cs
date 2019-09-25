@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
@@ -20,7 +20,7 @@ namespace Settings.Unittests
         [Test]
         public void TestIntShouldSave()
         {
-            var SettingsFile = Substitute.For<SettingsFile>();
+            var SettingsFile = Substitute.For<SettingsFile>("Joe", "Bob");
             SettingsFile.Load().Returns(new Dictionary<string, string>());
             var settings = new TestSettings(SettingsFile)
             {
@@ -32,7 +32,7 @@ namespace Settings.Unittests
         [Test]
         public void TestBoolShouldSave()
         {
-            var SettingsFile = Substitute.For<SettingsFile>();
+            var SettingsFile = Substitute.For<SettingsFile>("Joe", "Bob");
             SettingsFile.Load().Returns(new Dictionary<string, string>());
             var settings = new TestSettings(SettingsFile)
             {
@@ -44,7 +44,7 @@ namespace Settings.Unittests
         [Test]
         public void TestDoubleShouldSave()
         {
-            var SettingsFile = Substitute.For<SettingsFile>();
+            var SettingsFile = Substitute.For<SettingsFile>("Joe", "Bob");
             SettingsFile.Load().Returns(new Dictionary<string, string>());
             var settings = new TestSettings(SettingsFile)
             {
@@ -56,7 +56,7 @@ namespace Settings.Unittests
         [Test]
         public void TestStringShouldSave()
         {
-            var SettingsFile = Substitute.For<SettingsFile>();
+            var SettingsFile = Substitute.For<SettingsFile>("Joe", "Bob");
             SettingsFile.Load().Returns(new Dictionary<string, string>());
             var settings = new TestSettings(SettingsFile)
             {

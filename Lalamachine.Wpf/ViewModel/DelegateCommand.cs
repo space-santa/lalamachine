@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Input;
 
 namespace Lalamachine.Wpf.ViewModel
@@ -23,7 +23,7 @@ namespace Lalamachine.Wpf.ViewModel
             return true;
         }
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
 
         public void InvokeCanExecuteChanged()
         {

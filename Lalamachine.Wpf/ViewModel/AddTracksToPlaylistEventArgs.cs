@@ -6,7 +6,12 @@ namespace Lalamachine.Wpf.ViewModel
 {
     public class AddTracksToPlaylistEventArgs : EventArgs
     {
-        public List<Tags> Tracks { get; set; }
-        public bool NewPlaylist { get; set; }
+        public AddTracksToPlaylistEventArgs(List<Tags> tracks, bool newPlaylist)
+        {
+            Tracks = tracks;
+            NewPlaylist = newPlaylist;
+        }
+        public List<Tags> Tracks { get; }
+        public bool NewPlaylist { get; }
     }
 }

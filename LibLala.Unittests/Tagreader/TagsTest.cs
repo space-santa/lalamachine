@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using LibLala.TagReader;
 using NUnit.Framework;
 
@@ -10,7 +10,7 @@ namespace LibLala.Unittests.Tagreader
         public void DurationWithHoursShouldBeCorrectLength()
         {
             var ts = new TimeSpan(0, 2, 4, 3, 999);
-            var tags = new Tags
+            var tags = new Tags("bob", "/path/tp/bob")
             {
                 duration = ts
             };
@@ -22,7 +22,7 @@ namespace LibLala.Unittests.Tagreader
         public void DurationWithTwoDigitSecondsShouldBeCorrectLength()
         {
             var ts = new TimeSpan(0, 2, 4, 34, 15);
-            var tags = new Tags
+            var tags = new Tags("bob", "/path/tp/bob")
             {
                 duration = ts
             };
@@ -33,7 +33,7 @@ namespace LibLala.Unittests.Tagreader
         [Test]
         public void ArtistArrayDuplicatesShouldBeRemoved()
         {
-            var tags = new Tags
+            var tags = new Tags("bob", "/path/tp/bob")
             {
                 Artist = new string[2] { "Therapy?", "Therapy?" }
             };
@@ -43,7 +43,7 @@ namespace LibLala.Unittests.Tagreader
         [Test]
         public void ArtistStringSetterShouldSplitCommaSeperatedString()
         {
-            var tags = new Tags
+            var tags = new Tags("bob", "/path/tp/bob")
             {
                 ArtistString = "Therapy?, Machine Head"
             };
@@ -55,7 +55,7 @@ namespace LibLala.Unittests.Tagreader
         [Test]
         public void ArtistStringSetterShouldRemoveDuplicates()
         {
-            var tags = new Tags
+            var tags = new Tags("bob", "/path/tp/bob")
             {
                 ArtistString = "Therapy?, Therapy?"
             };

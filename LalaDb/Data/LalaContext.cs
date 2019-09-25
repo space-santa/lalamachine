@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+# nullable disable
 namespace LalaDb.Data
 {
     public class LalaContext : DbContext

@@ -6,7 +6,7 @@ namespace Settings
 {
     public class AppSettings : AppSettingsBase
     {
-        public AppSettings(string appName, string settingsName) : base(new SettingsFile { AppName = appName, SettingsName = settingsName })
+        public AppSettings(string appName, string settingsName) : base(new SettingsFile(appName, settingsName))
         { }
     }
 

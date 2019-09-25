@@ -13,7 +13,7 @@ namespace Lalamachine.Wpf.Unittests
         public void PlayNextTrackHandler_NoTracks_DoesNothing()
         {
             var wasCalled = false;
-            var viewModel = new PlaylistViewModel();
+            var viewModel = new PlaylistBaseViewModel("LIBRARY");
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayNextTrackHandler(null, null);
             Assert.IsFalse(wasCalled);
@@ -23,8 +23,8 @@ namespace Lalamachine.Wpf.Unittests
         public void PlayNextTrackHandler_HasTracks_PlayNext()
         {
             var wasCalled = false;
-            var viewModel = new PlaylistViewModel();
-            viewModel.AddTrack(new Tags());
+            var viewModel = new PlaylistBaseViewModel("LIBRARY");
+            viewModel.AddTrack(new Tags("bob", "/path/to/bob"));
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayNextTrackHandler(null, null);
             Assert.IsTrue(wasCalled);
@@ -34,7 +34,7 @@ namespace Lalamachine.Wpf.Unittests
         public void PlayPreviousTrackHandler_NoTracks_DoesNothing()
         {
             var wasCalled = false;
-            var viewModel = new PlaylistViewModel();
+            var viewModel = new PlaylistBaseViewModel("LIBRARY");
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayLastTrackHandler(null, null);
             Assert.IsFalse(wasCalled);
@@ -44,27 +44,11 @@ namespace Lalamachine.Wpf.Unittests
         public void PlayPreviousTrackHandler_HasTracks_PlayPrevious()
         {
             var wasCalled = false;
-            var viewModel = new PlaylistViewModel();
-            viewModel.AddTrack(new Tags());
+            var viewModel = new PlaylistBaseViewModel("LIBRARY");
+            viewModel.AddTrack(new Tags("bob", "/path/to/bob"));
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayLastTrackHandler(null, null);
             Assert.IsTrue(wasCalled);
-        }
-
-        [Test]
-        public void Instance_NoContext_HasNameLibrary()
-        {
-            var viewModel = new PlaylistViewModel();
-            Assert.AreEqual(viewModel.Name, "LIBRARY");
-        }
-
-        [Test]
-        public void Instance_WithContext_HasNameMain()
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<LalaContext>().UseInMemoryDatabase(Guid.NewGuid().ToString());
-            var contextMock = new LalaContext(optionsBuilder.Options);
-            var viewModel = new PlaylistViewModel(contextMock);
-            Assert.AreEqual(viewModel.Name, "MAIN");
         }
     }
 }

@@ -18,13 +18,13 @@ namespace Lalamachine.Wpf.ViewModel
 
     public class ShuffleRepeatViewModel : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public event EventHandler<ChangeShuffleRepeatEventArgs> ShuffleRepeatChanged;
+        public event EventHandler<ChangeShuffleRepeatEventArgs>? ShuffleRepeatChanged;
         protected virtual void InvokeShuffleRepeatChanged()
         {
             ShuffleRepeatChanged?.Invoke(this, new ChangeShuffleRepeatEventArgs(State));

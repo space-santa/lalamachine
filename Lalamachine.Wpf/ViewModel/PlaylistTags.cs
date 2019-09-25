@@ -6,13 +6,13 @@ namespace Lalamachine.Wpf.ViewModel
 {
     public class PlaylistTags : Tags, INotifyPropertyChanged
     {
-        public PlaylistTags() : base() { }
+        public PlaylistTags(string title, string path) : base(title, path) { }
         public PlaylistTags(Tags other) : base(other) { }
         public PlaylistTags(PlaylistTags other) : base(other) { IsPlaying = other.IsPlaying; }
 
         private bool isPlaying;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -4,7 +4,7 @@ namespace LalaDb.Data
 {
     public class LalaTags : LibLala.TagReader.Tags
     {
-        public LalaTags(Track track)
+        public LalaTags(Track track) : base(track.Title, track.Path)
         {
             if (track.Album != null)
             {
@@ -21,8 +21,6 @@ namespace LalaDb.Data
                 genre = track.GenreTracks.Select(x => x.Genre.Name).ToArray();
             }
             length = track.Length;
-            path = track.Path;
-            Title = track.Title;
             Track = (uint)track.TrackNumber;
             Year = (uint)track.Year;
             TrackId = track.TrackId;

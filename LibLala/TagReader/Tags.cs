@@ -6,15 +6,19 @@ namespace LibLala.TagReader
 {
     public class Tags
     {
-        public Tags()
+        public Tags(string title, string path)
         {
-            artist = new string[0];
+            _artist = new string[0];
             genre = new string[0];
+            Comment = "";
+            Album = "";
+            Title = title;
+            Path = path;
         }
 
         public Tags(Tags other)
         {
-            artist = new string[0];
+            _artist = new string[0];
             genre = new string[0];
             Album = other.Album;
             Artist = other.Artist;
@@ -25,12 +29,13 @@ namespace LibLala.TagReader
             Title = other.Title;
             Track = other.Track;
             Year = other.Year;
-            path = other.path;
+            Path = other.Path;
             TrackId = other.TrackId;
         }
 
-        public void FromTagLibFile(TagLib.File file)
+        public Tags(TagLib.File file, string path)
         {
+            Path = path;
             Album = file.Tag.Album;
             var x = file.Tag.AlbumArtists;
             var y = file.Tag.Performers;
@@ -39,6 +44,7 @@ namespace LibLala.TagReader
             x.CopyTo(z, 0);
             y.CopyTo(z, x.Length);
 
+            _artist = new string[0];
             Artist = z;
             Comment = file.Tag.Comment;
             DiscNumber = file.Tag.Disc;
@@ -54,10 +60,10 @@ namespace LibLala.TagReader
             return Title != null && Title.Length > 0 && length > 0;
         }
 
-        private string[] artist;
+        private string[] _artist;
         public string[] Artist
         {
-            get => artist;
+            get => _artist;
             set
             {
                 for (var i = 0; i < value.Length; ++i)
@@ -65,12 +71,12 @@ namespace LibLala.TagReader
                     value[i] = value[i].Trim();
                 }
 
-                artist = value.Distinct().ToArray();
+                _artist = value.Distinct().ToArray();
             }
         }
         public string ArtistString
         {
-            get => JoinArrayWithComma(artist.Distinct().ToArray());
+            get => JoinArrayWithComma(_artist.Distinct().ToArray());
             set
             {
                 var localArtist = value.Split(',');
@@ -80,7 +86,7 @@ namespace LibLala.TagReader
                     localArtist[i] = localArtist[i].Trim();
                 }
 
-                artist = localArtist.Distinct().ToArray();
+                _artist = localArtist.Distinct().ToArray();
             }
         }
 
@@ -121,8 +127,7 @@ namespace LibLala.TagReader
         public uint Year { get; set; }
         public uint DiscNumber { get; set; }
         public int TrackId { get; set; }
-
-        public string path;
+        public string Path { get; set; }
 
         private string JoinArrayWithComma(string[] arr)
         {
