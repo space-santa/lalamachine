@@ -1,36 +1,25 @@
 {
-    // Use IntelliSense to find out which attributes exist for C# debugging
-    // Use hover for the description of the existing attributes
-    // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Lalamachine",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Lalamachine/bin/Debug/netcoreapp3.0/Lalamachine.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/Lalamachine",
-            "stopAtEntry": false,
-            "console": "internalConsole"
-        },
-        {
-            "name": "Wpf",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build-wpf",
-            "program": "${workspaceFolder}/Lalamachine.Wpf/bin/Debug/netcoreapp3.0/Lalamachine.Wpf.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/Lalamachine.Wpf",
-            "stopAtEntry": false,
-            "console": "internalConsole"
-        },
-        {
-            "name": ".NET Core Attach",
-            "type": "coreclr",
-            "request": "attach",
-            "processId": "${command:pickProcess}"
-        }
-    ]
+  // Use IntelliSense to find out which attributes exist for C# debugging
+  // Use hover for the description of the existing attributes
+  // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Wpf",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-wpf",
+      "program": "${workspaceFolder}/Lalamachine.Wpf/bin/Debug/netcoreapp3.0/win-x64/Lalamachine.Wpf.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/Lalamachine.Wpf",
+      "stopAtEntry": false,
+      "console": "internalConsole"
+    },
+    {
+      "name": ".NET Core Attach",
+      "type": "coreclr",
+      "request": "attach",
+      "processId": "${command:pickProcess}"
+    }
+  ]
 }
