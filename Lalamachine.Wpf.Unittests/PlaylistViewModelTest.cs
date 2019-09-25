@@ -12,7 +12,7 @@ namespace Lalamachine.Wpf.Unittests
             var wasCalled = false;
             var viewModel = new PlaylistBaseViewModel("LIBRARY");
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
-            viewModel.PlayNextTrackHandler(null, null);
+            viewModel.PlayNextTrackHandler(null, new System.EventArgs());
             Assert.IsFalse(wasCalled);
         }
 
@@ -23,7 +23,7 @@ namespace Lalamachine.Wpf.Unittests
             var viewModel = new PlaylistBaseViewModel("LIBRARY");
             viewModel.AddTrack(new Tags("bob", "/path/to/bob"));
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
-            viewModel.PlayNextTrackHandler(null, null);
+            viewModel.PlayNextTrackHandler(null, new System.EventArgs());
             Assert.IsTrue(wasCalled);
         }
 
@@ -33,7 +33,7 @@ namespace Lalamachine.Wpf.Unittests
             var wasCalled = false;
             var viewModel = new PlaylistBaseViewModel("LIBRARY");
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
-            viewModel.PlayLastTrackHandler(null, null);
+            viewModel.PlayLastTrackHandler(null, new System.EventArgs());
             Assert.IsFalse(wasCalled);
         }
 
@@ -44,7 +44,7 @@ namespace Lalamachine.Wpf.Unittests
             var viewModel = new PlaylistBaseViewModel("LIBRARY");
             viewModel.AddTrack(new Tags("bob", "/path/to/bob"));
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
-            viewModel.PlayLastTrackHandler(null, null);
+            viewModel.PlayLastTrackHandler(null, new System.EventArgs());
             Assert.IsTrue(wasCalled);
         }
     }
