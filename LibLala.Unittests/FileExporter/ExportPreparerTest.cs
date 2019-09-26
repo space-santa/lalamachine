@@ -2,7 +2,7 @@ using System;
 using LibLala.FileExporter;
 using NUnit.Framework;
 
-namespace LibLala.Unittest.FileExporter
+namespace LibLala.Unittests.FileExporter
 {
     public class ExportPreparerTest
     {
