@@ -12,7 +12,11 @@ namespace Lalamachine.Wpf.ViewModel
 {
     public class DisplayLibChangedEventArgs : EventArgs
     {
-        public ObservableCollection<PlaylistTags> Tracks { get; set; }
+        public DisplayLibChangedEventArgs(ObservableCollection<PlaylistTags> tracks)
+        {
+            Tracks = tracks;
+        }
+        public ObservableCollection<PlaylistTags> Tracks { get; }
     }
 
     internal class LibraryViewModel : INotifyPropertyChanged
@@ -23,10 +27,10 @@ namespace Lalamachine.Wpf.ViewModel
         {
             _model = new MusicLibModel(context);
             Scanning = false;
-            SearchString = "";
-            GenreFilter = "";
-            ArtistFilter = "";
-            AlbumFilter = "";
+            _searchString = "";
+            _genreFilter = "";
+            _artistFilter = "";
+            _albumFilter = "";
 
             _setGenreFilterCommand = new DelegateCommand(OnSetGenreFilter);
             _setArtistFilterCommand = new DelegateCommand(OnSetArtistFilter);
@@ -88,27 +92,27 @@ namespace Lalamachine.Wpf.ViewModel
         #endregion
 
         #region Events
-        public event EventHandler<AddTracksToPlaylistEventArgs> AddTracksToPlaylistEvent;
+        public event EventHandler<AddTracksToPlaylistEventArgs>? AddTracksToPlaylistEvent;
         private void InvokeAddTrackToPlaylistEvent(string name, bool newPlaylist)
         {
-            var args = new AddTracksToPlaylistEventArgs { Tracks = _model.getAlbumTracks(name), NewPlaylist = newPlaylist };
+            var args = new AddTracksToPlaylistEventArgs(_model.getAlbumTracks(name), newPlaylist);
             AddTracksToPlaylistEvent?.Invoke(this, args);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public event EventHandler<DisplayLibChangedEventArgs> DisplayLibChanged;
+        public event EventHandler<DisplayLibChangedEventArgs>? DisplayLibChanged;
         private void NotifyDisplayLibChanged()
         {
-            DisplayLibChanged?.Invoke(this, new DisplayLibChangedEventArgs { Tracks = DisplayLib });
+            DisplayLibChanged?.Invoke(this, new DisplayLibChangedEventArgs(DisplayLib));
         }
         #endregion
 
-        internal void StartScanHandler(object sender, StartScanEventArgs e)
+        internal void StartScanHandler(object? sender, StartScanEventArgs e)
         {
             ScanAsync(e.Path);
         }
@@ -227,14 +231,14 @@ namespace Lalamachine.Wpf.ViewModel
             Scanning = false;
         }
 
-        public ObservableCollection<string> GenreList
+        public ObservableCollection<string?> GenreList
         {
             get
             {
                 var list = _model.genreList(SearchString);
                 NumberOfGenres = list.Length;
                 list = list.Prepend(Constants.ALL).ToArray();
-                return new ObservableCollection<string>(list);
+                return new ObservableCollection<string?>(list);
             }
         }
 
@@ -250,15 +254,14 @@ namespace Lalamachine.Wpf.ViewModel
         }
         public string GenreHeader => $" Genre ({NumberOfGenres}) ";
 
-        public ObservableCollection<string> ArtistList
+        public ObservableCollection<string?> ArtistList
         {
             get
             {
-                string[] list;
-                list = _model.artistList(GenreFilter, SearchString);
+                var list = _model.artistList(GenreFilter, SearchString);
                 NumberOfArtists = list.Length;
                 list = list.Prepend(Constants.ALL).ToArray();
-                return new ObservableCollection<string>(list);
+                return new ObservableCollection<string?>(list);
             }
         }
 
@@ -274,15 +277,14 @@ namespace Lalamachine.Wpf.ViewModel
         }
         public string ArtistHeader => $" Artist ({NumberOfArtists}) ";
 
-        public ObservableCollection<string> AlbumList
+        public ObservableCollection<string?> AlbumList
         {
             get
             {
-                string[] list;
-                list = _model.albumList(ArtistFilter, GenreFilter, SearchString);
+                var list = _model.albumList(ArtistFilter, GenreFilter, SearchString);
                 NumberOfAlbums = list.Length;
                 list = list.Prepend(Constants.ALL).ToArray();
-                return new ObservableCollection<string>(list);
+                return new ObservableCollection<string?>(list);
             }
         }
 
@@ -307,7 +309,7 @@ namespace Lalamachine.Wpf.ViewModel
                 var list = _model.displayLib(AlbumFilter, ArtistFilter, GenreFilter, SearchString);
                 foreach (var track in list)
                 {
-                    displayLib.Add(new PlaylistTags(new LalaTags(track)));
+                    if (track is { }) displayLib.Add(new PlaylistTags(new LalaTags(track)));
                 }
 
                 return displayLib;

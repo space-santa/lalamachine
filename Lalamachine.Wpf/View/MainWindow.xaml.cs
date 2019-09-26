@@ -29,7 +29,7 @@ namespace Lalamachine.Wpf.View
         private readonly MainWindowSettings _settings;
         private readonly SettingsViewModel _settingsViewModel;
         private readonly LibraryViewModel _libraryViewModel;
-        private readonly PlaylistViewModel _libraryPlaylistViewModel;
+        private readonly LibraryPlaylistViewModel _libraryPlaylistViewModel;
 
         public MainWindow()
         {
@@ -46,7 +46,7 @@ namespace Lalamachine.Wpf.View
             _shuffleRepeatViewModel = new ShuffleRepeatViewModel();
             _settingsViewModel = new SettingsViewModel();
             _libraryViewModel = new LibraryViewModel(context);
-            _libraryPlaylistViewModel = new PlaylistViewModel();
+            _libraryPlaylistViewModel = new LibraryPlaylistViewModel();
 
             _shuffleRepeatViewModel.ShuffleRepeatChanged += _playlistViewModel.ShuffleRepeatChangedHandler;
             _player.ManualLoadEvent += _playlistViewModel.ManualLoadHandler;

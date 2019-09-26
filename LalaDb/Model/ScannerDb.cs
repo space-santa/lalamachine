@@ -32,10 +32,10 @@ namespace LalaDb.Model
                         Name = g
                     };
 
-                    _context.Genres.Add(genre);
+                    _context.Genres?.Add(genre);
                 }
 
-                _context.GenreTracks.Add(new GenreTrack { Genre = genre, Track = track });
+                _context.GenreTracks?.Add(new GenreTrack { Genre = genre, Track = track });
             }
 
             foreach (var a in tags.Artist)
@@ -52,11 +52,11 @@ namespace LalaDb.Model
                     {
                         Name = a
                     };
-                    _context.Artists.Add(artist);
+                    _context.Artists?.Add(artist);
                 }
 
 
-                _context.ArtistTracks.Add(new ArtistTrack { Artist = artist, Track = track });
+                _context.ArtistTracks?.Add(new ArtistTrack { Artist = artist, Track = track });
             }
 
             if (_context.Albums.Any(x => x.Name == tags.Album))
@@ -74,12 +74,12 @@ namespace LalaDb.Model
             track.Comment = tags.Comment;
             track.DiscNumber = (int)tags.DiscNumber;
             track.Length = tags.length;
-            track.Path = tags.path;
+            track.Path = tags.Path;
             track.Title = tags.Title;
             track.TrackNumber = (int)tags.Track;
             track.Year = (int)tags.Year;
 
-            _context.Tracks.Add(track);
+            _context.Tracks?.Add(track);
             _context.SaveChanges();
         }
 
@@ -90,12 +90,12 @@ namespace LalaDb.Model
 
         public void EnsureDatabase()
         {
-            _context.Albums.RemoveRange(_context.Albums);
-            _context.Artists.RemoveRange(_context.Artists);
-            _context.ArtistTracks.RemoveRange(_context.ArtistTracks);
-            _context.Genres.RemoveRange(_context.Genres);
-            _context.GenreTracks.RemoveRange(_context.GenreTracks);
-            _context.Tracks.RemoveRange(_context.Tracks);
+            _context.Albums?.RemoveRange(_context.Albums);
+            _context.Artists?.RemoveRange(_context.Artists);
+            _context.ArtistTracks?.RemoveRange(_context.ArtistTracks);
+            _context.Genres?.RemoveRange(_context.Genres);
+            _context.GenreTracks?.RemoveRange(_context.GenreTracks);
+            _context.Tracks?.RemoveRange(_context.Tracks);
         }
     }
 }

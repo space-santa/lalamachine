@@ -19,7 +19,7 @@ namespace Lalamachine.Wpf.View.Converter
             return $"{tags.ArtistString} - {tags.Title}";
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object? ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             return null;
         }

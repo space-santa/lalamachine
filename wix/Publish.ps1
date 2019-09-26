@@ -1,7 +1,7 @@
 $version = "4.99.6"
 $PathToPublish = "..\Lalamachine.Wpf\bin\Release\netcoreapp3.0\win-x64\publish"
 
-dotnet publish ../Lalamachine.Wpf/Lalamachine.Wpf.csproj -r win-x64 -c Release -p:PublishSingleFile=true
+dotnet publish ../Lalamachine.Wpf/Lalamachine.Wpf.csproj -c Release
 Remove-Item "${PathToPublish}\\assets" -Recurse -Force
 Copy-Item ..\Lalamachine.Wpf\assets $PathToPublish -Recurse -Force
 
@@ -11,7 +11,7 @@ $xml.Save("$pwd\\main.wxs")
 
 heat.exe dir $PathToPublish -cg DependencyGroup -dr INSTALLDIR -gg -g1 -out DependencyGroup.wxs
 (Get-Content .\DependencyGroup.wxs) | ForEach-Object {
-    $_ -replace "SourceDir", $PathToPublish
+  $_ -replace "SourceDir", $PathToPublish
 } | Set-Content .\DependencyGroup.wxs
 
 candle.exe main.wxs DependencyGroup.wxs

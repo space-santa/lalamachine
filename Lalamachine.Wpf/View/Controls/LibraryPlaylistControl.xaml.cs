@@ -16,7 +16,7 @@ namespace Lalamachine.Wpf.View.Controls
 
         private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var viewModel = (PlaylistViewModel)DataContext;
+            var viewModel = (PlaylistBaseViewModel)DataContext;
             viewModel.PlayTrackCommand.Execute(LibraryPlaylistView.SelectedItem);
         }
     }

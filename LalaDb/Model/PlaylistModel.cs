@@ -18,8 +18,8 @@ namespace LalaDb.Model
         {
             try
             {
-                _context.PlaylistTracks.RemoveRange(_context.PlaylistTracks.Where(x => x.Playlist.Name == name));
-                _context.Playlists.Remove(_context.Playlists.Single(x => x.Name == name));
+                _context.PlaylistTracks?.RemoveRange(_context.PlaylistTracks.AsEnumerable().Where(x => x.Playlist?.Name == name));
+                _context.Playlists?.Remove(_context.Playlists.Single(x => x.Name == name));
                 _context.SaveChanges();
             }
             catch (System.InvalidOperationException)
@@ -32,16 +32,17 @@ namespace LalaDb.Model
         public void savePlaylist(string name, List<Tags> tracks)
         {
             deletePlaylist(name);
-            var playlist = _context.Playlists.Add(new Playlist { Name = name });
+            var playlist = _context.Playlists?.Add(new Playlist { Name = name });
+            if (playlist is null) return;
 
             var i = 0;
             foreach (var track in tracks)
             {
-                _context.PlaylistTracks.Add(
+                _context.PlaylistTracks?.Add(
                     new PlaylistTrack
                     {
                         Playlist = playlist.Entity,
-                        TrackPath = track.path,
+                        TrackPath = track.Path,
                         Order = ++i
                     }
                 ); ; ;
@@ -51,7 +52,7 @@ namespace LalaDb.Model
 
         public List<LalaTags> getPlaylistTracks(string name)
         {
-            var trackPaths = _context.PlaylistTracks.Where(x => x.Playlist.Name == name).OrderBy(x => x.Order).Select(x => x.TrackPath).ToArray();
+            var trackPaths = _context.PlaylistTracks.AsEnumerable().Where(x => x.Playlist?.Name == name).OrderBy(x => x.Order).Select(x => x.TrackPath).ToArray();
             var tagList = new List<LalaTags>();
             foreach (var trackPath in trackPaths)
             {

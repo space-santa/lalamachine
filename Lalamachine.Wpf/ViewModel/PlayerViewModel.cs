@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
@@ -19,6 +19,11 @@ namespace Lalamachine.Wpf.ViewModel
 
     public class ManualLoadEventArgs : EventArgs
     {
+        public ManualLoadEventArgs(string path)
+        {
+            Path = path;
+        }
+
         public string Path { get; set; }
     }
 
@@ -43,12 +48,13 @@ namespace Lalamachine.Wpf.ViewModel
             _lastCommand = new DelegateCommand(OnPlayLastTrack);
             _muteCommand = new DelegateCommand(OnMute);
 
+            _dispatcherTimer = new DispatcherTimer();
             SetupTimer();
             _dispatcherTimer.Start();
         }
 
-        public event EventHandler PlayNextTrackEvent;
-        public event EventHandler PlayNextLibraryTrackEvent;
+        public event EventHandler? PlayNextTrackEvent;
+        public event EventHandler? PlayNextLibraryTrackEvent;
         protected virtual void InvokePlayNextTrackEvent()
         {
             if (LastActivePlaylist == "MAIN")
@@ -65,8 +71,8 @@ namespace Lalamachine.Wpf.ViewModel
             InvokePlayNextTrackEvent();
         }
 
-        public event EventHandler PlayLastTrackEvent;
-        public event EventHandler PlayLastLibraryTrackEvent;
+        public event EventHandler? PlayLastTrackEvent;
+        public event EventHandler? PlayLastLibraryTrackEvent;
         protected virtual void OnPlayLastTrack(object commandParameter)
         {
             if (LastActivePlaylist == "MAIN")
@@ -79,19 +85,19 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
-        public event EventHandler<ManualLoadEventArgs> ManualLoadEvent;
+        public event EventHandler<ManualLoadEventArgs>? ManualLoadEvent;
         protected virtual void OnManualLoad(ManualLoadEventArgs e)
         {
             ManualLoadEvent?.Invoke(this, e);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void PlayTrackHandler(object sender, PlayTrackEventArgs e)
+        public void PlayTrackHandler(object? sender, PlayTrackEventArgs e)
         {
             Source = e.Path;
             LastActivePlaylist = e.ListName;
@@ -188,24 +194,23 @@ namespace Lalamachine.Wpf.ViewModel
         private readonly DelegateCommand _muteCommand;
         public ICommand MuteCommand => _muteCommand;
 
-        private void _mediaPlayer_MediaEnded(object sender, EventArgs e)
+        private void _mediaPlayer_MediaEnded(object? sender, EventArgs e)
         {
             InvokePlayNextTrackEvent();
         }
 
-        private void _mediaPlayer_MediaOpened(object sender, EventArgs e)
+        private void _mediaPlayer_MediaOpened(object? sender, EventArgs e)
         {
             NotifyPropertyChanged("Duration");
         }
 
         private void SetupTimer()
         {
-            _dispatcherTimer = new DispatcherTimer();
             _dispatcherTimer.Tick += new EventHandler(DispatcherTimerTick);
             _dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 200);
         }
 
-        private void DispatcherTimerTick(object sender, EventArgs e)
+        private void DispatcherTimerTick(object? sender, EventArgs e)
         {
             NotifyPropertyChanged("Position");
         }
@@ -236,7 +241,7 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 foreach (var path in dlg.FileNames)
                 {
-                    OnManualLoad(new ManualLoadEventArgs { Path = path });
+                    OnManualLoad(new ManualLoadEventArgs(path));
                 }
             }
         }
@@ -261,7 +266,7 @@ namespace Lalamachine.Wpf.ViewModel
             }
             else
             {
-                _nextCommand.Execute(null);
+                _nextCommand.Execute(new object());
             }
         }
 

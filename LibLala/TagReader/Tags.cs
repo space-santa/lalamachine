@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
@@ -6,16 +7,20 @@ namespace LibLala.TagReader
 {
     public class Tags
     {
-        public Tags()
+        public Tags(string title, string path)
         {
-            artist = new string[0];
-            genre = new string[0];
+            _artist = new List<string>();
+            genre = new List<string>();
+            Comment = "";
+            Album = "";
+            Title = title;
+            Path = path;
         }
 
         public Tags(Tags other)
         {
-            artist = new string[0];
-            genre = new string[0];
+            _artist = new List<string>();
+            genre = new List<string>();
             Album = other.Album;
             Artist = other.Artist;
             Comment = other.Comment;
@@ -25,12 +30,13 @@ namespace LibLala.TagReader
             Title = other.Title;
             Track = other.Track;
             Year = other.Year;
-            path = other.path;
+            Path = other.Path;
             TrackId = other.TrackId;
         }
 
-        public void FromTagLibFile(TagLib.File file)
+        public Tags(TagLib.File file, string path)
         {
+            Path = path;
             Album = file.Tag.Album;
             var x = file.Tag.AlbumArtists;
             var y = file.Tag.Performers;
@@ -39,10 +45,11 @@ namespace LibLala.TagReader
             x.CopyTo(z, 0);
             y.CopyTo(z, x.Length);
 
-            Artist = z;
+            _artist = new List<string>();
+            Artist = z.ToList();
             Comment = file.Tag.Comment;
             DiscNumber = file.Tag.Disc;
-            genre = file.Tag.Genres;
+            genre = file.Tag.Genres.ToList();
             duration = file.Properties.Duration;
             Title = file.Tag.Title;
             Track = file.Tag.Track;
@@ -54,23 +61,23 @@ namespace LibLala.TagReader
             return Title != null && Title.Length > 0 && length > 0;
         }
 
-        private string[] artist;
-        public string[] Artist
+        private List<string> _artist;
+        public List<string> Artist
         {
-            get => artist;
+            get => _artist;
             set
             {
-                for (var i = 0; i < value.Length; ++i)
+                for (var i = 0; i < value.Count; ++i)
                 {
                     value[i] = value[i].Trim();
                 }
 
-                artist = value.Distinct().ToArray();
+                _artist = value.Distinct().ToList();
             }
         }
         public string ArtistString
         {
-            get => JoinArrayWithComma(artist.Distinct().ToArray());
+            get => JoinArrayWithComma(_artist.Distinct().ToArray());
             set
             {
                 var localArtist = value.Split(',');
@@ -80,15 +87,15 @@ namespace LibLala.TagReader
                     localArtist[i] = localArtist[i].Trim();
                 }
 
-                artist = localArtist.Distinct().ToArray();
+                _artist = localArtist.Distinct().ToList();
             }
         }
 
-        public string[] genre;
+        public List<string> genre;
         public string GenreString
         {
-            get => JoinArrayWithComma(genre);
-            set => genre = value.Split(',');
+            get => JoinArrayWithComma(genre.ToArray());
+            set => genre = value.Split(',').ToList();
         }
 
         public TimeSpan duration;
@@ -121,8 +128,7 @@ namespace LibLala.TagReader
         public uint Year { get; set; }
         public uint DiscNumber { get; set; }
         public int TrackId { get; set; }
-
-        public string path;
+        public string Path { get; set; }
 
         private string JoinArrayWithComma(string[] arr)
         {

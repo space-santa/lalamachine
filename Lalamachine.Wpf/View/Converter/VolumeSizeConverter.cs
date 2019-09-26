@@ -14,7 +14,7 @@ namespace Lalamachine.Wpf.View.Converter
             return (int)displaySize;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object? ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             return null;
         }

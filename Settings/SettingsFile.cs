@@ -6,8 +6,13 @@ namespace Settings
 {
     public class SettingsFile
     {
-        public string AppName { get; set; }
-        public string SettingsName { get; set; }
+        public SettingsFile(string appName, string settingsName)
+        {
+            AppName = appName;
+            SettingsName = settingsName;
+        }
+        public string AppName { get; }
+        public string SettingsName { get; }
 
         public virtual Dictionary<string, string> Load()
         {

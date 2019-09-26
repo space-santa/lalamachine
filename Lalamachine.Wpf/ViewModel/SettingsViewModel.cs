@@ -16,7 +16,11 @@ namespace Lalamachine.Wpf.ViewModel
 
     public class StartScanEventArgs : EventArgs
     {
-        public string Path { get; set; }
+        public StartScanEventArgs(string path)
+        {
+            Path = path;
+        }
+        public string Path { get; }
     }
 
     public class SettingsViewModel : INotifyPropertyChanged
@@ -26,25 +30,25 @@ namespace Lalamachine.Wpf.ViewModel
             _loadCommand = new DelegateCommand(OnLoad);
             _scanCommand = new DelegateCommand(OnScan);
             _settings = new SettingsSettings();
-            LibraryPath = _settings.LibraryPath;
+            _libraryPath = _settings.LibraryPath;
         }
 
         private readonly SettingsSettings _settings;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private string libraryPath;
+        private string _libraryPath;
         public string LibraryPath
         {
-            get => libraryPath;
+            get => _libraryPath;
             set
             {
-                libraryPath = value;
-                _settings.LibraryPath = libraryPath;
+                _libraryPath = value;
+                _settings.LibraryPath = _libraryPath;
                 NotifyPropertyChanged();
             }
         }
@@ -77,13 +81,10 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
-        public event EventHandler<StartScanEventArgs> StartScanEvent;
+        public event EventHandler<StartScanEventArgs>? StartScanEvent;
         protected virtual void InvokeStartScanEvent()
         {
-            var args = new StartScanEventArgs
-            {
-                Path = LibraryPath
-            };
+            var args = new StartScanEventArgs(LibraryPath);
             StartScanEvent?.Invoke(this, args);
         }
     }
