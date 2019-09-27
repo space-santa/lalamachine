@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace LibLala.DomainPrimitives
 {
@@ -19,7 +18,7 @@ namespace LibLala.DomainPrimitives
             {
                 _artists.Add(new Artist(artistString));
             }
-         
+
             EnsureDistinctArtists();
         }
 
@@ -52,7 +51,7 @@ namespace LibLala.DomainPrimitives
         {
             var stringList = new List<string>();
 
-            foreach(var artist in _artists)
+            foreach (var artist in _artists)
             {
                 stringList.Add(artist.ToString());
             }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibLala.DomainPrimitives
+﻿namespace LibLala.DomainPrimitives
 {
     class Artist : BaseNameString
     {
