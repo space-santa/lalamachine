@@ -21,9 +21,18 @@ namespace Lalamachine.Wpf.ViewModel
             _removeAllTracksCommand = new DelegateCommand(OnRemoveAllTrackCommandHandler);
             _createNewPlaylistFromSelectionCommand = new DelegateCommand(OnCreateNewPlaylistFromSelectionCommand);
             _addSelectionToPlaylistCommand = new DelegateCommand(OnAddSelectionToPlaylistCommand);
+            _sortCommand = new DelegateCommand(OnSortCommandHandler);
         }
 
         #region Commands
+        private DelegateCommand _sortCommand;
+        public ICommand SortCommand => _sortCommand;
+        private void OnSortCommandHandler(object obj)
+        {
+            //do all the things to sort all the things
+        }
+
+
         private DelegateCommand _playTrackCommand;
         public ICommand PlayTrackCommand => _playTrackCommand;
         private void OnPlayTrackCommandHandler(object obj)
