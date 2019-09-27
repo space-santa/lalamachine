@@ -52,11 +52,6 @@ namespace Lalamachine.Wpf.View.Controls
                         }
                     }
 
-                    var columnBinding = headerClicked.Column.DisplayMemberBinding as Binding;
-                    var sortBy = columnBinding?.Path.Path ?? headerClicked.Column.Header as string;
-
-                    Sort(sortBy, direction);
-
                     if (direction == ListSortDirection.Ascending)
                     {
                         headerClicked.Column.SetCurrentValue(GridViewColumn.HeaderTemplateProperty, Resources["HeaderTemplateArrowUp"] as DataTemplate);
@@ -74,19 +69,12 @@ namespace Lalamachine.Wpf.View.Controls
 
                     _lastHeaderClicked = headerClicked;
                     _lastDirection = direction;
+
+                    // TODO: Create an object that contains the relevant information for sorting and pass it to the command.
+                    var viewModel = (PlaylistViewModel)DataContext;
+                    viewModel.SortCommand.Execute(PlaylistView.SelectedItem);
                 }
             }
-        }
-
-        private void Sort(string? sortBy, ListSortDirection direction)
-        {
-            if (sortBy is null) return;
-
-            var dataView = CollectionViewSource.GetDefaultView(PlaylistView.ItemsSource);
-            dataView.SortDescriptions.Clear();
-            var sd = new SortDescription(sortBy, direction);
-            dataView.SortDescriptions.Add(sd);
-            dataView.Refresh();
         }
     }
 }

@@ -29,7 +29,10 @@ namespace Lalamachine.Wpf.ViewModel
         public ICommand SortCommand => _sortCommand;
         private void OnSortCommandHandler(object obj)
         {
-            //do all the things to sort all the things
+            // TODO: all the things to sort all the things
+            _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.Album));
+            NotifyPropertyChanged(nameof(Playlist));
+
         }
 
 
