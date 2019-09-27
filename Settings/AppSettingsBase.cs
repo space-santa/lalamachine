@@ -16,6 +16,7 @@ namespace Settings
 
         public AppSettingsBase(SettingsFile settingsFile)
         {
+            if (settingsFile is null) throw new ArgumentNullException(paramName: nameof(settingsFile));
             SettingsFile = settingsFile;
             _settings = SettingsFile.Load();
         }
@@ -29,17 +30,17 @@ namespace Settings
 
         protected void Set(int value, [CallerMemberName] string key = "defaultInt")
         {
-            Set(value.ToString(), key);
+            Set(value.ToString(LibLala.Constants.CULTURE), key);
         }
 
         protected void Set(double value, [CallerMemberName] string key = "defaultDouble")
         {
-            Set(value.ToString(), key);
+            Set(value.ToString(LibLala.Constants.CULTURE), key);
         }
 
         protected void Set(bool value, [CallerMemberName] string key = "defaultBool")
         {
-            Set(value.ToString(), key);
+            Set(value.ToString(LibLala.Constants.CULTURE), key);
         }
 
         protected void Set(string value, [CallerMemberName] string key = "defaultString")
@@ -48,43 +49,43 @@ namespace Settings
             Save();
         }
 
-        protected int GetInt(int initial_value = 0, [CallerMemberName] string key = "defaultInt")
+        protected int GetInt(int initialValue = 0, [CallerMemberName] string key = "defaultInt")
         {
             try
             {
-                return Convert.ToInt32(_settings[key]);
+                return Convert.ToInt32(_settings[key], LibLala.Constants.CULTURE);
             }
             catch (KeyNotFoundException)
             {
-                return initial_value;
+                return initialValue;
             }
         }
 
-        protected double GetDouble(double initial_value = 0.0, [CallerMemberName] string key = "defaultDouble")
+        protected double GetDouble(double initialValue = 0.0, [CallerMemberName] string key = "defaultDouble")
         {
             try
             {
-                return Convert.ToDouble(_settings[key]);
+                return Convert.ToDouble(_settings[key], LibLala.Constants.CULTURE);
             }
             catch (KeyNotFoundException)
             {
-                return initial_value;
+                return initialValue;
             }
         }
 
-        protected bool GetBool(bool initial_value = false, [CallerMemberName] string key = "defaultBool")
+        protected bool GetBool(bool initialValue = false, [CallerMemberName] string key = "defaultBool")
         {
             try
             {
-                return Convert.ToBoolean(_settings[key]);
+                return Convert.ToBoolean(_settings[key], LibLala.Constants.CULTURE);
             }
             catch (KeyNotFoundException)
             {
-                return initial_value;
+                return initialValue;
             }
         }
 
-        protected string GetString(string initial_value = "", [CallerMemberName] string key = "defaultString")
+        protected string GetString(string initialValue = "", [CallerMemberName] string key = "defaultString")
         {
             try
             {
@@ -92,7 +93,7 @@ namespace Settings
             }
             catch (KeyNotFoundException)
             {
-                return initial_value;
+                return initialValue;
             }
         }
     }

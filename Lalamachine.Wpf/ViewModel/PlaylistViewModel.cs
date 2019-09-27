@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using LalaDb.Data;
 using LalaDb.Model;
-using LibLala.TagReader;
+using LibLala.LibLalaTagReader;
 
 namespace Lalamachine.Wpf.ViewModel
 {
@@ -18,7 +18,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         private void LoadLastPlaylist()
         {
-            var tracks = _playlistModel.getPlaylistTracks(LibLala.Constants.MISC_PLAYLIST_NAME);
+            var tracks = _playlistModel.getPlaylistTracks(LibLala.Constants.MISCPLAYLISTNAME);
             AddTracks(tracks);
         }
 
@@ -26,9 +26,9 @@ namespace Lalamachine.Wpf.ViewModel
         {
             if (_playlistModel != null)
             {
-                var tagsList = new List<Tags>();
+                var tagsList = new List<LibLalaTags>();
                 foreach (var item in Playlist) { tagsList.Add(item); }
-                _playlistModel.savePlaylist(LibLala.Constants.MISC_PLAYLIST_NAME, tagsList);
+                _playlistModel.savePlaylist(LibLala.Constants.MISCPLAYLISTNAME, tagsList);
             }
         }
     }

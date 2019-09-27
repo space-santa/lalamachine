@@ -13,11 +13,13 @@ namespace LalaDb.Model
             _context = Context;
         }
 
-        public void AddTagsToDatabase(LibLala.TagReader.Tags tags)
+        public void AddTagsToDatabase(LibLala.LibLalaTagReader.LibLalaTags tags)
         {
+            if (tags is null) return;
+
             var track = new Track();
 
-            foreach (var g in tags.genre)
+            foreach (var g in tags.Genre)
             {
                 Genre genre;
 

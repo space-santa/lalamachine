@@ -8,7 +8,7 @@ namespace LibLala.Unittests
         [Test]
         public void RemoveFilePrefix_NoPrefix_UnchangedString()
         {
-            var result = Utils.Utils.RemoveFilePrefix("bob goes to town");
+            var result = Utils.StringUtils.RemoveFilePrefix("bob goes to town");
             var expected = "bob goes to town";
             Assert.AreEqual(result, expected);
         }
@@ -16,7 +16,7 @@ namespace LibLala.Unittests
         [Test]
         public void RemoveFilePrefix_FilePrefix_CleanString()
         {
-            var result = Utils.Utils.RemoveFilePrefix("file:////d/e/f");
+            var result = Utils.StringUtils.RemoveFilePrefix("file:////d/e/f");
             var expected = "/d/e/f";
             Assert.AreEqual(result, expected);
         }
@@ -25,7 +25,7 @@ namespace LibLala.Unittests
         public void SafeStringList_NullList_ReturnEmptyList()
         {
             var unsafeList = new List<string?> { null, null };
-            var safeList = Utils.Utils.SafeStringList(unsafeList);
+            var safeList = Utils.StringUtils.SafeStringList(unsafeList);
             Assert.IsEmpty(safeList);
         }
 
@@ -33,7 +33,7 @@ namespace LibLala.Unittests
         public void SafeStringList_ListWithStringsAndNulls_ReturnOnlyStringsInList()
         {
             var unsafeList = new List<string?> { null, "bob", null, "joe" };
-            var safeList = Utils.Utils.SafeStringList(unsafeList);
+            var safeList = Utils.StringUtils.SafeStringList(unsafeList);
             Assert.IsTrue(safeList.Count == 2);
             Assert.IsTrue(safeList[0] == "bob");
             Assert.IsTrue(safeList[1] == "joe");

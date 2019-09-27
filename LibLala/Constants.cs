@@ -3,16 +3,18 @@ using System.IO;
 
 namespace LibLala
 {
-    public class Constants
+    public static class Constants
     {
-        public static string LALADIR = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "lalamachine");
-        public static string SETTINGS_PATH = Path.Combine(LALADIR, "settings.json");
-        public static string LIB_SETTINGS_PATH = Path.Combine(LALADIR, "libsettings.json");
-        public static string CONFIG_PATH = Path.Combine(LALADIR, "config.json");
-        public static string DB_PATH = Path.Combine(LALADIR, "musiclib.db");
+        public static string LALADIR { get => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "lalamachine"); }
+        public static string SETTINGSPATH { get => Path.Combine(LALADIR, "settings.json"); }
+        public static string LIBSETTINGSPATH { get => Path.Combine(LALADIR, "libsettings.json"); }
+        public static string CONFIGPATH { get => Path.Combine(LALADIR, "config.json"); }
+        public static string DBPATH { get => Path.Combine(LALADIR, "musiclib.db"); }
 
-        public static string MISC_PLAYLIST_NAME = "cs1m090";
+        public const string MISCPLAYLISTNAME = "cs1m090";
 
-        public static string ALL = "-- all --";
+        public const string ALL = "-- all --";
+
+        public static CultureInfo CULTURE { get => new CultureInfo("en-AU"); }
     }
 }

@@ -1,14 +1,18 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using LibLala.TagReader;
+using LibLala.LibLalaTagReader;
 
 namespace Lalamachine.Wpf.ViewModel
 {
-    public class PlaylistTags : Tags, INotifyPropertyChanged
+    public class PlaylistTags : LibLalaTags, INotifyPropertyChanged
     {
         public PlaylistTags(string title, string path) : base(title, path) { }
-        public PlaylistTags(Tags other) : base(other) { }
-        public PlaylistTags(PlaylistTags other) : base(other) { IsPlaying = other.IsPlaying; }
+        public PlaylistTags(LibLalaTags other) : base(other) { }
+        public PlaylistTags(PlaylistTags other) : base(other)
+        {
+            if (other is null) return;
+            IsPlaying = other.IsPlaying;
+        }
 
         private bool isPlaying;
 

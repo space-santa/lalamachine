@@ -6,6 +6,7 @@ namespace Lalamachine.Wpf.View.Converter
     [ValueConversion(typeof(double), typeof(string))]
     public class SecondsToTimeSpanConverter : IValueConverter
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "<Pending>")]
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             var seconds = value is double ? (double)value : (int)value;

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using LibLala.FileExporter;
 using NUnit.Framework;
 
@@ -6,8 +6,11 @@ namespace LibLala.Unittests.FileExporter
 {
     public class MockExporterDirectory : IExporterDirectory
     {
-        public bool ReplyOfExists = false;
-        public string ArgOfCreateDirectory = "";
+        private bool replyOfExists = false;
+        private string argOfCreateDirectory = "";
+
+        public bool ReplyOfExists { get => replyOfExists; set => replyOfExists = value; }
+        public string ArgOfCreateDirectory { get => argOfCreateDirectory; set => argOfCreateDirectory = value; }
 
         public bool Exists(string destination)
         {
@@ -56,7 +59,7 @@ namespace LibLala.Unittests.FileExporter
         [Test]
         public void ExporterDirectory_GetDirectorySuffix_IsProperlyFormattedCurrentDateTime()
         {
-            var expected = DateTime.Now.ToString("-yyyyMMdd_HHmmss");
+            var expected = DateTime.Now.ToString("-yyyyMMdd_HHmmss", LibLala.Constants.CULTURE);
             var exporterDirectory = new ExporterDirectory();
             Assert.AreEqual(expected, exporterDirectory.GetDirectorySuffix());
         }

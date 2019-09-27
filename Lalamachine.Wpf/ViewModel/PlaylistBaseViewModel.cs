@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using LalaDb.Data;
-using LibLala.TagReader;
+using LibLala.LibLalaTagReader;
 
 namespace Lalamachine.Wpf.ViewModel
 {
@@ -64,7 +64,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         #region events
         public event EventHandler<AddTracksToPlaylistEventArgs>? AddLibraryTracksToPlaylistEvent;
-        private void InvokeAddLibraryTracksToPlaylistEvent(bool newPlaylist, List<Tags> tags)
+        private void InvokeAddLibraryTracksToPlaylistEvent(bool newPlaylist, List<LibLalaTags> tags)
         {
             var args = new AddTracksToPlaylistEventArgs(tags, newPlaylist);
             AddLibraryTracksToPlaylistEvent?.Invoke(this, args);
@@ -73,12 +73,14 @@ namespace Lalamachine.Wpf.ViewModel
         public event EventHandler<PlayTrackEventArgs>? PlayTrackEvent;
         protected virtual void InvokePlayTrackEvent(PlaylistTags tags)
         {
+            if (tags is null) return;
+
             foreach (var item in _playlist)
             {
                 item.IsPlaying = false;
             }
             tags.IsPlaying = true;
-            NotifyPropertyChanged("CurrentIndex");
+            NotifyPropertyChanged(nameof(CurrentIndex));
             PlayTrackEvent?.Invoke(this, new PlayTrackEventArgs(tags.Path, Name));
         }
 
@@ -95,14 +97,14 @@ namespace Lalamachine.Wpf.ViewModel
 
         private void UpdatePlaylistInfo()
         {
-            NotifyPropertyChanged("NumberOfTracks");
-            NotifyPropertyChanged("TotalPlaytime");
+            NotifyPropertyChanged(nameof(NumberOfTracks));
+            NotifyPropertyChanged(nameof(TotalPlaytime));
         }
 
-        private List<Tags> ConvertSelectedItemsToTagsList(object obj)
+        private static List<LibLalaTags> ConvertSelectedItemsToTagsList(object obj)
         {
             var items = (System.Collections.IList)obj;
-            var tagsList = new List<Tags>();
+            var tagsList = new List<LibLalaTags>();
             foreach (PlaylistTags? tags in items)
             {
                 if (tags is { }) tagsList.Add(tags);
@@ -129,7 +131,7 @@ namespace Lalamachine.Wpf.ViewModel
         }
 
         public PlaylistTags CurrentTrack => Playlist[CurrentIndex];
-        public PlaylistTags NextTrack
+        public PlaylistTags? NextTrack
         {
             get
             {
@@ -151,14 +153,14 @@ namespace Lalamachine.Wpf.ViewModel
 
                 if (CurrentIndex != Playlist.Count - 1)
                 {
-                    throw new InvalidOperationException("Playlist must be at the end to get here.");
+                    return null;
                 }
                 if (PlaylistShuffleRepeatState == ShuffleRepeatState.RepeatAll)
                 {
                     return Playlist[0];
                 }
 
-                throw new EndOfPlaylistException();
+                return null;
             }
         }
         public PlaylistTags PreviousTrack
@@ -177,50 +179,51 @@ namespace Lalamachine.Wpf.ViewModel
         public ObservableCollection<PlaylistTags> Playlist
         {
             get => _playlist;
-            set
-            {
-                _playlist = value;
-                NotifyPropertyChanged();
-            }
         }
 
         public ShuffleRepeatState PlaylistShuffleRepeatState { get; set; }
 
         #region AddTrack(s)
-        public void AddTrack(Tags tags)
+        public void AddTrack(LibLalaTags tags)
         {
             AddTrack(new PlaylistTags(tags));
         }
         public void AddTrack(PlaylistTags tags)
         {
             Playlist.Add(tags);
-            NotifyPropertyChanged("Playlist");
+            NotifyPropertyChanged(nameof(Playlist));
         }
 
         public void AddTracks(List<LalaTags> tagsRange)
         {
+            if (tagsRange is null) return;
+
             foreach (var tags in tagsRange)
             {
                 AddTrack(tags);
             }
-            NotifyPropertyChanged("Playlist");
+            NotifyPropertyChanged(nameof(Playlist));
         }
 
-        public void AddTracks(List<Tags> tagsRange)
+        public void AddTracks(List<LibLalaTags> tagsRange)
         {
+            if (tagsRange is null) return;
+
             foreach (var tags in tagsRange)
             {
                 AddTrack(tags);
             }
-            NotifyPropertyChanged("Playlist");
+            NotifyPropertyChanged(nameof(Playlist));
         }
         public void AddTracks(List<PlaylistTags> tagsRange)
         {
+            if (tagsRange is null) return;
+
             foreach (var tags in tagsRange)
             {
                 AddTrack(tags);
             }
-            NotifyPropertyChanged("Playlist");
+            NotifyPropertyChanged(nameof(Playlist));
         }
         #endregion
 
@@ -228,7 +231,7 @@ namespace Lalamachine.Wpf.ViewModel
         public void DeleteTrack(int index)
         {
             Playlist.RemoveAt(index);
-            NotifyPropertyChanged("Playlist");
+            NotifyPropertyChanged(nameof(Playlist));
         }
 
         public void DeleteTracks(int startIndex, int numberOfTracks)
@@ -237,18 +240,20 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 DeleteTrack(startIndex);
             }
-            NotifyPropertyChanged("Playlist");
+            NotifyPropertyChanged(nameof(Playlist));
         }
 
         public void DeleteAllTracks()
         {
             Playlist.Clear();
-            NotifyPropertyChanged("Playlist");
+            NotifyPropertyChanged(nameof(Playlist));
         }
         #endregion
 
         public void ManualLoadHandler(object? sender, ManualLoadEventArgs e)
         {
+            if (e is null) return;
+
             var path = e.Path;
             var tags = new TagReader().Read(path);
             AddTrack(tags);
@@ -256,17 +261,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void PlayNextTrackHandler(object? sender, EventArgs e)
         {
-            if (HasTracks)
-            {
-                try
-                {
-                    InvokePlayTrackEvent(NextTrack);
-                }
-                catch (EndOfPlaylistException)
-                {
-                    // Nothing really.
-                }
-            }
+            if (NextTrack is { }) InvokePlayTrackEvent(NextTrack);
         }
 
         public void PlayLastTrackHandler(object? sender, EventArgs e)
@@ -282,6 +277,8 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void ShuffleRepeatChangedHandler(object? sender, ChangeShuffleRepeatEventArgs e)
         {
+            if (e is null) return;
+
             PlaylistShuffleRepeatState = e.ShuffleRepeatState;
         }
     }

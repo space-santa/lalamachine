@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using LibLala.TagReader;
+using LibLala.LibLalaTagReader;
 
 namespace Lalamachine.Wpf.ViewModel
 {
     public class AddTracksToPlaylistEventArgs : EventArgs
     {
-        public AddTracksToPlaylistEventArgs(List<Tags> tracks, bool newPlaylist)
+        public AddTracksToPlaylistEventArgs(List<LibLalaTags> tracks, bool newPlaylist)
         {
             Tracks = tracks;
             NewPlaylist = newPlaylist;
         }
-        public List<Tags> Tracks { get; }
+        public List<LibLalaTags> Tracks { get; }
         public bool NewPlaylist { get; }
     }
 }
