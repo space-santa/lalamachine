@@ -208,3 +208,9 @@ csharp_space_between_square_brackets = false
 csharp_prefer_braces = true:silent
 csharp_preserve_single_line_blocks = true
 csharp_preserve_single_line_statements = true
+
+# CA1707: Identifiers should not contain underscores
+dotnet_diagnostic.CA1707.severity = suggestion
+
+# CA1812: This was the problem with WPF controlls not finding InitializeComponent or XAML-defined components.
+dotnet_diagnostic.CA1812.severity = suggestion
