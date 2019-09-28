@@ -26,7 +26,6 @@ namespace Lalamachine.Wpf.View.Controls
             viewModel.PlayTrackCommand.Execute(PlaylistView.SelectedItem);
         }
 
-        // TODO: Add sort of the actual list to the ViewModel as a command. This does only sort the view which is useless.
         private void PlaylistViewColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             var headerClicked = e.OriginalSource as GridViewColumnHeader;
@@ -70,7 +69,6 @@ namespace Lalamachine.Wpf.View.Controls
                     _lastHeaderClicked = headerClicked;
                     _lastDirection = direction;
 
-                    // TODO: Create an object that contains the relevant information for sorting and pass it to the command.
                     var message = new SortMessage(_lastDirection, new PlaylistColumn(_lastHeaderClicked.Content.ToString()));
                     var viewModel = (PlaylistViewModel)DataContext;
                     viewModel.SortCommand.Execute(message);
