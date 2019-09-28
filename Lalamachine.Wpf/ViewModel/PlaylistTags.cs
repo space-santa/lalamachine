@@ -18,7 +18,7 @@ namespace Lalamachine.Wpf.ViewModel
             IsPlaying = other.IsPlaying;
         }
 
-        private bool isPlaying;
+        private bool _isPlaying;
 
         public event PropertyChangedEventHandler? PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
@@ -26,6 +26,6 @@ namespace Lalamachine.Wpf.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public bool IsPlaying { get => isPlaying; set { isPlaying = value; NotifyPropertyChanged(); } }
+        public bool IsPlaying { get => _isPlaying; set { _isPlaying = value; NotifyPropertyChanged(); } }
     }
 }
