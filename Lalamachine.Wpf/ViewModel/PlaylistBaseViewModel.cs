@@ -50,27 +50,48 @@ namespace Lalamachine.Wpf.ViewModel
 
             var ascending = sortMessage.Direction == ListSortDirection.Ascending;
 
-            // TODO: This doesn't seem to sort the entire list over a certain length.
             switch (sortMessage.Column.ColumnType)
             {
                 case PlaylistColumnType.Album:
                     if (ascending)
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.Album));
+                        _playlist = new ObservableCollection<PlaylistTags>(
+                            _playlist
+                                .OrderBy(x => x.Album)
+                                .ThenBy(x => x.Track)
+                                .ThenBy(x => x.DiscNumber)
+                        );
                     }
                     else
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderByDescending(x => x.Album));
+                        _playlist = new ObservableCollection<PlaylistTags>(
+                            _playlist
+                                .OrderByDescending(x => x.Album)
+                                .ThenBy(x => x.Track)
+                                .ThenBy(x => x.DiscNumber)
+                        );
                     }
                     break;
                 case PlaylistColumnType.Artist:
                     if (ascending)
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.ArtistString));
+                        _playlist = new ObservableCollection<PlaylistTags>(
+                            _playlist
+                                .OrderBy(x => x.ArtistString)
+                                .ThenBy(x => x.Album)
+                                .ThenBy(x => x.Track)
+                                .ThenBy(x => x.DiscNumber)
+                        );
                     }
                     else
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderByDescending(x => x.ArtistString));
+                        _playlist = new ObservableCollection<PlaylistTags>(
+                            _playlist
+                                .OrderByDescending(x => x.ArtistString)
+                                .ThenBy(x => x.Album)
+                                .ThenBy(x => x.Track)
+                                .ThenBy(x => x.DiscNumber)
+                        );
                     }
                     break;
                 case PlaylistColumnType.Comment:
@@ -96,11 +117,25 @@ namespace Lalamachine.Wpf.ViewModel
                 case PlaylistColumnType.Genre:
                     if (ascending)
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.Genre));
+                        _playlist = new ObservableCollection<PlaylistTags>(
+                            _playlist
+                                .OrderBy(x => x.GenreString)
+                                .ThenBy(x => x.ArtistString)
+                                .ThenBy(x => x.Album)
+                                .ThenBy(x => x.Track)
+                                .ThenBy(x => x.DiscNumber)
+                        );
                     }
                     else
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderByDescending(x => x.Genre));
+                        _playlist = new ObservableCollection<PlaylistTags>(
+                            _playlist
+                                .OrderByDescending(x => x.GenreString)
+                                .ThenBy(x => x.ArtistString)
+                                .ThenBy(x => x.Album)
+                                .ThenBy(x => x.Track)
+                                .ThenBy(x => x.DiscNumber)
+                            );
                     }
                     break;
                 case PlaylistColumnType.Length:
@@ -126,11 +161,23 @@ namespace Lalamachine.Wpf.ViewModel
                 case PlaylistColumnType.Track:
                     if (ascending)
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.Track));
+                        _playlist = new ObservableCollection<PlaylistTags>(
+                            _playlist
+                                .OrderBy(x => x.Track)
+                                .ThenBy(x => x.ArtistString)
+                                .ThenBy(x => x.Album)
+                                .ThenBy(x => x.DiscNumber)
+                        );
                     }
                     else
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderByDescending(x => x.Track));
+                        _playlist = new ObservableCollection<PlaylistTags>(
+                            _playlist
+                                .OrderByDescending(x => x.Track)
+                                .ThenBy(x => x.ArtistString)
+                                .ThenBy(x => x.Album)
+                                .ThenBy(x => x.DiscNumber)
+                        );
                     }
                     break;
                 case PlaylistColumnType.Year:
@@ -147,9 +194,7 @@ namespace Lalamachine.Wpf.ViewModel
                     return;
             }
 
-            _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.Album));
             NotifyPropertyChanged(nameof(Playlist));
-
         }
 
 
