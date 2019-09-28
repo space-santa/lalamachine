@@ -1,31 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LibLala.DomainPrimitives;
 using Newtonsoft.Json;
 
-namespace LibLala.TagReader
+namespace LibLala.LibLalaTagReader
 {
-    public class Tags
+    public class LibLalaTags
     {
-        public Tags(string title, string path)
+        public LibLalaTags(string title, string path)
         {
-            _artist = new List<string>();
-            genre = new List<string>();
+            _artist = new Artists(new List<string>());
+            _genre = new List<string>();
+            Comment = "";
+            Album = "";
+            Title = title;
+            Path = path;
+        }
+        public LibLalaTags(string title, string path, List<string> genre, List<string> artist)
+        {
+            _artist = new Artists(artist);
+            _genre = genre;
             Comment = "";
             Album = "";
             Title = title;
             Path = path;
         }
 
-        public Tags(Tags other)
+        public LibLalaTags(LibLalaTags other)
         {
-            _artist = new List<string>();
-            genre = new List<string>();
+            if (other is null)
+            {
+                throw new ArgumentNullException(paramName: nameof(other));
+            }
+
+            _artist = new Artists(other.Artist);
+            _genre = new List<string>();
             Album = other.Album;
-            Artist = other.Artist;
             Comment = other.Comment;
             DiscNumber = other.DiscNumber;
-            genre = other.genre;
+            _genre = other.Genre;
             duration = other.duration;
             Title = other.Title;
             Track = other.Track;
@@ -34,8 +48,18 @@ namespace LibLala.TagReader
             TrackId = other.TrackId;
         }
 
-        public Tags(TagLib.File file, string path)
+        public LibLalaTags(TagLib.File file, string path)
         {
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new ArgumentNullException(paramName: nameof(path));
+            }
+
+            if (file is null)
+            {
+                throw new ArgumentNullException(paramName: nameof(file));
+            }
+
             Path = path;
             Album = file.Tag.Album;
             var x = file.Tag.AlbumArtists;
@@ -45,11 +69,10 @@ namespace LibLala.TagReader
             x.CopyTo(z, 0);
             y.CopyTo(z, x.Length);
 
-            _artist = new List<string>();
-            Artist = z.ToList();
+            _artist = new Artists(z.ToList());
             Comment = file.Tag.Comment;
             DiscNumber = file.Tag.Disc;
-            genre = file.Tag.Genres.ToList();
+            _genre = file.Tag.Genres.ToList();
             duration = file.Properties.Duration;
             Title = file.Tag.Title;
             Track = file.Tag.Track;
@@ -61,44 +84,34 @@ namespace LibLala.TagReader
             return Title != null && Title.Length > 0 && length > 0;
         }
 
-        private List<string> _artist;
+        private Artists _artist;
         public List<string> Artist
         {
-            get => _artist;
-            set
-            {
-                for (var i = 0; i < value.Count; ++i)
-                {
-                    value[i] = value[i].Trim();
-                }
-
-                _artist = value.Distinct().ToList();
-            }
+            get => _artist.ToStringList();
         }
         public string ArtistString
         {
-            get => JoinArrayWithComma(_artist.Distinct().ToArray());
+            get => _artist.ToCsvString();
+            set => _artist = new Artists(value);
+        }
+
+        private List<string> _genre;
+        public List<string> Genre { get => _genre; }
+        public string GenreString
+        {
+            get => JoinArrayWithComma(Genre.ToArray());
             set
             {
-                var localArtist = value.Split(',');
-
-                for (var i = 0; i < localArtist.Length; ++i)
+                if (value is null)
                 {
-                    localArtist[i] = localArtist[i].Trim();
+                    throw new ArgumentNullException(paramName: nameof(value));
                 }
 
-                _artist = localArtist.Distinct().ToList();
+                _genre = value.Split(',').ToList();
             }
         }
 
-        public List<string> genre;
-        public string GenreString
-        {
-            get => JoinArrayWithComma(genre.ToArray());
-            set => genre = value.Split(',').ToList();
-        }
-
-        public TimeSpan duration;
+        public TimeSpan duration { get; set; }
 
         public int length
         {
@@ -130,7 +143,7 @@ namespace LibLala.TagReader
         public int TrackId { get; set; }
         public string Path { get; set; }
 
-        private string JoinArrayWithComma(string[] arr)
+        private static string JoinArrayWithComma(string[] arr)
         {
             try
             {

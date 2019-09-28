@@ -41,7 +41,7 @@ namespace Settings
             }
         }
 
-        private string SettingsDir => LibLala.Constants.LALADIR;
+        private static string SettingsDir => LibLala.Constants.LALADIR;
         private string SettingsPath => Path.Combine(SettingsDir, $"{SettingsName}.json");
     }
 }

@@ -16,7 +16,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ListView x:Name="LibraryPlaylistView" ItemsSource="{Binding Path=Playlist}" Grid.Row="0">
+        <ListView x:Name="LibraryPlaylistView" ItemsSource="{Binding Path=Playlist}" Grid.Row="0" GridViewColumnHeader.Click="LibraryPlaylistViewColumnHeader_Click">
             <ListView.Resources>
                 <Style BasedOn="{StaticResource MainListViewItem}" TargetType="{x:Type ListViewItem}">
                     <EventSetter Event="MouseDoubleClick" Handler="ListView_MouseDoubleClick" />

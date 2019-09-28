@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using LalaDb.Data;
-using LibLala.TagReader;
+using LibLala.LibLalaTagReader;
 
 namespace LalaDb.Model
 {
@@ -29,11 +29,19 @@ namespace LalaDb.Model
 
         }
 
-        public void savePlaylist(string name, List<Tags> tracks)
+        public void savePlaylist(string name, List<LibLalaTags> tracks)
         {
+            if (string.IsNullOrEmpty(name) || tracks is null)
+            {
+                return;
+            }
+
             deletePlaylist(name);
             var playlist = _context.Playlists?.Add(new Playlist { Name = name });
-            if (playlist is null) return;
+            if (playlist is null)
+            {
+                return;
+            }
 
             var i = 0;
             foreach (var track in tracks)

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 
 namespace LibLala.FileExporter
@@ -24,7 +24,7 @@ namespace LibLala.FileExporter
 
         public string GetDirectorySuffix()
         {
-            return DateTime.Now.ToString("-yyyyMMdd_HHmmss");
+            return DateTime.Now.ToString("-yyyyMMdd_HHmmss", LibLala.Constants.CULTURE);
         }
     }
 }

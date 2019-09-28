@@ -1,11 +1,22 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace LibLala.FileExporter
 {
-    public class FileExporter
+    public static class PlaylistExporter
     {
         public static void ExportPlaylist(string destination, string[] files)
         {
+            if (string.IsNullOrEmpty(destination))
+            {
+                throw new ArgumentNullException(paramName: nameof(destination));
+            }
+
+            if (files is null)
+            {
+                throw new ArgumentNullException(paramName: nameof(files));
+            }
+
             var actualDestination = ExportPreparer.PrepareDestinationDirectory(destination);
             var position = 1;
             var totalNumber = files.Length;

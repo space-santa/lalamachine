@@ -37,8 +37,10 @@ namespace Lalamachine.Wpf.View
             var optionsBuilder = new DbContextOptionsBuilder<LalaContext>();
             optionsBuilder
                 .UseLazyLoadingProxies()
-                    .UseSqlite($"Data Source={LibLala.Constants.DB_PATH}");
+                    .UseSqlite($"Data Source={LibLala.Constants.DBPATH}");
+#pragma warning disable CA2000 // Dispose objects before losing scope. The DI container is taking care of the context lifecycle.
             var context = new LalaContext(optionsBuilder.Options);
+#pragma warning restore CA2000 // Dispose objects before losing scope
             context.Database.Migrate();
 
             _player = new PlayerViewModel();
@@ -77,7 +79,7 @@ namespace Lalamachine.Wpf.View
             Left = _settings.Left;
             Width = _settings.Width;
             Height = _settings.Height;
-            if (_settings.Maximized) { WindowState = WindowState.Maximized; }
+            if (_settings.Maximized) { SetCurrentValue(WindowStateProperty, WindowState.Maximized); }
         }
 
         private void Window_Closed(object sender, System.EventArgs e)

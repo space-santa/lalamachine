@@ -134,7 +134,7 @@ namespace Lalamachine.Wpf.ViewModel
                 _scanning = value;
                 NotifyPropertyChanged();
                 NotifyListsChanged();
-                NotifyPropertyChanged("ScanVisible");
+                NotifyPropertyChanged(nameof(ScanVisible));
             }
         }
 
@@ -155,10 +155,10 @@ namespace Lalamachine.Wpf.ViewModel
 
         private void NotifyListsChanged()
         {
-            NotifyPropertyChanged("DisplayLib");
-            NotifyPropertyChanged("GenreList");
-            NotifyPropertyChanged("ArtistList");
-            NotifyPropertyChanged("AlbumList");
+            NotifyPropertyChanged(nameof(DisplayLib));
+            NotifyPropertyChanged(nameof(GenreList));
+            NotifyPropertyChanged(nameof(ArtistList));
+            NotifyPropertyChanged(nameof(AlbumList));
             NotifyDisplayLibChanged();
         }
 
@@ -193,9 +193,9 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 _artistFilter = EmptyWhenNullOrAll(value);
                 NotifyPropertyChanged();
-                NotifyPropertyChanged("DisplayLib");
-                NotifyPropertyChanged("ArtistList");
-                NotifyPropertyChanged("AlbumList");
+                NotifyPropertyChanged(nameof(DisplayLib));
+                NotifyPropertyChanged(nameof(ArtistList));
+                NotifyPropertyChanged(nameof(AlbumList));
                 NotifyDisplayLibChanged();
             }
         }
@@ -207,13 +207,13 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 _albumFilter = EmptyWhenNullOrAll(value);
                 NotifyPropertyChanged();
-                NotifyPropertyChanged("DisplayLib");
-                NotifyPropertyChanged("AlbumList");
+                NotifyPropertyChanged(nameof(DisplayLib));
+                NotifyPropertyChanged(nameof(AlbumList));
                 NotifyDisplayLibChanged();
             }
         }
 
-        private string EmptyWhenNullOrAll(string value)
+        private static string EmptyWhenNullOrAll(string value)
         {
             if (value == null || value == Constants.ALL)
             {
@@ -227,7 +227,7 @@ namespace Lalamachine.Wpf.ViewModel
         {
             if (Scanning) { return; }
             Scanning = true;
-            await _model.scanAsync(path);
+            await _model.scanAsync(path).ConfigureAwait(true);
             Scanning = false;
         }
 
@@ -249,7 +249,7 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 _numberOfGenres = value;
                 NotifyPropertyChanged();
-                NotifyPropertyChanged("GenreHeader");
+                NotifyPropertyChanged(nameof(GenreHeader));
             }
         }
         public string GenreHeader => $" Genre ({NumberOfGenres}) ";
@@ -272,7 +272,7 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 _numberOfArtists = value;
                 NotifyPropertyChanged();
-                NotifyPropertyChanged("ArtistHeader");
+                NotifyPropertyChanged(nameof(ArtistHeader));
             }
         }
         public string ArtistHeader => $" Artist ({NumberOfArtists}) ";
@@ -295,7 +295,7 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 _numberOfAlbums = value;
                 NotifyPropertyChanged();
-                NotifyPropertyChanged("AlbumHeader");
+                NotifyPropertyChanged(nameof(AlbumHeader));
             }
         }
         public string AlbumHeader => $" Album ({NumberOfAlbums}) ";
@@ -309,7 +309,10 @@ namespace Lalamachine.Wpf.ViewModel
                 var list = _model.displayLib(AlbumFilter, ArtistFilter, GenreFilter, SearchString);
                 foreach (var track in list)
                 {
-                    if (track is { }) displayLib.Add(new PlaylistTags(new LalaTags(track)));
+                    if (track is { })
+                    {
+                        displayLib.Add(new PlaylistTags(new LalaTags(track)));
+                    }
                 }
 
                 return displayLib;

@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Lalamachine.Wpf.ViewModel
 {
     [Serializable]
-    internal class EndOfPlaylistException : Exception
+    public class EndOfPlaylistException : Exception
     {
         public EndOfPlaylistException()
         {

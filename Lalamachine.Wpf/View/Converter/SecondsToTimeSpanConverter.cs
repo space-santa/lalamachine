@@ -12,15 +12,15 @@ namespace Lalamachine.Wpf.View.Converter
             var timeSpan = new TimeSpan(0, 0, (int)seconds);
             if (timeSpan.TotalDays >= 1)
             {
-                return timeSpan.ToString(@"d' days, 'h\:mm\:ss");
+                return timeSpan.ToString(@"d' days, 'h\:mm\:ss", LibLala.Constants.CULTURE);
             }
             else if (timeSpan.TotalMinutes > 59)
             {
-                return timeSpan.ToString(@"h\:mm\:ss");
+                return timeSpan.ToString(@"h\:mm\:ss", LibLala.Constants.CULTURE);
             }
             else
             {
-                return timeSpan.ToString(@"m\:ss");
+                return timeSpan.ToString(@"m\:ss", LibLala.Constants.CULTURE);
             }
         }
 

@@ -30,7 +30,7 @@ namespace Lalamachine.Wpf.ViewModel
     public class PlayerViewModel : INotifyPropertyChanged
     {
         private readonly MediaPlayer _mediaPlayer;
-        private DispatcherTimer _dispatcherTimer;
+        private readonly DispatcherTimer _dispatcherTimer;
         private readonly PlayerSettings _playerSettings;
 
         public PlayerViewModel()
@@ -99,6 +99,11 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void PlayTrackHandler(object? sender, PlayTrackEventArgs e)
         {
+            if (e is null)
+            {
+                return;
+            }
+
             Source = e.Path;
             LastActivePlaylist = e.ListName;
             Play();
@@ -135,7 +140,7 @@ namespace Lalamachine.Wpf.ViewModel
                 if (Source.Length > 0)
                 {
                     _isPlaying = value;
-                    NotifyPropertyChanged("IsPlaying");
+                    NotifyPropertyChanged(nameof(IsPlaying));
                 }
             }
         }
@@ -201,7 +206,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         private void _mediaPlayer_MediaOpened(object? sender, EventArgs e)
         {
-            NotifyPropertyChanged("Duration");
+            NotifyPropertyChanged(nameof(Duration));
         }
 
         private void SetupTimer()
@@ -212,7 +217,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         private void DispatcherTimerTick(object? sender, EventArgs e)
         {
-            NotifyPropertyChanged("Position");
+            NotifyPropertyChanged(nameof(Position));
         }
 
         private void OnChangePlayPause(object commandParameter)
@@ -254,7 +259,7 @@ namespace Lalamachine.Wpf.ViewModel
         public void Open(string path)
         {
             _mediaPlayer.Open(new Uri(path));
-            NotifyPropertyChanged("Source");
+            NotifyPropertyChanged(nameof(Source));
         }
 
         public void Play()

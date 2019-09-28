@@ -1,26 +1,29 @@
 ﻿using System;
 
-namespace LibLala.TagReader
+namespace LibLala.LibLalaTagReader
 {
     public class TagReaderException : Exception
     {
-        public TagReaderException(string message) : base(message)
-        {
-        }
+        public TagReaderException() : base() { }
+        public TagReaderException(string message) : base(message) { }
+
+        public TagReaderException(string message, Exception innerException) : base(message, innerException) { }
     }
 
     public abstract class ITagCreator
     {
-        public abstract Tags Create(string path);
+        public abstract LibLalaTags Create(string path);
     }
 
     public class TagCreator : ITagCreator
     {
-        public override Tags Create(string path)
+        public override LibLalaTags Create(string path)
         {
-            var file = TagLib.File.Create(path);
-            var tags = new Tags(file, System.IO.Path.GetFullPath(path));
-            return tags;
+            using (var file = TagLib.File.Create(path))
+            {
+                var tags = new LibLalaTags(file, System.IO.Path.GetFullPath(path));
+                return tags;
+            }
         }
     }
 
@@ -33,10 +36,11 @@ namespace LibLala.TagReader
 
         public ITagCreator TagCreator { get; set; }
 
-        public Tags Read(string path)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>")]
+        public LibLalaTags Read(string path)
         {
             path = Uri.UnescapeDataString(path);
-            path = Utils.Utils.RemoveFilePrefix(path);
+            path = Utils.StringUtils.RemoveFilePrefix(path);
 
             if (path.Length == 0)
             {

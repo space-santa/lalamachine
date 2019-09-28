@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 
 namespace LibLala.FileExporter
@@ -16,7 +16,7 @@ namespace LibLala.FileExporter
         {
             var digits = (int)Math.Floor(Math.Log10(max) + 1);
             var format = $"D{digits}";
-            var retval = $"{pos.ToString(format)}-{Path.GetFileName(path)}";
+            var retval = $"{pos.ToString(format, LibLala.Constants.CULTURE)}-{Path.GetFileName(path)}";
             return retval;
         }
     }

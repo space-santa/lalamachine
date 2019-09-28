@@ -1,5 +1,5 @@
 ﻿using Lalamachine.Wpf.ViewModel;
-using LibLala.TagReader;
+using LibLala.LibLalaTagReader;
 using NUnit.Framework;
 
 namespace Lalamachine.Wpf.Unittests
@@ -21,7 +21,7 @@ namespace Lalamachine.Wpf.Unittests
         {
             var wasCalled = false;
             var viewModel = new PlaylistBaseViewModel("LIBRARY");
-            viewModel.AddTrack(new Tags("bob", "/path/to/bob"));
+            viewModel.AddTrack(new LibLalaTags("bob", "/path/to/bob"));
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayNextTrackHandler(null, new System.EventArgs());
             Assert.IsTrue(wasCalled);
@@ -42,7 +42,7 @@ namespace Lalamachine.Wpf.Unittests
         {
             var wasCalled = false;
             var viewModel = new PlaylistBaseViewModel("LIBRARY");
-            viewModel.AddTrack(new Tags("bob", "/path/to/bob"));
+            viewModel.AddTrack(new LibLalaTags("bob", "/path/to/bob"));
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayLastTrackHandler(null, new System.EventArgs());
             Assert.IsTrue(wasCalled);

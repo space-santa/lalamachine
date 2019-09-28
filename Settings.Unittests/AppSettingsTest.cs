@@ -38,7 +38,7 @@ namespace Settings.Unittests
             {
                 TestBool = true
             };
-            SettingsFile.Received().Save(Arg.Is<Dictionary<string, string>>(x => x["TestBool"] == true.ToString()));
+            SettingsFile.Received().Save(Arg.Is<Dictionary<string, string>>(x => x["TestBool"] == true.ToString(LibLala.Constants.CULTURE)));
         }
 
         [Test]
