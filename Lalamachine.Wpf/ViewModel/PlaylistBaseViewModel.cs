@@ -6,10 +6,23 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using LalaDb.Data;
+using LibLala.DomainPrimitives;
 using LibLala.LibLalaTagReader;
 
 namespace Lalamachine.Wpf.ViewModel
 {
+    internal class SortMessage
+    {
+        public SortMessage(ListSortDirection direction, PlaylistColumn column)
+        {
+            Direction = direction;
+            Column = column;
+        }
+
+        public ListSortDirection Direction { get; }
+        public PlaylistColumn Column { get; }
+    }
+
     public class PlaylistBaseViewModel : INotifyPropertyChanged
     {
         public PlaylistBaseViewModel(string name)
@@ -25,18 +38,122 @@ namespace Lalamachine.Wpf.ViewModel
         }
 
         #region Commands
-        private DelegateCommand _sortCommand;
+        private readonly DelegateCommand _sortCommand;
         public ICommand SortCommand => _sortCommand;
         private void OnSortCommandHandler(object obj)
         {
-            // TODO: all the things to sort all the things
+            var sortMessage = obj as SortMessage;
+            if (sortMessage is null)
+            {
+                return;
+            }
+
+            var ascending = sortMessage.Direction == ListSortDirection.Ascending;
+
+            // TODO: This doesn't seem to sort the entire list over a certain length.
+            switch (sortMessage.Column.ColumnType)
+            {
+                case PlaylistColumnType.Album:
+                    if (ascending)
+                    {
+                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.Album));
+                    }
+                    else
+                    {
+                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderByDescending(x => x.Album));
+                    }
+                    break;
+                case PlaylistColumnType.Artist:
+                    if (ascending)
+                    {
+                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.ArtistString));
+                    }
+                    else
+                    {
+                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderByDescending(x => x.ArtistString));
+                    }
+                    break;
+                case PlaylistColumnType.Comment:
+                    if (ascending)
+                    {
+                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.Comment));
+                    }
+                    else
+                    {
+                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderByDescending(x => x.Comment));
+                    }
+                    break;
+                case PlaylistColumnType.Disc:
+                    if (ascending)
+                    {
+                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.DiscNumber));
+                    }
+                    else
+                    {
+                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderByDescending(x => x.DiscNumber));
+                    }
+                    break;
+                case PlaylistColumnType.Genre:
+                    if (ascending)
+                    {
+                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.Genre));
+                    }
+                    else
+                    {
+                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderByDescending(x => x.Genre));
+                    }
+                    break;
+                case PlaylistColumnType.Length:
+                    if (ascending)
+                    {
+                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.length));
+                    }
+                    else
+                    {
+                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderByDescending(x => x.length));
+                    }
+                    break;
+                case PlaylistColumnType.Title:
+                    if (ascending)
+                    {
+                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.Title));
+                    }
+                    else
+                    {
+                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderByDescending(x => x.Title));
+                    }
+                    break;
+                case PlaylistColumnType.Track:
+                    if (ascending)
+                    {
+                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.Track));
+                    }
+                    else
+                    {
+                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderByDescending(x => x.Track));
+                    }
+                    break;
+                case PlaylistColumnType.Year:
+                    if (ascending)
+                    {
+                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.Year));
+                    }
+                    else
+                    {
+                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderByDescending(x => x.Year));
+                    }
+                    break;
+                default:
+                    return;
+            }
+
             _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.Album));
             NotifyPropertyChanged(nameof(Playlist));
 
         }
 
 
-        private DelegateCommand _playTrackCommand;
+        private readonly DelegateCommand _playTrackCommand;
         public ICommand PlayTrackCommand => _playTrackCommand;
         private void OnPlayTrackCommandHandler(object obj)
         {
@@ -44,7 +161,7 @@ namespace Lalamachine.Wpf.ViewModel
             InvokePlayTrackEvent(track);
         }
 
-        private DelegateCommand _removeTrackCommand;
+        private readonly DelegateCommand _removeTrackCommand;
         public ICommand RemoveTrackCommand => _removeTrackCommand;
         private void OnRemoveTrackCommandHandler(object obj)
         {
@@ -52,21 +169,21 @@ namespace Lalamachine.Wpf.ViewModel
             _playlist.Remove(selectedItem);
         }
 
-        private DelegateCommand _removeAllTracksCommand;
+        private readonly DelegateCommand _removeAllTracksCommand;
         public ICommand RemoveAllTracksCommand => _removeAllTracksCommand;
         private void OnRemoveAllTrackCommandHandler(object obj)
         {
             DeleteAllTracks();
         }
 
-        private DelegateCommand _createNewPlaylistFromSelectionCommand;
+        private readonly DelegateCommand _createNewPlaylistFromSelectionCommand;
         public ICommand CreateNewPlaylistFromSelectionCommand => _createNewPlaylistFromSelectionCommand;
         private void OnCreateNewPlaylistFromSelectionCommand(object obj)
         {
             InvokeAddLibraryTracksToPlaylistEvent(true, ConvertSelectedItemsToTagsList(obj));
         }
 
-        private DelegateCommand _addSelectionToPlaylistCommand;
+        private readonly DelegateCommand _addSelectionToPlaylistCommand;
         public ICommand AddSelectionToPlaylistCommand => _addSelectionToPlaylistCommand;
         private void OnAddSelectionToPlaylistCommand(object obj)
         {
@@ -85,7 +202,10 @@ namespace Lalamachine.Wpf.ViewModel
         public event EventHandler<PlayTrackEventArgs>? PlayTrackEvent;
         protected virtual void InvokePlayTrackEvent(PlaylistTags tags)
         {
-            if (tags is null) return;
+            if (tags is null)
+            {
+                return;
+            }
 
             foreach (var item in _playlist)
             {
@@ -119,7 +239,10 @@ namespace Lalamachine.Wpf.ViewModel
             var tagsList = new List<LibLalaTags>();
             foreach (PlaylistTags? tags in items)
             {
-                if (tags is { }) tagsList.Add(tags);
+                if (tags is { })
+                {
+                    tagsList.Add(tags);
+                }
             }
             return tagsList;
         }
@@ -208,7 +331,10 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void AddTracks(List<LalaTags> tagsRange)
         {
-            if (tagsRange is null) return;
+            if (tagsRange is null)
+            {
+                return;
+            }
 
             foreach (var tags in tagsRange)
             {
@@ -219,7 +345,10 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void AddTracks(List<LibLalaTags> tagsRange)
         {
-            if (tagsRange is null) return;
+            if (tagsRange is null)
+            {
+                return;
+            }
 
             foreach (var tags in tagsRange)
             {
@@ -229,7 +358,10 @@ namespace Lalamachine.Wpf.ViewModel
         }
         public void AddTracks(List<PlaylistTags> tagsRange)
         {
-            if (tagsRange is null) return;
+            if (tagsRange is null)
+            {
+                return;
+            }
 
             foreach (var tags in tagsRange)
             {
@@ -264,7 +396,10 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void ManualLoadHandler(object? sender, ManualLoadEventArgs e)
         {
-            if (e is null) return;
+            if (e is null)
+            {
+                return;
+            }
 
             var path = e.Path;
             var tags = new TagReader().Read(path);
@@ -273,7 +408,10 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void PlayNextTrackHandler(object? sender, EventArgs e)
         {
-            if (NextTrack is { }) InvokePlayTrackEvent(NextTrack);
+            if (NextTrack is { })
+            {
+                InvokePlayTrackEvent(NextTrack);
+            }
         }
 
         public void PlayLastTrackHandler(object? sender, EventArgs e)
@@ -289,7 +427,10 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void ShuffleRepeatChangedHandler(object? sender, ChangeShuffleRepeatEventArgs e)
         {
-            if (e is null) return;
+            if (e is null)
+            {
+                return;
+            }
 
             PlaylistShuffleRepeatState = e.ShuffleRepeatState;
         }

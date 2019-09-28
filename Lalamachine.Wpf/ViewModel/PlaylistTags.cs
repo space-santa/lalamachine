@@ -10,7 +10,11 @@ namespace Lalamachine.Wpf.ViewModel
         public PlaylistTags(LibLalaTags other) : base(other) { }
         public PlaylistTags(PlaylistTags other) : base(other)
         {
-            if (other is null) return;
+            if (other is null)
+            {
+                return;
+            }
+
             IsPlaying = other.IsPlaying;
         }
 

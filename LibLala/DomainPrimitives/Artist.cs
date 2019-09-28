@@ -1,6 +1,6 @@
 ﻿namespace LibLala.DomainPrimitives
 {
-    class Artist : BaseNameString
+    internal class Artist : BaseNameString
     {
         public Artist(string name) : base(name)
         {

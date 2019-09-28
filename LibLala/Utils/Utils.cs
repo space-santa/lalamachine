@@ -7,7 +7,10 @@ namespace LibLala.Utils
     {
         public static string RemoveFilePrefix(string path)
         {
-            if (path is null) throw new ArgumentNullException(paramName: nameof(path));
+            if (path is null)
+            {
+                throw new ArgumentNullException(paramName: nameof(path));
+            }
 
             if (path.StartsWith("file:///", StringComparison.Ordinal))
             {
@@ -18,12 +21,18 @@ namespace LibLala.Utils
 
         public static List<string> SafeStringList(List<string?> unsafeList)
         {
-            if (unsafeList is null) throw new ArgumentNullException(paramName: nameof(unsafeList));
+            if (unsafeList is null)
+            {
+                throw new ArgumentNullException(paramName: nameof(unsafeList));
+            }
 
             var safeList = new List<string>();
             foreach (var value in unsafeList)
             {
-                if (value is { }) safeList.Add(value);
+                if (value is { })
+                {
+                    safeList.Add(value);
+                }
             }
             return safeList;
 

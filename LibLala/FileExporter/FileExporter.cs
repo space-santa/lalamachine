@@ -7,8 +7,15 @@ namespace LibLala.FileExporter
     {
         public static void ExportPlaylist(string destination, string[] files)
         {
-            if (string.IsNullOrEmpty(destination)) throw new ArgumentNullException(paramName: nameof(destination));
-            if (files is null) throw new ArgumentNullException(paramName: nameof(files));
+            if (string.IsNullOrEmpty(destination))
+            {
+                throw new ArgumentNullException(paramName: nameof(destination));
+            }
+
+            if (files is null)
+            {
+                throw new ArgumentNullException(paramName: nameof(files));
+            }
 
             var actualDestination = ExportPreparer.PrepareDestinationDirectory(destination);
             var position = 1;

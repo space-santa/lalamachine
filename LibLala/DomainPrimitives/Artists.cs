@@ -4,13 +4,16 @@ using System.Linq;
 
 namespace LibLala.DomainPrimitives
 {
-    class Artists
+    internal class Artists : IComparable<Artists>
     {
         private List<Artist> _artists;
 
         public Artists(List<string> artistStrings)
         {
-            if (artistStrings is null) throw new ArgumentNullException(paramName: nameof(artistStrings));
+            if (artistStrings is null)
+            {
+                throw new ArgumentNullException(paramName: nameof(artistStrings));
+            }
 
             _artists = new List<Artist>();
 
@@ -24,7 +27,10 @@ namespace LibLala.DomainPrimitives
 
         public Artists(string artistsCsvString)
         {
-            if (string.IsNullOrEmpty(artistsCsvString)) throw new ArgumentNullException(paramName: nameof(artistsCsvString));
+            if (string.IsNullOrEmpty(artistsCsvString))
+            {
+                throw new ArgumentNullException(paramName: nameof(artistsCsvString));
+            }
 
             _artists = new List<Artist>();
 
@@ -57,6 +63,11 @@ namespace LibLala.DomainPrimitives
             }
 
             return stringList;
+        }
+
+        public int CompareTo(Artists other)
+        {
+            return string.Compare(ToCsvString(), other.ToCsvString(), StringComparison.Ordinal);
         }
     }
 }

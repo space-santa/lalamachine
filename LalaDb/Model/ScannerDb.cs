@@ -15,7 +15,10 @@ namespace LalaDb.Model
 
         public void AddTagsToDatabase(LibLala.LibLalaTagReader.LibLalaTags tags)
         {
-            if (tags is null) return;
+            if (tags is null)
+            {
+                return;
+            }
 
             var track = new Track();
 

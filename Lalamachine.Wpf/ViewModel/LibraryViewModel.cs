@@ -309,7 +309,10 @@ namespace Lalamachine.Wpf.ViewModel
                 var list = _model.displayLib(AlbumFilter, ArtistFilter, GenreFilter, SearchString);
                 foreach (var track in list)
                 {
-                    if (track is { }) displayLib.Add(new PlaylistTags(new LalaTags(track)));
+                    if (track is { })
+                    {
+                        displayLib.Add(new PlaylistTags(new LalaTags(track)));
+                    }
                 }
 
                 return displayLib;

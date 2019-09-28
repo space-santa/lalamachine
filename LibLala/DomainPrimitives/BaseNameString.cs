@@ -2,15 +2,23 @@
 
 namespace LibLala.DomainPrimitives
 {
-    class BaseNameString
+    internal class BaseNameString
     {
-        private string _name = "";
+        private readonly string _name = "";
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>")]
         public BaseNameString(string name)
         {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(paramName: nameof(name));
-            if (name.Length > 256) throw new ArgumentOutOfRangeException(paramName: nameof(name), message: "Name must not be longer than 256 characters.");
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException(paramName: nameof(name));
+            }
+
+            if (name.Length > 256)
+            {
+                throw new ArgumentOutOfRangeException(paramName: nameof(name), message: "Name must not be longer than 256 characters.");
+            }
+
             _name = name.Trim();
         }
 
@@ -33,7 +41,10 @@ namespace LibLala.DomainPrimitives
         {
             var newObject = other as BaseNameString;
 
-            if (newObject is { }) return this == newObject;
+            if (newObject is { })
+            {
+                return this == newObject;
+            }
 
             return base.Equals(other);
         }

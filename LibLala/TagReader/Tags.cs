@@ -29,7 +29,10 @@ namespace LibLala.LibLalaTagReader
 
         public LibLalaTags(LibLalaTags other)
         {
-            if (other is null) throw new ArgumentNullException(paramName: nameof(other));
+            if (other is null)
+            {
+                throw new ArgumentNullException(paramName: nameof(other));
+            }
 
             _artist = new Artists(other.Artist);
             _genre = new List<string>();
@@ -47,8 +50,15 @@ namespace LibLala.LibLalaTagReader
 
         public LibLalaTags(TagLib.File file, string path)
         {
-            if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(paramName: nameof(path));
-            if (file is null) throw new ArgumentNullException(paramName: nameof(file));
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new ArgumentNullException(paramName: nameof(path));
+            }
+
+            if (file is null)
+            {
+                throw new ArgumentNullException(paramName: nameof(file));
+            }
 
             Path = path;
             Album = file.Tag.Album;
@@ -92,7 +102,11 @@ namespace LibLala.LibLalaTagReader
             get => JoinArrayWithComma(Genre.ToArray());
             set
             {
-                if (value is null) throw new ArgumentNullException(paramName: nameof(value));
+                if (value is null)
+                {
+                    throw new ArgumentNullException(paramName: nameof(value));
+                }
+
                 _genre = value.Split(',').ToList();
             }
         }

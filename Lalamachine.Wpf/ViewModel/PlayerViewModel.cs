@@ -30,7 +30,7 @@ namespace Lalamachine.Wpf.ViewModel
     public class PlayerViewModel : INotifyPropertyChanged
     {
         private readonly MediaPlayer _mediaPlayer;
-        private DispatcherTimer _dispatcherTimer;
+        private readonly DispatcherTimer _dispatcherTimer;
         private readonly PlayerSettings _playerSettings;
 
         public PlayerViewModel()
@@ -99,7 +99,10 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void PlayTrackHandler(object? sender, PlayTrackEventArgs e)
         {
-            if (e is null) return;
+            if (e is null)
+            {
+                return;
+            }
 
             Source = e.Path;
             LastActivePlaylist = e.ListName;

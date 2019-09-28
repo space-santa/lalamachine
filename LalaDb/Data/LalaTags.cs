@@ -8,7 +8,10 @@ namespace LalaDb.Data
     {
         public LalaTags(Track? track) : base(track?.Title ?? "", track?.Path ?? "", GenreTackListToStringList(track?.GenreTracks), ArtistTackListToStringList(track?.ArtistTracks))
         {
-            if (track is null) return;
+            if (track is null)
+            {
+                return;
+            }
 
             if (track.Album is { })
             {
@@ -22,16 +25,17 @@ namespace LalaDb.Data
             TrackId = track.TrackId;
         }
 
-        static List<string> GenreTackListToStringList(List<GenreTrack>? genreTracks)
+        private static List<string> GenreTackListToStringList(List<GenreTrack>? genreTracks)
         {
             if (genreTracks is null)
             {
                 return new List<string>();
             }
+
             return StringUtils.SafeStringList(genreTracks.Select(x => x.Genre?.Name).ToList());
         }
 
-        static List<string> ArtistTackListToStringList(List<ArtistTrack>? artistTracks)
+        private static List<string> ArtistTackListToStringList(List<ArtistTrack>? artistTracks)
         {
             if (artistTracks is null)
             {

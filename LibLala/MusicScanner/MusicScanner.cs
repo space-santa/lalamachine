@@ -9,8 +9,15 @@ namespace LibLala.MusicScanner
     {
         public static void ProcessDirectory(string path, IMusicDatabase db)
         {
-            if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(paramName: nameof(path));
-            if (db is null) throw new ArgumentNullException(paramName: nameof(db));
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new ArgumentNullException(paramName: nameof(path));
+            }
+
+            if (db is null)
+            {
+                throw new ArgumentNullException(paramName: nameof(db));
+            }
 
             db.EnsureDatabase();
 

@@ -9,7 +9,10 @@ namespace Lalamachine.Wpf.View.Converter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (value is null) return "";
+            if (value is null)
+            {
+                return "";
+            }
 
             var source = (string)value;
             if (source.Length < 1)

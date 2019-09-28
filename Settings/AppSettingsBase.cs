@@ -16,7 +16,11 @@ namespace Settings
 
         public AppSettingsBase(SettingsFile settingsFile)
         {
-            if (settingsFile is null) throw new ArgumentNullException(paramName: nameof(settingsFile));
+            if (settingsFile is null)
+            {
+                throw new ArgumentNullException(paramName: nameof(settingsFile));
+            }
+
             SettingsFile = settingsFile;
             _settings = SettingsFile.Load();
         }

@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using Lalamachine.Wpf.ViewModel;
+using LibLala.DomainPrimitives;
 
 namespace Lalamachine.Wpf.View.Controls
 {
@@ -12,8 +12,8 @@ namespace Lalamachine.Wpf.View.Controls
     /// </summary>
     public partial class PlaylistControl : UserControl
     {
-        GridViewColumnHeader? _lastHeaderClicked = null;
-        ListSortDirection _lastDirection = ListSortDirection.Ascending;
+        private GridViewColumnHeader? _lastHeaderClicked = null;
+        private ListSortDirection _lastDirection = ListSortDirection.Ascending;
 
         public PlaylistControl()
         {
@@ -71,8 +71,9 @@ namespace Lalamachine.Wpf.View.Controls
                     _lastDirection = direction;
 
                     // TODO: Create an object that contains the relevant information for sorting and pass it to the command.
+                    var message = new SortMessage(_lastDirection, new PlaylistColumn(_lastHeaderClicked.Content.ToString()));
                     var viewModel = (PlaylistViewModel)DataContext;
-                    viewModel.SortCommand.Execute(PlaylistView.SelectedItem);
+                    viewModel.SortCommand.Execute(message);
                 }
             }
         }
