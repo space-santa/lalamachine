@@ -11,7 +11,7 @@ namespace LibLala.LibLalaTagReader
         public LibLalaTags(string title, string path)
         {
             _artist = new ArtistsOfTrack(new List<string>());
-            _genre = new List<string>();
+            _genre = new GenresOfTrack(new List<string>());
             Comment = "";
             Album = "";
             Title = title;
@@ -20,7 +20,7 @@ namespace LibLala.LibLalaTagReader
         public LibLalaTags(string title, string path, List<string> genre, List<string> artist)
         {
             _artist = new ArtistsOfTrack(artist);
-            _genre = genre;
+            _genre = new GenresOfTrack(genre);
             Comment = "";
             Album = "";
             Title = title;
@@ -35,11 +35,10 @@ namespace LibLala.LibLalaTagReader
             }
 
             _artist = new ArtistsOfTrack(other.Artist);
-            _genre = new List<string>();
+            _genre = new GenresOfTrack(other.Genre);
             Album = other.Album;
             Comment = other.Comment;
             DiscNumber = other.DiscNumber;
-            _genre = other.Genre;
             duration = other.duration;
             Title = other.Title;
             Track = other.Track;
@@ -72,7 +71,7 @@ namespace LibLala.LibLalaTagReader
             _artist = new ArtistsOfTrack(z.ToList());
             Comment = file.Tag.Comment;
             DiscNumber = file.Tag.Disc;
-            _genre = file.Tag.Genres.ToList();
+            _genre = new GenresOfTrack(file.Tag.Genres.ToList());
             duration = file.Properties.Duration;
             Title = file.Tag.Title;
             Track = file.Tag.Track;
@@ -95,20 +94,12 @@ namespace LibLala.LibLalaTagReader
             set => _artist = new ArtistsOfTrack(value);
         }
 
-        private List<string> _genre;
-        public List<string> Genre { get => _genre; }
+        private GenresOfTrack _genre;
+        public List<string> Genre { get => _genre.ToStringList(); }
         public string GenreString
         {
-            get => JoinArrayWithComma(Genre.ToArray());
-            set
-            {
-                if (value is null)
-                {
-                    throw new ArgumentNullException(paramName: nameof(value));
-                }
-
-                _genre = value.Split(',').ToList();
-            }
+            get => _genre.ToCsvString();
+            set => _genre = new GenresOfTrack(value);
         }
 
         public TimeSpan duration { get; set; }
