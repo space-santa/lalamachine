@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace LibLala.DomainPrimitives
 {
-    internal class Artists : IComparable<Artists>
+    internal class ArtistsOfTrack : IComparable<ArtistsOfTrack>
     {
         private List<Artist> _artists;
 
-        public Artists(List<string> artistStrings)
+        public ArtistsOfTrack(List<string> artistStrings)
         {
             if (artistStrings is null)
             {
@@ -25,7 +25,7 @@ namespace LibLala.DomainPrimitives
             EnsureDistinctArtists();
         }
 
-        public Artists(string artistsCsvString)
+        public ArtistsOfTrack(string artistsCsvString)
         {
             if (string.IsNullOrEmpty(artistsCsvString))
             {
@@ -65,7 +65,7 @@ namespace LibLala.DomainPrimitives
             return stringList;
         }
 
-        public int CompareTo(Artists other)
+        public int CompareTo(ArtistsOfTrack other)
         {
             return string.Compare(ToCsvString(), other.ToCsvString(), StringComparison.Ordinal);
         }

@@ -10,7 +10,7 @@ namespace LibLala.LibLalaTagReader
     {
         public LibLalaTags(string title, string path)
         {
-            _artist = new Artists(new List<string>());
+            _artist = new ArtistsOfTrack(new List<string>());
             _genre = new List<string>();
             Comment = "";
             Album = "";
@@ -19,7 +19,7 @@ namespace LibLala.LibLalaTagReader
         }
         public LibLalaTags(string title, string path, List<string> genre, List<string> artist)
         {
-            _artist = new Artists(artist);
+            _artist = new ArtistsOfTrack(artist);
             _genre = genre;
             Comment = "";
             Album = "";
@@ -34,7 +34,7 @@ namespace LibLala.LibLalaTagReader
                 throw new ArgumentNullException(paramName: nameof(other));
             }
 
-            _artist = new Artists(other.Artist);
+            _artist = new ArtistsOfTrack(other.Artist);
             _genre = new List<string>();
             Album = other.Album;
             Comment = other.Comment;
@@ -69,7 +69,7 @@ namespace LibLala.LibLalaTagReader
             x.CopyTo(z, 0);
             y.CopyTo(z, x.Length);
 
-            _artist = new Artists(z.ToList());
+            _artist = new ArtistsOfTrack(z.ToList());
             Comment = file.Tag.Comment;
             DiscNumber = file.Tag.Disc;
             _genre = file.Tag.Genres.ToList();
@@ -84,7 +84,7 @@ namespace LibLala.LibLalaTagReader
             return Title != null && Title.Length > 0 && length > 0;
         }
 
-        private Artists _artist;
+        private ArtistsOfTrack _artist;
         public List<string> Artist
         {
             get => _artist.ToStringList();
@@ -92,7 +92,7 @@ namespace LibLala.LibLalaTagReader
         public string ArtistString
         {
             get => _artist.ToCsvString();
-            set => _artist = new Artists(value);
+            set => _artist = new ArtistsOfTrack(value);
         }
 
         private List<string> _genre;
