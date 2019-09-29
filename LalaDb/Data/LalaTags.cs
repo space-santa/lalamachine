@@ -6,14 +6,18 @@ namespace LalaDb.Data
 {
     public class LalaTags : LibLala.LibLalaTagReader.LibLalaTags
     {
-        public LalaTags(Track? track) : base(track?.Title ?? "", track?.Path ?? "", GenreTackListToStringList(track?.GenreTracks), ArtistTackListToStringList(track?.ArtistTracks), track?.Album?.Name ?? "")
+        public LalaTags(Track? track) : base(
+            track?.Title ?? "",
+            track?.Path ?? "",
+            GenreTackListToStringList(track?.GenreTracks),
+            ArtistTackListToStringList(track?.ArtistTracks),
+            track?.Album?.Name ?? "", track?.Comment ?? "")
         {
             if (track is null)
             {
                 return;
             }
 
-            Comment = track.Comment ?? "";
             DiscNumber = (uint)track.DiscNumber;
             Length = track.Length;
             Track = (uint)track.TrackNumber;

@@ -10,22 +10,23 @@ namespace LibLala.LibLalaTagReader
     {
         private readonly Album _album;
         private ArtistsOfTrack _artist;
+        private readonly Comment _comment;
         private GenresOfTrack _genre;
 
         public LibLalaTags(string title, string path)
         {
             _artist = new ArtistsOfTrack(new List<string>());
             _genre = new GenresOfTrack(new List<string>());
-            Comment = "";
+            _comment = new Comment("");
             _album = new Album("");
             Title = title;
             Path = path;
         }
-        public LibLalaTags(string title, string path, List<string> genre, List<string> artist, string album)
+        public LibLalaTags(string title, string path, List<string> genre, List<string> artist, string album, string comment)
         {
             _artist = new ArtistsOfTrack(artist);
             _genre = new GenresOfTrack(genre);
-            Comment = "";
+            _comment = new Comment(comment);
             _album = new Album(album);
             Title = title;
             Path = path;
@@ -41,7 +42,7 @@ namespace LibLala.LibLalaTagReader
             _artist = new ArtistsOfTrack(other.Artist);
             _genre = new GenresOfTrack(other.Genre);
             _album = new Album(other.Album);
-            Comment = other.Comment;
+            _comment = new Comment(other.Comment);
             DiscNumber = other.DiscNumber;
             Duration = other.Duration;
             Title = other.Title;
@@ -73,7 +74,7 @@ namespace LibLala.LibLalaTagReader
             y.CopyTo(z, x.Length);
 
             _artist = new ArtistsOfTrack(z.ToList());
-            Comment = file.Tag.Comment;
+            _comment = new Comment(file.Tag.Comment);
             DiscNumber = file.Tag.Disc;
             _genre = new GenresOfTrack(file.Tag.Genres.ToList());
             Duration = file.Properties.Duration;
@@ -126,7 +127,7 @@ namespace LibLala.LibLalaTagReader
 
         public string Title { get; set; }
         public uint Track { get; set; }
-        public string Comment { get; set; }
+        public string Comment { get => _comment.ToString(); }
         public string Album { get => _album.ToString(); }
         public uint Year { get; set; }
         public uint DiscNumber { get; set; }
