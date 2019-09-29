@@ -37,28 +37,5 @@ namespace LibLala.Unittests.Tagreader
             var tags = new LibLalaTags(title: "bob", path: "/path/tp/bob", genre: new List<string>(), artist: new List<string> { "Therapy?", "Therapy?" }, "", "");
             Assert.AreEqual("Therapy?", tags.ArtistString);
         }
-
-        [Test]
-        public void ArtistStringSetterShouldSplitCommaSeperatedString()
-        {
-            var tags = new LibLalaTags("bob", "/path/tp/bob")
-            {
-                ArtistString = "Therapy?, Machine Head"
-            };
-            Assert.AreEqual(2, tags.Artist.Count);
-            Assert.AreEqual("Therapy?", tags.Artist[0]);
-            Assert.AreEqual("Machine Head", tags.Artist[1]);
-        }
-
-        [Test]
-        public void ArtistStringSetterShouldRemoveDuplicates()
-        {
-            var tags = new LibLalaTags("bob", "/path/tp/bob")
-            {
-                ArtistString = "Therapy?, Therapy?"
-            };
-            Assert.AreEqual(tags.Artist.Count, 1);
-            Assert.AreEqual("Therapy?", tags.Artist[0]);
-        }
     }
 }

@@ -85,31 +85,23 @@ namespace LibLala.LibLalaTagReader
 
         public bool IsValid => Title != null && Title.Length > 0 && Length > 0;
 
-        public List<string> Artist
-        {
-            get => _artist.ToStringList();
-        }
-        public string ArtistString
-        {
-            get => _artist.ToCsvString();
-            set => _artist = new ArtistsOfTrack(value);
-        }
+        public string Album => _album.ToString();
 
-        public List<string> Genre { get => _genre.ToStringList(); }
-        public string GenreString
-        {
-            get => _genre.ToCsvString();
-            set => _genre = new GenresOfTrack(value);
-        }
+        public List<string> Artist => _artist.ToStringList();
+        public string ArtistString => _artist.ToCsvString();
+        
+        public string Comment => _comment.ToString();
 
         public TimeSpan Duration { get; set; }
+
+        public List<string> Genre => _genre.ToStringList();
+        public string GenreString => _genre.ToCsvString();
 
         public int Length
         {
             get => (int)Duration.TotalSeconds;
             set => Duration = new TimeSpan(0, 0, value);
         }
-
         public string LengthString
         {
             get
@@ -127,8 +119,6 @@ namespace LibLala.LibLalaTagReader
 
         public string Title { get; set; }
         public uint Track { get; set; }
-        public string Comment { get => _comment.ToString(); }
-        public string Album { get => _album.ToString(); }
         public uint Year { get; set; }
         public uint DiscNumber { get; set; }
         public int TrackId { get; set; }
