@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -9,6 +10,7 @@ namespace LibLala.MusicScanner
     {
         public static void ProcessDirectory(string path, IMusicDatabase db)
         {
+            var stopwatch = Stopwatch.StartNew();
             if (string.IsNullOrEmpty(path))
             {
                 throw new ArgumentNullException(paramName: nameof(path));
@@ -23,11 +25,13 @@ namespace LibLala.MusicScanner
 
             foreach (var file in DirSearch(path))
             {
-                var tags = new LibLala.LibLalaTagReader.TagReader().Read(file);
+                var tags = new LibLalaTagReader.TagReader().Read(file);
                 db.AddTagsToDatabase(tags);
             }
 
             db.SaveChanges();
+            var duration = stopwatch.Elapsed;
+            Console.WriteLine($"Scanning took {duration.ToString()}");
         }
 
         private static IEnumerable<string> DirSearch(string basePath)
