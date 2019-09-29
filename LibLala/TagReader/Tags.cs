@@ -13,6 +13,7 @@ namespace LibLala.LibLalaTagReader
         private readonly Comment _comment;
         private readonly DiscNumber _discNumber;
         private readonly GenresOfTrack _genre;
+        private readonly TitleName _title;
         private readonly TrackNumber _trackNumber;
         private readonly Year? _year;
 
@@ -24,7 +25,7 @@ namespace LibLala.LibLalaTagReader
             _album = new AlbumName("");
             _discNumber = new DiscNumber(1);
             _trackNumber = new TrackNumber(1);
-            Title = title;
+            _title = new TitleName(title);
             Path = path;
         }
         public LibLalaTags(string title, string path, List<string> genre, List<string> artist, string album, string comment, int? year, int? discNumber, int? trackNumber)
@@ -52,7 +53,7 @@ namespace LibLala.LibLalaTagReader
             }
             if (year is { }) { _year = new Year((uint)year); }
 
-            Title = title;
+            _title = new TitleName(title);
             Path = path;
         }
 
@@ -69,7 +70,7 @@ namespace LibLala.LibLalaTagReader
             _comment = new Comment(other.Comment);
             _discNumber = new DiscNumber(other.DiscNumber);
             Duration = other.Duration;
-            Title = other.Title;
+            _title = new TitleName(other.Title);
             _trackNumber = new TrackNumber(other.Track);
 
             if (other.Year is { }) { _year = new Year(other.Year.Value); };
@@ -104,7 +105,7 @@ namespace LibLala.LibLalaTagReader
             _discNumber = new DiscNumber(file.Tag.Disc);
             _genre = new GenresOfTrack(file.Tag.Genres.ToList());
             Duration = file.Properties.Duration;
-            Title = file.Tag.Title;
+            _title = new TitleName(file.Tag.Title);
             _trackNumber = new TrackNumber(file.Tag.Track);
             _year = new Year(file.Tag.Year);
         }
@@ -144,7 +145,7 @@ namespace LibLala.LibLalaTagReader
             }
         }
 
-        public string Title { get; set; }
+        public string Title => _title.ToString();
         public uint Track => _trackNumber.Value;
         public int TrackId { get; set; }
         public string Path { get; set; }
