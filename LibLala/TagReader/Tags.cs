@@ -12,6 +12,7 @@ namespace LibLala.LibLalaTagReader
         private ArtistsOfTrack _artist;
         private readonly Comment _comment;
         private GenresOfTrack _genre;
+        private readonly Year? _year;
 
         public LibLalaTags(string title, string path)
         {
@@ -22,12 +23,15 @@ namespace LibLala.LibLalaTagReader
             Title = title;
             Path = path;
         }
-        public LibLalaTags(string title, string path, List<string> genre, List<string> artist, string album, string comment)
+        public LibLalaTags(string title, string path, List<string> genre, List<string> artist, string album, string comment, int? year)
         {
             _artist = new ArtistsOfTrack(artist);
             _genre = new GenresOfTrack(genre);
             _comment = new Comment(comment);
             _album = new Album(album);
+
+            if (year is { }) { _year = new Year((uint)year); }
+
             Title = title;
             Path = path;
         }
@@ -47,7 +51,9 @@ namespace LibLala.LibLalaTagReader
             Duration = other.Duration;
             Title = other.Title;
             Track = other.Track;
-            Year = other.Year;
+
+            if (other.Year is { }) { _year = new Year(other.Year.Value); };
+
             Path = other.Path;
             TrackId = other.TrackId;
         }
@@ -80,7 +86,7 @@ namespace LibLala.LibLalaTagReader
             Duration = file.Properties.Duration;
             Title = file.Tag.Title;
             Track = file.Tag.Track;
-            Year = file.Tag.Year;
+            _year = new Year(file.Tag.Year);
         }
 
         public bool IsValid => Title != null && Title.Length > 0 && Length > 0;
@@ -119,10 +125,11 @@ namespace LibLala.LibLalaTagReader
 
         public string Title { get; set; }
         public uint Track { get; set; }
-        public uint Year { get; set; }
         public uint DiscNumber { get; set; }
         public int TrackId { get; set; }
         public string Path { get; set; }
+        
+        public uint? Year => _year?.Value;
 
         public string ToJson()
         {

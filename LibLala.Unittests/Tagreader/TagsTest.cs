@@ -34,7 +34,7 @@ namespace LibLala.Unittests.Tagreader
         [Test]
         public void ArtistArrayDuplicatesShouldBeRemoved()
         {
-            var tags = new LibLalaTags(title: "bob", path: "/path/tp/bob", genre: new List<string>(), artist: new List<string> { "Therapy?", "Therapy?" }, "", "");
+            var tags = new LibLalaTags(title: "bob", path: "/path/tp/bob", genre: new List<string>(), artist: new List<string> { "Therapy?", "Therapy?" }, "", "", null);
             Assert.AreEqual("Therapy?", tags.ArtistString);
         }
     }

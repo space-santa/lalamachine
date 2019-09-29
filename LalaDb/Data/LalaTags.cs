@@ -11,7 +11,9 @@ namespace LalaDb.Data
             track?.Path ?? "",
             GenreTackListToStringList(track?.GenreTracks),
             ArtistTackListToStringList(track?.ArtistTracks),
-            track?.Album?.Name ?? "", track?.Comment ?? "")
+            track?.Album?.Name ?? "", 
+            track?.Comment ?? "", 
+            track?.Year ?? null)
         {
             if (track is null)
             {
@@ -21,7 +23,6 @@ namespace LalaDb.Data
             DiscNumber = (uint)track.DiscNumber;
             Length = track.Length;
             Track = (uint)track.TrackNumber;
-            Year = (uint)track.Year;
             TrackId = track.TrackId;
         }
 

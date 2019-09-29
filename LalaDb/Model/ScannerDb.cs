@@ -82,7 +82,8 @@ namespace LalaDb.Model
             track.Path = tags.Path;
             track.Title = tags.Title;
             track.TrackNumber = (int)tags.Track;
-            track.Year = (int)tags.Year;
+
+            if (tags.Year is { }) { track.Year = (int)tags.Year; }
 
             _context.Tracks?.Add(track);
             _context.SaveChanges();
