@@ -9,10 +9,11 @@ namespace LibLala.LibLalaTagReader
     public class LibLalaTags
     {
         private readonly AlbumName _album;
-        private ArtistsOfTrack _artist;
+        private readonly ArtistsOfTrack _artist;
         private readonly Comment _comment;
         private readonly DiscNumber _discNumber;
-        private GenresOfTrack _genre;
+        private readonly GenresOfTrack _genre;
+        private readonly TrackNumber _trackNumber;
         private readonly Year? _year;
 
         public LibLalaTags(string title, string path)
@@ -22,10 +23,11 @@ namespace LibLala.LibLalaTagReader
             _comment = new Comment("");
             _album = new AlbumName("");
             _discNumber = new DiscNumber(1);
+            _trackNumber = new TrackNumber(1);
             Title = title;
             Path = path;
         }
-        public LibLalaTags(string title, string path, List<string> genre, List<string> artist, string album, string comment, int? year, int? discNumber)
+        public LibLalaTags(string title, string path, List<string> genre, List<string> artist, string album, string comment, int? year, int? discNumber, int? trackNumber)
         {
             _artist = new ArtistsOfTrack(artist);
             _genre = new GenresOfTrack(genre);
@@ -39,6 +41,14 @@ namespace LibLala.LibLalaTagReader
             else
             {
                 _discNumber = new DiscNumber(1);
+            }
+            if (trackNumber is { })
+            {
+                _trackNumber = new TrackNumber((uint)trackNumber);
+            }
+            else
+            {
+                _trackNumber = new TrackNumber(1);
             }
             if (year is { }) { _year = new Year((uint)year); }
 
@@ -60,7 +70,7 @@ namespace LibLala.LibLalaTagReader
             _discNumber = new DiscNumber(other.DiscNumber);
             Duration = other.Duration;
             Title = other.Title;
-            Track = other.Track;
+            _trackNumber = new TrackNumber(other.Track);
 
             if (other.Year is { }) { _year = new Year(other.Year.Value); };
 
@@ -95,7 +105,7 @@ namespace LibLala.LibLalaTagReader
             _genre = new GenresOfTrack(file.Tag.Genres.ToList());
             Duration = file.Properties.Duration;
             Title = file.Tag.Title;
-            Track = file.Tag.Track;
+            _trackNumber = new TrackNumber(file.Tag.Track);
             _year = new Year(file.Tag.Year);
         }
 
@@ -135,7 +145,7 @@ namespace LibLala.LibLalaTagReader
         }
 
         public string Title { get; set; }
-        public uint Track { get; set; }
+        public uint Track => _trackNumber.Value;
         public int TrackId { get; set; }
         public string Path { get; set; }
 

@@ -14,7 +14,8 @@ namespace LalaDb.Data
             track?.Album?.Name ?? "",
             track?.Comment ?? "",
             track?.Year ?? null,
-            track?.DiscNumber ?? null)
+            track?.DiscNumber ?? null,
+            track?.TrackNumber ?? null)
         {
             if (track is null)
             {
@@ -22,7 +23,6 @@ namespace LalaDb.Data
             }
 
             Length = track.Length;
-            Track = (uint)track.TrackNumber;
             TrackId = track.TrackId;
         }
 
