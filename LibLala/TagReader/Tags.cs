@@ -8,21 +8,25 @@ namespace LibLala.LibLalaTagReader
 {
     public class LibLalaTags
     {
+        private readonly Album _album;
+        private ArtistsOfTrack _artist;
+        private GenresOfTrack _genre;
+
         public LibLalaTags(string title, string path)
         {
             _artist = new ArtistsOfTrack(new List<string>());
             _genre = new GenresOfTrack(new List<string>());
             Comment = "";
-            Album = "";
+            _album = new Album("");
             Title = title;
             Path = path;
         }
-        public LibLalaTags(string title, string path, List<string> genre, List<string> artist)
+        public LibLalaTags(string title, string path, List<string> genre, List<string> artist, string album)
         {
             _artist = new ArtistsOfTrack(artist);
             _genre = new GenresOfTrack(genre);
             Comment = "";
-            Album = "";
+            _album = new Album(album);
             Title = title;
             Path = path;
         }
@@ -36,10 +40,10 @@ namespace LibLala.LibLalaTagReader
 
             _artist = new ArtistsOfTrack(other.Artist);
             _genre = new GenresOfTrack(other.Genre);
-            Album = other.Album;
+            _album = new Album(other.Album);
             Comment = other.Comment;
             DiscNumber = other.DiscNumber;
-            duration = other.duration;
+            Duration = other.Duration;
             Title = other.Title;
             Track = other.Track;
             Year = other.Year;
@@ -60,7 +64,7 @@ namespace LibLala.LibLalaTagReader
             }
 
             Path = path;
-            Album = file.Tag.Album;
+            _album = new Album(file.Tag.Album);
             var x = file.Tag.AlbumArtists;
             var y = file.Tag.Performers;
 
@@ -72,18 +76,14 @@ namespace LibLala.LibLalaTagReader
             Comment = file.Tag.Comment;
             DiscNumber = file.Tag.Disc;
             _genre = new GenresOfTrack(file.Tag.Genres.ToList());
-            duration = file.Properties.Duration;
+            Duration = file.Properties.Duration;
             Title = file.Tag.Title;
             Track = file.Tag.Track;
             Year = file.Tag.Year;
         }
 
-        public bool isValid()
-        {
-            return Title != null && Title.Length > 0 && length > 0;
-        }
+        public bool IsValid => Title != null && Title.Length > 0 && Length > 0;
 
-        private ArtistsOfTrack _artist;
         public List<string> Artist
         {
             get => _artist.ToStringList();
@@ -94,7 +94,6 @@ namespace LibLala.LibLalaTagReader
             set => _artist = new ArtistsOfTrack(value);
         }
 
-        private GenresOfTrack _genre;
         public List<string> Genre { get => _genre.ToStringList(); }
         public string GenreString
         {
@@ -102,20 +101,20 @@ namespace LibLala.LibLalaTagReader
             set => _genre = new GenresOfTrack(value);
         }
 
-        public TimeSpan duration { get; set; }
+        public TimeSpan Duration { get; set; }
 
-        public int length
+        public int Length
         {
-            get => (int)duration.TotalSeconds;
-            set => duration = new TimeSpan(0, 0, value);
+            get => (int)Duration.TotalSeconds;
+            set => Duration = new TimeSpan(0, 0, value);
         }
 
         public string LengthString
         {
             get
             {
-                var seconds = duration.Seconds;
-                var minutesValue = (int)duration.TotalMinutes;
+                var seconds = Duration.Seconds;
+                var minutesValue = (int)Duration.TotalMinutes;
                 var secondsString = $"{seconds}";
                 if (secondsString.Length == 1)
                 {
@@ -128,23 +127,11 @@ namespace LibLala.LibLalaTagReader
         public string Title { get; set; }
         public uint Track { get; set; }
         public string Comment { get; set; }
-        public string Album { get; set; }
+        public string Album { get => _album.ToString(); }
         public uint Year { get; set; }
         public uint DiscNumber { get; set; }
         public int TrackId { get; set; }
         public string Path { get; set; }
-
-        private static string JoinArrayWithComma(string[] arr)
-        {
-            try
-            {
-                return string.Join(", ", arr);
-            }
-            catch (ArgumentNullException)
-            {
-                return "";
-            }
-        }
 
         public string ToJson()
         {

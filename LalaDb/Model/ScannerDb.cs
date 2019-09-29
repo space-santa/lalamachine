@@ -8,9 +8,9 @@ namespace LalaDb.Model
     {
         private readonly LalaContext _context;
 
-        public ScannerDb(LalaContext Context)
+        public ScannerDb(LalaContext context)
         {
-            _context = Context;
+            _context = context;
         }
 
         public void AddTagsToDatabase(LibLala.LibLalaTagReader.LibLalaTags tags)
@@ -78,7 +78,7 @@ namespace LalaDb.Model
 
             track.Comment = tags.Comment;
             track.DiscNumber = (int)tags.DiscNumber;
-            track.Length = tags.length;
+            track.Length = tags.Length;
             track.Path = tags.Path;
             track.Title = tags.Title;
             track.TrackNumber = (int)tags.Track;

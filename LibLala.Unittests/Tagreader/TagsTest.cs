@@ -13,10 +13,10 @@ namespace LibLala.Unittests.Tagreader
             var ts = new TimeSpan(0, 2, 4, 3, 999);
             var tags = new LibLalaTags("bob", "/path/tp/bob")
             {
-                duration = ts
+                Duration = ts
             };
             Assert.AreEqual("124:03", tags.LengthString);
-            Assert.AreEqual(124 * 60 + 3, tags.length);
+            Assert.AreEqual(124 * 60 + 3, tags.Length);
         }
 
         [Test]
@@ -25,16 +25,16 @@ namespace LibLala.Unittests.Tagreader
             var ts = new TimeSpan(0, 2, 4, 34, 15);
             var tags = new LibLalaTags("bob", "/path/tp/bob")
             {
-                duration = ts
+                Duration = ts
             };
             Assert.AreEqual("124:34", tags.LengthString);
-            Assert.AreEqual(124 * 60 + 34, tags.length);
+            Assert.AreEqual(124 * 60 + 34, tags.Length);
         }
 
         [Test]
         public void ArtistArrayDuplicatesShouldBeRemoved()
         {
-            var tags = new LibLalaTags(title: "bob", path: "/path/tp/bob", genre: new List<string>(), artist: new List<string> { "Therapy?", "Therapy?" });
+            var tags = new LibLalaTags(title: "bob", path: "/path/tp/bob", genre: new List<string>(), artist: new List<string> { "Therapy?", "Therapy?" }, "");
             Assert.AreEqual("Therapy?", tags.ArtistString);
         }
 
