@@ -9,7 +9,7 @@ namespace LibLala.DomainPrimitives
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>")]
         public BaseNameString(string name)
         {
-            if (string.IsNullOrEmpty(name))
+            if (name is null)
             {
                 throw new ArgumentNullException(paramName: nameof(name));
             }
