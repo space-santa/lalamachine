@@ -8,7 +8,7 @@ namespace LibLala.LibLalaTagReader
 {
     public class LibLalaTags
     {
-        private readonly Album _album;
+        private readonly AlbumName _album;
         private ArtistsOfTrack _artist;
         private readonly Comment _comment;
         private readonly DiscNumber _discNumber;
@@ -20,7 +20,7 @@ namespace LibLala.LibLalaTagReader
             _artist = new ArtistsOfTrack(new List<string>());
             _genre = new GenresOfTrack(new List<string>());
             _comment = new Comment("");
-            _album = new Album("");
+            _album = new AlbumName("");
             _discNumber = new DiscNumber(1);
             Title = title;
             Path = path;
@@ -30,7 +30,7 @@ namespace LibLala.LibLalaTagReader
             _artist = new ArtistsOfTrack(artist);
             _genre = new GenresOfTrack(genre);
             _comment = new Comment(comment);
-            _album = new Album(album);
+            _album = new AlbumName(album);
 
             if (discNumber is { })
             {
@@ -55,7 +55,7 @@ namespace LibLala.LibLalaTagReader
 
             _artist = new ArtistsOfTrack(other.Artist);
             _genre = new GenresOfTrack(other.Genre);
-            _album = new Album(other.Album);
+            _album = new AlbumName(other.Album);
             _comment = new Comment(other.Comment);
             _discNumber = new DiscNumber(other.DiscNumber);
             Duration = other.Duration;
@@ -81,7 +81,7 @@ namespace LibLala.LibLalaTagReader
             }
 
             Path = path;
-            _album = new Album(file.Tag.Album);
+            _album = new AlbumName(file.Tag.Album);
             var x = file.Tag.AlbumArtists;
             var y = file.Tag.Performers;
 

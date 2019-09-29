@@ -6,7 +6,7 @@ namespace LibLala.DomainPrimitives
 {
     internal class ArtistsOfTrack : IComparable<ArtistsOfTrack>
     {
-        private List<Artist> _artists;
+        private List<ArtistName> _artists;
 
         public ArtistsOfTrack(List<string> artistStrings)
         {
@@ -15,11 +15,11 @@ namespace LibLala.DomainPrimitives
                 throw new ArgumentNullException(paramName: nameof(artistStrings));
             }
 
-            _artists = new List<Artist>();
+            _artists = new List<ArtistName>();
 
             foreach (var artistString in artistStrings)
             {
-                _artists.Add(new Artist(artistString));
+                _artists.Add(new ArtistName(artistString));
             }
 
             EnsureDistinctArtists();
@@ -32,12 +32,12 @@ namespace LibLala.DomainPrimitives
                 throw new ArgumentNullException(paramName: nameof(artistsCsvString));
             }
 
-            _artists = new List<Artist>();
+            _artists = new List<ArtistName>();
 
             var localArtist = artistsCsvString.Split(',');
             for (var i = 0; i < localArtist.Length; ++i)
             {
-                _artists.Add(new Artist(localArtist[i]));
+                _artists.Add(new ArtistName(localArtist[i]));
             }
 
             EnsureDistinctArtists();
