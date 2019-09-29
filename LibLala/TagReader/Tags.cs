@@ -29,34 +29,18 @@ namespace LibLala.LibLalaTagReader
             _title = new TitleName(title);
             _trackPath = new TrackPath(path);
         }
-        public LibLalaTags(string title, string path, List<string> genre, List<string> artist, string album, string comment, int? year, int? discNumber, int? trackNumber, int? trackId)
+        internal LibLalaTags(LibLalaTagsBuilder builder)
         {
-            _artist = new ArtistsOfTrack(artist);
-            _genre = new GenresOfTrack(genre);
-            _comment = new Comment(comment);
-            _album = new AlbumName(album);
-            _trackPath = new TrackPath(path);
-            TrackId = trackId;
-
-            if (discNumber is { })
-            {
-                _discNumber = new DiscNumber((uint)discNumber);
-            }
-            else
-            {
-                _discNumber = new DiscNumber(1);
-            }
-            if (trackNumber is { })
-            {
-                _trackNumber = new TrackNumber((uint)trackNumber);
-            }
-            else
-            {
-                _trackNumber = new TrackNumber(1);
-            }
-            if (year is { }) { _year = new Year((uint)year); }
-
-            _title = new TitleName(title);
+            _album = builder.Album;
+            _artist = builder.Artist;
+            _comment = builder.Comment;
+            _discNumber = builder.DiscNumber;
+            _genre = builder.Genre;
+            _title = builder.Title;
+            TrackId = builder.TrackId;
+            _trackNumber = builder.TrackNumber;
+            _trackPath = builder.TrackPath;
+            _year = builder.Year;
         }
 
         public LibLalaTags(LibLalaTags other)
@@ -122,6 +106,7 @@ namespace LibLala.LibLalaTagReader
         public string Comment => _comment.ToString();
         public uint DiscNumber => _discNumber.Value;
 
+        // TODO: Duration should be a domain primitive, no?
         public TimeSpan Duration { get; set; }
 
         public List<string> Genre => _genre.ToStringList();

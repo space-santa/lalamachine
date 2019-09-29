@@ -2,7 +2,7 @@
 
 namespace LibLala.DomainPrimitives
 {
-    internal class BaseNameString
+    public class BaseNameString
     {
         private readonly string _name = "";
 
@@ -29,11 +29,13 @@ namespace LibLala.DomainPrimitives
 
         public static bool operator ==(BaseNameString lhs, BaseNameString rhs)
         {
+            if (lhs is null || rhs is null) { return false; }
             return lhs.ToString().Equals(rhs.ToString(), StringComparison.Ordinal);
         }
 
         public static bool operator !=(BaseNameString lhs, BaseNameString rhs)
         {
+            if (lhs is null || rhs is null) { return false; }
             return !lhs.ToString().Equals(rhs.ToString(), StringComparison.Ordinal);
         }
 

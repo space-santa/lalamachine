@@ -2,7 +2,7 @@
 
 namespace LibLala.DomainPrimitives
 {
-    internal class Year
+    public class Year
     {
         public Year(uint year)
         {

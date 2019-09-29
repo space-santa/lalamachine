@@ -18,7 +18,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         private void LoadLastPlaylist()
         {
-            var tracks = _playlistModel.getPlaylistTracks(LibLala.Constants.MISCPLAYLISTNAME);
+            var tracks = _playlistModel.GetPlaylistTracks(LibLala.Constants.MISCPLAYLISTNAME);
             AddTracks(tracks);
         }
 
@@ -28,7 +28,7 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 var tagsList = new List<LibLalaTags>();
                 foreach (var item in Playlist) { tagsList.Add(item); }
-                _playlistModel.savePlaylist(LibLala.Constants.MISCPLAYLISTNAME, tagsList);
+                _playlistModel.SavePlaylist(LibLala.Constants.MISCPLAYLISTNAME, tagsList);
             }
         }
     }

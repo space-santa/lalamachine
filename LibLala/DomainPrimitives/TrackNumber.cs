@@ -2,7 +2,7 @@
 
 namespace LibLala.DomainPrimitives
 {
-    internal class TrackNumber
+    public class TrackNumber
     {
         public TrackNumber(uint number)
         {

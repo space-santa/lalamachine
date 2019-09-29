@@ -2,7 +2,7 @@
 
 namespace LibLala.DomainPrimitives
 {
-    internal class DiscNumber
+    public class DiscNumber
     {
         public DiscNumber(uint number)
         {

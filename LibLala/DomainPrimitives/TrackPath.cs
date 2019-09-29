@@ -5,7 +5,7 @@ using System.IO;
 
 namespace LibLala.DomainPrimitives
 {
-    internal class TrackPath
+    public class TrackPath
     {
         private readonly FileInfo _fileInfo;
 

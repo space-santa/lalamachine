@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace LibLala.DomainPrimitives
 {
-    internal class GenresOfTrack : IComparable<GenresOfTrack>
+    public class GenresOfTrack : IComparable<GenresOfTrack>
     {
         private List<Genre> _genres;
 
@@ -67,7 +67,63 @@ namespace LibLala.DomainPrimitives
 
         public int CompareTo(GenresOfTrack other)
         {
+            if (other is null) { throw new ArgumentNullException(paramName: nameof(other)); }
             return string.Compare(ToCsvString(), other.ToCsvString(), StringComparison.Ordinal);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj is null)
+            {
+                return false;
+            }
+
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public static bool operator ==(GenresOfTrack left, GenresOfTrack right)
+        {
+            if (left is null)
+            {
+                return right is null;
+            }
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(GenresOfTrack left, GenresOfTrack right)
+        {
+            return !(left == right);
+        }
+
+        public static bool operator <(GenresOfTrack left, GenresOfTrack right)
+        {
+            return left is null ? right is object : left.CompareTo(right) < 0;
+        }
+
+        public static bool operator <=(GenresOfTrack left, GenresOfTrack right)
+        {
+            return left is null || left.CompareTo(right) <= 0;
+        }
+
+        public static bool operator >(GenresOfTrack left, GenresOfTrack right)
+        {
+            return left is object && left.CompareTo(right) > 0;
+        }
+
+        public static bool operator >=(GenresOfTrack left, GenresOfTrack right)
+        {
+            return left is null ? right is null : left.CompareTo(right) >= 0;
         }
     }
 }
