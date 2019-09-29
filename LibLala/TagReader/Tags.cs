@@ -15,6 +15,7 @@ namespace LibLala.LibLalaTagReader
         private readonly GenresOfTrack _genre;
         private readonly TitleName _title;
         private readonly TrackNumber _trackNumber;
+        private readonly TrackPath _trackPath;
         private readonly Year? _year;
 
         public LibLalaTags(string title, string path)
@@ -26,7 +27,7 @@ namespace LibLala.LibLalaTagReader
             _discNumber = new DiscNumber(1);
             _trackNumber = new TrackNumber(1);
             _title = new TitleName(title);
-            Path = path;
+            _trackPath = new TrackPath(path);
         }
         public LibLalaTags(string title, string path, List<string> genre, List<string> artist, string album, string comment, int? year, int? discNumber, int? trackNumber, int? trackId)
         {
@@ -34,6 +35,7 @@ namespace LibLala.LibLalaTagReader
             _genre = new GenresOfTrack(genre);
             _comment = new Comment(comment);
             _album = new AlbumName(album);
+            _trackPath = new TrackPath(path);
             TrackId = trackId;
 
             if (discNumber is { })
@@ -55,7 +57,6 @@ namespace LibLala.LibLalaTagReader
             if (year is { }) { _year = new Year((uint)year); }
 
             _title = new TitleName(title);
-            Path = path;
         }
 
         public LibLalaTags(LibLalaTags other)
@@ -76,7 +77,7 @@ namespace LibLala.LibLalaTagReader
 
             if (other.Year is { }) { _year = new Year(other.Year.Value); };
 
-            Path = other.Path;
+            _trackPath = new TrackPath(other.Path);
             TrackId = other.TrackId;
         }
 
@@ -92,7 +93,7 @@ namespace LibLala.LibLalaTagReader
                 throw new ArgumentNullException(paramName: nameof(file));
             }
 
-            Path = path;
+            _trackPath = new TrackPath(path);
             _album = new AlbumName(file.Tag.Album);
             var x = file.Tag.AlbumArtists;
             var y = file.Tag.Performers;
@@ -149,7 +150,7 @@ namespace LibLala.LibLalaTagReader
         public string Title => _title.ToString();
         public uint Track => _trackNumber.Value;
         public int? TrackId { get; }
-        public string Path { get; set; }
+        public string Path => _trackPath.FullName;
 
         public uint? Year => _year?.Value;
 
