@@ -15,7 +15,8 @@ namespace LalaDb.Data
             track?.Comment ?? "",
             track?.Year ?? null,
             track?.DiscNumber ?? null,
-            track?.TrackNumber ?? null)
+            track?.TrackNumber ?? null,
+            track?.TrackId ?? null)
         {
             if (track is null)
             {
@@ -23,7 +24,6 @@ namespace LalaDb.Data
             }
 
             Length = track.Length;
-            TrackId = track.TrackId;
         }
 
         private static List<string> GenreTackListToStringList(List<GenreTrack>? genreTracks)

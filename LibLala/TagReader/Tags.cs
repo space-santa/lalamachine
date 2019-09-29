@@ -28,12 +28,13 @@ namespace LibLala.LibLalaTagReader
             _title = new TitleName(title);
             Path = path;
         }
-        public LibLalaTags(string title, string path, List<string> genre, List<string> artist, string album, string comment, int? year, int? discNumber, int? trackNumber)
+        public LibLalaTags(string title, string path, List<string> genre, List<string> artist, string album, string comment, int? year, int? discNumber, int? trackNumber, int? trackId)
         {
             _artist = new ArtistsOfTrack(artist);
             _genre = new GenresOfTrack(genre);
             _comment = new Comment(comment);
             _album = new AlbumName(album);
+            TrackId = trackId;
 
             if (discNumber is { })
             {
@@ -147,7 +148,7 @@ namespace LibLala.LibLalaTagReader
 
         public string Title => _title.ToString();
         public uint Track => _trackNumber.Value;
-        public int TrackId { get; set; }
+        public int? TrackId { get; }
         public string Path { get; set; }
 
         public uint? Year => _year?.Value;
