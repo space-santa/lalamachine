@@ -6,6 +6,7 @@ namespace LibLala.DomainPrimitives
     {
         public DiscNumber(uint number)
         {
+            if (number == 0) { number = 1; }
             if (number > 99 || number < 1)
             {
                 throw new ArgumentOutOfRangeException(paramName: nameof(number));
