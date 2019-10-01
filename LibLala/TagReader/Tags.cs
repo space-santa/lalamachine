@@ -13,22 +13,11 @@ namespace LibLala.LibLalaTagReader
         private readonly Comment _comment;
         private readonly DiscNumber _discNumber;
         private readonly GenresOfTrack _genre;
+        private readonly TrackLength _length;
         private readonly TitleName _title;
         private readonly TrackNumber _trackNumber;
-        private readonly TrackPath _trackPath;
         private readonly Year? _year;
 
-        public LibLalaTags(string title, string path)
-        {
-            _artist = new ArtistsOfTrack(new List<string>());
-            _genre = new GenresOfTrack(new List<string>());
-            _comment = new Comment("");
-            _album = new AlbumName("");
-            _discNumber = new DiscNumber(1);
-            _trackNumber = new TrackNumber(1);
-            _title = new TitleName(title);
-            _trackPath = new TrackPath(path);
-        }
         internal LibLalaTags(LibLalaTagsBuilder builder)
         {
             _album = builder.Album;
@@ -36,10 +25,11 @@ namespace LibLala.LibLalaTagReader
             _comment = builder.Comment;
             _discNumber = builder.DiscNumber;
             _genre = builder.Genre;
+            _length = builder.Length;
             _title = builder.Title;
             TrackId = builder.TrackId;
             _trackNumber = builder.TrackNumber;
-            _trackPath = builder.TrackPath;
+            TrackPath = builder.TrackPath;
             _year = builder.Year;
         }
 
@@ -55,13 +45,13 @@ namespace LibLala.LibLalaTagReader
             _album = new AlbumName(other.Album);
             _comment = new Comment(other.Comment);
             _discNumber = new DiscNumber(other.DiscNumber);
-            Duration = other.Duration;
+            _length = new TrackLength(other.Length);
             _title = new TitleName(other.Title);
             _trackNumber = new TrackNumber(other.Track);
 
             if (other.Year is { }) { _year = new Year(other.Year.Value); };
 
-            _trackPath = new TrackPath(other.Path);
+            TrackPath = other.TrackPath;
             TrackId = other.TrackId;
         }
 
@@ -77,7 +67,7 @@ namespace LibLala.LibLalaTagReader
                 throw new ArgumentNullException(paramName: nameof(file));
             }
 
-            _trackPath = new TrackPath(path);
+            TrackPath = new TrackPath(path);
             _album = new AlbumName(file.Tag.Album);
             var x = file.Tag.AlbumArtists;
             var y = file.Tag.Performers;
@@ -90,7 +80,7 @@ namespace LibLala.LibLalaTagReader
             _comment = new Comment(file.Tag.Comment);
             _discNumber = new DiscNumber(file.Tag.Disc);
             _genre = new GenresOfTrack(file.Tag.Genres.ToList());
-            Duration = file.Properties.Duration;
+            _length = new TrackLength(file.Properties.Duration);
             _title = new TitleName(file.Tag.Title);
             _trackNumber = new TrackNumber(file.Tag.Track);
             _year = new Year(file.Tag.Year);
@@ -106,36 +96,17 @@ namespace LibLala.LibLalaTagReader
         public string Comment => _comment.ToString();
         public uint DiscNumber => _discNumber.Value;
 
-        // TODO: Duration should be a domain primitive, no?
-        public TimeSpan Duration { get; set; }
-
         public List<string> Genre => _genre.ToStringList();
         public string GenreString => _genre.ToCsvString();
 
-        public int Length
-        {
-            get => (int)Duration.TotalSeconds;
-            set => Duration = new TimeSpan(0, 0, value);
-        }
-        public string LengthString
-        {
-            get
-            {
-                var seconds = Duration.Seconds;
-                var minutesValue = (int)Duration.TotalMinutes;
-                var secondsString = $"{seconds}";
-                if (secondsString.Length == 1)
-                {
-                    secondsString = $"0{secondsString}";
-                }
-                return $"{minutesValue}:{secondsString}";
-            }
-        }
+        public int Length => _length.TotalSeconds;
+        public string LengthString => _length.ToString();
 
         public string Title => _title.ToString();
         public uint Track => _trackNumber.Value;
         public int? TrackId { get; }
-        public string Path => _trackPath.FullName;
+        public string Path => TrackPath.FullName;
+        internal ITrackPath TrackPath { get; }
 
         public uint? Year => _year?.Value;
 

@@ -1,11 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 
 namespace LibLala.DomainPrimitives
 {
-    public class TrackPath
+    public interface ITrackPath
+    {
+        public string ToString();
+        public string FullName { get; }
+    }
+
+    public class TrackPath : ITrackPath
     {
         private readonly FileInfo _fileInfo;
 
@@ -26,5 +30,12 @@ namespace LibLala.DomainPrimitives
 
         public override string ToString() => _fileInfo.ToString();
         public string FullName => _fileInfo.FullName;
+    }
+
+    public class FakeTrackPath : ITrackPath
+    {
+        public FakeTrackPath(string path) { FullName = path; }
+        public override string ToString() => FullName;
+        public string FullName { get; }
     }
 }

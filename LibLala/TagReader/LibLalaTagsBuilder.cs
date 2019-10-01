@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using LibLala.DomainPrimitives;
 
 namespace LibLala.LibLalaTagReader
@@ -12,22 +10,37 @@ namespace LibLala.LibLalaTagReader
         public Comment Comment { get; private set; }
         public DiscNumber DiscNumber { get; private set; }
         public GenresOfTrack Genre { get; private set; }
+        public TrackLength Length { get; private set; }
         public TitleName Title { get; }
         public int? TrackId { get; private set; }
         public TrackNumber TrackNumber { get; private set; }
-        public TrackPath TrackPath { get; }
+        public ITrackPath TrackPath { get; }
         public Year? Year { get; private set; }
 
-        public LibLalaTagsBuilder(string title, string path)
+        public LibLalaTagsBuilder(string title, string path, int totalSeconds)
         {
             Album = new AlbumName("");
             Artist = new ArtistsOfTrack(new List<string>());
             Comment = new Comment("");
             DiscNumber = new DiscNumber(1);
             Genre = new GenresOfTrack(new List<string>());
+            Length = new TrackLength(totalSeconds);
             Title = new TitleName(title);
             TrackNumber = new TrackNumber(1);
             TrackPath = new TrackPath(path);
+        }
+
+        public LibLalaTagsBuilder(string title, ITrackPath fakePath, int totalSeconds)
+        {
+            Album = new AlbumName("");
+            Artist = new ArtistsOfTrack(new List<string>());
+            Comment = new Comment("");
+            DiscNumber = new DiscNumber(1);
+            Genre = new GenresOfTrack(new List<string>());
+            Length = new TrackLength(totalSeconds);
+            Title = new TitleName(title);
+            TrackNumber = new TrackNumber(1);
+            TrackPath = fakePath;
         }
 
         public LibLalaTagsBuilder WithAlbum(string album)
