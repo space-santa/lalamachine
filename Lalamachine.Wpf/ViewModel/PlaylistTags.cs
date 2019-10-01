@@ -6,7 +6,6 @@ namespace Lalamachine.Wpf.ViewModel
 {
     public class PlaylistTags : LibLalaTags, INotifyPropertyChanged
     {
-        public PlaylistTags(string title, string path) : base(title, path) { }
         public PlaylistTags(LibLalaTags other) : base(other) { }
         public PlaylistTags(PlaylistTags other) : base(other)
         {
