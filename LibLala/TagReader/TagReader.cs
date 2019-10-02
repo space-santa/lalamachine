@@ -13,7 +13,7 @@ namespace LibLala.LibLalaTagReader
     public class TagCreator
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "NSubstitute for testing.")]
-        public LibLalaTags Create(string path)
+        virtual public LibLalaTags Create(string path)
         {
             using (var file = TagLib.File.Create(path))
             {
