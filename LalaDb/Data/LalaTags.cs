@@ -28,7 +28,7 @@ namespace LalaDb.Data
             if (track!.GenreTracks is { }) { builder = builder.WithGenre(GenreTackListToStringList(track?.GenreTracks)); }
             if (track!.TrackId is { }) { builder = builder.WithTrackId(track.TrackId); }
             if (track!.TrackNumber is { }) { builder = builder.WithTrackNumber((uint)track.TrackNumber); }
-            if (track!.Year is { }) { builder = builder.WithYear((uint)track.Year); }
+            if (track!.Year is { }) { builder = builder.WithYear(track.Year); }
             var tags = builder.Build();
 
             return new LalaTags(tags);

@@ -9,14 +9,14 @@ namespace LibLala.LibLalaTagReader
     public class LibLalaTags
     {
         private readonly AlbumName _album;
-        private readonly ArtistsOfTrack _artist;
+        private readonly ArtistList _artist;
         private readonly Comment _comment;
         private readonly DiscNumber _discNumber;
-        private readonly GenresOfTrack _genre;
+        private readonly GenreList _genre;
         private readonly TrackLength _length;
         private readonly TitleName _title;
         private readonly TrackNumber _trackNumber;
-        private readonly Year? _year;
+        private readonly Year _year;
 
         internal LibLalaTags(LibLalaTagsBuilder builder)
         {
@@ -40,8 +40,8 @@ namespace LibLala.LibLalaTagReader
                 throw new ArgumentNullException(paramName: nameof(other));
             }
 
-            _artist = new ArtistsOfTrack(other.Artist);
-            _genre = new GenresOfTrack(other.Genre);
+            _artist = new ArtistList(other.Artist);
+            _genre = new GenreList(other.Genre);
             _album = new AlbumName(other.Album);
             _comment = new Comment(other.Comment);
             _discNumber = new DiscNumber(other.DiscNumber);
@@ -49,7 +49,7 @@ namespace LibLala.LibLalaTagReader
             _title = new TitleName(other.Title);
             _trackNumber = new TrackNumber(other.Track);
 
-            if (other.Year is { }) { _year = new Year(other.Year.Value); };
+            _year = new Year(other.Year);
 
             TrackPath = other.TrackPath;
             TrackId = other.TrackId;
@@ -68,7 +68,7 @@ namespace LibLala.LibLalaTagReader
             }
 
             TrackPath = new TrackPath(path);
-            _album = new AlbumName(file.Tag.Album);
+            _album = new AlbumName(file.Tag.Album ?? "");
             var x = file.Tag.AlbumArtists;
             var y = file.Tag.Performers;
 
@@ -76,14 +76,14 @@ namespace LibLala.LibLalaTagReader
             x.CopyTo(z, 0);
             y.CopyTo(z, x.Length);
 
-            _artist = new ArtistsOfTrack(z.ToList());
-            _comment = new Comment(file.Tag.Comment);
+            _artist = new ArtistList(z.ToList());
+            _comment = new Comment(file.Tag.Comment ?? "");
             _discNumber = new DiscNumber(file.Tag.Disc);
-            _genre = new GenresOfTrack(file.Tag.Genres.ToList());
+            _genre = new GenreList(file.Tag.Genres.ToList());
             _length = new TrackLength(file.Properties.Duration);
             _title = new TitleName(file.Tag.Title);
             _trackNumber = new TrackNumber(file.Tag.Track);
-            _year = new Year(file.Tag.Year);
+            _year = new Year((int)file.Tag.Year);
         }
 
         public bool IsValid => Title != null && Title.Length > 0 && Length > 0;
@@ -108,7 +108,7 @@ namespace LibLala.LibLalaTagReader
         public string Path => TrackPath.FullName;
         internal ITrackPath TrackPath { get; }
 
-        public uint? Year => _year?.Value;
+        public int Year => _year.Value;
 
         public string ToJson()
         {

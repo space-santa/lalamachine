@@ -1,71 +1,68 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace LibLala.DomainPrimitives
 {
-    public class GenresOfTrack : IComparable<GenresOfTrack>
+    public class BaseNameStringList<T> : IComparable<BaseNameStringList<T>> where T : BaseNameString
     {
-        private List<Genre> _genres;
+        private List<T> Names { get; }
 
-        public GenresOfTrack(List<string> nameStrings)
+        public BaseNameStringList() { Names = new List<T>(); }
+
+        public BaseNameStringList(List<string> nameStrings)
         {
             if (nameStrings is null)
             {
                 throw new ArgumentNullException(paramName: nameof(nameStrings));
             }
 
-            _genres = new List<Genre>();
-
+            Names = new List<T>();
             foreach (var name in nameStrings)
             {
-                _genres.Add(new Genre(name));
+                Add((T?)Activator.CreateInstance(typeof(T), name));
             }
-
-            EnsureDistinctArtists();
         }
 
-        public GenresOfTrack(string nameCsvString)
+        public BaseNameStringList(string nameCsvString)
         {
             if (string.IsNullOrEmpty(nameCsvString))
             {
                 throw new ArgumentNullException(paramName: nameof(nameCsvString));
             }
 
-            _genres = new List<Genre>();
-
             var localName = nameCsvString.Split(',');
+            Names = new List<T>();
             for (var i = 0; i < localName.Length; ++i)
             {
-                _genres.Add(new Genre(localName[i]));
+                Add((T?)Activator.CreateInstance(typeof(T), localName[i]));
             }
-
-            EnsureDistinctArtists();
         }
 
-        private void EnsureDistinctArtists()
+        public void Add(T? name)
         {
-            _genres = _genres.Distinct().ToList();
-        }
-
-        public string ToCsvString()
-        {
-            return string.Join(", ", _genres);
+            if (name is null) { throw new ArgumentNullException(paramName: nameof(name)); }
+            if (Names.Contains(name)) { return; }
+            Names.Add(name);
         }
 
         public List<string> ToStringList()
         {
             var stringList = new List<string>();
 
-            foreach (var genre in _genres)
+            foreach (var name in Names)
             {
-                stringList.Add(genre.ToString());
+                stringList.Add(name.ToString());
             }
 
             return stringList;
         }
 
-        public int CompareTo(GenresOfTrack other)
+        public string ToCsvString()
+        {
+            return string.Join(", ", Names);
+        }
+
+        public int CompareTo(BaseNameStringList<T> other)
         {
             if (other is null) { throw new ArgumentNullException(paramName: nameof(other)); }
             return string.Compare(ToCsvString(), other.ToCsvString(), StringComparison.Ordinal);
@@ -90,8 +87,7 @@ namespace LibLala.DomainPrimitives
         {
             return base.GetHashCode();
         }
-
-        public static bool operator ==(GenresOfTrack left, GenresOfTrack right)
+        public static bool operator ==(BaseNameStringList<T> left, BaseNameStringList<T> right)
         {
             if (left is null)
             {
@@ -101,27 +97,27 @@ namespace LibLala.DomainPrimitives
             return left.Equals(right);
         }
 
-        public static bool operator !=(GenresOfTrack left, GenresOfTrack right)
+        public static bool operator !=(BaseNameStringList<T> left, BaseNameStringList<T> right)
         {
             return !(left == right);
         }
 
-        public static bool operator <(GenresOfTrack left, GenresOfTrack right)
+        public static bool operator <(BaseNameStringList<T> left, BaseNameStringList<T> right)
         {
             return left is null ? right is object : left.CompareTo(right) < 0;
         }
 
-        public static bool operator <=(GenresOfTrack left, GenresOfTrack right)
+        public static bool operator <=(BaseNameStringList<T> left, BaseNameStringList<T> right)
         {
             return left is null || left.CompareTo(right) <= 0;
         }
 
-        public static bool operator >(GenresOfTrack left, GenresOfTrack right)
+        public static bool operator >(BaseNameStringList<T> left, BaseNameStringList<T> right)
         {
             return left is object && left.CompareTo(right) > 0;
         }
 
-        public static bool operator >=(GenresOfTrack left, GenresOfTrack right)
+        public static bool operator >=(BaseNameStringList<T> left, BaseNameStringList<T> right)
         {
             return left is null ? right is null : left.CompareTo(right) >= 0;
         }
