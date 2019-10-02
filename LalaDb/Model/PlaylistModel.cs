@@ -14,7 +14,7 @@ namespace LalaDb.Model
             _context = context;
         }
 
-        public void deletePlaylist(string name)
+        public void DeletePlaylist(string name)
         {
             try
             {
@@ -29,14 +29,14 @@ namespace LalaDb.Model
 
         }
 
-        public void savePlaylist(string name, List<LibLalaTags> tracks)
+        public void SavePlaylist(string name, List<LibLalaTags> tracks)
         {
             if (string.IsNullOrEmpty(name) || tracks is null)
             {
                 return;
             }
 
-            deletePlaylist(name);
+            DeletePlaylist(name);
             var playlist = _context.Playlists?.Add(new Playlist { Name = name });
             if (playlist is null)
             {
@@ -58,7 +58,7 @@ namespace LalaDb.Model
             _context.SaveChanges();
         }
 
-        public List<LalaTags> getPlaylistTracks(string name)
+        public List<LalaTags> GetPlaylistTracks(string name)
         {
             var trackPaths = _context.PlaylistTracks.AsEnumerable().Where(x => x.Playlist?.Name == name).OrderBy(x => x.Order).Select(x => x.TrackPath).ToArray();
             var tagList = new List<LalaTags>();
@@ -67,7 +67,7 @@ namespace LalaDb.Model
                 try
                 {
                     var track = _context.Tracks.Single(x => x.Path == trackPath);
-                    var lalaTags = new LalaTags(track);
+                    var lalaTags = LalaTags.Build(track);
                     tagList.Add(lalaTags);
                 }
                 catch (System.InvalidOperationException)

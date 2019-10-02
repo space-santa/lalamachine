@@ -22,7 +22,7 @@ namespace LalaDb.Model
             Scanning = false;
         }
 
-        public string?[] genreList(string searchString)
+        public string?[] GenreList(string searchString)
         {
             if (Scanning) { return Array.Empty<string>(); }
 
@@ -33,7 +33,7 @@ namespace LalaDb.Model
                 .ToArray();
             return list;
         }
-        public string?[] artistList(string genreFilter, string searchString)
+        public string?[] ArtistList(string genreFilter, string searchString)
         {
             if (Scanning) { return Array.Empty<string>(); }
 
@@ -63,7 +63,7 @@ namespace LalaDb.Model
             return list;
         }
 
-        public string?[] albumList(string artistFilter, string genreFilter, string searchString)
+        public string?[] AlbumList(string artistFilter, string genreFilter, string searchString)
         {
             if (Scanning) { return Array.Empty<string>(); }
 
@@ -116,7 +116,7 @@ namespace LalaDb.Model
             return list;
         }
 
-        public Track?[] displayLib(string albumFilter, string artistFilter, string genreFilter, string searchString)
+        public Track?[] DisplayLib(string albumFilter, string artistFilter, string genreFilter, string searchString)
         {
             if (Scanning) { return Array.Empty<Track>(); }
 
@@ -193,7 +193,7 @@ namespace LalaDb.Model
             return list;
         }
 
-        public List<LibLalaTags> getAlbumTracks(string name)
+        public List<LibLalaTags> GetAlbumTracks(string name)
         {
             if (string.IsNullOrEmpty(name) || name == LibLala.Constants.ALL)
             {
@@ -204,20 +204,20 @@ namespace LalaDb.Model
             var tagList = new List<LibLalaTags>();
             foreach (var track in tracks)
             {
-                var lalaTags = new LalaTags(track);
+                var lalaTags = LalaTags.Build(track);
                 tagList.Add(lalaTags);
             }
             return tagList;
         }
 
-        public LalaTags getMetadataForMrl(string path)
+        public LalaTags GetMetadataForMrl(string path)
         {
             path = LibLala.Utils.StringUtils.RemoveFilePrefix(path);
-            var tags = new LalaTags(_context.Tracks.Single(x => Path.GetFullPath(x.Path ?? "") == Path.GetFullPath(path)));
+            var tags = LalaTags.Build(_context.Tracks.Single(x => Path.GetFullPath(x.Path ?? "") == Path.GetFullPath(path)));
             return tags;
         }
 
-        public async Task scanAsync(string path)
+        public async Task ScanAsync(string path)
         {
             if (Scanning)
             {

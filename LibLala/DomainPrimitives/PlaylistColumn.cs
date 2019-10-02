@@ -17,38 +17,19 @@ namespace LibLala.DomainPrimitives
             }
 
             var title = headerContent.Trim();
-            switch (title)
+            ColumnType = title switch
             {
-                case "Track":
-                    ColumnType = PlaylistColumnType.Track;
-                    break;
-                case "Disc":
-                    ColumnType = PlaylistColumnType.Disc;
-                    break;
-                case "Title":
-                    ColumnType = PlaylistColumnType.Title;
-                    break;
-                case "Length":
-                    ColumnType = PlaylistColumnType.Length;
-                    break;
-                case "Comment":
-                    ColumnType = PlaylistColumnType.Comment;
-                    break;
-                case "Artist":
-                    ColumnType = PlaylistColumnType.Artist;
-                    break;
-                case "Album":
-                    ColumnType = PlaylistColumnType.Album;
-                    break;
-                case "Genre":
-                    ColumnType = PlaylistColumnType.Genre;
-                    break;
-                case "Year":
-                    ColumnType = PlaylistColumnType.Year;
-                    break;
-                default:
-                    throw new ArgumentException(paramName: headerContent, message: "Unknown column title.");
-            }
+                "Track" => PlaylistColumnType.Track,
+                "Disc" => PlaylistColumnType.Disc,
+                "Title" => PlaylistColumnType.Title,
+                "Length" => PlaylistColumnType.Length,
+                "Comment" => PlaylistColumnType.Comment,
+                "Artist" => PlaylistColumnType.Artist,
+                "Album" => PlaylistColumnType.Album,
+                "Genre" => PlaylistColumnType.Genre,
+                "Year" => PlaylistColumnType.Year,
+                _ => throw new ArgumentException(paramName: headerContent, message: "Unknown column title."),
+            };
         }
 
         public PlaylistColumnType ColumnType { get; }

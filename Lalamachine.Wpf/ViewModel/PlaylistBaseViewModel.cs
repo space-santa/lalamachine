@@ -141,11 +141,11 @@ namespace Lalamachine.Wpf.ViewModel
                 case PlaylistColumnType.Length:
                     if (ascending)
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.length));
+                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.Length));
                     }
                     else
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderByDescending(x => x.length));
+                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderByDescending(x => x.Length));
                     }
                     break;
                 case PlaylistColumnType.Title:
@@ -296,7 +296,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         public int CurrentIndex => Playlist.IndexOf(Playlist.FirstOrDefault(x => x.IsPlaying));
         public int NumberOfTracks => _playlist.Count;
-        public int TotalPlaytime => _playlist.Sum(track => track.length);
+        public int TotalPlaytime => _playlist.Sum(track => track.Length);
 
         internal void DisplayChangedHandler(object? sender, DisplayLibChangedEventArgs e)
         {

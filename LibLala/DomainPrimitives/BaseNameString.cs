@@ -2,14 +2,14 @@
 
 namespace LibLala.DomainPrimitives
 {
-    internal class BaseNameString
+    public class BaseNameString
     {
         private readonly string _name = "";
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>")]
         public BaseNameString(string name)
         {
-            if (string.IsNullOrEmpty(name))
+            if (name is null)
             {
                 throw new ArgumentNullException(paramName: nameof(name));
             }
@@ -29,11 +29,13 @@ namespace LibLala.DomainPrimitives
 
         public static bool operator ==(BaseNameString lhs, BaseNameString rhs)
         {
+            if (lhs is null || rhs is null) { return false; }
             return lhs.ToString().Equals(rhs.ToString(), StringComparison.Ordinal);
         }
 
         public static bool operator !=(BaseNameString lhs, BaseNameString rhs)
         {
+            if (lhs is null || rhs is null) { return false; }
             return !lhs.ToString().Equals(rhs.ToString(), StringComparison.Ordinal);
         }
 

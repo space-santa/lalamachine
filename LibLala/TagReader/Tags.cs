@@ -8,23 +8,29 @@ namespace LibLala.LibLalaTagReader
 {
     public class LibLalaTags
     {
-        public LibLalaTags(string title, string path)
+        private readonly AlbumName _album;
+        private readonly ArtistList _artist;
+        private readonly Comment _comment;
+        private readonly DiscNumber _discNumber;
+        private readonly GenreList _genre;
+        private readonly TrackLength _length;
+        private readonly TitleName _title;
+        private readonly TrackNumber _trackNumber;
+        private readonly Year _year;
+
+        internal LibLalaTags(LibLalaTagsBuilder builder)
         {
-            _artist = new Artists(new List<string>());
-            _genre = new List<string>();
-            Comment = "";
-            Album = "";
-            Title = title;
-            Path = path;
-        }
-        public LibLalaTags(string title, string path, List<string> genre, List<string> artist)
-        {
-            _artist = new Artists(artist);
-            _genre = genre;
-            Comment = "";
-            Album = "";
-            Title = title;
-            Path = path;
+            _album = builder.Album;
+            _artist = builder.Artist;
+            _comment = builder.Comment;
+            _discNumber = builder.DiscNumber;
+            _genre = builder.Genre;
+            _length = builder.Length;
+            _title = builder.Title;
+            TrackId = builder.TrackId;
+            _trackNumber = builder.TrackNumber;
+            TrackPath = builder.TrackPath;
+            _year = builder.Year;
         }
 
         public LibLalaTags(LibLalaTags other)
@@ -34,17 +40,18 @@ namespace LibLala.LibLalaTagReader
                 throw new ArgumentNullException(paramName: nameof(other));
             }
 
-            _artist = new Artists(other.Artist);
-            _genre = new List<string>();
-            Album = other.Album;
-            Comment = other.Comment;
-            DiscNumber = other.DiscNumber;
-            _genre = other.Genre;
-            duration = other.duration;
-            Title = other.Title;
-            Track = other.Track;
-            Year = other.Year;
-            Path = other.Path;
+            _artist = new ArtistList(other.Artist);
+            _genre = new GenreList(other.Genre);
+            _album = new AlbumName(other.Album);
+            _comment = new Comment(other.Comment);
+            _discNumber = new DiscNumber(other.DiscNumber);
+            _length = new TrackLength(other.Length);
+            _title = new TitleName(other.Title);
+            _trackNumber = new TrackNumber(other.Track);
+
+            _year = new Year(other.Year);
+
+            TrackPath = other.TrackPath;
             TrackId = other.TrackId;
         }
 
@@ -60,8 +67,8 @@ namespace LibLala.LibLalaTagReader
                 throw new ArgumentNullException(paramName: nameof(file));
             }
 
-            Path = path;
-            Album = file.Tag.Album;
+            TrackPath = new TrackPath(path);
+            _album = new AlbumName(file.Tag.Album ?? "");
             var x = file.Tag.AlbumArtists;
             var y = file.Tag.Performers;
 
@@ -69,91 +76,39 @@ namespace LibLala.LibLalaTagReader
             x.CopyTo(z, 0);
             y.CopyTo(z, x.Length);
 
-            _artist = new Artists(z.ToList());
-            Comment = file.Tag.Comment;
-            DiscNumber = file.Tag.Disc;
-            _genre = file.Tag.Genres.ToList();
-            duration = file.Properties.Duration;
-            Title = file.Tag.Title;
-            Track = file.Tag.Track;
-            Year = file.Tag.Year;
+            _artist = new ArtistList(z.ToList());
+            _comment = new Comment(file.Tag.Comment ?? "");
+            _discNumber = new DiscNumber(file.Tag.Disc);
+            _genre = new GenreList(file.Tag.Genres.ToList());
+            _length = new TrackLength(file.Properties.Duration);
+            _title = new TitleName(file.Tag.Title);
+            _trackNumber = new TrackNumber(file.Tag.Track);
+            _year = new Year((int)file.Tag.Year);
         }
 
-        public bool isValid()
-        {
-            return Title != null && Title.Length > 0 && length > 0;
-        }
+        public bool IsValid => Title != null && Title.Length > 0 && Length > 0;
 
-        private Artists _artist;
-        public List<string> Artist
-        {
-            get => _artist.ToStringList();
-        }
-        public string ArtistString
-        {
-            get => _artist.ToCsvString();
-            set => _artist = new Artists(value);
-        }
+        public string Album => _album.ToString();
 
-        private List<string> _genre;
-        public List<string> Genre { get => _genre; }
-        public string GenreString
-        {
-            get => JoinArrayWithComma(Genre.ToArray());
-            set
-            {
-                if (value is null)
-                {
-                    throw new ArgumentNullException(paramName: nameof(value));
-                }
+        public List<string> Artist => _artist.ToStringList();
+        public string ArtistString => _artist.ToCsvString();
 
-                _genre = value.Split(',').ToList();
-            }
-        }
+        public string Comment => _comment.ToString();
+        public uint DiscNumber => _discNumber.Value;
 
-        public TimeSpan duration { get; set; }
+        public List<string> Genre => _genre.ToStringList();
+        public string GenreString => _genre.ToCsvString();
 
-        public int length
-        {
-            get => (int)duration.TotalSeconds;
-            set => duration = new TimeSpan(0, 0, value);
-        }
+        public int Length => _length.TotalSeconds;
+        public string LengthString => _length.ToString();
 
-        public string LengthString
-        {
-            get
-            {
-                var seconds = duration.Seconds;
-                var minutesValue = (int)duration.TotalMinutes;
-                var secondsString = $"{seconds}";
-                if (secondsString.Length == 1)
-                {
-                    secondsString = $"0{secondsString}";
-                }
-                return $"{minutesValue}:{secondsString}";
-            }
-        }
+        public string Title => _title.ToString();
+        public uint Track => _trackNumber.Value;
+        public int? TrackId { get; }
+        public string Path => TrackPath.FullName;
+        internal ITrackPath TrackPath { get; }
 
-        public string Title { get; set; }
-        public uint Track { get; set; }
-        public string Comment { get; set; }
-        public string Album { get; set; }
-        public uint Year { get; set; }
-        public uint DiscNumber { get; set; }
-        public int TrackId { get; set; }
-        public string Path { get; set; }
-
-        private static string JoinArrayWithComma(string[] arr)
-        {
-            try
-            {
-                return string.Join(", ", arr);
-            }
-            catch (ArgumentNullException)
-            {
-                return "";
-            }
-        }
+        public int Year => _year.Value;
 
         public string ToJson()
         {

@@ -1,9 +1,11 @@
 ﻿using Lalamachine.Wpf.ViewModel;
+using LibLala.DomainPrimitives;
 using LibLala.LibLalaTagReader;
 using NUnit.Framework;
 
 namespace Lalamachine.Wpf.Unittests
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "<Pending>")]
     public class PlaylistViewModelTest
     {
         [Test]
@@ -21,7 +23,7 @@ namespace Lalamachine.Wpf.Unittests
         {
             var wasCalled = false;
             var viewModel = new PlaylistBaseViewModel("LIBRARY");
-            viewModel.AddTrack(new LibLalaTags("bob", "/path/to/bob"));
+            viewModel.AddTrack(new LibLalaTagsBuilder("bob", new FakeTrackPath("/path/to/bob"), 5).Build());
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayNextTrackHandler(null, new System.EventArgs());
             Assert.IsTrue(wasCalled);
@@ -42,7 +44,7 @@ namespace Lalamachine.Wpf.Unittests
         {
             var wasCalled = false;
             var viewModel = new PlaylistBaseViewModel("LIBRARY");
-            viewModel.AddTrack(new LibLalaTags("bob", "/path/to/bob"));
+            viewModel.AddTrack(new LibLalaTagsBuilder("bob", new FakeTrackPath("/path/to/bob"), 5).Build());
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayLastTrackHandler(null, new System.EventArgs());
             Assert.IsTrue(wasCalled);

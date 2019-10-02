@@ -10,20 +10,13 @@ namespace LibLala.LibLalaTagReader
         public TagReaderException(string message, Exception innerException) : base(message, innerException) { }
     }
 
-    public abstract class ITagCreator
+    public class TagCreator
     {
-        public abstract LibLalaTags Create(string path);
-    }
-
-    public class TagCreator : ITagCreator
-    {
-        public override LibLalaTags Create(string path)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "NSubstitute for testing.")]
+        virtual public LibLalaTags Create(string path)
         {
-            using (var file = TagLib.File.Create(path))
-            {
-                var tags = new LibLalaTags(file, System.IO.Path.GetFullPath(path));
-                return tags;
-            }
+            using var file = TagLib.File.Create(path);
+            return new LibLalaTags(file, System.IO.Path.GetFullPath(path));
         }
     }
 
@@ -34,7 +27,7 @@ namespace LibLala.LibLalaTagReader
             TagCreator = new TagCreator();
         }
 
-        public ITagCreator TagCreator { get; set; }
+        public TagCreator TagCreator { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>")]
         public LibLalaTags Read(string path)
