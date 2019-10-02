@@ -10,8 +10,8 @@
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AssemblyVersion>4.99.8</AssemblyVersion>
-    <FileVersion>4.99.8</FileVersion>
+    <AssemblyVersion>4.99.9</AssemblyVersion>
+    <FileVersion>4.99.9</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

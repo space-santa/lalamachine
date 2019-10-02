@@ -1,4 +1,4 @@
-$version = "4.99.8"
+$version = "4.99.9"
 $PathToPublish = "..\Lalamachine.Wpf\bin\Release\netcoreapp3.0\win-x64\publish"
 
 dotnet publish ../Lalamachine.Wpf/Lalamachine.Wpf.csproj -c Release
