@@ -15,10 +15,8 @@ namespace LibLala.LibLalaTagReader
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "NSubstitute for testing.")]
         virtual public LibLalaTags Create(string path)
         {
-            using (var file = TagLib.File.Create(path))
-            {
-                return new LibLalaTags(file, System.IO.Path.GetFullPath(path));
-            }
+            using var file = TagLib.File.Create(path);
+            return new LibLalaTags(file, System.IO.Path.GetFullPath(path));
         }
     }
 
