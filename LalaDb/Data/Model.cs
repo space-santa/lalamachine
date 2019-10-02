@@ -42,7 +42,7 @@ namespace LalaDb.Data
         public int TrackNumber { get; set; }
         public string? Path { get; set; }
         public int Length { get; set; }
-        public int? Year { get; set; }
+        public int Year { get; set; }
         public int DiscNumber { get; set; }
 
         public int AlbumId { get; set; }
