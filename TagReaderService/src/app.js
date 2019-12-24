@@ -1,5 +1,6 @@
 const express = require("express");
 const multer = require("multer");
+const jsmediatags = require("jsmediatags");
 
 const app = express();
 
@@ -17,12 +18,15 @@ const upload = multer({
 });
 
 app.post("/tags", upload.single("file"), async (req, res) => {
-  try {
-    // do the thing to get the tags
-    res.send({ tags: "lotsa tags" });
-  } catch (error) {
-    res.status(404).send();
-  }
+  // TODO: Filter the tags to be more useful.
+  jsmediatags.read(req.file.buffer, {
+    onSuccess: function(tag) {
+      res.send(tag);
+    },
+    onError: function(error) {
+      res.status(404).send(":(", error.type, error.info);
+    }
+  });
 });
 
 module.exports = app;
