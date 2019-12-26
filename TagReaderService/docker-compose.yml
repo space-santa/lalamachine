@@ -1,0 +1,10 @@
+version: "3"
+services:
+  tag-reader-service:
+    build:
+      context: .
+    image: tag-reader-service
+    container_name: tag-reader-service
+    ports:
+      - "3001:3001"
+    restart: "no"
