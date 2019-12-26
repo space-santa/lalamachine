@@ -19,16 +19,25 @@ const upload = multer({
   }
 });
 
-app.post("/tags", upload.single("file"), async (req, res) => {
-  // TODO: Filter the tags to be more useful.
-  jsmediatags.read(req.file.buffer, {
-    onSuccess: function(tag) {
-      res.send(extract(tag.tags));
-    },
-    onError: function(error) {
-      res.status(404).send(":(", error.type, error.info);
+app.get(
+  "/tags",
+  upload.single("music"),
+  async (req, res) => {
+    if (!req.file) {
+      return res.status(400).send("Please send a music file.");
     }
-  });
-});
+    jsmediatags.read(req.file.buffer, {
+      onSuccess: function(tag) {
+        res.send(extract(tag.tags));
+      },
+      onError: function(error) {
+        res.status(400).send(":(", error.type, error.info);
+      }
+    });
+  },
+  (error, req, res, next) => {
+    res.status(400).send({ error: error.message });
+  }
+);
 
 module.exports = app;
