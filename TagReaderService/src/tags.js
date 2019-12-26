@@ -6,13 +6,16 @@ const extract = json => {
     title: json.title,
     artist: json.artist,
     album: json.album,
-    comment: json.comment.text,
+    comment: json.comment.text ? json.comment.text : json.comment,
     track: json.track,
-    genre: genreLookup(+json.genre),
-    disc: json.TPOS.data,
-    BPM: json.TBPM.data,
-    KEY: json.TKEY.data,
-    year: json.TDRC.data
+    genre:
+      genreLookup(+json.genre) === "Unknown"
+        ? json.genre
+        : genreLookup(+json.genre),
+    disc: json.TPOS ? json.TPOS.data : undefined,
+    year: json.year ? json.year : json.TDRC ? json.TDRC.data : undefined,
+    BPM: json.TBPM ? json.TBPM.data : undefined,
+    KEY: json.TKEY ? json.TKEY.data : undefined
   };
 
   return tags;
