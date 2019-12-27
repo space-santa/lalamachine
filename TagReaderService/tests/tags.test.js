@@ -3,7 +3,7 @@ const app = require("../src/app");
 
 test("Should get correct genre string from number when posting a file to /tags", async () => {
   const response = await request(app)
-    .post("/tags")
+    .get("/tags")
     .attach("file", "tests/fixtures/good.mp3")
     .expect(200);
   console.log(response.body);
@@ -12,7 +12,7 @@ test("Should get correct genre string from number when posting a file to /tags",
 
 test("Should get correct genre string object when posting a file to /tags", async () => {
   const response = await request(app)
-    .post("/tags")
+    .get("/tags")
     .attach("file", "tests/fixtures/genre.mp3")
     .expect(200);
   console.log(response.body);
