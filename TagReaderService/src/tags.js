@@ -1,7 +1,6 @@
 const genreLookup = require("id3-genre");
 
 const extract = json => {
-  console.log(json);
   const tags = {
     title: json.title,
     artist: json.artist,
