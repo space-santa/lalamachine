@@ -15,7 +15,7 @@ dotnet core 3.0
 
 Either install the .msi from the release section, or clone the repo and
 
-```
+```bash
 cd Lalamachine
 dotnet run
 ```
@@ -25,22 +25,22 @@ dotnet run
 The addition of TagReaderService marks the beginning of the end of the desktop app. The long term goal is to reinvent the web-app-music-player.
 TagReaderService will evolve to be LalaServer. It will take care of all the things (which actually aren't that many). Things we need:
 
-* LalaSPA
-* LalaServer
-  * MongoDB
-  * TagReaderService
-  * FileServer
-  * FileUploadService
+- LalaSPA
+- LalaServer
+  - MongoDB
+  - TagReaderService
+  - FileServer
+  - FileUploadService
 
 ### Endpoints
 
-* Fileupload POST /files/
-  * File --> extract tags --> save tags to DB --> store file with UUID as filename (or, maybe make the URI `genre/artist/album/title` which would match the filters)
-* Download GET /files/:id
-* GET /albums/
-* GET /genres/
-* GET /artists/
-* GET /titles/
+- Fileupload POST /files/
+  - File --> extract tags --> save tags to DB --> store file with UUID as filename (or, maybe make the URI `genre/artist/album/title` which would match the filters)
+- Download GET /files/:id
+- GET /albums/
+- GET /genres/
+- GET /artists/
+- GET /titles/
 
 We leave auth for Ron.
 
