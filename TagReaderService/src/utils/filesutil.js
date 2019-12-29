@@ -54,6 +54,10 @@ const saveFile = file => {
     }
 
     if (jsonTags.album) {
+      if (!jsonTags.artist) {
+        return reject("Album must have an artist.");
+      }
+
       const album = await Album.findOne({ name: jsonTags.album });
       if (album) {
         jsonTags.album = album;
@@ -64,9 +68,8 @@ const saveFile = file => {
       if (jsonTags.genre) {
         jsonTags.album.genre = jsonTags.genre;
       }
-      if (jsonTags.artist) {
-        jsonTags.album.artist = jsonTags.artist;
-      }
+
+      jsonTags.album.artist = jsonTags.artist;
 
       await jsonTags.album.save();
     }
