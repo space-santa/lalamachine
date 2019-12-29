@@ -1,3 +1,4 @@
+const jsmediatags = require("jsmediatags");
 const genreLookup = require("id3-genre");
 
 const getTrackOrDiscWithoutSlash = value => {
@@ -27,4 +28,20 @@ const extract = json => {
   return tags;
 };
 
-module.exports = extract;
+const getTags = file => {
+  return new Promise(resolve => {
+    if (!file) {
+      throw new Error("Please send a music file.");
+    }
+    jsmediatags.read(file.buffer, {
+      onSuccess: function(tag) {
+        resolve(extract(tag.tags));
+      },
+      onError: function(error) {
+        throw new Error(":(", error.type, error.info);
+      }
+    });
+  });
+};
+
+module.exports = { getTags, extract };

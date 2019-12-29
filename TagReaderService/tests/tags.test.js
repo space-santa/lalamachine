@@ -25,7 +25,7 @@ test("Should get the discnumber if it has one", async () => {
   expect(response.body.disc).toEqual("2");
 });
 
-const extract = require("../src/tags");
+const TagsUtil = require("../src/utils/tagsutil");
 
 const testTags = {
   title: "bob title",
@@ -45,7 +45,7 @@ const getTestTags = () => {
 };
 
 test("Should get tags from testTags", async () => {
-  const tags = extract(getTestTags());
+  const tags = TagsUtil.extract(getTestTags());
   expect(tags).toEqual({
     title: "bob title",
     artist: "bob artist",
@@ -63,7 +63,7 @@ test("Should get tags from testTags", async () => {
 test("Should get string comment", async () => {
   let localTestTags = getTestTags();
   localTestTags.comment = "new bob comment";
-  const tags = extract(localTestTags);
+  const tags = TagsUtil.extract(localTestTags);
   expect(tags.comment).toEqual("new bob comment");
 });
 
@@ -71,27 +71,27 @@ test("Should get year from year id3 tag", async () => {
   let localTestTags = getTestTags();
   delete localTestTags.TDRC;
   localTestTags.year = "1997";
-  const tags = extract(localTestTags);
+  const tags = TagsUtil.extract(localTestTags);
   expect(tags.year).toEqual("1997");
 });
 
 test("Should not include year in tags without year or TDRC id3 tag", async () => {
   let localTestTags = getTestTags();
   delete localTestTags.TDRC;
-  const tags = extract(localTestTags);
+  const tags = TagsUtil.extract(localTestTags);
   expect(tags.year).toBeUndefined();
 });
 
 test("Should not include BPM in tags without TBPM id3 tag", async () => {
   let localTestTags = getTestTags();
   delete localTestTags.TBPM;
-  const tags = extract(localTestTags);
+  const tags = TagsUtil.extract(localTestTags);
   expect(tags.BPM).toBeUndefined();
 });
 
 test("Should not include KEY in tags without TKEY id3 tag", async () => {
   let localTestTags = getTestTags();
   delete localTestTags.TKEY;
-  const tags = extract(localTestTags);
+  const tags = TagsUtil.extract(localTestTags);
   expect(tags.KEY).toBeUndefined();
 });

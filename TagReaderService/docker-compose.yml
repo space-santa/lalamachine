@@ -8,3 +8,18 @@ services:
     ports:
       - "3001:3001"
     restart: "no"
+    environment:
+      - MONGODB_URL=mongodb://root:example@localhost:27017/lalamachine?authSource=admin&w=1
+
+  lalamongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - lala-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+volumes:
+  lala-data:
