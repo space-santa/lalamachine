@@ -18,7 +18,7 @@ const saveFile = file => {
     if (fs.existsSync(fileUri)) {
       return resolve();
     }
-    fs.writeFileSync(fileUri, file);
+    fs.writeFileSync(fileUri, file.buffer);
 
     const tags = new Tags(jsonTags);
     tags.URI = fileUri;
