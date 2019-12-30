@@ -1,3 +1,8 @@
 module.exports = {
-  openSync() {}
+  openSync() {},
+  mkdirSync() {},
+  existsSync() {
+    return false;
+  },
+  writeFileSync() {}
 };

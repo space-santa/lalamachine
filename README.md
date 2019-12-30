@@ -37,10 +37,10 @@ TagReaderService will evolve to be LalaServer. It will take care of all the thin
 - Fileupload POST /files/ ✔
   - File --> extract tags --> save tags to DB --> store file with UUID as filename (or, maybe make the URI `genre/artist/album/title` which would match the filters)
 - Download GET /files/:id ✔
-- GET /albums/
-- GET /genres/
-- GET /artists/
-- GET /titles/
+- GET /albums/ ✔
+- GET /genres/ ✔
+- GET /artists/ ✔
+- GET /titles/ ✔
 
 We leave auth for Ron.
 
