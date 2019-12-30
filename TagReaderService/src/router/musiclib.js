@@ -92,7 +92,10 @@ router.get("/albums", async (req, res) => {
   }
 
   try {
-    const albums = await Album.find(filter, "name");
+    const albums = await Album.find(filter, "name artist").populate({
+      path: "artist",
+      select: "name"
+    });
     return res.send(albums);
   } catch (error) {
     return res.status(500).send({ error });
