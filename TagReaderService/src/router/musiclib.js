@@ -14,15 +14,15 @@ router.get("/titles", async (req, res) => {
     filter.title = new RegExp(req.query.title);
   }
 
-  if (req.query.genre) {
+  if (req.query.genreId) {
     filter.genre = req.query.genreId;
   }
 
-  if (req.query.artist) {
+  if (req.query.artistId) {
     filter.artist = req.query.artistId;
   }
 
-  if (req.query.album) {
+  if (req.query.albumId) {
     filter.album = req.query.albumId;
   }
 
