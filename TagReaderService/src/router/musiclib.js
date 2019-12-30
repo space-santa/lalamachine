@@ -32,7 +32,22 @@ router.get("/titles", async (req, res) => {
   }
 
   try {
-    const titles = await Tags.find(filter);
+    const titles = await Tags.find(
+      filter,
+      "track disk title duration comment album artist genre year"
+    )
+      .populate({
+        path: "genre",
+        select: "name"
+      })
+      .populate({
+        path: "artist",
+        select: "name"
+      })
+      .populate({
+        path: "album",
+        select: "name"
+      });
     return res.send(titles);
   } catch (error) {
     return res.status(500).send({ error });
