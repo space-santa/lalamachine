@@ -58,20 +58,23 @@ const saveFile = file => {
         return reject("Album must have an artist.");
       }
 
-      const album = await Album.findOne({ name: jsonTags.album });
+      const album = await Album.findOne({
+        name: jsonTags.album,
+        artist: jsonTags.artist._id
+      });
       if (album) {
         jsonTags.album = album;
       } else {
         jsonTags.album = new Album({ name: jsonTags.album });
+
+        if (jsonTags.genre) {
+          jsonTags.album.genre = jsonTags.genre;
+        }
+
+        jsonTags.album.artist = jsonTags.artist;
+
+        await jsonTags.album.save();
       }
-
-      if (jsonTags.genre) {
-        jsonTags.album.genre = jsonTags.genre;
-      }
-
-      jsonTags.album.artist = jsonTags.artist;
-
-      await jsonTags.album.save();
     }
 
     const tags = new Tags(jsonTags);
