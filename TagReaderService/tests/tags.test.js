@@ -1,3 +1,4 @@
+const mockingoose = require("mockingoose");
 const request = require("supertest");
 const app = require("../src/app");
 const getTestTags = require("./fixtures/tagsfactory");
