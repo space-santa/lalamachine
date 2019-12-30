@@ -18,13 +18,13 @@ genreSchema.virtual("tags", {
 genreSchema.virtual("artist", {
   ref: "Artist",
   localField: "_id",
-  foreignField: "artist"
+  foreignField: "genre"
 });
 
 genreSchema.virtual("album", {
   ref: "Album",
   localField: "_id",
-  foreignField: "album"
+  foreignField: "genre"
 });
 
 const Genre = mongoose.model("Genre", genreSchema);

@@ -23,7 +23,7 @@ artistSchema.virtual("tags", {
 artistSchema.virtual("album", {
   ref: "Album",
   localField: "_id",
-  foreignField: "album"
+  foreignField: "artist"
 });
 
 const Artist = mongoose.model("Artist", artistSchema);
