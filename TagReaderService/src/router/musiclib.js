@@ -60,7 +60,7 @@ router.get("/genres", async (req, res) => {
   if (req.query.name) {
     filter.name = new RegExp(req.query.name);
   }
-  console.log(filter);
+
   try {
     const genres = await Genre.find(filter, "name");
     return res.send(genres);
