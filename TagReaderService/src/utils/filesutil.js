@@ -6,12 +6,12 @@ const Genre = require("../models/genre");
 const Tags = require("../models/tags");
 
 const replaceWhitespaceWithUnderscore = value => value.replace(/\s/g, "_");
-const replaceSlashWithDash = value => value.replace(/\//g, "-");
+const replaceNonWordWithDash = value => value.replace(/\W/g, "-");
 
 const getDirname = tags => {
-  const genre = replaceSlashWithDash(tags.genre);
-  const artist = replaceSlashWithDash(tags.artist);
-  const album = replaceSlashWithDash(tags.album);
+  const genre = replaceNonWordWithDash(tags.genre);
+  const artist = replaceNonWordWithDash(tags.artist);
+  const album = replaceNonWordWithDash(tags.album);
   return `${process.env.MUSIC_DIR}/${genre}/${artist}/${album}`;
 };
 
