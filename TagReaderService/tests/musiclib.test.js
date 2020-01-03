@@ -7,14 +7,16 @@ const Genre = require("../src/models/genre");
 const Artist = require("../src/models/artist");
 const Album = require("../src/models/album");
 
-test("Should do nothing at all", async () => {
-  expect(1).toEqual(1);
-});
-
 const artistList = [
   { _id: "507f191e810c19729de8aaea", name: "Johnny" },
   { _id: "507f191e810c19729de860ea", name: "Bobo" },
   { _id: "507f191e810c19729de860ff", name: "Boba the builder" }
+];
+
+const genreList = [
+  { _id: "507f191e810c19729de8aaea", name: "Metal" },
+  { _id: "507f191e810c19729de860ea", name: "Black Metal" },
+  { _id: "507f191e810c19729de860ff", name: "Alternative" }
 ];
 
 const findNameMatch = (query, list) => {
@@ -52,6 +54,35 @@ test("Should find no artists by name", async () => {
   mockingoose(Artist).toReturn(finderMock, "find");
   const response = await request(app)
     .get("/artists")
+    .query({ name: "Jim" })
+    .expect(200);
+
+  expect(response.body).toEqual([]);
+});
+
+test("Should get genre by name", async () => {
+  const finderMock = query => {
+    return findNameMatch(query, genreList);
+  };
+
+  mockingoose(Genre).toReturn(finderMock, "find");
+  const response = await request(app)
+    .get("/genres")
+    .query({ name: "etal" })
+    .expect(200);
+
+  expect(response.body[0].name).toEqual("Metal");
+  expect(response.body[1].name).toEqual("Black Metal");
+});
+
+test("Should find no genre by name", async () => {
+  const finderMock = query => {
+    return findNameMatch(query, genreList);
+  };
+
+  mockingoose(Genre).toReturn(finderMock, "find");
+  const response = await request(app)
+    .get("/genres")
     .query({ name: "Jim" })
     .expect(200);
 
