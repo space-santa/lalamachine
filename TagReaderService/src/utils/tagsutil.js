@@ -18,20 +18,14 @@ const extract = json => {
   return tags;
 };
 
-const getTags = file => {
-  return new Promise(async resolve => {
-    if (!file) {
-      throw new Error("Please send a music file.");
-    }
-    try {
-      const metadata = await mm.parseBuffer(file.buffer, "audio/mpeg", {
-        duration: true
-      });
-      resolve(extract(metadata));
-    } catch (error) {
-      reject(error);
-    }
+const getTags = async file => {
+  if (!file) {
+    throw new Error("Please send a music file.");
+  }
+  const metadata = await mm.parseBuffer(file.buffer, "audio/mpeg", {
+    duration: true
   });
+  return extract(metadata);
 };
 
 module.exports = { getTags, extract };
