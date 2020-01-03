@@ -31,6 +31,21 @@ test("Should create new Genre", async () => {
   expect(jsonTags.genre._id).not.toEqual(undefined);
 });
 
+test("Should use existing Genre if there is one", async () => {
+  const jsonTags = getBaseTagsCopy();
+  jsonTags.genre = "bob album";
+
+  const _doc = {
+    _id: "507f191e810c19729de860ea",
+    name: "bob album"
+  };
+  mockingoose(Genre).toReturn(_doc, "findOne");
+
+  await FilesUtilHelper.writeTagsToDatabase(jsonTags);
+
+  expect(jsonTags.genre._id.toString()).toEqual(_doc._id);
+});
+
 test("Should create new Artist", async () => {
   const jsonTags = getBaseTagsCopy();
   jsonTags.artist = "bob";
@@ -38,6 +53,31 @@ test("Should create new Artist", async () => {
   await FilesUtilHelper.writeTagsToDatabase(jsonTags);
 
   expect(jsonTags.artist._id).not.toEqual(undefined);
+});
+
+test("Should use existing Artist if there is one", async () => {
+  const jsonTags = getBaseTagsCopy();
+  jsonTags.artist = "bob";
+
+  const _doc = {
+    _id: "507f191e810c19729de860ea",
+    name: "bob"
+  };
+  mockingoose(Artist).toReturn(_doc, "findOne");
+
+  await FilesUtilHelper.writeTagsToDatabase(jsonTags);
+
+  expect(jsonTags.artist._id.toString()).toEqual(_doc._id);
+});
+
+test("Should add Genre to Artist if there is one", async () => {
+  const jsonTags = getBaseTagsCopy();
+  jsonTags.artist = "bob";
+  jsonTags.genre = "bob album";
+
+  await FilesUtilHelper.writeTagsToDatabase(jsonTags);
+
+  expect(jsonTags.artist.genre).not.toEqual(undefined);
 });
 
 test("Should create new Album if it has an artist", async () => {
@@ -48,6 +88,34 @@ test("Should create new Album if it has an artist", async () => {
   await FilesUtilHelper.writeTagsToDatabase(jsonTags);
 
   expect(jsonTags.album._id).not.toEqual(undefined);
+});
+
+test("Should use existing Album if there is one", async () => {
+  const jsonTags = getBaseTagsCopy();
+  jsonTags.artist = "bob";
+  jsonTags.album = "bob album";
+
+  const _doc = {
+    _id: "507f191e810c19729de860ea",
+    name: "bob album",
+    artist: "507f191e810c19729de860ff"
+  };
+  mockingoose(Album).toReturn(_doc, "findOne");
+
+  await FilesUtilHelper.writeTagsToDatabase(jsonTags);
+
+  expect(jsonTags.album._id.toString()).toEqual(_doc._id);
+});
+
+test("Should add Genre to Album", async () => {
+  const jsonTags = getBaseTagsCopy();
+  jsonTags.artist = "bob";
+  jsonTags.album = "bob album";
+  jsonTags.genre = "bob genre";
+
+  await FilesUtilHelper.writeTagsToDatabase(jsonTags);
+
+  expect(jsonTags.album.genre.name).toEqual("bob genre");
 });
 
 test("Should throw error when album has no artist", async () => {
