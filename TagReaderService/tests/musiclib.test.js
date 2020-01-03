@@ -31,6 +31,21 @@ const findNameMatch = (query, list) => {
   return values;
 };
 
+test("Should get all artists", async () => {
+  const finderMock = query => {
+    return findNameMatch(query, artistList);
+  };
+
+  mockingoose(Artist).toReturn(finderMock, "find");
+  const response = await request(app)
+    .get("/artists")
+    .expect(200);
+
+  expect(response.body[0].name).toEqual("Johnny");
+  expect(response.body[1].name).toEqual("Bobo");
+  expect(response.body[2].name).toEqual("Boba the builder");
+});
+
 test("Should get artists by name", async () => {
   const finderMock = query => {
     return findNameMatch(query, artistList);
@@ -58,6 +73,21 @@ test("Should find no artists by name", async () => {
     .expect(200);
 
   expect(response.body).toEqual([]);
+});
+
+test("Should get all genres", async () => {
+  const finderMock = query => {
+    return findNameMatch(query, genreList);
+  };
+
+  mockingoose(Genre).toReturn(finderMock, "find");
+  const response = await request(app)
+    .get("/genres")
+    .expect(200);
+
+  expect(response.body[0].name).toEqual("Metal");
+  expect(response.body[1].name).toEqual("Black Metal");
+  expect(response.body[2].name).toEqual("Alternative");
 });
 
 test("Should get genre by name", async () => {
