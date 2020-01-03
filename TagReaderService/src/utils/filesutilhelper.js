@@ -1,4 +1,5 @@
 // This file exists because I couldn't make it work to replace functions in the module under test with mocks.
+const fs = require("fs");
 
 const Artist = require("../models/artist");
 const Album = require("../models/album");
