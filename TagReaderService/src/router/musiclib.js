@@ -1,10 +1,9 @@
 const express = require("express");
 const router = new express.Router();
 
-const Tags = require("../models/tags");
-const Genre = require("../models/genre");
-const Artist = require("../models/artist");
-const Album = require("../models/album");
+const DB = require("../db/interface");
+
+const Tags = require("../db/models/tags");
 
 router.get("/titles", async (req, res) => {
   const filter = {};
@@ -55,14 +54,8 @@ router.get("/titles", async (req, res) => {
 });
 
 router.get("/genres", async (req, res) => {
-  const filter = {};
-
-  if (req.query.name) {
-    filter.name = new RegExp(req.query.name);
-  }
-
   try {
-    const genres = await Genre.find(filter, "name");
+    const genres = await DB.getFilteredGenres(req.query.name);
     return res.send(genres);
   } catch (error) {
     return res.status(500).send({ error });
@@ -70,14 +63,8 @@ router.get("/genres", async (req, res) => {
 });
 
 router.get("/artists", async (req, res) => {
-  const filter = {};
-
-  if (req.query.name) {
-    filter.name = new RegExp(req.query.name);
-  }
-
   try {
-    const artists = await Artist.find(filter, "name");
+    const artists = await DB.getFilteredArtists(req.query.name);
     return res.send(artists);
   } catch (error) {
     return res.status(500).send({ error });
@@ -85,17 +72,8 @@ router.get("/artists", async (req, res) => {
 });
 
 router.get("/albums", async (req, res) => {
-  const filter = {};
-
-  if (req.query.name) {
-    filter.name = new RegExp(req.query.name);
-  }
-
   try {
-    const albums = await Album.find(filter, "name artist").populate({
-      path: "artist",
-      select: "name"
-    });
+    const albums = await DB.getFilteredAlbums(req.query.name);
     return res.send(albums);
   } catch (error) {
     return res.status(500).send({ error });

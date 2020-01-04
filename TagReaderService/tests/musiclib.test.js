@@ -2,10 +2,10 @@ const mockingoose = require("mockingoose").default;
 const request = require("supertest");
 const app = require("../src/app");
 
-const Tags = require("../src/models/tags");
-const Genre = require("../src/models/genre");
-const Artist = require("../src/models/artist");
-const Album = require("../src/models/album");
+const Tags = require("../src/db/models/tags");
+const Genre = require("../src/db/models/genre");
+const Artist = require("../src/db/models/artist");
+const Album = require("../src/db/models/album");
 
 const artistList = [
   { _id: "507f191e810c19729de8aaea", name: "Johnny" },

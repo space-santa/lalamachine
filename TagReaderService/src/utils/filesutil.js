@@ -1,7 +1,7 @@
 const fs = require("fs");
 const FilesUtilHelper = require("./filesutilhelper");
 const TagsUtil = require("./tagsutil");
-const Tags = require("../models/tags");
+const { getTagsById, deleteTagsById } = require("../db/interface");
 
 const saveFile = async file => {
   const jsonTags = await TagsUtil.getTags(file);
@@ -14,15 +14,12 @@ const saveFile = async file => {
 };
 
 const openFile = async id => {
-  const tags = await Tags.findById(id);
-  if (!tags) {
-    throw new Error("Tags not found");
-  }
+  const tags = await getTagsById(id);
 
   try {
     fs.openSync(tags.URI);
   } catch (error) {
-    await Tags.deleteOne({ _id: id });
+    await deleteTagsById(id);
     throw new Error("File not found");
   }
 
