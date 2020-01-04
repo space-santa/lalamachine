@@ -27,8 +27,8 @@ class TitleFilter {
 
     if (query.sortBy) {
       const parts = query.sortBy.split(":");
-      filter.sortBy = parts[0];
-      filter.sortAscending = parts[1] === "asc";
+      this.sortBy = parts[0];
+      this.sortAscending = parts[1] === "asc";
     }
   }
 
