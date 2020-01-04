@@ -2,51 +2,14 @@ const express = require("express");
 const router = new express.Router();
 
 const DB = require("../db/interface");
-
-const Tags = require("../db/models/tags");
+const TitleFilter = require("../db/titlefilter");
 
 router.get("/titles", async (req, res) => {
-  const filter = {};
-  const sort = {};
-
-  if (req.query.title) {
-    filter.title = new RegExp(req.query.title);
-  }
-
-  if (req.query.genreId) {
-    filter.genre = req.query.genreId;
-  }
-
-  if (req.query.artistId) {
-    filter.artist = req.query.artistId;
-  }
-
-  if (req.query.albumId) {
-    filter.album = req.query.albumId;
-  }
-
-  if (req.query.sortBy) {
-    const parts = req.query.sortBy.split(":");
-    sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
-  }
+  const filter = new TitleFilter();
+  filter.fromQuery(req.query);
 
   try {
-    const titles = await Tags.find(
-      filter,
-      "track disk title duration comment album artist genre year"
-    )
-      .populate({
-        path: "genre",
-        select: "name"
-      })
-      .populate({
-        path: "artist",
-        select: "name"
-      })
-      .populate({
-        path: "album",
-        select: "name"
-      });
+    const titles = await DB.getFilteredTitles(filter);
     return res.send(titles);
   } catch (error) {
     return res.status(500).send({ error });

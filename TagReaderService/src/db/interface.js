@@ -114,11 +114,35 @@ const getFilteredAlbums = async (name = "") => {
   return albums;
 };
 
+const getFilteredTitles = async titleFilter => {
+  const titles = await Tags.find(
+    titleFilter.filterObject(),
+    "track disk title duration comment album artist genre year"
+  )
+    .populate({
+      path: "genre",
+      select: "name"
+    })
+    .populate({
+      path: "artist",
+      select: "name"
+    })
+    .populate({
+      path: "album",
+      select: "name"
+    })
+    .sort(titleFilter.sortObject());
+  // TODO: Sorting this is a way more involved process.
+  // It has to sort by whatever is selected and the at least by album, track, and disknumber
+  return titles;
+};
+
 module.exports = {
   writeTagsToDatabase,
   getTagsById,
   deleteTagsById,
   getFilteredGenres,
   getFilteredArtists,
-  getFilteredAlbums
+  getFilteredAlbums,
+  getFilteredTitles
 };
