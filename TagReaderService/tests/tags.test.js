@@ -20,10 +20,10 @@ test("Should get correct genre string object when posting a file to /tags", asyn
   expect(response.body.genre).toEqual("Garage / Bassline / Grime");
 });
 
-test("Should get the discnumber if it has one", async () => {
+test("Should get the disknumber if it has one", async () => {
   const response = await request(app)
     .get("/tags")
-    .attach("music", "tests/fixtures/disc.mp3")
+    .attach("music", "tests/fixtures/disk.mp3")
     .expect(200);
   expect(response.body.disk).toEqual(2);
 });
