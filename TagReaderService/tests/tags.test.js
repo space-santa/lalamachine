@@ -1,4 +1,4 @@
-const mockingoose = require("mockingoose");
+const mockingoose = require("mockingoose").default;
 const request = require("supertest");
 const app = require("../src/app");
 const getTestTags = require("./fixtures/tagsfactory");

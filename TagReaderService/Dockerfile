@@ -1,5 +1,6 @@
 from node:lts-alpine
 
+RUN mkdir /opt/musiclib
 RUN mkdir /app
 WORKDIR /app
 ENV NODE_ENV=production

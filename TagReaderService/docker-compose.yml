@@ -9,12 +9,15 @@ services:
       - "3001:3001"
     restart: "no"
     environment:
-      - MONGODB_URL=mongodb://root:example@localhost:27017/lalamachine?authSource=admin&w=1
+      - MONGODB_URL=mongodb://root:example@lalamongo:27017/lalamachine?authSource=admin&w=1
+      - MUSIC_DIR=/opt/musiclib
+    volumes:
+      - music-data:/opt/musiclib
 
   lalamongo:
     image: mongo
     ports:
-      - 27017:27017
+      - 27055:27017
     volumes:
       - lala-data:/data/db
     environment:
@@ -23,3 +26,4 @@ services:
 
 volumes:
   lala-data:
+  music-data:
