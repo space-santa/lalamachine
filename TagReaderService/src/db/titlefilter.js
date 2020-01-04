@@ -17,15 +17,15 @@ class TitleFilter {
       this.genreId = query.genreId;
     }
 
-    if (req.query.artistId) {
+    if (query.artistId) {
       this.artistId = query.artistId;
     }
 
-    if (req.query.albumId) {
+    if (query.albumId) {
       this.albumId = query.albumId;
     }
 
-    if (req.query.sortBy) {
+    if (query.sortBy) {
       const parts = query.sortBy.split(":");
       filter.sortBy = parts[0];
       filter.sortAscending = parts[1] === "asc";
@@ -33,12 +33,20 @@ class TitleFilter {
   }
 
   filterObject() {
-    return {
-      title: this.title,
-      genre: this.genreId,
-      artist: this.artistId,
-      album: this.artistId
-    };
+    const filter = {};
+    if (this.title) {
+      filter.title = this.title;
+    }
+    if (this.genreId) {
+      filter.genre = this.genreId;
+    }
+    if (this.artistId) {
+      filter.artist = this.artistId;
+    }
+    if (this.albumId) {
+      filter.album = this.albumId;
+    }
+    return filter;
   }
 
   sortObject() {
