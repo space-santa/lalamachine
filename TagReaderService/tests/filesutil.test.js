@@ -3,7 +3,7 @@ const TagsUtil = require("../src/utils/tagsutil");
 const FilesUtilHelper = require("../src/utils/filesutilhelper");
 
 const mockingoose = require("mockingoose").default;
-const Tags = require("../src/models/tags");
+const Tags = require("../src/db/models/tags");
 const FilesUtil = require("../src/utils/filesutil");
 const getTestTags = require("./fixtures/tagsfactory");
 

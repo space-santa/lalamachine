@@ -23,7 +23,7 @@
   * Add SingleInstanceGuard to only allow one instance of lalamachine.
 
 * Sat Nov 25 2017 rmean 3.4-1
-  * Consider discnumber when sorting tracks.
+  * Consider disknumber when sorting tracks.
 
 * Sat Sep 30 2017 rmean 3.3-1
   * Remove systray icon.
@@ -32,13 +32,13 @@
 * Fri Sep 29 2017 rmean 3.2-1
   * Make sure new settings are added and available in the dialog.
   * The settings dialog now resizes properly.
-  * Remove disc burning functionality.
+  * Remove disk burning functionality.
   * The background is now blue, the sliders are orange.
   * New application icon.
 
 * Tue Sep 26 2017 rmean 3.1-1
   * Ported lalamachine to MacOS.
-  * Added the discnumber to the library and playlist.
+  * Added the disknumber to the library and playlist.
 
 * Fri Jan 13 2017 rmean 3.0-1
   * Ported lalamachine to Windows.
