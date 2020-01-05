@@ -4,8 +4,6 @@ class TitleFilter {
     this.genreId = "";
     this.artistId = "";
     this.albumId = "";
-    this.sortBy = "title";
-    this.sortAscending = true;
   }
 
   fromQuery(query) {
@@ -24,12 +22,6 @@ class TitleFilter {
     if (query.albumId) {
       this.albumId = query.albumId;
     }
-
-    if (query.sortBy) {
-      const parts = query.sortBy.split(":");
-      this.sortBy = parts[0];
-      this.sortAscending = parts[1] === "asc";
-    }
   }
 
   filterObject() {
@@ -47,12 +39,6 @@ class TitleFilter {
       filter.album = this.albumId;
     }
     return filter;
-  }
-
-  sortObject() {
-    const sort = {};
-    sort[this.sortBy] = this.sortAscending ? 1 : -1;
-    return sort;
   }
 }
 

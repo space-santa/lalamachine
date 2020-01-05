@@ -131,9 +131,10 @@ const getFilteredTitles = async titleFilter => {
       path: "album",
       select: "name"
     })
-    .sort(titleFilter.sortObject());
-  // TODO: Sorting this is a way more involved process.
-  // It has to sort by whatever is selected and the at least by album, track, and disknumber
+    .sort({ title: 1 });
+  // NOTE: Sorting this is a way more involved process.
+  // But I don't always want to hit the backend for sorting the list,
+  // so sorting will have to happen on the front-end.
   return titles;
 };
 
