@@ -1,6 +1,9 @@
 {
   "name": "lala-spa",
   "version": "0.0.0",
+  "description": "",
+  "author": "Claus Zirkel",
+  "license": "AGPL-3.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

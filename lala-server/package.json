@@ -2,8 +2,8 @@
   "name": "lala-server",
   "version": "0.0.1",
   "description": "",
-  "author": "",
-  "license": "MIT",
+  "author": "Claus Zirkel",
+  "license": "AGPL-3.0",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
