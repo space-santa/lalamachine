@@ -51,13 +51,13 @@ export class PlayerService {
     this.isPausedChanged.next(this.audioElement.paused);
   }
 
-  private load(url: string) {
-    this.audioElement.src = `http://127.0.0.1:3000/${url}`;
+  private load(fileId: number) {
+    this.audioElement.src = `http://127.0.0.1:3000/files/${fileId}`;
     this.audioElement.load();
   }
 
   play(track: Track) {
-    this.load(track.mediaUrl);
+    this.load(track.fileId);
     this.trackChanged.next(track);
     this.audioElement.play();
     this.isPausedChanged.next(this.audioElement.paused);

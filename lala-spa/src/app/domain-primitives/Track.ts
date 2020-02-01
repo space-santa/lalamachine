@@ -18,7 +18,7 @@ export class Track {
   private _artist: NameWithId;
   private _genre: NameWithId;
   private _year: Year;
-  private _url: MediaUrl;
+  private _fileId: Id;
 
   static fromJson(json: any): Track {
     let track = new Track();
@@ -32,7 +32,7 @@ export class Track {
     track._artist = NameWithId.fromJson(json["artist"]);
     track._genre = NameWithId.fromJson(json["genre"]);
     track._year = new Year(json["year"]);
-    track._url = new MediaUrl(json["url"]);
+    track._fileId = new Id(json["fileId"]);
 
     return track;
   }
@@ -50,7 +50,7 @@ export class Track {
     track._artist = new NameWithId(4, "The Bob Band");
     track._genre = new NameWithId(5, "BobMetal");
     track._year = new Year(2001);
-    track._url = new MediaUrl("music.mp3");
+    track._fileId = new Id(4);
 
     return track;
   }
@@ -95,7 +95,7 @@ export class Track {
     return this._year.value;
   }
 
-  get mediaUrl(): string {
-    return this._url.value;
+  get fileId(): number {
+    return this._fileId.value;
   }
 }
