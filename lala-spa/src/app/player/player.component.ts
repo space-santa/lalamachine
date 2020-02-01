@@ -8,7 +8,7 @@ import { Track } from "../domain-primitives/Track";
   styleUrls: ["./player.component.css"]
 })
 export class PlayerComponent implements OnInit {
-  selectedFile = "http://127.0.0.1:3000/music.mp3";
+  selectedFile = "http://127.0.0.1:3000/files/4";
   currentPosition: string;
   totalLength: string;
   progress = 0;
