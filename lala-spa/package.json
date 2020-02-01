@@ -7,8 +7,8 @@
     "build": "ng build",
     "test": "ng test",
     "e2e": "ng e2e",
-    "prettier": "prettier --write \"src/**/*.{js,ts}\" \"tests/**/*.{js,ts}\"",
-    "lint": "prettier --check \"src/**/*.{js,ts}\" \"tests/**/*.{js,ts}\""
+    "prettier": "prettier --write \"{src,e2e}/**/*.{js,ts}\"",
+    "lint": "prettier --check \"{src,e2e}/**/*.{js,ts}\""
   },
   "private": true,
   "dependencies": {
