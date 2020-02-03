@@ -21,7 +21,18 @@ export class FilesController {
   }
 
   @Post()
-  @UseInterceptors(FilesInterceptor("files"))
+  @UseInterceptors(
+    FilesInterceptor("files", 999, {
+      limits: { fileSize: 20 * 1000 * 1000 },
+      fileFilter(req, file, cb) {
+        if (!file.originalname.toLowerCase().match(/\.(mp3|m4a)$/)) {
+          return cb(new Error("Please upload music."), false);
+        }
+
+        cb(undefined, true);
+      }
+    })
+  )
   uploadFile(@UploadedFiles() files) {
     console.log(files);
   }

@@ -1,3 +1,5 @@
+.env
+
 # JS stuff
 **/node_modules/
 **/coverage/
