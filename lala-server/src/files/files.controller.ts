@@ -9,15 +9,15 @@ import {
   UploadedFiles
 } from "@nestjs/common";
 import { FilesInterceptor } from "@nestjs/platform-express";
-import * as path from "path";
+import { FilesService } from "./files.service";
 
 @Controller("files")
 export class FilesController {
-  @Get("/:id")
-  getFileById(@Param("id", ParseIntPipe) id: number, @Res() res): Buffer {
-    return res.sendFile(
-      path.resolve(__dirname + "../../../test/fixtures/good.mp3")
-    );
+  constructor(private filesService: FilesService) {}
+
+  @Get("/:tagId")
+  getFileById(@Param("tagId", ParseIntPipe) tagId: number, @Res() res): Buffer {
+    return res.sendFile(this.filesService.getFileUri(tagId));
   }
 
   @Post()
@@ -33,7 +33,7 @@ export class FilesController {
       }
     })
   )
-  uploadFile(@UploadedFiles() files) {
-    console.log(files);
+  async uploadFile(@UploadedFiles() files) {
+    return await this.filesService.saveFiles(files);
   }
 }
