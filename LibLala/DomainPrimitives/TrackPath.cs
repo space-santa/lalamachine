@@ -17,7 +17,7 @@ namespace LibLala.DomainPrimitives
         public TrackPath(string path)
         {
             _fileInfo = new FileInfo(path);
-            if (!_fileInfo.Exists) { throw new ArgumentException(paramName: nameof(path), message: "File doesn't exist."); }
+            if (!_fileInfo.Exists) { throw new ArgumentException(paramName: nameof(path), message: $"File {path} doesn't exist."); }
 
             var suffix = _fileInfo.Extension;
             var isMp3 = string.Equals(suffix, ".mp3", StringComparison.OrdinalIgnoreCase);
