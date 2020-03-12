@@ -311,7 +311,14 @@ namespace Lalamachine.Wpf.ViewModel
                 {
                     if (track is { })
                     {
-                        displayLib.Add(new PlaylistTags(LalaTags.Build(track)));
+                        try
+                        {
+                            displayLib.Add(new PlaylistTags(LalaTags.Build(track)));
+                        }
+                        catch (ArgumentException e)
+                        {
+                            System.Windows.MessageBox.Show($"{e.Message}.\nYou may need to rescan the library.");
+                        }
                     }
                 }
 
