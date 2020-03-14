@@ -53,6 +53,23 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
+
+        private string _scanVisible = "Collapsed";
+        public string ScanVisible
+        {
+            get => _scanVisible;
+            set
+            {
+                _scanVisible = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        internal void ScanVisibleChangedHandler(object? sender, ScanVisibleChangedEventArgs e)
+        {
+            ScanVisible = e.ScanVisible;
+        }
+
         private readonly DelegateCommand _scanCommand;
         public ICommand ScanCommand => _scanCommand;
 
@@ -61,6 +78,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         private void OnLoad(object commandParameter)
         {
+            if (ScanVisible == "Visible") { return; }
             using (var fbd = new FolderBrowserDialog())
             {
                 var result = fbd.ShowDialog();
@@ -75,6 +93,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         private void OnScan(object commandParameters)
         {
+            if (ScanVisible == "Visible") { return; }
             if (LibraryPath.Length > 0)
             {
                 InvokeStartScanEvent();

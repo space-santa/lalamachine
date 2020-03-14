@@ -19,6 +19,15 @@ namespace Lalamachine.Wpf.ViewModel
         public ObservableCollection<PlaylistTags> Tracks { get; }
     }
 
+    public class ScanVisibleChangedEventArgs : EventArgs
+    {
+        public ScanVisibleChangedEventArgs(string scanVisible)
+        {
+            ScanVisible = scanVisible;
+        }
+        public string ScanVisible { get; }
+    }
+
     internal class LibraryViewModel : INotifyPropertyChanged
     {
         private readonly MusicLibModel _model;
@@ -110,6 +119,12 @@ namespace Lalamachine.Wpf.ViewModel
         {
             DisplayLibChanged?.Invoke(this, new DisplayLibChangedEventArgs(DisplayLib));
         }
+
+        public event EventHandler<ScanVisibleChangedEventArgs>? ScanVisibleChanged;
+        private void NotifyScanningChanged()
+        {
+            ScanVisibleChanged?.Invoke(this, new ScanVisibleChangedEventArgs(ScanVisible));
+        }
         #endregion
 
         internal void StartScanHandler(object? sender, StartScanEventArgs e)
@@ -135,6 +150,7 @@ namespace Lalamachine.Wpf.ViewModel
                 NotifyPropertyChanged();
                 NotifyListsChanged();
                 NotifyPropertyChanged(nameof(ScanVisible));
+                NotifyScanningChanged();
             }
         }
 
