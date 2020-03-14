@@ -4,9 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Lalamachine.Wpf.View.Controls"
+             xmlns:converter="clr-namespace:Lalamachine.Wpf.View.Converter"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <converter:ScanningVisibleConverter x:Key="scanningVisibleConverter" />
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -85,6 +89,6 @@
             <TextBox x:Name="SearchBox" Grid.Column="1" BorderBrush="White" TextChanged="SearchBox_TextChanged" Text="{Binding Path=SearchString}" />
         </Grid>
         <local:LibraryPlaylistControl Grid.Row="2" x:Name="LibraryPlaylist" />
-        <Label Grid.Row="3" Visibility="{Binding Path=ScanVisible}" HorizontalAlignment="Center" FontSize="24" Content="Scanning..." />
+        <Label Grid.Row="3" Visibility="{Binding Path=Scanning, Converter={StaticResource scanningVisibleConverter}}" HorizontalAlignment="Center" FontSize="24" Content="Scanning..." />
     </Grid>
 </UserControl>
