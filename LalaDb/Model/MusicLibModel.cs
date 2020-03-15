@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using LalaDb.Data;
 using LibLala.LibLalaTagReader;
 using Microsoft.EntityFrameworkCore;
+using LibLala.MusicScanner;
 
 namespace LalaDb.Model
 {
@@ -224,8 +225,31 @@ namespace LalaDb.Model
                 return;
             }
             Scanning = true;
-            await Task.Run(() => LibLala.MusicScanner.DirectoryProcessor.ProcessDirectory(path, _scannerDb)).ConfigureAwait(true);
+            var directoryProcessor = new DirectoryProcessor(_scannerDb, path);
+            directoryProcessor.FileScannedEvent += FileScannedInvoker;
+            var fileCount = directoryProcessor.FileCount;
+            InvokeFilesToScanChangedEvent(fileCount);
+            await Task.Run(() => directoryProcessor.ProcessDirectory()).ConfigureAwait(true);
             Scanning = false;
+        }
+
+        public event EventHandler<FileScannedEventArgs>? FilesToScanChangedEvent;
+        protected virtual void InvokeFilesToScanChangedEvent(int count)
+        {
+            var args = new FileScannedEventArgs(count);
+            FilesToScanChangedEvent?.Invoke(this, args);
+        }
+
+        internal void FileScannedInvoker(object? sender, FileScannedEventArgs args)
+        {
+            InvokeFileScannedEvent(args.Count);
+        }
+
+        public event EventHandler<FileScannedEventArgs>? FileScannedEvent;
+        protected virtual void InvokeFileScannedEvent(int count)
+        {
+            var args = new FileScannedEventArgs(count);
+            FileScannedEvent?.Invoke(this, args);
         }
     }
 }
