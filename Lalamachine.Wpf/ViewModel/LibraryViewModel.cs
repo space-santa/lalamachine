@@ -7,6 +7,7 @@ using System.Windows.Input;
 using LalaDb.Data;
 using LalaDb.Model;
 using LibLala;
+using LibLala.MusicScanner;
 
 namespace Lalamachine.Wpf.ViewModel
 {
@@ -35,6 +36,8 @@ namespace Lalamachine.Wpf.ViewModel
         public LibraryViewModel(LalaContext context)
         {
             _model = new MusicLibModel(context);
+            _model.FileScannedEvent += FileScannedEventHandler;
+            _model.FilesToScanChangedEvent += FilesToScanChangedEventHandler;
             Scanning = false;
             _searchString = "";
             _genreFilter = "";
@@ -151,6 +154,36 @@ namespace Lalamachine.Wpf.ViewModel
                 NotifyListsChanged();
                 NotifyScanningChanged();
             }
+        }
+
+        internal void FilesToScanChangedEventHandler(object? sender, FileScannedEventArgs args)
+        {
+            FilesToScanCount = args.Count;
+        }
+        public int _filesToScanCount = 0;
+        public int FilesToScanCount
+        {
+            get => _filesToScanCount;
+            set
+            {
+                _filesToScanCount = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public int _filesScannedCount = 0;
+        public int FilesScannedCount
+        {
+            get => _filesScannedCount;
+            set
+            {
+                _filesScannedCount = value;
+                NotifyPropertyChanged();
+            }
+        }
+        internal void FileScannedEventHandler(object? sender, FileScannedEventArgs args)
+        {
+            FilesScannedCount = args.Count;
         }
 
         private void NotifyListsChanged()

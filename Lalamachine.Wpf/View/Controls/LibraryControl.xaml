@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Lalamachine.Wpf.View.Controls.LibraryControl"
+<UserControl x:Class="Lalamachine.Wpf.View.Controls.LibraryControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -16,6 +16,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
@@ -90,5 +91,15 @@
         </Grid>
         <local:LibraryPlaylistControl Grid.Row="2" x:Name="LibraryPlaylist" />
         <Label Grid.Row="3" Visibility="{Binding Path=Scanning, Converter={StaticResource scanningVisibleConverter}}" HorizontalAlignment="Center" FontSize="24" Content="Scanning..." />
+        <ProgressBar
+            Grid.Row="4"
+            Height="12"
+            Foreground="DarkOrange"
+            Visibility="{Binding Path=Scanning, Converter={StaticResource scanningVisibleConverter}}"
+            x:Name="ScanProgressBar"
+            Maximum="{Binding Path=FilesToScanCount}"
+            Minimum="0"
+            Value="{Binding Path=FilesScannedCount}"
+        ></ProgressBar>
     </Grid>
 </UserControl>

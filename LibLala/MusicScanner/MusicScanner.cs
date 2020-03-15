@@ -6,37 +6,58 @@ using System.Linq;
 
 namespace LibLala.MusicScanner
 {
-    public static class DirectoryProcessor
+    public class FileScannedEventArgs : EventArgs
     {
-        public static void ProcessDirectory(string path, IMusicDatabase db)
+        public FileScannedEventArgs(int count)
+        {
+            Count = count;
+        }
+        public int Count { get; }
+    }
+
+    public class DirectoryProcessor
+    {
+        readonly IMusicDatabase _db;
+        readonly string _path;
+        IEnumerable<string> Files { get => GetFiles(); }
+        public int FileCount { get => Files.Count(); }
+
+        public DirectoryProcessor(IMusicDatabase db, string path)
+        {
+            _db = db;
+            _path = path;
+        }
+
+        public event EventHandler<FileScannedEventArgs>? FileScannedEvent;
+        protected virtual void InvokeFileScannedEvent(int count)
+        {
+            var args = new FileScannedEventArgs(count);
+            FileScannedEvent?.Invoke(this, args);
+        }
+
+        public void ProcessDirectory()
         {
             var stopwatch = Stopwatch.StartNew();
-            if (string.IsNullOrEmpty(path))
-            {
-                throw new ArgumentNullException(paramName: nameof(path));
-            }
 
-            if (db is null)
-            {
-                throw new ArgumentNullException(paramName: nameof(db));
-            }
+            _db.EnsureDatabase();
 
-            db.EnsureDatabase();
-
-            foreach (var file in DirSearch(path))
+            int count = 0;
+            foreach (var file in Files)
             {
                 var tags = new LibLalaTagReader.TagReader().Read(file);
-                db.AddTagsToDatabase(tags);
+                _db.AddTagsToDatabase(tags);
+                count += 1;
+                InvokeFileScannedEvent(count);
             }
 
-            db.SaveChanges();
+            _db.SaveChanges();
             var duration = stopwatch.Elapsed;
             Console.WriteLine($"Scanning took {duration.ToString()}");
         }
 
-        private static IEnumerable<string> DirSearch(string basePath)
+        private IEnumerable<string> GetFiles()
         {
-            var files = Directory.EnumerateFiles(basePath, "*.*", SearchOption.AllDirectories)
+            var files = Directory.EnumerateFiles(_path, "*.*", SearchOption.AllDirectories)
                 .Where(s => s.EndsWith(".mp3", StringComparison.Ordinal) || s.EndsWith(".m4a", StringComparison.Ordinal));
             return files;
         }
