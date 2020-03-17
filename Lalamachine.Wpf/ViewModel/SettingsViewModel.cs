@@ -53,6 +53,23 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
+
+        private bool _scanning = false;
+        public bool Scanning
+        {
+            get => _scanning;
+            set
+            {
+                _scanning = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        internal void ScanningChangedHandler(object? sender, ScanningChangedEventArgs e)
+        {
+            Scanning = e.Scanning;
+        }
+
         private readonly DelegateCommand _scanCommand;
         public ICommand ScanCommand => _scanCommand;
 
@@ -61,6 +78,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         private void OnLoad(object commandParameter)
         {
+            if (Scanning) { return; }
             using (var fbd = new FolderBrowserDialog())
             {
                 var result = fbd.ShowDialog();
@@ -75,6 +93,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         private void OnScan(object commandParameters)
         {
+            if (Scanning) { return; }
             if (LibraryPath.Length > 0)
             {
                 InvokeStartScanEvent();

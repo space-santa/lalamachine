@@ -7,6 +7,7 @@ using System.Windows.Input;
 using LalaDb.Data;
 using LalaDb.Model;
 using LibLala;
+using LibLala.MusicScanner;
 
 namespace Lalamachine.Wpf.ViewModel
 {
@@ -19,6 +20,15 @@ namespace Lalamachine.Wpf.ViewModel
         public ObservableCollection<PlaylistTags> Tracks { get; }
     }
 
+    public class ScanningChangedEventArgs : EventArgs
+    {
+        public ScanningChangedEventArgs(bool scanning)
+        {
+            Scanning = scanning;
+        }
+        public bool Scanning { get; }
+    }
+
     internal class LibraryViewModel : INotifyPropertyChanged
     {
         private readonly MusicLibModel _model;
@@ -26,6 +36,8 @@ namespace Lalamachine.Wpf.ViewModel
         public LibraryViewModel(LalaContext context)
         {
             _model = new MusicLibModel(context);
+            _model.FileScannedEvent += FileScannedEventHandler;
+            _model.FilesToScanChangedEvent += FilesToScanChangedEventHandler;
             Scanning = false;
             _searchString = "";
             _genreFilter = "";
@@ -110,6 +122,12 @@ namespace Lalamachine.Wpf.ViewModel
         {
             DisplayLibChanged?.Invoke(this, new DisplayLibChangedEventArgs(DisplayLib));
         }
+
+        public event EventHandler<ScanningChangedEventArgs>? ScanningChanged;
+        private void NotifyScanningChanged()
+        {
+            ScanningChanged?.Invoke(this, new ScanningChangedEventArgs(Scanning));
+        }
         #endregion
 
         internal void StartScanHandler(object? sender, StartScanEventArgs e)
@@ -134,23 +152,38 @@ namespace Lalamachine.Wpf.ViewModel
                 _scanning = value;
                 NotifyPropertyChanged();
                 NotifyListsChanged();
-                NotifyPropertyChanged(nameof(ScanVisible));
+                NotifyScanningChanged();
             }
         }
 
-        public string ScanVisible
+        internal void FilesToScanChangedEventHandler(object? sender, FileScannedEventArgs args)
         {
-            get
+            FilesToScanCount = args.Count;
+        }
+        public int _filesToScanCount = 0;
+        public int FilesToScanCount
+        {
+            get => _filesToScanCount;
+            set
             {
-                if (Scanning)
-                {
-                    return "Visible";
-                }
-                else
-                {
-                    return "Collapsed";
-                }
+                _filesToScanCount = value;
+                NotifyPropertyChanged();
             }
+        }
+
+        public int _filesScannedCount = 0;
+        public int FilesScannedCount
+        {
+            get => _filesScannedCount;
+            set
+            {
+                _filesScannedCount = value;
+                NotifyPropertyChanged();
+            }
+        }
+        internal void FileScannedEventHandler(object? sender, FileScannedEventArgs args)
+        {
+            FilesScannedCount = args.Count;
         }
 
         private void NotifyListsChanged()
@@ -311,7 +344,14 @@ namespace Lalamachine.Wpf.ViewModel
                 {
                     if (track is { })
                     {
-                        displayLib.Add(new PlaylistTags(LalaTags.Build(track)));
+                        try
+                        {
+                            displayLib.Add(new PlaylistTags(LalaTags.Build(track)));
+                        }
+                        catch (ArgumentException e)
+                        {
+                            System.Windows.MessageBox.Show($"{e.Message}.\nYou may need to rescan the library.");
+                        }
                     }
                 }
 

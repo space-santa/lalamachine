@@ -62,7 +62,9 @@ namespace Lalamachine.Wpf.View
             _libraryPlaylistViewModel.PlayTrackEvent += _player.PlayTrackHandler;
             _libraryPlaylistViewModel.AddLibraryTracksToPlaylistEvent += _playlistViewModel.AddTracksToPlaylistHandler;
 
+            _settingsViewModel.StartScanEvent += StartScanHandler;
             _settingsViewModel.StartScanEvent += _libraryViewModel.StartScanHandler;
+            _libraryViewModel.ScanningChanged += _settingsViewModel.ScanningChangedHandler;
             _libraryViewModel.DisplayLibChanged += _libraryPlaylistViewModel.DisplayChangedHandler;
             _libraryViewModel.AddTracksToPlaylistEvent += _playlistViewModel.AddTracksToPlaylistHandler;
 
@@ -91,6 +93,11 @@ namespace Lalamachine.Wpf.View
             _settings.Width = Width;
             _settings.Height = Height;
             _settings.Maximized = WindowState == WindowState.Maximized;
+        }
+
+        private void StartScanHandler(object? sender, StartScanEventArgs e)
+        {
+            ListTabs.SelectedIndex = 1;
         }
     }
 }
