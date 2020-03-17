@@ -8,6 +8,27 @@ root = true
 [*]
 indent_style = space
 # (Please don't specify an indent_size here; that has too many unintended consequences.)
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.md]
+max_line_length = off
+trim_trailing_whitespace = false
+
+# JS files
+[*.{js,ts}]
+indent_size = 2
+
+# JSON files
+[*.json]
+indent_size = 2
+
+[*.html]
+indent_size = 2
+
+[*.css]
+indent_size = 2
 
 # Code files
 [*.{cs,csx,vb,vbx}]
@@ -22,14 +43,6 @@ indent_size = 2
 
 # XML config files
 [*.{props,targets,ruleset,config,nuspec,resx,vsixmanifest,vsct}]
-indent_size = 2
-
-# JS files
-[*.js]
-indent_size = 2
-
-# JSON files
-[*.json]
 indent_size = 2
 
 # Powershell files

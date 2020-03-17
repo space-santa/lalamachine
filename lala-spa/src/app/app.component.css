@@ -1,0 +1,16 @@
+.top-geometry {
+  height: 50px;
+}
+
+.content-geometry {
+  position: absolute;
+  top: 50px;
+  /* bottom = bottom-geometry.height + 8px margin * 3 above buttons, below buttons and below controls*/
+  bottom: 96px;
+  left: 16px;
+  right: 16px;
+}
+
+.bottom-geometry {
+  height: 72px;
+}
