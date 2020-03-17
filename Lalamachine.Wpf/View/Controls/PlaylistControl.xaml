@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converter="clr-namespace:Lalamachine.Wpf.View.Converter"
+             xmlns:dd="urn:gong-wpf-dragdrop"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -15,7 +16,14 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ListView x:Name="PlaylistView" ItemsSource="{Binding Path=Playlist}" Grid.Row="0" GridViewColumnHeader.Click="PlaylistViewColumnHeader_Click">
+        <ListView 
+            x:Name="PlaylistView" 
+            ItemsSource="{Binding Path=Playlist}" 
+            Grid.Row="0" 
+            GridViewColumnHeader.Click="PlaylistViewColumnHeader_Click"
+            dd:DragDrop.IsDragSource="True"
+            dd:DragDrop.IsDropTarget="True"
+        >
             <ListView.Resources>
                 <Style BasedOn="{StaticResource MainListViewItem}" TargetType="{x:Type ListViewItem}">
                     <EventSetter Event="MouseDoubleClick" Handler="ListView_MouseDoubleClick" />
