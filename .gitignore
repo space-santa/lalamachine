@@ -346,3 +346,6 @@ ASALocalRun/
 
 # Database files
 **.db
+
+# Build output
+dist/
