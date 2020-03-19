@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using LibLala.LibLalaTagReader;
 
 namespace Lalamachine.Wpf.ViewModel
@@ -17,14 +16,8 @@ namespace Lalamachine.Wpf.ViewModel
             IsPlaying = other.IsPlaying;
         }
 
-        private bool _isPlaying;
-
         public event PropertyChangedEventHandler? PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
-        public bool IsPlaying { get => _isPlaying; set { _isPlaying = value; NotifyPropertyChanged(); } }
+        public bool IsPlaying { get; set; }
     }
 }
