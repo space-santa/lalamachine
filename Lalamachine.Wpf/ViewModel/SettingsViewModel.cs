@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Settings;
@@ -30,40 +29,24 @@ namespace Lalamachine.Wpf.ViewModel
             _loadCommand = new DelegateCommand(OnLoad);
             _scanCommand = new DelegateCommand(OnScan);
             _settings = new SettingsSettings();
-            _libraryPath = _settings.LibraryPath;
+            LibraryPath = _settings.LibraryPath;
+            PropertyChanged += LibraryPathChanged;
+        }
+
+        private void LibraryPathChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(LibraryPath))
+            {
+                _settings.LibraryPath = LibraryPath;
+            }
         }
 
         private readonly SettingsSettings _settings;
 
         public event PropertyChangedEventHandler? PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
-        private string _libraryPath;
-        public string LibraryPath
-        {
-            get => _libraryPath;
-            set
-            {
-                _libraryPath = value;
-                _settings.LibraryPath = _libraryPath;
-                NotifyPropertyChanged();
-            }
-        }
-
-
-        private bool _scanning = false;
-        public bool Scanning
-        {
-            get => _scanning;
-            set
-            {
-                _scanning = value;
-                NotifyPropertyChanged();
-            }
-        }
+        public string LibraryPath { get; set; }
+        public bool Scanning { get; set; }
 
         internal void ScanningChangedHandler(object? sender, ScanningChangedEventArgs e)
         {

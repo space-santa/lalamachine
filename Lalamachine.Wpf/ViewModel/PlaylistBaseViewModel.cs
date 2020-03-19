@@ -262,7 +262,7 @@ namespace Lalamachine.Wpf.ViewModel
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             if (propertyName == "Playlist")
             {

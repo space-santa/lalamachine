@@ -349,3 +349,6 @@ ASALocalRun/
 
 # Build output
 dist/
+
+# Fody generated file
+FodyWeavers.xsd
