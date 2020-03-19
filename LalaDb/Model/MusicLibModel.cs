@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using LalaDb.Data;
 using LibLala.LibLalaTagReader;
-using Microsoft.EntityFrameworkCore;
 using LibLala.MusicScanner;
+using Microsoft.EntityFrameworkCore;
 
 namespace LalaDb.Model
 {

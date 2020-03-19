@@ -28,7 +28,7 @@ namespace Lalamachine.Wpf.ViewModel
         public PlaylistBaseViewModel(string name)
         {
             Name = name;
-            _playlist = new ObservableCollection<PlaylistTags>();
+            Playlist = new ObservableCollection<PlaylistTags>();
             _playTrackCommand = new DelegateCommand(OnPlayTrackCommandHandler);
             _removeTrackCommand = new DelegateCommand(OnRemoveTrackCommandHandler);
             _removeAllTracksCommand = new DelegateCommand(OnRemoveAllTrackCommandHandler);
@@ -55,8 +55,8 @@ namespace Lalamachine.Wpf.ViewModel
                 case PlaylistColumnType.Album:
                     if (ascending)
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(
-                            _playlist
+                        Playlist = new ObservableCollection<PlaylistTags>(
+                            Playlist
                                 .OrderBy(x => x.Album)
                                 .ThenBy(x => x.Track)
                                 .ThenBy(x => x.DiscNumber)
@@ -64,8 +64,8 @@ namespace Lalamachine.Wpf.ViewModel
                     }
                     else
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(
-                            _playlist
+                        Playlist = new ObservableCollection<PlaylistTags>(
+                            Playlist
                                 .OrderByDescending(x => x.Album)
                                 .ThenBy(x => x.Track)
                                 .ThenBy(x => x.DiscNumber)
@@ -75,8 +75,8 @@ namespace Lalamachine.Wpf.ViewModel
                 case PlaylistColumnType.Artist:
                     if (ascending)
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(
-                            _playlist
+                        Playlist = new ObservableCollection<PlaylistTags>(
+                            Playlist
                                 .OrderBy(x => x.ArtistString)
                                 .ThenBy(x => x.Album)
                                 .ThenBy(x => x.Track)
@@ -85,8 +85,8 @@ namespace Lalamachine.Wpf.ViewModel
                     }
                     else
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(
-                            _playlist
+                        Playlist = new ObservableCollection<PlaylistTags>(
+                            Playlist
                                 .OrderByDescending(x => x.ArtistString)
                                 .ThenBy(x => x.Album)
                                 .ThenBy(x => x.Track)
@@ -97,28 +97,28 @@ namespace Lalamachine.Wpf.ViewModel
                 case PlaylistColumnType.Comment:
                     if (ascending)
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.Comment));
+                        Playlist = new ObservableCollection<PlaylistTags>(Playlist.OrderBy(x => x.Comment));
                     }
                     else
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderByDescending(x => x.Comment));
+                        Playlist = new ObservableCollection<PlaylistTags>(Playlist.OrderByDescending(x => x.Comment));
                     }
                     break;
                 case PlaylistColumnType.Disc:
                     if (ascending)
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.DiscNumber));
+                        Playlist = new ObservableCollection<PlaylistTags>(Playlist.OrderBy(x => x.DiscNumber));
                     }
                     else
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderByDescending(x => x.DiscNumber));
+                        Playlist = new ObservableCollection<PlaylistTags>(Playlist.OrderByDescending(x => x.DiscNumber));
                     }
                     break;
                 case PlaylistColumnType.Genre:
                     if (ascending)
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(
-                            _playlist
+                        Playlist = new ObservableCollection<PlaylistTags>(
+                            Playlist
                                 .OrderBy(x => x.GenreString)
                                 .ThenBy(x => x.ArtistString)
                                 .ThenBy(x => x.Album)
@@ -128,8 +128,8 @@ namespace Lalamachine.Wpf.ViewModel
                     }
                     else
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(
-                            _playlist
+                        Playlist = new ObservableCollection<PlaylistTags>(
+                            Playlist
                                 .OrderByDescending(x => x.GenreString)
                                 .ThenBy(x => x.ArtistString)
                                 .ThenBy(x => x.Album)
@@ -141,28 +141,28 @@ namespace Lalamachine.Wpf.ViewModel
                 case PlaylistColumnType.Length:
                     if (ascending)
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.Length));
+                        Playlist = new ObservableCollection<PlaylistTags>(Playlist.OrderBy(x => x.Length));
                     }
                     else
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderByDescending(x => x.Length));
+                        Playlist = new ObservableCollection<PlaylistTags>(Playlist.OrderByDescending(x => x.Length));
                     }
                     break;
                 case PlaylistColumnType.Title:
                     if (ascending)
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.Title));
+                        Playlist = new ObservableCollection<PlaylistTags>(Playlist.OrderBy(x => x.Title));
                     }
                     else
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderByDescending(x => x.Title));
+                        Playlist = new ObservableCollection<PlaylistTags>(Playlist.OrderByDescending(x => x.Title));
                     }
                     break;
                 case PlaylistColumnType.Track:
                     if (ascending)
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(
-                            _playlist
+                        Playlist = new ObservableCollection<PlaylistTags>(
+                            Playlist
                                 .OrderBy(x => x.Track)
                                 .ThenBy(x => x.ArtistString)
                                 .ThenBy(x => x.Album)
@@ -171,8 +171,8 @@ namespace Lalamachine.Wpf.ViewModel
                     }
                     else
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(
-                            _playlist
+                        Playlist = new ObservableCollection<PlaylistTags>(
+                            Playlist
                                 .OrderByDescending(x => x.Track)
                                 .ThenBy(x => x.ArtistString)
                                 .ThenBy(x => x.Album)
@@ -183,18 +183,16 @@ namespace Lalamachine.Wpf.ViewModel
                 case PlaylistColumnType.Year:
                     if (ascending)
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderBy(x => x.Year));
+                        Playlist = new ObservableCollection<PlaylistTags>(Playlist.OrderBy(x => x.Year));
                     }
                     else
                     {
-                        _playlist = new ObservableCollection<PlaylistTags>(_playlist.OrderByDescending(x => x.Year));
+                        Playlist = new ObservableCollection<PlaylistTags>(Playlist.OrderByDescending(x => x.Year));
                     }
                     break;
                 default:
                     return;
             }
-
-            NotifyPropertyChanged(nameof(Playlist));
         }
 
 
@@ -211,7 +209,7 @@ namespace Lalamachine.Wpf.ViewModel
         private void OnRemoveTrackCommandHandler(object obj)
         {
             var selectedItem = (PlaylistTags)obj;
-            _playlist.Remove(selectedItem);
+            Playlist.Remove(selectedItem);
         }
 
         private readonly DelegateCommand _removeAllTracksCommand;
@@ -252,7 +250,7 @@ namespace Lalamachine.Wpf.ViewModel
                 return;
             }
 
-            foreach (var item in _playlist)
+            foreach (var item in Playlist)
             {
                 item.IsPlaying = false;
             }
@@ -262,7 +260,7 @@ namespace Lalamachine.Wpf.ViewModel
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             if (propertyName == "Playlist")
             {
@@ -292,11 +290,9 @@ namespace Lalamachine.Wpf.ViewModel
             return tagsList;
         }
 
-        private ObservableCollection<PlaylistTags> _playlist;
-
         public int CurrentIndex => Playlist.IndexOf(Playlist.FirstOrDefault(x => x.IsPlaying));
-        public int NumberOfTracks => _playlist.Count;
-        public int TotalPlaytime => _playlist.Sum(track => track.Length);
+        public int NumberOfTracks => Playlist.Count;
+        public int TotalPlaytime => Playlist.Sum(track => track.Length);
 
         internal void DisplayChangedHandler(object? sender, DisplayLibChangedEventArgs e)
         {
@@ -322,7 +318,7 @@ namespace Lalamachine.Wpf.ViewModel
 
                 if (PlaylistShuffleRepeatState == ShuffleRepeatState.Shuffle)
                 {
-                    var newIndex = new Random().Next(0, _playlist.Count - 1);
+                    var newIndex = new Random().Next(0, Playlist.Count - 1);
                     return Playlist[newIndex];
                 }
 
@@ -356,10 +352,7 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
-        public ObservableCollection<PlaylistTags> Playlist
-        {
-            get => _playlist;
-        }
+        public ObservableCollection<PlaylistTags> Playlist { get; private set; }
 
         public ShuffleRepeatState PlaylistShuffleRepeatState { get; set; }
 
@@ -467,7 +460,7 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
-        public bool HasTracks => _playlist.Count > 0;
+        public bool HasTracks => Playlist.Count > 0;
         public string Name { get; private set; }
 
         public void ShuffleRepeatChangedHandler(object? sender, ChangeShuffleRepeatEventArgs e)
