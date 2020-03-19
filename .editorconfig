@@ -8,11 +8,11 @@ root = true
 [*]
 indent_style = space
 # (Please don't specify an indent_size here; that has too many unintended consequences.)
+insert_final_newline = true
 
 # Code files
 [*.{cs,csx,vb,vbx}]
 indent_size = 4
-insert_final_newline = true
 end_of_line = crlf
 charset = utf-8-bom
 
