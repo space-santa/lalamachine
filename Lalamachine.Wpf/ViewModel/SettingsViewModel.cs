@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Settings;
@@ -24,12 +25,17 @@ namespace Lalamachine.Wpf.ViewModel
 
     public class SettingsViewModel : INotifyPropertyChanged
     {
+        private readonly DelegateCommand _scanCommand;
+        private readonly DelegateCommand _loadCommand;
+        private readonly SettingsSettings _settings;
+        private bool _scanning;
+
         public SettingsViewModel()
         {
             _loadCommand = new DelegateCommand(OnLoad);
             _scanCommand = new DelegateCommand(OnScan);
             _settings = new SettingsSettings();
-            LibraryPath = _settings.LibraryPath;
+            Scanning = false;
             PropertyChanged += LibraryPathChanged;
         }
 
@@ -41,22 +47,39 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
-        private readonly SettingsSettings _settings;
-
         public event PropertyChangedEventHandler? PropertyChanged;
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
-        public string LibraryPath { get; set; }
-        public bool Scanning { get; set; }
+        public string LibraryPath
+        {
+            get => _settings.LibraryPath;
+            set
+            {
+                _settings.LibraryPath = value;
+                NotifyPropertyChanged();
+            }
+        }       
+        
+        public bool Scanning 
+        { 
+            get => _scanning;
+            set
+            {
+                _scanning = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         internal void ScanningChangedHandler(object? sender, ScanningChangedEventArgs e)
         {
             Scanning = e.Scanning;
         }
 
-        private readonly DelegateCommand _scanCommand;
         public ICommand ScanCommand => _scanCommand;
 
-        private readonly DelegateCommand _loadCommand;
         public ICommand LoadCommand => _loadCommand;
 
         private void OnLoad(object commandParameter)
