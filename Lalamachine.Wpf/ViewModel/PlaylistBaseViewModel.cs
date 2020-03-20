@@ -193,6 +193,8 @@ namespace Lalamachine.Wpf.ViewModel
                 default:
                     return;
             }
+
+            NotifyPropertyChanged(nameof(Playlist));
         }
 
 
