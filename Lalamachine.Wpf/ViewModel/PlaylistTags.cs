@@ -1,10 +1,13 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using LibLala.LibLalaTagReader;
 
 namespace Lalamachine.Wpf.ViewModel
 {
     public class PlaylistTags : LibLalaTags, INotifyPropertyChanged
     {
+        private bool _isPlaying;
+
         public PlaylistTags(LibLalaTags other) : base(other) { }
         public PlaylistTags(PlaylistTags other) : base(other)
         {
@@ -17,7 +20,19 @@ namespace Lalamachine.Wpf.ViewModel
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
-        public bool IsPlaying { get; set; }
+        public bool IsPlaying
+        {
+            get => _isPlaying;
+            set
+            {
+                _isPlaying = value;
+                NotifyPropertyChanged();
+            }
+        }
     }
 }

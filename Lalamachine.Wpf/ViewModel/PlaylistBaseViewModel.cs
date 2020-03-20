@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using LalaDb.Data;
 using LibLala.DomainPrimitives;
@@ -23,7 +22,7 @@ namespace Lalamachine.Wpf.ViewModel
         public PlaylistColumn Column { get; }
     }
 
-    public class PlaylistBaseViewModel : INotifyPropertyChanged
+    public class PlaylistBaseViewModel : BaseNotifyPropertyChanged
     {
         public PlaylistBaseViewModel(string name)
         {
@@ -35,6 +34,16 @@ namespace Lalamachine.Wpf.ViewModel
             _createNewPlaylistFromSelectionCommand = new DelegateCommand(OnCreateNewPlaylistFromSelectionCommand);
             _addSelectionToPlaylistCommand = new DelegateCommand(OnAddSelectionToPlaylistCommand);
             _sortCommand = new DelegateCommand(OnSortCommandHandler);
+
+            PropertyChanged += UpdatePlaylistInfoHandler;
+        }
+
+        private void UpdatePlaylistInfoHandler(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Playlist))
+            {
+                UpdatePlaylistInfo();
+            }
         }
 
         #region Commands
@@ -193,6 +202,8 @@ namespace Lalamachine.Wpf.ViewModel
                 default:
                     return;
             }
+
+            NotifyPropertyChanged(nameof(Playlist));
         }
 
 
@@ -257,16 +268,6 @@ namespace Lalamachine.Wpf.ViewModel
             tags.IsPlaying = true;
             NotifyPropertyChanged(nameof(CurrentIndex));
             PlayTrackEvent?.Invoke(this, new PlayTrackEventArgs(tags.Path, Name));
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            if (propertyName == "Playlist")
-            {
-                UpdatePlaylistInfo();
-            }
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
 

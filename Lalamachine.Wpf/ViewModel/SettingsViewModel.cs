@@ -22,14 +22,19 @@ namespace Lalamachine.Wpf.ViewModel
         public string Path { get; }
     }
 
-    public class SettingsViewModel : INotifyPropertyChanged
+    public class SettingsViewModel : BaseNotifyPropertyChanged
     {
+        private readonly DelegateCommand _scanCommand;
+        private readonly DelegateCommand _loadCommand;
+        private readonly SettingsSettings _settings;
+        private bool _scanning;
+
         public SettingsViewModel()
         {
             _loadCommand = new DelegateCommand(OnLoad);
             _scanCommand = new DelegateCommand(OnScan);
             _settings = new SettingsSettings();
-            LibraryPath = _settings.LibraryPath;
+            Scanning = false;
             PropertyChanged += LibraryPathChanged;
         }
 
@@ -41,22 +46,33 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
-        private readonly SettingsSettings _settings;
+        public string LibraryPath
+        {
+            get => _settings.LibraryPath;
+            set
+            {
+                _settings.LibraryPath = value;
+                NotifyPropertyChanged();
+            }
+        }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        public string LibraryPath { get; set; }
-        public bool Scanning { get; set; }
+        public bool Scanning
+        {
+            get => _scanning;
+            set
+            {
+                _scanning = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         internal void ScanningChangedHandler(object? sender, ScanningChangedEventArgs e)
         {
             Scanning = e.Scanning;
         }
 
-        private readonly DelegateCommand _scanCommand;
         public ICommand ScanCommand => _scanCommand;
 
-        private readonly DelegateCommand _loadCommand;
         public ICommand LoadCommand => _loadCommand;
 
         private void OnLoad(object commandParameter)

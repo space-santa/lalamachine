@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -27,7 +25,7 @@ namespace Lalamachine.Wpf.ViewModel
         public string Path { get; set; }
     }
 
-    public class PlayerViewModel : INotifyPropertyChanged
+    public class PlayerViewModel : BaseNotifyPropertyChanged
     {
         private readonly MediaPlayer _mediaPlayer;
         private readonly DispatcherTimer _dispatcherTimer;
@@ -91,12 +89,6 @@ namespace Lalamachine.Wpf.ViewModel
             ManualLoadEvent?.Invoke(this, e);
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         public void PlayTrackHandler(object? sender, PlayTrackEventArgs e)
         {
             if (e is null)
@@ -140,6 +132,7 @@ namespace Lalamachine.Wpf.ViewModel
                 if (Source.Length > 0)
                 {
                     _isPlaying = value;
+                    NotifyPropertyChanged();
                 }
             }
         }
@@ -150,6 +143,7 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 _mediaPlayer.IsMuted = value;
                 _playerSettings.IsMuted = _mediaPlayer.IsMuted;
+                NotifyPropertyChanged();
             }
         }
 
@@ -160,6 +154,7 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 _mediaPlayer.Volume = value / 100;
                 _playerSettings.Volume = value;
+                NotifyPropertyChanged();
             }
         }
 

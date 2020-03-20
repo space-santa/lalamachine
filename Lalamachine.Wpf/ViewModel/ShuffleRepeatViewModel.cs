@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Windows.Input;
 
 namespace Lalamachine.Wpf.ViewModel
@@ -15,10 +14,8 @@ namespace Lalamachine.Wpf.ViewModel
         public ShuffleRepeatState ShuffleRepeatState { get; }
     }
 
-    public class ShuffleRepeatViewModel : INotifyPropertyChanged
+    public class ShuffleRepeatViewModel : BaseNotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
         public event EventHandler<ChangeShuffleRepeatEventArgs>? ShuffleRepeatChanged;
         protected virtual void InvokeShuffleRepeatChanged()
         {
@@ -32,6 +29,7 @@ namespace Lalamachine.Wpf.ViewModel
             set
             {
                 _state = value;
+                NotifyPropertyChanged();
                 InvokeShuffleRepeatChanged();
             }
         }
