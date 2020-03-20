@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -27,7 +25,7 @@ namespace Lalamachine.Wpf.ViewModel
         public string Path { get; set; }
     }
 
-    public class PlayerViewModel : INotifyPropertyChanged
+    public class PlayerViewModel : BaseNotifyPropertyChanged
     {
         private readonly MediaPlayer _mediaPlayer;
         private readonly DispatcherTimer _dispatcherTimer;
@@ -89,12 +87,6 @@ namespace Lalamachine.Wpf.ViewModel
         protected virtual void OnManualLoad(ManualLoadEventArgs e)
         {
             ManualLoadEvent?.Invoke(this, e);
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public void PlayTrackHandler(object? sender, PlayTrackEventArgs e)

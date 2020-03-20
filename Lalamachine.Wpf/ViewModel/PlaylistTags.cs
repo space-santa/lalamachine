@@ -25,14 +25,14 @@ namespace Lalamachine.Wpf.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public bool IsPlaying 
-        { 
-            get => _isPlaying; 
-            set 
+        public bool IsPlaying
+        {
+            get => _isPlaying;
+            set
             {
-                _isPlaying = value; 
-                NotifyPropertyChanged(); 
-            } 
+                _isPlaying = value;
+                NotifyPropertyChanged();
+            }
         }
     }
 }

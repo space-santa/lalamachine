@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using LalaDb.Data;
 using LalaDb.Model;
@@ -29,7 +28,7 @@ namespace Lalamachine.Wpf.ViewModel
         public bool Scanning { get; }
     }
 
-    internal class LibraryViewModel : INotifyPropertyChanged
+    internal class LibraryViewModel : BaseNotifyPropertyChanged
     {
         private readonly MusicLibModel _model;
 
@@ -156,12 +155,6 @@ namespace Lalamachine.Wpf.ViewModel
         {
             var args = new AddTracksToPlaylistEventArgs(_model.GetAlbumTracks(name), newPlaylist);
             AddTracksToPlaylistEvent?.Invoke(this, args);
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public event EventHandler<DisplayLibChangedEventArgs>? DisplayLibChanged;

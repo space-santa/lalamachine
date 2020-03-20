@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Settings;
@@ -23,7 +22,7 @@ namespace Lalamachine.Wpf.ViewModel
         public string Path { get; }
     }
 
-    public class SettingsViewModel : INotifyPropertyChanged
+    public class SettingsViewModel : BaseNotifyPropertyChanged
     {
         private readonly DelegateCommand _scanCommand;
         private readonly DelegateCommand _loadCommand;
@@ -47,12 +46,6 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         public string LibraryPath
         {
             get => _settings.LibraryPath;
@@ -61,10 +54,10 @@ namespace Lalamachine.Wpf.ViewModel
                 _settings.LibraryPath = value;
                 NotifyPropertyChanged();
             }
-        }       
-        
-        public bool Scanning 
-        { 
+        }
+
+        public bool Scanning
+        {
             get => _scanning;
             set
             {
