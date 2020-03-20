@@ -140,6 +140,7 @@ namespace Lalamachine.Wpf.ViewModel
                 if (Source.Length > 0)
                 {
                     _isPlaying = value;
+                    NotifyPropertyChanged();
                 }
             }
         }
@@ -150,6 +151,7 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 _mediaPlayer.IsMuted = value;
                 _playerSettings.IsMuted = _mediaPlayer.IsMuted;
+                NotifyPropertyChanged();
             }
         }
 
@@ -160,6 +162,7 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 _mediaPlayer.Volume = value / 100;
                 _playerSettings.Volume = value;
+                NotifyPropertyChanged();
             }
         }
 
