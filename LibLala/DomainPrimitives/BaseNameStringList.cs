@@ -62,7 +62,7 @@ namespace LibLala.DomainPrimitives
             return string.Join(", ", Names);
         }
 
-        public int CompareTo(BaseNameStringList<T> other)
+        public int CompareTo(BaseNameStringList<T>? other)
         {
             if (other is null) { throw new ArgumentNullException(paramName: nameof(other)); }
             return string.Compare(ToCsvString(), other.ToCsvString(), StringComparison.Ordinal);
