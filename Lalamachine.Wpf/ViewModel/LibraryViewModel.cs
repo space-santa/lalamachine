@@ -65,7 +65,7 @@ namespace Lalamachine.Wpf.ViewModel
             NotifyDisplayLibChanged();
         }
 
-        private void HandlePropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void HandlePropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
@@ -340,6 +340,12 @@ namespace Lalamachine.Wpf.ViewModel
             get
             {
                 var list = _model.AlbumList(ArtistFilter, GenreFilter, SearchString);
+
+                if (list is null)
+                {
+                    list = Array.Empty<string>();
+                }
+
                 NumberOfAlbums = list.Length;
                 list = list.Prepend(Constants.ALL).ToArray();
                 return new ObservableCollection<string?>(list);
@@ -353,6 +359,9 @@ namespace Lalamachine.Wpf.ViewModel
                 var displayLib = new ObservableCollection<PlaylistTags>();
 
                 var list = _model.DisplayLib(AlbumFilter, ArtistFilter, GenreFilter, SearchString);
+
+                if (list is null) { return displayLib; }
+
                 foreach (var track in list)
                 {
                     if (track is { })

@@ -38,7 +38,7 @@ namespace Lalamachine.Wpf.ViewModel
             PropertyChanged += LibraryPathChanged;
         }
 
-        private void LibraryPathChanged(object sender, PropertyChangedEventArgs e)
+        private void LibraryPathChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(LibraryPath))
             {

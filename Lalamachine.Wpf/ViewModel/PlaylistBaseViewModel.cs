@@ -38,7 +38,7 @@ namespace Lalamachine.Wpf.ViewModel
             PropertyChanged += UpdatePlaylistInfoHandler;
         }
 
-        private void UpdatePlaylistInfoHandler(object sender, PropertyChangedEventArgs e)
+        private void UpdatePlaylistInfoHandler(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(Playlist))
             {
@@ -291,7 +291,15 @@ namespace Lalamachine.Wpf.ViewModel
             return tagsList;
         }
 
-        public int CurrentIndex => Playlist.IndexOf(Playlist.FirstOrDefault(x => x.IsPlaying));
+        public int CurrentIndex
+        {
+            get
+            {
+                PlaylistTags? tags = Playlist.FirstOrDefault(x => x.IsPlaying);
+                if (tags is null) { return -1; }
+                return Playlist.IndexOf(tags);
+            }
+        }
         public int NumberOfTracks => Playlist.Count;
         public int TotalPlaytime => Playlist.Sum(track => track.Length);
 

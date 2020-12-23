@@ -13,12 +13,13 @@ namespace Lalamachine.Wpf.ViewModel
             _executeAction = executeAction;
         }
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
+            if (parameter is null) { return; }
             _executeAction(parameter);
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             return true;
         }
