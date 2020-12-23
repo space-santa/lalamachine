@@ -43,7 +43,7 @@ namespace Lalamachine.Wpf.ViewModel
             _changeShuffleRepeatCommand = new DelegateCommand(OnChangeShuffleRepeat);
         }
 
-        private void OnChangeShuffleRepeat(object commandParameter)
+        private void OnChangeShuffleRepeat(object? commandParameter)
         {
             switch (State)
             {

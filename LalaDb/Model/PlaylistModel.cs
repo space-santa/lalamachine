@@ -60,15 +60,22 @@ namespace LalaDb.Model
 
         public List<LalaTags> GetPlaylistTracks(string name)
         {
-            var trackPaths = _context.PlaylistTracks.AsEnumerable().Where(x => x.Playlist?.Name == name).OrderBy(x => x.Order).Select(x => x.TrackPath).ToArray();
+            var trackPaths = _context.PlaylistTracks?.AsEnumerable().Where(x => x.Playlist?.Name == name).OrderBy(x => x.Order).Select(x => x.TrackPath).ToArray();
             var tagList = new List<LalaTags>();
+
+            if (trackPaths is null) { return tagList; }
+
             foreach (var trackPath in trackPaths)
             {
                 try
                 {
-                    var track = _context.Tracks.Single(x => x.Path == trackPath);
-                    var lalaTags = LalaTags.Build(track);
-                    tagList.Add(lalaTags);
+                    var track = _context.Tracks?.Single(x => x.Path == trackPath);
+                    if (track != null)
+                    {
+
+                        var lalaTags = LalaTags.Build(track);
+                        tagList.Add(lalaTags);
+                    }
                 }
                 catch (System.InvalidOperationException)
                 {

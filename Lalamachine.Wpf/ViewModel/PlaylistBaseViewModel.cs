@@ -38,7 +38,7 @@ namespace Lalamachine.Wpf.ViewModel
             PropertyChanged += UpdatePlaylistInfoHandler;
         }
 
-        private void UpdatePlaylistInfoHandler(object sender, PropertyChangedEventArgs e)
+        private void UpdatePlaylistInfoHandler(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(Playlist))
             {
@@ -49,8 +49,10 @@ namespace Lalamachine.Wpf.ViewModel
         #region Commands
         private readonly DelegateCommand _sortCommand;
         public ICommand SortCommand => _sortCommand;
-        private void OnSortCommandHandler(object obj)
+        private void OnSortCommandHandler(object? obj)
         {
+            if (obj is null) { return; }
+
             var sortMessage = obj as SortMessage;
             if (sortMessage is null)
             {
@@ -209,38 +211,42 @@ namespace Lalamachine.Wpf.ViewModel
 
         private readonly DelegateCommand _playTrackCommand;
         public ICommand PlayTrackCommand => _playTrackCommand;
-        private void OnPlayTrackCommandHandler(object obj)
+        private void OnPlayTrackCommandHandler(object? obj)
         {
+            if (obj is null) { return; }
             var track = (PlaylistTags)obj;
             InvokePlayTrackEvent(track);
         }
 
         private readonly DelegateCommand _removeTrackCommand;
         public ICommand RemoveTrackCommand => _removeTrackCommand;
-        private void OnRemoveTrackCommandHandler(object obj)
+        private void OnRemoveTrackCommandHandler(object? obj)
         {
+            if (obj is null) { return; }
             var selectedItem = (PlaylistTags)obj;
             Playlist.Remove(selectedItem);
         }
 
         private readonly DelegateCommand _removeAllTracksCommand;
         public ICommand RemoveAllTracksCommand => _removeAllTracksCommand;
-        private void OnRemoveAllTrackCommandHandler(object obj)
+        private void OnRemoveAllTrackCommandHandler(object? obj)
         {
             DeleteAllTracks();
         }
 
         private readonly DelegateCommand _createNewPlaylistFromSelectionCommand;
         public ICommand CreateNewPlaylistFromSelectionCommand => _createNewPlaylistFromSelectionCommand;
-        private void OnCreateNewPlaylistFromSelectionCommand(object obj)
+        private void OnCreateNewPlaylistFromSelectionCommand(object? obj)
         {
+            if (obj is null) { return; }
             InvokeAddLibraryTracksToPlaylistEvent(true, ConvertSelectedItemsToTagsList(obj));
         }
 
         private readonly DelegateCommand _addSelectionToPlaylistCommand;
         public ICommand AddSelectionToPlaylistCommand => _addSelectionToPlaylistCommand;
-        private void OnAddSelectionToPlaylistCommand(object obj)
+        private void OnAddSelectionToPlaylistCommand(object? obj)
         {
+            if (obj is null) { return; }
             InvokeAddLibraryTracksToPlaylistEvent(false, ConvertSelectedItemsToTagsList(obj));
         }
         #endregion
@@ -291,7 +297,15 @@ namespace Lalamachine.Wpf.ViewModel
             return tagsList;
         }
 
-        public int CurrentIndex => Playlist.IndexOf(Playlist.FirstOrDefault(x => x.IsPlaying));
+        public int CurrentIndex
+        {
+            get
+            {
+                PlaylistTags? tags = Playlist.FirstOrDefault(x => x.IsPlaying);
+                if (tags is null) { return -1; }
+                return Playlist.IndexOf(tags);
+            }
+        }
         public int NumberOfTracks => Playlist.Count;
         public int TotalPlaytime => Playlist.Sum(track => track.Length);
 

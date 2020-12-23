@@ -65,7 +65,7 @@ namespace Lalamachine.Wpf.ViewModel
             NotifyDisplayLibChanged();
         }
 
-        private void HandlePropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void HandlePropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
@@ -105,19 +105,43 @@ namespace Lalamachine.Wpf.ViewModel
         #region Commands
         private readonly DelegateCommand _setGenreFilterCommand;
         public ICommand SetGenreFilterCommand => _setGenreFilterCommand;
-        private void OnSetGenreFilter(object obj) { GenreFilter = (string)obj; }
+        private void OnSetGenreFilter(object? obj)
+        {
+            if (obj is null)
+            {
+                GenreFilter = "";
+                return;
+            }
+            GenreFilter = (string)obj;
+        }
 
         private readonly DelegateCommand _setArtistFilterCommand;
         public ICommand SetArtistFilterCommand => _setArtistFilterCommand;
-        private void OnSetArtistFilter(object obj) { ArtistFilter = (string)obj; }
+        private void OnSetArtistFilter(object? obj)
+        {
+            if (obj is null)
+            {
+                ArtistFilter = "";
+                return;
+            }
+            ArtistFilter = (string)obj;
+        }
 
         private readonly DelegateCommand _setAlbumFilterCommand;
         public ICommand SetAlbumFilterCommand => _setAlbumFilterCommand;
-        private void OnSetAlbumFilter(object obj) { AlbumFilter = (string)obj; }
+        private void OnSetAlbumFilter(object? obj)
+        {
+            if (obj is null)
+            {
+                AlbumFilter = "";
+                return;
+            }
+            AlbumFilter = (string)obj;
+        }
 
         private readonly DelegateCommand _clearSearchCommand;
         public ICommand ClearSearchCommand => _clearSearchCommand;
-        private void ClearSearch(object obj)
+        private void ClearSearch(object? obj)
         {
             SearchString = "";
             _genreFilter = "";
@@ -128,23 +152,29 @@ namespace Lalamachine.Wpf.ViewModel
 
         private readonly DelegateCommand _startScanCommand;
         public ICommand StartScanCommand => _startScanCommand;
-        private void OnStartScan(object obj) { ScanAsync((string)obj); }
+        private void OnStartScan(object? obj)
+        {
+            if (obj is null) { return; }
+            ScanAsync((string)obj);
+        }
 
         private readonly DelegateCommand _updateListsCommand;
         public ICommand UpdateListsCommand => _updateListsCommand;
-        private void OnUpdateLists(object obj) { NotifyListsChanged(); }
+        private void OnUpdateLists(object? obj) { NotifyListsChanged(); }
 
         private readonly DelegateCommand _createNewPlaylistFromAlbumCommand;
         public ICommand CreateNewPlaylistFromAlbumCommand => _createNewPlaylistFromAlbumCommand;
-        private void OnCreateNewPlaylistFromAlbumCommand(object obj)
+        private void OnCreateNewPlaylistFromAlbumCommand(object? obj)
         {
+            if (obj is null) { return; }
             InvokeAddTrackToPlaylistEvent((string)obj, true);
         }
 
         private readonly DelegateCommand _addTracksFromAlbumCommand;
         public ICommand AddTracksFromAlbumCommand => _addTracksFromAlbumCommand;
-        private void OnAddTracksFromAlbumCommand(object obj)
+        private void OnAddTracksFromAlbumCommand(object? obj)
         {
+            if (obj is null) { return; }
             InvokeAddTrackToPlaylistEvent((string)obj, false);
         }
         #endregion
@@ -340,6 +370,12 @@ namespace Lalamachine.Wpf.ViewModel
             get
             {
                 var list = _model.AlbumList(ArtistFilter, GenreFilter, SearchString);
+
+                if (list is null)
+                {
+                    list = Array.Empty<string>();
+                }
+
                 NumberOfAlbums = list.Length;
                 list = list.Prepend(Constants.ALL).ToArray();
                 return new ObservableCollection<string?>(list);
@@ -353,6 +389,9 @@ namespace Lalamachine.Wpf.ViewModel
                 var displayLib = new ObservableCollection<PlaylistTags>();
 
                 var list = _model.DisplayLib(AlbumFilter, ArtistFilter, GenreFilter, SearchString);
+
+                if (list is null) { return displayLib; }
+
                 foreach (var track in list)
                 {
                     if (track is { })

@@ -9,7 +9,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build-wpf",
-      "program": "${workspaceFolder}/Lalamachine.Wpf/bin/Debug/netcoreapp3.0/win-x64/Lalamachine.Wpf.dll",
+      "program": "${workspaceFolder}/Lalamachine.Wpf/bin/Debug/net5.0-windows/win-x64/Lalamachine.Wpf.dll",
       "args": [],
       "cwd": "${workspaceFolder}/Lalamachine.Wpf",
       "stopAtEntry": false,

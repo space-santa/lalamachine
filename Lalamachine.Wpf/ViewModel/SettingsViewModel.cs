@@ -38,7 +38,7 @@ namespace Lalamachine.Wpf.ViewModel
             PropertyChanged += LibraryPathChanged;
         }
 
-        private void LibraryPathChanged(object sender, PropertyChangedEventArgs e)
+        private void LibraryPathChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(LibraryPath))
             {
@@ -75,7 +75,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         public ICommand LoadCommand => _loadCommand;
 
-        private void OnLoad(object commandParameter)
+        private void OnLoad(object? commandParameter)
         {
             if (Scanning) { return; }
             using (var fbd = new FolderBrowserDialog())
@@ -90,7 +90,7 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
-        private void OnScan(object commandParameters)
+        private void OnScan(object? commandParameters)
         {
             if (Scanning) { return; }
             if (LibraryPath.Length > 0)
