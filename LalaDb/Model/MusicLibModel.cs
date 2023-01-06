@@ -178,14 +178,14 @@ namespace LalaDb.Model
                 return list;
             }
 
-            if (string.IsNullOrEmpty(searchString))
+            if (string.IsNullOrEmpty(searchString) && _context.Tracks != null)
             {
                 list = _context.Tracks
-                            .Include(track => track.Album)
-                            .Include(track => track.GenreTracks)
-                                .ThenInclude(gt => gt.Genre)
-                            .Include(track => track.ArtistTracks)
-                                .ThenInclude(at => at.Artist)
+                            .Include(track => track.Album!)
+                            .Include(track => track.GenreTracks!)
+                                .ThenInclude(gt => gt.Genre!)
+                            .Include(track => track.ArtistTracks!)
+                                .ThenInclude(at => at.Artist!)
                             .ToArray();
             }
             else
