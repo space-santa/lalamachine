@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Settings;
@@ -23,38 +22,40 @@ namespace Lalamachine.Wpf.ViewModel
         public string Path { get; }
     }
 
-    public class SettingsViewModel : INotifyPropertyChanged
+    public class SettingsViewModel : BaseNotifyPropertyChanged
     {
+        private readonly DelegateCommand _scanCommand;
+        private readonly DelegateCommand _loadCommand;
+        private readonly SettingsSettings _settings;
+        private bool _scanning;
+
         public SettingsViewModel()
         {
             _loadCommand = new DelegateCommand(OnLoad);
             _scanCommand = new DelegateCommand(OnScan);
             _settings = new SettingsSettings();
-            _libraryPath = _settings.LibraryPath;
+            Scanning = false;
+            PropertyChanged += LibraryPathChanged;
         }
 
-        private readonly SettingsSettings _settings;
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        private void LibraryPathChanged(object? sender, PropertyChangedEventArgs e)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (e.PropertyName == nameof(LibraryPath))
+            {
+                _settings.LibraryPath = LibraryPath;
+            }
         }
 
-        private string _libraryPath;
         public string LibraryPath
         {
-            get => _libraryPath;
+            get => _settings.LibraryPath;
             set
             {
-                _libraryPath = value;
-                _settings.LibraryPath = _libraryPath;
+                _settings.LibraryPath = value;
                 NotifyPropertyChanged();
             }
         }
 
-
-        private bool _scanning = false;
         public bool Scanning
         {
             get => _scanning;
@@ -70,13 +71,11 @@ namespace Lalamachine.Wpf.ViewModel
             Scanning = e.Scanning;
         }
 
-        private readonly DelegateCommand _scanCommand;
         public ICommand ScanCommand => _scanCommand;
 
-        private readonly DelegateCommand _loadCommand;
         public ICommand LoadCommand => _loadCommand;
 
-        private void OnLoad(object commandParameter)
+        private void OnLoad(object? commandParameter)
         {
             if (Scanning) { return; }
             using (var fbd = new FolderBrowserDialog())
@@ -91,7 +90,7 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
-        private void OnScan(object commandParameters)
+        private void OnScan(object? commandParameters)
         {
             if (Scanning) { return; }
             if (LibraryPath.Length > 0)

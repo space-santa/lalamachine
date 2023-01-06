@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using LalaDb.Data;
 using LalaDb.Model;
@@ -29,20 +28,28 @@ namespace Lalamachine.Wpf.ViewModel
         public bool Scanning { get; }
     }
 
-    internal class LibraryViewModel : INotifyPropertyChanged
+    internal class LibraryViewModel : BaseNotifyPropertyChanged
     {
         private readonly MusicLibModel _model;
+
+        private string _genreFilter = "";
+        private string _artistFilter = "";
+        private string _albumFilter = "";
+        public int _filesToScanCount = 0;
+        public int _filesScannedCount = 0;
+        private bool _scanning = false;
+        private int _filesToScanCount1;
+        private int _filesScannedCount1;
+        private string _searchString = "";
+        private int _numberOfGenres;
+        private int _numberOfArtists;
+        private int _numberOfAlbums;
 
         public LibraryViewModel(LalaContext context)
         {
             _model = new MusicLibModel(context);
             _model.FileScannedEvent += FileScannedEventHandler;
             _model.FilesToScanChangedEvent += FilesToScanChangedEventHandler;
-            Scanning = false;
-            _searchString = "";
-            _genreFilter = "";
-            _artistFilter = "";
-            _albumFilter = "";
 
             _setGenreFilterCommand = new DelegateCommand(OnSetGenreFilter);
             _setArtistFilterCommand = new DelegateCommand(OnSetArtistFilter);
@@ -53,25 +60,88 @@ namespace Lalamachine.Wpf.ViewModel
             _createNewPlaylistFromAlbumCommand = new DelegateCommand(OnCreateNewPlaylistFromAlbumCommand);
             _addTracksFromAlbumCommand = new DelegateCommand(OnAddTracksFromAlbumCommand);
 
+            PropertyChanged += HandlePropertyChanged;
+
             NotifyDisplayLibChanged();
+        }
+
+        private void HandlePropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(DisplayLib):
+                    NotifyDisplayLibChanged();
+                    break;
+                case nameof(Scanning):
+                    NotifyScanningChanged();
+                    break;
+                case nameof(SearchString):
+                    NotifyListsChanged();
+                    break;
+                case nameof(GenreFilter):
+                    NotifyListsChanged();
+                    break;
+                case nameof(ArtistFilter):
+                    NotifyPropertyChanged(nameof(DisplayLib));
+                    NotifyPropertyChanged(nameof(ArtistList));
+                    NotifyPropertyChanged(nameof(AlbumList));
+                    break;
+                case nameof(AlbumFilter):
+                    NotifyPropertyChanged(nameof(DisplayLib));
+                    NotifyPropertyChanged(nameof(AlbumList));
+                    break;
+                case nameof(NumberOfGenres):
+                    NotifyPropertyChanged(nameof(GenreHeader));
+                    break;
+                case nameof(NumberOfArtists):
+                    NotifyPropertyChanged(nameof(ArtistHeader));
+                    break;
+                case nameof(NumberOfAlbums):
+                    NotifyPropertyChanged(nameof(AlbumHeader));
+                    break;
+            }
         }
 
         #region Commands
         private readonly DelegateCommand _setGenreFilterCommand;
         public ICommand SetGenreFilterCommand => _setGenreFilterCommand;
-        private void OnSetGenreFilter(object obj) { GenreFilter = (string)obj; }
+        private void OnSetGenreFilter(object? obj)
+        {
+            if (obj is null)
+            {
+                GenreFilter = "";
+                return;
+            }
+            GenreFilter = (string)obj;
+        }
 
         private readonly DelegateCommand _setArtistFilterCommand;
         public ICommand SetArtistFilterCommand => _setArtistFilterCommand;
-        private void OnSetArtistFilter(object obj) { ArtistFilter = (string)obj; }
+        private void OnSetArtistFilter(object? obj)
+        {
+            if (obj is null)
+            {
+                ArtistFilter = "";
+                return;
+            }
+            ArtistFilter = (string)obj;
+        }
 
         private readonly DelegateCommand _setAlbumFilterCommand;
         public ICommand SetAlbumFilterCommand => _setAlbumFilterCommand;
-        private void OnSetAlbumFilter(object obj) { AlbumFilter = (string)obj; }
+        private void OnSetAlbumFilter(object? obj)
+        {
+            if (obj is null)
+            {
+                AlbumFilter = "";
+                return;
+            }
+            AlbumFilter = (string)obj;
+        }
 
         private readonly DelegateCommand _clearSearchCommand;
         public ICommand ClearSearchCommand => _clearSearchCommand;
-        private void ClearSearch(object obj)
+        private void ClearSearch(object? obj)
         {
             SearchString = "";
             _genreFilter = "";
@@ -82,23 +152,29 @@ namespace Lalamachine.Wpf.ViewModel
 
         private readonly DelegateCommand _startScanCommand;
         public ICommand StartScanCommand => _startScanCommand;
-        private void OnStartScan(object obj) { ScanAsync((string)obj); }
+        private void OnStartScan(object? obj)
+        {
+            if (obj is null) { return; }
+            ScanAsync((string)obj);
+        }
 
         private readonly DelegateCommand _updateListsCommand;
         public ICommand UpdateListsCommand => _updateListsCommand;
-        private void OnUpdateLists(object obj) { NotifyListsChanged(); }
+        private void OnUpdateLists(object? obj) { NotifyListsChanged(); }
 
         private readonly DelegateCommand _createNewPlaylistFromAlbumCommand;
         public ICommand CreateNewPlaylistFromAlbumCommand => _createNewPlaylistFromAlbumCommand;
-        private void OnCreateNewPlaylistFromAlbumCommand(object obj)
+        private void OnCreateNewPlaylistFromAlbumCommand(object? obj)
         {
+            if (obj is null) { return; }
             InvokeAddTrackToPlaylistEvent((string)obj, true);
         }
 
         private readonly DelegateCommand _addTracksFromAlbumCommand;
         public ICommand AddTracksFromAlbumCommand => _addTracksFromAlbumCommand;
-        private void OnAddTracksFromAlbumCommand(object obj)
+        private void OnAddTracksFromAlbumCommand(object? obj)
         {
+            if (obj is null) { return; }
             InvokeAddTrackToPlaylistEvent((string)obj, false);
         }
         #endregion
@@ -109,12 +185,6 @@ namespace Lalamachine.Wpf.ViewModel
         {
             var args = new AddTracksToPlaylistEventArgs(_model.GetAlbumTracks(name), newPlaylist);
             AddTracksToPlaylistEvent?.Invoke(this, args);
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public event EventHandler<DisplayLibChangedEventArgs>? DisplayLibChanged;
@@ -135,52 +205,11 @@ namespace Lalamachine.Wpf.ViewModel
             ScanAsync(e.Path);
         }
 
-        private bool _scanning;
-        private string _searchString;
-        private string _genreFilter;
-        private string _artistFilter;
-        private string _albumFilter;
-        private int _numberOfGenres;
-        private int _numberOfArtists;
-        private int _numberOfAlbums;
-
-        public bool Scanning
-        {
-            get => _scanning;
-            set
-            {
-                _scanning = value;
-                NotifyPropertyChanged();
-                NotifyListsChanged();
-                NotifyScanningChanged();
-            }
-        }
-
         internal void FilesToScanChangedEventHandler(object? sender, FileScannedEventArgs args)
         {
             FilesToScanCount = args.Count;
         }
-        public int _filesToScanCount = 0;
-        public int FilesToScanCount
-        {
-            get => _filesToScanCount;
-            set
-            {
-                _filesToScanCount = value;
-                NotifyPropertyChanged();
-            }
-        }
 
-        public int _filesScannedCount = 0;
-        public int FilesScannedCount
-        {
-            get => _filesScannedCount;
-            set
-            {
-                _filesScannedCount = value;
-                NotifyPropertyChanged();
-            }
-        }
         internal void FileScannedEventHandler(object? sender, FileScannedEventArgs args)
         {
             FilesScannedCount = args.Count;
@@ -192,7 +221,35 @@ namespace Lalamachine.Wpf.ViewModel
             NotifyPropertyChanged(nameof(GenreList));
             NotifyPropertyChanged(nameof(ArtistList));
             NotifyPropertyChanged(nameof(AlbumList));
-            NotifyDisplayLibChanged();
+        }
+
+        public bool Scanning
+        {
+            get => _scanning;
+            set
+            {
+                _scanning = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public int FilesToScanCount
+        {
+            get => _filesToScanCount1;
+            set
+            {
+                _filesToScanCount1 = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public int FilesScannedCount
+        {
+            get => _filesScannedCount1;
+            set
+            {
+                _filesScannedCount1 = value;
+                NotifyPropertyChanged();
+            }
         }
 
         public string SearchString
@@ -202,8 +259,6 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 _searchString = value;
                 NotifyPropertyChanged();
-                NotifyListsChanged();
-                NotifyDisplayLibChanged();
             }
         }
 
@@ -214,8 +269,6 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 _genreFilter = EmptyWhenNullOrAll(value);
                 NotifyPropertyChanged();
-                NotifyListsChanged();
-                NotifyDisplayLibChanged();
             }
         }
 
@@ -226,10 +279,6 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 _artistFilter = EmptyWhenNullOrAll(value);
                 NotifyPropertyChanged();
-                NotifyPropertyChanged(nameof(DisplayLib));
-                NotifyPropertyChanged(nameof(ArtistList));
-                NotifyPropertyChanged(nameof(AlbumList));
-                NotifyDisplayLibChanged();
             }
         }
 
@@ -240,9 +289,6 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 _albumFilter = EmptyWhenNullOrAll(value);
                 NotifyPropertyChanged();
-                NotifyPropertyChanged(nameof(DisplayLib));
-                NotifyPropertyChanged(nameof(AlbumList));
-                NotifyDisplayLibChanged();
             }
         }
 
@@ -282,10 +328,31 @@ namespace Lalamachine.Wpf.ViewModel
             {
                 _numberOfGenres = value;
                 NotifyPropertyChanged();
-                NotifyPropertyChanged(nameof(GenreHeader));
             }
         }
         public string GenreHeader => $" Genre ({NumberOfGenres}) ";
+
+        public int NumberOfArtists
+        {
+            get => _numberOfArtists;
+            set
+            {
+                _numberOfArtists = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public string ArtistHeader => $" Artist ({NumberOfArtists}) ";
+
+        public int NumberOfAlbums
+        {
+            get => _numberOfAlbums;
+            set
+            {
+                _numberOfAlbums = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public string AlbumHeader => $" Album ({NumberOfAlbums}) ";
 
         public ObservableCollection<string?> ArtistList
         {
@@ -298,40 +365,22 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
-        public int NumberOfArtists
-        {
-            get => _numberOfArtists;
-            set
-            {
-                _numberOfArtists = value;
-                NotifyPropertyChanged();
-                NotifyPropertyChanged(nameof(ArtistHeader));
-            }
-        }
-        public string ArtistHeader => $" Artist ({NumberOfArtists}) ";
-
         public ObservableCollection<string?> AlbumList
         {
             get
             {
                 var list = _model.AlbumList(ArtistFilter, GenreFilter, SearchString);
+
+                if (list is null)
+                {
+                    list = Array.Empty<string>();
+                }
+
                 NumberOfAlbums = list.Length;
                 list = list.Prepend(Constants.ALL).ToArray();
                 return new ObservableCollection<string?>(list);
             }
         }
-
-        public int NumberOfAlbums
-        {
-            get => _numberOfAlbums;
-            set
-            {
-                _numberOfAlbums = value;
-                NotifyPropertyChanged();
-                NotifyPropertyChanged(nameof(AlbumHeader));
-            }
-        }
-        public string AlbumHeader => $" Album ({NumberOfAlbums}) ";
 
         public ObservableCollection<PlaylistTags> DisplayLib
         {
@@ -340,6 +389,9 @@ namespace Lalamachine.Wpf.ViewModel
                 var displayLib = new ObservableCollection<PlaylistTags>();
 
                 var list = _model.DisplayLib(AlbumFilter, ArtistFilter, GenreFilter, SearchString);
+
+                if (list is null) { return displayLib; }
+
                 foreach (var track in list)
                 {
                     if (track is { })

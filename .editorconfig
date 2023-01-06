@@ -33,7 +33,6 @@ indent_size = 2
 # Code files
 [*.{cs,csx,vb,vbx}]
 indent_size = 4
-insert_final_newline = true
 end_of_line = crlf
 charset = utf-8-bom
 
@@ -231,3 +230,6 @@ dotnet_diagnostic.CA1707.severity = suggestion
 
 # CA1812: This was the problem with WPF controlls not finding InitializeComponent or XAML-defined components.
 dotnet_diagnostic.CA1812.severity = suggestion
+
+# CS0067 event never used. Since Fody is injecting the code that uses the PropertyChanged event, this is necessary.
+dotnet_diagnostic.CS0067.severity = suggestion

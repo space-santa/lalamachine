@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -27,7 +25,7 @@ namespace Lalamachine.Wpf.ViewModel
         public string Path { get; set; }
     }
 
-    public class PlayerViewModel : INotifyPropertyChanged
+    public class PlayerViewModel : BaseNotifyPropertyChanged
     {
         private readonly MediaPlayer _mediaPlayer;
         private readonly DispatcherTimer _dispatcherTimer;
@@ -66,14 +64,14 @@ namespace Lalamachine.Wpf.ViewModel
                 PlayNextLibraryTrackEvent?.Invoke(this, EventArgs.Empty);
             }
         }
-        protected virtual void OnPlayNextTrack(object commandParameter)
+        protected virtual void OnPlayNextTrack(object? commandParameter)
         {
             InvokePlayNextTrackEvent();
         }
 
         public event EventHandler? PlayLastTrackEvent;
         public event EventHandler? PlayLastLibraryTrackEvent;
-        protected virtual void OnPlayLastTrack(object commandParameter)
+        protected virtual void OnPlayLastTrack(object? commandParameter)
         {
             if (LastActivePlaylist == "MAIN")
             {
@@ -89,12 +87,6 @@ namespace Lalamachine.Wpf.ViewModel
         protected virtual void OnManualLoad(ManualLoadEventArgs e)
         {
             ManualLoadEvent?.Invoke(this, e);
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public void PlayTrackHandler(object? sender, PlayTrackEventArgs e)
@@ -140,7 +132,7 @@ namespace Lalamachine.Wpf.ViewModel
                 if (Source.Length > 0)
                 {
                     _isPlaying = value;
-                    NotifyPropertyChanged(nameof(IsPlaying));
+                    NotifyPropertyChanged();
                 }
             }
         }
@@ -220,7 +212,7 @@ namespace Lalamachine.Wpf.ViewModel
             NotifyPropertyChanged(nameof(Position));
         }
 
-        private void OnChangePlayPause(object commandParameter)
+        private void OnChangePlayPause(object? commandParameter)
         {
             if (IsPlaying)
             {
@@ -232,7 +224,7 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
-        private void OnLoad(object commandParameter)
+        private void OnLoad(object? commandParameter)
         {
             var dlg = new Microsoft.Win32.OpenFileDialog
             {
@@ -251,7 +243,7 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
-        private void OnMute(object commandParameter)
+        private void OnMute(object? commandParameter)
         {
             IsMuted = !IsMuted;
         }

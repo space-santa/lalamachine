@@ -53,17 +53,17 @@ namespace LalaDb.Model
 
             foreach (var g in tags.Genre)
             {
-                var genre = _context.Genres.Single(x => x.Name == g);
+                var genre = _context.Genres?.Single(x => x.Name == g);
                 _context.GenreTracks?.Add(new GenreTrack { Genre = genre, Track = track });
             }
 
             foreach (var a in tags.Artist)
             {
-                var artist = _context.Artists.Single(x => x.Name == a);
+                var artist = _context.Artists?.Single(x => x.Name == a);
                 _context.ArtistTracks?.Add(new ArtistTrack { Artist = artist, Track = track });
             }
 
-            track.Album = _context.Albums.Single(x => x.Name == tags.Album);
+            track.Album = _context.Albums?.Single(x => x.Name == tags.Album);
             track.Comment = tags.Comment;
             track.DiscNumber = (int)tags.DiscNumber;
             track.Length = tags.Length;

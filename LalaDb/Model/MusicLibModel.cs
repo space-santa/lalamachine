@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using LalaDb.Data;
 using LibLala.LibLalaTagReader;
-using Microsoft.EntityFrameworkCore;
 using LibLala.MusicScanner;
+using Microsoft.EntityFrameworkCore;
 
 namespace LalaDb.Model
 {
@@ -27,11 +27,14 @@ namespace LalaDb.Model
         {
             if (Scanning) { return Array.Empty<string>(); }
 
-            var list = _context.Genres.AsEnumerable()
+            if (_context.Genres is null) { return Array.Empty<string>(); }
+
+            string?[] list = _context.Genres.AsEnumerable()
                 .Where(x => x.Name is { } && x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 .Select(x => x.Name)
                 .OrderBy(x => x)
                 .ToArray();
+
             return list;
         }
         public string?[] ArtistList(string genreFilter, string searchString)
@@ -43,32 +46,39 @@ namespace LalaDb.Model
                 genreFilter = "";
             }
 
-            string?[] list;
-
-            if (genreFilter.Length > 0)
+            if (genreFilter.Length > 0 && _context.GenreTracks != null)
             {
-                list = _context.GenreTracks.AsEnumerable()
+                return _context.GenreTracks.AsEnumerable()
                                .Where(x => x.Genre?.Name == genreFilter)
-                               .SelectMany(x => x.Track?.ArtistTracks)
+                               .SelectMany(x =>
+                               {
+                                   if (x.Track != null && x.Track.ArtistTracks != null)
+                                   {
+                                       return x.Track.ArtistTracks;
+                                   }
+
+                                   return new List<ArtistTrack>();
+                               })
                                .Select(x => x.Artist?.Name).Distinct().ToArray();
             }
-            else
+
+            if (_context.Artists != null)
             {
-                list = _context.Artists.AsEnumerable()
+                return _context.Artists.AsEnumerable()
                                         .Where(x => x.Name is { } && x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                                         .Select(x => x.Name)
                                         .OrderBy(x => x)
                                         .ToArray();
             }
 
-            return list;
+            return Array.Empty<string>();
         }
 
-        public string?[] AlbumList(string artistFilter, string genreFilter, string searchString)
+        public string?[]? AlbumList(string artistFilter, string genreFilter, string searchString)
         {
             if (Scanning) { return Array.Empty<string>(); }
 
-            string?[] list;
+            string?[]? list;
 
             if (artistFilter is null)
             {
@@ -82,25 +92,25 @@ namespace LalaDb.Model
 
             if (artistFilter.Length > 0)
             {
-                list = _context.ArtistTracks.AsEnumerable()
+                list = _context.ArtistTracks?.AsEnumerable()
                                .Where(x => x.Artist?.Name == artistFilter)
                                .Select(x => x.Track)
                                .Select(x => x?.Album?.Name).Distinct().ToArray();
             }
             else if (genreFilter.Length > 0)
             {
-                list = _context.GenreTracks.AsEnumerable()
+                list = _context.GenreTracks?.AsEnumerable()
                                .Where(x => x.Genre?.Name == genreFilter)
                                .Select(x => x.Track)
                                .Select(x => x?.Album?.Name).Distinct().ToArray();
             }
             else if (string.IsNullOrEmpty(searchString))
             {
-                list = _context.Albums.Select(x => x.Name).ToArray();
+                list = _context.Albums?.Select(x => x.Name).ToArray();
             }
             else
             {
-                list = _context.Albums.AsEnumerable()
+                list = _context.Albums?.AsEnumerable()
                     .Where(x =>
                     {
                         if (x.Name is { })
@@ -117,11 +127,11 @@ namespace LalaDb.Model
             return list;
         }
 
-        public Track?[] DisplayLib(string albumFilter, string artistFilter, string genreFilter, string searchString)
+        public Track?[]? DisplayLib(string albumFilter, string artistFilter, string genreFilter, string searchString)
         {
             if (Scanning) { return Array.Empty<Track>(); }
 
-            Track?[] list;
+            Track?[]? list;
 
             if (artistFilter is null)
             {
@@ -142,8 +152,8 @@ namespace LalaDb.Model
             {
                 try
                 {
-                    var a = _context.Albums.AsEnumerable().Single(x => x.Name == albumFilter);
-                    if (a.Tracks is { })
+                    var a = _context.Albums?.AsEnumerable().Single(x => x.Name == albumFilter);
+                    if (a != null && a.Tracks is { })
                     {
                         return a.Tracks.ToArray();
                     }
@@ -158,29 +168,29 @@ namespace LalaDb.Model
 
             if (artistFilter.Length > 0)
             {
-                list = _context.ArtistTracks.AsEnumerable().Where(x => x.Artist?.Name == artistFilter).Select(x => x.Track).ToArray();
+                list = _context.ArtistTracks?.AsEnumerable().Where(x => x.Artist?.Name == artistFilter).Select(x => x.Track).ToArray();
                 return list;
             }
 
             if (genreFilter.Length > 0)
             {
-                list = _context.GenreTracks.AsEnumerable().Where(x => x.Genre?.Name == genreFilter).Select(x => x.Track).ToArray();
+                list = _context.GenreTracks?.AsEnumerable().Where(x => x.Genre?.Name == genreFilter).Select(x => x.Track).ToArray();
                 return list;
             }
 
-            if (string.IsNullOrEmpty(searchString))
+            if (string.IsNullOrEmpty(searchString) && _context.Tracks != null)
             {
                 list = _context.Tracks
-                            .Include(track => track.Album)
-                            .Include(track => track.GenreTracks)
-                                .ThenInclude(gt => gt.Genre)
-                            .Include(track => track.ArtistTracks)
-                                .ThenInclude(at => at.Artist)
+                            .Include(track => track.Album!)
+                            .Include(track => track.GenreTracks!)
+                                .ThenInclude(gt => gt.Genre!)
+                            .Include(track => track.ArtistTracks!)
+                                .ThenInclude(at => at.Artist!)
                             .ToArray();
             }
             else
             {
-                list = _context.Tracks.AsEnumerable()
+                list = _context.Tracks?.AsEnumerable()
                     .Where(x =>
                     {
                         if (x.Title is { })
@@ -201,19 +211,30 @@ namespace LalaDb.Model
                 return new List<LibLalaTags>();
             }
 
-            var tracks = _context.Albums.Single(x => x.Name == name).Tracks.OrderBy(x => x.DiscNumber).ThenBy(x => x.TrackNumber);
+            var tracks = _context.Albums?.Single(x => x.Name == name)?.Tracks?.OrderBy(x => x.DiscNumber).ThenBy(x => x.TrackNumber);
             var tagList = new List<LibLalaTags>();
+
+            if (tracks is null) { return tagList; }
+
             foreach (var track in tracks)
             {
                 var lalaTags = LalaTags.Build(track);
                 tagList.Add(lalaTags);
             }
+
             return tagList;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>")]
         public LalaTags GetMetadataForMrl(string path)
         {
             path = LibLala.Utils.StringUtils.RemoveFilePrefix(path);
+
+            if (_context.Tracks is null)
+            {
+                throw new ArgumentException("Tacks is null on context.");
+            }
+
             var tags = LalaTags.Build(_context.Tracks.Single(x => Path.GetFullPath(x.Path ?? "") == Path.GetFullPath(path)));
             return tags;
         }

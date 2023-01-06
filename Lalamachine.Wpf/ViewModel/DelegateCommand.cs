@@ -6,19 +6,19 @@ namespace Lalamachine.Wpf.ViewModel
 
     public class DelegateCommand : ICommand
     {
-        private readonly Action<object> _executeAction;
+        private readonly Action<object?> _executeAction;
 
-        public DelegateCommand(Action<object> executeAction)
+        public DelegateCommand(Action<object?> executeAction)
         {
             _executeAction = executeAction;
         }
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
             _executeAction(parameter);
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             return true;
         }
