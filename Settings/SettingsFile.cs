@@ -18,10 +18,19 @@ namespace Settings
         {
             try
             {
-                using (var file = File.OpenText(SettingsPath))
+                using (StreamReader file = File.OpenText(SettingsPath))
                 {
                     var serializer = new JsonSerializer();
-                    return (Dictionary<string, string>)serializer.Deserialize(file, typeof(Dictionary<string, string>));
+                    var fileAsDict = (Dictionary<string, string>?)serializer.Deserialize(file, typeof(Dictionary<string, string>));
+
+                    if (fileAsDict is null)
+                    {
+                        return new Dictionary<string, string>();
+                    }
+                    else
+                    {
+                        return fileAsDict;
+                    }
                 }
             }
             catch (FileNotFoundException)
