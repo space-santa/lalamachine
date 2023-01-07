@@ -5,6 +5,8 @@
 **/coverage/
 **/musicdir/
 **/dist/
+**/out/
+**/.angular/cache
 
 # Installer output
 installer/
