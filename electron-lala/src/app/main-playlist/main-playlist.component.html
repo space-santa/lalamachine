@@ -15,7 +15,7 @@
     [ngClass]="currentIndex === i ? 'w3-orange' : 'w3-dark-gray'"
     *ngFor="let track of tracks; index as i"
     (click)="playTrack(i)"
-    style="cursor: pointer;"
+    style="cursor: pointer"
   >
     <div class="w3-col s1 l1 w3-center">{{ track.trackNumber }}</div>
     <div class="w3-col s1 l1 w3-center">{{ track.discNumber }}</div>

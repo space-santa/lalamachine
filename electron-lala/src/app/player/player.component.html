@@ -1,12 +1,8 @@
 <div class="w3-container w3-blue-gray w3-padding">
   <div class="w3-row">
-    <div class="w3-col w3-center" style="width: 320px; height: 40px;">
-      <button class="w3-button w3-dark-gray player-button">
-        🎵
-      </button>
-      <button class="w3-button w3-dark-gray player-button">
-        ⏮
-      </button>
+    <div class="w3-col w3-center" style="width: 320px; height: 40px">
+      <button class="w3-button w3-dark-gray player-button">🎵</button>
+      <button class="w3-button w3-dark-gray player-button">⏮</button>
       <button
         class="w3-button w3-dark-gray player-button"
         (click)="onPlayPause()"
@@ -15,12 +11,10 @@
       <button class="w3-button w3-dark-gray player-button" (click)="onNext()">
         ⏭
       </button>
-      <button class="w3-button w3-dark-gray player-button">
-        🔊
-      </button>
+      <button class="w3-button w3-dark-gray player-button">🔊</button>
     </div>
     <div class="w3-blue-gray w3-rest">
-      <div class="w3-center w3-small" style="height: 16px;">
+      <div class="w3-center w3-small" style="height: 16px">
         {{ track ? track.title : "" }}
       </div>
       <app-progress-bar

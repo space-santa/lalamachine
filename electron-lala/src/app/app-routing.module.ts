@@ -7,11 +7,11 @@ import { SettingsComponent } from "./settings/settings.component";
 const routes: Routes = [
   { path: "", component: MainPlaylistComponent },
   { path: "library", component: LibraryComponent },
-  { path: "settings", component: SettingsComponent }
+  { path: "settings", component: SettingsComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}

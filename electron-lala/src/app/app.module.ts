@@ -18,10 +18,10 @@ import { SettingsComponent } from "./settings/settings.component";
     ProgressBarComponent,
     MainPlaylistComponent,
     LibraryComponent,
-    SettingsComponent
+    SettingsComponent,
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

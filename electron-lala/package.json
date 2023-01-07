@@ -13,6 +13,8 @@
     "watch": "ng build --base-href ./ --watch --configuration development",
     "test": "jest",
     "test:coverage": "jest --coverage",
+    "lint": "prettier --write ./src/",
+    "lint:check": "prettier --list-different ./src/",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },

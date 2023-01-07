@@ -7,7 +7,7 @@ import { Progress } from "../domain-primitives/Progress";
 import { Track } from "../domain-primitives/Track";
 
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class PlayerService {
   audioElement: HTMLAudioElement;
@@ -19,10 +19,10 @@ export class PlayerService {
 
   constructor() {
     this.audioElement = new Audio();
-    this.audioElement.ondurationchange = event => {
+    this.audioElement.ondurationchange = (event) => {
       this.durationChanged.next(new Length(this.audioElement.duration));
     };
-    this.audioElement.ontimeupdate = event => {
+    this.audioElement.ontimeupdate = (event) => {
       this.positionChanged.next(new Length(this.audioElement.currentTime));
     };
   }
