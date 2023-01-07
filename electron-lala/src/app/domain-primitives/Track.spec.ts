@@ -18,7 +18,8 @@ describe("Track", () => {
       artist: { id: 77, name: "bob goes to town" },
       genre: { id: 1234, name: "barn metal" },
       year: 2014,
-      url: "https://bob/goes/to/town.mp3"
+      url: "https://bob/goes/to/town.mp3",
+      fileId: 4,
     });
     expect(track).toBeTruthy();
     expect(track.id).toEqual(4);

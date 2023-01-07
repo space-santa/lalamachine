@@ -46,7 +46,7 @@ export class MainPlaylistComponent implements OnInit {
       this.doubleClickTimeout = setTimeout(() => {
         console.log("cancel timeout");
         this.doubleClickInProgress = false;
-      }, 300);
+      }, 300) as unknown as number;
     }
   }
 
