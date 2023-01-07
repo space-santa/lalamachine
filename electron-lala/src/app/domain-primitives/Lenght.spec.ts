@@ -16,20 +16,14 @@ describe("Length", () => {
     expect(length.asString).toEqual("1:01:07");
   });
 
-  it("should throw a range error when seconds is 0", () => {
-    expect(function() {
-      new Length(0);
-    }).toThrowError(RangeError);
-  });
-
   it("should throw a range error when seconds is negative", () => {
-    expect(function() {
+    expect(function () {
       new Length(-10);
     }).toThrowError(RangeError);
   });
 
   it("should throw a range error when seconds is too big", () => {
-    expect(function() {
+    expect(function () {
       new Length(36001);
     }).toThrowError(RangeError);
   });

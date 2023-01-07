@@ -12,6 +12,7 @@ export class MediaUrl extends NoUndefinedValue<string> {
       // The server shouldn't have to change, so it is just the path.
       // Or it could even just be UUID.
       console.log(`Insecure URL ${value}`);
+      throw new InsecureUrlError();
     }
 
     if (value.endsWith(".mp3") || value.endsWith(".m4a")) {
