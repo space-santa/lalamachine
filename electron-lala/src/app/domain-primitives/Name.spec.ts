@@ -7,13 +7,13 @@ describe("Name", () => {
   });
 
   it("should throw a range error when string is empty", () => {
-    expect(function() {
+    expect(function () {
       new Name("");
     }).toThrowError(RangeError);
   });
 
   it("should throw a range error when string is only whitespace", () => {
-    expect(function() {
+    expect(function () {
       new Name("    ");
     }).toThrowError(RangeError);
   });
@@ -23,7 +23,7 @@ describe("Name", () => {
     for (let i = 0; i < 100; ++i) {
       name += "o";
     }
-    expect(function() {
+    expect(function () {
       new Name(name);
     }).toThrowError(RangeError);
   });

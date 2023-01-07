@@ -16,13 +16,13 @@ describe("MediaUrl", () => {
   });
 
   it("should throw an error when url is not https", () => {
-    expect(function() {
+    expect(function () {
       new MediaUrl("http://bob/goes/to/town.mp3");
     }).toThrowError(InsecureUrlError);
   });
 
   it("should throw an error when suffix is not mp3 or m4a", () => {
-    expect(function() {
+    expect(function () {
       new MediaUrl("https://bob/goes/to/town.mbo");
     }).toThrowError(SuffixError);
   });

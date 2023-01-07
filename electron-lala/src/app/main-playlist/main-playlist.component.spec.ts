@@ -8,7 +8,7 @@ describe("MainPlaylistComponent", () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [MainPlaylistComponent]
+      declarations: [MainPlaylistComponent],
     }).compileComponents();
   }));
 

@@ -9,13 +9,13 @@ describe("NameWithId", () => {
   });
 
   it("should throw ValueIsUndefinedError when JSON has no id key", () => {
-    expect(function() {
+    expect(function () {
       NameWithId.fromJson({ name: "bob" });
     }).toThrowError(ValueIsUndefinedError);
   });
 
   it("should throw ValueIsUndefinedError when JSON has no name key", () => {
-    expect(function() {
+    expect(function () {
       NameWithId.fromJson({ id: 4 });
     }).toThrowError(ValueIsUndefinedError);
   });
