@@ -5,4 +5,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Performance", "CA1805:Do not initialize unnecessarily", Justification = "<Pending>", Scope = "member", Target = "~F:Lalamachine.Wpf.ViewModel.LibraryViewModel._scanning")]
+[assembly: SuppressMessage("Performance", "CA1805:Do not initialize unnecessarily", Justification = "<Pending>")]
+[assembly: SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification ="Converter class for WPF.")]
+[assembly: SuppressMessage("Performance", "CA1852:Seal internal types", Justification ="Converter class for WPF.")]

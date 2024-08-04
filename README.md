@@ -30,7 +30,7 @@ If you'd like to contribute to lalamachine,
 
 ## Licence
 
-Copyright 2015-2020 Claus Zirkel
+Copyright 2015-2024 Claus Zirkel
 
 Lalamachine is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
