@@ -11,17 +11,13 @@ namespace Lalamachine.Wpf.View.Converter
         {
             var state = (ShuffleRepeatState)value;
 
-            switch (state)
+            return state switch
             {
-                case ShuffleRepeatState.RepeatOne:
-                    return "🔂";
-                case ShuffleRepeatState.RepeatAll:
-                    return "🔁";
-                case ShuffleRepeatState.Shuffle:
-                    return "🔀";
-                default:
-                    return "🎵";
-            }
+                ShuffleRepeatState.RepeatOne => "🔂",
+                ShuffleRepeatState.RepeatAll => "🔁",
+                ShuffleRepeatState.Shuffle => "🔀",
+                _ => "🎵",
+            };
         }
 
         public object? ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
