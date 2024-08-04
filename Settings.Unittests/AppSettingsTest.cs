@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Settings.Unittests
 {
-    internal class TestSettings : AppSettingsBase
+    internal sealed class TestSettings : AppSettingsBase
     {
         public TestSettings(SettingsFile settingsFile) : base(settingsFile) { }
 

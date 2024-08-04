@@ -12,10 +12,7 @@ namespace LibLala.FileExporter
                 throw new ArgumentNullException(paramName: nameof(destination));
             }
 
-            if (files is null)
-            {
-                throw new ArgumentNullException(paramName: nameof(files));
-            }
+            ArgumentNullException.ThrowIfNull(files);
 
             var actualDestination = ExportPreparer.PrepareDestinationDirectory(destination);
             var position = 1;

@@ -1,0 +1,204 @@
+Lalamachine.Wpf.App
+Lalamachine.Wpf.App.App() -> void
+Lalamachine.Wpf.View.Controls.LibraryControl
+Lalamachine.Wpf.View.Controls.LibraryControl.LibraryControl() -> void
+Lalamachine.Wpf.View.Controls.LibraryPlaylistControl
+Lalamachine.Wpf.View.Controls.LibraryPlaylistControl.LibraryPlaylistControl() -> void
+Lalamachine.Wpf.View.Controls.PlayerButtonsControl
+Lalamachine.Wpf.View.Controls.PlayerButtonsControl.PlayerButtonsControl() -> void
+Lalamachine.Wpf.View.Controls.PlayerControl
+Lalamachine.Wpf.View.Controls.PlayerControl.PlayerControl() -> void
+Lalamachine.Wpf.View.Controls.PlaylistControl
+Lalamachine.Wpf.View.Controls.PlaylistControl.PlaylistControl() -> void
+Lalamachine.Wpf.View.Controls.SettingsControl
+Lalamachine.Wpf.View.Controls.SettingsControl.SettingsControl() -> void
+Lalamachine.Wpf.View.Controls.ShuffleRepeatControl
+Lalamachine.Wpf.View.Controls.ShuffleRepeatControl.ShuffleRepeatControl() -> void
+Lalamachine.Wpf.View.Controls.VolumeControl
+Lalamachine.Wpf.View.Controls.VolumeControl.VolumeControl() -> void
+Lalamachine.Wpf.View.Converter.IsPlayingDisplayConverter
+Lalamachine.Wpf.View.Converter.IsPlayingDisplayConverter.Convert(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture) -> object
+Lalamachine.Wpf.View.Converter.IsPlayingDisplayConverter.ConvertBack(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture) -> object
+Lalamachine.Wpf.View.Converter.IsPlayingDisplayConverter.IsPlayingDisplayConverter() -> void
+Lalamachine.Wpf.View.Converter.MutedDisplayConverter
+Lalamachine.Wpf.View.Converter.MutedDisplayConverter.Convert(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture) -> object
+Lalamachine.Wpf.View.Converter.MutedDisplayConverter.ConvertBack(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture) -> object
+Lalamachine.Wpf.View.Converter.MutedDisplayConverter.MutedDisplayConverter() -> void
+Lalamachine.Wpf.View.Converter.PlaylistItemIsPlayingConverter
+Lalamachine.Wpf.View.Converter.PlaylistItemIsPlayingConverter.Convert(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture) -> object
+Lalamachine.Wpf.View.Converter.PlaylistItemIsPlayingConverter.ConvertBack(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture) -> object
+Lalamachine.Wpf.View.Converter.PlaylistItemIsPlayingConverter.PlaylistItemIsPlayingConverter() -> void
+Lalamachine.Wpf.View.Converter.ScanningNotVisibleConverter
+Lalamachine.Wpf.View.Converter.ScanningNotVisibleConverter.Convert(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture) -> object
+Lalamachine.Wpf.View.Converter.ScanningNotVisibleConverter.ConvertBack(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture) -> object
+Lalamachine.Wpf.View.Converter.ScanningNotVisibleConverter.ScanningNotVisibleConverter() -> void
+Lalamachine.Wpf.View.Converter.ScanningVisibleConverter
+Lalamachine.Wpf.View.Converter.ScanningVisibleConverter.Convert(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture) -> object
+Lalamachine.Wpf.View.Converter.ScanningVisibleConverter.ConvertBack(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture) -> object
+Lalamachine.Wpf.View.Converter.ScanningVisibleConverter.ScanningVisibleConverter() -> void
+Lalamachine.Wpf.View.Converter.SecondsToTimeSpanConverter
+Lalamachine.Wpf.View.Converter.SecondsToTimeSpanConverter.Convert(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture) -> object
+Lalamachine.Wpf.View.Converter.SecondsToTimeSpanConverter.ConvertBack(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture) -> object
+Lalamachine.Wpf.View.Converter.SecondsToTimeSpanConverter.SecondsToTimeSpanConverter() -> void
+Lalamachine.Wpf.View.Converter.UriToTitleConverter
+Lalamachine.Wpf.View.Converter.UriToTitleConverter.Convert(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture) -> object
+Lalamachine.Wpf.View.Converter.UriToTitleConverter.ConvertBack(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture) -> object
+Lalamachine.Wpf.View.Converter.UriToTitleConverter.UriToTitleConverter() -> void
+Lalamachine.Wpf.View.Converter.VolumeSizeConverter
+Lalamachine.Wpf.View.Converter.VolumeSizeConverter.Convert(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture) -> object
+Lalamachine.Wpf.View.Converter.VolumeSizeConverter.ConvertBack(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture) -> object
+Lalamachine.Wpf.View.Converter.VolumeSizeConverter.VolumeSizeConverter() -> void
+Lalamachine.Wpf.View.MainWindow
+Lalamachine.Wpf.View.MainWindow.MainWindow() -> void
+Lalamachine.Wpf.ViewModel.AddTracksToPlaylistEventArgs
+Lalamachine.Wpf.ViewModel.AddTracksToPlaylistEventArgs.AddTracksToPlaylistEventArgs(System.Collections.Generic.List<LibLala.LibLalaTagReader.LibLalaTags> tracks, bool newPlaylist) -> void
+Lalamachine.Wpf.ViewModel.AddTracksToPlaylistEventArgs.NewPlaylist.get -> bool
+Lalamachine.Wpf.ViewModel.AddTracksToPlaylistEventArgs.Tracks.get -> System.Collections.Generic.List<LibLala.LibLalaTagReader.LibLalaTags>
+Lalamachine.Wpf.ViewModel.BaseNotifyPropertyChanged
+Lalamachine.Wpf.ViewModel.BaseNotifyPropertyChanged.BaseNotifyPropertyChanged() -> void
+Lalamachine.Wpf.ViewModel.BaseNotifyPropertyChanged.NotifyPropertyChanged(string propertyName = "") -> void
+Lalamachine.Wpf.ViewModel.BaseNotifyPropertyChanged.PropertyChanged -> System.ComponentModel.PropertyChangedEventHandler
+Lalamachine.Wpf.ViewModel.ChangeShuffleRepeatEventArgs
+Lalamachine.Wpf.ViewModel.ChangeShuffleRepeatEventArgs.ChangeShuffleRepeatEventArgs(Lalamachine.Wpf.ViewModel.ShuffleRepeatState shuffleRepeatState) -> void
+Lalamachine.Wpf.ViewModel.ChangeShuffleRepeatEventArgs.ShuffleRepeatState.get -> Lalamachine.Wpf.ViewModel.ShuffleRepeatState
+Lalamachine.Wpf.ViewModel.DelegateCommand
+Lalamachine.Wpf.ViewModel.DelegateCommand.CanExecute(object parameter) -> bool
+Lalamachine.Wpf.ViewModel.DelegateCommand.CanExecuteChanged -> System.EventHandler
+Lalamachine.Wpf.ViewModel.DelegateCommand.DelegateCommand(System.Action<object> executeAction) -> void
+Lalamachine.Wpf.ViewModel.DelegateCommand.Execute(object parameter) -> void
+Lalamachine.Wpf.ViewModel.DelegateCommand.InvokeCanExecuteChanged() -> void
+Lalamachine.Wpf.ViewModel.DisplayLibChangedEventArgs
+Lalamachine.Wpf.ViewModel.DisplayLibChangedEventArgs.DisplayLibChangedEventArgs(System.Collections.ObjectModel.ObservableCollection<Lalamachine.Wpf.ViewModel.PlaylistTags> tracks) -> void
+Lalamachine.Wpf.ViewModel.DisplayLibChangedEventArgs.Tracks.get -> System.Collections.ObjectModel.ObservableCollection<Lalamachine.Wpf.ViewModel.PlaylistTags>
+Lalamachine.Wpf.ViewModel.EndOfPlaylistException
+Lalamachine.Wpf.ViewModel.EndOfPlaylistException.EndOfPlaylistException() -> void
+Lalamachine.Wpf.ViewModel.EndOfPlaylistException.EndOfPlaylistException(string message) -> void
+Lalamachine.Wpf.ViewModel.EndOfPlaylistException.EndOfPlaylistException(string message, System.Exception innerException) -> void
+Lalamachine.Wpf.ViewModel.EndOfPlaylistException.EndOfPlaylistException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
+Lalamachine.Wpf.ViewModel.LibraryPlaylistViewModel
+Lalamachine.Wpf.ViewModel.LibraryPlaylistViewModel.LibraryPlaylistViewModel() -> void
+Lalamachine.Wpf.ViewModel.ManualLoadEventArgs
+Lalamachine.Wpf.ViewModel.ManualLoadEventArgs.ManualLoadEventArgs(string path) -> void
+Lalamachine.Wpf.ViewModel.ManualLoadEventArgs.Path.get -> string
+Lalamachine.Wpf.ViewModel.ManualLoadEventArgs.Path.set -> void
+Lalamachine.Wpf.ViewModel.PlayerSettings
+Lalamachine.Wpf.ViewModel.PlayerSettings.IsMuted.get -> bool
+Lalamachine.Wpf.ViewModel.PlayerSettings.IsMuted.set -> void
+Lalamachine.Wpf.ViewModel.PlayerSettings.LastActivePlaylist.get -> string
+Lalamachine.Wpf.ViewModel.PlayerSettings.LastActivePlaylist.set -> void
+Lalamachine.Wpf.ViewModel.PlayerSettings.PlayerSettings() -> void
+Lalamachine.Wpf.ViewModel.PlayerSettings.Volume.get -> double
+Lalamachine.Wpf.ViewModel.PlayerSettings.Volume.set -> void
+Lalamachine.Wpf.ViewModel.PlayerViewModel
+Lalamachine.Wpf.ViewModel.PlayerViewModel.ChangePlayPauseCommand.get -> System.Windows.Input.ICommand
+Lalamachine.Wpf.ViewModel.PlayerViewModel.Duration.get -> double
+Lalamachine.Wpf.ViewModel.PlayerViewModel.IsMuted.get -> bool
+Lalamachine.Wpf.ViewModel.PlayerViewModel.IsMuted.set -> void
+Lalamachine.Wpf.ViewModel.PlayerViewModel.IsPlaying.get -> bool
+Lalamachine.Wpf.ViewModel.PlayerViewModel.IsPlaying.set -> void
+Lalamachine.Wpf.ViewModel.PlayerViewModel.LastActivePlaylist.get -> string
+Lalamachine.Wpf.ViewModel.PlayerViewModel.LastActivePlaylist.set -> void
+Lalamachine.Wpf.ViewModel.PlayerViewModel.LastCommand.get -> System.Windows.Input.ICommand
+Lalamachine.Wpf.ViewModel.PlayerViewModel.LoadCommand.get -> System.Windows.Input.ICommand
+Lalamachine.Wpf.ViewModel.PlayerViewModel.ManualLoadEvent -> System.EventHandler<Lalamachine.Wpf.ViewModel.ManualLoadEventArgs>
+Lalamachine.Wpf.ViewModel.PlayerViewModel.MuteCommand.get -> System.Windows.Input.ICommand
+Lalamachine.Wpf.ViewModel.PlayerViewModel.NextCommand.get -> System.Windows.Input.ICommand
+Lalamachine.Wpf.ViewModel.PlayerViewModel.Open(string path) -> void
+Lalamachine.Wpf.ViewModel.PlayerViewModel.Pause() -> void
+Lalamachine.Wpf.ViewModel.PlayerViewModel.Play() -> void
+Lalamachine.Wpf.ViewModel.PlayerViewModel.PlayerViewModel() -> void
+Lalamachine.Wpf.ViewModel.PlayerViewModel.PlayLastLibraryTrackEvent -> System.EventHandler
+Lalamachine.Wpf.ViewModel.PlayerViewModel.PlayLastTrackEvent -> System.EventHandler
+Lalamachine.Wpf.ViewModel.PlayerViewModel.PlayNextLibraryTrackEvent -> System.EventHandler
+Lalamachine.Wpf.ViewModel.PlayerViewModel.PlayNextTrackEvent -> System.EventHandler
+Lalamachine.Wpf.ViewModel.PlayerViewModel.PlayTrackHandler(object sender, Lalamachine.Wpf.ViewModel.PlayTrackEventArgs e) -> void
+Lalamachine.Wpf.ViewModel.PlayerViewModel.Position.get -> double
+Lalamachine.Wpf.ViewModel.PlayerViewModel.Position.set -> void
+Lalamachine.Wpf.ViewModel.PlayerViewModel.Source.get -> string
+Lalamachine.Wpf.ViewModel.PlayerViewModel.Source.set -> void
+Lalamachine.Wpf.ViewModel.PlayerViewModel.Stop() -> void
+Lalamachine.Wpf.ViewModel.PlayerViewModel.Volume.get -> double
+Lalamachine.Wpf.ViewModel.PlayerViewModel.Volume.set -> void
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.AddLibraryTracksToPlaylistEvent -> System.EventHandler<Lalamachine.Wpf.ViewModel.AddTracksToPlaylistEventArgs>
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.AddSelectionToPlaylistCommand.get -> System.Windows.Input.ICommand
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.AddTrack(Lalamachine.Wpf.ViewModel.PlaylistTags tags) -> void
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.AddTrack(LibLala.LibLalaTagReader.LibLalaTags tags) -> void
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.AddTracks(System.Collections.Generic.List<LalaDb.Data.LalaTags> tagsRange) -> void
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.AddTracks(System.Collections.Generic.List<Lalamachine.Wpf.ViewModel.PlaylistTags> tagsRange) -> void
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.AddTracks(System.Collections.Generic.List<LibLala.LibLalaTagReader.LibLalaTags> tagsRange) -> void
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.CreateNewPlaylistFromSelectionCommand.get -> System.Windows.Input.ICommand
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.CurrentIndex.get -> int
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.CurrentTrack.get -> Lalamachine.Wpf.ViewModel.PlaylistTags
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.DeleteAllTracks() -> void
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.DeleteTrack(int index) -> void
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.DeleteTracks(int startIndex, int numberOfTracks) -> void
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.HasTracks.get -> bool
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.ManualLoadHandler(object sender, Lalamachine.Wpf.ViewModel.ManualLoadEventArgs e) -> void
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.Name.get -> string
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.NextTrack.get -> Lalamachine.Wpf.ViewModel.PlaylistTags
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.NumberOfTracks.get -> int
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.PlayLastTrackHandler(object sender, System.EventArgs e) -> void
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.Playlist.get -> System.Collections.ObjectModel.ObservableCollection<Lalamachine.Wpf.ViewModel.PlaylistTags>
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.PlaylistBaseViewModel(string name) -> void
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.PlaylistShuffleRepeatState.get -> Lalamachine.Wpf.ViewModel.ShuffleRepeatState
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.PlaylistShuffleRepeatState.set -> void
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.PlayNextTrackHandler(object sender, System.EventArgs e) -> void
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.PlayTrackCommand.get -> System.Windows.Input.ICommand
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.PlayTrackEvent -> System.EventHandler<Lalamachine.Wpf.ViewModel.PlayTrackEventArgs>
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.PreviousTrack.get -> Lalamachine.Wpf.ViewModel.PlaylistTags
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.RemoveAllTracksCommand.get -> System.Windows.Input.ICommand
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.RemoveTrackCommand.get -> System.Windows.Input.ICommand
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.ShuffleRepeatChangedHandler(object sender, Lalamachine.Wpf.ViewModel.ChangeShuffleRepeatEventArgs e) -> void
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.SortCommand.get -> System.Windows.Input.ICommand
+Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.TotalPlaytime.get -> int
+Lalamachine.Wpf.ViewModel.PlaylistTags
+Lalamachine.Wpf.ViewModel.PlaylistTags.IsPlaying.get -> bool
+Lalamachine.Wpf.ViewModel.PlaylistTags.IsPlaying.set -> void
+Lalamachine.Wpf.ViewModel.PlaylistTags.PlaylistTags(Lalamachine.Wpf.ViewModel.PlaylistTags other) -> void
+Lalamachine.Wpf.ViewModel.PlaylistTags.PlaylistTags(LibLala.LibLalaTagReader.LibLalaTags other) -> void
+Lalamachine.Wpf.ViewModel.PlaylistTags.PropertyChanged -> System.ComponentModel.PropertyChangedEventHandler
+Lalamachine.Wpf.ViewModel.PlaylistViewModel
+Lalamachine.Wpf.ViewModel.PlaylistViewModel.PlaylistViewModel(LalaDb.Data.LalaContext context) -> void
+Lalamachine.Wpf.ViewModel.PlaylistViewModel.SavePlaylist() -> void
+Lalamachine.Wpf.ViewModel.PlayTrackEventArgs
+Lalamachine.Wpf.ViewModel.PlayTrackEventArgs.ListName.get -> string
+Lalamachine.Wpf.ViewModel.PlayTrackEventArgs.Path.get -> string
+Lalamachine.Wpf.ViewModel.PlayTrackEventArgs.PlayTrackEventArgs(string path, string listName) -> void
+Lalamachine.Wpf.ViewModel.ScanningChangedEventArgs
+Lalamachine.Wpf.ViewModel.ScanningChangedEventArgs.Scanning.get -> bool
+Lalamachine.Wpf.ViewModel.ScanningChangedEventArgs.ScanningChangedEventArgs(bool scanning) -> void
+Lalamachine.Wpf.ViewModel.SettingsSettings
+Lalamachine.Wpf.ViewModel.SettingsSettings.LibraryPath.get -> string
+Lalamachine.Wpf.ViewModel.SettingsSettings.LibraryPath.set -> void
+Lalamachine.Wpf.ViewModel.SettingsSettings.SettingsSettings() -> void
+Lalamachine.Wpf.ViewModel.SettingsViewModel
+Lalamachine.Wpf.ViewModel.SettingsViewModel.LibraryPath.get -> string
+Lalamachine.Wpf.ViewModel.SettingsViewModel.LibraryPath.set -> void
+Lalamachine.Wpf.ViewModel.SettingsViewModel.LoadCommand.get -> System.Windows.Input.ICommand
+Lalamachine.Wpf.ViewModel.SettingsViewModel.ScanCommand.get -> System.Windows.Input.ICommand
+Lalamachine.Wpf.ViewModel.SettingsViewModel.Scanning.get -> bool
+Lalamachine.Wpf.ViewModel.SettingsViewModel.Scanning.set -> void
+Lalamachine.Wpf.ViewModel.SettingsViewModel.SettingsViewModel() -> void
+Lalamachine.Wpf.ViewModel.SettingsViewModel.StartScanEvent -> System.EventHandler<Lalamachine.Wpf.ViewModel.StartScanEventArgs>
+Lalamachine.Wpf.ViewModel.ShuffleRepeatState
+Lalamachine.Wpf.ViewModel.ShuffleRepeatState.None = 0 -> Lalamachine.Wpf.ViewModel.ShuffleRepeatState
+Lalamachine.Wpf.ViewModel.ShuffleRepeatState.RepeatAll = 2 -> Lalamachine.Wpf.ViewModel.ShuffleRepeatState
+Lalamachine.Wpf.ViewModel.ShuffleRepeatState.RepeatOne = 1 -> Lalamachine.Wpf.ViewModel.ShuffleRepeatState
+Lalamachine.Wpf.ViewModel.ShuffleRepeatState.Shuffle = 3 -> Lalamachine.Wpf.ViewModel.ShuffleRepeatState
+Lalamachine.Wpf.ViewModel.ShuffleRepeatViewModel
+Lalamachine.Wpf.ViewModel.ShuffleRepeatViewModel.ChangeShuffleRepeatCommand.get -> System.Windows.Input.ICommand
+Lalamachine.Wpf.ViewModel.ShuffleRepeatViewModel.ShuffleRepeatChanged -> System.EventHandler<Lalamachine.Wpf.ViewModel.ChangeShuffleRepeatEventArgs>
+Lalamachine.Wpf.ViewModel.ShuffleRepeatViewModel.ShuffleRepeatViewModel() -> void
+Lalamachine.Wpf.ViewModel.ShuffleRepeatViewModel.State.get -> Lalamachine.Wpf.ViewModel.ShuffleRepeatState
+Lalamachine.Wpf.ViewModel.ShuffleRepeatViewModel.State.set -> void
+Lalamachine.Wpf.ViewModel.StartScanEventArgs
+Lalamachine.Wpf.ViewModel.StartScanEventArgs.Path.get -> string
+Lalamachine.Wpf.ViewModel.StartScanEventArgs.StartScanEventArgs(string path) -> void
+virtual Lalamachine.Wpf.ViewModel.PlayerViewModel.InvokePlayNextTrackEvent() -> void
+virtual Lalamachine.Wpf.ViewModel.PlayerViewModel.OnManualLoad(Lalamachine.Wpf.ViewModel.ManualLoadEventArgs e) -> void
+virtual Lalamachine.Wpf.ViewModel.PlayerViewModel.OnPlayLastTrack(object commandParameter) -> void
+virtual Lalamachine.Wpf.ViewModel.PlayerViewModel.OnPlayNextTrack(object commandParameter) -> void
+virtual Lalamachine.Wpf.ViewModel.PlaylistBaseViewModel.InvokePlayTrackEvent(Lalamachine.Wpf.ViewModel.PlaylistTags tags) -> void
+virtual Lalamachine.Wpf.ViewModel.SettingsViewModel.InvokeStartScanEvent() -> void
+virtual Lalamachine.Wpf.ViewModel.ShuffleRepeatViewModel.InvokeShuffleRepeatChanged() -> void

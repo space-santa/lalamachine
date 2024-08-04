@@ -6,11 +6,11 @@ namespace LibLala.Unittests.FileExporter
 {
     public class MockExporterDirectory : IExporterDirectory
     {
-        private bool replyOfExists = false;
-        private string argOfCreateDirectory = "";
+        private bool _replyOfExists;
+        private string _argOfCreateDirectory = "";
 
-        public bool ReplyOfExists { get => replyOfExists; set => replyOfExists = value; }
-        public string ArgOfCreateDirectory { get => argOfCreateDirectory; set => argOfCreateDirectory = value; }
+        public bool ReplyOfExists { get => _replyOfExists; set => _replyOfExists = value; }
+        public string ArgOfCreateDirectory { get => _argOfCreateDirectory; set => _argOfCreateDirectory = value; }
 
         public bool Exists(string destination)
         {
@@ -39,7 +39,7 @@ namespace LibLala.Unittests.FileExporter
             var directroyPreparer = new DirectoryPreparer(mock);
             var destination = @"C:\the\path";
             directroyPreparer.PrepareDestination(destination);
-            Assert.AreEqual(destination, mock.ArgOfCreateDirectory);
+            Assert.That(destination == mock.ArgOfCreateDirectory);
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace LibLala.Unittests.FileExporter
             var destination = @"C:\the\path";
             var expected = @"C:\the\path-20180304_112233";
             directroyPreparer.PrepareDestination(destination);
-            Assert.AreEqual(expected, mock.ArgOfCreateDirectory);
+            Assert.That(expected == mock.ArgOfCreateDirectory);
         }
 
         [Test]
@@ -61,7 +61,7 @@ namespace LibLala.Unittests.FileExporter
         {
             var expected = DateTime.Now.ToString("-yyyyMMdd_HHmmss", LibLala.Constants.CULTURE);
             var exporterDirectory = new ExporterDirectory();
-            Assert.AreEqual(expected, exporterDirectory.GetDirectorySuffix());
+            Assert.That(expected == exporterDirectory.GetDirectorySuffix());
         }
     }
 }

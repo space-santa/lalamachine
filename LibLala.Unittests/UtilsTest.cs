@@ -3,14 +3,14 @@ using NUnit.Framework;
 
 namespace LibLala.Unittests
 {
-    internal class UtilsTest
+    internal sealed class UtilsTest
     {
         [Test]
         public void RemoveFilePrefix_NoPrefix_UnchangedString()
         {
             var result = Utils.StringUtils.RemoveFilePrefix("bob goes to town");
             var expected = "bob goes to town";
-            Assert.AreEqual(result, expected);
+            Assert.That(result == expected);
         }
 
         [Test]
@@ -18,7 +18,7 @@ namespace LibLala.Unittests
         {
             var result = Utils.StringUtils.RemoveFilePrefix("file:////d/e/f");
             var expected = "/d/e/f";
-            Assert.AreEqual(result, expected);
+            Assert.That(result == expected);
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace LibLala.Unittests
         {
             var unsafeList = new List<string?> { null, null };
             var safeList = Utils.StringUtils.SafeStringList(unsafeList);
-            Assert.IsEmpty(safeList);
+            Assert.That(safeList.Count == 0);
         }
 
         [Test]
@@ -34,9 +34,9 @@ namespace LibLala.Unittests
         {
             var unsafeList = new List<string?> { null, "bob", null, "joe" };
             var safeList = Utils.StringUtils.SafeStringList(unsafeList);
-            Assert.IsTrue(safeList.Count == 2);
-            Assert.IsTrue(safeList[0] == "bob");
-            Assert.IsTrue(safeList[1] == "joe");
+            Assert.That(safeList.Count == 2);
+            Assert.That(safeList[0] == "bob");
+            Assert.That(safeList[1] == "joe");
         }
     }
 }

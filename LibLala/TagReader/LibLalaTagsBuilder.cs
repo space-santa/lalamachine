@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using LibLala.DomainPrimitives;
 
 namespace LibLala.LibLalaTagReader
@@ -57,7 +59,7 @@ namespace LibLala.LibLalaTagReader
             return this;
         }
 
-        public LibLalaTagsBuilder WithArtist(List<string> artist)
+        public LibLalaTagsBuilder WithArtist(IList<string> artist)
         {
             Artist = new ArtistList(artist);
             return this;
@@ -81,7 +83,7 @@ namespace LibLala.LibLalaTagReader
             return this;
         }
 
-        public LibLalaTagsBuilder WithGenre(List<string> genre)
+        public LibLalaTagsBuilder WithGenre(IList<string> genre)
         {
             Genre = new GenreList(genre);
             return this;

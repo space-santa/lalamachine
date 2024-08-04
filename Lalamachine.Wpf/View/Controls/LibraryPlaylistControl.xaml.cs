@@ -12,7 +12,7 @@ namespace Lalamachine.Wpf.View.Controls
     /// </summary>
     public partial class LibraryPlaylistControl : UserControl
     {
-        private GridViewColumnHeader? _lastHeaderClicked = null;
+        private GridViewColumnHeader? _lastHeaderClicked;
         private ListSortDirection _lastDirection = ListSortDirection.Ascending;
 
         public LibraryPlaylistControl()

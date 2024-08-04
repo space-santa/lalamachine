@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace LibLala.Utils
 {
@@ -7,10 +8,7 @@ namespace LibLala.Utils
     {
         public static string RemoveFilePrefix(string path)
         {
-            if (path is null)
-            {
-                throw new ArgumentNullException(paramName: nameof(path));
-            }
+            ArgumentNullException.ThrowIfNull(path);
 
             if (path.StartsWith("file:///", StringComparison.Ordinal))
             {
@@ -19,12 +17,9 @@ namespace LibLala.Utils
             return path;
         }
 
-        public static List<string> SafeStringList(List<string?> unsafeList)
+        public static IList<string> SafeStringList(IList<string?> unsafeList)
         {
-            if (unsafeList is null)
-            {
-                throw new ArgumentNullException(paramName: nameof(unsafeList));
-            }
+            ArgumentNullException.ThrowIfNull(unsafeList);
 
             var safeList = new List<string>();
             foreach (var value in unsafeList)

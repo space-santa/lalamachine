@@ -5,6 +5,12 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "C#: <project-name> Debug",
+      "type": "dotnet",
+      "request": "launch",
+      "projectPath": "${workspaceFolder}/Lalamachine.Wpf/Lalamachine.Wpf.csproj"
+    },
+    {
       "name": "Wpf",
       "type": "coreclr",
       "request": "launch",

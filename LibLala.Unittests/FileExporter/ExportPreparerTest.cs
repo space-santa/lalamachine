@@ -6,7 +6,7 @@ namespace LibLala.Unittests.FileExporter
 {
     public class ExportPreparerTest
     {
-        private string GetPath()
+        private static string GetPath()
         {
             if (Environment.OSVersion.Platform == PlatformID.Win32Windows)
             {
@@ -23,7 +23,7 @@ namespace LibLala.Unittests.FileExporter
         {
             var result = ExportPreparer.GetNewFilename(3, 9, GetPath());
             var expected = "3-lala.mp3";
-            Assert.AreEqual(expected, result);
+            Assert.That(expected == result);
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace LibLala.Unittests.FileExporter
         {
             var result = ExportPreparer.GetNewFilename(3, 12, GetPath());
             var expected = "03-lala.mp3";
-            Assert.AreEqual(expected, result);
+            Assert.That(expected == result);
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace LibLala.Unittests.FileExporter
         {
             var result = ExportPreparer.GetNewFilename(3, 120, GetPath());
             var expected = "003-lala.mp3";
-            Assert.AreEqual(expected, result);
+            Assert.That(expected == result);
         }
     }
 }

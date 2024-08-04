@@ -28,15 +28,13 @@ namespace Lalamachine.Wpf.ViewModel
         public bool Scanning { get; }
     }
 
-    internal class LibraryViewModel : BaseNotifyPropertyChanged
+    internal sealed class LibraryViewModel : BaseNotifyPropertyChanged
     {
         private readonly MusicLibModel _model;
 
         private string _genreFilter = "";
         private string _artistFilter = "";
         private string _albumFilter = "";
-        public int _filesToScanCount = 0;
-        public int _filesScannedCount = 0;
         private bool _scanning = false;
         private int _filesToScanCount1;
         private int _filesScannedCount1;

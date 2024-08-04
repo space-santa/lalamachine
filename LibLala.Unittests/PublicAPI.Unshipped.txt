@@ -1,0 +1,30 @@
+LibLala.Unittests.FileExporter.DirectoryPreparerTest
+LibLala.Unittests.FileExporter.DirectoryPreparerTest.DirectoryPreparerTest() -> void
+LibLala.Unittests.FileExporter.DirectoryPreparerTest.ExporterDirectory_GetDirectorySuffix_IsProperlyFormattedCurrentDateTime() -> void
+LibLala.Unittests.FileExporter.DirectoryPreparerTest.PrepareDirectory_DoesExist_IsCreated() -> void
+LibLala.Unittests.FileExporter.DirectoryPreparerTest.PrepareDirectory_DoesNotExist_IsCreated() -> void
+LibLala.Unittests.FileExporter.ExportPreparerTest
+LibLala.Unittests.FileExporter.ExportPreparerTest.ExportPreparerTest() -> void
+LibLala.Unittests.FileExporter.ExportPreparerTest.GetNewFilename_120Tracks_LeadingZerosInFilename() -> void
+LibLala.Unittests.FileExporter.ExportPreparerTest.GetNewFilename_12Tracks_LeadingZeroInFilename() -> void
+LibLala.Unittests.FileExporter.ExportPreparerTest.GetNewFilename_9Tracks_NoLeadingZeroInFilename() -> void
+LibLala.Unittests.FileExporter.MockExporterDirectory
+LibLala.Unittests.FileExporter.MockExporterDirectory.ArgOfCreateDirectory.get -> string
+LibLala.Unittests.FileExporter.MockExporterDirectory.ArgOfCreateDirectory.set -> void
+LibLala.Unittests.FileExporter.MockExporterDirectory.CreateDirectory(string destination) -> void
+LibLala.Unittests.FileExporter.MockExporterDirectory.Exists(string destination) -> bool
+LibLala.Unittests.FileExporter.MockExporterDirectory.GetDirectorySuffix() -> string
+LibLala.Unittests.FileExporter.MockExporterDirectory.MockExporterDirectory() -> void
+LibLala.Unittests.FileExporter.MockExporterDirectory.ReplyOfExists.get -> bool
+LibLala.Unittests.FileExporter.MockExporterDirectory.ReplyOfExists.set -> void
+LibLala.Unittests.Tagreader.TagReaderTest
+LibLala.Unittests.Tagreader.TagReaderTest.BadMp3ShouldThrowTagReaderException() -> void
+LibLala.Unittests.Tagreader.TagReaderTest.BadPathShouldThrowTagReaderException() -> void
+LibLala.Unittests.Tagreader.TagReaderTest.EmptyPathShouldThrowTagReaderException() -> void
+LibLala.Unittests.Tagreader.TagReaderTest.EncodedPathShouldReturnTags() -> void
+LibLala.Unittests.Tagreader.TagReaderTest.TagReaderTest() -> void
+LibLala.Unittests.Tagreader.TagsTest
+LibLala.Unittests.Tagreader.TagsTest.ArtistArrayDuplicatesShouldBeRemoved() -> void
+LibLala.Unittests.Tagreader.TagsTest.DurationWithHoursShouldBeCorrectLength() -> void
+LibLala.Unittests.Tagreader.TagsTest.DurationWithTwoDigitSecondsShouldBeCorrectLength() -> void
+LibLala.Unittests.Tagreader.TagsTest.TagsTest() -> void

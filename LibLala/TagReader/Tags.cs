@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using LibLala.DomainPrimitives;
 using Newtonsoft.Json;
@@ -35,10 +36,7 @@ namespace LibLala.LibLalaTagReader
 
         public LibLalaTags(LibLalaTags other)
         {
-            if (other is null)
-            {
-                throw new ArgumentNullException(paramName: nameof(other));
-            }
+            ArgumentNullException.ThrowIfNull(other);
 
             _artist = new ArtistList(other.Artist);
             _genre = new GenreList(other.Genre);
@@ -62,10 +60,7 @@ namespace LibLala.LibLalaTagReader
                 throw new ArgumentNullException(paramName: nameof(path));
             }
 
-            if (file is null)
-            {
-                throw new ArgumentNullException(paramName: nameof(file));
-            }
+            ArgumentNullException.ThrowIfNull(file);
 
             TrackPath = new TrackPath(path);
             _album = new AlbumName(file.Tag.Album ?? "");
@@ -90,13 +85,13 @@ namespace LibLala.LibLalaTagReader
 
         public string Album => _album.ToString();
 
-        public List<string> Artist => _artist.ToStringList();
+        public IList<string> Artist => _artist.ToStringList();
         public string ArtistString => _artist.ToCsvString();
 
         public string Comment => _comment.ToString();
         public uint DiscNumber => _discNumber.Value;
 
-        public List<string> Genre => _genre.ToStringList();
+        public IList<string> Genre => _genre.ToStringList();
         public string GenreString => _genre.ToCsvString();
 
         public int Length => _length.TotalSeconds;

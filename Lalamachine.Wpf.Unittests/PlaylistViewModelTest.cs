@@ -15,7 +15,7 @@ namespace Lalamachine.Wpf.Unittests
             var viewModel = new PlaylistBaseViewModel("LIBRARY");
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayNextTrackHandler(null, new System.EventArgs());
-            Assert.IsFalse(wasCalled);
+            Assert.That(!wasCalled);
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace Lalamachine.Wpf.Unittests
             viewModel.AddTrack(new LibLalaTagsBuilder("bob", new FakeTrackPath("/path/to/bob"), 5).Build());
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayNextTrackHandler(null, new System.EventArgs());
-            Assert.IsTrue(wasCalled);
+            Assert.That(wasCalled);
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace Lalamachine.Wpf.Unittests
             var viewModel = new PlaylistBaseViewModel("LIBRARY");
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayLastTrackHandler(null, new System.EventArgs());
-            Assert.IsFalse(wasCalled);
+            Assert.That(!wasCalled);
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace Lalamachine.Wpf.Unittests
             viewModel.AddTrack(new LibLalaTagsBuilder("bob", new FakeTrackPath("/path/to/bob"), 5).Build());
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayLastTrackHandler(null, new System.EventArgs());
-            Assert.IsTrue(wasCalled);
+            Assert.That(wasCalled);
         }
     }
 }

@@ -10,7 +10,7 @@ using LibLala.LibLalaTagReader;
 
 namespace Lalamachine.Wpf.ViewModel
 {
-    internal class SortMessage
+    internal sealed class SortMessage
     {
         public SortMessage(ListSortDirection direction, PlaylistColumn column)
         {
@@ -333,7 +333,9 @@ namespace Lalamachine.Wpf.ViewModel
 
                 if (PlaylistShuffleRepeatState == ShuffleRepeatState.Shuffle)
                 {
+#pragma warning disable CA5394 // Do not use insecure randomness
                     var newIndex = new Random().Next(0, Playlist.Count - 1);
+#pragma warning restore CA5394 // Do not use insecure randomness
                     return Playlist[newIndex];
                 }
 
@@ -382,7 +384,7 @@ namespace Lalamachine.Wpf.ViewModel
             NotifyPropertyChanged(nameof(Playlist));
         }
 
-        public void AddTracks(List<LalaTags> tagsRange)
+        public void AddTracks(IList<LalaTags> tagsRange)
         {
             if (tagsRange is null)
             {
@@ -396,7 +398,7 @@ namespace Lalamachine.Wpf.ViewModel
             NotifyPropertyChanged(nameof(Playlist));
         }
 
-        public void AddTracks(List<LibLalaTags> tagsRange)
+        public void AddTracks(IList<LibLalaTags> tagsRange)
         {
             if (tagsRange is null)
             {
@@ -409,7 +411,7 @@ namespace Lalamachine.Wpf.ViewModel
             }
             NotifyPropertyChanged(nameof(Playlist));
         }
-        public void AddTracks(List<PlaylistTags> tagsRange)
+        public void AddTracks(IList<PlaylistTags> tagsRange)
         {
             if (tagsRange is null)
             {

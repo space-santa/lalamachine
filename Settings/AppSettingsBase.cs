@@ -10,16 +10,13 @@ namespace Settings
         { }
     }
 
-    public abstract class AppSettingsBase
+    public class AppSettingsBase
     {
         private readonly Dictionary<string, string> _settings;
 
         public AppSettingsBase(SettingsFile settingsFile)
         {
-            if (settingsFile is null)
-            {
-                throw new ArgumentNullException(paramName: nameof(settingsFile));
-            }
+            ArgumentNullException.ThrowIfNull(settingsFile);
 
             SettingsFile = settingsFile;
             _settings = SettingsFile.Load();
@@ -32,7 +29,9 @@ namespace Settings
             SettingsFile.Save(_settings);
         }
 
+#pragma warning disable RS0026 // Do not add multiple public overloads with optional parameters
         protected void Set(int value, [CallerMemberName] string key = "defaultInt")
+
         {
             Set(value.ToString(LibLala.Constants.CULTURE), key);
         }
@@ -52,6 +51,7 @@ namespace Settings
             _settings[key] = value;
             Save();
         }
+#pragma warning restore RS0026 // Do not add multiple public overloads with optional parameters
 
         protected int GetInt(int initialValue = 0, [CallerMemberName] string key = "defaultInt")
         {

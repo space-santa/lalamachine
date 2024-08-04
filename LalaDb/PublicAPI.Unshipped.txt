@@ -1,0 +1,153 @@
+LalaDb.Data.Album
+LalaDb.Data.Album.Album() -> void
+LalaDb.Data.Album.AlbumId.get -> int
+LalaDb.Data.Album.AlbumId.set -> void
+LalaDb.Data.Album.Name.get -> string
+LalaDb.Data.Album.Name.set -> void
+LalaDb.Data.Artist
+LalaDb.Data.Artist.Artist() -> void
+LalaDb.Data.Artist.ArtistId.get -> int
+LalaDb.Data.Artist.ArtistId.set -> void
+LalaDb.Data.Artist.Name.get -> string
+LalaDb.Data.Artist.Name.set -> void
+LalaDb.Data.ArtistTrack
+LalaDb.Data.ArtistTrack.ArtistId.get -> int
+LalaDb.Data.ArtistTrack.ArtistId.set -> void
+LalaDb.Data.ArtistTrack.ArtistTrack() -> void
+LalaDb.Data.ArtistTrack.ArtistTrackId.get -> int
+LalaDb.Data.ArtistTrack.ArtistTrackId.set -> void
+LalaDb.Data.ArtistTrack.TrackId.get -> int
+LalaDb.Data.ArtistTrack.TrackId.set -> void
+LalaDb.Data.Genre
+LalaDb.Data.Genre.Genre() -> void
+LalaDb.Data.Genre.GenreId.get -> int
+LalaDb.Data.Genre.GenreId.set -> void
+LalaDb.Data.Genre.Name.get -> string
+LalaDb.Data.Genre.Name.set -> void
+LalaDb.Data.GenreTrack
+LalaDb.Data.GenreTrack.GenreId.get -> int
+LalaDb.Data.GenreTrack.GenreId.set -> void
+LalaDb.Data.GenreTrack.GenreTrack() -> void
+LalaDb.Data.GenreTrack.GenreTrackId.get -> int
+LalaDb.Data.GenreTrack.GenreTrackId.set -> void
+LalaDb.Data.GenreTrack.TrackId.get -> int
+LalaDb.Data.GenreTrack.TrackId.set -> void
+LalaDb.Data.LalaContext
+LalaDb.Data.LalaContext.Albums.get -> Microsoft.EntityFrameworkCore.DbSet<LalaDb.Data.Album>
+LalaDb.Data.LalaContext.Albums.set -> void
+LalaDb.Data.LalaContext.Artists.get -> Microsoft.EntityFrameworkCore.DbSet<LalaDb.Data.Artist>
+LalaDb.Data.LalaContext.Artists.set -> void
+LalaDb.Data.LalaContext.ArtistTracks.get -> Microsoft.EntityFrameworkCore.DbSet<LalaDb.Data.ArtistTrack>
+LalaDb.Data.LalaContext.ArtistTracks.set -> void
+LalaDb.Data.LalaContext.Genres.get -> Microsoft.EntityFrameworkCore.DbSet<LalaDb.Data.Genre>
+LalaDb.Data.LalaContext.Genres.set -> void
+LalaDb.Data.LalaContext.GenreTracks.get -> Microsoft.EntityFrameworkCore.DbSet<LalaDb.Data.GenreTrack>
+LalaDb.Data.LalaContext.GenreTracks.set -> void
+LalaDb.Data.LalaContext.LalaContext(Microsoft.EntityFrameworkCore.DbContextOptions<LalaDb.Data.LalaContext> options) -> void
+LalaDb.Data.LalaContext.Playlists.get -> Microsoft.EntityFrameworkCore.DbSet<LalaDb.Data.Playlist>
+LalaDb.Data.LalaContext.Playlists.set -> void
+LalaDb.Data.LalaContext.PlaylistTracks.get -> Microsoft.EntityFrameworkCore.DbSet<LalaDb.Data.PlaylistTrack>
+LalaDb.Data.LalaContext.PlaylistTracks.set -> void
+LalaDb.Data.LalaContext.Tracks.get -> Microsoft.EntityFrameworkCore.DbSet<LalaDb.Data.Track>
+LalaDb.Data.LalaContext.Tracks.set -> void
+LalaDb.Data.LalaContextFactory
+LalaDb.Data.LalaContextFactory.CreateDbContext(string[] args) -> LalaDb.Data.LalaContext
+LalaDb.Data.LalaContextFactory.LalaContextFactory() -> void
+LalaDb.Data.LalaTags
+LalaDb.Data.Playlist
+LalaDb.Data.Playlist.Name.get -> string
+LalaDb.Data.Playlist.Name.set -> void
+LalaDb.Data.Playlist.Playlist() -> void
+LalaDb.Data.Playlist.PlaylistId.get -> int
+LalaDb.Data.Playlist.PlaylistId.set -> void
+LalaDb.Data.PlaylistTrack
+LalaDb.Data.PlaylistTrack.Order.get -> int
+LalaDb.Data.PlaylistTrack.Order.set -> void
+LalaDb.Data.PlaylistTrack.PlaylistId.get -> int
+LalaDb.Data.PlaylistTrack.PlaylistId.set -> void
+LalaDb.Data.PlaylistTrack.PlaylistTrack() -> void
+LalaDb.Data.PlaylistTrack.PlaylistTrackId.get -> int
+LalaDb.Data.PlaylistTrack.PlaylistTrackId.set -> void
+LalaDb.Data.PlaylistTrack.TrackId.get -> int
+LalaDb.Data.PlaylistTrack.TrackId.set -> void
+LalaDb.Data.PlaylistTrack.TrackPath.get -> string
+LalaDb.Data.PlaylistTrack.TrackPath.set -> void
+LalaDb.Data.Track
+LalaDb.Data.Track.AlbumId.get -> int
+LalaDb.Data.Track.AlbumId.set -> void
+LalaDb.Data.Track.Comment.get -> string
+LalaDb.Data.Track.Comment.set -> void
+LalaDb.Data.Track.DiscNumber.get -> int
+LalaDb.Data.Track.DiscNumber.set -> void
+LalaDb.Data.Track.Length.get -> int
+LalaDb.Data.Track.Length.set -> void
+LalaDb.Data.Track.Path.get -> string
+LalaDb.Data.Track.Path.set -> void
+LalaDb.Data.Track.Title.get -> string
+LalaDb.Data.Track.Title.set -> void
+LalaDb.Data.Track.Track() -> void
+LalaDb.Data.Track.TrackId.get -> int
+LalaDb.Data.Track.TrackId.set -> void
+LalaDb.Data.Track.TrackNumber.get -> int
+LalaDb.Data.Track.TrackNumber.set -> void
+LalaDb.Data.Track.Year.get -> int
+LalaDb.Data.Track.Year.set -> void
+LalaDb.Migrations.Initial
+LalaDb.Migrations.Initial.Initial() -> void
+LalaDb.Migrations.Playlist
+LalaDb.Migrations.Playlist.Playlist() -> void
+LalaDb.Migrations.PlaylistUsePath
+LalaDb.Migrations.PlaylistUsePath.PlaylistUsePath() -> void
+LalaDb.Model.MusicLibModel
+LalaDb.Model.MusicLibModel.AlbumList(string artistFilter, string genreFilter, string searchString) -> string[]
+LalaDb.Model.MusicLibModel.ArtistList(string genreFilter, string searchString) -> string[]
+LalaDb.Model.MusicLibModel.DisplayLib(string albumFilter, string artistFilter, string genreFilter, string searchString) -> LalaDb.Data.Track[]
+LalaDb.Model.MusicLibModel.FileScannedEvent -> System.EventHandler<LibLala.MusicScanner.FileScannedEventArgs>
+LalaDb.Model.MusicLibModel.FilesToScanChangedEvent -> System.EventHandler<LibLala.MusicScanner.FileScannedEventArgs>
+LalaDb.Model.MusicLibModel.GenreList(string searchString) -> string[]
+LalaDb.Model.MusicLibModel.GetAlbumTracks(string name) -> System.Collections.Generic.List<LibLala.LibLalaTagReader.LibLalaTags>
+LalaDb.Model.MusicLibModel.GetMetadataForMrl(string path) -> LalaDb.Data.LalaTags
+LalaDb.Model.MusicLibModel.MusicLibModel(LalaDb.Data.LalaContext context) -> void
+LalaDb.Model.MusicLibModel.ScanAsync(string path) -> System.Threading.Tasks.Task
+LalaDb.Model.MusicLibModel.Scanning.get -> bool
+LalaDb.Model.MusicLibModel.Scanning.set -> void
+LalaDb.Model.PlaylistModel
+LalaDb.Model.PlaylistModel.DeletePlaylist(string name) -> void
+LalaDb.Model.PlaylistModel.GetPlaylistTracks(string name) -> System.Collections.Generic.List<LalaDb.Data.LalaTags>
+LalaDb.Model.PlaylistModel.PlaylistModel(LalaDb.Data.LalaContext context) -> void
+LalaDb.Model.PlaylistModel.SavePlaylist(string name, System.Collections.Generic.List<LibLala.LibLalaTagReader.LibLalaTags> tracks) -> void
+LalaDb.Model.ScannerDb
+LalaDb.Model.ScannerDb.AddTagsToDatabase(LibLala.LibLalaTagReader.LibLalaTags tags) -> void
+LalaDb.Model.ScannerDb.EnsureDatabase() -> void
+LalaDb.Model.ScannerDb.SaveChanges() -> void
+LalaDb.Model.ScannerDb.ScannerDb(LalaDb.Data.LalaContext context) -> void
+override LalaDb.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder modelBuilder) -> void
+override LalaDb.Migrations.Initial.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder migrationBuilder) -> void
+override LalaDb.Migrations.Initial.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder migrationBuilder) -> void
+override LalaDb.Migrations.Playlist.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder modelBuilder) -> void
+override LalaDb.Migrations.Playlist.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder migrationBuilder) -> void
+override LalaDb.Migrations.Playlist.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder migrationBuilder) -> void
+override LalaDb.Migrations.PlaylistUsePath.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder modelBuilder) -> void
+override LalaDb.Migrations.PlaylistUsePath.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder migrationBuilder) -> void
+override LalaDb.Migrations.PlaylistUsePath.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder migrationBuilder) -> void
+static LalaDb.Data.LalaTags.Build(LalaDb.Data.Track track) -> LalaDb.Data.LalaTags
+virtual LalaDb.Data.Album.Tracks.get -> System.Collections.Generic.List<LalaDb.Data.Track>
+virtual LalaDb.Data.Artist.ArtistTracks.get -> System.Collections.Generic.List<LalaDb.Data.ArtistTrack>
+virtual LalaDb.Data.ArtistTrack.Artist.get -> LalaDb.Data.Artist
+virtual LalaDb.Data.ArtistTrack.Artist.set -> void
+virtual LalaDb.Data.ArtistTrack.Track.get -> LalaDb.Data.Track
+virtual LalaDb.Data.ArtistTrack.Track.set -> void
+virtual LalaDb.Data.Genre.GenreTracks.get -> System.Collections.Generic.List<LalaDb.Data.GenreTrack>
+virtual LalaDb.Data.GenreTrack.Genre.get -> LalaDb.Data.Genre
+virtual LalaDb.Data.GenreTrack.Genre.set -> void
+virtual LalaDb.Data.GenreTrack.Track.get -> LalaDb.Data.Track
+virtual LalaDb.Data.GenreTrack.Track.set -> void
+virtual LalaDb.Data.Playlist.Tracks.get -> System.Collections.Generic.List<LalaDb.Data.PlaylistTrack>
+virtual LalaDb.Data.PlaylistTrack.Playlist.get -> LalaDb.Data.Playlist
+virtual LalaDb.Data.PlaylistTrack.Playlist.set -> void
+virtual LalaDb.Data.Track.Album.get -> LalaDb.Data.Album
+virtual LalaDb.Data.Track.Album.set -> void
+virtual LalaDb.Data.Track.ArtistTracks.get -> System.Collections.Generic.List<LalaDb.Data.ArtistTrack>
+virtual LalaDb.Data.Track.GenreTracks.get -> System.Collections.Generic.List<LalaDb.Data.GenreTrack>
+virtual LalaDb.Model.MusicLibModel.InvokeFileScannedEvent(int count) -> void
+virtual LalaDb.Model.MusicLibModel.InvokeFilesToScanChangedEvent(int count) -> void

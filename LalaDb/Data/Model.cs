@@ -8,7 +8,7 @@ namespace LalaDb.Data
         public int GenreId { get; set; }
         public string? Name { get; set; }
 
-        public virtual List<GenreTrack>? GenreTracks { get; }
+        public virtual IList<GenreTrack>? GenreTracks { get; }
     }
 
     public class Artist
@@ -16,7 +16,7 @@ namespace LalaDb.Data
         public int ArtistId { get; set; }
         public string? Name { get; set; }
 
-        public virtual List<ArtistTrack>? ArtistTracks { get; }
+        public virtual IList<ArtistTrack>? ArtistTracks { get; }
     }
 
     public class Album
@@ -24,14 +24,14 @@ namespace LalaDb.Data
         public int AlbumId { get; set; }
         public string? Name { get; set; }
 
-        public virtual List<Track>? Tracks { get; }
+        public virtual IList<Track>? Tracks { get; }
     }
 
     public class Playlist
     {
         public int PlaylistId { get; set; }
         public string? Name { get; set; }
-        public virtual List<PlaylistTrack>? Tracks { get; }
+        public virtual IList<PlaylistTrack>? Tracks { get; }
     }
 
     public class Track
@@ -48,8 +48,8 @@ namespace LalaDb.Data
         public int AlbumId { get; set; }
         public virtual Album? Album { get; set; }
 
-        public virtual List<ArtistTrack>? ArtistTracks { get; }
-        public virtual List<GenreTrack>? GenreTracks { get; }
+        public virtual IList<ArtistTrack>? ArtistTracks { get; }
+        public virtual IList<GenreTrack>? GenreTracks { get; }
     }
 
 

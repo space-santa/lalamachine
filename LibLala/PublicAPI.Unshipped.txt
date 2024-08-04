@@ -1,0 +1,180 @@
+const LibLala.Constants.ALL = "-- all --" -> string
+const LibLala.Constants.MISCPLAYLISTNAME = "cs1m090" -> string
+LibLala.Constants
+LibLala.DomainPrimitives.AlbumName
+LibLala.DomainPrimitives.AlbumName.AlbumName(string name) -> void
+LibLala.DomainPrimitives.ArtistList
+LibLala.DomainPrimitives.ArtistList.ArtistList(string artistsCsvString) -> void
+LibLala.DomainPrimitives.ArtistList.ArtistList(System.Collections.Generic.List<string> artistStrings) -> void
+LibLala.DomainPrimitives.ArtistName
+LibLala.DomainPrimitives.ArtistName.ArtistName(string name) -> void
+LibLala.DomainPrimitives.BaseNameString
+LibLala.DomainPrimitives.BaseNameString.BaseNameString(string name) -> void
+LibLala.DomainPrimitives.BaseNameStringList<T>
+LibLala.DomainPrimitives.BaseNameStringList<T>.Add(T name) -> void
+LibLala.DomainPrimitives.BaseNameStringList<T>.BaseNameStringList() -> void
+LibLala.DomainPrimitives.BaseNameStringList<T>.BaseNameStringList(string nameCsvString) -> void
+LibLala.DomainPrimitives.BaseNameStringList<T>.BaseNameStringList(System.Collections.Generic.List<string> nameStrings) -> void
+LibLala.DomainPrimitives.BaseNameStringList<T>.CompareTo(LibLala.DomainPrimitives.BaseNameStringList<T> other) -> int
+LibLala.DomainPrimitives.BaseNameStringList<T>.ToCsvString() -> string
+LibLala.DomainPrimitives.BaseNameStringList<T>.ToStringList() -> System.Collections.Generic.List<string>
+LibLala.DomainPrimitives.Comment
+LibLala.DomainPrimitives.Comment.Comment(string name) -> void
+LibLala.DomainPrimitives.DiscNumber
+LibLala.DomainPrimitives.DiscNumber.DiscNumber(uint number) -> void
+LibLala.DomainPrimitives.DiscNumber.Value.get -> uint
+LibLala.DomainPrimitives.FakeTrackPath
+LibLala.DomainPrimitives.FakeTrackPath.FakeTrackPath(string path) -> void
+LibLala.DomainPrimitives.FakeTrackPath.FullName.get -> string
+LibLala.DomainPrimitives.GenreList
+LibLala.DomainPrimitives.GenreList.GenreList(string nameCsvString) -> void
+LibLala.DomainPrimitives.GenreList.GenreList(System.Collections.Generic.List<string> nameStrings) -> void
+LibLala.DomainPrimitives.GenreName
+LibLala.DomainPrimitives.GenreName.GenreName(string name) -> void
+LibLala.DomainPrimitives.ITrackPath
+LibLala.DomainPrimitives.ITrackPath.FullName.get -> string
+LibLala.DomainPrimitives.ITrackPath.ToString() -> string
+LibLala.DomainPrimitives.PlaylistColumn
+LibLala.DomainPrimitives.PlaylistColumn.ColumnType.get -> LibLala.DomainPrimitives.PlaylistColumnType
+LibLala.DomainPrimitives.PlaylistColumn.PlaylistColumn(string headerContent) -> void
+LibLala.DomainPrimitives.PlaylistColumnType
+LibLala.DomainPrimitives.PlaylistColumnType.Album = 5 -> LibLala.DomainPrimitives.PlaylistColumnType
+LibLala.DomainPrimitives.PlaylistColumnType.Artist = 6 -> LibLala.DomainPrimitives.PlaylistColumnType
+LibLala.DomainPrimitives.PlaylistColumnType.Comment = 4 -> LibLala.DomainPrimitives.PlaylistColumnType
+LibLala.DomainPrimitives.PlaylistColumnType.Disc = 1 -> LibLala.DomainPrimitives.PlaylistColumnType
+LibLala.DomainPrimitives.PlaylistColumnType.Genre = 7 -> LibLala.DomainPrimitives.PlaylistColumnType
+LibLala.DomainPrimitives.PlaylistColumnType.Length = 3 -> LibLala.DomainPrimitives.PlaylistColumnType
+LibLala.DomainPrimitives.PlaylistColumnType.Title = 2 -> LibLala.DomainPrimitives.PlaylistColumnType
+LibLala.DomainPrimitives.PlaylistColumnType.Track = 0 -> LibLala.DomainPrimitives.PlaylistColumnType
+LibLala.DomainPrimitives.PlaylistColumnType.Year = 8 -> LibLala.DomainPrimitives.PlaylistColumnType
+LibLala.DomainPrimitives.TitleName
+LibLala.DomainPrimitives.TitleName.TitleName(string name) -> void
+LibLala.DomainPrimitives.TrackLength
+LibLala.DomainPrimitives.TrackLength.TotalSeconds.get -> int
+LibLala.DomainPrimitives.TrackLength.TrackLength(int totalSeconds) -> void
+LibLala.DomainPrimitives.TrackLength.TrackLength(System.TimeSpan duration) -> void
+LibLala.DomainPrimitives.TrackNumber
+LibLala.DomainPrimitives.TrackNumber.TrackNumber(uint number) -> void
+LibLala.DomainPrimitives.TrackNumber.Value.get -> uint
+LibLala.DomainPrimitives.TrackPath
+LibLala.DomainPrimitives.TrackPath.FullName.get -> string
+LibLala.DomainPrimitives.TrackPath.TrackPath(string path) -> void
+LibLala.DomainPrimitives.Year
+LibLala.DomainPrimitives.Year.Value.get -> int
+LibLala.DomainPrimitives.Year.Year(int? year) -> void
+LibLala.FileExporter.DirectoryPreparer
+LibLala.FileExporter.DirectoryPreparer.DirectoryPreparer(LibLala.FileExporter.IExporterDirectory exporterDirectory) -> void
+LibLala.FileExporter.DirectoryPreparer.PrepareDestination(string destination) -> string
+LibLala.FileExporter.ExporterDirectory
+LibLala.FileExporter.ExporterDirectory.CreateDirectory(string destination) -> void
+LibLala.FileExporter.ExporterDirectory.Exists(string destination) -> bool
+LibLala.FileExporter.ExporterDirectory.ExporterDirectory() -> void
+LibLala.FileExporter.ExporterDirectory.GetDirectorySuffix() -> string
+LibLala.FileExporter.ExportPreparer
+LibLala.FileExporter.IExporterDirectory
+LibLala.FileExporter.IExporterDirectory.CreateDirectory(string destination) -> void
+LibLala.FileExporter.IExporterDirectory.Exists(string destination) -> bool
+LibLala.FileExporter.IExporterDirectory.GetDirectorySuffix() -> string
+LibLala.FileExporter.PlaylistExporter
+LibLala.LibLalaTagReader.LibLalaTags
+LibLala.LibLalaTagReader.LibLalaTags.Album.get -> string
+LibLala.LibLalaTagReader.LibLalaTags.Artist.get -> System.Collections.Generic.List<string>
+LibLala.LibLalaTagReader.LibLalaTags.ArtistString.get -> string
+LibLala.LibLalaTagReader.LibLalaTags.Comment.get -> string
+LibLala.LibLalaTagReader.LibLalaTags.DiscNumber.get -> uint
+LibLala.LibLalaTagReader.LibLalaTags.Genre.get -> System.Collections.Generic.List<string>
+LibLala.LibLalaTagReader.LibLalaTags.GenreString.get -> string
+LibLala.LibLalaTagReader.LibLalaTags.IsValid.get -> bool
+LibLala.LibLalaTagReader.LibLalaTags.Length.get -> int
+LibLala.LibLalaTagReader.LibLalaTags.LengthString.get -> string
+LibLala.LibLalaTagReader.LibLalaTags.LibLalaTags(LibLala.LibLalaTagReader.LibLalaTags other) -> void
+LibLala.LibLalaTagReader.LibLalaTags.LibLalaTags(TagLib.File file, string path) -> void
+LibLala.LibLalaTagReader.LibLalaTags.Path.get -> string
+LibLala.LibLalaTagReader.LibLalaTags.Title.get -> string
+LibLala.LibLalaTagReader.LibLalaTags.ToJson() -> string
+LibLala.LibLalaTagReader.LibLalaTags.Track.get -> uint
+LibLala.LibLalaTagReader.LibLalaTags.TrackId.get -> int?
+LibLala.LibLalaTagReader.LibLalaTags.Year.get -> int
+LibLala.LibLalaTagReader.LibLalaTagsBuilder
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.Album.get -> LibLala.DomainPrimitives.AlbumName
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.Artist.get -> LibLala.DomainPrimitives.ArtistList
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.Build() -> LibLala.LibLalaTagReader.LibLalaTags
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.Comment.get -> LibLala.DomainPrimitives.Comment
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.DiscNumber.get -> LibLala.DomainPrimitives.DiscNumber
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.Genre.get -> LibLala.DomainPrimitives.GenreList
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.Length.get -> LibLala.DomainPrimitives.TrackLength
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.LibLalaTagsBuilder(string title, LibLala.DomainPrimitives.ITrackPath fakePath, int totalSeconds) -> void
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.LibLalaTagsBuilder(string title, string path, int totalSeconds) -> void
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.Title.get -> LibLala.DomainPrimitives.TitleName
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.TrackId.get -> int?
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.TrackNumber.get -> LibLala.DomainPrimitives.TrackNumber
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.TrackPath.get -> LibLala.DomainPrimitives.ITrackPath
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.WithAlbum(string album) -> LibLala.LibLalaTagReader.LibLalaTagsBuilder
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.WithArtist(string artist) -> LibLala.LibLalaTagReader.LibLalaTagsBuilder
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.WithArtist(System.Collections.Generic.List<string> artist) -> LibLala.LibLalaTagReader.LibLalaTagsBuilder
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.WithComment(string comment) -> LibLala.LibLalaTagReader.LibLalaTagsBuilder
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.WithDiscNumber(uint discNumber) -> LibLala.LibLalaTagReader.LibLalaTagsBuilder
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.WithGenre(string genre) -> LibLala.LibLalaTagReader.LibLalaTagsBuilder
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.WithGenre(System.Collections.Generic.List<string> genre) -> LibLala.LibLalaTagReader.LibLalaTagsBuilder
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.WithTrackId(int trackId) -> LibLala.LibLalaTagReader.LibLalaTagsBuilder
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.WithTrackNumber(uint trackNumber) -> LibLala.LibLalaTagReader.LibLalaTagsBuilder
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.WithYear(int year) -> LibLala.LibLalaTagReader.LibLalaTagsBuilder
+LibLala.LibLalaTagReader.LibLalaTagsBuilder.Year.get -> LibLala.DomainPrimitives.Year
+LibLala.LibLalaTagReader.TagCreator
+LibLala.LibLalaTagReader.TagCreator.TagCreator() -> void
+LibLala.LibLalaTagReader.TagReader
+LibLala.LibLalaTagReader.TagReader.Read(string path) -> LibLala.LibLalaTagReader.LibLalaTags
+LibLala.LibLalaTagReader.TagReader.TagCreator.get -> LibLala.LibLalaTagReader.TagCreator
+LibLala.LibLalaTagReader.TagReader.TagCreator.set -> void
+LibLala.LibLalaTagReader.TagReader.TagReader() -> void
+LibLala.LibLalaTagReader.TagReaderException
+LibLala.LibLalaTagReader.TagReaderException.TagReaderException() -> void
+LibLala.LibLalaTagReader.TagReaderException.TagReaderException(string message) -> void
+LibLala.LibLalaTagReader.TagReaderException.TagReaderException(string message, System.Exception innerException) -> void
+LibLala.MusicScanner.DirectoryProcessor
+LibLala.MusicScanner.DirectoryProcessor.DirectoryProcessor(LibLala.MusicScanner.IMusicDatabase db, string path) -> void
+LibLala.MusicScanner.DirectoryProcessor.FileCount.get -> int
+LibLala.MusicScanner.DirectoryProcessor.FileScannedEvent -> System.EventHandler<LibLala.MusicScanner.FileScannedEventArgs>
+LibLala.MusicScanner.DirectoryProcessor.ProcessDirectory() -> void
+LibLala.MusicScanner.FileScannedEventArgs
+LibLala.MusicScanner.FileScannedEventArgs.Count.get -> int
+LibLala.MusicScanner.FileScannedEventArgs.FileScannedEventArgs(int count) -> void
+LibLala.MusicScanner.IMusicDatabase
+LibLala.MusicScanner.IMusicDatabase.AddTagsToDatabase(LibLala.LibLalaTagReader.LibLalaTags tags) -> void
+LibLala.MusicScanner.IMusicDatabase.EnsureDatabase() -> void
+LibLala.MusicScanner.IMusicDatabase.SaveChanges() -> void
+LibLala.Utils.DirectoryEnforcer
+LibLala.Utils.StringUtils
+override LibLala.DomainPrimitives.BaseNameString.Equals(object other) -> bool
+override LibLala.DomainPrimitives.BaseNameString.GetHashCode() -> int
+override LibLala.DomainPrimitives.BaseNameString.ToString() -> string
+override LibLala.DomainPrimitives.BaseNameStringList<T>.Equals(object obj) -> bool
+override LibLala.DomainPrimitives.BaseNameStringList<T>.GetHashCode() -> int
+override LibLala.DomainPrimitives.DiscNumber.ToString() -> string
+override LibLala.DomainPrimitives.FakeTrackPath.ToString() -> string
+override LibLala.DomainPrimitives.TrackLength.ToString() -> string
+override LibLala.DomainPrimitives.TrackNumber.ToString() -> string
+override LibLala.DomainPrimitives.TrackPath.ToString() -> string
+override LibLala.DomainPrimitives.Year.ToString() -> string
+static LibLala.Constants.CONFIGPATH.get -> string
+static LibLala.Constants.CULTURE.get -> System.Globalization.CultureInfo
+static LibLala.Constants.DBPATH.get -> string
+static LibLala.Constants.LALADIR.get -> string
+static LibLala.Constants.LIBSETTINGSPATH.get -> string
+static LibLala.Constants.SETTINGSPATH.get -> string
+static LibLala.DomainPrimitives.BaseNameString.operator !=(LibLala.DomainPrimitives.BaseNameString lhs, LibLala.DomainPrimitives.BaseNameString rhs) -> bool
+static LibLala.DomainPrimitives.BaseNameString.operator ==(LibLala.DomainPrimitives.BaseNameString lhs, LibLala.DomainPrimitives.BaseNameString rhs) -> bool
+static LibLala.DomainPrimitives.BaseNameStringList<T>.operator !=(LibLala.DomainPrimitives.BaseNameStringList<T> left, LibLala.DomainPrimitives.BaseNameStringList<T> right) -> bool
+static LibLala.DomainPrimitives.BaseNameStringList<T>.operator <(LibLala.DomainPrimitives.BaseNameStringList<T> left, LibLala.DomainPrimitives.BaseNameStringList<T> right) -> bool
+static LibLala.DomainPrimitives.BaseNameStringList<T>.operator <=(LibLala.DomainPrimitives.BaseNameStringList<T> left, LibLala.DomainPrimitives.BaseNameStringList<T> right) -> bool
+static LibLala.DomainPrimitives.BaseNameStringList<T>.operator ==(LibLala.DomainPrimitives.BaseNameStringList<T> left, LibLala.DomainPrimitives.BaseNameStringList<T> right) -> bool
+static LibLala.DomainPrimitives.BaseNameStringList<T>.operator >(LibLala.DomainPrimitives.BaseNameStringList<T> left, LibLala.DomainPrimitives.BaseNameStringList<T> right) -> bool
+static LibLala.DomainPrimitives.BaseNameStringList<T>.operator >=(LibLala.DomainPrimitives.BaseNameStringList<T> left, LibLala.DomainPrimitives.BaseNameStringList<T> right) -> bool
+static LibLala.FileExporter.ExportPreparer.GetNewFilename(int pos, int max, string path) -> string
+static LibLala.FileExporter.ExportPreparer.PrepareDestinationDirectory(string destination) -> string
+static LibLala.FileExporter.PlaylistExporter.ExportPlaylist(string destination, string[] files) -> void
+static LibLala.Utils.DirectoryEnforcer.EnsureLaladir() -> void
+static LibLala.Utils.StringUtils.RemoveFilePrefix(string path) -> string
+static LibLala.Utils.StringUtils.SafeStringList(System.Collections.Generic.List<string> unsafeList) -> System.Collections.Generic.List<string>
+virtual LibLala.LibLalaTagReader.TagCreator.Create(string path) -> LibLala.LibLalaTagReader.LibLalaTags
+virtual LibLala.MusicScanner.DirectoryProcessor.InvokeFileScannedEvent(int count) -> void

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using LibLala.LibLalaTagReader;
 using LibLala.Utils;
@@ -10,7 +11,7 @@ namespace LalaDb.Data
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>")]
         public static LalaTags Build(Track track)
         {
-            if (track is null) { throw new System.ArgumentNullException(paramName: nameof(track)); }
+            ArgumentNullException.ThrowIfNull(track);
 
             if (track.Title is null || track.Path is null)
             {
@@ -37,7 +38,7 @@ namespace LalaDb.Data
         {
         }
 
-        private static List<string> GenreTackListToStringList(List<GenreTrack>? genreTracks)
+        private static IList<string> GenreTackListToStringList(IList<GenreTrack>? genreTracks)
         {
             if (genreTracks is null)
             {
@@ -47,7 +48,7 @@ namespace LalaDb.Data
             return StringUtils.SafeStringList(genreTracks.Select(x => x.Genre?.Name).ToList());
         }
 
-        private static List<string> ArtistTackListToStringList(List<ArtistTrack>? artistTracks)
+        private static IList<string> ArtistTackListToStringList(IList<ArtistTrack>? artistTracks)
         {
             if (artistTracks is null)
             {

@@ -29,7 +29,7 @@ namespace LalaDb.Model
 
         }
 
-        public void SavePlaylist(string name, List<LibLalaTags> tracks)
+        public void SavePlaylist(string name, IList<LibLalaTags> tracks)
         {
             if (string.IsNullOrEmpty(name) || tracks is null)
             {
@@ -58,7 +58,7 @@ namespace LalaDb.Model
             _context.SaveChanges();
         }
 
-        public List<LalaTags> GetPlaylistTracks(string name)
+        public IList<LalaTags> GetPlaylistTracks(string name)
         {
             var trackPaths = _context.PlaylistTracks?.AsEnumerable().Where(x => x.Playlist?.Name == name).OrderBy(x => x.Order).Select(x => x.TrackPath).ToArray();
             var tagList = new List<LalaTags>();

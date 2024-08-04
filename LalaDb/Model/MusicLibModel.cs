@@ -204,7 +204,7 @@ namespace LalaDb.Model
             return list;
         }
 
-        public List<LibLalaTags> GetAlbumTracks(string name)
+        public IList<LibLalaTags> GetAlbumTracks(string name)
         {
             if (string.IsNullOrEmpty(name) || name == LibLala.Constants.ALL)
             {

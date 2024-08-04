@@ -6,7 +6,7 @@ using Settings;
 
 namespace Lalamachine.Wpf.View
 {
-    internal class MainWindowSettings : AppSettings
+    internal sealed class MainWindowSettings : AppSettings
     {
         public MainWindowSettings() : base("Lalamachine.Wpf", "MainWindowSettings") { }
 

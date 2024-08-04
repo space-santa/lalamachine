@@ -1,0 +1,19 @@
+Settings.AppSettings
+Settings.AppSettings.AppSettings(string appName, string settingsName) -> void
+Settings.AppSettingsBase
+Settings.AppSettingsBase.AppSettingsBase(Settings.SettingsFile settingsFile) -> void
+Settings.AppSettingsBase.GetBool(bool initialValue = false, string key = "defaultBool") -> bool
+Settings.AppSettingsBase.GetDouble(double initialValue = 0, string key = "defaultDouble") -> double
+Settings.AppSettingsBase.GetInt(int initialValue = 0, string key = "defaultInt") -> int
+Settings.AppSettingsBase.GetString(string initialValue = "", string key = "defaultString") -> string
+Settings.AppSettingsBase.Save() -> void
+Settings.AppSettingsBase.Set(bool value, string key = "defaultBool") -> void
+Settings.AppSettingsBase.Set(double value, string key = "defaultDouble") -> void
+Settings.AppSettingsBase.Set(int value, string key = "defaultInt") -> void
+Settings.AppSettingsBase.Set(string value, string key = "defaultString") -> void
+Settings.SettingsFile
+Settings.SettingsFile.AppName.get -> string
+Settings.SettingsFile.SettingsFile(string appName, string settingsName) -> void
+Settings.SettingsFile.SettingsName.get -> string
+virtual Settings.SettingsFile.Load() -> System.Collections.Generic.Dictionary<string, string>
+virtual Settings.SettingsFile.Save(System.Collections.Generic.Dictionary<string, string> settings) -> void

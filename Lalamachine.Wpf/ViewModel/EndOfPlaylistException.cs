@@ -17,9 +17,5 @@ namespace Lalamachine.Wpf.ViewModel
         public EndOfPlaylistException(string message, Exception innerException) : base(message, innerException)
         {
         }
-
-        protected EndOfPlaylistException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
     }
 }

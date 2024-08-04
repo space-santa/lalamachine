@@ -9,10 +9,7 @@ namespace LibLala.DomainPrimitives
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>")]
         public BaseNameString(string name)
         {
-            if (name is null)
-            {
-                throw new ArgumentNullException(paramName: nameof(name));
-            }
+            ArgumentNullException.ThrowIfNull(name);
 
             if (name.Length > 256)
             {
@@ -39,16 +36,16 @@ namespace LibLala.DomainPrimitives
             return !lhs.ToString().Equals(rhs.ToString(), StringComparison.Ordinal);
         }
 
-        public override bool Equals(object? other)
+        public override bool Equals(object? obj)
         {
-            var newObject = other as BaseNameString;
+            var newObject = obj as BaseNameString;
 
             if (newObject is { })
             {
                 return this == newObject;
             }
 
-            return base.Equals(other);
+            return base.Equals(obj);
         }
 
         public override int GetHashCode()

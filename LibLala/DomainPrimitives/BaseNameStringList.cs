@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace LibLala.DomainPrimitives
 {
@@ -9,12 +10,9 @@ namespace LibLala.DomainPrimitives
 
         public BaseNameStringList() { Names = new List<T>(); }
 
-        public BaseNameStringList(List<string> nameStrings)
+        public BaseNameStringList(IList<string> nameStrings)
         {
-            if (nameStrings is null)
-            {
-                throw new ArgumentNullException(paramName: nameof(nameStrings));
-            }
+            ArgumentNullException.ThrowIfNull(nameStrings);
 
             Names = new List<T>();
             foreach (var name in nameStrings)
@@ -40,12 +38,12 @@ namespace LibLala.DomainPrimitives
 
         public void Add(T? name)
         {
-            if (name is null) { throw new ArgumentNullException(paramName: nameof(name)); }
+            ArgumentNullException.ThrowIfNull(name, paramName: nameof(name));
             if (Names.Contains(name)) { return; }
             Names.Add(name);
         }
 
-        public List<string> ToStringList()
+        public IList<string> ToStringList()
         {
             var stringList = new List<string>();
 
@@ -64,7 +62,7 @@ namespace LibLala.DomainPrimitives
 
         public int CompareTo(BaseNameStringList<T>? other)
         {
-            if (other is null) { throw new ArgumentNullException(paramName: nameof(other)); }
+            ArgumentNullException.ThrowIfNull(other, paramName: nameof(other));
             return string.Compare(ToCsvString(), other.ToCsvString(), StringComparison.Ordinal);
         }
 

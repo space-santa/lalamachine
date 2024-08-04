@@ -1,5 +1,4 @@
-﻿using System;
-using LibLala.LibLalaTagReader;
+﻿using LibLala.LibLalaTagReader;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
@@ -12,14 +11,14 @@ namespace LibLala.Unittests.Tagreader
         public void EmptyPathShouldThrowTagReaderException()
         {
             var ex = Assert.Throws<TagReaderException>(() => new TagReader().Read(""));
-            Assert.AreEqual("You must give a value for path.", ex.Message);
+            Assert.That(ex is null || "You must give a value for path." == ex.Message);
         }
 
         [Test]
         public void BadPathShouldThrowTagReaderException()
         {
             var ex = Assert.Throws<TagReaderException>(() => new TagReader().Read("lalalala"));
-            Assert.AreEqual("Can't open `lalalala`.", ex.Message);
+            Assert.That(ex is null || "Can't open `lalalala`." == ex.Message);
         }
 
         [Test]
@@ -40,10 +39,10 @@ namespace LibLala.Unittests.Tagreader
             var testPath = "bad.mp3";
             var tagReader = new TagReader();
             var tagCreatorMock = Substitute.For<TagCreator>();
-            tagCreatorMock.Create(testPath).Returns(x => { throw new Exception(); });
+            tagCreatorMock.Create(testPath).Returns(x => { throw new TestException("dummy"); });
             tagReader.TagCreator = tagCreatorMock;
             var ex = Assert.Throws<TagReaderException>(() => { tagReader.Read(testPath); });
-            Assert.AreEqual("Can't open `bad.mp3`.", ex.Message);
+            Assert.That(ex is null || "Can't open `bad.mp3`." == ex.Message);
         }
     }
 }
