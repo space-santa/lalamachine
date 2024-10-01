@@ -1,0 +1,30 @@
+<div class="w3-row w3-card w3-blue-gray w3-small">
+  <button class="w3-button w3-col s1 l1 w3-center">Track</button>
+  <button class="w3-button w3-col s1 l1 w3-center">Disc</button>
+  <button class="w3-button w3-col s6 l2 w3-center">Title</button>
+  <button class="w3-button w3-col s4 l2 w3-center">Artist</button>
+  <button class="w3-button w3-col s1 l1 w3-center">Comment</button>
+  <button class="w3-button w3-col s1 l1 w3-center">Length</button>
+  <button class="w3-button w3-col s6 l2 w3-center">Album</button>
+  <button class="w3-button w3-col s3 l1 w3-center">Genre</button>
+  <button class="w3-button w3-col s1 l1 w3-center">Year</button>
+</div>
+<div class="full-height with-scrollbar">
+  <div
+    class="w3-card w3-padding w3-row w3-hover-gray"
+    [ngClass]="currentIndex === i ? 'w3-orange' : 'w3-dark-gray'"
+    *ngFor="let track of tracks; index as i"
+    (click)="playTrack(i)"
+    style="cursor: pointer"
+  >
+    <div class="w3-col s1 l1 w3-center">{{ track.trackNumber }}</div>
+    <div class="w3-col s1 l1 w3-center">{{ track.discNumber }}</div>
+    <div class="w3-col s6 l2 w3-center">{{ track.title }}</div>
+    <div class="w3-col s4 l2 w3-center">{{ track.artistName }}</div>
+    <div class="w3-col s1 l1 w3-center">{{ track.comment }}</div>
+    <div class="w3-col s1 l1 w3-center">{{ track.length }}</div>
+    <div class="w3-col s6 l2 w3-center">{{ track.albumName }}</div>
+    <div class="w3-col s3 l1 w3-center">{{ track.genreName }}</div>
+    <div class="w3-col s1 l1 w3-right-align">{{ track.year }}</div>
+  </div>
+</div>
