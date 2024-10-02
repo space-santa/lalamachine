@@ -51,26 +51,26 @@ Rectangle {
     // This setter is necessary to make sure that latest changes to the list are
     // remembered when a new playlist is loaded.
     function setCurrentPlaylist(name) {
-        writeCurrentListIfNamed()
-        currentName = name
+        writeCurrentListIfNamed();
+        currentName = name;
     }
 
     function writeCurrentListIfNamed() {
         if (playlistIsNamed()) {
-            writePlaylist(currentPlaylist)
+            writePlaylist(currentPlaylist);
         }
     }
 
     onCurrentNameChanged: {
         if (currentName != "") {
-            readPlaylist(currentName)
+            readPlaylist(currentName);
         }
     }
 
     onRowPlayingChanged: {
-        playlist_view.selection.clear()
-        playlist_view.selection.select(rowPlaying)
-        nowPlayingTitle = playlist_model.get(rowPlaying).title
+        playlist_view.selection.clear();
+        playlist_view.selection.select(rowPlaying);
+        nowPlayingTitle = playlist_model.get(rowPlaying).title;
     }
 
     // MetadataProvider {
@@ -127,35 +127,35 @@ Rectangle {
     }
 
     function playlistIsNamed() {
-        return !(currentName === miscPlaylistName || currentName === "")
+        return !(currentName === miscPlaylistName || currentName === "");
     }
 
     function showSaveDialog() {
-        save_playlist_dialog.visible = true
+        save_playlist_dialog.visible = true;
     }
 
     function deletePlaylist(listname) {
-        m3u.deletePlaylist(listname)
+        m3u.deletePlaylist(listname);
         if (listname === currentName) {
-            createNewList()
+            createNewList();
         }
     }
 
     SavePlaylistDialog {
         id: save_playlist_dialog
         onAccepted: {
-            writePlaylist(save_playlist_dialog.playlistName)
-            save_playlist_dialog.visible = false
-            setCurrentPlaylist(save_playlist_dialog.playlistName)
+            writePlaylist(save_playlist_dialog.playlistName);
+            save_playlist_dialog.visible = false;
+            setCurrentPlaylist(save_playlist_dialog.playlistName);
         }
     }
 
     function getPlaylistPath(name) {
-        return m3u.playlistPath(name)
+        return m3u.playlistPath(name);
     }
 
     function playCurrentTrack() {
-        playRow(playlist_view.currentRow)
+        playRow(playlist_view.currentRow);
     }
 
     // We can't bind the property to this function because the property will
@@ -163,15 +163,15 @@ Rectangle {
     function updateNowPlayingRow() {
         for (var i = 0; i < playlist_model.count; ++i) {
             if (currentTitle === playlist_model.get(i)["title"]) {
-                rowPlaying = i
-                return
+                rowPlaying = i;
+                return;
             }
         }
     }
 
     function addToPlaylist(listname) {
-        addSelectionToPlaylist(listname)
-        playlist_view.selection.clear()
+        addSelectionToPlaylist(listname);
+        playlist_view.selection.clear();
     }
 
     // This function is adding the selection to the playlist.
@@ -184,157 +184,141 @@ Rectangle {
         // This is by design, so we return here if it is an unnamed list
         // (miscPlaylistName).
         if (!isLibrary && listname === miscPlaylistName) {
-            return
+            return;
         }
         // The main playlist has no option to add stuff to a new list ("").
         // That is what the clear list button is for. It is debatable if that
         // could be considered a bug / missing functionality, but I am happy
         // with that behaviour.
         if (!isLibrary && listname === "") {
-            return
+            return;
         }
         // This is relevant if this is the library view. The library can create a new list/add to the misc playlist.
         if (listname === "") {
-            mainPlaylist.createNewList()
-            listname = miscPlaylistName
+            mainPlaylist.createNewList();
+            listname = miscPlaylistName;
         }
-
         playlist_view.selection.forEach(function (rowIndex) {
-            mainPlaylist.add(playlist_model.get(rowIndex).path)
-        })
-
-        updateAndSave()
+            mainPlaylist.add(playlist_model.get(rowIndex).path);
+        });
+        updateAndSave();
     }
 
     function getSelectedRowIndices() {
-        var indices = []
-
+        var indices = [];
         playlist_view.selection.forEach(function (rowIndex) {
-            indices.push(rowIndex)
-        })
-
-        return indices
+            indices.push(rowIndex);
+        });
+        return indices;
     }
 
     function getSelectedTracks() {
-        var indices = getSelectedRowIndices()
-        var retval = []
-
+        var indices = getSelectedRowIndices();
+        var retval = [];
         for (var i = 0; i < indices.length; ++i) {
-            var row = indices[i]
-            retval.push(playlist_model.get(row))
+            var row = indices[i];
+            retval.push(playlist_model.get(row));
         }
-
-        return retval
+        return retval;
     }
 
     function clearSelection() {
-        playlist_view.selection.clear()
+        playlist_view.selection.clear();
     }
 
     function removeRows(rows) {
         for (var i = rows.length - 1; i >= 0; --i) {
-            playlist_model.remove(rows[i])
+            playlist_model.remove(rows[i]);
         }
-
-        playlist_model.updateTotalLength()
+        playlist_model.updateTotalLength();
     }
 
     function deleteSelection() {
-        var indices = getSelectedRowIndices()
-        clearSelection()
-
-        removeRows(indices)
-
+        var indices = getSelectedRowIndices();
+        clearSelection();
+        removeRows(indices);
         if (playlistIsNamed()) {
-            writePlaylist(currentName)
+            writePlaylist(currentName);
         }
     }
 
     function exportPlaylist(path) {
-        file_ex.exportPlaylist(path, getPathList())
+        file_ex.exportPlaylist(path, getPathList());
     }
 
     function getPathList() {
-        var list = []
-
+        var list = [];
         for (var i = 0; i < playlist_model.count; ++i) {
-            list[i] = playlist_model.get(i)["path"]
+            list[i] = playlist_model.get(i)["path"];
         }
-
-        return list
+        return list;
     }
 
     function writePlaylist(name) {
-        m3u.writePlaylist(name, JSON.stringify(getPathList()))
+        m3u.writePlaylist(name, JSON.stringify(getPathList()));
     }
 
     function readPlaylist(name) {
         // We use this function here because we want to keep the currentName.
-        emptyCurrentList()
+        emptyCurrentList();
         let files = JSON.parse(m3u.readPlaylist(name));
-
         for (var file of files) {
-            add(file)
+            add(file);
         }
     }
 
     function createNewList() {
-        clearList(true)
+        clearList(true);
     }
     function emptyCurrentList() {
-        clearList(false)
+        clearList(false);
     }
     function clearList(newlist) {
         if (newlist) {
-            setCurrentPlaylist("")
+            setCurrentPlaylist("");
         }
-        playlist_model.clear()
-        updateNowPlayingRow()
+        playlist_model.clear();
+        updateNowPlayingRow();
     }
 
     function addList(list) {
         for (var i = 0; i < list.length; ++i) {
-            add(list[i].toString())
+            add(list[i].toString());
         }
     }
 
     function addJsonList(json, clear) {
         if (!json) {
-            return
+            return;
         }
-
-        playlist_model.fromJson(json, clear)
+        playlist_model.fromJson(json, clear);
         if (isLibrary) {
-            playlist_model.defaultSort()
+            playlist_model.defaultSort();
         }
-        updateNowPlayingRow()
+        updateNowPlayingRow();
     }
 
     function add(path) {
         if (typeof (path) === "undefined" || path === "") {
-            return
+            return;
         }
 
         // First check the dbase here.
-        var tmp = JSON.parse(musicLib.getMetadataForMrl(path))
+        var tmp = JSON.parse(musicLib.getMetadataForMrl(path));
         if (!tmp || !tmp.title) {
             // Only get the metadata from taglib if its not in the dbase
             // because it takes about forever.
-            tmp = setId(meta.metaDataAsJson(path))
-            console.log("INFO: Had to get metadate from taglib for", path)
+            tmp = setId(meta.metaDataAsJson(path));
+            console.log("INFO: Had to get metadate from taglib for", path);
         }
-
-        playlist_model.appendTags(tmp)
-        playlist_model.updateTotalLength()
-
+        playlist_model.appendTags(tmp);
+        playlist_model.updateTotalLength();
     }
 
     function updateAndSave() {
-        updateNowPlayingRow()
-
+        updateNowPlayingRow();
         if (playlistIsNamed()) {
-            writePlaylist(currentName)
+            writePlaylist(currentName);
         }
     }
 
@@ -343,62 +327,61 @@ Rectangle {
     // This is necessary because the mrl can't be the unique id, since a track
     // can be added multiple times.
     function setId(json) {
-        json['id'] = playlist_model.count
-        return json
+        json['id'] = playlist_model.count;
+        return json;
     }
 
     function playRow(row) {
-        rowPlaying = row
-        currentTitle = playlist_model.get(row)["title"]
-        play(playlist_model.get(row)["path"], currentTitle, playlist_model.get(row)["artist"])
-        playlist_view.currentRow = rowPlaying
+        rowPlaying = row;
+        currentTitle = playlist_model.get(row)["title"];
+        play(playlist_model.get(row)["path"], currentTitle, playlist_model.get(row)["artist"]);
+        playlist_view.currentRow = rowPlaying;
     }
 
     function hasNext() {
-        return rowPlaying < playlist_model.count - 1
+        return rowPlaying < playlist_model.count - 1;
     }
 
     function getRandomNext() {
-        var rand = rowPlaying
+        var rand = rowPlaying;
         while (rand === rowPlaying) {
-            rand = Functions.randomInt(0, playlist_model.count - 1)
+            rand = Functions.randomInt(0, playlist_model.count - 1);
         }
-        return rand
+        return rand;
     }
 
     function playNext(random) {
         // Random has to be checked first because hasNext catches almost all.
         if (random) {
-            console.log("playNext random")
-            playRow(getRandomNext())
+            console.log("playNext random");
+            playRow(getRandomNext());
         } else if (hasNext()) {
-            console.log("playNext has next")
-            playRow(rowPlaying + 1)
+            console.log("playNext has next");
+            playRow(rowPlaying + 1);
         } else if (repeatAll) {
-            console.log("playNext repeat all")
-            playRow(0)
+            console.log("playNext repeat all");
+            playRow(0);
         } else {
-            console.log("playlist finished")
+            console.log("playlist finished");
         }
     }
 
     function hasPrevious() {
-        return rowPlaying > 0
+        return rowPlaying > 0;
     }
 
     function playPrevious() {
         if (hasPrevious()) {
-            playRow(rowPlaying - 1)
+            playRow(rowPlaying - 1);
         }
     }
 
     function modelToArray(model) {
-        var retval = []
+        var retval = [];
         for (var i = 0; i < model.count; ++i) {
-            retval[i] = model.get(i)
+            retval[i] = model.get(i);
         }
-
-        return retval
+        return retval;
     }
 
     PlaylistModel {

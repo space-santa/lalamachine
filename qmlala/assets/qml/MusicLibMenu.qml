@@ -10,16 +10,15 @@ Menu {
         text: "Rescan"
         icon.source: "../images/refresh.png"
         onTriggered: {
-            rescanLibrary()
+            rescanLibrary();
         }
     }
-    MenuSeparator {
-    }
+    MenuSeparator {}
     MenuItem {
         text: "Set library"
         icon.source: "../images/preferences.png"
         onTriggered: {
-            showSetLibraryDialog()
+            showSetLibraryDialog();
         }
     }
 }

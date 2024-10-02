@@ -35,69 +35,65 @@ Rectangle {
     signal rightClick
 
     onStringListChanged: {
-        list_model.clear()
-
+        list_model.clear();
         for (var i = 0; i < stringList.length; ++i) {
             list_model.append({
-                                  content: stringList[i]
-                              })
+                content: stringList[i]
+            });
         }
     }
 
     Component.onCompleted: reset()
 
     function reset() {
-        if(typeof list_view.selection !== "undefined") {
-            list_view.selection.select(0)
+        if (typeof list_view.selection !== "undefined") {
+            list_view.selection.select(0);
         }
     }
 
     function getSelection() {
         if (list_model.get(list_view.currentRow)) {
-            return list_model.get(list_view.currentRow).content
+            return list_model.get(list_view.currentRow).content;
         } else {
-            return ""
+            return "";
         }
     }
 
     function sort(how) {
         if (list_model.count < 2) {
-            return
+            return;
         }
-
         if (!container.allowSort) {
-            return
+            return;
         }
-
-        var sorter
+        var sorter;
         if (how === 0) {
-            sorter = contentAsc
+            sorter = contentAsc;
         } else {
-            sorter = contentDes
+            sorter = contentDes;
         }
-
         for (var i = 0; i < list_model.count; ++i) {
             if (i < 1) {
-                continue
+                continue;
             }
             if (i === 1) {
                 // if 0 is not < 1 move 0 to 1
                 if (sorter(1, 0)) {
-                    list_model.move(0, 1, 1)
+                    list_model.move(0, 1, 1);
                 }
-                continue
+                continue;
             }
             if (sorter(i, i - 1)) {
-                list_model.move(i - 1, i, 1)
-                i -= 2
+                list_model.move(i - 1, i, 1);
+                i -= 2;
             }
         }
     }
     function contentAsc(i, j) {
-        return list_model.get(i).content < list_model.get(j).content
+        return list_model.get(i).content < list_model.get(j).content;
     }
     function contentDes(i, j) {
-        return list_model.get(i).content > list_model.get(j).content
+        return list_model.get(i).content > list_model.get(j).content;
     }
 
     ListModel {
@@ -119,15 +115,15 @@ Rectangle {
             // style: TableStyle {
             // }
 
-
             // I found the horizontal scrollbars annoying for this lists.
             // They take up too much space and don't really give better info
             // when searching through e.g. a list of genres.
             //horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             onCurrentRowChanged: {
-                selection.clear()
-                selection.select(currentRow)
+                selection.clear();
+                selection.select(currentRow);
             }
+
             // TableViewColumn {
             //     role: "content"
             //     title: container.roleString
@@ -136,7 +132,7 @@ Rectangle {
 
             onModelChanged: {
                 if (list_model.rowCount() > 0) {
-                    list_view.clearColumnWidths()
+                    list_view.clearColumnWidths();
                 }
             }
 

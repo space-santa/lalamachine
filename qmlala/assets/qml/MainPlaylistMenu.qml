@@ -33,23 +33,20 @@ Menu {
         onTriggered: showSavePlaylistDialog()
     }
 
-    MenuSeparator {
-    }
+    MenuSeparator {}
     PlaylistMenu {
         id: delete_menu
         title: "Delete"
         icon.source: "../images/delete.png"
         onSelected: deletePlaylist(listname)
     }
-    MenuSeparator {
-    }
+    MenuSeparator {}
     MenuItem {
         text: "Export Files"
         icon.source: "../images/export.png"
         onTriggered: openExportDialog()
     }
-    MenuSeparator {
-    }
+    MenuSeparator {}
     MenuItem {
         text: "Settings"
         icon.source: "../images/preferences.png"

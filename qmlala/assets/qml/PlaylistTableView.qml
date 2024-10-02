@@ -1,4 +1,4 @@
-﻿import QtQuick
+import QtQuick
 import QtQuick.Controls
 import Qt.labs.qmlmodels
 
@@ -8,6 +8,7 @@ TableView {
     id: playlist_view
     model: PlaylistTableModel {}
     selectionMode: TableView.ExtendedSelection
+
     // backgroundVisible: true
 
     // style: TableStyle {
@@ -20,6 +21,7 @@ TableView {
     property int mouseY
     property int containerHeight
     property int initialRow
+
     // property int currentRow
 
     Component.onCompleted: setColumns()
@@ -46,28 +48,28 @@ TableView {
 
     onActiveFocusChanged: {
         if (!focus) {
-            ctrlPressed = false
-            shiftPressed = false
+            ctrlPressed = false;
+            shiftPressed = false;
         }
     }
 
     Keys.onPressed: {
         if (event.key === Qt.Key_Control) {
-            shiftPressed = false
-            ctrlPressed = true
+            shiftPressed = false;
+            ctrlPressed = true;
         }
         if (event.key === Qt.Key_Shift) {
-            ctrlPressed = false
-            shiftPressed = true
+            ctrlPressed = false;
+            shiftPressed = true;
         }
     }
 
     Keys.onReleased: {
         if (event.key === Qt.Key_Control) {
-            ctrlPressed = false
+            ctrlPressed = false;
         }
         if (event.key === Qt.Key_Shift) {
-            shiftPressed = false
+            shiftPressed = false;
         }
     }
 
@@ -75,32 +77,29 @@ TableView {
         // Since the library can't play tracks in order,
         // moving them around doesn't make sense.
         if (isLibrary) {
-            return
+            return;
         }
         // If ctrl or shift is pressed it's not dragging, it's selecting.
         if (ctrlPressed || shiftPressed) {
-            return
+            return;
         }
 
         // If the mouse button is not pressed, no drag.
         if (!leftPressed) {
-            return
+            return;
         }
-
-        var newRow = initialRow + mouseY / containerHeight
+        var newRow = initialRow + mouseY / containerHeight;
         // console.log("Current Row", currentRow, "New Row", newRow, "mouseY", mouseY, "cheight", containerHeight)
 
         if (newRow < 0) {
-            return
+            return;
         }
-
         if (Math.abs(newRow - initialRow) < 0.1) {
-            return
+            return;
         }
-
-        selection.clear()
-        model.move(currentRow, newRow, 1)
-        currentRow = newRow
+        selection.clear();
+        model.move(currentRow, newRow, 1);
+        currentRow = newRow;
     }
 
     // onClicked: {
@@ -119,79 +118,74 @@ TableView {
     // }
 
     function setColumns() {
-        model.clear()
-
+        model.clear();
         let columnsJson = JSON.parse(playlistColumns);
-
         for (let i = 0; i < columnsJson.length; ++i) {
             if (columnsJson[i].value) {
                 let columnString = buildColumnString(columnsJson[i].key);
                 var o = Qt.createQmlObject(columnString, playlist_view, "DynO");
-                playlist_view.addColumn(o)
+                playlist_view.addColumn(o);
             }
         }
     }
 
     function buildColumnString(tag) {
-        var width = 150
-        var title = tag
-
+        var width = 150;
+        var title = tag;
         if (tag === "track") {
-            width = 70
+            width = 70;
         }
         if (tag === "title") {
-            width = 250
+            width = 250;
         }
         if (tag === "comment") {
-            width = 100
+            width = 100;
         }
         if (tag === "length") {
-            width = 80
-            tag = "lengthString"
+            width = 80;
+            tag = "lengthString";
         }
         if (tag === "genre") {
-            width = 150
-            tag = "genreString"
+            width = 150;
+            tag = "genreString";
         }
         if (tag === "artist") {
-            width = 150
-            tag = "artistString"
+            width = 150;
+            tag = "artistString";
         }
         if (tag === "album") {
-            width = 150
+            width = 150;
         }
         if (tag === "year") {
-            width = 70
+            width = 70;
         }
         if (tag === "discNumber") {
-            width = 50
-            title = "Disc"
+            width = 50;
+            title = "Disc";
         }
-
-        return columnString(tag, title, width)
+        return columnString(tag, title, width);
     }
 
     function columnString(role, title, width) {
-        var retval = "import QtQuick 2.0;\n"
-        retval += "import QtQuick.Controls 1.2;\n"
-        retval += "TableViewColumn {\n"
-        retval += "role: \"" + role + "\";\n"
-        retval += "title: \"" + title + "\";\n"
-        retval += "width: " + width + "\n"
-        retval += "}"
-
-        return retval
+        var retval = "import QtQuick 2.0;\n";
+        retval += "import QtQuick.Controls 1.2;\n";
+        retval += "TableViewColumn {\n";
+        retval += "role: \"" + role + "\";\n";
+        retval += "title: \"" + title + "\";\n";
+        retval += "width: " + width + "\n";
+        retval += "}";
+        return retval;
     }
 
     onModelChanged: {
         if (model.rowCount() > 0) {
-            playlist_view.resizeColumnsToContents()
-            updateNowPlayingRow()
+            playlist_view.resizeColumnsToContents();
+            updateNowPlayingRow();
         }
     }
 
     function getColumnRole(col) {
-        return getColumn(col).role
+        return getColumn(col).role;
     }
 
     // sortIndicatorVisible: true

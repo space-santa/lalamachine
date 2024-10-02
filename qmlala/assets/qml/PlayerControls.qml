@@ -20,10 +20,10 @@ Rectangle {
     signal seek(var pos)
 
     function volumeUp() {
-        volume_control.volumeUp()
+        volume_control.volumeUp();
     }
     function volumeDown() {
-        volume_control.volumeDown()
+        volume_control.volumeDown();
     }
 
     Item {
@@ -44,7 +44,7 @@ Rectangle {
         albumArtist: Functions.getSafeValue(rawAlbumArtist)
 
         onSeek: {
-            container.seek(pos)
+            container.seek(pos);
         }
     }
 

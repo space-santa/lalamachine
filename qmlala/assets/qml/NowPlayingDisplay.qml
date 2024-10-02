@@ -65,13 +65,13 @@ Rectangle {
         // In fact they are the same, but I use this epsilon approach because
         // I don't trust JavaScripts check for equal.
         function changeRange() {
-            return Math.abs(value - (position/duration)) > 0.002
+            return Math.abs(value - (position / duration)) > 0.002;
         }
 
         onValueChanged: {
             if (changeRange()) {
-                console.log("seeking for " + value * duration)
-                seek(value * duration)
+                console.log("seeking for " + value * duration);
+                seek(value * duration);
             }
         }
     }
@@ -87,31 +87,27 @@ Rectangle {
         anchors.bottom: progress_timer.top
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignRight
-        text: getNowPlayingInfo() + Functions.millisToMinSec(
-                  progress_timer.value * duration) + " / " + Functions.millisToMinSec(
-                  duration)
+        text: getNowPlayingInfo() + Functions.millisToMinSec(progress_timer.value * duration) + " / " + Functions.millisToMinSec(duration)
         font.pointSize: 12
         font.family: "Helvetica"
         styleColor: "#000000"
         style: Text.Outline
 
         function getNowPlayingInfo() {
-            var retVal = ""
-
+            var retVal = "";
             if (title !== "") {
-                retVal += title
+                retVal += title;
             }
             if (typeof albumArtist !== "") {
                 if (retVal.length > 0) {
-                    retVal += " - "
+                    retVal += " - ";
                 }
-                retVal += albumArtist
+                retVal += albumArtist;
             }
             if (retVal.length > 0) {
-                retVal += " | "
+                retVal += " | ";
             }
-
-            return retVal
+            return retVal;
         }
     }
 }

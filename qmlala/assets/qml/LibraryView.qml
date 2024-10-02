@@ -42,41 +42,41 @@ Rectangle {
 
     function rescan(path) {
         if (!libview.scanInProgress) {
-            lib.rescan(path)
+            lib.rescan(path);
         }
     }
 
     function playNext(random) {
-        titles.playNext(random)
+        titles.playNext(random);
     }
 
     function playPrevious() {
-        titles.playPrevious()
+        titles.playPrevious();
     }
 
     function playCurrentTrack() {
-        titles.playCurrentTrack()
+        titles.playCurrentTrack();
     }
 
     MusicLib {
         id: lib
 
         function updateDisplayLib() {
-            var d = Date.now()
-            titles.emptyCurrentList()
-            titles.addJsonList(JSON.parse(displayLib), true)
-            console.log("Adding the list took", Date.now() - d, "ms.")
+            var d = Date.now();
+            titles.emptyCurrentList();
+            titles.addJsonList(JSON.parse(displayLib), true);
+            console.log("Adding the list took", Date.now() - d, "ms.");
         }
 
-        onScanDone: function() {
-            console.log("message: scan done")
-            scan_notifier.hide()
-            topShelve.updateLists()
+        onScanDone: function () {
+            console.log("message: scan done");
+            scan_notifier.hide();
+            topShelve.updateLists();
         }
 
         function rescan(path) {
             scan_notifier.show();
-            scanAsync(path)
+            scanAsync(path);
         }
     }
 
@@ -97,24 +97,24 @@ Rectangle {
 
             onHeightChanged: {
                 if (libsettings.isActive) {
-                    libsettings.libraryTopShelveHeight = height
+                    libsettings.libraryTopShelveHeight = height;
                 }
                 libsettings.isActive = true;
             }
 
             Component.onCompleted: {
                 if (libsettings.libraryTopShelveHeight > 0) {
-                    height = libsettings.libraryTopShelveHeight
+                    height = libsettings.libraryTopShelveHeight;
                 }
-                libsettings.isActive = true
-                updateLists()
+                libsettings.isActive = true;
+                updateLists();
             }
 
             function updateLists() {
-                genre_list.stringList = JSON.parse(lib.genreList)
-                album_list.stringList = JSON.parse(lib.albumList)
-                artist_list.stringList = JSON.parse(lib.artistList)
-                lib.updateDisplayLib()
+                genre_list.stringList = JSON.parse(lib.genreList);
+                album_list.stringList = JSON.parse(lib.albumList);
+                artist_list.stringList = JSON.parse(lib.artistList);
+                lib.updateDisplayLib();
             }
 
             StringListView {
@@ -127,11 +127,11 @@ Rectangle {
                 roleString: "genre"
                 stringList: lib.genreList
 
-                onSelectionChanged: function() {
+                onSelectionChanged: function () {
                     lib.genreFilter = selection;
-                    artist_list.stringList = JSON.parse(lib.artistList)
-                    album_list.stringList = JSON.parse(lib.albumList)
-                    lib.updateDisplayLib()
+                    artist_list.stringList = JSON.parse(lib.artistList);
+                    album_list.stringList = JSON.parse(lib.albumList);
+                    lib.updateDisplayLib();
                 }
             }
             StringListView {
@@ -145,10 +145,10 @@ Rectangle {
                 roleString: "artist"
                 stringList: lib.artistList
 
-                onSelectionChanged: function() {
+                onSelectionChanged: function () {
                     lib.artistFilter = selection;
-                    album_list.stringList = JSON.parse(lib.albumList)
-                    lib.updateDisplayLib()
+                    album_list.stringList = JSON.parse(lib.albumList);
+                    lib.updateDisplayLib();
                 }
             }
             StringListView {
@@ -161,13 +161,13 @@ Rectangle {
                 roleString: "album"
                 stringList: lib.albumList
 
-                onSelectionChanged: function() {
+                onSelectionChanged: function () {
                     lib.albumFilter = selection;
-                    lib.updateDisplayLib()
+                    lib.updateDisplayLib();
                 }
 
                 onRightClick: {
-                    rcm.popup()
+                    rcm.popup();
                 }
             }
 
@@ -176,16 +176,14 @@ Rectangle {
 
                 onAddToPlaylist: {
                     let clear = false;
-
                     if (listname === "") {
-                        mainPlaylist.createNewList()
-                        listname = miscPlaylistName
-                        clear = true
+                        mainPlaylist.createNewList();
+                        listname = miscPlaylistName;
+                        clear = true;
                     }
-
-                    var albumList = JSON.parse(musicLib.getAlbumTracks(album_list.selection))
-                    mainPlaylist.addJsonList(albumList, clear)
-                    mainPlaylist.updateAndSave()
+                    var albumList = JSON.parse(musicLib.getAlbumTracks(album_list.selection));
+                    mainPlaylist.addJsonList(albumList, clear);
+                    mainPlaylist.updateAndSave();
                 }
             }
         }
@@ -226,10 +224,10 @@ Rectangle {
 
                         placeholderText: "Filter..."
 
-                        onTextChanged: function() {
+                        onTextChanged: function () {
                             if (text.length > 2 || text.length < 1) {
-                                lib.searchString = text
-                                topShelve.updateLists()
+                                lib.searchString = text;
+                                topShelve.updateLists();
                             }
                         }
                     }
@@ -247,8 +245,8 @@ Rectangle {
                         onClicked: {
                             // Force onTextChanged if the search box is empty.
                             // This is to reset the genre / artist / album filter.
-                            filter_text.text = " "
-                            filter_text.text = ""
+                            filter_text.text = " ";
+                            filter_text.text = "";
                         }
                     }
                 }
@@ -263,8 +261,7 @@ Rectangle {
 
                     color: "transparent"
 
-                    onAddTracksToNamedPlaylist: m3u.addTracksToNamedPlaylist(
-                                                    listname, JSON.stringify(tracks))
+                    onAddTracksToNamedPlaylist: m3u.addTracksToNamedPlaylist(listname, JSON.stringify(tracks))
 
                     onPlay: lalaplayer.playTrack(path, title, artist)
                 }
@@ -304,12 +301,12 @@ Rectangle {
 
                 function show() {
                     height = 50;
-                    now_scanning_text.visible = true
+                    now_scanning_text.visible = true;
                 }
 
                 function hide() {
                     height = 0;
-                    now_scanning_text.visible = false
+                    now_scanning_text.visible = false;
                 }
 
                 TextBase {

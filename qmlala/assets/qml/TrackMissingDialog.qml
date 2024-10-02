@@ -17,9 +17,9 @@ Dialog {
         implicitWidth: 400
         implicitHeight: 100
         Text {
+            id: msg
             anchors.fill: parent
             verticalAlignment: Qt.AlignVCenter
-            id: msg
             wrapMode: Text.WordWrap
             anchors.centerIn: parent
         }

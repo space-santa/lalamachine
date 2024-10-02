@@ -34,16 +34,13 @@ ApplicationWindow {
     width: Screen.width / 2
     height: Screen.height / 2
     title: {
-        var title = ""
-
+        var title = "";
         if (lalaplayer.currentTitle !== "") {
-            title += lalaplayer.currentTitle
-            title += " | "
+            title += lalaplayer.currentTitle;
+            title += " | ";
         }
-
-        title += "lalamachine"
-
-        return title
+        title += "lalamachine";
+        return title;
     }
 
     minimumHeight: 500
@@ -63,57 +60,54 @@ ApplicationWindow {
 
     function getPlayingStatus() {
         if (playMusic.isPlaying) {
-            return true
+            return true;
         } else {
-            return false
+            return false;
         }
     }
 
     onXChanged: {
         if (settings.isActive) {
-            settings.x = master.x
+            settings.x = master.x;
         }
     }
     onYChanged: {
         if (settings.isActive) {
-            settings.y = master.y
+            settings.y = master.y;
         }
     }
     onHeightChanged: {
         if (settings.isActive) {
-            settings.height = master.height
+            settings.height = master.height;
         }
     }
     onWidthChanged: {
         if (settings.isActive) {
-            settings.width = master.width
+            settings.width = master.width;
         }
     }
 
     Component.onCompleted: {
-        playlist.setCurrentPlaylist(config.lastPlaylist)
-
+        playlist.setCurrentPlaylist(config.lastPlaylist);
         if (settings.x > 0) {
-            master.x = settings.x
+            master.x = settings.x;
         }
         if (settings.y > 0) {
-            master.y = settings.y
+            master.y = settings.y;
         }
         if (settings.height > 0) {
-            master.height = settings.height
+            master.height = settings.height;
         }
         if (settings.width > 0) {
-            master.width = settings.width
+            master.width = settings.width;
         }
-        settings.isActive = true
-
+        settings.isActive = true;
         if (settings.showPlaylist) {
-            show_list_action.trigger()
+            show_list_action.trigger();
         } else {
-            show_musiclib_action.trigger()
+            show_musiclib_action.trigger();
         }
-
-        m3u.updatePlaylistNames()
+        m3u.updatePlaylistNames();
     }
 
     Settings {
@@ -125,15 +119,14 @@ ApplicationWindow {
         // This looks like the last playlist is always saved as the misc playlist and then under its name when it has one.
         // That seems redundant because the last playlist is (should be) loaded when this is constructed.
         // TODO: This looks like it needs refactoring.
-        playlist.writePlaylist(miscPlaylistName)
+        playlist.writePlaylist(miscPlaylistName);
 
         // If the current list has a name we want to remember latest changes.
-        playlist.writeCurrentListIfNamed()
-
+        playlist.writeCurrentListIfNamed();
         if (currentPlaylist === "") {
-            config.lastPlaylist = miscPlaylistName
+            config.lastPlaylist = miscPlaylistName;
         } else {
-            config.lastPlaylist = currentPlaylist
+            config.lastPlaylist = currentPlaylist;
         }
     }
 
@@ -184,7 +177,7 @@ ApplicationWindow {
         onPlaylistNamesChanged: updatePlaylistNames()
 
         function updatePlaylistNames() {
-            main_playlist_menu.updatePlaylistNames(JSON.parse(m3u.allPlaylistNames))
+            main_playlist_menu.updatePlaylistNames(JSON.parse(m3u.allPlaylistNames));
         }
     }
 
@@ -253,12 +246,12 @@ ApplicationWindow {
         // tooltip: "Shortcut: " + shortcut
         onTriggered: {
             if (playMusic.isPlaying) {
-                playMusic.pause()
+                playMusic.pause();
             } else {
                 if (playMusic.hasAudio) {
-                    playMusic.play()
+                    playMusic.play();
                 } else {
-                    playlist.playNext()
+                    playlist.playNext();
                 }
             }
         }
@@ -275,8 +268,8 @@ ApplicationWindow {
         id: config
 
         onManualPlaylistColumnsChanged: function () {
-            playlist.playlistColumns = config.playlistColumns
-            libview.updateColumns(config.playlistColumns)
+            playlist.playlistColumns = config.playlistColumns;
+            libview.updateColumns(config.playlistColumns);
         }
     }
 
@@ -293,47 +286,47 @@ ApplicationWindow {
 
         onPlayingChanged: {
             if (playing === StoppedState && currentTrackIsAtEnd) {
-                playNextTrack()
+                playNextTrack();
             }
         }
 
         function playNextTrack() {
             if (left_shelve.z > right_shelve.z) {
-                left_shelve.playNext(player_controls.random)
+                left_shelve.playNext(player_controls.random);
             } else {
-                right_shelve.playNext(player_controls.random)
+                right_shelve.playNext(player_controls.random);
             }
         }
 
         function playPreviousTrack() {
             if (left_shelve.z > right_shelve.z) {
-                left_shelve.playPrevious()
+                left_shelve.playPrevious();
             } else {
-                right_shelve.playPrevious()
+                right_shelve.playPrevious();
             }
         }
 
         function playCurrentTrack() {
             if (left_shelve.z > right_shelve.z) {
-                left_shelve.playCurrent()
+                left_shelve.playCurrent();
             } else {
-                right_shelve.playCurrent()
+                right_shelve.playCurrent();
             }
         }
 
         function playTrack(path, title, artist) {
             var pathWithoutBackSlash = path.replace(/\\/g, "/");
-            playMusic.source = pathWithoutBackSlash
-            playMusic.play()
-            currentTitle = title
-            currentArtist = artist
+            playMusic.source = pathWithoutBackSlash;
+            playMusic.play();
+            currentTitle = title;
+            currentArtist = artist;
         }
 
         onErrorOccurred: {
-            miss_dialog.text = errorString
-            miss_dialog.text += "\nYou might want to delete that track"
-            miss_dialog.text += "\nfrom the playlist and/or rescan you library."
-            miss_dialog.open()
+            miss_dialog.text = errorString;
+            miss_dialog.text += "\nYou might want to delete that track";
+            miss_dialog.text += "\nfrom the playlist and/or rescan you library.";
+            miss_dialog.open();
         }
     }
 
@@ -345,31 +338,31 @@ ApplicationWindow {
         id: tab_group
         exclusive: true
     }
-        Action {
-            id: show_list_action
-            checkable: true
-            shortcut: "ctrl+h"
-            text: "Playlist"
-            // tooltip: "Shortcut: " + shortcut
-            onTriggered: {
-                left_shelve.z = 3
-                right_shelve.z = 1
-            }
-            ButtonGroup.group: tab_group
+    Action {
+        id: show_list_action
+        checkable: true
+        shortcut: "ctrl+h"
+        text: "Playlist"
+        // tooltip: "Shortcut: " + shortcut
+        onTriggered: {
+            left_shelve.z = 3;
+            right_shelve.z = 1;
         }
+        ButtonGroup.group: tab_group
+    }
 
-        Action {
-            id: show_musiclib_action
-            checkable: true
-            shortcut: "ctrl+l"
-            // tooltip: "Shortcut: " + shortcut
-            text: "Library"
-            onTriggered: {
-                left_shelve.z = 1
-                right_shelve.z = 3
-            }
-            ButtonGroup.group: tab_group
+    Action {
+        id: show_musiclib_action
+        checkable: true
+        shortcut: "ctrl+l"
+        // tooltip: "Shortcut: " + shortcut
+        text: "Library"
+        onTriggered: {
+            left_shelve.z = 1;
+            right_shelve.z = 3;
         }
+        ButtonGroup.group: tab_group
+    }
 
     Item {
         id: tab_container
@@ -440,15 +433,15 @@ ApplicationWindow {
             color: "transparent"
 
             function playNext(random) {
-                playlist.playNext(random)
+                playlist.playNext(random);
             }
 
             function playPrevious() {
-                playlist.playPrevious()
+                playlist.playPrevious();
             }
 
             function playCurrent() {
-                playlist.playCurrentTrack()
+                playlist.playCurrentTrack();
             }
 
             Rectangle {
@@ -466,15 +459,14 @@ ApplicationWindow {
                     repeatAll: player_controls.repeatAll
                     nowPlayingSource: playMusic.source
 
-                    onAddTracksToNamedPlaylist: m3u.addTracksToNamedPlaylist(
-                                                    listname, JSON.stringify(tracks))
+                    onAddTracksToNamedPlaylist: m3u.addTracksToNamedPlaylist(listname, JSON.stringify(tracks))
 
                     onStop: {
-                        playMusic.stop()
+                        playMusic.stop();
                     }
 
                     onPlay: {
-                        playMusic.playTrack(path, title, artist)
+                        playMusic.playTrack(path, title, artist);
                     }
                 }
 
@@ -495,18 +487,14 @@ ApplicationWindow {
                     style: Text.Outline
 
                     function buildText() {
-                        var retval = ""
-                        if (playlist.currentName === ""
-                                || playlist.currentName === miscPlaylistName) {
-                            retval += "new list" + " -- "
+                        var retval = "";
+                        if (playlist.currentName === "" || playlist.currentName === miscPlaylistName) {
+                            retval += "new list" + " -- ";
                         } else {
-                            retval += playlist.currentName + " -- "
+                            retval += playlist.currentName + " -- ";
                         }
-
-                        retval += playlist.count + " Tracks, Total length = "
-                                + playlist.totalPlaytimeString
-
-                        return retval
+                        retval += playlist.count + " Tracks, Total length = " + playlist.totalPlaytimeString;
+                        return retval;
                     }
                 }
             }
@@ -522,15 +510,15 @@ ApplicationWindow {
             color: "transparent"
 
             function playNext(random) {
-                libview.playNext(random)
+                libview.playNext(random);
             }
 
             function playPrevious() {
-                libview.playPrevious()
+                libview.playPrevious();
             }
 
             function playCurrentTrack() {
-                libview.playCurrentTrack()
+                libview.playCurrentTrack();
             }
 
             LibraryView {
@@ -539,8 +527,8 @@ ApplicationWindow {
                 library: config.libPath
 
                 onAddTrack: {
-                    playlist.add(path)
-                    playlist.updateAndSave()
+                    playlist.add(path);
+                    playlist.updateAndSave();
                 }
             }
         }
@@ -570,7 +558,7 @@ ApplicationWindow {
         }
 
         onSeek: {
-            lalaplayer.seek(pos)
+            lalaplayer.seek(pos);
         }
     }
 
@@ -581,30 +569,31 @@ ApplicationWindow {
         nameFilters: ["Audio files (*.mp3 *.m4a *.ogg *.wav)"]
 
         onAccepted: {
-            console.log("You chose: " + fileDialog.fileUrls)
-            playlist.addList(fileDialog.fileUrls)
-            visible = false
+            console.log("You chose: " + fileDialog.fileUrls);
+            playlist.addList(fileDialog.fileUrls);
+            visible = false;
         }
         onRejected: {
-            console.log("Canceled")
-            visible = false
+            console.log("Canceled");
+            visible = false;
         }
     }
 
     FileDialog {
         id: lib_dialog
         title: "Please set your library"
+
         // selectMultiple: false
         // selectExisting: true
         // selectFolder: true
 
         onAccepted: {
-            config.libPath = lib_dialog.folder
-            libview.rescan(config.libPath)
-            visible = false
+            config.libPath = lib_dialog.folder;
+            libview.rescan(config.libPath);
+            visible = false;
         }
         onRejected: {
-            visible = false
+            visible = false;
         }
     }
 
@@ -614,15 +603,15 @@ ApplicationWindow {
 
         onAccepted: {
             // We want to export the files into a folder 'playlist name'.
-            var lalaname = currentPlaylist
+            var lalaname = currentPlaylist;
             if (lalaname === miscPlaylistName || lalaname.length < 1) {
-                lalaname = "new list"
+                lalaname = "new list";
             }
-            playlist.exportPlaylist(export_dialog.folder + "/" + lalaname)
-            close()
+            playlist.exportPlaylist(export_dialog.folder + "/" + lalaname);
+            close();
         }
         onRejected: {
-            close()
+            close();
         }
     }
 }

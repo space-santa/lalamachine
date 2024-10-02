@@ -36,63 +36,63 @@ ImageButton {
 
     onNoneChanged: {
         if (none) {
-            console.log("none")
-            selectionChanged()
+            console.log("none");
+            selectionChanged();
         }
     }
     onRepeatAllChanged: {
         if (repeatAll) {
-            console.log("repeatAll")
-            selectionChanged()
+            console.log("repeatAll");
+            selectionChanged();
         }
     }
     onRepeatOneChanged: {
         if (repeatOne) {
-            console.log("repeatOne")
-            selectionChanged()
+            console.log("repeatOne");
+            selectionChanged();
         }
     }
     onRandomChanged: {
         if (random) {
-            console.log("random")
-            selectionChanged()
+            console.log("random");
+            selectionChanged();
         }
     }
 
     function checkSelection() {
         if (none) {
-            repeatAll = false
-            repeatOne = false
-            random = false
+            repeatAll = false;
+            repeatOne = false;
+            random = false;
         }
         if (repeatAll) {
-            none = false
-            repeatOne = false
-            random = false
+            none = false;
+            repeatOne = false;
+            random = false;
         }
         if (repeatOne) {
-            none = false
-            repeatAll = false
-            random = false
+            none = false;
+            repeatAll = false;
+            random = false;
         }
         if (random) {
-            repeatAll = false
-            repeatOne = false
-            none = false
+            repeatAll = false;
+            repeatOne = false;
+            none = false;
         }
     }
 
     function imageSource() {
         if (repeatOne) {
-            return "../images/repeat1.png"
+            return "../images/repeat1.png";
         }
         if (repeatAll) {
-            return "../images/repeatAll.png"
+            return "../images/repeatAll.png";
         }
         if (random) {
-            return "../images/random.png"
+            return "../images/random.png";
         }
-        return "../images/repeat_random.png"
+        return "../images/repeat_random.png";
     }
 
     MouseArea {
@@ -100,17 +100,17 @@ ImageButton {
 
         onClicked: {
             if (none) {
-                none = false
-                repeatAll = true
+                none = false;
+                repeatAll = true;
             } else if (repeatAll) {
-                repeatAll = false
-                repeatOne = true
+                repeatAll = false;
+                repeatOne = true;
             } else if (repeatOne) {
-                repeatOne = false
-                random = true
+                repeatOne = false;
+                random = true;
             } else {
-                random = false
-                none = true
+                random = false;
+                none = true;
             }
         }
     }

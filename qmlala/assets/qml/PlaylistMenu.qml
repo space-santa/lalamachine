@@ -27,11 +27,10 @@ Menu {
     signal selected(string listname)
 
     function populatePlaylistMenu(names) {
-        playlist_menu.clear()
+        playlist_menu.clear();
         for (var i = 0; i < names.length; ++i) {
             let name = names[i];
-            var o = Qt.createQmlObject(generateQbjectString(name),
-                                       playlist_menu, 'PlaylistMenu');
+            var o = Qt.createQmlObject(generateQbjectString(name), playlist_menu, 'PlaylistMenu');
             playlist_menu.insertItem(playlist_menu.items.length, o);
         }
     }
@@ -39,12 +38,11 @@ Menu {
     // This creates the string for a MenuItem with text 'name' that will call
     // the function 'trigger' with argument 'name'
     function generateQbjectString(name) {
-        var msg = "import QtQuick 2.0\n"
-        msg += "import QtQuick.Controls 1.2\n"
-        msg += "MenuItem {text: '"
-        msg += name
-        msg += "';\n onTriggered: selected(text);}"
-
-        return msg
+        var msg = "import QtQuick 2.0\n";
+        msg += "import QtQuick.Controls 1.2\n";
+        msg += "MenuItem {text: '";
+        msg += name;
+        msg += "';\n onTriggered: selected(text);}";
+        return msg;
     }
 }

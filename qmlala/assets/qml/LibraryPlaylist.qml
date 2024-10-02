@@ -8,7 +8,6 @@ LalaPlaylist {
     LibraryPlaylistRightClickMenu {
         id: rcm
         onAddToPlaylist: library_playlist.addToPlaylist(listname)
-        onAddToNamedPlaylist: library_playlist.addTracksToNamedPlaylist(
-                                  listname, getSelectedTracks())
+        onAddToNamedPlaylist: library_playlist.addTracksToNamedPlaylist(listname, getSelectedTracks())
     }
 }

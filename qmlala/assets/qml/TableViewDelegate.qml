@@ -49,12 +49,12 @@ Item {
             acceptedButtons: Qt.RightButton | Qt.LeftButton
             onClicked: {
                 if (mouse.button == Qt.RightButton) {
-                    console.log("Right-Click", styleData.row)
+                    console.log("Right-Click", styleData.row);
                     if (target.selection.count < 2) {
-                        target.selection.clear()
-                        target.selection.select(styleData.row)
+                        target.selection.clear();
+                        target.selection.select(styleData.row);
                     }
-                    rightClick(styleData.row)
+                    rightClick(styleData.row);
                 }
             }
 
@@ -66,18 +66,17 @@ Item {
                     // set the state to released when clicking into a row.
                     // This is to be sure that no drag is happening until we
                     // finished the preparations.
-                    container.released()
+                    container.released();
                     // Next we set the mouseY position to start with. This must
                     // happen before we set the pressed flag to aboid accidental
                     // 'jumping' which could happen if the pressed flag is set
                     // and a new mouseY is set. The view could assume that a
                     // drag happend because the Y coordinate changed.
-                    emitMouseYChanged()
+                    emitMouseYChanged();
                     // All preps are finished, set the pressed flag.
-                    container.pressed(styleData.row)
-
-                    target["clicked"](styleData.row)
-                    container.leftClicked(styleData.row)
+                    container.pressed(styleData.row);
+                    target["clicked"](styleData.row);
+                    container.leftClicked(styleData.row);
                 }
             }
 
@@ -89,12 +88,12 @@ Item {
                 // WARNING: Only do this for the left button. Else opening
                 // the right click menu might move tracks around.
                 if (pressedButtons === Qt.LeftButton) {
-                    emitMouseYChanged()
+                    emitMouseYChanged();
                 }
             }
 
             function emitMouseYChanged() {
-                container.mouseYChanged(mouseY, container.height, styleData.row)
+                container.mouseYChanged(mouseY, container.height, styleData.row);
             }
         }
     }

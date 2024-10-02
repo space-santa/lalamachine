@@ -29,8 +29,8 @@ Dialog {
 
     onAccepted: console.log("Saving the date " + name_field.text)
     onRejected: {
-        visible = false
-        name_field.text = ""
+        visible = false;
+        name_field.text = "";
     }
 
     Column {

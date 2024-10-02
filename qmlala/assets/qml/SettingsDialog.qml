@@ -29,7 +29,7 @@ Dialog {
 
     onAccepted: {
         let json = playlist_columns.getJson();
-        config.playlistColumns = JSON.stringify(json)
+        config.playlistColumns = JSON.stringify(json);
     }
 
     standardButtons: StandardButton.Ok | StandardButton.Cancel

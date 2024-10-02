@@ -24,35 +24,35 @@ Rectangle {
     color: "transparent"
 
     onValueChanged: {
-        lalaplayer.volume = value
+        lalaplayer.volume = value;
     }
 
     Component.onCompleted: {
-        value = config.volume
+        value = config.volume;
     }
 
     Component.onDestruction: {
-        config.volume = value
+        config.volume = value;
     }
 
     function volumeUp() {
-        var tmpvol = value
+        var tmpvol = value;
         if (tmpvol < 0.9) {
-            tmpvol += 0.1
+            tmpvol += 0.1;
         } else {
-            tmpvol = 1
+            tmpvol = 1;
         }
-        value = Math.round(tmpvol * 10) / 10
+        value = Math.round(tmpvol * 10) / 10;
     }
 
     function volumeDown() {
-        var tmpvol = value
+        var tmpvol = value;
         if (tmpvol > 0.1) {
-            tmpvol -= 0.1
+            tmpvol -= 0.1;
         } else {
-            tmpvol = 0
+            tmpvol = 0;
         }
-        value = Math.round(tmpvol * 10) / 10
+        value = Math.round(tmpvol * 10) / 10;
     }
 
     Rectangle {
@@ -74,7 +74,7 @@ Rectangle {
 
             function iconSize() {
                 // The icon should still be visible if volume is 0.
-                return parent.height * (0.25 + 0.75 * volume_slider.value)
+                return parent.height * (0.25 + 0.75 * volume_slider.value);
             }
         }
         Image {

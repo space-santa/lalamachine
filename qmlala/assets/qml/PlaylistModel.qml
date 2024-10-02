@@ -1,28 +1,28 @@
-﻿import QtQuick
+import QtQuick
 import QtQuick.Controls
 
 ListModel {
     id: playlist_model
     property int totalPlaytime: 0
 
-    function setLibrary(json){
+    function setLibrary(json) {
         for (var i = 0; i < json.length; ++i) {
             appendTags(json[i]);
         }
-        updateTotalLength()
+        updateTotalLength();
     }
 
     function appendTags(json) {
         // It is abit tricky to get data in and out of the model.
         // This is why we have to only append objects with keys that we want.
         // In particular, artist and artistString (and the genre equivalent) would cause problems.
-        let tmp = rowDataToTrackJson(json)
-        append(tmp)
+        let tmp = rowDataToTrackJson(json);
+        append(tmp);
     }
 
     function createCompare(what, order) {
         if (what.length < 1) {
-            return function(a, b) {
+            return function (a, b) {
                 if (a["album"] == b["album"] && a["discNumber"] == b["discNumber"] && a["track"] == b["track"])
                     return 0;
                 if (a["album"] == b["album"] && a["discNumber"] == b["discNumber"] && a["track"] < b["track"])
@@ -32,17 +32,16 @@ ListModel {
                 if (a["album"] < b["album"])
                     return -1;
                 return 1;
-            }
+            };
         }
-
-        let how = order === 0 ? 1 : -1
-        return function(a, b) {
+        let how = order === 0 ? 1 : -1;
+        return function (a, b) {
             if (a[what] < b[what])
                 return -1 * how;
             if (a[what] > b[what])
                 return 1 * how;
             return 0;
-        }
+        };
     }
 
     function defaultSort() {
@@ -50,19 +49,17 @@ ListModel {
     }
 
     function sortRole(role, order) {
-        console.log("sortRole:", role, order)
-        var list = toJson()
+        console.log("sortRole:", role, order);
+        var list = toJson();
         list = list.sort(createCompare(role, order));
-        fromJson(list, true)
+        fromJson(list, true);
     }
 
     function toJson() {
-        let retval = []
-
+        let retval = [];
         for (let i = 0; i < playlist_model.count; ++i) {
             retval.push(getTrackJsonAtIndex(i));
         }
-
         return retval;
     }
 
@@ -74,21 +71,21 @@ ListModel {
         // This function looks absolutely redundant.
         // Why not just pass in the original object, right?
         // The problem is that we must not have other keys, and for some reason `delete`ing them didn't work.
-        let tmp = {}
-        tmp["album"] = rowData.album
-        tmp["artistString"] = rowData.artistString
-        tmp["genreString"] = rowData.genreString
-        tmp["comment"] = rowData.comment
-        tmp["track"] = rowData.track
-        tmp["title"] = rowData.title
-        tmp["mrl"] = rowData.mrl
-        tmp["path"] = rowData.path
-        tmp["length"] = rowData.length
-        tmp["lengthString"] = rowData.lengthString
-        tmp["year"] = rowData.year
-        tmp["discNumber"] = rowData.discNumber
-        tmp["id"] = rowData.id
-        return tmp
+        let tmp = {};
+        tmp["album"] = rowData.album;
+        tmp["artistString"] = rowData.artistString;
+        tmp["genreString"] = rowData.genreString;
+        tmp["comment"] = rowData.comment;
+        tmp["track"] = rowData.track;
+        tmp["title"] = rowData.title;
+        tmp["mrl"] = rowData.mrl;
+        tmp["path"] = rowData.path;
+        tmp["length"] = rowData.length;
+        tmp["lengthString"] = rowData.lengthString;
+        tmp["year"] = rowData.year;
+        tmp["discNumber"] = rowData.discNumber;
+        tmp["id"] = rowData.id;
+        return tmp;
     }
 
     function fromJson(json, clearList) {
@@ -100,11 +97,9 @@ ListModel {
 
     function updateTotalLength() {
         let totalLength = 0;
-
         for (let i = 0; i < playlist_model.count; ++i) {
             totalLength += getTrackJsonAtIndex(i).length;
         }
-
-        totalPlaytime = totalLength
+        totalPlaytime = totalLength;
     }
 }
