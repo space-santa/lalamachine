@@ -25,8 +25,6 @@ import QtMultimedia
 
 import Lala 1.0
 
-import "./functions.js" as Functions
-
 ApplicationWindow {
     id: master
     visible: true
@@ -147,10 +145,10 @@ ApplicationWindow {
         MainPlaylistMenu {
             id: main_playlist_menu
             saveAction: save_current_list_action
-            onOpenPlaylist: playlist.setCurrentPlaylist(listname)
+            onOpenPlaylist: listname => playlist.setCurrentPlaylist(listname)
             onSaveCurrentPlaylist: playlist.writeCurrentListIfNamed()
             onShowSavePlaylistDialog: playlist.showSaveDialog()
-            onDeletePlaylist: playlist.deletePlaylist(listname)
+            onDeletePlaylist: listname => playlist.deletePlaylist(listname)
             onOpenExportDialog: export_dialog.open()
             onOpenSettingsDialog: settings_dialog.open()
         }
@@ -183,7 +181,7 @@ ApplicationWindow {
 
     Action {
         id: save_current_list_action
-        shortcut: StandardKey.save
+        shortcut: StandardKey.Save
         // tooltip: "Shortcut: " + shortcut
         onTriggered: playlist.writeCurrentListIfNamed()
         enabled: playlist.playlistIsNamed()
@@ -459,13 +457,13 @@ ApplicationWindow {
                     repeatAll: player_controls.repeatAll
                     nowPlayingSource: playMusic.source
 
-                    onAddTracksToNamedPlaylist: m3u.addTracksToNamedPlaylist(listname, JSON.stringify(tracks))
+                    onAddTracksToNamedPlaylist: (listname, tracks) => m3u.addTracksToNamedPlaylist(listname, JSON.stringify(tracks))
 
                     onStop: {
                         playMusic.stop();
                     }
 
-                    onPlay: {
+                    onPlay: function (path, title, artist) {
                         playMusic.playTrack(path, title, artist);
                     }
                 }
@@ -488,7 +486,7 @@ ApplicationWindow {
 
                     function buildText() {
                         var retval = "";
-                        if (playlist.currentName === "" || playlist.currentName === miscPlaylistName) {
+                        if (playlist.currentName === "" || playlist.currentName === master.miscPlaylistName) {
                             retval += "new list" + " -- ";
                         } else {
                             retval += playlist.currentName + " -- ";
@@ -526,7 +524,7 @@ ApplicationWindow {
                 anchors.fill: parent
                 library: config.libPath
 
-                onAddTrack: {
+                onAddTrack: function (path) {
                     playlist.add(path);
                     playlist.updateAndSave();
                 }
@@ -540,11 +538,11 @@ ApplicationWindow {
         anchors.right: parent.right
         anchors.left: parent.left
 
-        rawTitle: lalaplayer.currentTitle
-        rawAlbumArtist: lalaplayer.currentArtist
-        duration: lalaplayer.duration
-        position: lalaplayer.position
-        hasAudio: lalaplayer.hasAudio
+        rawTitle: master.lalaplayer.currentTitle
+        rawAlbumArtist: master.lalaplayer.currentArtist
+        duration: master.lalaplayer.duration
+        position: master.lalaplayer.position
+        hasAudio: master.lalaplayer.hasAudio
 
         gradient: Gradient {
             GradientStop {
@@ -557,8 +555,8 @@ ApplicationWindow {
             }
         }
 
-        onSeek: {
-            lalaplayer.seek(pos);
+        onSeek: function (pos) {
+            master.lalaplayer.seek(pos);
         }
     }
 
@@ -603,8 +601,8 @@ ApplicationWindow {
 
         onAccepted: {
             // We want to export the files into a folder 'playlist name'.
-            var lalaname = currentPlaylist;
-            if (lalaname === miscPlaylistName || lalaname.length < 1) {
+            var lalaname = master.currentPlaylist;
+            if (lalaname === master.miscPlaylistName || lalaname.length < 1) {
                 lalaname = "new list";
             }
             playlist.exportPlaylist(export_dialog.folder + "/" + lalaname);

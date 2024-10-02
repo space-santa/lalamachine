@@ -1,14 +1,28 @@
-# EditorConfig is awesome: https://EditorConfig.org
-# This file is mostly copied from dotnet/roslyn which is Apache 2.0 licensed.
 
-# top-most EditorConfig file
+# Editor configuration, see https://editorconfig.org
 root = true
 
-# Don't use tabs for indentation.
 [*]
+charset = utf-8
 indent_style = space
-# (Please don't specify an indent_size here; that has too many unintended consequences.)
+indent_size = 4
 insert_final_newline = true
+trim_trailing_whitespace = true
+end_of_line = lf
+max_line_length = 120
+
+[*.py]
+indent_size = 4
+
+[*.yml]
+indent_size = 2
+
+[*.md]
+max_line_length = off
+trim_trailing_whitespace = false
+
+[Makefile]
+indent_style = tab
 
 # Code files
 [*.{cs,csx,vb,vbx}]

@@ -1,5 +1,5 @@
 // import QtQuick.Controls.Styles 1.4
-import QtQuick
+// import QtQuick
 
 // SliderStyle {
 //     groove: Rectangle {

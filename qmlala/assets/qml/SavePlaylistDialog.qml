@@ -18,7 +18,6 @@ along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Dialogs
 
 Dialog {
     id: savePlaylistDialog

@@ -14,7 +14,7 @@ TableView {
     // style: TableStyle {
     // }
 
-    property var playlistColumns: playlist_container.playlistColumns
+    property var playlistColumns
 
     // These values are required for drag and move. For a explanation,
     // see TableViewDelegate.qml.
@@ -179,7 +179,7 @@ TableView {
 
     onModelChanged: {
         if (model.rowCount() > 0) {
-            playlist_view.resizeColumnsToContents();
+            playlist_view.resizeContent();
             updateNowPlayingRow();
         }
     }

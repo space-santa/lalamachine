@@ -16,8 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
-import QtQuick 2.0
-import QtQuick.Controls 1.2
+import QtQuick
 
 Item {
     id: container
@@ -47,7 +46,7 @@ Item {
         MouseArea {
             anchors.fill: parent
             acceptedButtons: Qt.RightButton | Qt.LeftButton
-            onClicked: {
+            onClicked: function(mouse) {
                 if (mouse.button == Qt.RightButton) {
                     console.log("Right-Click", styleData.row);
                     if (target.selection.count < 2) {
@@ -60,7 +59,7 @@ Item {
 
             onDoubleClicked: container.doubleClicked(styleData.row)
 
-            onPressed: {
+            onPressed: function(mouse) {
                 if (mouse.button == Qt.LeftButton) {
                     // For drag and click to work properly we need to first
                     // set the state to released when clicking into a row.

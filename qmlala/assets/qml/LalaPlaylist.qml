@@ -391,6 +391,7 @@ Rectangle {
     PlaylistTableView {
         id: playlist_view
         model: playlist_model
+        playlistColumns: playlist_container.playlistColumns
         anchors.fill: parent
     }
 }

@@ -17,9 +17,6 @@ You should have received a copy of the GNU General Public License
 along with lalamachine.  If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick
-import QtQuick.Controls
-
-import Lala 1.0
 
 Rectangle {
     id: container
@@ -120,8 +117,8 @@ Rectangle {
             // when searching through e.g. a list of genres.
             //horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             onCurrentRowChanged: {
-                selection.clear();
-                selection.select(currentRow);
+                container.selection.clear();
+                container.selection.select(currentRow);
             }
 
             // TableViewColumn {
@@ -178,7 +175,7 @@ Rectangle {
                 visible: true
 
                 // Since --all-- is counted, count minus 1.
-                text: roleString + " count: " + (list_model.count - 1)
+                text: container.roleString + " count: " + (list_model.count - 1)
                 color: "#ffffff"
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
