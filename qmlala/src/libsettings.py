@@ -1,8 +1,9 @@
-from PySide6.QtCore import QObject, Signal, Property
+from PySide6.QtCore import Property, QObject, Signal
 from PySide6.QtQml import QmlElement
 
 QML_IMPORT_NAME = "Lala"
 QML_IMPORT_MAJOR_VERSION = 1
+
 
 @QmlElement
 class LibSettings(QObject):

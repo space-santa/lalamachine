@@ -1,8 +1,11 @@
-from PySide6.QtCore import QObject, Signal, Property
-from PySide6.QtQml import QmlElement
 import json
+
+from PySide6.QtCore import Property, QObject, Signal
+from PySide6.QtQml import QmlElement
+
 QML_IMPORT_NAME = "Lala"
 QML_IMPORT_MAJOR_VERSION = 1
+
 
 @QmlElement
 class MusicLib(QObject):
@@ -16,13 +19,14 @@ class MusicLib(QObject):
         super().__init__(parent)
         self._scanning = False
         self._searchString = ""
-        self._genreFilter= ""
+        self._genreFilter = ""
         self._artistFilter = ""
         self._albumFilter = ""
 
     @Property(bool, notify=scanDone)
     def scanning(self):
         return self._scanning
+
     @scanning.setter
     def scanning(self, value):
         self._scanning = value
@@ -30,6 +34,7 @@ class MusicLib(QObject):
     @Property(str)
     def searchString(self):
         return self._searchString
+
     @searchString.setter
     def searchString(self, value):
         self._searchString = value
@@ -37,6 +42,7 @@ class MusicLib(QObject):
     @Property(str)
     def genreFilter(self):
         return self._genreFilter
+
     @genreFilter.setter
     def genreFilter(self, value):
         self._genreFilter = value
@@ -44,6 +50,7 @@ class MusicLib(QObject):
     @Property(str)
     def artistFilter(self):
         return self._artistFilter
+
     @artistFilter.setter
     def artistFilter(self, value):
         self._artistFilter = value
@@ -51,6 +58,7 @@ class MusicLib(QObject):
     @Property(str)
     def albumFilter(self):
         return self._albumFilter
+
     @albumFilter.setter
     def albumFilter(self, value):
         self._albumFilter = value
@@ -70,4 +78,3 @@ class MusicLib(QObject):
     @Property(str, notify=displayLibChanged)
     def displayLib(self):
         return json.dumps([])
-

@@ -1,5 +1,6 @@
 from PySide6.QtCore import QAbstractTableModel, Qt
 
+
 class PlaylistTableModel(QAbstractTableModel):
     def __init__(self):
         super().__init__()

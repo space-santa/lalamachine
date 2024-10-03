@@ -1,8 +1,11 @@
-from PySide6.QtCore import QObject, Signal, Property
-from PySide6.QtQml import QmlElement
 import json
+
+from PySide6.QtCore import Property, QObject, Signal
+from PySide6.QtQml import QmlElement
+
 QML_IMPORT_NAME = "Lala"
 QML_IMPORT_MAJOR_VERSION = 1
+
 
 @QmlElement
 class Config(QObject):
@@ -12,18 +15,18 @@ class Config(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
         self._volume = 0.5
-        self._libPath= ""
+        self._libPath = ""
         self._lastPlaylist = ""
         self._playlistColumns = [
-            { "key": "track", "value": True },
-            { "key": "discNumber", "value": True },
-            { "key": "title", "value": True },
-            { "key": "comment", "value": True },
-            { "key": "length", "value": True },
-            { "key": "genre", "value": True },
-            { "key": "album", "value": True },
-            { "key": "artist", "value": True },
-            { "key": "year", "value": True },
+            {"key": "track", "value": True},
+            {"key": "discNumber", "value": True},
+            {"key": "title", "value": True},
+            {"key": "comment", "value": True},
+            {"key": "length", "value": True},
+            {"key": "genre", "value": True},
+            {"key": "album", "value": True},
+            {"key": "artist", "value": True},
+            {"key": "year", "value": True},
         ]
 
     @Property(float, notify=volumeChanged)

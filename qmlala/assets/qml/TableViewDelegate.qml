@@ -46,7 +46,7 @@ Item {
         MouseArea {
             anchors.fill: parent
             acceptedButtons: Qt.RightButton | Qt.LeftButton
-            onClicked: function(mouse) {
+            onClicked: function (mouse) {
                 if (mouse.button == Qt.RightButton) {
                     console.log("Right-Click", styleData.row);
                     if (target.selection.count < 2) {
@@ -59,7 +59,7 @@ Item {
 
             onDoubleClicked: container.doubleClicked(styleData.row)
 
-            onPressed: function(mouse) {
+            onPressed: function (mouse) {
                 if (mouse.button == Qt.LeftButton) {
                     // For drag and click to work properly we need to first
                     // set the state to released when clicking into a row.
