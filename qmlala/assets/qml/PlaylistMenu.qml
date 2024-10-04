@@ -27,7 +27,7 @@ Menu {
     signal selected(string listname)
 
     function populatePlaylistMenu(names) {
-        playlist_menu.clear();
+        // playlist_menu.clear();
         for (var i = 0; i < names.length; ++i) {
             let name = names[i];
             var o = Qt.createQmlObject(generateQbjectString(name), playlist_menu, 'PlaylistMenu');

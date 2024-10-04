@@ -1,9 +1,14 @@
-from PySide6.QtCore import QAbstractTableModel, Qt
+from PySide6.QtCore import QAbstractTableModel, Qt, Slot
+from PySide6.QtQml import QmlElement
+
+QML_IMPORT_NAME = "Lala"
+QML_IMPORT_MAJOR_VERSION = 1
 
 
+@QmlElement
 class PlaylistTableModel(QAbstractTableModel):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent)
         self._data = {}
 
     def rowCount(self, parent=None):
@@ -24,3 +29,11 @@ class PlaylistTableModel(QAbstractTableModel):
             else:
                 return f"Row {section + 1}"
         return None
+
+    @Slot()
+    def clear(self):
+        pass
+
+    @Slot(str, str, int)
+    def appendColumn(self, tag: str, title: str, width: int):
+        print(tag, title, width)

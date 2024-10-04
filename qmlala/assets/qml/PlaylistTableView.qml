@@ -6,7 +6,10 @@ import Lala 1.0
 
 TableView {
     id: playlist_view
-    model: PlaylistTableModel {}
+    model: PlaylistTableModel {
+        id: tableModel
+    }
+
     selectionMode: TableView.ExtendedSelection
 
     // backgroundVisible: true
@@ -118,18 +121,17 @@ TableView {
     // }
 
     function setColumns() {
-        model.clear();
+        tableModel.clear();
         let columnsJson = JSON.parse(playlistColumns);
         for (let i = 0; i < columnsJson.length; ++i) {
             if (columnsJson[i].value) {
-                let columnString = buildColumnString(columnsJson[i].key);
-                var o = Qt.createQmlObject(columnString, playlist_view, "DynO");
-                playlist_view.addColumn(o);
+                let columnDef = buildColumnDefinition(columnsJson[i].key);
+                tableModel.appendColumn(columnDef.tag, columnDef.title, columnDef.width);
             }
         }
     }
 
-    function buildColumnString(tag) {
+    function buildColumnDefinition(tag) {
         var width = 150;
         var title = tag;
         if (tag === "track") {
@@ -163,18 +165,11 @@ TableView {
             width = 50;
             title = "Disc";
         }
-        return columnString(tag, title, width);
-    }
-
-    function columnString(role, title, width) {
-        var retval = "import QtQuick 2.0;\n";
-        retval += "import QtQuick.Controls 1.2;\n";
-        retval += "TableViewColumn {\n";
-        retval += "role: \"" + role + "\";\n";
-        retval += "title: \"" + title + "\";\n";
-        retval += "width: " + width + "\n";
-        retval += "}";
-        return retval;
+        return {
+            "tag": tag,
+            "title": title,
+            "width": width
+        };
     }
 
     onModelChanged: {
