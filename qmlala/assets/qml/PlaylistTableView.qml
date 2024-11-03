@@ -4,13 +4,25 @@ import Qt.labs.qmlmodels
 
 import Lala 1.0
 
-TableView {
+ListView {
     id: playlist_view
-    model: PlaylistTableModel {
-        id: tableModel
+    model: ListModel {
+        id: playlistModel
+
+        ListElement {
+            Track: 13
+            Title: "row.title"
+            Comment: "row.comment"
+            Length: "row.length"
+            Genre: "row.genre"
+            Artist: "row.artist"
+            Album: "row.album"
+            Year: 1234
+            Disc: 2
+        }
     }
 
-    selectionMode: TableView.ExtendedSelection
+    // selectionMode: TableView.ExtendedSelection
 
     // backgroundVisible: true
 
@@ -121,14 +133,39 @@ TableView {
     // }
 
     function setColumns() {
-        tableModel.clear();
-        let columnsJson = JSON.parse(playlistColumns);
-        for (let i = 0; i < columnsJson.length; ++i) {
-            if (columnsJson[i].value) {
-                let columnDef = buildColumnDefinition(columnsJson[i].key);
-                tableModel.appendColumn(columnDef.tag, columnDef.title, columnDef.width);
-            }
-        }
+        playlistModel.append(buildRowJson({
+            "track": 1,
+            "title": "Bob",
+            "comment": "lala",
+            "length": "3:45",
+            "genre": "rocky",
+            "artist": "Bob Band",
+            "album": "Bob Album",
+            "year": 1994,
+            "discNumber": 1
+        }));
+    // tableModel.clear();
+    // let columnsJson = JSON.parse(playlistColumns);
+    // for (let i = 0; i < columnsJson.length; ++i) {
+    //     if (columnsJson[i].value) {
+    //         let columnDef = buildColumnDefinition(columnsJson[i].key);
+    //         playlistModel.append(columnDef.tag, columnDef.title, columnDef.width);
+    //     }
+    // }
+    }
+
+    function buildRowJson(row) {
+        return {
+            "Track": row.track,
+            "Title": row.title,
+            "Comment": row.comment,
+            "Length": row.length,
+            "Genre": row.genre,
+            "Artist": row.artist,
+            "Album": row.album,
+            "Year": row.year,
+            "Disc": row.discNumber
+        };
     }
 
     function buildColumnDefinition(tag) {
