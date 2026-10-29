@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Settings
 {
@@ -18,20 +18,8 @@ namespace Settings
         {
             try
             {
-                using (StreamReader file = File.OpenText(SettingsPath))
-                {
-                    var serializer = new JsonSerializer();
-                    var fileAsDict = (Dictionary<string, string>?)serializer.Deserialize(file, typeof(Dictionary<string, string>));
-
-                    if (fileAsDict is null)
-                    {
-                        return new Dictionary<string, string>();
-                    }
-                    else
-                    {
-                        return fileAsDict;
-                    }
-                }
+                using var file = File.OpenRead(SettingsPath);
+                return JsonSerializer.Deserialize<Dictionary<string, string>>(file) ?? new Dictionary<string, string>();
             }
             catch (FileNotFoundException)
             {
@@ -43,11 +31,8 @@ namespace Settings
 
         public virtual void Save(Dictionary<string, string> settings)
         {
-            using (var file = File.CreateText(SettingsPath))
-            {
-                var serializer = new JsonSerializer();
-                serializer.Serialize(file, settings);
-            }
+            using var file = File.Create(SettingsPath);
+            JsonSerializer.Serialize(file, settings);
         }
 
         private static string SettingsDir => LibLala.Constants.LALADIR;

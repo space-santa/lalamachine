@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using LibLala.DomainPrimitives;
-using Newtonsoft.Json;
 
 namespace LibLala.LibLalaTagReader
 {
@@ -104,11 +103,5 @@ namespace LibLala.LibLalaTagReader
         internal ITrackPath TrackPath { get; }
 
         public int Year => _year.Value;
-
-        public string ToJson()
-        {
-            var output = JsonConvert.SerializeObject(this);
-            return output;
-        }
     }
 }

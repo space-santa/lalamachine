@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Windows.Forms;
 using System.Windows.Input;
+using Microsoft.Win32;
 using Settings;
 
 namespace Lalamachine.Wpf.ViewModel
@@ -78,15 +78,12 @@ namespace Lalamachine.Wpf.ViewModel
         private void OnLoad(object? commandParameter)
         {
             if (Scanning) { return; }
-            using (var fbd = new FolderBrowserDialog())
-            {
-                var result = fbd.ShowDialog();
+            var dialog = new OpenFolderDialog();
 
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
-                {
-                    LibraryPath = fbd.SelectedPath;
-                    ScanCommand.Execute(null);
-                }
+            if (dialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(dialog.FolderName))
+            {
+                LibraryPath = dialog.FolderName;
+                ScanCommand.Execute(null);
             }
         }
 
