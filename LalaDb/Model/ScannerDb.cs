@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using LalaDb.Data;
 using LibLala.DomainPrimitives;
 using LibLala.LibLalaTagReader;
@@ -47,23 +47,21 @@ namespace LalaDb.Model
             _albumList.Add(new AlbumName(tags.Album));
         }
 
-        private void PrepareTrackForSave(LibLalaTags tags)
+        private void PrepareTrackForSave(LibLalaTags tags, Dictionary<string, Genre> genres, Dictionary<string, Artist> artists, Dictionary<string, Album> albums)
         {
             var track = new Track();
 
             foreach (var g in tags.Genre)
             {
-                var genre = _context.Genres?.Single(x => x.Name == g);
-                _context.GenreTracks?.Add(new GenreTrack { Genre = genre, Track = track });
+                _context.GenreTracks?.Add(new GenreTrack { Genre = genres[g], Track = track });
             }
 
             foreach (var a in tags.Artist)
             {
-                var artist = _context.Artists?.Single(x => x.Name == a);
-                _context.ArtistTracks?.Add(new ArtistTrack { Artist = artist, Track = track });
+                _context.ArtistTracks?.Add(new ArtistTrack { Artist = artists[a], Track = track });
             }
 
-            track.Album = _context.Albums?.Single(x => x.Name == tags.Album);
+            track.Album = albums[tags.Album];
             track.Comment = tags.Comment;
             track.DiscNumber = (int)tags.DiscNumber;
             track.Length = tags.Length;
@@ -77,21 +75,23 @@ namespace LalaDb.Model
 
         public void SaveChanges()
         {
-            SaveAllGenres();
-            SaveAllArtists();
-            SaveAllAlbums();
-            _context.SaveChanges();
+            var genres = SaveAllGenres();
+            var artists = SaveAllArtists();
+            var albums = SaveAllAlbums();
 
             foreach (var tag in _tagList)
             {
-                PrepareTrackForSave(tag);
+                PrepareTrackForSave(tag, genres, artists, albums);
             }
 
+            // A single SaveChanges runs in one transaction, so the old library is only replaced once the new one is complete.
             _context.SaveChanges();
         }
 
-        private void SaveAllGenres()
+        private Dictionary<string, Genre> SaveAllGenres()
         {
+            var genres = new Dictionary<string, Genre>(StringComparer.Ordinal);
+
             foreach (var genreName in _genreList.ToStringList())
             {
                 var genre = new Genre
@@ -100,11 +100,16 @@ namespace LalaDb.Model
                 };
 
                 _context.Genres?.Add(genre);
+                genres[genreName] = genre;
             }
+
+            return genres;
         }
 
-        private void SaveAllArtists()
+        private Dictionary<string, Artist> SaveAllArtists()
         {
+            var artists = new Dictionary<string, Artist>(StringComparer.Ordinal);
+
             foreach (var artistName in _artistList.ToStringList())
             {
                 var artist = new Artist
@@ -113,11 +118,16 @@ namespace LalaDb.Model
                 };
 
                 _context.Artists?.Add(artist);
+                artists[artistName] = artist;
             }
+
+            return artists;
         }
 
-        private void SaveAllAlbums()
+        private Dictionary<string, Album> SaveAllAlbums()
         {
+            var albums = new Dictionary<string, Album>(StringComparer.Ordinal);
+
             foreach (var albumName in _albumList.ToStringList())
             {
                 var album = new Album
@@ -126,11 +136,20 @@ namespace LalaDb.Model
                 };
 
                 _context.Albums?.Add(album);
+                albums[albumName] = album;
             }
+
+            return albums;
         }
 
         public void EnsureDatabase()
         {
+            // Every scan starts from scratch, otherwise a second scan in the same session duplicates every track.
+            _albumList = new BaseNameStringList<AlbumName>();
+            _artistList = new BaseNameStringList<ArtistName>();
+            _genreList = new BaseNameStringList<GenreName>();
+            _tagList = new List<LibLalaTags>();
+
             _context.Albums?.RemoveRange(_context.Albums);
             _context.Artists?.RemoveRange(_context.Artists);
             _context.ArtistTracks?.RemoveRange(_context.ArtistTracks);

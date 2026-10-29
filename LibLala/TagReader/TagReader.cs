@@ -46,8 +46,7 @@ namespace LibLala.LibLalaTagReader
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                throw new TagReaderException($"Can't open `{path}`.");
+                throw new TagReaderException($"Can't open `{path}`.", ex);
             }
         }
     }

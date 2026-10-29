@@ -41,11 +41,20 @@ namespace LibLala.MusicScanner
 
             _db.EnsureDatabase();
 
+            _skippedFiles.Clear();
             int count = 0;
             foreach (var file in Files)
             {
-                var tags = new LibLalaTagReader.TagReader().Read(file);
-                _db.AddTagsToDatabase(tags);
+                try
+                {
+                    var tags = new LibLalaTagReader.TagReader().Read(file);
+                    _db.AddTagsToDatabase(tags);
+                }
+                catch (LibLalaTagReader.TagReaderException)
+                {
+                    // One unreadable file must not abort the scan of the whole library.
+                    _skippedFiles.Add(file);
+                }
                 count += 1;
                 InvokeFileScannedEvent(count);
             }
@@ -55,10 +64,19 @@ namespace LibLala.MusicScanner
             Console.WriteLine($"Scanning took {duration.ToString()}");
         }
 
+        private readonly List<string> _skippedFiles = new List<string>();
+        public IReadOnlyList<string> SkippedFiles => _skippedFiles;
+
+        private static readonly EnumerationOptions s_enumerationOptions = new EnumerationOptions
+        {
+            RecurseSubdirectories = true,
+            IgnoreInaccessible = true,
+        };
+
         private IEnumerable<string> GetFiles()
         {
-            var files = Directory.EnumerateFiles(_path, "*.*", SearchOption.AllDirectories)
-                .Where(s => s.EndsWith(".mp3", StringComparison.Ordinal) || s.EndsWith(".m4a", StringComparison.Ordinal));
+            var files = Directory.EnumerateFiles(_path, "*", s_enumerationOptions)
+                .Where(s => s.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) || s.EndsWith(".m4a", StringComparison.OrdinalIgnoreCase));
             return files;
         }
     }

@@ -321,33 +321,36 @@ namespace Lalamachine.Wpf.ViewModel
             AddTracks(e.Tracks);
         }
 
-        public PlaylistTags CurrentTrack => Playlist[CurrentIndex];
         public PlaylistTags? NextTrack
         {
             get
             {
-                if (PlaylistShuffleRepeatState == ShuffleRepeatState.RepeatOne)
+                if (Playlist.Count == 0)
                 {
-                    return Playlist[CurrentIndex];
+                    return null;
+                }
+
+                var currentIndex = CurrentIndex;
+
+                // Nothing is playing yet (fresh start, playlist just replaced), so there is nothing to repeat.
+                if (PlaylistShuffleRepeatState == ShuffleRepeatState.RepeatOne && currentIndex >= 0)
+                {
+                    return Playlist[currentIndex];
                 }
 
                 if (PlaylistShuffleRepeatState == ShuffleRepeatState.Shuffle)
                 {
 #pragma warning disable CA5394 // Do not use insecure randomness
-                    var newIndex = new Random().Next(0, Playlist.Count - 1);
+                    var newIndex = Random.Shared.Next(Playlist.Count);
 #pragma warning restore CA5394 // Do not use insecure randomness
                     return Playlist[newIndex];
                 }
 
-                if (CurrentIndex < Playlist.Count - 1)
+                if (currentIndex < Playlist.Count - 1)
                 {
-                    return Playlist[CurrentIndex + 1];
+                    return Playlist[currentIndex + 1];
                 }
 
-                if (CurrentIndex != Playlist.Count - 1)
-                {
-                    return null;
-                }
                 if (PlaylistShuffleRepeatState == ShuffleRepeatState.RepeatAll)
                 {
                     return Playlist[0];
@@ -427,21 +430,6 @@ namespace Lalamachine.Wpf.ViewModel
         #endregion
 
         #region DeleteTrack(s)
-        public void DeleteTrack(int index)
-        {
-            Playlist.RemoveAt(index);
-            NotifyPropertyChanged(nameof(Playlist));
-        }
-
-        public void DeleteTracks(int startIndex, int numberOfTracks)
-        {
-            for (var i = 0; i < numberOfTracks; ++i)
-            {
-                DeleteTrack(startIndex);
-            }
-            NotifyPropertyChanged(nameof(Playlist));
-        }
-
         public void DeleteAllTracks()
         {
             Playlist.Clear();
@@ -457,15 +445,24 @@ namespace Lalamachine.Wpf.ViewModel
             }
 
             var path = e.Path;
-            var tags = new TagReader().Read(path);
-            AddTrack(tags);
+            try
+            {
+                var tags = new TagReader().Read(path);
+                AddTrack(tags);
+            }
+            catch (TagReaderException ex)
+            {
+                System.Windows.MessageBox.Show($"{ex.Message}\n{ex.InnerException?.Message}");
+            }
         }
 
         public void PlayNextTrackHandler(object? sender, EventArgs e)
         {
-            if (NextTrack is { })
+            // Read NextTrack only once, in shuffle mode every read picks a different track.
+            var nextTrack = NextTrack;
+            if (nextTrack is { })
             {
-                InvokePlayTrackEvent(NextTrack);
+                InvokePlayTrackEvent(nextTrack);
             }
         }
 

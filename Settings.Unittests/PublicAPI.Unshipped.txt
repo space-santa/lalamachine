@@ -1,6 +1,0 @@
-Settings.Unittests.AppSettingsTest
-Settings.Unittests.AppSettingsTest.AppSettingsTest() -> void
-Settings.Unittests.AppSettingsTest.TestBoolShouldSave() -> void
-Settings.Unittests.AppSettingsTest.TestDoubleShouldSave() -> void
-Settings.Unittests.AppSettingsTest.TestIntShouldSave() -> void
-Settings.Unittests.AppSettingsTest.TestStringShouldSave() -> void

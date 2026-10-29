@@ -24,16 +24,16 @@ namespace LibLala.DomainPrimitives
             return _name;
         }
 
-        public static bool operator ==(BaseNameString lhs, BaseNameString rhs)
+        public static bool operator ==(BaseNameString? lhs, BaseNameString? rhs)
         {
-            if (lhs is null || rhs is null) { return false; }
+            if (lhs is null) { return rhs is null; }
+            if (rhs is null) { return false; }
             return lhs.ToString().Equals(rhs.ToString(), StringComparison.Ordinal);
         }
 
-        public static bool operator !=(BaseNameString lhs, BaseNameString rhs)
+        public static bool operator !=(BaseNameString? lhs, BaseNameString? rhs)
         {
-            if (lhs is null || rhs is null) { return false; }
-            return !lhs.ToString().Equals(rhs.ToString(), StringComparison.Ordinal);
+            return !(lhs == rhs);
         }
 
         public override bool Equals(object? obj)

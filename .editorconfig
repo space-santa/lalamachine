@@ -222,8 +222,9 @@ dotnet_diagnostic.CA1812.severity = none
 # CA1852: WPF controlls can be sealed.
 dotnet_diagnostic.CA1852.severity = none
 
-# CS0067 event never used. Since Fody is injecting the code that uses the PropertyChanged event, this is necessary.
-dotnet_diagnostic.CS0067.severity = suggestion
+# CA1515: Types in an app can be internal. XAML code-behind and the types the WPF tests use have to stay public.
+dotnet_diagnostic.CA1515.severity = none
 
-# RS0036: Annotate nullability of public types and members in the declared API
-dotnet_diagnostic.RS0036.severity = suggestion
+# Tests: constant arrays as expected values are fine, CA1861 is about hot paths.
+[*Unittests/**.cs]
+dotnet_diagnostic.CA1861.severity = none

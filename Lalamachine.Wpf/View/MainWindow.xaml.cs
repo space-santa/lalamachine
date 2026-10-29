@@ -38,7 +38,7 @@ namespace Lalamachine.Wpf.View
             optionsBuilder
                 .UseLazyLoadingProxies()
                     .UseSqlite($"Data Source={LibLala.Constants.DBPATH}");
-#pragma warning disable CA2000 // Dispose objects before losing scope. The DI container is taking care of the context lifecycle.
+#pragma warning disable CA2000 // Dispose objects before losing scope. The UI's context lives as long as the main window, i.e. the whole app.
             var context = new LalaContext(optionsBuilder.Options);
 #pragma warning restore CA2000 // Dispose objects before losing scope
             context.Database.Migrate();
@@ -47,7 +47,7 @@ namespace Lalamachine.Wpf.View
             _playlistViewModel = new PlaylistViewModel(context);
             _shuffleRepeatViewModel = new ShuffleRepeatViewModel();
             _settingsViewModel = new SettingsViewModel();
-            _libraryViewModel = new LibraryViewModel(context);
+            _libraryViewModel = new LibraryViewModel(context, () => new LalaContext(optionsBuilder.Options));
             _libraryPlaylistViewModel = new LibraryPlaylistViewModel();
 
             _shuffleRepeatViewModel.ShuffleRepeatChanged += _playlistViewModel.ShuffleRepeatChangedHandler;

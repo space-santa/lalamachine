@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using LalaDb.Data;
@@ -13,13 +12,13 @@ namespace LalaDb.Model
     public class MusicLibModel
     {
         private readonly LalaContext _context;
-        private readonly ScannerDb _scannerDb;
-        public bool Scanning { get; set; }
+        private readonly Func<LalaContext> _createScanContext;
+        public bool Scanning { get; private set; }
 
-        public MusicLibModel(LalaContext context)
+        public MusicLibModel(LalaContext context, Func<LalaContext> createScanContext)
         {
             _context = context;
-            _scannerDb = new ScannerDb(_context);
+            _createScanContext = createScanContext;
             Scanning = false;
         }
 
@@ -211,7 +210,7 @@ namespace LalaDb.Model
                 return new List<LibLalaTags>();
             }
 
-            var tracks = _context.Albums?.Single(x => x.Name == name)?.Tracks?.OrderBy(x => x.DiscNumber).ThenBy(x => x.TrackNumber);
+            var tracks = _context.Albums?.FirstOrDefault(x => x.Name == name)?.Tracks?.OrderBy(x => x.DiscNumber).ThenBy(x => x.TrackNumber);
             var tagList = new List<LibLalaTags>();
 
             if (tracks is null) { return tagList; }
@@ -225,33 +224,34 @@ namespace LalaDb.Model
             return tagList;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>")]
-        public LalaTags GetMetadataForMrl(string path)
-        {
-            path = LibLala.Utils.StringUtils.RemoveFilePrefix(path);
-
-            if (_context.Tracks is null)
-            {
-                throw new ArgumentException("Tacks is null on context.");
-            }
-
-            var tags = LalaTags.Build(_context.Tracks.Single(x => Path.GetFullPath(x.Path ?? "") == Path.GetFullPath(path)));
-            return tags;
-        }
-
-        public async Task ScanAsync(string path)
+        /// <summary>
+        /// Replaces the library with the music found in <paramref name="path"/>.
+        /// </summary>
+        /// <returns>The files that couldn't be read and were left out.</returns>
+        public async Task<IReadOnlyList<string>> ScanAsync(string path)
         {
             if (Scanning)
             {
-                return;
+                return Array.Empty<string>();
             }
             Scanning = true;
-            var directoryProcessor = new DirectoryProcessor(_scannerDb, path);
-            directoryProcessor.FileScannedEvent += FileScannedInvoker;
-            var fileCount = directoryProcessor.FileCount;
-            InvokeFilesToScanChangedEvent(fileCount);
-            await Task.Run(() => directoryProcessor.ProcessDirectory()).ConfigureAwait(true);
-            Scanning = false;
+            try
+            {
+                // The scan runs on a worker thread, so it needs its own context. A DbContext isn't thread-safe.
+                using var scanContext = _createScanContext();
+                var directoryProcessor = new DirectoryProcessor(new ScannerDb(scanContext), path);
+                directoryProcessor.FileScannedEvent += FileScannedInvoker;
+                var fileCount = await Task.Run(() => directoryProcessor.FileCount).ConfigureAwait(true);
+                InvokeFilesToScanChangedEvent(fileCount);
+                await Task.Run(() => directoryProcessor.ProcessDirectory()).ConfigureAwait(true);
+                return directoryProcessor.SkippedFiles;
+            }
+            finally
+            {
+                // The library was replaced behind this context's back, so drop everything it has cached.
+                _context.ChangeTracker.Clear();
+                Scanning = false;
+            }
         }
 
         public event EventHandler<FileScannedEventArgs>? FilesToScanChangedEvent;

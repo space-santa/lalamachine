@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using LibLala.DomainPrimitives;
-using Newtonsoft.Json;
 
 namespace LibLala.LibLalaTagReader
 {
@@ -76,7 +75,8 @@ namespace LibLala.LibLalaTagReader
             _discNumber = new DiscNumber(file.Tag.Disc);
             _genre = new GenreList(file.Tag.Genres.ToList());
             _length = new TrackLength(file.Properties.Duration);
-            _title = new TitleName(file.Tag.Title);
+            // Untagged files are common, show them under their file name rather than refusing them.
+            _title = new TitleName(string.IsNullOrWhiteSpace(file.Tag.Title) ? System.IO.Path.GetFileNameWithoutExtension(path) : file.Tag.Title);
             _trackNumber = new TrackNumber(file.Tag.Track);
             _year = new Year((int)file.Tag.Year);
         }
@@ -104,11 +104,5 @@ namespace LibLala.LibLalaTagReader
         internal ITrackPath TrackPath { get; }
 
         public int Year => _year.Value;
-
-        public string ToJson()
-        {
-            var output = JsonConvert.SerializeObject(this);
-            return output;
-        }
     }
 }

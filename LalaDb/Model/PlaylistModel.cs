@@ -53,7 +53,7 @@ namespace LalaDb.Model
                         TrackPath = track.Path,
                         Order = ++i
                     }
-                ); ; ;
+                );
             }
             _context.SaveChanges();
         }
@@ -80,6 +80,10 @@ namespace LalaDb.Model
                 catch (System.InvalidOperationException)
                 {
                     // Empty playlist, database upgraded, whatever reason, no harm but also nothing else to do here.
+                }
+                catch (System.ArgumentException)
+                {
+                    // A broken row in the library must not stop the app from starting.
                 }
             }
             return tagList;

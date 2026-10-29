@@ -64,5 +64,29 @@ namespace Settings.Unittests
             };
             settingsFile.Received().Save(Arg.Is<Dictionary<string, string>>(x => x["TestString"] == "Bob goes to town."));
         }
+
+        [Test]
+        public void UnchangedValueIsNotSavedAgain()
+        {
+            var settingsFile = Substitute.For<SettingsFile>("Joe", "Bob");
+            settingsFile.Load().Returns(new Dictionary<string, string>());
+            var settings = new TestSettings(settingsFile)
+            {
+                TestDouble = 5.5
+            };
+            settings.TestDouble = 5.5;
+            settingsFile.Received(1).Save(Arg.Any<Dictionary<string, string>>());
+        }
+
+        [Test]
+        public void UnreadableValueFallsBackToDefault()
+        {
+            var settingsFile = Substitute.For<SettingsFile>("Joe", "Bob");
+            settingsFile.Load().Returns(new Dictionary<string, string> { ["TestInt"] = "lots", ["TestBool"] = "maybe", ["TestDouble"] = "" });
+            var settings = new TestSettings(settingsFile);
+            Assert.That(settings.TestInt, Is.EqualTo(0));
+            Assert.That(settings.TestBool, Is.False);
+            Assert.That(settings.TestDouble, Is.EqualTo(0.0));
+        }
     }
 }

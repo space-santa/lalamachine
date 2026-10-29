@@ -33,7 +33,7 @@ namespace LibLala.LibLalaTagReader
             Year = new Year(-1);
         }
 
-        public LibLalaTagsBuilder(string title, ITrackPath fakePath, int totalSeconds)
+        public LibLalaTagsBuilder(string title, ITrackPath trackPath, int totalSeconds)
         {
             Album = new AlbumName("");
             Artist = new ArtistList(new List<string>());
@@ -43,7 +43,7 @@ namespace LibLala.LibLalaTagReader
             Length = new TrackLength(totalSeconds);
             Title = new TitleName(title);
             TrackNumber = new TrackNumber(1);
-            TrackPath = fakePath;
+            TrackPath = trackPath;
             Year = new Year(-1);
         }
 
