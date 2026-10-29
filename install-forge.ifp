@@ -1,753 +1,92 @@
-﻿
-[Header]
-ProjectFileVersion = 1.1
-[General]
-Program name = lalamachine
-Program version = 4.99.15
-Windows XP = 0
-Windows Server 2003 = 0
-Windows Vista = 0
-Windows Server 2008 = 0
-Windows 7 = 0
-Windows 8 = 0
-Windows 10 = 1
-Windows Server 2016 = 0
-Windows Server 2019 = 0
-Windows Server 2022 = 0
-Windows 11 = 1
-DoNotCheckOS = 0
-Company name = space-santa
-Website = https://github.com/space-santa/lalamachine
-SFA = 0
-DFA = 0
-Comp = 1
-[Graphics]
-Wizard image = <main>
-Header image = <main>
-Show Label = 1
-VisualStylesEnabled = 1
-[Files]
-Installation path = <ProgramFiles>\<Company>\<AppName>\
-Autcip = 1
-[Uninstall]
-Vwau = 0
-Website = https://
-Include uninstaller = 1
-Uninstaller filename = Uninstall
-UseCustomDisplayIcon = 0
-CustomDisplayIcon = <InstallPath>\
-[Licence]
-Licence dialog = 1
-[Finish]
-Sart program = 0
-Reboot computer = 0
-Program = <InstallPath>\
-ProgramArguments = 
-[Shortcuts]
-Allowtc = 0
-Shortcut path = <Company>\<AppName>\
-[Serialoptions]
-Allows = 0
-Number = 1000
-Mask = #####-#####-#####-#####
-[SplashScreen]
-Image = 
-Sound = 
-Time = 2
-PlaySound = 0
-Allow = 0
-[Build]
-File = C:\Users\space\code\dotnet\lalamachine\lalamachine_4.99.15.exe
-SetupIconPath = ..\icons\ancient.ico
-UninstallIconPath = ..\icons\ancient.ico
-CompressionMethod = 0
-CompressionLevel = 2
-[Updater]
-Allow = 0
-1 = <AppName>
-2 = <AppVersion>
-3 = http://
-4 = http://
-5 = http://
-6 = Update
-Language = 0
-RunProg = 
-RunProgs = 0
-Execdlls = 0
-[Languages]
-[Files/Dirs]
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\D3DCompiler_47_cor3.dll
-4.7 MB
-dll
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\e_sqlite3.dll
-1.6 MB
-dll
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\LalaDb.pdb
-23.4 KB
-pdb
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\Lalamachine.Wpf.exe
-153.8 MB
-exe
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\Lalamachine.Wpf.pdb
-54.3 KB
-pdb
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\LibLala.pdb
-18.9 KB
-pdb
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\PenImc_cor3.dll
-154.3 KB
-dll
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\PresentationNative_cor3.dll
-1.2 MB
-dll
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\Settings.pdb
-12 KB
-pdb
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\vcruntime140_cor3.dll
-117.1 KB
-dll
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\wpfgfx_cor3.dll
-1.9 MB
-dll
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\assets\images\lalamachine-new.ico
-99.2 KB
-ico
-[Licence_Begin]
-35404
-{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang2057{\fonttbl{\f0\fnil\fcharset0 Arial;}{\f1\fnil Arial;}}
-{\*\generator Riched20 10.0.22621}\viewkind4\uc1 
-\pard\fs20\lang3081 **GNU GENERAL PUBLIC LICENSE**\par
-\par
-Version 3, 29 June 2007\par
-\par
-Copyright \'a9 2007 Free Software Foundation, Inc.\par
-\\<[https://fsf.org/](https://fsf.org/)\\>\par
-\par
-Everyone is permitted to copy and distribute verbatim copies of this\par
-license document, but changing it is not allowed.\par
-\par
-**Preamble**\par
-\par
-The GNU General Public License is a free, copyleft license for software\par
-and other kinds of works.\par
-\par
-The licenses for most software and other practical works are designed to\par
-take away your freedom to share and change the works. By contrast, the\par
-GNU General Public License is intended to guarantee your freedom to\par
-share and change all versions of a program\\--to make sure it remains\par
-free software for all its users. We, the Free Software Foundation, use\par
-the GNU General Public License for most of our software; it applies also\par
-to any other work released this way by its authors. You can apply it to\par
-your programs, too.\par
-\par
-When we speak of free software, we are referring to freedom, not price.\par
-Our General Public Licenses are designed to make sure that you have the\par
-freedom to distribute copies of free software (and charge for them if\par
-you wish), that you receive source code or can get it if you want it,\par
-that you can change the software or use pieces of it in new free\par
-programs, and that you know you can do these things.\par
-\par
-To protect your rights, we need to prevent others from denying you these\par
-rights or asking you to surrender the rights. Therefore, you have\par
-certain responsibilities if you distribute copies of the software, or if\par
-you modify it: responsibilities to respect the freedom of others.\par
-\par
-For example, if you distribute copies of such a program, whether gratis\par
-or for a fee, you must pass on to the recipients the same freedoms that\par
-you received. You must make sure that they, too, receive or can get the\par
-source code. And you must show them these terms so they know their\par
-rights.\par
-\par
-Developers that use the GNU GPL protect your rights with two steps: (1)\par
-assert copyright on the software, and (2) offer you this License giving\par
-you legal permission to copy, distribute and/or modify it.\par
-\par
-For the developers\\' and authors\\' protection, the GPL clearly explains\par
-that there is no warranty for this free software. For both users\\' and\par
-authors\\' sake, the GPL requires that modified versions be marked as\par
-changed, so that their problems will not be attributed erroneously to\par
-authors of previous versions.\par
-\par
-Some devices are designed to deny users access to install or run\par
-modified versions of the software inside them, although the manufacturer\par
-can do so. This is fundamentally incompatible with the aim of protecting\par
-users\\' freedom to change the software. The systematic pattern of such\par
-abuse occurs in the area of products for individuals to use, which is\par
-precisely where it is most unacceptable. Therefore, we have designed\par
-this version of the GPL to prohibit the practice for those products. If\par
-such problems arise substantially in other domains, we stand ready to\par
-extend this provision to those domains in future versions of the GPL, as\par
-needed to protect the freedom of users.\par
-\par
-Finally, every program is threatened constantly by software patents.\par
-States should not allow patents to restrict development and use of\par
-software on general-purpose computers, but in those that do, we wish to\par
-avoid the special danger that patents applied to a free program could\par
-make it effectively proprietary. To prevent this, the GPL assures that\par
-patents cannot be used to render the program non-free.\par
-\par
-The precise terms and conditions for copying, distribution and\par
-modification follow.\par
-\par
-**TERMS AND CONDITIONS**\par
-\par
-**0. Definitions.**\par
-\par
-"This License" refers to version 3 of the GNU General Public License.\par
-\par
-"Copyright" also means copyright-like laws that apply to other kinds of\par
-works, such as semiconductor masks.\par
-\par
-"The Program" refers to any copyrightable work licensed under this\par
-License. Each licensee is addressed as "you". "Licensees" and\par
-"recipients" may be individuals or organizations.\par
-\par
-To "modify" a work means to copy from or adapt all or part of the work\par
-in a fashion requiring copyright permission, other than the making of an\par
-exact copy. The resulting work is called a "modified version" of the\par
-earlier work or a work "based on" the earlier work.\par
-\par
-A "covered work" means either the unmodified Program or a work based on\par
-the Program.\par
-\par
-To "propagate" a work means to do anything with it that, without\par
-permission, would make you directly or secondarily liable for\par
-infringement under applicable copyright law, except executing it on a\par
-computer or modifying a private copy. Propagation includes copying,\par
-distribution (with or without modification), making available to the\par
-public, and in some countries other activities as well.\par
-\par
-To "convey" a work means any kind of propagation that enables other\par
-parties to make or receive copies. Mere interaction with a user through\par
-a computer network, with no transfer of a copy, is not conveying.\par
-\par
-An interactive user interface displays "Appropriate Legal Notices" to\par
-the extent that it includes a convenient and prominently visible feature\par
-that (1) displays an appropriate copyright notice, and (2) tells the\par
-user that there is no warranty for the work (except to the extent that\par
-warranties are provided), that licensees may convey the work under this\par
-License, and how to view a copy of this License. If the interface\par
-presents a list of user commands or options, such as a menu, a prominent\par
-item in the list meets this criterion.\par
-\par
-**1. Source Code.**\par
-\par
-The "source code" for a work means the preferred form of the work for\par
-making modifications to it. "Object code" means any non-source form of a\par
-work.\par
-\par
-A "Standard Interface" means an interface that either is an official\par
-standard defined by a recognized standards body, or, in the case of\par
-interfaces specified for a particular programming language, one that is\par
-widely used among developers working in that language.\par
-\par
-The "System Libraries" of an executable work include anything, other\par
-than the work as a whole, that (a) is included in the normal form of\par
-packaging a Major Component, but which is not part of that Major\par
-Component, and (b) serves only to enable use of the work with that Major\par
-Component, or to implement a Standard Interface for which an\par
-implementation is available to the public in source code form. A "Major\par
-Component", in this context, means a major essential component (kernel,\par
-window system, and so on) of the specific operating system (if any) on\par
-which the executable work runs, or a compiler used to produce the work,\par
-or an object code interpreter used to run it.\par
-\par
-The "Corresponding Source" for a work in object code form means all the\par
-source code needed to generate, install, and (for an executable work)\par
-run the object code and to modify the work, including scripts to control\par
-those activities. However, it does not include the work\\'s System\par
-Libraries, or general-purpose tools or generally available free programs\par
-which are used unmodified in performing those activities but which are\par
-not part of the work. For example, Corresponding Source includes\par
-interface definition files associated with source files for the work,\par
-and the source code for shared libraries and dynamically linked\par
-subprograms that the work is specifically designed to require, such as\par
-by intimate data communication or control flow between those subprograms\par
-and other parts of the work.\par
-\par
-The Corresponding Source need not include anything that users can\par
-regenerate automatically from other parts of the Corresponding Source.\par
-\par
-The Corresponding Source for a work in source code form is that same\par
-work.\par
-\par
-**2. Basic Permissions.**\par
-\par
-All rights granted under this License are granted for the term of\par
-copyright on the Program, and are irrevocable provided the stated\par
-conditions are met. This License explicitly affirms your unlimited\par
-permission to run the unmodified Program. The output from running a\par
-covered work is covered by this License only if the output, given its\par
-content, constitutes a covered work. This License acknowledges your\par
-rights of fair use or other equivalent, as provided by copyright law.\par
-\par
-You may make, run and propagate covered works that you do not convey,\par
-without conditions so long as your license otherwise remains in force.\par
-You may convey covered works to others for the sole purpose of having\par
-them make modifications exclusively for you, or provide you with\par
-facilities for running those works, provided that you comply with the\par
-terms of this License in conveying all material for which you do not\par
-control copyright. Those thus making or running the covered works for\par
-you must do so exclusively on your behalf, under your direction and\par
-control, on terms that prohibit them from making any copies of your\par
-copyrighted material outside their relationship with you.\par
-\par
-Conveying under any other circumstances is permitted solely under the\par
-conditions stated below. Sublicensing is not allowed; section 10 makes\par
-it unnecessary.\par
-\par
-**3. Protecting Users\\' Legal Rights From Anti-Circumvention Law.**\par
-\par
-No covered work shall be deemed part of an effective technological\par
-measure under any applicable law fulfilling obligations under article 11\par
-of the WIPO copyright treaty adopted on 20 December 1996, or similar\par
-laws prohibiting or restricting circumvention of such measures.\par
-\par
-When you convey a covered work, you waive any legal power to forbid\par
-circumvention of technological measures to the extent such circumvention\par
-is effected by exercising rights under this License with respect to the\par
-covered work, and you disclaim any intention to limit operation or\par
-modification of the work as a means of enforcing, against the work\\'s\par
-users, your or third parties\\' legal rights to forbid circumvention of\par
-technological measures.\par
-\par
-**4. Conveying Verbatim Copies.**\par
-\par
-You may convey verbatim copies of the Program\\'s source code as you\par
-receive it, in any medium, provided that you conspicuously and\par
-appropriately publish on each copy an appropriate copyright notice; keep\par
-intact all notices stating that this License and any non-permissive\par
-terms added in accord with section 7 apply to the code; keep intact all\par
-notices of the absence of any warranty; and give all recipients a copy\par
-of this License along with the Program.\par
-\par
-You may charge any price or no price for each copy that you convey, and\par
-you may offer support or warranty protection for a fee.\par
-\par
-**5. Conveying Modified Source Versions.**\par
-\par
-You may convey a work based on the Program, or the modifications to\par
-produce it from the Program, in the form of source code under the terms\par
-of section 4, provided that you also meet all of these conditions:\par
-\par
-\f1\bullet  a) The work must carry prominent notices stating that you modified it,\par
-and giving a relevant date.\par
-\par
-\bullet  b) The work must carry prominent notices stating that it is released\par
-under this License and any conditions added under section 7. This\par
-requirement modifies the requirement in section 4 to "keep intact all\par
-notices".\par
-\par
-\bullet  c) You must license the entire work, as a whole, under this License to\par
-anyone who comes into possession of a copy. This License will therefore\par
-apply, along with any applicable section 7 additional terms, to the\par
-whole of the work, and all its parts, regardless of how they are\par
-packaged. This License gives no permission to license the work in any\par
-other way, but it does not invalidate such permission if you have\par
-separately received it.\par
-\par
-\bullet  d) If the work has interactive user interfaces, each must display\par
-Appropriate Legal Notices; however, if the Program has interactive\par
-interfaces that do not display Appropriate Legal Notices, your work need\par
-not make them do so.\par
-\par
-A compilation of a covered work with other separate and independent\par
-works, which are not by their nature extensions of the covered work, and\par
-which are not combined with it such as to form a larger program, in or\par
-on a volume of a storage or distribution medium, is called an\par
-"aggregate" if the compilation and its resulting copyright are not used\par
-to limit the access or legal rights of the compilation\\'s users beyond\par
-what the individual works permit. Inclusion of a covered work in an\par
-aggregate does not cause this License to apply to the other parts of the\par
-aggregate.\par
-\par
-**6. Conveying Non-Source Forms.**\par
-\par
-You may convey a covered work in object code form under the terms of\par
-sections 4 and 5, provided that you also convey the machine-readable\par
-Corresponding Source under the terms of this License, in one of these\par
-ways:\par
-\par
-\bullet  a) Convey the object code in, or embodied in, a physical product\par
-(including a physical distribution medium), accompanied by the\par
-Corresponding Source fixed on a durable physical medium customarily used\par
-for software interchange.\par
-\par
-\bullet  b) Convey the object code in, or embodied in, a physical product\par
-(including a physical distribution medium), accompanied by a written\par
-offer, valid for at least three years and valid for as long as you offer\par
-spare parts or customer support for that product model, to give anyone\par
-who possesses the object code either (1) a copy of the Corresponding\par
-Source for all the software in the product that is covered by this\par
-License, on a durable physical medium customarily used for software\par
-interchange, for a price no more than your reasonable cost of physically\par
-performing this conveying of source, or (2) access to copy the\par
-Corresponding Source from a network server at no charge.\par
-\par
-\bullet  c) Convey individual copies of the object code with a copy of the\par
-written offer to provide the Corresponding Source. This alternative is\par
-allowed only occasionally and noncommercially, and only if you received\par
-the object code with such an offer, in accord with subsection 6b.\par
-\par
-\bullet  d) Convey the object code by offering access from a designated place\par
-(gratis or for a charge), and offer equivalent access to the\par
-Corresponding Source in the same way through the same place at no\par
-further charge. You need not require recipients to copy the\par
-Corresponding Source along with the object code. If the place to copy\par
-the object code is a network server, the Corresponding Source may be on\par
-a different server (operated by you or a third party) that supports\par
-equivalent copying facilities, provided you maintain clear directions\par
-next to the object code saying where to find the Corresponding Source.\par
-Regardless of what server hosts the Corresponding Source, you remain\par
-obligated to ensure that it is available for as long as needed to\par
-satisfy these requirements.\par
-\par
-\bullet  e) Convey the object code using peer-to-peer transmission, provided\par
-you inform other peers where the object code and Corresponding Source of\par
-the work are being offered to the general public at no charge under\par
-subsection 6d.\par
-\par
-A separable portion of the object code, whose source code is excluded\par
-from the Corresponding Source as a System Library, need not be included\par
-in conveying the object code work.\par
-\par
-A "User Product" is either (1) a "consumer product", which means any\par
-tangible personal property which is normally used for personal, family,\par
-or household purposes, or (2) anything designed or sold for\par
-incorporation into a dwelling. In determining whether a product is a\par
-consumer product, doubtful cases shall be resolved in favor of coverage.\par
-For a particular product received by a particular user, "normally used"\par
-refers to a typical or common use of that class of product, regardless\par
-of the status of the particular user or of the way in which the\par
-particular user actually uses, or expects or is expected to use, the\par
-product. A product is a consumer product regardless of whether the\par
-product has substantial commercial, industrial or non-consumer uses,\par
-unless such uses represent the only significant mode of use of the\par
-product.\par
-\par
-"Installation Information" for a User Product means any methods,\par
-procedures, authorization keys, or other information required to install\par
-and execute modified versions of a covered work in that User Product\par
-from a modified version of its Corresponding Source. The information\par
-must suffice to ensure that the continued functioning of the modified\par
-object code is in no case prevented or interfered with solely because\par
-modification has been made.\par
-\par
-If you convey an object code work under this section in, or with, or\par
-specifically for use in, a User Product, and the conveying occurs as\par
-part of a transaction in which the right of possession and use of the\par
-User Product is transferred to the recipient in perpetuity or for a\par
-fixed term (regardless of how the transaction is characterized), the\par
-Corresponding Source conveyed under this section must be accompanied by\par
-the Installation Information. But this requirement does not apply if\par
-neither you nor any third party retains the ability to install modified\par
-object code on the User Product (for example, the work has been\par
-installed in ROM).\par
-\par
-The requirement to provide Installation Information does not include a\par
-requirement to continue to provide support service, warranty, or updates\par
-for a work that has been modified or installed by the recipient, or for\par
-the User Product in which it has been modified or installed. Access to a\par
-network may be denied when the modification itself materially and\par
-adversely affects the operation of the network or violates the rules and\par
-protocols for communication across the network.\par
-\par
-Corresponding Source conveyed, and Installation Information provided, in\par
-accord with this section must be in a format that is publicly documented\par
-(and with an implementation available to the public in source code\par
-form), and must require no special password or key for unpacking,\par
-reading or copying.\par
-\par
-**7. Additional Terms.**\par
-\par
-"Additional permissions" are terms that supplement the terms of this\par
-License by making exceptions from one or more of its conditions.\par
-Additional permissions that are applicable to the entire Program shall\par
-be treated as though they were included in this License, to the extent\par
-that they are valid under applicable law. If additional permissions\par
-apply only to part of the Program, that part may be used separately\par
-under those permissions, but the entire Program remains governed by this\par
-License without regard to the additional permissions.\par
-\par
-When you convey a copy of a covered work, you may at your option remove\par
-any additional permissions from that copy, or from any part of it.\par
-(Additional permissions may be written to require their own removal in\par
-certain cases when you modify the work.) You may place additional\par
-permissions on material, added by you to a covered work, for which you\par
-have or can give appropriate copyright permission.\par
-\par
-Notwithstanding any other provision of this License, for material you\par
-add to a covered work, you may (if authorized by the copyright holders\par
-of that material) supplement the terms of this License with terms:\par
-\par
-\bullet  a) Disclaiming warranty or limiting liability differently from the\par
-terms of sections 15 and 16 of this License; or\par
-\par
-\bullet  b) Requiring preservation of specified reasonable legal notices or\par
-author attributions in that material or in the Appropriate Legal Notices\par
-displayed by works containing it; or\par
-\par
-\bullet  c) Prohibiting misrepresentation of the origin of that material, or\par
-requiring that modified versions of such material be marked in\par
-reasonable ways as different from the original version; or\par
-\par
-\bullet  d) Limiting the use for publicity purposes of names of licensors or\par
-authors of the material; or\par
-\par
-\bullet  e) Declining to grant rights under trademark law for use of some trade\par
-names, trademarks, or service marks; or\par
-\par
-\bullet  f) Requiring indemnification of licensors and authors of that material\par
-by anyone who conveys the material (or modified versions of it) with\par
-contractual assumptions of liability to the recipient, for any liability\par
-that these contractual assumptions directly impose on those licensors\par
-and authors.\par
-\par
-All other non-permissive additional terms are considered "further\par
-restrictions" within the meaning of section 10. If the Program as you\par
-received it, or any part of it, contains a notice stating that it is\par
-governed by this License along with a term that is a further\par
-restriction, you may remove that term. If a license document contains a\par
-further restriction but permits relicensing or conveying under this\par
-License, you may add to a covered work material governed by the terms of\par
-that license document, provided that the further restriction does not\par
-survive such relicensing or conveying.\par
-\par
-If you add terms to a covered work in accord with this section, you must\par
-place, in the relevant source files, a statement of the additional terms\par
-that apply to those files, or a notice indicating where to find the\par
-applicable terms.\par
-\par
-Additional terms, permissive or non-permissive, may be stated in the\par
-form of a separately written license, or stated as exceptions; the above\par
-requirements apply either way.\par
-\par
-**8. Termination.**\par
-\par
-You may not propagate or modify a covered work except as expressly\par
-provided under this License. Any attempt otherwise to propagate or\par
-modify it is void, and will automatically terminate your rights under\par
-this License (including any patent licenses granted under the third\par
-paragraph of section 11).\par
-\par
-However, if you cease all violation of this License, then your license\par
-from a particular copyright holder is reinstated (a) provisionally,\par
-unless and until the copyright holder explicitly and finally terminates\par
-your license, and (b) permanently, if the copyright holder fails to\par
-notify you of the violation by some reasonable means prior to 60 days\par
-after the cessation.\par
-\par
-Moreover, your license from a particular copyright holder is reinstated\par
-permanently if the copyright holder notifies you of the violation by\par
-some reasonable means, this is the first time you have received notice\par
-of violation of this License (for any work) from that copyright holder,\par
-and you cure the violation prior to 30 days after your receipt of the\par
-notice.\par
-\par
-Termination of your rights under this section does not terminate the\par
-licenses of parties who have received copies or rights from you under\par
-this License. If your rights have been terminated and not permanently\par
-reinstated, you do not qualify to receive new licenses for the same\par
-material under section 10.\par
-\par
-**9. Acceptance Not Required for Having Copies.**\par
-\par
-You are not required to accept this License in order to receive or run a\par
-copy of the Program. Ancillary propagation of a covered work occurring\par
-solely as a consequence of using peer-to-peer transmission to receive a\par
-copy likewise does not require acceptance. However, nothing other than\par
-this License grants you permission to propagate or modify any covered\par
-work. These actions infringe copyright if you do not accept this\par
-License. Therefore, by modifying or propagating a covered work, you\par
-indicate your acceptance of this License to do so.\par
-\par
-**10. Automatic Licensing of Downstream Recipients.**\par
-\par
-Each time you convey a covered work, the recipient automatically\par
-receives a license from the original licensors, to run, modify and\par
-propagate that work, subject to this License. You are not responsible\par
-for enforcing compliance by third parties with this License.\par
-\par
-An "entity transaction" is a transaction transferring control of an\par
-organization, or substantially all assets of one, or subdividing an\par
-organization, or merging organizations. If propagation of a covered work\par
-results from an entity transaction, each party to that transaction who\par
-receives a copy of the work also receives whatever licenses to the work\par
-the party\\'s predecessor in interest had or could give under the\par
-previous paragraph, plus a right to possession of the Corresponding\par
-Source of the work from the predecessor in interest, if the predecessor\par
-has it or can get it with reasonable efforts.\par
-\par
-You may not impose any further restrictions on the exercise of the\par
-rights granted or affirmed under this License. For example, you may not\par
-impose a license fee, royalty, or other charge for exercise of rights\par
-granted under this License, and you may not initiate litigation\par
-(including a cross-claim or counterclaim in a lawsuit) alleging that any\par
-patent claim is infringed by making, using, selling, offering for sale,\par
-or importing the Program or any portion of it.\par
-\par
-**11. Patents.**\par
-\par
-A "contributor" is a copyright holder who authorizes use under this\par
-License of the Program or a work on which the Program is based. The work\par
-thus licensed is called the contributor\\'s "contributor version".\par
-\par
-A contributor\\'s "essential patent claims" are all patent claims owned\par
-or controlled by the contributor, whether already acquired or hereafter\par
-acquired, that would be infringed by some manner, permitted by this\par
-License, of making, using, or selling its contributor version, but do\par
-not include claims that would be infringed only as a consequence of\par
-further modification of the contributor version. For purposes of this\par
-definition, "control" includes the right to grant patent sublicenses in\par
-a manner consistent with the requirements of this License.\par
-\par
-Each contributor grants you a non-exclusive, worldwide, royalty-free\par
-patent license under the contributor\\'s essential patent claims, to\par
-make, use, sell, offer for sale, import and otherwise run, modify and\par
-propagate the contents of its contributor version.\par
-\par
-In the following three paragraphs, a "patent license" is any express\par
-agreement or commitment, however denominated, not to enforce a patent\par
-(such as an express permission to practice a patent or covenant not to\par
-sue for patent infringement). To "grant" such a patent license to a\par
-party means to make such an agreement or commitment not to enforce a\par
-patent against the party.\par
-\par
-If you convey a covered work, knowingly relying on a patent license, and\par
-the Corresponding Source of the work is not available for anyone to\par
-copy, free of charge and under the terms of this License, through a\par
-publicly available network server or other readily accessible means,\par
-then you must either (1) cause the Corresponding Source to be so\par
-available, or (2) arrange to deprive yourself of the benefit of the\par
-patent license for this particular work, or (3) arrange, in a manner\par
-consistent with the requirements of this License, to extend the patent\par
-license to downstream recipients. "Knowingly relying" means you have\par
-actual knowledge that, but for the patent license, your conveying the\par
-covered work in a country, or your recipient\\'s use of the covered work\par
-in a country, would infringe one or more identifiable patents in that\par
-country that you have reason to believe are valid.\par
-\par
-If, pursuant to or in connection with a single transaction or\par
-arrangement, you convey, or propagate by procuring conveyance of, a\par
-covered work, and grant a patent license to some of the parties\par
-receiving the covered work authorizing them to use, propagate, modify or\par
-convey a specific copy of the covered work, then the patent license you\par
-grant is automatically extended to all recipients of the covered work\par
-and works based on it.\par
-\par
-A patent license is "discriminatory" if it does not include within the\par
-scope of its coverage, prohibits the exercise of, or is conditioned on\par
-the non-exercise of one or more of the rights that are specifically\par
-granted under this License. You may not convey a covered work if you are\par
-a party to an arrangement with a third party that is in the business of\par
-distributing software, under which you make payment to the third party\par
-based on the extent of your activity of conveying the work, and under\par
-which the third party grants, to any of the parties who would receive\par
-the covered work from you, a discriminatory patent license (a) in\par
-connection with copies of the covered work conveyed by you (or copies\par
-made from those copies), or (b) primarily for and in connection with\par
-specific products or compilations that contain the covered work, unless\par
-you entered into that arrangement, or that patent license was granted,\par
-prior to 28 March 2007.\par
-\par
-Nothing in this License shall be construed as excluding or limiting any\par
-implied license or other defenses to infringement that may otherwise be\par
-available to you under applicable patent law.\par
-\par
-**12. No Surrender of Others\\' Freedom.**\par
-\par
-If conditions are imposed on you (whether by court order, agreement or\par
-otherwise) that contradict the conditions of this License, they do not\par
-excuse you from the conditions of this License. If you cannot convey a\par
-covered work so as to satisfy simultaneously your obligations under this\par
-License and any other pertinent obligations, then as a consequence you\par
-may not convey it at all. For example, if you agree to terms that\par
-obligate you to collect a royalty for further conveying from those to\par
-whom you convey the Program, the only way you could satisfy both those\par
-terms and this License would be to refrain entirely from conveying the\par
-Program.\par
-\par
-**13. Use with the GNU Affero General Public License.**\par
-\par
-Notwithstanding any other provision of this License, you have permission\par
-to link or combine any covered work with a work licensed under version 3\par
-of the GNU Affero General Public License into a single combined work,\par
-and to convey the resulting work. The terms of this License will\par
-continue to apply to the part which is the covered work, but the special\par
-requirements of the GNU Affero General Public License, section 13,\par
-concerning interaction through a network will apply to the combination\par
-as such.\par
-\par
-**14. Revised Versions of this License.**\par
-\par
-The Free Software Foundation may publish revised and/or new versions of\par
-the GNU General Public License from time to time. Such new versions will\par
-be similar in spirit to the present version, but may differ in detail to\par
-address new problems or concerns.\par
-\par
-Each version is given a distinguishing version number. If the Program\par
-specifies that a certain numbered version of the GNU General Public\par
-License "or any later version" applies to it, you have the option of\par
-following the terms and conditions either of that numbered version or of\par
-any later version published by the Free Software Foundation. If the\par
-Program does not specify a version number of the GNU General Public\par
-License, you may choose any version ever published by the Free Software\par
-Foundation.\par
-\par
-If the Program specifies that a proxy can decide which future versions\par
-of the GNU General Public License can be used, that proxy\\'s public\par
-statement of acceptance of a version permanently authorizes you to\par
-choose that version for the Program.\par
-\par
-Later license versions may give you additional or different permissions.\par
-However, no additional obligations are imposed on any author or\par
-copyright holder as a result of your choosing to follow a later version.\par
-\par
-**15. Disclaimer of Warranty.**\par
-\par
-THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY\par
-APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT\par
-HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT\par
-WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT\par
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A\par
-PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF\par
-THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME\par
-THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.\par
-\par
-**16. Limitation of Liability.**\par
-\par
-IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING\par
-WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR\par
-CONVEYS THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES,\par
-INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES\par
-ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT\par
-NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES\par
-SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE\par
-WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN\par
-ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.\par
-\par
-**17. Interpretation of Sections 15 and 16.**\par
-\par
-If the disclaimer of warranty and limitation of liability provided above\par
-cannot be given local legal effect according to their terms, reviewing\par
-courts shall apply local law that most closely approximates an absolute\par
-waiver of all civil liability in connection with the Program, unless a\par
-warranty or assumption of liability accompanies a copy of the Program in\par
-return for a fee.\par
-\par
-END OF TERMS AND CONDITIONS\lang2057\par
-}
- [Licence_End]
-[Registry]
-[Variables]
-[SCs]
-Startmenu
-lalamachine
-<InstallPath>\Lalamachine.Wpf.exe
+<?xml version="1.0" encoding="UTF-8"?>
 
-<InstallPath>\lalamachine-new.ico
-0
-[IFP_End]
-[Serials]
-[Serials_End]
-[Commands]
+<InstallForgeProject>
+  <Metadata productVersion="1.6.1" projectFileVersion="2.0"/>
+  <ProductInformation>
+    <Name>lalamachine</Name>
+    <Version>4.99.15</Version>
+    <CompanyName>space-santa</CompanyName>
+    <WebURI>https://github.com/space-santa/lalamachine</WebURI>
+  </ProductInformation>
+  <InstallerConfiguration>
+    <Prerequisites>
+      <OperatingSystem check="true">
+        <WindowsXP>false</WindowsXP>
+        <WindowsServer2003>false</WindowsServer2003>
+        <WindowsVista>false</WindowsVista>
+        <WindowsServer2008>false</WindowsServer2008>
+        <Windows7>false</Windows7>
+        <Windows8>false</Windows8>
+        <Windows10>true</Windows10>
+        <WindowsServer2016>false</WindowsServer2016>
+        <WindowsServer2019>false</WindowsServer2019>
+        <WindowsServer2022>false</WindowsServer2022>
+        <Windows11>true</Windows11>
+        <WindowsServer2025>false</WindowsServer2025>
+      </OperatingSystem>
+    </Prerequisites>
+    <UserInterface>
+      <WizardImage filePath="&lt;main&gt;"/>
+      <HeaderImage filePath="&lt;main&gt;"/>
+      <Label isEnabled="true"/>
+      <VisualStyle isEnabled="true"/>
+    </UserInterface>
+    <InstallationFiles defaultInstallationPath="&lt;ProgramFiles&gt;\&lt;Company&gt;\&lt;AppName&gt;\" isDefaultInstallationPathAlterable ="true">
+      <InstallationFile size="4.7 MB" type="dll">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\D3DCompiler_47_cor3.dll</InstallationFile>
+      <InstallationFile size="1.6 MB" type="dll">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\e_sqlite3.dll</InstallationFile>
+      <InstallationFile size="23.4 KB" type="pdb">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\LalaDb.pdb</InstallationFile>
+      <InstallationFile size="153.8 MB" type="exe">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\Lalamachine.Wpf.exe</InstallationFile>
+      <InstallationFile size="54.3 KB" type="pdb">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\Lalamachine.Wpf.pdb</InstallationFile>
+      <InstallationFile size="18.9 KB" type="pdb">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\LibLala.pdb</InstallationFile>
+      <InstallationFile size="154.3 KB" type="dll">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\PenImc_cor3.dll</InstallationFile>
+      <InstallationFile size="1.2 MB" type="dll">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\PresentationNative_cor3.dll</InstallationFile>
+      <InstallationFile size="12 KB" type="pdb">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\Settings.pdb</InstallationFile>
+      <InstallationFile size="117.1 KB" type="dll">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\vcruntime140_cor3.dll</InstallationFile>
+      <InstallationFile size="1.9 MB" type="dll">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\wpfgfx_cor3.dll</InstallationFile>
+      <InstallationFile size="99.2 KB" type="ico">Lalamachine.Wpf\assets\images\lalamachine-new.ico</InstallationFile>
+    </InstallationFiles>
+    <Languages/>
+    <Variables/>
+    <Commands/>
+    <Registry/>
+    <Shortcuts defaultPath="&lt;Company&gt;\&lt;AppName&gt;\" isDefaultPathAlterable="false" isCreateStartmenuShortcutsForAllUsers="false" isCreateDesktopShortcutsForAllUsers="false">
+      <Shortcut destination="Startmenu" name="lalamachine" targetFile="&lt;InstallPath&gt;\Lalamachine.Wpf.exe" commandLineArguments="" iconFilePath="&lt;InstallPath&gt;\lalamachine-new.ico" iconIndex="0"/>
+    </Shortcuts>
+    <Serials isDialogEnabled="false" count="1000" mask ="#####-#####-#####-#####"/>
+    <SplashScreen isDialogEnabled="false" delayTime="2">
+      <Image filePath=""/>
+      <Sound isEnabled="false" filePath=""/>
+    </SplashScreen>
+    <License isDialogEnabled="true">
+      <Data>e1xydGYxXGFuc2lcYW5zaWNwZzEyNTJcZGVmZjBcbm91aWNvbXBhdFxkZWZsYW5nMjA1N3tcZm9udHRibHtcZjBcZm5pbFxmY2hhcnNldDAgQXJpYWw7fXtcZjFcZm5pbCBBcmlhbDt9fQ0Ke1xjb2xvcnRibCA7XHJlZDBcZ3JlZW4wXGJsdWUyNTU7fQ0Ke1wqXGdlbmVyYXRvciBSaWNoZWQyMCAxMC4wLjI2MTAwfVx2aWV3a2luZDRcdWMxIA0KXHBhcmRcZnMyMFxsYW5nMzA4MSAqKkdOVSBHRU5FUkFMIFBVQkxJQyBMSUNFTlNFKipccGFyDQpccGFyDQpWZXJzaW9uIDMsIDI5IEp1bmUgMjAwN1xwYXINClxwYXINCkNvcHlyaWdodCBcJ2E5IDIwMDcgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLCBJbmMuXHBhcg0KXFw8W3t7XGZpZWxke1wqXGZsZGluc3R7SFlQRVJMSU5LIGh0dHBzOi8vZnNmLm9yZy9dKGh0dHBzOi8vZnNmLm9yZy8pXFxcXCB9fXtcZmxkcnNsdHtodHRwczovL2ZzZi5vcmcvXShodHRwczovL2ZzZi5vcmcvKVxcXHVsMFxjZjB9fX19XGYwXGZzMjAgPlxwYXINClxwYXINCkV2ZXJ5b25lIGlzIHBlcm1pdHRlZCB0byBjb3B5IGFuZCBkaXN0cmlidXRlIHZlcmJhdGltIGNvcGllcyBvZiB0aGlzXHBhcg0KbGljZW5zZSBkb2N1bWVudCwgYnV0IGNoYW5naW5nIGl0IGlzIG5vdCBhbGxvd2VkLlxwYXINClxwYXINCioqUHJlYW1ibGUqKlxwYXINClxwYXINClRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBpcyBhIGZyZWUsIGNvcHlsZWZ0IGxpY2Vuc2UgZm9yIHNvZnR3YXJlXHBhcg0KYW5kIG90aGVyIGtpbmRzIG9mIHdvcmtzLlxwYXINClxwYXINClRoZSBsaWNlbnNlcyBmb3IgbW9zdCBzb2Z0d2FyZSBhbmQgb3RoZXIgcHJhY3RpY2FsIHdvcmtzIGFyZSBkZXNpZ25lZCB0b1xwYXINCnRha2UgYXdheSB5b3VyIGZyZWVkb20gdG8gc2hhcmUgYW5kIGNoYW5nZSB0aGUgd29ya3MuIEJ5IGNvbnRyYXN0LCB0aGVccGFyDQpHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBpcyBpbnRlbmRlZCB0byBndWFyYW50ZWUgeW91ciBmcmVlZG9tIHRvXHBhcg0Kc2hhcmUgYW5kIGNoYW5nZSBhbGwgdmVyc2lvbnMgb2YgYSBwcm9ncmFtXFwtLXRvIG1ha2Ugc3VyZSBpdCByZW1haW5zXHBhcg0KZnJlZSBzb2Z0d2FyZSBmb3IgYWxsIGl0cyB1c2Vycy4gV2UsIHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb24sIHVzZVxwYXINCnRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBmb3IgbW9zdCBvZiBvdXIgc29mdHdhcmU7IGl0IGFwcGxpZXMgYWxzb1xwYXINCnRvIGFueSBvdGhlciB3b3JrIHJlbGVhc2VkIHRoaXMgd2F5IGJ5IGl0cyBhdXRob3JzLiBZb3UgY2FuIGFwcGx5IGl0IHRvXHBhcg0KeW91ciBwcm9ncmFtcywgdG9vLlxwYXINClxwYXINCldoZW4gd2Ugc3BlYWsgb2YgZnJlZSBzb2Z0d2FyZSwgd2UgYXJlIHJlZmVycmluZyB0byBmcmVlZG9tLCBub3QgcHJpY2UuXHBhcg0KT3VyIEdlbmVyYWwgUHVibGljIExpY2Vuc2VzIGFyZSBkZXNpZ25lZCB0byBtYWtlIHN1cmUgdGhhdCB5b3UgaGF2ZSB0aGVccGFyDQpmcmVlZG9tIHRvIGRpc3RyaWJ1dGUgY29waWVzIG9mIGZyZWUgc29mdHdhcmUgKGFuZCBjaGFyZ2UgZm9yIHRoZW0gaWZccGFyDQp5b3Ugd2lzaCksIHRoYXQgeW91IHJlY2VpdmUgc291cmNlIGNvZGUgb3IgY2FuIGdldCBpdCBpZiB5b3Ugd2FudCBpdCxccGFyDQp0aGF0IHlvdSBjYW4gY2hhbmdlIHRoZSBzb2Z0d2FyZSBvciB1c2UgcGllY2VzIG9mIGl0IGluIG5ldyBmcmVlXHBhcg0KcHJvZ3JhbXMsIGFuZCB0aGF0IHlvdSBrbm93IHlvdSBjYW4gZG8gdGhlc2UgdGhpbmdzLlxwYXINClxwYXINClRvIHByb3RlY3QgeW91ciByaWdodHMsIHdlIG5lZWQgdG8gcHJldmVudCBvdGhlcnMgZnJvbSBkZW55aW5nIHlvdSB0aGVzZVxwYXINCnJpZ2h0cyBvciBhc2tpbmcgeW91IHRvIHN1cnJlbmRlciB0aGUgcmlnaHRzLiBUaGVyZWZvcmUsIHlvdSBoYXZlXHBhcg0KY2VydGFpbiByZXNwb25zaWJpbGl0aWVzIGlmIHlvdSBkaXN0cmlidXRlIGNvcGllcyBvZiB0aGUgc29mdHdhcmUsIG9yIGlmXHBhcg0KeW91IG1vZGlmeSBpdDogcmVzcG9uc2liaWxpdGllcyB0byByZXNwZWN0IHRoZSBmcmVlZG9tIG9mIG90aGVycy5ccGFyDQpccGFyDQpGb3IgZXhhbXBsZSwgaWYgeW91IGRpc3RyaWJ1dGUgY29waWVzIG9mIHN1Y2ggYSBwcm9ncmFtLCB3aGV0aGVyIGdyYXRpc1xwYXINCm9yIGZvciBhIGZlZSwgeW91IG11c3QgcGFzcyBvbiB0byB0aGUgcmVjaXBpZW50cyB0aGUgc2FtZSBmcmVlZG9tcyB0aGF0XHBhcg0KeW91IHJlY2VpdmVkLiBZb3UgbXVzdCBtYWtlIHN1cmUgdGhhdCB0aGV5LCB0b28sIHJlY2VpdmUgb3IgY2FuIGdldCB0aGVccGFyDQpzb3VyY2UgY29kZS4gQW5kIHlvdSBtdXN0IHNob3cgdGhlbSB0aGVzZSB0ZXJtcyBzbyB0aGV5IGtub3cgdGhlaXJccGFyDQpyaWdodHMuXHBhcg0KXHBhcg0KRGV2ZWxvcGVycyB0aGF0IHVzZSB0aGUgR05VIEdQTCBwcm90ZWN0IHlvdXIgcmlnaHRzIHdpdGggdHdvIHN0ZXBzOiAoMSlccGFyDQphc3NlcnQgY29weXJpZ2h0IG9uIHRoZSBzb2Z0d2FyZSwgYW5kICgyKSBvZmZlciB5b3UgdGhpcyBMaWNlbnNlIGdpdmluZ1xwYXINCnlvdSBsZWdhbCBwZXJtaXNzaW9uIHRvIGNvcHksIGRpc3RyaWJ1dGUgYW5kL29yIG1vZGlmeSBpdC5ccGFyDQpccGFyDQpGb3IgdGhlIGRldmVsb3BlcnNcXCcgYW5kIGF1dGhvcnNcXCcgcHJvdGVjdGlvbiwgdGhlIEdQTCBjbGVhcmx5IGV4cGxhaW5zXHBhcg0KdGhhdCB0aGVyZSBpcyBubyB3YXJyYW50eSBmb3IgdGhpcyBmcmVlIHNvZnR3YXJlLiBGb3IgYm90aCB1c2Vyc1xcJyBhbmRccGFyDQphdXRob3JzXFwnIHNha2UsIHRoZSBHUEwgcmVxdWlyZXMgdGhhdCBtb2RpZmllZCB2ZXJzaW9ucyBiZSBtYXJrZWQgYXNccGFyDQpjaGFuZ2VkLCBzbyB0aGF0IHRoZWlyIHByb2JsZW1zIHdpbGwgbm90IGJlIGF0dHJpYnV0ZWQgZXJyb25lb3VzbHkgdG9ccGFyDQphdXRob3JzIG9mIHByZXZpb3VzIHZlcnNpb25zLlxwYXINClxwYXINClNvbWUgZGV2aWNlcyBhcmUgZGVzaWduZWQgdG8gZGVueSB1c2VycyBhY2Nlc3MgdG8gaW5zdGFsbCBvciBydW5ccGFyDQptb2RpZmllZCB2ZXJzaW9ucyBvZiB0aGUgc29mdHdhcmUgaW5zaWRlIHRoZW0sIGFsdGhvdWdoIHRoZSBtYW51ZmFjdHVyZXJccGFyDQpjYW4gZG8gc28uIFRoaXMgaXMgZnVuZGFtZW50YWxseSBpbmNvbXBhdGlibGUgd2l0aCB0aGUgYWltIG9mIHByb3RlY3RpbmdccGFyDQp1c2Vyc1xcJyBmcmVlZG9tIHRvIGNoYW5nZSB0aGUgc29mdHdhcmUuIFRoZSBzeXN0ZW1hdGljIHBhdHRlcm4gb2Ygc3VjaFxwYXINCmFidXNlIG9jY3VycyBpbiB0aGUgYXJlYSBvZiBwcm9kdWN0cyBmb3IgaW5kaXZpZHVhbHMgdG8gdXNlLCB3aGljaCBpc1xwYXINCnByZWNpc2VseSB3aGVyZSBpdCBpcyBtb3N0IHVuYWNjZXB0YWJsZS4gVGhlcmVmb3JlLCB3ZSBoYXZlIGRlc2lnbmVkXHBhcg0KdGhpcyB2ZXJzaW9uIG9mIHRoZSBHUEwgdG8gcHJvaGliaXQgdGhlIHByYWN0aWNlIGZvciB0aG9zZSBwcm9kdWN0cy4gSWZccGFyDQpzdWNoIHByb2JsZW1zIGFyaXNlIHN1YnN0YW50aWFsbHkgaW4gb3RoZXIgZG9tYWlucywgd2Ugc3RhbmQgcmVhZHkgdG9ccGFyDQpleHRlbmQgdGhpcyBwcm92aXNpb24gdG8gdGhvc2UgZG9tYWlucyBpbiBmdXR1cmUgdmVyc2lvbnMgb2YgdGhlIEdQTCwgYXNccGFyDQpuZWVkZWQgdG8gcHJvdGVjdCB0aGUgZnJlZWRvbSBvZiB1c2Vycy5ccGFyDQpccGFyDQpGaW5hbGx5LCBldmVyeSBwcm9ncmFtIGlzIHRocmVhdGVuZWQgY29uc3RhbnRseSBieSBzb2Z0d2FyZSBwYXRlbnRzLlxwYXINClN0YXRlcyBzaG91bGQgbm90IGFsbG93IHBhdGVudHMgdG8gcmVzdHJpY3QgZGV2ZWxvcG1lbnQgYW5kIHVzZSBvZlxwYXINCnNvZnR3YXJlIG9uIGdlbmVyYWwtcHVycG9zZSBjb21wdXRlcnMsIGJ1dCBpbiB0aG9zZSB0aGF0IGRvLCB3ZSB3aXNoIHRvXHBhcg0KYXZvaWQgdGhlIHNwZWNpYWwgZGFuZ2VyIHRoYXQgcGF0ZW50cyBhcHBsaWVkIHRvIGEgZnJlZSBwcm9ncmFtIGNvdWxkXHBhcg0KbWFrZSBpdCBlZmZlY3RpdmVseSBwcm9wcmlldGFyeS4gVG8gcHJldmVudCB0aGlzLCB0aGUgR1BMIGFzc3VyZXMgdGhhdFxwYXINCnBhdGVudHMgY2Fubm90IGJlIHVzZWQgdG8gcmVuZGVyIHRoZSBwcm9ncmFtIG5vbi1mcmVlLlxwYXINClxwYXINClRoZSBwcmVjaXNlIHRlcm1zIGFuZCBjb25kaXRpb25zIGZvciBjb3B5aW5nLCBkaXN0cmlidXRpb24gYW5kXHBhcg0KbW9kaWZpY2F0aW9uIGZvbGxvdy5ccGFyDQpccGFyDQoqKlRFUk1TIEFORCBDT05ESVRJT05TKipccGFyDQpccGFyDQoqKjAuIERlZmluaXRpb25zLioqXHBhcg0KXHBhcg0KIlRoaXMgTGljZW5zZSIgcmVmZXJzIHRvIHZlcnNpb24gMyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UuXHBhcg0KXHBhcg0KIkNvcHlyaWdodCIgYWxzbyBtZWFucyBjb3B5cmlnaHQtbGlrZSBsYXdzIHRoYXQgYXBwbHkgdG8gb3RoZXIga2luZHMgb2ZccGFyDQp3b3Jrcywgc3VjaCBhcyBzZW1pY29uZHVjdG9yIG1hc2tzLlxwYXINClxwYXINCiJUaGUgUHJvZ3JhbSIgcmVmZXJzIHRvIGFueSBjb3B5cmlnaHRhYmxlIHdvcmsgbGljZW5zZWQgdW5kZXIgdGhpc1xwYXINCkxpY2Vuc2UuIEVhY2ggbGljZW5zZWUgaXMgYWRkcmVzc2VkIGFzICJ5b3UiLiAiTGljZW5zZWVzIiBhbmRccGFyDQoicmVjaXBpZW50cyIgbWF5IGJlIGluZGl2aWR1YWxzIG9yIG9yZ2FuaXphdGlvbnMuXHBhcg0KXHBhcg0KVG8gIm1vZGlmeSIgYSB3b3JrIG1lYW5zIHRvIGNvcHkgZnJvbSBvciBhZGFwdCBhbGwgb3IgcGFydCBvZiB0aGUgd29ya1xwYXINCmluIGEgZmFzaGlvbiByZXF1aXJpbmcgY29weXJpZ2h0IHBlcm1pc3Npb24sIG90aGVyIHRoYW4gdGhlIG1ha2luZyBvZiBhblxwYXINCmV4YWN0IGNvcHkuIFRoZSByZXN1bHRpbmcgd29yayBpcyBjYWxsZWQgYSAibW9kaWZpZWQgdmVyc2lvbiIgb2YgdGhlXHBhcg0KZWFybGllciB3b3JrIG9yIGEgd29yayAiYmFzZWQgb24iIHRoZSBlYXJsaWVyIHdvcmsuXHBhcg0KXHBhcg0KQSAiY292ZXJlZCB3b3JrIiBtZWFucyBlaXRoZXIgdGhlIHVubW9kaWZpZWQgUHJvZ3JhbSBvciBhIHdvcmsgYmFzZWQgb25ccGFyDQp0aGUgUHJvZ3JhbS5ccGFyDQpccGFyDQpUbyAicHJvcGFnYXRlIiBhIHdvcmsgbWVhbnMgdG8gZG8gYW55dGhpbmcgd2l0aCBpdCB0aGF0LCB3aXRob3V0XHBhcg0KcGVybWlzc2lvbiwgd291bGQgbWFrZSB5b3UgZGlyZWN0bHkgb3Igc2Vjb25kYXJpbHkgbGlhYmxlIGZvclxwYXINCmluZnJpbmdlbWVudCB1bmRlciBhcHBsaWNhYmxlIGNvcHlyaWdodCBsYXcsIGV4Y2VwdCBleGVjdXRpbmcgaXQgb24gYVxwYXINCmNvbXB1dGVyIG9yIG1vZGlmeWluZyBhIHByaXZhdGUgY29weS4gUHJvcGFnYXRpb24gaW5jbHVkZXMgY29weWluZyxccGFyDQpkaXN0cmlidXRpb24gKHdpdGggb3Igd2l0aG91dCBtb2RpZmljYXRpb24pLCBtYWtpbmcgYXZhaWxhYmxlIHRvIHRoZVxwYXINCnB1YmxpYywgYW5kIGluIHNvbWUgY291bnRyaWVzIG90aGVyIGFjdGl2aXRpZXMgYXMgd2VsbC5ccGFyDQpccGFyDQpUbyAiY29udmV5IiBhIHdvcmsgbWVhbnMgYW55IGtpbmQgb2YgcHJvcGFnYXRpb24gdGhhdCBlbmFibGVzIG90aGVyXHBhcg0KcGFydGllcyB0byBtYWtlIG9yIHJlY2VpdmUgY29waWVzLiBNZXJlIGludGVyYWN0aW9uIHdpdGggYSB1c2VyIHRocm91Z2hccGFyDQphIGNvbXB1dGVyIG5ldHdvcmssIHdpdGggbm8gdHJhbnNmZXIgb2YgYSBjb3B5LCBpcyBub3QgY29udmV5aW5nLlxwYXINClxwYXINCkFuIGludGVyYWN0aXZlIHVzZXIgaW50ZXJmYWNlIGRpc3BsYXlzICJBcHByb3ByaWF0ZSBMZWdhbCBOb3RpY2VzIiB0b1xwYXINCnRoZSBleHRlbnQgdGhhdCBpdCBpbmNsdWRlcyBhIGNvbnZlbmllbnQgYW5kIHByb21pbmVudGx5IHZpc2libGUgZmVhdHVyZVxwYXINCnRoYXQgKDEpIGRpc3BsYXlzIGFuIGFwcHJvcHJpYXRlIGNvcHlyaWdodCBub3RpY2UsIGFuZCAoMikgdGVsbHMgdGhlXHBhcg0KdXNlciB0aGF0IHRoZXJlIGlzIG5vIHdhcnJhbnR5IGZvciB0aGUgd29yayAoZXhjZXB0IHRvIHRoZSBleHRlbnQgdGhhdFxwYXINCndhcnJhbnRpZXMgYXJlIHByb3ZpZGVkKSwgdGhhdCBsaWNlbnNlZXMgbWF5IGNvbnZleSB0aGUgd29yayB1bmRlciB0aGlzXHBhcg0KTGljZW5zZSwgYW5kIGhvdyB0byB2aWV3IGEgY29weSBvZiB0aGlzIExpY2Vuc2UuIElmIHRoZSBpbnRlcmZhY2VccGFyDQpwcmVzZW50cyBhIGxpc3Qgb2YgdXNlciBjb21tYW5kcyBvciBvcHRpb25zLCBzdWNoIGFzIGEgbWVudSwgYSBwcm9taW5lbnRccGFyDQppdGVtIGluIHRoZSBsaXN0IG1lZXRzIHRoaXMgY3JpdGVyaW9uLlxwYXINClxwYXINCioqMS4gU291cmNlIENvZGUuKipccGFyDQpccGFyDQpUaGUgInNvdXJjZSBjb2RlIiBmb3IgYSB3b3JrIG1lYW5zIHRoZSBwcmVmZXJyZWQgZm9ybSBvZiB0aGUgd29yayBmb3JccGFyDQptYWtpbmcgbW9kaWZpY2F0aW9ucyB0byBpdC4gIk9iamVjdCBjb2RlIiBtZWFucyBhbnkgbm9uLXNvdXJjZSBmb3JtIG9mIGFccGFyDQp3b3JrLlxwYXINClxwYXINCkEgIlN0YW5kYXJkIEludGVyZmFjZSIgbWVhbnMgYW4gaW50ZXJmYWNlIHRoYXQgZWl0aGVyIGlzIGFuIG9mZmljaWFsXHBhcg0Kc3RhbmRhcmQgZGVmaW5lZCBieSBhIHJlY29nbml6ZWQgc3RhbmRhcmRzIGJvZHksIG9yLCBpbiB0aGUgY2FzZSBvZlxwYXINCmludGVyZmFjZXMgc3BlY2lmaWVkIGZvciBhIHBhcnRpY3VsYXIgcHJvZ3JhbW1pbmcgbGFuZ3VhZ2UsIG9uZSB0aGF0IGlzXHBhcg0Kd2lkZWx5IHVzZWQgYW1vbmcgZGV2ZWxvcGVycyB3b3JraW5nIGluIHRoYXQgbGFuZ3VhZ2UuXHBhcg0KXHBhcg0KVGhlICJTeXN0ZW0gTGlicmFyaWVzIiBvZiBhbiBleGVjdXRhYmxlIHdvcmsgaW5jbHVkZSBhbnl0aGluZywgb3RoZXJccGFyDQp0aGFuIHRoZSB3b3JrIGFzIGEgd2hvbGUsIHRoYXQgKGEpIGlzIGluY2x1ZGVkIGluIHRoZSBub3JtYWwgZm9ybSBvZlxwYXINCnBhY2thZ2luZyBhIE1ham9yIENvbXBvbmVudCwgYnV0IHdoaWNoIGlzIG5vdCBwYXJ0IG9mIHRoYXQgTWFqb3JccGFyDQpDb21wb25lbnQsIGFuZCAoYikgc2VydmVzIG9ubHkgdG8gZW5hYmxlIHVzZSBvZiB0aGUgd29yayB3aXRoIHRoYXQgTWFqb3JccGFyDQpDb21wb25lbnQsIG9yIHRvIGltcGxlbWVudCBhIFN0YW5kYXJkIEludGVyZmFjZSBmb3Igd2hpY2ggYW5ccGFyDQppbXBsZW1lbnRhdGlvbiBpcyBhdmFpbGFibGUgdG8gdGhlIHB1YmxpYyBpbiBzb3VyY2UgY29kZSBmb3JtLiBBICJNYWpvclxwYXINCkNvbXBvbmVudCIsIGluIHRoaXMgY29udGV4dCwgbWVhbnMgYSBtYWpvciBlc3NlbnRpYWwgY29tcG9uZW50IChrZXJuZWwsXHBhcg0Kd2luZG93IHN5c3RlbSwgYW5kIHNvIG9uKSBvZiB0aGUgc3BlY2lmaWMgb3BlcmF0aW5nIHN5c3RlbSAoaWYgYW55KSBvblxwYXINCndoaWNoIHRoZSBleGVjdXRhYmxlIHdvcmsgcnVucywgb3IgYSBjb21waWxlciB1c2VkIHRvIHByb2R1Y2UgdGhlIHdvcmssXHBhcg0Kb3IgYW4gb2JqZWN0IGNvZGUgaW50ZXJwcmV0ZXIgdXNlZCB0byBydW4gaXQuXHBhcg0KXHBhcg0KVGhlICJDb3JyZXNwb25kaW5nIFNvdXJjZSIgZm9yIGEgd29yayBpbiBvYmplY3QgY29kZSBmb3JtIG1lYW5zIGFsbCB0aGVccGFyDQpzb3VyY2UgY29kZSBuZWVkZWQgdG8gZ2VuZXJhdGUsIGluc3RhbGwsIGFuZCAoZm9yIGFuIGV4ZWN1dGFibGUgd29yaylccGFyDQpydW4gdGhlIG9iamVjdCBjb2RlIGFuZCB0byBtb2RpZnkgdGhlIHdvcmssIGluY2x1ZGluZyBzY3JpcHRzIHRvIGNvbnRyb2xccGFyDQp0aG9zZSBhY3Rpdml0aWVzLiBIb3dldmVyLCBpdCBkb2VzIG5vdCBpbmNsdWRlIHRoZSB3b3JrXFwncyBTeXN0ZW1ccGFyDQpMaWJyYXJpZXMsIG9yIGdlbmVyYWwtcHVycG9zZSB0b29scyBvciBnZW5lcmFsbHkgYXZhaWxhYmxlIGZyZWUgcHJvZ3JhbXNccGFyDQp3aGljaCBhcmUgdXNlZCB1bm1vZGlmaWVkIGluIHBlcmZvcm1pbmcgdGhvc2UgYWN0aXZpdGllcyBidXQgd2hpY2ggYXJlXHBhcg0Kbm90IHBhcnQgb2YgdGhlIHdvcmsuIEZvciBleGFtcGxlLCBDb3JyZXNwb25kaW5nIFNvdXJjZSBpbmNsdWRlc1xwYXINCmludGVyZmFjZSBkZWZpbml0aW9uIGZpbGVzIGFzc29jaWF0ZWQgd2l0aCBzb3VyY2UgZmlsZXMgZm9yIHRoZSB3b3JrLFxwYXINCmFuZCB0aGUgc291cmNlIGNvZGUgZm9yIHNoYXJlZCBsaWJyYXJpZXMgYW5kIGR5bmFtaWNhbGx5IGxpbmtlZFxwYXINCnN1YnByb2dyYW1zIHRoYXQgdGhlIHdvcmsgaXMgc3BlY2lmaWNhbGx5IGRlc2lnbmVkIHRvIHJlcXVpcmUsIHN1Y2ggYXNccGFyDQpieSBpbnRpbWF0ZSBkYXRhIGNvbW11bmljYXRpb24gb3IgY29udHJvbCBmbG93IGJldHdlZW4gdGhvc2Ugc3VicHJvZ3JhbXNccGFyDQphbmQgb3RoZXIgcGFydHMgb2YgdGhlIHdvcmsuXHBhcg0KXHBhcg0KVGhlIENvcnJlc3BvbmRpbmcgU291cmNlIG5lZWQgbm90IGluY2x1ZGUgYW55dGhpbmcgdGhhdCB1c2VycyBjYW5ccGFyDQpyZWdlbmVyYXRlIGF1dG9tYXRpY2FsbHkgZnJvbSBvdGhlciBwYXJ0cyBvZiB0aGUgQ29ycmVzcG9uZGluZyBTb3VyY2UuXHBhcg0KXHBhcg0KVGhlIENvcnJlc3BvbmRpbmcgU291cmNlIGZvciBhIHdvcmsgaW4gc291cmNlIGNvZGUgZm9ybSBpcyB0aGF0IHNhbWVccGFyDQp3b3JrLlxwYXINClxwYXINCioqMi4gQmFzaWMgUGVybWlzc2lvbnMuKipccGFyDQpccGFyDQpBbGwgcmlnaHRzIGdyYW50ZWQgdW5kZXIgdGhpcyBMaWNlbnNlIGFyZSBncmFudGVkIGZvciB0aGUgdGVybSBvZlxwYXINCmNvcHlyaWdodCBvbiB0aGUgUHJvZ3JhbSwgYW5kIGFyZSBpcnJldm9jYWJsZSBwcm92aWRlZCB0aGUgc3RhdGVkXHBhcg0KY29uZGl0aW9ucyBhcmUgbWV0LiBUaGlzIExpY2Vuc2UgZXhwbGljaXRseSBhZmZpcm1zIHlvdXIgdW5saW1pdGVkXHBhcg0KcGVybWlzc2lvbiB0byBydW4gdGhlIHVubW9kaWZpZWQgUHJvZ3JhbS4gVGhlIG91dHB1dCBmcm9tIHJ1bm5pbmcgYVxwYXINCmNvdmVyZWQgd29yayBpcyBjb3ZlcmVkIGJ5IHRoaXMgTGljZW5zZSBvbmx5IGlmIHRoZSBvdXRwdXQsIGdpdmVuIGl0c1xwYXINCmNvbnRlbnQsIGNvbnN0aXR1dGVzIGEgY292ZXJlZCB3b3JrLiBUaGlzIExpY2Vuc2UgYWNrbm93bGVkZ2VzIHlvdXJccGFyDQpyaWdodHMgb2YgZmFpciB1c2Ugb3Igb3RoZXIgZXF1aXZhbGVudCwgYXMgcHJvdmlkZWQgYnkgY29weXJpZ2h0IGxhdy5ccGFyDQpccGFyDQpZb3UgbWF5IG1ha2UsIHJ1biBhbmQgcHJvcGFnYXRlIGNvdmVyZWQgd29ya3MgdGhhdCB5b3UgZG8gbm90IGNvbnZleSxccGFyDQp3aXRob3V0IGNvbmRpdGlvbnMgc28gbG9uZyBhcyB5b3VyIGxpY2Vuc2Ugb3RoZXJ3aXNlIHJlbWFpbnMgaW4gZm9yY2UuXHBhcg0KWW91IG1heSBjb252ZXkgY292ZXJlZCB3b3JrcyB0byBvdGhlcnMgZm9yIHRoZSBzb2xlIHB1cnBvc2Ugb2YgaGF2aW5nXHBhcg0KdGhlbSBtYWtlIG1vZGlmaWNhdGlvbnMgZXhjbHVzaXZlbHkgZm9yIHlvdSwgb3IgcHJvdmlkZSB5b3Ugd2l0aFxwYXINCmZhY2lsaXRpZXMgZm9yIHJ1bm5pbmcgdGhvc2Ugd29ya3MsIHByb3ZpZGVkIHRoYXQgeW91IGNvbXBseSB3aXRoIHRoZVxwYXINCnRlcm1zIG9mIHRoaXMgTGljZW5zZSBpbiBjb252ZXlpbmcgYWxsIG1hdGVyaWFsIGZvciB3aGljaCB5b3UgZG8gbm90XHBhcg0KY29udHJvbCBjb3B5cmlnaHQuIFRob3NlIHRodXMgbWFraW5nIG9yIHJ1bm5pbmcgdGhlIGNvdmVyZWQgd29ya3MgZm9yXHBhcg0KeW91IG11c3QgZG8gc28gZXhjbHVzaXZlbHkgb24geW91ciBiZWhhbGYsIHVuZGVyIHlvdXIgZGlyZWN0aW9uIGFuZFxwYXINCmNvbnRyb2wsIG9uIHRlcm1zIHRoYXQgcHJvaGliaXQgdGhlbSBmcm9tIG1ha2luZyBhbnkgY29waWVzIG9mIHlvdXJccGFyDQpjb3B5cmlnaHRlZCBtYXRlcmlhbCBvdXRzaWRlIHRoZWlyIHJlbGF0aW9uc2hpcCB3aXRoIHlvdS5ccGFyDQpccGFyDQpDb252ZXlpbmcgdW5kZXIgYW55IG90aGVyIGNpcmN1bXN0YW5jZXMgaXMgcGVybWl0dGVkIHNvbGVseSB1bmRlciB0aGVccGFyDQpjb25kaXRpb25zIHN0YXRlZCBiZWxvdy4gU3VibGljZW5zaW5nIGlzIG5vdCBhbGxvd2VkOyBzZWN0aW9uIDEwIG1ha2VzXHBhcg0KaXQgdW5uZWNlc3NhcnkuXHBhcg0KXHBhcg0KKiozLiBQcm90ZWN0aW5nIFVzZXJzXFwnIExlZ2FsIFJpZ2h0cyBGcm9tIEFudGktQ2lyY3VtdmVudGlvbiBMYXcuKipccGFyDQpccGFyDQpObyBjb3ZlcmVkIHdvcmsgc2hhbGwgYmUgZGVlbWVkIHBhcnQgb2YgYW4gZWZmZWN0aXZlIHRlY2hub2xvZ2ljYWxccGFyDQptZWFzdXJlIHVuZGVyIGFueSBhcHBsaWNhYmxlIGxhdyBmdWxmaWxsaW5nIG9ibGlnYXRpb25zIHVuZGVyIGFydGljbGUgMTFccGFyDQpvZiB0aGUgV0lQTyBjb3B5cmlnaHQgdHJlYXR5IGFkb3B0ZWQgb24gMjAgRGVjZW1iZXIgMTk5Niwgb3Igc2ltaWxhclxwYXINCmxhd3MgcHJvaGliaXRpbmcgb3IgcmVzdHJpY3RpbmcgY2lyY3VtdmVudGlvbiBvZiBzdWNoIG1lYXN1cmVzLlxwYXINClxwYXINCldoZW4geW91IGNvbnZleSBhIGNvdmVyZWQgd29yaywgeW91IHdhaXZlIGFueSBsZWdhbCBwb3dlciB0byBmb3JiaWRccGFyDQpjaXJjdW12ZW50aW9uIG9mIHRlY2hub2xvZ2ljYWwgbWVhc3VyZXMgdG8gdGhlIGV4dGVudCBzdWNoIGNpcmN1bXZlbnRpb25ccGFyDQppcyBlZmZlY3RlZCBieSBleGVyY2lzaW5nIHJpZ2h0cyB1bmRlciB0aGlzIExpY2Vuc2Ugd2l0aCByZXNwZWN0IHRvIHRoZVxwYXINCmNvdmVyZWQgd29yaywgYW5kIHlvdSBkaXNjbGFpbSBhbnkgaW50ZW50aW9uIHRvIGxpbWl0IG9wZXJhdGlvbiBvclxwYXINCm1vZGlmaWNhdGlvbiBvZiB0aGUgd29yayBhcyBhIG1lYW5zIG9mIGVuZm9yY2luZywgYWdhaW5zdCB0aGUgd29ya1xcJ3NccGFyDQp1c2VycywgeW91ciBvciB0aGlyZCBwYXJ0aWVzXFwnIGxlZ2FsIHJpZ2h0cyB0byBmb3JiaWQgY2lyY3VtdmVudGlvbiBvZlxwYXINCnRlY2hub2xvZ2ljYWwgbWVhc3VyZXMuXHBhcg0KXHBhcg0KKio0LiBDb252ZXlpbmcgVmVyYmF0aW0gQ29waWVzLioqXHBhcg0KXHBhcg0KWW91IG1heSBjb252ZXkgdmVyYmF0aW0gY29waWVzIG9mIHRoZSBQcm9ncmFtXFwncyBzb3VyY2UgY29kZSBhcyB5b3VccGFyDQpyZWNlaXZlIGl0LCBpbiBhbnkgbWVkaXVtLCBwcm92aWRlZCB0aGF0IHlvdSBjb25zcGljdW91c2x5IGFuZFxwYXINCmFwcHJvcHJpYXRlbHkgcHVibGlzaCBvbiBlYWNoIGNvcHkgYW4gYXBwcm9wcmlhdGUgY29weXJpZ2h0IG5vdGljZTsga2VlcFxwYXINCmludGFjdCBhbGwgbm90aWNlcyBzdGF0aW5nIHRoYXQgdGhpcyBMaWNlbnNlIGFuZCBhbnkgbm9uLXBlcm1pc3NpdmVccGFyDQp0ZXJtcyBhZGRlZCBpbiBhY2NvcmQgd2l0aCBzZWN0aW9uIDcgYXBwbHkgdG8gdGhlIGNvZGU7IGtlZXAgaW50YWN0IGFsbFxwYXINCm5vdGljZXMgb2YgdGhlIGFic2VuY2Ugb2YgYW55IHdhcnJhbnR5OyBhbmQgZ2l2ZSBhbGwgcmVjaXBpZW50cyBhIGNvcHlccGFyDQpvZiB0aGlzIExpY2Vuc2UgYWxvbmcgd2l0aCB0aGUgUHJvZ3JhbS5ccGFyDQpccGFyDQpZb3UgbWF5IGNoYXJnZSBhbnkgcHJpY2Ugb3Igbm8gcHJpY2UgZm9yIGVhY2ggY29weSB0aGF0IHlvdSBjb252ZXksIGFuZFxwYXINCnlvdSBtYXkgb2ZmZXIgc3VwcG9ydCBvciB3YXJyYW50eSBwcm90ZWN0aW9uIGZvciBhIGZlZS5ccGFyDQpccGFyDQoqKjUuIENvbnZleWluZyBNb2RpZmllZCBTb3VyY2UgVmVyc2lvbnMuKipccGFyDQpccGFyDQpZb3UgbWF5IGNvbnZleSBhIHdvcmsgYmFzZWQgb24gdGhlIFByb2dyYW0sIG9yIHRoZSBtb2RpZmljYXRpb25zIHRvXHBhcg0KcHJvZHVjZSBpdCBmcm9tIHRoZSBQcm9ncmFtLCBpbiB0aGUgZm9ybSBvZiBzb3VyY2UgY29kZSB1bmRlciB0aGUgdGVybXNccGFyDQpvZiBzZWN0aW9uIDQsIHByb3ZpZGVkIHRoYXQgeW91IGFsc28gbWVldCBhbGwgb2YgdGhlc2UgY29uZGl0aW9uczpccGFyDQpccGFyDQpcZjFcYnVsbGV0ICBhKSBUaGUgd29yayBtdXN0IGNhcnJ5IHByb21pbmVudCBub3RpY2VzIHN0YXRpbmcgdGhhdCB5b3UgbW9kaWZpZWQgaXQsXHBhcg0KYW5kIGdpdmluZyBhIHJlbGV2YW50IGRhdGUuXHBhcg0KXHBhcg0KXGJ1bGxldCAgYikgVGhlIHdvcmsgbXVzdCBjYXJyeSBwcm9taW5lbnQgbm90aWNlcyBzdGF0aW5nIHRoYXQgaXQgaXMgcmVsZWFzZWRccGFyDQp1bmRlciB0aGlzIExpY2Vuc2UgYW5kIGFueSBjb25kaXRpb25zIGFkZGVkIHVuZGVyIHNlY3Rpb24gNy4gVGhpc1xwYXINCnJlcXVpcmVtZW50IG1vZGlmaWVzIHRoZSByZXF1aXJlbWVudCBpbiBzZWN0aW9uIDQgdG8gImtlZXAgaW50YWN0IGFsbFxwYXINCm5vdGljZXMiLlxwYXINClxwYXINClxidWxsZXQgIGMpIFlvdSBtdXN0IGxpY2Vuc2UgdGhlIGVudGlyZSB3b3JrLCBhcyBhIHdob2xlLCB1bmRlciB0aGlzIExpY2Vuc2UgdG9ccGFyDQphbnlvbmUgd2hvIGNvbWVzIGludG8gcG9zc2Vzc2lvbiBvZiBhIGNvcHkuIFRoaXMgTGljZW5zZSB3aWxsIHRoZXJlZm9yZVxwYXINCmFwcGx5LCBhbG9uZyB3aXRoIGFueSBhcHBsaWNhYmxlIHNlY3Rpb24gNyBhZGRpdGlvbmFsIHRlcm1zLCB0byB0aGVccGFyDQp3aG9sZSBvZiB0aGUgd29yaywgYW5kIGFsbCBpdHMgcGFydHMsIHJlZ2FyZGxlc3Mgb2YgaG93IHRoZXkgYXJlXHBhcg0KcGFja2FnZWQuIFRoaXMgTGljZW5zZSBnaXZlcyBubyBwZXJtaXNzaW9uIHRvIGxpY2Vuc2UgdGhlIHdvcmsgaW4gYW55XHBhcg0Kb3RoZXIgd2F5LCBidXQgaXQgZG9lcyBub3QgaW52YWxpZGF0ZSBzdWNoIHBlcm1pc3Npb24gaWYgeW91IGhhdmVccGFyDQpzZXBhcmF0ZWx5IHJlY2VpdmVkIGl0LlxwYXINClxwYXINClxidWxsZXQgIGQpIElmIHRoZSB3b3JrIGhhcyBpbnRlcmFjdGl2ZSB1c2VyIGludGVyZmFjZXMsIGVhY2ggbXVzdCBkaXNwbGF5XHBhcg0KQXBwcm9wcmlhdGUgTGVnYWwgTm90aWNlczsgaG93ZXZlciwgaWYgdGhlIFByb2dyYW0gaGFzIGludGVyYWN0aXZlXHBhcg0KaW50ZXJmYWNlcyB0aGF0IGRvIG5vdCBkaXNwbGF5IEFwcHJvcHJpYXRlIExlZ2FsIE5vdGljZXMsIHlvdXIgd29yayBuZWVkXHBhcg0Kbm90IG1ha2UgdGhlbSBkbyBzby5ccGFyDQpccGFyDQpBIGNvbXBpbGF0aW9uIG9mIGEgY292ZXJlZCB3b3JrIHdpdGggb3RoZXIgc2VwYXJhdGUgYW5kIGluZGVwZW5kZW50XHBhcg0Kd29ya3MsIHdoaWNoIGFyZSBub3QgYnkgdGhlaXIgbmF0dXJlIGV4dGVuc2lvbnMgb2YgdGhlIGNvdmVyZWQgd29yaywgYW5kXHBhcg0Kd2hpY2ggYXJlIG5vdCBjb21iaW5lZCB3aXRoIGl0IHN1Y2ggYXMgdG8gZm9ybSBhIGxhcmdlciBwcm9ncmFtLCBpbiBvclxwYXINCm9uIGEgdm9sdW1lIG9mIGEgc3RvcmFnZSBvciBkaXN0cmlidXRpb24gbWVkaXVtLCBpcyBjYWxsZWQgYW5ccGFyDQoiYWdncmVnYXRlIiBpZiB0aGUgY29tcGlsYXRpb24gYW5kIGl0cyByZXN1bHRpbmcgY29weXJpZ2h0IGFyZSBub3QgdXNlZFxwYXINCnRvIGxpbWl0IHRoZSBhY2Nlc3Mgb3IgbGVnYWwgcmlnaHRzIG9mIHRoZSBjb21waWxhdGlvblxcJ3MgdXNlcnMgYmV5b25kXHBhcg0Kd2hhdCB0aGUgaW5kaXZpZHVhbCB3b3JrcyBwZXJtaXQuIEluY2x1c2lvbiBvZiBhIGNvdmVyZWQgd29yayBpbiBhblxwYXINCmFnZ3JlZ2F0ZSBkb2VzIG5vdCBjYXVzZSB0aGlzIExpY2Vuc2UgdG8gYXBwbHkgdG8gdGhlIG90aGVyIHBhcnRzIG9mIHRoZVxwYXINCmFnZ3JlZ2F0ZS5ccGFyDQpccGFyDQoqKjYuIENvbnZleWluZyBOb24tU291cmNlIEZvcm1zLioqXHBhcg0KXHBhcg0KWW91IG1heSBjb252ZXkgYSBjb3ZlcmVkIHdvcmsgaW4gb2JqZWN0IGNvZGUgZm9ybSB1bmRlciB0aGUgdGVybXMgb2ZccGFyDQpzZWN0aW9ucyA0IGFuZCA1LCBwcm92aWRlZCB0aGF0IHlvdSBhbHNvIGNvbnZleSB0aGUgbWFjaGluZS1yZWFkYWJsZVxwYXINCkNvcnJlc3BvbmRpbmcgU291cmNlIHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGlzIExpY2Vuc2UsIGluIG9uZSBvZiB0aGVzZVxwYXINCndheXM6XHBhcg0KXHBhcg0KXGJ1bGxldCAgYSkgQ29udmV5IHRoZSBvYmplY3QgY29kZSBpbiwgb3IgZW1ib2RpZWQgaW4sIGEgcGh5c2ljYWwgcHJvZHVjdFxwYXINCihpbmNsdWRpbmcgYSBwaHlzaWNhbCBkaXN0cmlidXRpb24gbWVkaXVtKSwgYWNjb21wYW5pZWQgYnkgdGhlXHBhcg0KQ29ycmVzcG9uZGluZyBTb3VyY2UgZml4ZWQgb24gYSBkdXJhYmxlIHBoeXNpY2FsIG1lZGl1bSBjdXN0b21hcmlseSB1c2VkXHBhcg0KZm9yIHNvZnR3YXJlIGludGVyY2hhbmdlLlxwYXINClxwYXINClxidWxsZXQgIGIpIENvbnZleSB0aGUgb2JqZWN0IGNvZGUgaW4sIG9yIGVtYm9kaWVkIGluLCBhIHBoeXNpY2FsIHByb2R1Y3RccGFyDQooaW5jbHVkaW5nIGEgcGh5c2ljYWwgZGlzdHJpYnV0aW9uIG1lZGl1bSksIGFjY29tcGFuaWVkIGJ5IGEgd3JpdHRlblxwYXINCm9mZmVyLCB2YWxpZCBmb3IgYXQgbGVhc3QgdGhyZWUgeWVhcnMgYW5kIHZhbGlkIGZvciBhcyBsb25nIGFzIHlvdSBvZmZlclxwYXINCnNwYXJlIHBhcnRzIG9yIGN1c3RvbWVyIHN1cHBvcnQgZm9yIHRoYXQgcHJvZHVjdCBtb2RlbCwgdG8gZ2l2ZSBhbnlvbmVccGFyDQp3aG8gcG9zc2Vzc2VzIHRoZSBvYmplY3QgY29kZSBlaXRoZXIgKDEpIGEgY29weSBvZiB0aGUgQ29ycmVzcG9uZGluZ1xwYXINClNvdXJjZSBmb3IgYWxsIHRoZSBzb2Z0d2FyZSBpbiB0aGUgcHJvZHVjdCB0aGF0IGlzIGNvdmVyZWQgYnkgdGhpc1xwYXINCkxpY2Vuc2UsIG9uIGEgZHVyYWJsZSBwaHlzaWNhbCBtZWRpdW0gY3VzdG9tYXJpbHkgdXNlZCBmb3Igc29mdHdhcmVccGFyDQppbnRlcmNoYW5nZSwgZm9yIGEgcHJpY2Ugbm8gbW9yZSB0aGFuIHlvdXIgcmVhc29uYWJsZSBjb3N0IG9mIHBoeXNpY2FsbHlccGFyDQpwZXJmb3JtaW5nIHRoaXMgY29udmV5aW5nIG9mIHNvdXJjZSwgb3IgKDIpIGFjY2VzcyB0byBjb3B5IHRoZVxwYXINCkNvcnJlc3BvbmRpbmcgU291cmNlIGZyb20gYSBuZXR3b3JrIHNlcnZlciBhdCBubyBjaGFyZ2UuXHBhcg0KXHBhcg0KXGJ1bGxldCAgYykgQ29udmV5IGluZGl2aWR1YWwgY29waWVzIG9mIHRoZSBvYmplY3QgY29kZSB3aXRoIGEgY29weSBvZiB0aGVccGFyDQp3cml0dGVuIG9mZmVyIHRvIHByb3ZpZGUgdGhlIENvcnJlc3BvbmRpbmcgU291cmNlLiBUaGlzIGFsdGVybmF0aXZlIGlzXHBhcg0KYWxsb3dlZCBvbmx5IG9jY2FzaW9uYWxseSBhbmQgbm9uY29tbWVyY2lhbGx5LCBhbmQgb25seSBpZiB5b3UgcmVjZWl2ZWRccGFyDQp0aGUgb2JqZWN0IGNvZGUgd2l0aCBzdWNoIGFuIG9mZmVyLCBpbiBhY2NvcmQgd2l0aCBzdWJzZWN0aW9uIDZiLlxwYXINClxwYXINClxidWxsZXQgIGQpIENvbnZleSB0aGUgb2JqZWN0IGNvZGUgYnkgb2ZmZXJpbmcgYWNjZXNzIGZyb20gYSBkZXNpZ25hdGVkIHBsYWNlXHBhcg0KKGdyYXRpcyBvciBmb3IgYSBjaGFyZ2UpLCBhbmQgb2ZmZXIgZXF1aXZhbGVudCBhY2Nlc3MgdG8gdGhlXHBhcg0KQ29ycmVzcG9uZGluZyBTb3VyY2UgaW4gdGhlIHNhbWUgd2F5IHRocm91Z2ggdGhlIHNhbWUgcGxhY2UgYXQgbm9ccGFyDQpmdXJ0aGVyIGNoYXJnZS4gWW91IG5lZWQgbm90IHJlcXVpcmUgcmVjaXBpZW50cyB0byBjb3B5IHRoZVxwYXINCkNvcnJlc3BvbmRpbmcgU291cmNlIGFsb25nIHdpdGggdGhlIG9iamVjdCBjb2RlLiBJZiB0aGUgcGxhY2UgdG8gY29weVxwYXINCnRoZSBvYmplY3QgY29kZSBpcyBhIG5ldHdvcmsgc2VydmVyLCB0aGUgQ29ycmVzcG9uZGluZyBTb3VyY2UgbWF5IGJlIG9uXHBhcg0KYSBkaWZmZXJlbnQgc2VydmVyIChvcGVyYXRlZCBieSB5b3Ugb3IgYSB0aGlyZCBwYXJ0eSkgdGhhdCBzdXBwb3J0c1xwYXINCmVxdWl2YWxlbnQgY29weWluZyBmYWNpbGl0aWVzLCBwcm92aWRlZCB5b3UgbWFpbnRhaW4gY2xlYXIgZGlyZWN0aW9uc1xwYXINCm5leHQgdG8gdGhlIG9iamVjdCBjb2RlIHNheWluZyB3aGVyZSB0byBmaW5kIHRoZSBDb3JyZXNwb25kaW5nIFNvdXJjZS5ccGFyDQpSZWdhcmRsZXNzIG9mIHdoYXQgc2VydmVyIGhvc3RzIHRoZSBDb3JyZXNwb25kaW5nIFNvdXJjZSwgeW91IHJlbWFpblxwYXINCm9ibGlnYXRlZCB0byBlbnN1cmUgdGhhdCBpdCBpcyBhdmFpbGFibGUgZm9yIGFzIGxvbmcgYXMgbmVlZGVkIHRvXHBhcg0Kc2F0aXNmeSB0aGVzZSByZXF1aXJlbWVudHMuXHBhcg0KXHBhcg0KXGJ1bGxldCAgZSkgQ29udmV5IHRoZSBvYmplY3QgY29kZSB1c2luZyBwZWVyLXRvLXBlZXIgdHJhbnNtaXNzaW9uLCBwcm92aWRlZFxwYXINCnlvdSBpbmZvcm0gb3RoZXIgcGVlcnMgd2hlcmUgdGhlIG9iamVjdCBjb2RlIGFuZCBDb3JyZXNwb25kaW5nIFNvdXJjZSBvZlxwYXINCnRoZSB3b3JrIGFyZSBiZWluZyBvZmZlcmVkIHRvIHRoZSBnZW5lcmFsIHB1YmxpYyBhdCBubyBjaGFyZ2UgdW5kZXJccGFyDQpzdWJzZWN0aW9uIDZkLlxwYXINClxwYXINCkEgc2VwYXJhYmxlIHBvcnRpb24gb2YgdGhlIG9iamVjdCBjb2RlLCB3aG9zZSBzb3VyY2UgY29kZSBpcyBleGNsdWRlZFxwYXINCmZyb20gdGhlIENvcnJlc3BvbmRpbmcgU291cmNlIGFzIGEgU3lzdGVtIExpYnJhcnksIG5lZWQgbm90IGJlIGluY2x1ZGVkXHBhcg0KaW4gY29udmV5aW5nIHRoZSBvYmplY3QgY29kZSB3b3JrLlxwYXINClxwYXINCkEgIlVzZXIgUHJvZHVjdCIgaXMgZWl0aGVyICgxKSBhICJjb25zdW1lciBwcm9kdWN0Iiwgd2hpY2ggbWVhbnMgYW55XHBhcg0KdGFuZ2libGUgcGVyc29uYWwgcHJvcGVydHkgd2hpY2ggaXMgbm9ybWFsbHkgdXNlZCBmb3IgcGVyc29uYWwsIGZhbWlseSxccGFyDQpvciBob3VzZWhvbGQgcHVycG9zZXMsIG9yICgyKSBhbnl0aGluZyBkZXNpZ25lZCBvciBzb2xkIGZvclxwYXINCmluY29ycG9yYXRpb24gaW50byBhIGR3ZWxsaW5nLiBJbiBkZXRlcm1pbmluZyB3aGV0aGVyIGEgcHJvZHVjdCBpcyBhXHBhcg0KY29uc3VtZXIgcHJvZHVjdCwgZG91YnRmdWwgY2FzZXMgc2hhbGwgYmUgcmVzb2x2ZWQgaW4gZmF2b3Igb2YgY292ZXJhZ2UuXHBhcg0KRm9yIGEgcGFydGljdWxhciBwcm9kdWN0IHJlY2VpdmVkIGJ5IGEgcGFydGljdWxhciB1c2VyLCAibm9ybWFsbHkgdXNlZCJccGFyDQpyZWZlcnMgdG8gYSB0eXBpY2FsIG9yIGNvbW1vbiB1c2Ugb2YgdGhhdCBjbGFzcyBvZiBwcm9kdWN0LCByZWdhcmRsZXNzXHBhcg0Kb2YgdGhlIHN0YXR1cyBvZiB0aGUgcGFydGljdWxhciB1c2VyIG9yIG9mIHRoZSB3YXkgaW4gd2hpY2ggdGhlXHBhcg0KcGFydGljdWxhciB1c2VyIGFjdHVhbGx5IHVzZXMsIG9yIGV4cGVjdHMgb3IgaXMgZXhwZWN0ZWQgdG8gdXNlLCB0aGVccGFyDQpwcm9kdWN0LiBBIHByb2R1Y3QgaXMgYSBjb25zdW1lciBwcm9kdWN0IHJlZ2FyZGxlc3Mgb2Ygd2hldGhlciB0aGVccGFyDQpwcm9kdWN0IGhhcyBzdWJzdGFudGlhbCBjb21tZXJjaWFsLCBpbmR1c3RyaWFsIG9yIG5vbi1jb25zdW1lciB1c2VzLFxwYXINCnVubGVzcyBzdWNoIHVzZXMgcmVwcmVzZW50IHRoZSBvbmx5IHNpZ25pZmljYW50IG1vZGUgb2YgdXNlIG9mIHRoZVxwYXINCnByb2R1Y3QuXHBhcg0KXHBhcg0KIkluc3RhbGxhdGlvbiBJbmZvcm1hdGlvbiIgZm9yIGEgVXNlciBQcm9kdWN0IG1lYW5zIGFueSBtZXRob2RzLFxwYXINCnByb2NlZHVyZXMsIGF1dGhvcml6YXRpb24ga2V5cywgb3Igb3RoZXIgaW5mb3JtYXRpb24gcmVxdWlyZWQgdG8gaW5zdGFsbFxwYXINCmFuZCBleGVjdXRlIG1vZGlmaWVkIHZlcnNpb25zIG9mIGEgY292ZXJlZCB3b3JrIGluIHRoYXQgVXNlciBQcm9kdWN0XHBhcg0KZnJvbSBhIG1vZGlmaWVkIHZlcnNpb24gb2YgaXRzIENvcnJlc3BvbmRpbmcgU291cmNlLiBUaGUgaW5mb3JtYXRpb25ccGFyDQptdXN0IHN1ZmZpY2UgdG8gZW5zdXJlIHRoYXQgdGhlIGNvbnRpbnVlZCBmdW5jdGlvbmluZyBvZiB0aGUgbW9kaWZpZWRccGFyDQpvYmplY3QgY29kZSBpcyBpbiBubyBjYXNlIHByZXZlbnRlZCBvciBpbnRlcmZlcmVkIHdpdGggc29sZWx5IGJlY2F1c2VccGFyDQptb2RpZmljYXRpb24gaGFzIGJlZW4gbWFkZS5ccGFyDQpccGFyDQpJZiB5b3UgY29udmV5IGFuIG9iamVjdCBjb2RlIHdvcmsgdW5kZXIgdGhpcyBzZWN0aW9uIGluLCBvciB3aXRoLCBvclxwYXINCnNwZWNpZmljYWxseSBmb3IgdXNlIGluLCBhIFVzZXIgUHJvZHVjdCwgYW5kIHRoZSBjb252ZXlpbmcgb2NjdXJzIGFzXHBhcg0KcGFydCBvZiBhIHRyYW5zYWN0aW9uIGluIHdoaWNoIHRoZSByaWdodCBvZiBwb3NzZXNzaW9uIGFuZCB1c2Ugb2YgdGhlXHBhcg0KVXNlciBQcm9kdWN0IGlzIHRyYW5zZmVycmVkIHRvIHRoZSByZWNpcGllbnQgaW4gcGVycGV0dWl0eSBvciBmb3IgYVxwYXINCmZpeGVkIHRlcm0gKHJlZ2FyZGxlc3Mgb2YgaG93IHRoZSB0cmFuc2FjdGlvbiBpcyBjaGFyYWN0ZXJpemVkKSwgdGhlXHBhcg0KQ29ycmVzcG9uZGluZyBTb3VyY2UgY29udmV5ZWQgdW5kZXIgdGhpcyBzZWN0aW9uIG11c3QgYmUgYWNjb21wYW5pZWQgYnlccGFyDQp0aGUgSW5zdGFsbGF0aW9uIEluZm9ybWF0aW9uLiBCdXQgdGhpcyByZXF1aXJlbWVudCBkb2VzIG5vdCBhcHBseSBpZlxwYXINCm5laXRoZXIgeW91IG5vciBhbnkgdGhpcmQgcGFydHkgcmV0YWlucyB0aGUgYWJpbGl0eSB0byBpbnN0YWxsIG1vZGlmaWVkXHBhcg0Kb2JqZWN0IGNvZGUgb24gdGhlIFVzZXIgUHJvZHVjdCAoZm9yIGV4YW1wbGUsIHRoZSB3b3JrIGhhcyBiZWVuXHBhcg0KaW5zdGFsbGVkIGluIFJPTSkuXHBhcg0KXHBhcg0KVGhlIHJlcXVpcmVtZW50IHRvIHByb3ZpZGUgSW5zdGFsbGF0aW9uIEluZm9ybWF0aW9uIGRvZXMgbm90IGluY2x1ZGUgYVxwYXINCnJlcXVpcmVtZW50IHRvIGNvbnRpbnVlIHRvIHByb3ZpZGUgc3VwcG9ydCBzZXJ2aWNlLCB3YXJyYW50eSwgb3IgdXBkYXRlc1xwYXINCmZvciBhIHdvcmsgdGhhdCBoYXMgYmVlbiBtb2RpZmllZCBvciBpbnN0YWxsZWQgYnkgdGhlIHJlY2lwaWVudCwgb3IgZm9yXHBhcg0KdGhlIFVzZXIgUHJvZHVjdCBpbiB3aGljaCBpdCBoYXMgYmVlbiBtb2RpZmllZCBvciBpbnN0YWxsZWQuIEFjY2VzcyB0byBhXHBhcg0KbmV0d29yayBtYXkgYmUgZGVuaWVkIHdoZW4gdGhlIG1vZGlmaWNhdGlvbiBpdHNlbGYgbWF0ZXJpYWxseSBhbmRccGFyDQphZHZlcnNlbHkgYWZmZWN0cyB0aGUgb3BlcmF0aW9uIG9mIHRoZSBuZXR3b3JrIG9yIHZpb2xhdGVzIHRoZSBydWxlcyBhbmRccGFyDQpwcm90b2NvbHMgZm9yIGNvbW11bmljYXRpb24gYWNyb3NzIHRoZSBuZXR3b3JrLlxwYXINClxwYXINCkNvcnJlc3BvbmRpbmcgU291cmNlIGNvbnZleWVkLCBhbmQgSW5zdGFsbGF0aW9uIEluZm9ybWF0aW9uIHByb3ZpZGVkLCBpblxwYXINCmFjY29yZCB3aXRoIHRoaXMgc2VjdGlvbiBtdXN0IGJlIGluIGEgZm9ybWF0IHRoYXQgaXMgcHVibGljbHkgZG9jdW1lbnRlZFxwYXINCihhbmQgd2l0aCBhbiBpbXBsZW1lbnRhdGlvbiBhdmFpbGFibGUgdG8gdGhlIHB1YmxpYyBpbiBzb3VyY2UgY29kZVxwYXINCmZvcm0pLCBhbmQgbXVzdCByZXF1aXJlIG5vIHNwZWNpYWwgcGFzc3dvcmQgb3Iga2V5IGZvciB1bnBhY2tpbmcsXHBhcg0KcmVhZGluZyBvciBjb3B5aW5nLlxwYXINClxwYXINCioqNy4gQWRkaXRpb25hbCBUZXJtcy4qKlxwYXINClxwYXINCiJBZGRpdGlvbmFsIHBlcm1pc3Npb25zIiBhcmUgdGVybXMgdGhhdCBzdXBwbGVtZW50IHRoZSB0ZXJtcyBvZiB0aGlzXHBhcg0KTGljZW5zZSBieSBtYWtpbmcgZXhjZXB0aW9ucyBmcm9tIG9uZSBvciBtb3JlIG9mIGl0cyBjb25kaXRpb25zLlxwYXINCkFkZGl0aW9uYWwgcGVybWlzc2lvbnMgdGhhdCBhcmUgYXBwbGljYWJsZSB0byB0aGUgZW50aXJlIFByb2dyYW0gc2hhbGxccGFyDQpiZSB0cmVhdGVkIGFzIHRob3VnaCB0aGV5IHdlcmUgaW5jbHVkZWQgaW4gdGhpcyBMaWNlbnNlLCB0byB0aGUgZXh0ZW50XHBhcg0KdGhhdCB0aGV5IGFyZSB2YWxpZCB1bmRlciBhcHBsaWNhYmxlIGxhdy4gSWYgYWRkaXRpb25hbCBwZXJtaXNzaW9uc1xwYXINCmFwcGx5IG9ubHkgdG8gcGFydCBvZiB0aGUgUHJvZ3JhbSwgdGhhdCBwYXJ0IG1heSBiZSB1c2VkIHNlcGFyYXRlbHlccGFyDQp1bmRlciB0aG9zZSBwZXJtaXNzaW9ucywgYnV0IHRoZSBlbnRpcmUgUHJvZ3JhbSByZW1haW5zIGdvdmVybmVkIGJ5IHRoaXNccGFyDQpMaWNlbnNlIHdpdGhvdXQgcmVnYXJkIHRvIHRoZSBhZGRpdGlvbmFsIHBlcm1pc3Npb25zLlxwYXINClxwYXINCldoZW4geW91IGNvbnZleSBhIGNvcHkgb2YgYSBjb3ZlcmVkIHdvcmssIHlvdSBtYXkgYXQgeW91ciBvcHRpb24gcmVtb3ZlXHBhcg0KYW55IGFkZGl0aW9uYWwgcGVybWlzc2lvbnMgZnJvbSB0aGF0IGNvcHksIG9yIGZyb20gYW55IHBhcnQgb2YgaXQuXHBhcg0KKEFkZGl0aW9uYWwgcGVybWlzc2lvbnMgbWF5IGJlIHdyaXR0ZW4gdG8gcmVxdWlyZSB0aGVpciBvd24gcmVtb3ZhbCBpblxwYXINCmNlcnRhaW4gY2FzZXMgd2hlbiB5b3UgbW9kaWZ5IHRoZSB3b3JrLikgWW91IG1heSBwbGFjZSBhZGRpdGlvbmFsXHBhcg0KcGVybWlzc2lvbnMgb24gbWF0ZXJpYWwsIGFkZGVkIGJ5IHlvdSB0byBhIGNvdmVyZWQgd29yaywgZm9yIHdoaWNoIHlvdVxwYXINCmhhdmUgb3IgY2FuIGdpdmUgYXBwcm9wcmlhdGUgY29weXJpZ2h0IHBlcm1pc3Npb24uXHBhcg0KXHBhcg0KTm90d2l0aHN0YW5kaW5nIGFueSBvdGhlciBwcm92aXNpb24gb2YgdGhpcyBMaWNlbnNlLCBmb3IgbWF0ZXJpYWwgeW91XHBhcg0KYWRkIHRvIGEgY292ZXJlZCB3b3JrLCB5b3UgbWF5IChpZiBhdXRob3JpemVkIGJ5IHRoZSBjb3B5cmlnaHQgaG9sZGVyc1xwYXINCm9mIHRoYXQgbWF0ZXJpYWwpIHN1cHBsZW1lbnQgdGhlIHRlcm1zIG9mIHRoaXMgTGljZW5zZSB3aXRoIHRlcm1zOlxwYXINClxwYXINClxidWxsZXQgIGEpIERpc2NsYWltaW5nIHdhcnJhbnR5IG9yIGxpbWl0aW5nIGxpYWJpbGl0eSBkaWZmZXJlbnRseSBmcm9tIHRoZVxwYXINCnRlcm1zIG9mIHNlY3Rpb25zIDE1IGFuZCAxNiBvZiB0aGlzIExpY2Vuc2U7IG9yXHBhcg0KXHBhcg0KXGJ1bGxldCAgYikgUmVxdWlyaW5nIHByZXNlcnZhdGlvbiBvZiBzcGVjaWZpZWQgcmVhc29uYWJsZSBsZWdhbCBub3RpY2VzIG9yXHBhcg0KYXV0aG9yIGF0dHJpYnV0aW9ucyBpbiB0aGF0IG1hdGVyaWFsIG9yIGluIHRoZSBBcHByb3ByaWF0ZSBMZWdhbCBOb3RpY2VzXHBhcg0KZGlzcGxheWVkIGJ5IHdvcmtzIGNvbnRhaW5pbmcgaXQ7IG9yXHBhcg0KXHBhcg0KXGJ1bGxldCAgYykgUHJvaGliaXRpbmcgbWlzcmVwcmVzZW50YXRpb24gb2YgdGhlIG9yaWdpbiBvZiB0aGF0IG1hdGVyaWFsLCBvclxwYXINCnJlcXVpcmluZyB0aGF0IG1vZGlmaWVkIHZlcnNpb25zIG9mIHN1Y2ggbWF0ZXJpYWwgYmUgbWFya2VkIGluXHBhcg0KcmVhc29uYWJsZSB3YXlzIGFzIGRpZmZlcmVudCBmcm9tIHRoZSBvcmlnaW5hbCB2ZXJzaW9uOyBvclxwYXINClxwYXINClxidWxsZXQgIGQpIExpbWl0aW5nIHRoZSB1c2UgZm9yIHB1YmxpY2l0eSBwdXJwb3NlcyBvZiBuYW1lcyBvZiBsaWNlbnNvcnMgb3JccGFyDQphdXRob3JzIG9mIHRoZSBtYXRlcmlhbDsgb3JccGFyDQpccGFyDQpcYnVsbGV0ICBlKSBEZWNsaW5pbmcgdG8gZ3JhbnQgcmlnaHRzIHVuZGVyIHRyYWRlbWFyayBsYXcgZm9yIHVzZSBvZiBzb21lIHRyYWRlXHBhcg0KbmFtZXMsIHRyYWRlbWFya3MsIG9yIHNlcnZpY2UgbWFya3M7IG9yXHBhcg0KXHBhcg0KXGJ1bGxldCAgZikgUmVxdWlyaW5nIGluZGVtbmlmaWNhdGlvbiBvZiBsaWNlbnNvcnMgYW5kIGF1dGhvcnMgb2YgdGhhdCBtYXRlcmlhbFxwYXINCmJ5IGFueW9uZSB3aG8gY29udmV5cyB0aGUgbWF0ZXJpYWwgKG9yIG1vZGlmaWVkIHZlcnNpb25zIG9mIGl0KSB3aXRoXHBhcg0KY29udHJhY3R1YWwgYXNzdW1wdGlvbnMgb2YgbGlhYmlsaXR5IHRvIHRoZSByZWNpcGllbnQsIGZvciBhbnkgbGlhYmlsaXR5XHBhcg0KdGhhdCB0aGVzZSBjb250cmFjdHVhbCBhc3N1bXB0aW9ucyBkaXJlY3RseSBpbXBvc2Ugb24gdGhvc2UgbGljZW5zb3JzXHBhcg0KYW5kIGF1dGhvcnMuXHBhcg0KXHBhcg0KQWxsIG90aGVyIG5vbi1wZXJtaXNzaXZlIGFkZGl0aW9uYWwgdGVybXMgYXJlIGNvbnNpZGVyZWQgImZ1cnRoZXJccGFyDQpyZXN0cmljdGlvbnMiIHdpdGhpbiB0aGUgbWVhbmluZyBvZiBzZWN0aW9uIDEwLiBJZiB0aGUgUHJvZ3JhbSBhcyB5b3VccGFyDQpyZWNlaXZlZCBpdCwgb3IgYW55IHBhcnQgb2YgaXQsIGNvbnRhaW5zIGEgbm90aWNlIHN0YXRpbmcgdGhhdCBpdCBpc1xwYXINCmdvdmVybmVkIGJ5IHRoaXMgTGljZW5zZSBhbG9uZyB3aXRoIGEgdGVybSB0aGF0IGlzIGEgZnVydGhlclxwYXINCnJlc3RyaWN0aW9uLCB5b3UgbWF5IHJlbW92ZSB0aGF0IHRlcm0uIElmIGEgbGljZW5zZSBkb2N1bWVudCBjb250YWlucyBhXHBhcg0KZnVydGhlciByZXN0cmljdGlvbiBidXQgcGVybWl0cyByZWxpY2Vuc2luZyBvciBjb252ZXlpbmcgdW5kZXIgdGhpc1xwYXINCkxpY2Vuc2UsIHlvdSBtYXkgYWRkIHRvIGEgY292ZXJlZCB3b3JrIG1hdGVyaWFsIGdvdmVybmVkIGJ5IHRoZSB0ZXJtcyBvZlxwYXINCnRoYXQgbGljZW5zZSBkb2N1bWVudCwgcHJvdmlkZWQgdGhhdCB0aGUgZnVydGhlciByZXN0cmljdGlvbiBkb2VzIG5vdFxwYXINCnN1cnZpdmUgc3VjaCByZWxpY2Vuc2luZyBvciBjb252ZXlpbmcuXHBhcg0KXHBhcg0KSWYgeW91IGFkZCB0ZXJtcyB0byBhIGNvdmVyZWQgd29yayBpbiBhY2NvcmQgd2l0aCB0aGlzIHNlY3Rpb24sIHlvdSBtdXN0XHBhcg0KcGxhY2UsIGluIHRoZSByZWxldmFudCBzb3VyY2UgZmlsZXMsIGEgc3RhdGVtZW50IG9mIHRoZSBhZGRpdGlvbmFsIHRlcm1zXHBhcg0KdGhhdCBhcHBseSB0byB0aG9zZSBmaWxlcywgb3IgYSBub3RpY2UgaW5kaWNhdGluZyB3aGVyZSB0byBmaW5kIHRoZVxwYXINCmFwcGxpY2FibGUgdGVybXMuXHBhcg0KXHBhcg0KQWRkaXRpb25hbCB0ZXJtcywgcGVybWlzc2l2ZSBvciBub24tcGVybWlzc2l2ZSwgbWF5IGJlIHN0YXRlZCBpbiB0aGVccGFyDQpmb3JtIG9mIGEgc2VwYXJhdGVseSB3cml0dGVuIGxpY2Vuc2UsIG9yIHN0YXRlZCBhcyBleGNlcHRpb25zOyB0aGUgYWJvdmVccGFyDQpyZXF1aXJlbWVudHMgYXBwbHkgZWl0aGVyIHdheS5ccGFyDQpccGFyDQoqKjguIFRlcm1pbmF0aW9uLioqXHBhcg0KXHBhcg0KWW91IG1heSBub3QgcHJvcGFnYXRlIG9yIG1vZGlmeSBhIGNvdmVyZWQgd29yayBleGNlcHQgYXMgZXhwcmVzc2x5XHBhcg0KcHJvdmlkZWQgdW5kZXIgdGhpcyBMaWNlbnNlLiBBbnkgYXR0ZW1wdCBvdGhlcndpc2UgdG8gcHJvcGFnYXRlIG9yXHBhcg0KbW9kaWZ5IGl0IGlzIHZvaWQsIGFuZCB3aWxsIGF1dG9tYXRpY2FsbHkgdGVybWluYXRlIHlvdXIgcmlnaHRzIHVuZGVyXHBhcg0KdGhpcyBMaWNlbnNlIChpbmNsdWRpbmcgYW55IHBhdGVudCBsaWNlbnNlcyBncmFudGVkIHVuZGVyIHRoZSB0aGlyZFxwYXINCnBhcmFncmFwaCBvZiBzZWN0aW9uIDExKS5ccGFyDQpccGFyDQpIb3dldmVyLCBpZiB5b3UgY2Vhc2UgYWxsIHZpb2xhdGlvbiBvZiB0aGlzIExpY2Vuc2UsIHRoZW4geW91ciBsaWNlbnNlXHBhcg0KZnJvbSBhIHBhcnRpY3VsYXIgY29weXJpZ2h0IGhvbGRlciBpcyByZWluc3RhdGVkIChhKSBwcm92aXNpb25hbGx5LFxwYXINCnVubGVzcyBhbmQgdW50aWwgdGhlIGNvcHlyaWdodCBob2xkZXIgZXhwbGljaXRseSBhbmQgZmluYWxseSB0ZXJtaW5hdGVzXHBhcg0KeW91ciBsaWNlbnNlLCBhbmQgKGIpIHBlcm1hbmVudGx5LCBpZiB0aGUgY29weXJpZ2h0IGhvbGRlciBmYWlscyB0b1xwYXINCm5vdGlmeSB5b3Ugb2YgdGhlIHZpb2xhdGlvbiBieSBzb21lIHJlYXNvbmFibGUgbWVhbnMgcHJpb3IgdG8gNjAgZGF5c1xwYXINCmFmdGVyIHRoZSBjZXNzYXRpb24uXHBhcg0KXHBhcg0KTW9yZW92ZXIsIHlvdXIgbGljZW5zZSBmcm9tIGEgcGFydGljdWxhciBjb3B5cmlnaHQgaG9sZGVyIGlzIHJlaW5zdGF0ZWRccGFyDQpwZXJtYW5lbnRseSBpZiB0aGUgY29weXJpZ2h0IGhvbGRlciBub3RpZmllcyB5b3Ugb2YgdGhlIHZpb2xhdGlvbiBieVxwYXINCnNvbWUgcmVhc29uYWJsZSBtZWFucywgdGhpcyBpcyB0aGUgZmlyc3QgdGltZSB5b3UgaGF2ZSByZWNlaXZlZCBub3RpY2VccGFyDQpvZiB2aW9sYXRpb24gb2YgdGhpcyBMaWNlbnNlIChmb3IgYW55IHdvcmspIGZyb20gdGhhdCBjb3B5cmlnaHQgaG9sZGVyLFxwYXINCmFuZCB5b3UgY3VyZSB0aGUgdmlvbGF0aW9uIHByaW9yIHRvIDMwIGRheXMgYWZ0ZXIgeW91ciByZWNlaXB0IG9mIHRoZVxwYXINCm5vdGljZS5ccGFyDQpccGFyDQpUZXJtaW5hdGlvbiBvZiB5b3VyIHJpZ2h0cyB1bmRlciB0aGlzIHNlY3Rpb24gZG9lcyBub3QgdGVybWluYXRlIHRoZVxwYXINCmxpY2Vuc2VzIG9mIHBhcnRpZXMgd2hvIGhhdmUgcmVjZWl2ZWQgY29waWVzIG9yIHJpZ2h0cyBmcm9tIHlvdSB1bmRlclxwYXINCnRoaXMgTGljZW5zZS4gSWYgeW91ciByaWdodHMgaGF2ZSBiZWVuIHRlcm1pbmF0ZWQgYW5kIG5vdCBwZXJtYW5lbnRseVxwYXINCnJlaW5zdGF0ZWQsIHlvdSBkbyBub3QgcXVhbGlmeSB0byByZWNlaXZlIG5ldyBsaWNlbnNlcyBmb3IgdGhlIHNhbWVccGFyDQptYXRlcmlhbCB1bmRlciBzZWN0aW9uIDEwLlxwYXINClxwYXINCioqOS4gQWNjZXB0YW5jZSBOb3QgUmVxdWlyZWQgZm9yIEhhdmluZyBDb3BpZXMuKipccGFyDQpccGFyDQpZb3UgYXJlIG5vdCByZXF1aXJlZCB0byBhY2NlcHQgdGhpcyBMaWNlbnNlIGluIG9yZGVyIHRvIHJlY2VpdmUgb3IgcnVuIGFccGFyDQpjb3B5IG9mIHRoZSBQcm9ncmFtLiBBbmNpbGxhcnkgcHJvcGFnYXRpb24gb2YgYSBjb3ZlcmVkIHdvcmsgb2NjdXJyaW5nXHBhcg0Kc29sZWx5IGFzIGEgY29uc2VxdWVuY2Ugb2YgdXNpbmcgcGVlci10by1wZWVyIHRyYW5zbWlzc2lvbiB0byByZWNlaXZlIGFccGFyDQpjb3B5IGxpa2V3aXNlIGRvZXMgbm90IHJlcXVpcmUgYWNjZXB0YW5jZS4gSG93ZXZlciwgbm90aGluZyBvdGhlciB0aGFuXHBhcg0KdGhpcyBMaWNlbnNlIGdyYW50cyB5b3UgcGVybWlzc2lvbiB0byBwcm9wYWdhdGUgb3IgbW9kaWZ5IGFueSBjb3ZlcmVkXHBhcg0Kd29yay4gVGhlc2UgYWN0aW9ucyBpbmZyaW5nZSBjb3B5cmlnaHQgaWYgeW91IGRvIG5vdCBhY2NlcHQgdGhpc1xwYXINCkxpY2Vuc2UuIFRoZXJlZm9yZSwgYnkgbW9kaWZ5aW5nIG9yIHByb3BhZ2F0aW5nIGEgY292ZXJlZCB3b3JrLCB5b3VccGFyDQppbmRpY2F0ZSB5b3VyIGFjY2VwdGFuY2Ugb2YgdGhpcyBMaWNlbnNlIHRvIGRvIHNvLlxwYXINClxwYXINCioqMTAuIEF1dG9tYXRpYyBMaWNlbnNpbmcgb2YgRG93bnN0cmVhbSBSZWNpcGllbnRzLioqXHBhcg0KXHBhcg0KRWFjaCB0aW1lIHlvdSBjb252ZXkgYSBjb3ZlcmVkIHdvcmssIHRoZSByZWNpcGllbnQgYXV0b21hdGljYWxseVxwYXINCnJlY2VpdmVzIGEgbGljZW5zZSBmcm9tIHRoZSBvcmlnaW5hbCBsaWNlbnNvcnMsIHRvIHJ1biwgbW9kaWZ5IGFuZFxwYXINCnByb3BhZ2F0ZSB0aGF0IHdvcmssIHN1YmplY3QgdG8gdGhpcyBMaWNlbnNlLiBZb3UgYXJlIG5vdCByZXNwb25zaWJsZVxwYXINCmZvciBlbmZvcmNpbmcgY29tcGxpYW5jZSBieSB0aGlyZCBwYXJ0aWVzIHdpdGggdGhpcyBMaWNlbnNlLlxwYXINClxwYXINCkFuICJlbnRpdHkgdHJhbnNhY3Rpb24iIGlzIGEgdHJhbnNhY3Rpb24gdHJhbnNmZXJyaW5nIGNvbnRyb2wgb2YgYW5ccGFyDQpvcmdhbml6YXRpb24sIG9yIHN1YnN0YW50aWFsbHkgYWxsIGFzc2V0cyBvZiBvbmUsIG9yIHN1YmRpdmlkaW5nIGFuXHBhcg0Kb3JnYW5pemF0aW9uLCBvciBtZXJnaW5nIG9yZ2FuaXphdGlvbnMuIElmIHByb3BhZ2F0aW9uIG9mIGEgY292ZXJlZCB3b3JrXHBhcg0KcmVzdWx0cyBmcm9tIGFuIGVudGl0eSB0cmFuc2FjdGlvbiwgZWFjaCBwYXJ0eSB0byB0aGF0IHRyYW5zYWN0aW9uIHdob1xwYXINCnJlY2VpdmVzIGEgY29weSBvZiB0aGUgd29yayBhbHNvIHJlY2VpdmVzIHdoYXRldmVyIGxpY2Vuc2VzIHRvIHRoZSB3b3JrXHBhcg0KdGhlIHBhcnR5XFwncyBwcmVkZWNlc3NvciBpbiBpbnRlcmVzdCBoYWQgb3IgY291bGQgZ2l2ZSB1bmRlciB0aGVccGFyDQpwcmV2aW91cyBwYXJhZ3JhcGgsIHBsdXMgYSByaWdodCB0byBwb3NzZXNzaW9uIG9mIHRoZSBDb3JyZXNwb25kaW5nXHBhcg0KU291cmNlIG9mIHRoZSB3b3JrIGZyb20gdGhlIHByZWRlY2Vzc29yIGluIGludGVyZXN0LCBpZiB0aGUgcHJlZGVjZXNzb3JccGFyDQpoYXMgaXQgb3IgY2FuIGdldCBpdCB3aXRoIHJlYXNvbmFibGUgZWZmb3J0cy5ccGFyDQpccGFyDQpZb3UgbWF5IG5vdCBpbXBvc2UgYW55IGZ1cnRoZXIgcmVzdHJpY3Rpb25zIG9uIHRoZSBleGVyY2lzZSBvZiB0aGVccGFyDQpyaWdodHMgZ3JhbnRlZCBvciBhZmZpcm1lZCB1bmRlciB0aGlzIExpY2Vuc2UuIEZvciBleGFtcGxlLCB5b3UgbWF5IG5vdFxwYXINCmltcG9zZSBhIGxpY2Vuc2UgZmVlLCByb3lhbHR5LCBvciBvdGhlciBjaGFyZ2UgZm9yIGV4ZXJjaXNlIG9mIHJpZ2h0c1xwYXINCmdyYW50ZWQgdW5kZXIgdGhpcyBMaWNlbnNlLCBhbmQgeW91IG1heSBub3QgaW5pdGlhdGUgbGl0aWdhdGlvblxwYXINCihpbmNsdWRpbmcgYSBjcm9zcy1jbGFpbSBvciBjb3VudGVyY2xhaW0gaW4gYSBsYXdzdWl0KSBhbGxlZ2luZyB0aGF0IGFueVxwYXINCnBhdGVudCBjbGFpbSBpcyBpbmZyaW5nZWQgYnkgbWFraW5nLCB1c2luZywgc2VsbGluZywgb2ZmZXJpbmcgZm9yIHNhbGUsXHBhcg0Kb3IgaW1wb3J0aW5nIHRoZSBQcm9ncmFtIG9yIGFueSBwb3J0aW9uIG9mIGl0LlxwYXINClxwYXINCioqMTEuIFBhdGVudHMuKipccGFyDQpccGFyDQpBICJjb250cmlidXRvciIgaXMgYSBjb3B5cmlnaHQgaG9sZGVyIHdobyBhdXRob3JpemVzIHVzZSB1bmRlciB0aGlzXHBhcg0KTGljZW5zZSBvZiB0aGUgUHJvZ3JhbSBvciBhIHdvcmsgb24gd2hpY2ggdGhlIFByb2dyYW0gaXMgYmFzZWQuIFRoZSB3b3JrXHBhcg0KdGh1cyBsaWNlbnNlZCBpcyBjYWxsZWQgdGhlIGNvbnRyaWJ1dG9yXFwncyAiY29udHJpYnV0b3IgdmVyc2lvbiIuXHBhcg0KXHBhcg0KQSBjb250cmlidXRvclxcJ3MgImVzc2VudGlhbCBwYXRlbnQgY2xhaW1zIiBhcmUgYWxsIHBhdGVudCBjbGFpbXMgb3duZWRccGFyDQpvciBjb250cm9sbGVkIGJ5IHRoZSBjb250cmlidXRvciwgd2hldGhlciBhbHJlYWR5IGFjcXVpcmVkIG9yIGhlcmVhZnRlclxwYXINCmFjcXVpcmVkLCB0aGF0IHdvdWxkIGJlIGluZnJpbmdlZCBieSBzb21lIG1hbm5lciwgcGVybWl0dGVkIGJ5IHRoaXNccGFyDQpMaWNlbnNlLCBvZiBtYWtpbmcsIHVzaW5nLCBvciBzZWxsaW5nIGl0cyBjb250cmlidXRvciB2ZXJzaW9uLCBidXQgZG9ccGFyDQpub3QgaW5jbHVkZSBjbGFpbXMgdGhhdCB3b3VsZCBiZSBpbmZyaW5nZWQgb25seSBhcyBhIGNvbnNlcXVlbmNlIG9mXHBhcg0KZnVydGhlciBtb2RpZmljYXRpb24gb2YgdGhlIGNvbnRyaWJ1dG9yIHZlcnNpb24uIEZvciBwdXJwb3NlcyBvZiB0aGlzXHBhcg0KZGVmaW5pdGlvbiwgImNvbnRyb2wiIGluY2x1ZGVzIHRoZSByaWdodCB0byBncmFudCBwYXRlbnQgc3VibGljZW5zZXMgaW5ccGFyDQphIG1hbm5lciBjb25zaXN0ZW50IHdpdGggdGhlIHJlcXVpcmVtZW50cyBvZiB0aGlzIExpY2Vuc2UuXHBhcg0KXHBhcg0KRWFjaCBjb250cmlidXRvciBncmFudHMgeW91IGEgbm9uLWV4Y2x1c2l2ZSwgd29ybGR3aWRlLCByb3lhbHR5LWZyZWVccGFyDQpwYXRlbnQgbGljZW5zZSB1bmRlciB0aGUgY29udHJpYnV0b3JcXCdzIGVzc2VudGlhbCBwYXRlbnQgY2xhaW1zLCB0b1xwYXINCm1ha2UsIHVzZSwgc2VsbCwgb2ZmZXIgZm9yIHNhbGUsIGltcG9ydCBhbmQgb3RoZXJ3aXNlIHJ1biwgbW9kaWZ5IGFuZFxwYXINCnByb3BhZ2F0ZSB0aGUgY29udGVudHMgb2YgaXRzIGNvbnRyaWJ1dG9yIHZlcnNpb24uXHBhcg0KXHBhcg0KSW4gdGhlIGZvbGxvd2luZyB0aHJlZSBwYXJhZ3JhcGhzLCBhICJwYXRlbnQgbGljZW5zZSIgaXMgYW55IGV4cHJlc3NccGFyDQphZ3JlZW1lbnQgb3IgY29tbWl0bWVudCwgaG93ZXZlciBkZW5vbWluYXRlZCwgbm90IHRvIGVuZm9yY2UgYSBwYXRlbnRccGFyDQooc3VjaCBhcyBhbiBleHByZXNzIHBlcm1pc3Npb24gdG8gcHJhY3RpY2UgYSBwYXRlbnQgb3IgY292ZW5hbnQgbm90IHRvXHBhcg0Kc3VlIGZvciBwYXRlbnQgaW5mcmluZ2VtZW50KS4gVG8gImdyYW50IiBzdWNoIGEgcGF0ZW50IGxpY2Vuc2UgdG8gYVxwYXINCnBhcnR5IG1lYW5zIHRvIG1ha2Ugc3VjaCBhbiBhZ3JlZW1lbnQgb3IgY29tbWl0bWVudCBub3QgdG8gZW5mb3JjZSBhXHBhcg0KcGF0ZW50IGFnYWluc3QgdGhlIHBhcnR5LlxwYXINClxwYXINCklmIHlvdSBjb252ZXkgYSBjb3ZlcmVkIHdvcmssIGtub3dpbmdseSByZWx5aW5nIG9uIGEgcGF0ZW50IGxpY2Vuc2UsIGFuZFxwYXINCnRoZSBDb3JyZXNwb25kaW5nIFNvdXJjZSBvZiB0aGUgd29yayBpcyBub3QgYXZhaWxhYmxlIGZvciBhbnlvbmUgdG9ccGFyDQpjb3B5LCBmcmVlIG9mIGNoYXJnZSBhbmQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoaXMgTGljZW5zZSwgdGhyb3VnaCBhXHBhcg0KcHVibGljbHkgYXZhaWxhYmxlIG5ldHdvcmsgc2VydmVyIG9yIG90aGVyIHJlYWRpbHkgYWNjZXNzaWJsZSBtZWFucyxccGFyDQp0aGVuIHlvdSBtdXN0IGVpdGhlciAoMSkgY2F1c2UgdGhlIENvcnJlc3BvbmRpbmcgU291cmNlIHRvIGJlIHNvXHBhcg0KYXZhaWxhYmxlLCBvciAoMikgYXJyYW5nZSB0byBkZXByaXZlIHlvdXJzZWxmIG9mIHRoZSBiZW5lZml0IG9mIHRoZVxwYXINCnBhdGVudCBsaWNlbnNlIGZvciB0aGlzIHBhcnRpY3VsYXIgd29yaywgb3IgKDMpIGFycmFuZ2UsIGluIGEgbWFubmVyXHBhcg0KY29uc2lzdGVudCB3aXRoIHRoZSByZXF1aXJlbWVudHMgb2YgdGhpcyBMaWNlbnNlLCB0byBleHRlbmQgdGhlIHBhdGVudFxwYXINCmxpY2Vuc2UgdG8gZG93bnN0cmVhbSByZWNpcGllbnRzLiAiS25vd2luZ2x5IHJlbHlpbmciIG1lYW5zIHlvdSBoYXZlXHBhcg0KYWN0dWFsIGtub3dsZWRnZSB0aGF0LCBidXQgZm9yIHRoZSBwYXRlbnQgbGljZW5zZSwgeW91ciBjb252ZXlpbmcgdGhlXHBhcg0KY292ZXJlZCB3b3JrIGluIGEgY291bnRyeSwgb3IgeW91ciByZWNpcGllbnRcXCdzIHVzZSBvZiB0aGUgY292ZXJlZCB3b3JrXHBhcg0KaW4gYSBjb3VudHJ5LCB3b3VsZCBpbmZyaW5nZSBvbmUgb3IgbW9yZSBpZGVudGlmaWFibGUgcGF0ZW50cyBpbiB0aGF0XHBhcg0KY291bnRyeSB0aGF0IHlvdSBoYXZlIHJlYXNvbiB0byBiZWxpZXZlIGFyZSB2YWxpZC5ccGFyDQpccGFyDQpJZiwgcHVyc3VhbnQgdG8gb3IgaW4gY29ubmVjdGlvbiB3aXRoIGEgc2luZ2xlIHRyYW5zYWN0aW9uIG9yXHBhcg0KYXJyYW5nZW1lbnQsIHlvdSBjb252ZXksIG9yIHByb3BhZ2F0ZSBieSBwcm9jdXJpbmcgY29udmV5YW5jZSBvZiwgYVxwYXINCmNvdmVyZWQgd29yaywgYW5kIGdyYW50IGEgcGF0ZW50IGxpY2Vuc2UgdG8gc29tZSBvZiB0aGUgcGFydGllc1xwYXINCnJlY2VpdmluZyB0aGUgY292ZXJlZCB3b3JrIGF1dGhvcml6aW5nIHRoZW0gdG8gdXNlLCBwcm9wYWdhdGUsIG1vZGlmeSBvclxwYXINCmNvbnZleSBhIHNwZWNpZmljIGNvcHkgb2YgdGhlIGNvdmVyZWQgd29yaywgdGhlbiB0aGUgcGF0ZW50IGxpY2Vuc2UgeW91XHBhcg0KZ3JhbnQgaXMgYXV0b21hdGljYWxseSBleHRlbmRlZCB0byBhbGwgcmVjaXBpZW50cyBvZiB0aGUgY292ZXJlZCB3b3JrXHBhcg0KYW5kIHdvcmtzIGJhc2VkIG9uIGl0LlxwYXINClxwYXINCkEgcGF0ZW50IGxpY2Vuc2UgaXMgImRpc2NyaW1pbmF0b3J5IiBpZiBpdCBkb2VzIG5vdCBpbmNsdWRlIHdpdGhpbiB0aGVccGFyDQpzY29wZSBvZiBpdHMgY292ZXJhZ2UsIHByb2hpYml0cyB0aGUgZXhlcmNpc2Ugb2YsIG9yIGlzIGNvbmRpdGlvbmVkIG9uXHBhcg0KdGhlIG5vbi1leGVyY2lzZSBvZiBvbmUgb3IgbW9yZSBvZiB0aGUgcmlnaHRzIHRoYXQgYXJlIHNwZWNpZmljYWxseVxwYXINCmdyYW50ZWQgdW5kZXIgdGhpcyBMaWNlbnNlLiBZb3UgbWF5IG5vdCBjb252ZXkgYSBjb3ZlcmVkIHdvcmsgaWYgeW91IGFyZVxwYXINCmEgcGFydHkgdG8gYW4gYXJyYW5nZW1lbnQgd2l0aCBhIHRoaXJkIHBhcnR5IHRoYXQgaXMgaW4gdGhlIGJ1c2luZXNzIG9mXHBhcg0KZGlzdHJpYnV0aW5nIHNvZnR3YXJlLCB1bmRlciB3aGljaCB5b3UgbWFrZSBwYXltZW50IHRvIHRoZSB0aGlyZCBwYXJ0eVxwYXINCmJhc2VkIG9uIHRoZSBleHRlbnQgb2YgeW91ciBhY3Rpdml0eSBvZiBjb252ZXlpbmcgdGhlIHdvcmssIGFuZCB1bmRlclxwYXINCndoaWNoIHRoZSB0aGlyZCBwYXJ0eSBncmFudHMsIHRvIGFueSBvZiB0aGUgcGFydGllcyB3aG8gd291bGQgcmVjZWl2ZVxwYXINCnRoZSBjb3ZlcmVkIHdvcmsgZnJvbSB5b3UsIGEgZGlzY3JpbWluYXRvcnkgcGF0ZW50IGxpY2Vuc2UgKGEpIGluXHBhcg0KY29ubmVjdGlvbiB3aXRoIGNvcGllcyBvZiB0aGUgY292ZXJlZCB3b3JrIGNvbnZleWVkIGJ5IHlvdSAob3IgY29waWVzXHBhcg0KbWFkZSBmcm9tIHRob3NlIGNvcGllcyksIG9yIChiKSBwcmltYXJpbHkgZm9yIGFuZCBpbiBjb25uZWN0aW9uIHdpdGhccGFyDQpzcGVjaWZpYyBwcm9kdWN0cyBvciBjb21waWxhdGlvbnMgdGhhdCBjb250YWluIHRoZSBjb3ZlcmVkIHdvcmssIHVubGVzc1xwYXINCnlvdSBlbnRlcmVkIGludG8gdGhhdCBhcnJhbmdlbWVudCwgb3IgdGhhdCBwYXRlbnQgbGljZW5zZSB3YXMgZ3JhbnRlZCxccGFyDQpwcmlvciB0byAyOCBNYXJjaCAyMDA3LlxwYXINClxwYXINCk5vdGhpbmcgaW4gdGhpcyBMaWNlbnNlIHNoYWxsIGJlIGNvbnN0cnVlZCBhcyBleGNsdWRpbmcgb3IgbGltaXRpbmcgYW55XHBhcg0KaW1wbGllZCBsaWNlbnNlIG9yIG90aGVyIGRlZmVuc2VzIHRvIGluZnJpbmdlbWVudCB0aGF0IG1heSBvdGhlcndpc2UgYmVccGFyDQphdmFpbGFibGUgdG8geW91IHVuZGVyIGFwcGxpY2FibGUgcGF0ZW50IGxhdy5ccGFyDQpccGFyDQoqKjEyLiBObyBTdXJyZW5kZXIgb2YgT3RoZXJzXFwnIEZyZWVkb20uKipccGFyDQpccGFyDQpJZiBjb25kaXRpb25zIGFyZSBpbXBvc2VkIG9uIHlvdSAod2hldGhlciBieSBjb3VydCBvcmRlciwgYWdyZWVtZW50IG9yXHBhcg0Kb3RoZXJ3aXNlKSB0aGF0IGNvbnRyYWRpY3QgdGhlIGNvbmRpdGlvbnMgb2YgdGhpcyBMaWNlbnNlLCB0aGV5IGRvIG5vdFxwYXINCmV4Y3VzZSB5b3UgZnJvbSB0aGUgY29uZGl0aW9ucyBvZiB0aGlzIExpY2Vuc2UuIElmIHlvdSBjYW5ub3QgY29udmV5IGFccGFyDQpjb3ZlcmVkIHdvcmsgc28gYXMgdG8gc2F0aXNmeSBzaW11bHRhbmVvdXNseSB5b3VyIG9ibGlnYXRpb25zIHVuZGVyIHRoaXNccGFyDQpMaWNlbnNlIGFuZCBhbnkgb3RoZXIgcGVydGluZW50IG9ibGlnYXRpb25zLCB0aGVuIGFzIGEgY29uc2VxdWVuY2UgeW91XHBhcg0KbWF5IG5vdCBjb252ZXkgaXQgYXQgYWxsLiBGb3IgZXhhbXBsZSwgaWYgeW91IGFncmVlIHRvIHRlcm1zIHRoYXRccGFyDQpvYmxpZ2F0ZSB5b3UgdG8gY29sbGVjdCBhIHJveWFsdHkgZm9yIGZ1cnRoZXIgY29udmV5aW5nIGZyb20gdGhvc2UgdG9ccGFyDQp3aG9tIHlvdSBjb252ZXkgdGhlIFByb2dyYW0sIHRoZSBvbmx5IHdheSB5b3UgY291bGQgc2F0aXNmeSBib3RoIHRob3NlXHBhcg0KdGVybXMgYW5kIHRoaXMgTGljZW5zZSB3b3VsZCBiZSB0byByZWZyYWluIGVudGlyZWx5IGZyb20gY29udmV5aW5nIHRoZVxwYXINClByb2dyYW0uXHBhcg0KXHBhcg0KKioxMy4gVXNlIHdpdGggdGhlIEdOVSBBZmZlcm8gR2VuZXJhbCBQdWJsaWMgTGljZW5zZS4qKlxwYXINClxwYXINCk5vdHdpdGhzdGFuZGluZyBhbnkgb3RoZXIgcHJvdmlzaW9uIG9mIHRoaXMgTGljZW5zZSwgeW91IGhhdmUgcGVybWlzc2lvblxwYXINCnRvIGxpbmsgb3IgY29tYmluZSBhbnkgY292ZXJlZCB3b3JrIHdpdGggYSB3b3JrIGxpY2Vuc2VkIHVuZGVyIHZlcnNpb24gM1xwYXINCm9mIHRoZSBHTlUgQWZmZXJvIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgaW50byBhIHNpbmdsZSBjb21iaW5lZCB3b3JrLFxwYXINCmFuZCB0byBjb252ZXkgdGhlIHJlc3VsdGluZyB3b3JrLiBUaGUgdGVybXMgb2YgdGhpcyBMaWNlbnNlIHdpbGxccGFyDQpjb250aW51ZSB0byBhcHBseSB0byB0aGUgcGFydCB3aGljaCBpcyB0aGUgY292ZXJlZCB3b3JrLCBidXQgdGhlIHNwZWNpYWxccGFyDQpyZXF1aXJlbWVudHMgb2YgdGhlIEdOVSBBZmZlcm8gR2VuZXJhbCBQdWJsaWMgTGljZW5zZSwgc2VjdGlvbiAxMyxccGFyDQpjb25jZXJuaW5nIGludGVyYWN0aW9uIHRocm91Z2ggYSBuZXR3b3JrIHdpbGwgYXBwbHkgdG8gdGhlIGNvbWJpbmF0aW9uXHBhcg0KYXMgc3VjaC5ccGFyDQpccGFyDQoqKjE0LiBSZXZpc2VkIFZlcnNpb25zIG9mIHRoaXMgTGljZW5zZS4qKlxwYXINClxwYXINClRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb24gbWF5IHB1Ymxpc2ggcmV2aXNlZCBhbmQvb3IgbmV3IHZlcnNpb25zIG9mXHBhcg0KdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGZyb20gdGltZSB0byB0aW1lLiBTdWNoIG5ldyB2ZXJzaW9ucyB3aWxsXHBhcg0KYmUgc2ltaWxhciBpbiBzcGlyaXQgdG8gdGhlIHByZXNlbnQgdmVyc2lvbiwgYnV0IG1heSBkaWZmZXIgaW4gZGV0YWlsIHRvXHBhcg0KYWRkcmVzcyBuZXcgcHJvYmxlbXMgb3IgY29uY2VybnMuXHBhcg0KXHBhcg0KRWFjaCB2ZXJzaW9uIGlzIGdpdmVuIGEgZGlzdGluZ3Vpc2hpbmcgdmVyc2lvbiBudW1iZXIuIElmIHRoZSBQcm9ncmFtXHBhcg0Kc3BlY2lmaWVzIHRoYXQgYSBjZXJ0YWluIG51bWJlcmVkIHZlcnNpb24gb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpY1xwYXINCkxpY2Vuc2UgIm9yIGFueSBsYXRlciB2ZXJzaW9uIiBhcHBsaWVzIHRvIGl0LCB5b3UgaGF2ZSB0aGUgb3B0aW9uIG9mXHBhcg0KZm9sbG93aW5nIHRoZSB0ZXJtcyBhbmQgY29uZGl0aW9ucyBlaXRoZXIgb2YgdGhhdCBudW1iZXJlZCB2ZXJzaW9uIG9yIG9mXHBhcg0KYW55IGxhdGVyIHZlcnNpb24gcHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb24uIElmIHRoZVxwYXINClByb2dyYW0gZG9lcyBub3Qgc3BlY2lmeSBhIHZlcnNpb24gbnVtYmVyIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWNccGFyDQpMaWNlbnNlLCB5b3UgbWF5IGNob29zZSBhbnkgdmVyc2lvbiBldmVyIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZVxwYXINCkZvdW5kYXRpb24uXHBhcg0KXHBhcg0KSWYgdGhlIFByb2dyYW0gc3BlY2lmaWVzIHRoYXQgYSBwcm94eSBjYW4gZGVjaWRlIHdoaWNoIGZ1dHVyZSB2ZXJzaW9uc1xwYXINCm9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBjYW4gYmUgdXNlZCwgdGhhdCBwcm94eVxcJ3MgcHVibGljXHBhcg0Kc3RhdGVtZW50IG9mIGFjY2VwdGFuY2Ugb2YgYSB2ZXJzaW9uIHBlcm1hbmVudGx5IGF1dGhvcml6ZXMgeW91IHRvXHBhcg0KY2hvb3NlIHRoYXQgdmVyc2lvbiBmb3IgdGhlIFByb2dyYW0uXHBhcg0KXHBhcg0KTGF0ZXIgbGljZW5zZSB2ZXJzaW9ucyBtYXkgZ2l2ZSB5b3UgYWRkaXRpb25hbCBvciBkaWZmZXJlbnQgcGVybWlzc2lvbnMuXHBhcg0KSG93ZXZlciwgbm8gYWRkaXRpb25hbCBvYmxpZ2F0aW9ucyBhcmUgaW1wb3NlZCBvbiBhbnkgYXV0aG9yIG9yXHBhcg0KY29weXJpZ2h0IGhvbGRlciBhcyBhIHJlc3VsdCBvZiB5b3VyIGNob29zaW5nIHRvIGZvbGxvdyBhIGxhdGVyIHZlcnNpb24uXHBhcg0KXHBhcg0KKioxNS4gRGlzY2xhaW1lciBvZiBXYXJyYW50eS4qKlxwYXINClxwYXINClRIRVJFIElTIE5PIFdBUlJBTlRZIEZPUiBUSEUgUFJPR1JBTSwgVE8gVEhFIEVYVEVOVCBQRVJNSVRURUQgQllccGFyDQpBUFBMSUNBQkxFIExBVy4gRVhDRVBUIFdIRU4gT1RIRVJXSVNFIFNUQVRFRCBJTiBXUklUSU5HIFRIRSBDT1BZUklHSFRccGFyDQpIT0xERVJTIEFORC9PUiBPVEhFUiBQQVJUSUVTIFBST1ZJREUgVEhFIFBST0dSQU0gIkFTIElTIiBXSVRIT1VUXHBhcg0KV0FSUkFOVFkgT0YgQU5ZIEtJTkQsIEVJVEhFUiBFWFBSRVNTRUQgT1IgSU1QTElFRCwgSU5DTFVESU5HLCBCVVQgTk9UXHBhcg0KTElNSVRFRCBUTywgVEhFIElNUExJRUQgV0FSUkFOVElFUyBPRiBNRVJDSEFOVEFCSUxJVFkgQU5EIEZJVE5FU1MgRk9SIEFccGFyDQpQQVJUSUNVTEFSIFBVUlBPU0UuIFRIRSBFTlRJUkUgUklTSyBBUyBUTyBUSEUgUVVBTElUWSBBTkQgUEVSRk9STUFOQ0UgT0ZccGFyDQpUSEUgUFJPR1JBTSBJUyBXSVRIIFlPVS4gU0hPVUxEIFRIRSBQUk9HUkFNIFBST1ZFIERFRkVDVElWRSwgWU9VIEFTU1VNRVxwYXINClRIRSBDT1NUIE9GIEFMTCBORUNFU1NBUlkgU0VSVklDSU5HLCBSRVBBSVIgT1IgQ09SUkVDVElPTi5ccGFyDQpccGFyDQoqKjE2LiBMaW1pdGF0aW9uIG9mIExpYWJpbGl0eS4qKlxwYXINClxwYXINCklOIE5PIEVWRU5UIFVOTEVTUyBSRVFVSVJFRCBCWSBBUFBMSUNBQkxFIExBVyBPUiBBR1JFRUQgVE8gSU4gV1JJVElOR1xwYXINCldJTEwgQU5ZIENPUFlSSUdIVCBIT0xERVIsIE9SIEFOWSBPVEhFUiBQQVJUWSBXSE8gTU9ESUZJRVMgQU5EL09SXHBhcg0KQ09OVkVZUyBUSEUgUFJPR1JBTSBBUyBQRVJNSVRURUQgQUJPVkUsIEJFIExJQUJMRSBUTyBZT1UgRk9SIERBTUFHRVMsXHBhcg0KSU5DTFVESU5HIEFOWSBHRU5FUkFMLCBTUEVDSUFMLCBJTkNJREVOVEFMIE9SIENPTlNFUVVFTlRJQUwgREFNQUdFU1xwYXINCkFSSVNJTkcgT1VUIE9GIFRIRSBVU0UgT1IgSU5BQklMSVRZIFRPIFVTRSBUSEUgUFJPR1JBTSAoSU5DTFVESU5HIEJVVFxwYXINCk5PVCBMSU1JVEVEIFRPIExPU1MgT0YgREFUQSBPUiBEQVRBIEJFSU5HIFJFTkRFUkVEIElOQUNDVVJBVEUgT1IgTE9TU0VTXHBhcg0KU1VTVEFJTkVEIEJZIFlPVSBPUiBUSElSRCBQQVJUSUVTIE9SIEEgRkFJTFVSRSBPRiBUSEUgUFJPR1JBTSBUTyBPUEVSQVRFXHBhcg0KV0lUSCBBTlkgT1RIRVIgUFJPR1JBTVMpLCBFVkVOIElGIFNVQ0ggSE9MREVSIE9SIE9USEVSIFBBUlRZIEhBUyBCRUVOXHBhcg0KQURWSVNFRCBPRiBUSEUgUE9TU0lCSUxJVFkgT0YgU1VDSCBEQU1BR0VTLlxwYXINClxwYXINCioqMTcuIEludGVycHJldGF0aW9uIG9mIFNlY3Rpb25zIDE1IGFuZCAxNi4qKlxwYXINClxwYXINCklmIHRoZSBkaXNjbGFpbWVyIG9mIHdhcnJhbnR5IGFuZCBsaW1pdGF0aW9uIG9mIGxpYWJpbGl0eSBwcm92aWRlZCBhYm92ZVxwYXINCmNhbm5vdCBiZSBnaXZlbiBsb2NhbCBsZWdhbCBlZmZlY3QgYWNjb3JkaW5nIHRvIHRoZWlyIHRlcm1zLCByZXZpZXdpbmdccGFyDQpjb3VydHMgc2hhbGwgYXBwbHkgbG9jYWwgbGF3IHRoYXQgbW9zdCBjbG9zZWx5IGFwcHJveGltYXRlcyBhbiBhYnNvbHV0ZVxwYXINCndhaXZlciBvZiBhbGwgY2l2aWwgbGlhYmlsaXR5IGluIGNvbm5lY3Rpb24gd2l0aCB0aGUgUHJvZ3JhbSwgdW5sZXNzIGFccGFyDQp3YXJyYW50eSBvciBhc3N1bXB0aW9uIG9mIGxpYWJpbGl0eSBhY2NvbXBhbmllcyBhIGNvcHkgb2YgdGhlIFByb2dyYW0gaW5ccGFyDQpyZXR1cm4gZm9yIGEgZmVlLlxwYXINClxwYXINCkVORCBPRiBURVJNUyBBTkQgQ09ORElUSU9OU1xmMFxsYW5nMjA1N1xwYXINCn0NCgA=</Data>
+    </License>
+    <Finish isRebootMachineEnabled="false">
+      <Program executableFilePath="&lt;InstallPath&gt;\" isLaunchEnabled="false" arguments=""/>
+    </Finish>
+  </InstallerConfiguration>
+  <UninstallerConfiguration isPackaged="true">
+    <UninstallerExecutableFileName>Uninstall</UninstallerExecutableFileName>
+    <OpenWebURIAfterUninstallation isEnabled="false">https://</OpenWebURIAfterUninstallation>
+    <CustomDisplayIcon isEnabled="false" iconFilePath="&lt;InstallPath&gt;\"/>
+  </UninstallerConfiguration>
+  <VisualUpdateConfiguration isPackaged="false">
+    <ProductName>&lt;AppName&gt;</ProductName>
+    <ProductVersion>&lt;AppVersion&gt;</ProductVersion>
+    <Language>0</Language>
+    <UpdateScriptURIs>
+      <MainURI>http://</MainURI>
+      <FirstMirrorURI>http://</FirstMirrorURI>
+      <SecondMirrorURI>http://</SecondMirrorURI>
+    </UpdateScriptURIs>
+    <updateExecutableFileName>Update</updateExecutableFileName>
+    <proEditionLicenseKey/>
+    <Program executableFilePath="" isLaunchEnabled="false" isTerminationEnabled="false"/>
+  </VisualUpdateConfiguration>
+  <BuildConfiguration>
+    <SetupFilePath>dist\lalamachine.exe</SetupFilePath>
+    <SetupIconPath>Lalamachine.Wpf\assets\images\lalamachine-new.ico</SetupIconPath>
+    <UninstallerIconPath>Lalamachine.Wpf\assets\images\lalamachine-new.ico</UninstallerIconPath>
+    <Compression method="0" level="2"/>
+    <CodeSigning isEnabled="false" signToolCommandLine="/n &quot;Subject&quot; /tr http://timestamp.digicert.com /td sha256 /fd sha256 &quot;&lt;ExecutableFilePath&gt;&quot;"/>
+  </BuildConfiguration>
+</InstallForgeProject>

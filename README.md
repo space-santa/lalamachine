@@ -27,8 +27,12 @@ dotnet test
 
 ## Release
 
-`build-release.ps1` publishes the app to `Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish`.
-`install-forge.ifp` turns that folder into the installer.
+Needs [InstallForge](https://installforge.net) 1.6 or later. Set `<Version>` in `Lalamachine.Wpf\Lalamachine.Wpf.csproj`,
+then run `.\build-release.ps1`. It publishes the app and builds `dist\lalamachine_<version>.exe`.
+
+`install-forge.ifp` uses paths relative to the repository root, and InstallForge resolves them against the current
+directory. So build with the script, not from the InstallForge window. The window stores files you add there as
+absolute paths, make them relative before committing.
 
 ## Contribute
 
