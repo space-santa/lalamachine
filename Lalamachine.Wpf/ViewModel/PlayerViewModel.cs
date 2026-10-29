@@ -104,17 +104,8 @@ namespace Lalamachine.Wpf.ViewModel
 
         public string Source
         {
-            get
-            {
-                try
-                {
-                    return _mediaPlayer.Source.AbsolutePath;
-                }
-                catch (NullReferenceException)
-                {
-                    return "";
-                }
-            }
+            // LocalPath, not AbsolutePath: AbsolutePath drops the server of a network path (\\nas\music\a.mp3 becomes /music/a.mp3).
+            get => _mediaPlayer.Source?.LocalPath ?? "";
             set => Open(value);
         }
 
