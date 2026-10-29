@@ -6,10 +6,15 @@ namespace Settings
 {
     public class SettingsFile
     {
-        public SettingsFile(string appName, string settingsName)
+        public SettingsFile(string appName, string settingsName) : this(appName, settingsName, LibLala.Constants.LALADIR)
+        {
+        }
+
+        public SettingsFile(string appName, string settingsName, string settingsDir)
         {
             AppName = appName;
             SettingsName = settingsName;
+            SettingsDir = settingsDir;
         }
         public string AppName { get; }
         public string SettingsName { get; }
@@ -25,17 +30,26 @@ namespace Settings
             {
                 // Nothing to worry about, file just doesn't exist.
             }
+            catch (JsonException)
+            {
+                // A corrupt file must not stop the app from starting, fall back to the defaults.
+            }
 
             return new Dictionary<string, string>();
         }
 
         public virtual void Save(Dictionary<string, string> settings)
         {
-            using var file = File.Create(SettingsPath);
-            JsonSerializer.Serialize(file, settings);
+            // Write a temporary file first, so a crash mid-write can't leave a truncated settings file behind.
+            var tempPath = $"{SettingsPath}.tmp";
+            using (var file = File.Create(tempPath))
+            {
+                JsonSerializer.Serialize(file, settings);
+            }
+            File.Move(tempPath, SettingsPath, overwrite: true);
         }
 
-        private static string SettingsDir => LibLala.Constants.LALADIR;
+        private string SettingsDir { get; }
         private string SettingsPath => Path.Combine(SettingsDir, $"{SettingsName}.json");
     }
 }

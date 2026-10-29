@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 
 namespace Settings
@@ -29,9 +30,7 @@ namespace Settings
             SettingsFile.Save(_settings);
         }
 
-#pragma warning disable RS0026 // Do not add multiple public overloads with optional parameters
         protected void Set(int value, [CallerMemberName] string key = "defaultInt")
-
         {
             Set(value.ToString(LibLala.Constants.CULTURE), key);
         }
@@ -48,57 +47,46 @@ namespace Settings
 
         protected void Set(string value, [CallerMemberName] string key = "defaultString")
         {
+            // Sliders call this many times per second, only touch the file when something changed.
+            if (_settings.TryGetValue(key, out var current) && current == value) { return; }
+
             _settings[key] = value;
             Save();
         }
-#pragma warning restore RS0026 // Do not add multiple public overloads with optional parameters
 
         protected int GetInt(int initialValue = 0, [CallerMemberName] string key = "defaultInt")
         {
-            try
+            if (_settings.TryGetValue(key, out var value) && int.TryParse(value, NumberStyles.Integer, LibLala.Constants.CULTURE, out var result))
             {
-                return Convert.ToInt32(_settings[key], LibLala.Constants.CULTURE);
+                return result;
             }
-            catch (KeyNotFoundException)
-            {
-                return initialValue;
-            }
+
+            return initialValue;
         }
 
         protected double GetDouble(double initialValue = 0.0, [CallerMemberName] string key = "defaultDouble")
         {
-            try
+            if (_settings.TryGetValue(key, out var value) && double.TryParse(value, NumberStyles.Float | NumberStyles.AllowThousands, LibLala.Constants.CULTURE, out var result))
             {
-                return Convert.ToDouble(_settings[key], LibLala.Constants.CULTURE);
+                return result;
             }
-            catch (KeyNotFoundException)
-            {
-                return initialValue;
-            }
+
+            return initialValue;
         }
 
         protected bool GetBool(bool initialValue = false, [CallerMemberName] string key = "defaultBool")
         {
-            try
+            if (_settings.TryGetValue(key, out var value) && bool.TryParse(value, out var result))
             {
-                return Convert.ToBoolean(_settings[key], LibLala.Constants.CULTURE);
+                return result;
             }
-            catch (KeyNotFoundException)
-            {
-                return initialValue;
-            }
+
+            return initialValue;
         }
 
         protected string GetString(string initialValue = "", [CallerMemberName] string key = "defaultString")
         {
-            try
-            {
-                return _settings[key];
-            }
-            catch (KeyNotFoundException)
-            {
-                return initialValue;
-            }
+            return _settings.TryGetValue(key, out var value) ? value : initialValue;
         }
     }
 }
