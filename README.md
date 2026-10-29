@@ -9,16 +9,26 @@ lalamachine is just another music player. It features:
 
 ## Dependencies
 
-dotnet core 3.0
+Windows and the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
 
 ## Run it
 
-Either install the .msi from the release section, or clone the repo and
+Either use the installer from the release section, or clone the repo and
 
 ```bash
-cd Lalamachine
-dotnet run
+dotnet run --project Lalamachine.Wpf
 ```
+
+## Test
+
+```bash
+dotnet test
+```
+
+## Release
+
+`build-release.ps1` publishes the app to `Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish`.
+`install-forge.ifp` turns that folder into the installer.
 
 ## Contribute
 

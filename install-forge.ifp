@@ -76,37 +76,37 @@ RunProgs = 0
 Execdlls = 0
 [Languages]
 [Files/Dirs]
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net8.0-windows\win-x64\publish\D3DCompiler_47_cor3.dll
+C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\D3DCompiler_47_cor3.dll
 4.7 MB
 dll
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net8.0-windows\win-x64\publish\e_sqlite3.dll
+C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\e_sqlite3.dll
 1.6 MB
 dll
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net8.0-windows\win-x64\publish\LalaDb.pdb
+C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\LalaDb.pdb
 23.4 KB
 pdb
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net8.0-windows\win-x64\publish\Lalamachine.Wpf.exe
+C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\Lalamachine.Wpf.exe
 153.8 MB
 exe
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net8.0-windows\win-x64\publish\Lalamachine.Wpf.pdb
+C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\Lalamachine.Wpf.pdb
 54.3 KB
 pdb
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net8.0-windows\win-x64\publish\LibLala.pdb
+C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\LibLala.pdb
 18.9 KB
 pdb
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net8.0-windows\win-x64\publish\PenImc_cor3.dll
+C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\PenImc_cor3.dll
 154.3 KB
 dll
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net8.0-windows\win-x64\publish\PresentationNative_cor3.dll
+C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\PresentationNative_cor3.dll
 1.2 MB
 dll
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net8.0-windows\win-x64\publish\Settings.pdb
+C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\Settings.pdb
 12 KB
 pdb
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net8.0-windows\win-x64\publish\vcruntime140_cor3.dll
+C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\vcruntime140_cor3.dll
 117.1 KB
 dll
-C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net8.0-windows\win-x64\publish\wpfgfx_cor3.dll
+C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\wpfgfx_cor3.dll
 1.9 MB
 dll
 C:\Users\space\code\dotnet\lalamachine\Lalamachine.Wpf\assets\images\lalamachine-new.ico

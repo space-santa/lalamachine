@@ -1,5 +1,5 @@
-$PathToPublish = "..\Lalamachine.Wpf\bin\Release\net8.0-windows\win-x64\publish"
+$ErrorActionPreference = "Stop"
 
-dotnet publish .\Lalamachine.Wpf\Lalamachine.Wpf.csproj -c Release
-Remove-Item "${PathToPublish}\\assets" -Recurse -Force
-Copy-Item ..\Lalamachine.Wpf\assets $PathToPublish -Recurse -Force
+# Publishes to Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish, which is what install-forge.ifp packages.
+dotnet publish "$PSScriptRoot\Lalamachine.Wpf\Lalamachine.Wpf.csproj" -c Release
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

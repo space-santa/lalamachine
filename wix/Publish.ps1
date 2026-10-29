@@ -1,5 +1,5 @@
-$version = "4.99.14"
-$PathToPublish = "..\Lalamachine.Wpf\bin\Release\net7.0-windows\win-x64\publish"
+$version = "4.99.15"
+$PathToPublish = "..\Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish"
 
 dotnet publish ../Lalamachine.Wpf/Lalamachine.Wpf.csproj -c Release
 Remove-Item "${PathToPublish}\\assets" -Recurse -Force

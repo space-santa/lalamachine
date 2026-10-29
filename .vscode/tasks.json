@@ -15,7 +15,7 @@
       "label": "publish",
       "command": "dotnet",
       "type": "process",
-      "args": ["publish", "${workspaceFolder}/Lalamachine/Lalamachine.csproj"],
+      "args": ["publish", "${workspaceFolder}/Lalamachine.Wpf/Lalamachine.Wpf.csproj", "-c", "Release"],
       "problemMatcher": "$tsc"
     },
     {
@@ -25,7 +25,8 @@
       "args": [
         "watch",
         "run",
-        "${workspaceFolder}/Lalamachine/Lalamachine.csproj"
+        "--project",
+        "${workspaceFolder}/Lalamachine.Wpf/Lalamachine.Wpf.csproj"
       ],
       "problemMatcher": "$tsc"
     }
