@@ -75,7 +75,8 @@ namespace LibLala.LibLalaTagReader
             _discNumber = new DiscNumber(file.Tag.Disc);
             _genre = new GenreList(file.Tag.Genres.ToList());
             _length = new TrackLength(file.Properties.Duration);
-            _title = new TitleName(file.Tag.Title);
+            // Untagged files are common, show them under their file name rather than refusing them.
+            _title = new TitleName(string.IsNullOrWhiteSpace(file.Tag.Title) ? System.IO.Path.GetFileNameWithoutExtension(path) : file.Tag.Title);
             _trackNumber = new TrackNumber(file.Tag.Track);
             _year = new Year((int)file.Tag.Year);
         }

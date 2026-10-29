@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -43,9 +44,9 @@ namespace Lalamachine.Wpf.ViewModel
         private int _numberOfArtists;
         private int _numberOfAlbums;
 
-        public LibraryViewModel(LalaContext context)
+        public LibraryViewModel(LalaContext context, Func<LalaContext> createScanContext)
         {
-            _model = new MusicLibModel(context);
+            _model = new MusicLibModel(context, createScanContext);
             _model.FileScannedEvent += FileScannedEventHandler;
             _model.FilesToScanChangedEvent += FilesToScanChangedEventHandler;
 
@@ -304,8 +305,27 @@ namespace Lalamachine.Wpf.ViewModel
         {
             if (Scanning) { return; }
             Scanning = true;
-            await _model.ScanAsync(path).ConfigureAwait(true);
-            Scanning = false;
+            try
+            {
+                var skippedFiles = await _model.ScanAsync(path).ConfigureAwait(true);
+                if (skippedFiles.Count > 0)
+                {
+                    System.Windows.MessageBox.Show(SkippedFilesMessage(skippedFiles));
+                }
+            }
+            finally
+            {
+                Scanning = false;
+                NotifyListsChanged();
+            }
+        }
+
+        private static string SkippedFilesMessage(IReadOnlyList<string> skippedFiles)
+        {
+            const int maxListed = 10;
+            var listed = string.Join("\n", skippedFiles.Take(maxListed));
+            var more = skippedFiles.Count > maxListed ? $"\n... and {skippedFiles.Count - maxListed} more." : "";
+            return $"{skippedFiles.Count} file(s) couldn't be read and were left out of the library:\n\n{listed}{more}";
         }
 
         public ObservableCollection<string?> GenreList
