@@ -32,9 +32,13 @@ namespace LibLala.DomainPrimitives
         public string FullName => _fileInfo.FullName;
     }
 
-    public class FakeTrackPath : ITrackPath
+    /// <summary>
+    /// A path that isn't checked against the file system, e.g. a track loaded from the library database.
+    /// The file might just be temporarily unavailable (unplugged drive, offline share), which must not stop the track from loading.
+    /// </summary>
+    public class UncheckedTrackPath : ITrackPath
     {
-        public FakeTrackPath(string path) { FullName = path; }
+        public UncheckedTrackPath(string path) { FullName = path; }
         public override string ToString() => FullName;
         public string FullName { get; }
     }

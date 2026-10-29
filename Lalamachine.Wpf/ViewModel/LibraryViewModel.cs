@@ -418,9 +418,9 @@ namespace Lalamachine.Wpf.ViewModel
                         {
                             displayLib.Add(new PlaylistTags(LalaTags.Build(track)));
                         }
-                        catch (ArgumentException e)
+                        catch (ArgumentException)
                         {
-                            System.Windows.MessageBox.Show($"{e.Message}.\nYou may need to rescan the library.");
+                            // A broken row. Skip it rather than interrupting with a dialog on every refresh, a rescan rebuilds it.
                         }
                     }
                 }

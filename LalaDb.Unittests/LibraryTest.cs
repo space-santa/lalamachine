@@ -48,6 +48,21 @@ namespace LalaDb.Unittests
         }
 
         [Test]
+        public void PlaylistTrackWithMissingFileStillLoads()
+        {
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            var missingPath = Path.Combine(_musicDir, "on-the-unplugged-drive.mp3");
+            context.Tracks!.Add(new Track { Title = "Gone for now", Path = missingPath, Length = 100, TrackNumber = 1, DiscNumber = 1, Album = new Album { Name = "Album" } });
+            context.PlaylistTracks!.Add(new PlaylistTrack { Playlist = new Playlist { Name = "list" }, TrackPath = missingPath, Order = 1 });
+            context.SaveChanges();
+
+            var tracks = new PlaylistModel(context).GetPlaylistTracks("list");
+
+            Assert.That(tracks.Select(x => x.Title), Is.EqualTo(new[] { "Gone for now" }));
+        }
+
+        [Test]
         public async Task RescanDoesNotDuplicateTracks()
         {
             TestMp3.Write(Path.Combine(_musicDir, "a.mp3"), "A", "Artist", "Album");

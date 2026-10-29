@@ -23,7 +23,7 @@ namespace Lalamachine.Wpf.Unittests
         {
             var wasCalled = false;
             var viewModel = new PlaylistBaseViewModel("LIBRARY");
-            viewModel.AddTrack(new LibLalaTagsBuilder("bob", new FakeTrackPath("/path/to/bob"), 5).Build());
+            viewModel.AddTrack(new LibLalaTagsBuilder("bob", new UncheckedTrackPath("/path/to/bob"), 5).Build());
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayNextTrackHandler(null, new System.EventArgs());
             Assert.That(wasCalled);
@@ -44,7 +44,7 @@ namespace Lalamachine.Wpf.Unittests
         {
             var wasCalled = false;
             var viewModel = new PlaylistBaseViewModel("LIBRARY");
-            viewModel.AddTrack(new LibLalaTagsBuilder("bob", new FakeTrackPath("/path/to/bob"), 5).Build());
+            viewModel.AddTrack(new LibLalaTagsBuilder("bob", new UncheckedTrackPath("/path/to/bob"), 5).Build());
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayLastTrackHandler(null, new System.EventArgs());
             Assert.That(wasCalled);

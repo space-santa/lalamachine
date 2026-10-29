@@ -39,6 +39,7 @@ namespace Lalamachine.Wpf.ViewModel
             Volume = _playerSettings.Volume;
             _mediaPlayer.MediaOpened += _mediaPlayer_MediaOpened;
             _mediaPlayer.MediaEnded += _mediaPlayer_MediaEnded;
+            _mediaPlayer.MediaFailed += _mediaPlayer_MediaFailed;
 
             _changePlayPauseCommand = new DelegateCommand(OnChangePlayPause);
             _loadCommand = new DelegateCommand(OnLoad);
@@ -199,6 +200,12 @@ namespace Lalamachine.Wpf.ViewModel
         private void _mediaPlayer_MediaOpened(object? sender, EventArgs e)
         {
             NotifyPropertyChanged(nameof(Duration));
+        }
+
+        private void _mediaPlayer_MediaFailed(object? sender, ExceptionEventArgs e)
+        {
+            // E.g. the file is on a drive that isn't connected. Don't pretend to play it.
+            IsPlaying = false;
         }
 
         private void SetupTimer()
