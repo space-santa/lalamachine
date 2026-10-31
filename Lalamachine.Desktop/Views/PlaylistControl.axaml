@@ -1,0 +1,43 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:Lalamachine.Desktop"
+             xmlns:vm="using:Lalamachine.ViewModel"
+             x:Class="Lalamachine.Desktop.Views.PlaylistControl"
+             x:DataType="vm:PlaylistViewModel">
+    <Grid RowDefinitions="*,Auto">
+        <DataGrid x:Name="PlaylistGrid"
+                  Grid.Row="0"
+                  ItemsSource="{Binding Playlist}"
+                  IsReadOnly="True"
+                  SelectionMode="Single"
+                  CanUserReorderColumns="True"
+                  CanUserResizeColumns="True"
+                  CanUserSortColumns="True"
+                  GridLinesVisibility="None"
+                  DragDrop.AllowDrop="True">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Remove" Command="{Binding RemoveTrackCommand}" CommandParameter="{Binding #PlaylistGrid.SelectedItem}" />
+                    <MenuItem Header="Remove All" Command="{Binding RemoveAllTracksCommand}" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <DataGrid.Columns>
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="🔊" CanUserSort="False" Binding="{Binding IsPlaying, Converter={x:Static local:Converters.PlaylistItemIsPlaying}}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Track" Tag="Track" Binding="{Binding Track}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Disc" Tag="Disc" Binding="{Binding DiscNumber}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Title" Tag="Title" Binding="{Binding Title}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Length" Tag="Length" Binding="{Binding LengthString}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Comment" Tag="Comment" Binding="{Binding Comment}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Album" Tag="Album" Binding="{Binding Album}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Artist" Tag="Artist" Binding="{Binding ArtistString}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Genre" Tag="Genre" Binding="{Binding GenreString}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Year" Tag="Year" Binding="{Binding Year}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Label Content="{Binding NumberOfTracks}" />
+            <Label Content="Tracks, Total Playtime:" />
+            <Label Content="{Binding TotalPlaytime, Converter={x:Static local:Converters.SecondsToTime}}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -9,7 +9,8 @@ lalamachine is just another music player. It features:
 
 ## Dependencies
 
-Windows and the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
+The [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0). The WPF app needs Windows. The Avalonia app runs on
+Windows and macOS, and on Linux when VLC is installed.
 
 ## Run it
 
@@ -19,11 +20,20 @@ Either use the installer from the release section, or clone the repo and
 dotnet run --project Lalamachine.Wpf
 ```
 
+The Avalonia version, which will replace the WPF one, is
+
+```bash
+dotnet run --project Lalamachine.Desktop
+```
+
 ## Test
 
 ```bash
 dotnet test
 ```
+
+The solution includes the WPF app, so on macOS and Linux test the projects one by one, e.g.
+`dotnet test Lalamachine.ViewModel.Unittests`.
 
 ## Release
 

@@ -1,0 +1,25 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="using:Lalamachine.Desktop.Views"
+        x:Class="Lalamachine.Desktop.Views.MainWindow"
+        Title="lalamachine"
+        Icon="/Assets/lalamachine.ico"
+        Width="800" Height="800">
+    <Grid RowDefinitions="*,Auto">
+        <TabControl x:Name="ListTabs" Grid.Row="0">
+            <TabItem Header="Playlist">
+                <views:PlaylistControl x:Name="MainPlaylist" />
+            </TabItem>
+            <TabItem Header="Library">
+                <views:LibraryControl x:Name="Library" />
+            </TabItem>
+            <TabItem Header="🛠">
+                <views:SettingsControl x:Name="SettingsPanel" />
+            </TabItem>
+        </TabControl>
+
+        <Border Grid.Row="1" Classes="player">
+            <views:PlayerControl x:Name="Player" />
+        </Border>
+    </Grid>
+</Window>

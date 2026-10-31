@@ -7,7 +7,6 @@ namespace Lalamachine.ViewModel
 {
     public class SettingsSettings : AppSettings
     {
-        // Still "Lalamachine.Wpf", that's the name the existing settings files are stored under.
         public SettingsSettings() : base("Lalamachine.Wpf", "SettingsSettings") { }
 
         public string LibraryPath { get => GetString(""); set => Set(value); }

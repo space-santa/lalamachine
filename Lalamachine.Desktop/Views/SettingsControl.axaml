@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Lalamachine.ViewModel"
+             x:Class="Lalamachine.Desktop.Views.SettingsControl"
+             x:DataType="vm:SettingsViewModel">
+    <StackPanel>
+        <StackPanel Orientation="Horizontal" IsVisible="{Binding !Scanning}">
+            <Button Content="⚙" Command="{Binding ScanCommand}" />
+            <Button Content="📂" Command="{Binding LoadCommand}" />
+            <Label Content="{Binding LibraryPath}" />
+        </StackPanel>
+        <Label IsVisible="{Binding Scanning}" HorizontalAlignment="Center" FontSize="24" Content="Scanning..." />
+    </StackPanel>
+</UserControl>

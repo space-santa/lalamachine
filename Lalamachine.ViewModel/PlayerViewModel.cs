@@ -6,7 +6,6 @@ namespace Lalamachine.ViewModel
 {
     public class PlayerSettings : AppSettings
     {
-        // Still "Lalamachine.Wpf", that's the name the existing settings files are stored under.
         public PlayerSettings() : base("Lalamachine.Wpf", "PlayerSettings") { }
 
         public double Volume { get => GetDouble(50); set => Set(value); }
@@ -221,6 +220,10 @@ namespace Lalamachine.ViewModel
         {
             _audioPlayer.Open(new Uri(path));
             NotifyPropertyChanged(nameof(Source));
+            // Reset the position slider right away. Left at the old track's position, it would get clamped to a shorter
+            // new track's length once that is known, and seek there.
+            NotifyPropertyChanged(nameof(Position));
+            NotifyPropertyChanged(nameof(Duration));
         }
 
         public void Play()

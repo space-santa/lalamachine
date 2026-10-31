@@ -1,0 +1,136 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- The look of the WPF version: dark blue, white text, grey gradient buttons that turn orange. -->
+    <Styles.Resources>
+        <LinearGradientBrush x:Key="ControlBrush" StartPoint="50%,0%" EndPoint="50%,100%">
+            <GradientStop Offset="0" Color="White" />
+            <GradientStop Offset="1" Color="#FF808080" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="ControlMouseOverBrush" StartPoint="50%,0%" EndPoint="50%,100%">
+            <GradientStop Offset="0" Color="White" />
+            <GradientStop Offset="1" Color="Orange" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="ControlPressedBrush" StartPoint="50%,0%" EndPoint="50%,100%">
+            <GradientStop Offset="0" Color="White" />
+            <GradientStop Offset="1" Color="DarkOrange" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="ControlBorderBrush" StartPoint="50%,0%" EndPoint="50%,100%">
+            <GradientStop Offset="0" Color="#FFCCCCCC" />
+            <GradientStop Offset="1" Color="#FF444444" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="PlayerBackgroundBrush" StartPoint="50%,100%" EndPoint="50%,0%">
+            <GradientStop Offset="0" Color="LightBlue" />
+            <GradientStop Offset="1" Color="DarkBlue" />
+        </LinearGradientBrush>
+
+        <StaticResource x:Key="ButtonBackground" ResourceKey="ControlBrush" />
+        <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="ControlMouseOverBrush" />
+        <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="ControlPressedBrush" />
+        <StaticResource x:Key="ButtonBorderBrush" ResourceKey="ControlBorderBrush" />
+        <StaticResource x:Key="ButtonBorderBrushPointerOver" ResourceKey="ControlBorderBrush" />
+        <StaticResource x:Key="ButtonBorderBrushPressed" ResourceKey="ControlBorderBrush" />
+        <SolidColorBrush x:Key="ButtonForeground" Color="Black" />
+        <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Black" />
+        <SolidColorBrush x:Key="ButtonForegroundPressed" Color="Black" />
+
+        <StaticResource x:Key="DataGridColumnHeaderBackgroundBrush" ResourceKey="ControlBrush" />
+        <StaticResource x:Key="DataGridColumnHeaderHoveredBackgroundBrush" ResourceKey="ControlMouseOverBrush" />
+        <StaticResource x:Key="DataGridColumnHeaderPressedBackgroundBrush" ResourceKey="ControlPressedBrush" />
+        <SolidColorBrush x:Key="DataGridColumnHeaderForegroundBrush" Color="Black" />
+        <SolidColorBrush x:Key="DataGridRowSelectedBackgroundBrush" Color="DarkOrange" />
+        <SolidColorBrush x:Key="DataGridRowSelectedHoveredBackgroundBrush" Color="DarkOrange" />
+        <SolidColorBrush x:Key="DataGridRowSelectedUnfocusedBackgroundBrush" Color="DarkOrange" />
+        <SolidColorBrush x:Key="DataGridRowSelectedHoveredUnfocusedBackgroundBrush" Color="DarkOrange" />
+        <x:Double x:Key="DataGridRowSelectedBackgroundOpacity">1</x:Double>
+        <x:Double x:Key="DataGridRowSelectedHoveredBackgroundOpacity">1</x:Double>
+        <x:Double x:Key="DataGridRowSelectedUnfocusedBackgroundOpacity">1</x:Double>
+        <x:Double x:Key="DataGridRowSelectedHoveredUnfocusedBackgroundOpacity">1</x:Double>
+    </Styles.Resources>
+
+    <Style Selector="Window">
+        <Setter Property="Background" Value="DarkBlue" />
+    </Style>
+
+    <Style Selector="Border.player">
+        <Setter Property="Background" Value="{StaticResource PlayerBackgroundBrush}" />
+    </Style>
+
+    <Style Selector="TabItem">
+        <Setter Property="FontSize" Value="24" />
+    </Style>
+
+    <Style Selector="Label">
+        <Setter Property="FontFamily" Value="Calibri" />
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!-- The headers above the genre, artist and album lists, like the playlist's column headers. -->
+    <Style Selector="Label.header">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Background" Value="{StaticResource ControlBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource ControlBorderBrush}" />
+        <Setter Property="BorderThickness" Value="0,1" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="4,2" />
+    </Style>
+
+    <Style Selector="Button">
+        <Setter Property="MinHeight" Value="48" />
+        <Setter Property="MinWidth" Value="64" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="Padding" Value="2" />
+        <Setter Property="CornerRadius" Value="2" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="TextBox">
+        <Setter Property="FontFamily" Value="Calibri" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="White" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="TextBox:pointerover, TextBox:focus">
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+    <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement, TextBox:focus /template/ Border#PART_BorderElement">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="White" />
+    </Style>
+
+    <Style Selector="ListBox">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+    <Style Selector="ListBoxItem">
+        <Setter Property="FontFamily" Value="Calibri" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Padding" Value="4,2" />
+    </Style>
+    <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter, ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter, ListBoxItem:selected:pressed /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="DarkOrange" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+
+    <Style Selector="DataGrid">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontFamily" Value="Calibri" />
+        <Setter Property="FontSize" Value="20" />
+    </Style>
+    <Style Selector="DataGridColumnHeader">
+        <Setter Property="FontFamily" Value="Calibri" />
+        <Setter Property="FontSize" Value="20" />
+    </Style>
+</Styles>

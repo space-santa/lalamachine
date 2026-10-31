@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lalamachine.ViewModel", "La
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lalamachine.ViewModel.Unittests", "Lalamachine.ViewModel.Unittests\Lalamachine.ViewModel.Unittests.csproj", "{BEF79AF9-DA6B-4E40-A1A0-E76B3AA46402}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lalamachine.Desktop", "Lalamachine.Desktop\Lalamachine.Desktop.csproj", "{0ABB887E-0BD9-4A0A-A2D4-80872BB1A4C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -144,6 +146,18 @@ Global
 		{BEF79AF9-DA6B-4E40-A1A0-E76B3AA46402}.Release|x64.Build.0 = Release|Any CPU
 		{BEF79AF9-DA6B-4E40-A1A0-E76B3AA46402}.Release|x86.ActiveCfg = Release|Any CPU
 		{BEF79AF9-DA6B-4E40-A1A0-E76B3AA46402}.Release|x86.Build.0 = Release|Any CPU
+		{0ABB887E-0BD9-4A0A-A2D4-80872BB1A4C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0ABB887E-0BD9-4A0A-A2D4-80872BB1A4C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0ABB887E-0BD9-4A0A-A2D4-80872BB1A4C8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0ABB887E-0BD9-4A0A-A2D4-80872BB1A4C8}.Debug|x64.Build.0 = Debug|Any CPU
+		{0ABB887E-0BD9-4A0A-A2D4-80872BB1A4C8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0ABB887E-0BD9-4A0A-A2D4-80872BB1A4C8}.Debug|x86.Build.0 = Debug|Any CPU
+		{0ABB887E-0BD9-4A0A-A2D4-80872BB1A4C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0ABB887E-0BD9-4A0A-A2D4-80872BB1A4C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0ABB887E-0BD9-4A0A-A2D4-80872BB1A4C8}.Release|x64.ActiveCfg = Release|Any CPU
+		{0ABB887E-0BD9-4A0A-A2D4-80872BB1A4C8}.Release|x64.Build.0 = Release|Any CPU
+		{0ABB887E-0BD9-4A0A-A2D4-80872BB1A4C8}.Release|x86.ActiveCfg = Release|Any CPU
+		{0ABB887E-0BD9-4A0A-A2D4-80872BB1A4C8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
