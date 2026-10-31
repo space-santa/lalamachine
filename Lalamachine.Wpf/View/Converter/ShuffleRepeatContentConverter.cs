@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Data;
-using Lalamachine.Wpf.ViewModel;
+using Lalamachine.ViewModel;
 
 namespace Lalamachine.Wpf.View.Converter
 {

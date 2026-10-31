@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace Lalamachine.Wpf.ViewModel
+namespace Lalamachine.ViewModel
 {
 
     public class DelegateCommand : ICommand

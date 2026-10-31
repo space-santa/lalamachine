@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LalaDb\LalaDb.csproj" />
+    <ProjectReference Include="..\LibLala\LibLala.csproj" />
+    <ProjectReference Include="..\Settings\Settings.csproj" />
+  </ItemGroup>
+
+</Project>

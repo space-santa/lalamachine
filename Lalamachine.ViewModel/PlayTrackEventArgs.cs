@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lalamachine.Wpf.ViewModel
+namespace Lalamachine.ViewModel
 {
     public class PlayTrackEventArgs : EventArgs
     {

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Threading;
 using Settings;
 
-namespace Lalamachine.Wpf.ViewModel
+namespace Lalamachine.ViewModel
 {
     public class PlayerSettings : AppSettings
     {
+        // Still "Lalamachine.Wpf", that's the name the existing settings files are stored under.
         public PlayerSettings() : base("Lalamachine.Wpf", "PlayerSettings") { }
 
         public double Volume { get => GetDouble(50); set => Set(value); }
@@ -27,29 +26,27 @@ namespace Lalamachine.Wpf.ViewModel
 
     public class PlayerViewModel : BaseNotifyPropertyChanged
     {
-        private readonly MediaPlayer _mediaPlayer;
-        private readonly DispatcherTimer _dispatcherTimer;
+        private readonly IAudioPlayer _audioPlayer;
+        private readonly IDialogService _dialogs;
         private readonly PlayerSettings _playerSettings;
 
-        public PlayerViewModel()
+        public PlayerViewModel(IAudioPlayer audioPlayer, IDialogService dialogs)
         {
             _playerSettings = new PlayerSettings();
-            _mediaPlayer = new MediaPlayer();
+            _audioPlayer = audioPlayer;
+            _dialogs = dialogs;
             IsMuted = _playerSettings.IsMuted;
             Volume = _playerSettings.Volume;
-            _mediaPlayer.MediaOpened += _mediaPlayer_MediaOpened;
-            _mediaPlayer.MediaEnded += _mediaPlayer_MediaEnded;
-            _mediaPlayer.MediaFailed += _mediaPlayer_MediaFailed;
+            _audioPlayer.MediaOpened += _audioPlayer_MediaOpened;
+            _audioPlayer.MediaEnded += _audioPlayer_MediaEnded;
+            _audioPlayer.MediaFailed += _audioPlayer_MediaFailed;
+            _audioPlayer.PositionChanged += _audioPlayer_PositionChanged;
 
             _changePlayPauseCommand = new DelegateCommand(OnChangePlayPause);
             _loadCommand = new DelegateCommand(OnLoad);
             _nextCommand = new DelegateCommand(OnPlayNextTrack);
             _lastCommand = new DelegateCommand(OnPlayLastTrack);
             _muteCommand = new DelegateCommand(OnMute);
-
-            _dispatcherTimer = new DispatcherTimer();
-            SetupTimer();
-            _dispatcherTimer.Start();
         }
 
         public event EventHandler? PlayNextTrackEvent;
@@ -105,7 +102,7 @@ namespace Lalamachine.Wpf.ViewModel
         public string Source
         {
             // LocalPath, not AbsolutePath: AbsolutePath drops the server of a network path (\\nas\music\a.mp3 becomes /music/a.mp3).
-            get => _mediaPlayer.Source?.LocalPath ?? "";
+            get => _audioPlayer.Source?.LocalPath ?? "";
             set => Open(value);
         }
 
@@ -130,43 +127,32 @@ namespace Lalamachine.Wpf.ViewModel
         }
         public bool IsMuted
         {
-            get => _mediaPlayer.IsMuted;
+            get => _audioPlayer.IsMuted;
             set
             {
-                _mediaPlayer.IsMuted = value;
-                _playerSettings.IsMuted = _mediaPlayer.IsMuted;
+                _audioPlayer.IsMuted = value;
+                _playerSettings.IsMuted = _audioPlayer.IsMuted;
                 NotifyPropertyChanged();
             }
         }
 
         public double Volume
         {
-            get => _mediaPlayer.Volume * 100;
+            get => _audioPlayer.Volume * 100;
             set
             {
-                _mediaPlayer.Volume = value / 100;
+                _audioPlayer.Volume = value / 100;
                 _playerSettings.Volume = value;
                 NotifyPropertyChanged();
             }
         }
 
-        public double Duration
-        {
-            get
-            {
-                if (_mediaPlayer.NaturalDuration.HasTimeSpan)
-                {
-                    return _mediaPlayer.NaturalDuration.TimeSpan.TotalSeconds;
-                }
-
-                return 0;
-            }
-        }
+        public double Duration => _audioPlayer.Duration?.TotalSeconds ?? 0;
 
         public double Position
         {
-            get => _mediaPlayer.Position.TotalSeconds;
-            set => _mediaPlayer.Position = new TimeSpan(0, 0, (int)value);
+            get => _audioPlayer.Position.TotalSeconds;
+            set => _audioPlayer.Position = new TimeSpan(0, 0, (int)value);
         }
 
         private readonly DelegateCommand _changePlayPauseCommand;
@@ -183,29 +169,23 @@ namespace Lalamachine.Wpf.ViewModel
         private readonly DelegateCommand _muteCommand;
         public ICommand MuteCommand => _muteCommand;
 
-        private void _mediaPlayer_MediaEnded(object? sender, EventArgs e)
+        private void _audioPlayer_MediaEnded(object? sender, EventArgs e)
         {
             InvokePlayNextTrackEvent();
         }
 
-        private void _mediaPlayer_MediaOpened(object? sender, EventArgs e)
+        private void _audioPlayer_MediaOpened(object? sender, EventArgs e)
         {
             NotifyPropertyChanged(nameof(Duration));
         }
 
-        private void _mediaPlayer_MediaFailed(object? sender, ExceptionEventArgs e)
+        private void _audioPlayer_MediaFailed(object? sender, EventArgs e)
         {
             // E.g. the file is on a drive that isn't connected. Don't pretend to play it.
             IsPlaying = false;
         }
 
-        private void SetupTimer()
-        {
-            _dispatcherTimer.Tick += new EventHandler(DispatcherTimerTick);
-            _dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 200);
-        }
-
-        private void DispatcherTimerTick(object? sender, EventArgs e)
+        private void _audioPlayer_PositionChanged(object? sender, EventArgs e)
         {
             NotifyPropertyChanged(nameof(Position));
         }
@@ -222,22 +202,13 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
-        private void OnLoad(object? commandParameter)
+        private async void OnLoad(object? commandParameter)
         {
-            var dlg = new Microsoft.Win32.OpenFileDialog
-            {
-                Multiselect = true,
-                Filter = "Music | *.mp3; *.m4a"
-            };
+            var paths = await _dialogs.PickMusicFilesAsync().ConfigureAwait(true);
 
-            var result = dlg.ShowDialog();
-
-            if (result == true)
+            foreach (var path in paths)
             {
-                foreach (var path in dlg.FileNames)
-                {
-                    OnManualLoad(new ManualLoadEventArgs(path));
-                }
+                OnManualLoad(new ManualLoadEventArgs(path));
             }
         }
 
@@ -248,7 +219,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void Open(string path)
         {
-            _mediaPlayer.Open(new Uri(path));
+            _audioPlayer.Open(new Uri(path));
             NotifyPropertyChanged(nameof(Source));
         }
 
@@ -256,7 +227,7 @@ namespace Lalamachine.Wpf.ViewModel
         {
             if (Source.Length > 0)
             {
-                _mediaPlayer.Play();
+                _audioPlayer.Play();
                 IsPlaying = true;
             }
             else
@@ -267,13 +238,7 @@ namespace Lalamachine.Wpf.ViewModel
 
         public void Pause()
         {
-            _mediaPlayer.Pause();
-            IsPlaying = false;
-        }
-
-        public void Stop()
-        {
-            _mediaPlayer.Stop();
+            _audioPlayer.Pause();
             IsPlaying = false;
         }
     }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace Lalamachine.Wpf.ViewModel
+namespace Lalamachine.ViewModel
 {
     public enum ShuffleRepeatState { None, RepeatOne, RepeatAll, Shuffle };
 

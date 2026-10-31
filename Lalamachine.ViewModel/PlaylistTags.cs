@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using LibLala.LibLalaTagReader;
 
-namespace Lalamachine.Wpf.ViewModel
+namespace Lalamachine.ViewModel
 {
     public class PlaylistTags : LibLalaTags, INotifyPropertyChanged
     {

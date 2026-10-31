@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using LibLala.LibLalaTagReader;
 
-namespace Lalamachine.Wpf.ViewModel
+namespace Lalamachine.ViewModel
 {
     public class AddTracksToPlaylistEventArgs : EventArgs
     {

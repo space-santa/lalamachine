@@ -8,9 +8,9 @@ using LalaDb.Data;
 using LibLala.DomainPrimitives;
 using LibLala.LibLalaTagReader;
 
-namespace Lalamachine.Wpf.ViewModel
+namespace Lalamachine.ViewModel
 {
-    internal sealed class SortMessage
+    public sealed class SortMessage
     {
         public SortMessage(ListSortDirection direction, PlaylistColumn column)
         {
@@ -24,9 +24,12 @@ namespace Lalamachine.Wpf.ViewModel
 
     public class PlaylistBaseViewModel : BaseNotifyPropertyChanged
     {
-        public PlaylistBaseViewModel(string name)
+        private readonly IDialogService _dialogs;
+
+        public PlaylistBaseViewModel(string name, IDialogService dialogs)
         {
             Name = name;
+            _dialogs = dialogs;
             Playlist = new ObservableCollection<PlaylistTags>();
             _playTrackCommand = new DelegateCommand(OnPlayTrackCommandHandler);
             _removeTrackCommand = new DelegateCommand(OnRemoveTrackCommandHandler);
@@ -309,14 +312,24 @@ namespace Lalamachine.Wpf.ViewModel
         public int NumberOfTracks => Playlist.Count;
         public int TotalPlaytime => Playlist.Sum(track => track.Length);
 
-        internal void DisplayChangedHandler(object? sender, DisplayLibChangedEventArgs e)
+        public void DisplayChangedHandler(object? sender, DisplayLibChangedEventArgs e)
         {
+            if (e is null)
+            {
+                return;
+            }
+
             DeleteAllTracks();
             AddTracks(e.Tracks.ToList());
         }
 
-        internal void AddTracksToPlaylistHandler(object? sender, AddTracksToPlaylistEventArgs e)
+        public void AddTracksToPlaylistHandler(object? sender, AddTracksToPlaylistEventArgs e)
         {
+            if (e is null)
+            {
+                return;
+            }
+
             if (e.NewPlaylist) { DeleteAllTracks(); }
             AddTracks(e.Tracks);
         }
@@ -437,7 +450,7 @@ namespace Lalamachine.Wpf.ViewModel
         }
         #endregion
 
-        public void ManualLoadHandler(object? sender, ManualLoadEventArgs e)
+        public async void ManualLoadHandler(object? sender, ManualLoadEventArgs e)
         {
             if (e is null)
             {
@@ -452,7 +465,7 @@ namespace Lalamachine.Wpf.ViewModel
             }
             catch (TagReaderException ex)
             {
-                System.Windows.MessageBox.Show($"{ex.Message}\n{ex.InnerException?.Message}");
+                await _dialogs.ShowMessageAsync($"{ex.Message}\n{ex.InnerException?.Message}").ConfigureAwait(true);
             }
         }
 

@@ -3,14 +3,14 @@ using LalaDb.Data;
 using LalaDb.Model;
 using LibLala.LibLalaTagReader;
 
-namespace Lalamachine.Wpf.ViewModel
+namespace Lalamachine.ViewModel
 {
 
     public class PlaylistViewModel : PlaylistBaseViewModel
     {
         private readonly PlaylistModel _playlistModel;
 
-        public PlaylistViewModel(LalaContext context) : base("MAIN")
+        public PlaylistViewModel(LalaContext context, IDialogService dialogs) : base("MAIN", dialogs)
         {
             _playlistModel = new PlaylistModel(context);
             LoadLastPlaylist();

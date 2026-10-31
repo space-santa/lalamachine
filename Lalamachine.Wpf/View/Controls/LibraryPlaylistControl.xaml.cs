@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Lalamachine.Wpf.ViewModel;
+using Lalamachine.ViewModel;
 using LibLala.DomainPrimitives;
 
 namespace Lalamachine.Wpf.View.Controls

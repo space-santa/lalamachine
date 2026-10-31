@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using LalaDb.Data;
-using Lalamachine.Wpf.ViewModel;
+using Lalamachine.ViewModel;
+using Lalamachine.Wpf.Services;
 using Microsoft.EntityFrameworkCore;
 using Settings;
 
@@ -43,12 +44,13 @@ namespace Lalamachine.Wpf.View
 #pragma warning restore CA2000 // Dispose objects before losing scope
             context.Database.Migrate();
 
-            _player = new PlayerViewModel();
-            _playlistViewModel = new PlaylistViewModel(context);
+            var dialogs = new WpfDialogService();
+            _player = new PlayerViewModel(new WpfAudioPlayer(), dialogs);
+            _playlistViewModel = new PlaylistViewModel(context, dialogs);
             _shuffleRepeatViewModel = new ShuffleRepeatViewModel();
-            _settingsViewModel = new SettingsViewModel();
-            _libraryViewModel = new LibraryViewModel(context, () => new LalaContext(optionsBuilder.Options));
-            _libraryPlaylistViewModel = new LibraryPlaylistViewModel();
+            _settingsViewModel = new SettingsViewModel(dialogs);
+            _libraryViewModel = new LibraryViewModel(context, () => new LalaContext(optionsBuilder.Options), dialogs);
+            _libraryPlaylistViewModel = new LibraryPlaylistViewModel(dialogs);
 
             _shuffleRepeatViewModel.ShuffleRepeatChanged += _playlistViewModel.ShuffleRepeatChangedHandler;
             _player.ManualLoadEvent += _playlistViewModel.ManualLoadHandler;

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Input;
-using Microsoft.Win32;
 using Settings;
 
-namespace Lalamachine.Wpf.ViewModel
+namespace Lalamachine.ViewModel
 {
     public class SettingsSettings : AppSettings
     {
+        // Still "Lalamachine.Wpf", that's the name the existing settings files are stored under.
         public SettingsSettings() : base("Lalamachine.Wpf", "SettingsSettings") { }
 
         public string LibraryPath { get => GetString(""); set => Set(value); }
@@ -27,10 +27,12 @@ namespace Lalamachine.Wpf.ViewModel
         private readonly DelegateCommand _scanCommand;
         private readonly DelegateCommand _loadCommand;
         private readonly SettingsSettings _settings;
+        private readonly IDialogService _dialogs;
         private bool _scanning;
 
-        public SettingsViewModel()
+        public SettingsViewModel(IDialogService dialogs)
         {
+            _dialogs = dialogs;
             _loadCommand = new DelegateCommand(OnLoad);
             _scanCommand = new DelegateCommand(OnScan);
             _settings = new SettingsSettings();
@@ -66,8 +68,13 @@ namespace Lalamachine.Wpf.ViewModel
             }
         }
 
-        internal void ScanningChangedHandler(object? sender, ScanningChangedEventArgs e)
+        public void ScanningChangedHandler(object? sender, ScanningChangedEventArgs e)
         {
+            if (e is null)
+            {
+                return;
+            }
+
             Scanning = e.Scanning;
         }
 
@@ -75,14 +82,14 @@ namespace Lalamachine.Wpf.ViewModel
 
         public ICommand LoadCommand => _loadCommand;
 
-        private void OnLoad(object? commandParameter)
+        private async void OnLoad(object? commandParameter)
         {
             if (Scanning) { return; }
-            var dialog = new OpenFolderDialog();
+            var folder = await _dialogs.PickFolderAsync().ConfigureAwait(true);
 
-            if (dialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(dialog.FolderName))
+            if (!string.IsNullOrWhiteSpace(folder))
             {
-                LibraryPath = dialog.FolderName;
+                LibraryPath = folder;
                 ScanCommand.Execute(null);
             }
         }

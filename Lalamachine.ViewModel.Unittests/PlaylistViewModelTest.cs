@@ -1,9 +1,9 @@
-﻿using Lalamachine.Wpf.ViewModel;
-using LibLala.DomainPrimitives;
+﻿using LibLala.DomainPrimitives;
 using LibLala.LibLalaTagReader;
+using NSubstitute;
 using NUnit.Framework;
 
-namespace Lalamachine.Wpf.Unittests
+namespace Lalamachine.ViewModel.Unittests
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "<Pending>")]
     public class PlaylistViewModelTest
@@ -12,7 +12,7 @@ namespace Lalamachine.Wpf.Unittests
         public void PlayNextTrackHandler_NoTracks_DoesNothing()
         {
             var wasCalled = false;
-            var viewModel = new PlaylistBaseViewModel("LIBRARY");
+            var viewModel = new PlaylistBaseViewModel("LIBRARY", Substitute.For<IDialogService>());
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayNextTrackHandler(null, new System.EventArgs());
             Assert.That(!wasCalled);
@@ -22,7 +22,7 @@ namespace Lalamachine.Wpf.Unittests
         public void PlayNextTrackHandler_HasTracks_PlayNext()
         {
             var wasCalled = false;
-            var viewModel = new PlaylistBaseViewModel("LIBRARY");
+            var viewModel = new PlaylistBaseViewModel("LIBRARY", Substitute.For<IDialogService>());
             viewModel.AddTrack(new LibLalaTagsBuilder("bob", new UncheckedTrackPath("/path/to/bob"), 5).Build());
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayNextTrackHandler(null, new System.EventArgs());
@@ -33,7 +33,7 @@ namespace Lalamachine.Wpf.Unittests
         public void PlayPreviousTrackHandler_NoTracks_DoesNothing()
         {
             var wasCalled = false;
-            var viewModel = new PlaylistBaseViewModel("LIBRARY");
+            var viewModel = new PlaylistBaseViewModel("LIBRARY", Substitute.For<IDialogService>());
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayLastTrackHandler(null, new System.EventArgs());
             Assert.That(!wasCalled);
@@ -43,7 +43,7 @@ namespace Lalamachine.Wpf.Unittests
         public void PlayPreviousTrackHandler_HasTracks_PlayPrevious()
         {
             var wasCalled = false;
-            var viewModel = new PlaylistBaseViewModel("LIBRARY");
+            var viewModel = new PlaylistBaseViewModel("LIBRARY", Substitute.For<IDialogService>());
             viewModel.AddTrack(new LibLalaTagsBuilder("bob", new UncheckedTrackPath("/path/to/bob"), 5).Build());
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayLastTrackHandler(null, new System.EventArgs());
@@ -52,7 +52,7 @@ namespace Lalamachine.Wpf.Unittests
 
         private static PlaylistBaseViewModel ViewModelWithTracks(int numberOfTracks, ShuffleRepeatState state)
         {
-            var viewModel = new PlaylistBaseViewModel("MAIN") { PlaylistShuffleRepeatState = state };
+            var viewModel = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>()) { PlaylistShuffleRepeatState = state };
             for (var i = 0; i < numberOfTracks; ++i)
             {
                 viewModel.AddTrack(new LibLalaTagsBuilder($"track{i}", new UncheckedTrackPath($"/path/to/track{i}"), 5).Build());

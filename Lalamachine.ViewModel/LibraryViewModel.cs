@@ -9,7 +9,7 @@ using LalaDb.Model;
 using LibLala;
 using LibLala.MusicScanner;
 
-namespace Lalamachine.Wpf.ViewModel
+namespace Lalamachine.ViewModel
 {
     public class DisplayLibChangedEventArgs : EventArgs
     {
@@ -29,14 +29,15 @@ namespace Lalamachine.Wpf.ViewModel
         public bool Scanning { get; }
     }
 
-    internal sealed class LibraryViewModel : BaseNotifyPropertyChanged
+    public sealed class LibraryViewModel : BaseNotifyPropertyChanged
     {
         private readonly MusicLibModel _model;
+        private readonly IDialogService _dialogs;
 
         private string _genreFilter = "";
         private string _artistFilter = "";
         private string _albumFilter = "";
-        private bool _scanning = false;
+        private bool _scanning;
         private int _filesToScanCount1;
         private int _filesScannedCount1;
         private string _searchString = "";
@@ -44,8 +45,9 @@ namespace Lalamachine.Wpf.ViewModel
         private int _numberOfArtists;
         private int _numberOfAlbums;
 
-        public LibraryViewModel(LalaContext context, Func<LalaContext> createScanContext)
+        public LibraryViewModel(LalaContext context, Func<LalaContext> createScanContext, IDialogService dialogs)
         {
+            _dialogs = dialogs;
             _model = new MusicLibModel(context, createScanContext);
             _model.FileScannedEvent += FileScannedEventHandler;
             _model.FilesToScanChangedEvent += FilesToScanChangedEventHandler;
@@ -199,8 +201,13 @@ namespace Lalamachine.Wpf.ViewModel
         }
         #endregion
 
-        internal void StartScanHandler(object? sender, StartScanEventArgs e)
+        public void StartScanHandler(object? sender, StartScanEventArgs e)
         {
+            if (e is null)
+            {
+                return;
+            }
+
             ScanAsync(e.Path);
         }
 
@@ -310,7 +317,7 @@ namespace Lalamachine.Wpf.ViewModel
                 var skippedFiles = await _model.ScanAsync(path).ConfigureAwait(true);
                 if (skippedFiles.Count > 0)
                 {
-                    System.Windows.MessageBox.Show(SkippedFilesMessage(skippedFiles));
+                    await _dialogs.ShowMessageAsync(SkippedFilesMessage(skippedFiles)).ConfigureAwait(true);
                 }
             }
             finally
