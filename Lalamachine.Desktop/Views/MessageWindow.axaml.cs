@@ -12,11 +12,14 @@ namespace Lalamachine.Desktop.Views
             InitializeComponent();
         }
 
+        public MessageWindow(string message) : this()
+        {
+            MessageText.Text = message;
+        }
+
         public static Task ShowAsync(Window owner, string message)
         {
-            var window = new MessageWindow();
-            window.MessageText.Text = message;
-            return window.ShowDialog(owner);
+            return new MessageWindow(message).ShowDialog(owner);
         }
 
         private void OkButton_Click(object? sender, RoutedEventArgs e)

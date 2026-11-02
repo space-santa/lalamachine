@@ -29,7 +29,7 @@
         </Grid>
 
         <Grid Grid.Row="1" ColumnDefinitions="Auto,*">
-            <Button Grid.Column="0" Content="🧹" Command="{Binding ClearSearchCommand}" />
+            <Button Grid.Column="0" Content="🧹" Click="ClearButton_Click" />
             <!-- One way: the code behind decides when the typed text is long enough to search for. -->
             <TextBox x:Name="SearchBox" Grid.Column="1" Text="{Binding SearchString, Mode=OneWay}" TextChanged="SearchBox_TextChanged" />
         </Grid>

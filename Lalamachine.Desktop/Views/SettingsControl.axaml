@@ -7,7 +7,8 @@
         <StackPanel Orientation="Horizontal" IsVisible="{Binding !Scanning}">
             <Button Content="⚙" Command="{Binding ScanCommand}" />
             <Button Content="📂" Command="{Binding LoadCommand}" />
-            <Label Content="{Binding LibraryPath}" />
+            <!-- Not a Label, that would take the first underscore in a path for an access key. -->
+            <TextBlock Classes="label" Text="{Binding LibraryPath}" />
         </StackPanel>
         <Label IsVisible="{Binding Scanning}" HorizontalAlignment="Center" FontSize="24" Content="Scanning..." />
     </StackPanel>

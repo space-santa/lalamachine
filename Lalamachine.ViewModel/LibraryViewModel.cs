@@ -79,17 +79,20 @@ namespace Lalamachine.ViewModel
                 case nameof(SearchString):
                     NotifyListsChanged();
                     break;
+                // A filter only changes the lists below it. Its own list stays, so that it keeps its selection, scroll position and focus.
                 case nameof(GenreFilter):
-                    NotifyListsChanged();
-                    break;
-                case nameof(ArtistFilter):
+                    ClearUnlistedFilters();
                     NotifyPropertyChanged(nameof(DisplayLib));
                     NotifyPropertyChanged(nameof(ArtistList));
                     NotifyPropertyChanged(nameof(AlbumList));
                     break;
-                case nameof(AlbumFilter):
+                case nameof(ArtistFilter):
+                    ClearUnlistedFilters();
                     NotifyPropertyChanged(nameof(DisplayLib));
                     NotifyPropertyChanged(nameof(AlbumList));
+                    break;
+                case nameof(AlbumFilter):
+                    NotifyPropertyChanged(nameof(DisplayLib));
                     break;
                 case nameof(NumberOfGenres):
                     NotifyPropertyChanged(nameof(GenreHeader));
@@ -144,11 +147,10 @@ namespace Lalamachine.ViewModel
         public ICommand ClearSearchCommand => _clearSearchCommand;
         private void ClearSearch(object? obj)
         {
-            SearchString = "";
             _genreFilter = "";
             _albumFilter = "";
             _artistFilter = "";
-            NotifyListsChanged();
+            SearchString = "";
         }
 
         private readonly DelegateCommand _startScanCommand;
@@ -223,10 +225,31 @@ namespace Lalamachine.ViewModel
 
         private void NotifyListsChanged()
         {
+            ClearUnlistedFilters();
             NotifyPropertyChanged(nameof(DisplayLib));
             NotifyPropertyChanged(nameof(GenreList));
             NotifyPropertyChanged(nameof(ArtistList));
             NotifyPropertyChanged(nameof(AlbumList));
+        }
+
+        // A filter that its list doesn't show any more can't be seen or changed by the user, but DisplayLib would keep applying it.
+        // In this order, because the artists depend on the genre filter and the albums on both.
+        private void ClearUnlistedFilters()
+        {
+            if (_genreFilter.Length > 0 && !GenreList.Contains(_genreFilter))
+            {
+                _genreFilter = "";
+            }
+
+            if (_artistFilter.Length > 0 && !ArtistList.Contains(_artistFilter))
+            {
+                _artistFilter = "";
+            }
+
+            if (_albumFilter.Length > 0 && !AlbumList.Contains(_albumFilter))
+            {
+                _albumFilter = "";
+            }
         }
 
         public bool Scanning
@@ -273,7 +296,11 @@ namespace Lalamachine.ViewModel
             get => _genreFilter;
             set
             {
-                _genreFilter = EmptyWhenNullOrAll(value);
+                // A list that gets replaced selects its selected item again, and that sets the same filter again.
+                // Without this check, setting it replaces the lists again, and so on until the stack overflows.
+                var filter = EmptyWhenNullOrAll(value);
+                if (filter == _genreFilter) { return; }
+                _genreFilter = filter;
                 NotifyPropertyChanged();
             }
         }
@@ -283,7 +310,9 @@ namespace Lalamachine.ViewModel
             get => _artistFilter;
             set
             {
-                _artistFilter = EmptyWhenNullOrAll(value);
+                var filter = EmptyWhenNullOrAll(value);
+                if (filter == _artistFilter) { return; }
+                _artistFilter = filter;
                 NotifyPropertyChanged();
             }
         }
@@ -293,7 +322,9 @@ namespace Lalamachine.ViewModel
             get => _albumFilter;
             set
             {
-                _albumFilter = EmptyWhenNullOrAll(value);
+                var filter = EmptyWhenNullOrAll(value);
+                if (filter == _albumFilter) { return; }
+                _albumFilter = filter;
                 NotifyPropertyChanged();
             }
         }

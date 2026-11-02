@@ -25,7 +25,12 @@ namespace Lalamachine.Desktop.Services
             _libVlc = new LibVLC("--no-video");
             _mediaPlayer = new MediaPlayer(_libVlc);
             _mediaPlayer.LengthChanged += (sender, e) => Post(() => MediaOpened?.Invoke(this, EventArgs.Empty));
-            _mediaPlayer.EndReached += (sender, e) => Post(() => MediaEnded?.Invoke(this, EventArgs.Empty));
+            // VLC ignores Play and seeking on a track that ended until it is stopped.
+            _mediaPlayer.EndReached += (sender, e) => Post(() =>
+            {
+                _mediaPlayer.Stop();
+                MediaEnded?.Invoke(this, EventArgs.Empty);
+            });
             _mediaPlayer.EncounteredError += (sender, e) => Post(() => MediaFailed?.Invoke(this, EventArgs.Empty));
             // VLC forgets volume and mute while it has no audio output, so set them again once a track plays.
             _mediaPlayer.Playing += (sender, e) => Post(ApplyVolume);

@@ -98,9 +98,15 @@ namespace Lalamachine.Desktop.Views
             if (_settings.Maximized) { WindowState = WindowState.Maximized; }
         }
 
-        protected override void OnClosed(EventArgs e)
+        // Not in OnClosed, by then the window has no platform window any more and its position reads as 0,0.
+        protected override void OnClosing(WindowClosingEventArgs e)
         {
-            _playlistViewModel.SavePlaylist();
+            base.OnClosing(e);
+            if (e is null || e.Cancel)
+            {
+                return;
+            }
+
             _settings.ActiveTab = ListTabs.SelectedIndex;
             _settings.Maximized = WindowState == WindowState.Maximized;
             // A maximized window's size and position aren't the ones to restore it to.
@@ -111,9 +117,19 @@ namespace Lalamachine.Desktop.Views
                 _settings.Width = Width;
                 _settings.Height = Height;
             }
-            _audioPlayer.Dispose();
+        }
 
-            base.OnClosed(e);
+        protected override void OnClosed(EventArgs e)
+        {
+            try
+            {
+                _playlistViewModel.SavePlaylist();
+            }
+            finally
+            {
+                _audioPlayer.Dispose();
+                base.OnClosed(e);
+            }
         }
 
         private void StartScanHandler(object? sender, StartScanEventArgs e)

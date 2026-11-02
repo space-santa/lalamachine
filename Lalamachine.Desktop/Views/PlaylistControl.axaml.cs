@@ -79,7 +79,9 @@ namespace Lalamachine.Desktop.Views
                 return;
             }
 
-            playlist.Move(oldIndex, newIndex);
+            // Not Move, the grid doesn't show that.
+            playlist.RemoveAt(oldIndex);
+            playlist.Insert(newIndex, track);
             PlaylistGrid.SelectedItem = track;
         }
     }

@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
@@ -33,10 +34,28 @@ namespace Lalamachine.Desktop
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = new MainWindow();
+                desktop.MainWindow = CreateMainWindow();
             }
 
             base.OnFrameworkInitializationCompleted();
+        }
+
+        // E.g. VLC isn't installed or the database is broken. Without a window, the app would just not open.
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Whatever went wrong, the user has to be told.")]
+        private static Window CreateMainWindow()
+        {
+            try
+            {
+                return new MainWindow();
+            }
+            catch (Exception e)
+            {
+                LogException(e);
+                return new MessageWindow($"Lalamachine couldn't start: {e.Message}\n\nThe details are in {ErrorLogPath}")
+                {
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                };
+            }
         }
 
         private void OnDispatcherUnhandledException(object? sender, DispatcherUnhandledExceptionEventArgs e)

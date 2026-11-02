@@ -228,6 +228,7 @@ namespace Lalamachine.ViewModel
             if (obj is null) { return; }
             var selectedItem = (PlaylistTags)obj;
             Playlist.Remove(selectedItem);
+            NotifyPropertyChanged(nameof(Playlist));
         }
 
         private readonly DelegateCommand _removeAllTracksCommand;

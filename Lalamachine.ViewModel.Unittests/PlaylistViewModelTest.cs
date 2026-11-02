@@ -50,6 +50,20 @@ namespace Lalamachine.ViewModel.Unittests
             Assert.That(wasCalled);
         }
 
+        [Test]
+        public void RemoveTrack_NotifiesNumberOfTracksAndTotalPlaytime()
+        {
+            var viewModel = ViewModelWithTracks(2, ShuffleRepeatState.None);
+            var notifications = new System.Collections.Generic.List<string?>();
+            viewModel.PropertyChanged += (o, e) => notifications.Add(e.PropertyName);
+
+            viewModel.RemoveTrackCommand.Execute(viewModel.Playlist[0]);
+
+            Assert.That(viewModel.NumberOfTracks, Is.EqualTo(1));
+            Assert.That(notifications, Does.Contain(nameof(viewModel.NumberOfTracks)));
+            Assert.That(notifications, Does.Contain(nameof(viewModel.TotalPlaytime)));
+        }
+
         private static PlaylistBaseViewModel ViewModelWithTracks(int numberOfTracks, ShuffleRepeatState state)
         {
             var viewModel = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>()) { PlaylistShuffleRepeatState = state };

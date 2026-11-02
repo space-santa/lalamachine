@@ -6,12 +6,15 @@ namespace Lalamachine.Desktop.Views
 {
     public partial class LibraryControl : UserControl
     {
+        private bool _listsLoaded;
+
         public LibraryControl()
         {
             InitializeComponent();
         }
 
-        // The lists are replaced whenever a filter changes, which clears their selection. Only a selected item changes the filter.
+        // A list that gets replaced loses its selection, and selects its item again if the new list has it.
+        // So only a selected item changes a filter. The view model clears a filter whose item is gone.
         private void GenreList_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (DataContext is LibraryViewModel context && GenreList.SelectedItem is string genre)
@@ -50,14 +53,34 @@ namespace Lalamachine.Desktop.Views
             }
             else if (text.Length == 0)
             {
-                context.ClearSearchCommand.Execute(null);
+                ClearSearch(context);
             }
         }
 
-        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
+        private void ClearButton_Click(object? sender, RoutedEventArgs e)
         {
             if (DataContext is LibraryViewModel context)
             {
+                ClearSearch(context);
+            }
+        }
+
+        private void ClearSearch(LibraryViewModel context)
+        {
+            // First, or the replaced lists would select these items again, which would set the filters again.
+            GenreList.SelectedItem = null;
+            ArtistList.SelectedItem = null;
+            AlbumList.SelectedItem = null;
+            context.ClearSearchCommand.Execute(null);
+        }
+
+        // Loaded fires on every return to the library tab, but the lists only change with a filter or a scan.
+        // Rebuilding them would also replace the library playlist, which loses track of the playing track.
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
+        {
+            if (!_listsLoaded && DataContext is LibraryViewModel context)
+            {
+                _listsLoaded = true;
                 context.UpdateListsCommand.Execute(null);
             }
         }

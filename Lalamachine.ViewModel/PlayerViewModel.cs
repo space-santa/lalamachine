@@ -150,7 +150,9 @@ namespace Lalamachine.ViewModel
 
         public double Position
         {
-            get => _audioPlayer.Position.TotalSeconds;
+            // Never past the end, the length of a track can be an estimate or unknown. A slider clamps a larger value to its
+            // maximum and writes that back through its binding, which would seek there.
+            get => Math.Min(_audioPlayer.Position.TotalSeconds, Duration);
             set => _audioPlayer.Position = new TimeSpan(0, 0, (int)value);
         }
 
@@ -170,6 +172,8 @@ namespace Lalamachine.ViewModel
 
         private void _audioPlayer_MediaEnded(object? sender, EventArgs e)
         {
+            // The next track sets this again, if there is one.
+            IsPlaying = false;
             InvokePlayNextTrackEvent();
         }
 

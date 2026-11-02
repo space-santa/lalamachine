@@ -5,10 +5,10 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "C#: Lalamachine.Wpf Debug",
+      "name": "C#: Lalamachine.Desktop Debug",
       "type": "dotnet",
       "request": "launch",
-      "projectPath": "${workspaceFolder}/Lalamachine.Wpf/Lalamachine.Wpf.csproj"
+      "projectPath": "${workspaceFolder}/Lalamachine.Desktop/Lalamachine.Desktop.csproj"
     },
     {
       "name": "Wpf",
