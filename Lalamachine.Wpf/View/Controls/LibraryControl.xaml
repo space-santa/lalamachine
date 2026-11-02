@@ -29,7 +29,9 @@
             <ListView 
                 x:Name="GenreListView" 
                 Grid.Column="0" 
-                ItemsSource="{Binding Path=GenreList}" 
+                ItemsSource="{Binding Path=GenreList}"
+                SelectionMode="Extended"
+                PreviewMouseLeftButtonDown="FilterList_PreviewMouseLeftButtonDown"
                 SelectionChanged="GenreListView_SelectionChanged">
                 <ListView.Resources>
                     <Style BasedOn="{StaticResource MainListViewItem}" TargetType="{x:Type ListViewItem}">
@@ -45,7 +47,9 @@
             <ListView 
                 x:Name="ArtistListView" 
                 Grid.Column="1" 
-                ItemsSource="{Binding Path=ArtistList}" 
+                ItemsSource="{Binding Path=ArtistList}"
+                SelectionMode="Extended"
+                PreviewMouseLeftButtonDown="FilterList_PreviewMouseLeftButtonDown"
                 SelectionChanged="ArtistListView_SelectionChanged">
                 <ListView.Resources>
                     <Style BasedOn="{StaticResource MainListViewItem}" TargetType="{x:Type ListViewItem}">
@@ -61,7 +65,9 @@
             <ListView 
                 x:Name="AlbumListView" 
                 Grid.Column="2" 
-                ItemsSource="{Binding Path=AlbumList}" 
+                ItemsSource="{Binding Path=AlbumList}"
+                SelectionMode="Extended"
+                PreviewMouseLeftButtonDown="FilterList_PreviewMouseLeftButtonDown"
                 SelectionChanged="AlbumListView_SelectionChanged">
                 <ListView.Resources>
                     <Style BasedOn="{StaticResource MainListViewItem}" TargetType="{x:Type ListViewItem}">
@@ -70,8 +76,8 @@
                 </ListView.Resources>
                 <ListView.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Add to current playlist" Command="{Binding AddTracksFromAlbumCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />
-                        <MenuItem Header="Create new playlist" Command="{Binding CreateNewPlaylistFromAlbumCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />
+                        <MenuItem Header="Add to current playlist" Command="{Binding AddTracksFromAlbumCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
+                        <MenuItem Header="Create new playlist" Command="{Binding CreateNewPlaylistFromAlbumCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItems}" />
                     </ContextMenu>
                 </ListView.ContextMenu>
                 <ListView.View>

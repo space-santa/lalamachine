@@ -56,6 +56,17 @@ namespace Lalamachine.ViewModel.Unittests
             return new LalaContext(options);
         }
 
+        // A genre that the filters under test leave out, to see that several genres aren't the same as no filter.
+        private static void AddGenre(SqliteConnection connection, string name)
+        {
+            using var context = CreateContext(connection);
+            var genre = new Genre { Name = name };
+            var artist = new Artist { Name = $"{name}Artist" };
+            context.AddRange(genre, artist);
+            context.SaveChanges();
+            AddTrack(context, $"{name}Track", $"{name}Album", artist, genre);
+        }
+
         private static LibraryViewModel CreateViewModel(SqliteConnection connection, LalaContext context)
         {
             return new LibraryViewModel(context, () => CreateContext(connection), Substitute.For<IDialogService>());
@@ -219,9 +230,181 @@ namespace Lalamachine.ViewModel.Unittests
 
             viewModel.SetGenreFilterCommand.Execute("Rock");
 
-            Assert.That(viewModel.ArtistFilter, Is.EqualTo("Alice"));
-            Assert.That(viewModel.AlbumFilter, Is.EqualTo("AliceAlbum1"));
+            Assert.That(viewModel.ArtistFilter, Is.EqualTo(new[] { "Alice" }));
+            Assert.That(viewModel.AlbumFilter, Is.EqualTo(new[] { "AliceAlbum1" }));
             Assert.That(Titles(viewModel), Is.EqualTo(new[] { "a1" }));
+        }
+
+        [Test]
+        public void SetGenreFilter_SeveralGenres_ListsWhatIsInAnyOfThem()
+        {
+            using var connection = OpenDatabase();
+            AddGenre(connection, "Soul");
+            using var context = CreateContext(connection);
+            var viewModel = CreateViewModel(connection, context);
+
+            viewModel.SetGenreFilterCommand.Execute(new[] { "Rock", "Jazz" });
+
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "a1", "a2", "b1", "b2" }));
+            Assert.That(viewModel.ArtistList, Does.Contain("Alice").And.Contain("Bob"));
+            Assert.That(viewModel.AlbumList, Does.Contain("AliceAlbum1").And.Contain("BobAlbum2"));
+        }
+
+        [Test]
+        public void SetGenreFilter_TrackInBothGenres_IsListedOnce()
+        {
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            context.Add(new GenreTrack { GenreId = context.Genres!.Single(x => x.Name == "Jazz").GenreId, TrackId = context.Tracks!.Single(x => x.Title == "a1").TrackId });
+            context.SaveChanges();
+            var viewModel = CreateViewModel(connection, context);
+
+            viewModel.SetGenreFilterCommand.Execute(new[] { "Rock", "Jazz" });
+
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "a1", "a2", "b1", "b2" }));
+        }
+
+        [Test]
+        public void SetArtistFilter_SeveralArtists_ListsWhatIsByAnyOfThem()
+        {
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            var viewModel = CreateViewModel(connection, context);
+
+            viewModel.SetArtistFilterCommand.Execute(new[] { "Alice", "Bob" });
+
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "a1", "a2", "b1", "b2" }));
+            Assert.That(viewModel.AlbumList, Does.Contain("AliceAlbum1").And.Contain("BobAlbum2"));
+        }
+
+        [Test]
+        public void SetArtistFilter_TrackByBothArtists_IsListedOnce()
+        {
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            context.Add(new ArtistTrack { ArtistId = context.Artists!.Single(x => x.Name == "Bob").ArtistId, TrackId = context.Tracks!.Single(x => x.Title == "a1").TrackId });
+            context.SaveChanges();
+            var viewModel = CreateViewModel(connection, context);
+
+            viewModel.SetArtistFilterCommand.Execute(new[] { "Alice", "Bob" });
+
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "a1", "a2", "b1", "b2" }));
+        }
+
+        [Test]
+        public void SetAlbumFilter_SeveralAlbums_ListsTheTracksOfAll()
+        {
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            var viewModel = CreateViewModel(connection, context);
+
+            viewModel.SetAlbumFilterCommand.Execute(new[] { "AliceAlbum1", "BobAlbum2" });
+
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "a1", "b2" }));
+        }
+
+        // A list doesn't have to give back its selected items in the order it got them.
+        [Test]
+        public void SetFilter_SameItemsInAnotherOrder_DoesNotNotify()
+        {
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            var viewModel = CreateViewModel(connection, context);
+            viewModel.SetGenreFilterCommand.Execute(new[] { "Rock", "Jazz" });
+            var notifications = RecordNotifications(viewModel);
+
+            viewModel.SetGenreFilterCommand.Execute(new[] { "Jazz", "Rock" });
+
+            Assert.That(notifications, Is.Empty);
+        }
+
+        [Test]
+        public void SetFilter_AllAmongTheSelection_MeansNoFilter()
+        {
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            var viewModel = CreateViewModel(connection, context);
+            viewModel.SetGenreFilterCommand.Execute("Rock");
+
+            viewModel.SetGenreFilterCommand.Execute(new[] { LibLala.Constants.ALL, "Rock" });
+
+            Assert.That(viewModel.GenreFilter, Is.Empty);
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "a1", "a2", "b1", "b2" }));
+        }
+
+        [Test]
+        public void SetFilter_NothingSelected_MeansNoFilter()
+        {
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            var viewModel = CreateViewModel(connection, context);
+            viewModel.SetGenreFilterCommand.Execute("Rock");
+
+            viewModel.SetGenreFilterCommand.Execute(System.Array.Empty<string>());
+
+            Assert.That(viewModel.GenreFilter, Is.Empty);
+        }
+
+        [Test]
+        public void SetGenreFilter_OneOfTheArtistsNotInGenre_KeepsTheOther()
+        {
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            var viewModel = CreateViewModel(connection, context);
+            viewModel.SetArtistFilterCommand.Execute(new[] { "Alice", "Bob" });
+            viewModel.SetAlbumFilterCommand.Execute(new[] { "AliceAlbum1", "BobAlbum1" });
+
+            viewModel.SetGenreFilterCommand.Execute("Jazz");
+
+            Assert.That(viewModel.ArtistFilter, Is.EqualTo(new[] { "Bob" }));
+            Assert.That(viewModel.AlbumFilter, Is.EqualTo(new[] { "BobAlbum1" }));
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "b1" }));
+        }
+
+        [Test]
+        public void AddTracksFromAlbum_SeveralAlbums_AddsTheTracksOfAll()
+        {
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            var viewModel = CreateViewModel(connection, context);
+            AddTracksToPlaylistEventArgs? args = null;
+            viewModel.AddTracksToPlaylistEvent += (o, e) => args = e;
+
+            viewModel.AddTracksFromAlbumCommand.Execute(new[] { "AliceAlbum1", "BobAlbum2" });
+
+            Assert.That(args!.Tracks.Select(track => track.Title), Is.EqualTo(new[] { "a1", "b2" }));
+            Assert.That(args.NewPlaylist, Is.False);
+        }
+
+        [Test]
+        public void CreateNewPlaylistFromAlbum_SeveralAlbums_AddsTheTracksOfAll()
+        {
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            var viewModel = CreateViewModel(connection, context);
+            AddTracksToPlaylistEventArgs? args = null;
+            viewModel.AddTracksToPlaylistEvent += (o, e) => args = e;
+
+            viewModel.CreateNewPlaylistFromAlbumCommand.Execute(new[] { "AliceAlbum1", "BobAlbum2" });
+
+            Assert.That(args!.Tracks.Select(track => track.Title), Is.EqualTo(new[] { "a1", "b2" }));
+            Assert.That(args.NewPlaylist, Is.True);
+        }
+
+        [TestCase(new[] { "Rock" }, "Jazz", new[] { "Rock", "Jazz" })]
+        [TestCase(new string[0], "Jazz", new[] { "Jazz" })]
+        [TestCase(new[] { LibLala.Constants.ALL }, "Jazz", new[] { "Jazz" })]
+        [TestCase(new[] { "Rock", "Jazz" }, "Rock", new[] { "Jazz" })]
+        [TestCase(new[] { "Rock" }, "Rock", new[] { LibLala.Constants.ALL })]
+        [TestCase(new[] { "Rock", "Jazz" }, LibLala.Constants.ALL, new[] { LibLala.Constants.ALL })]
+        [TestCase(new[] { LibLala.Constants.ALL }, LibLala.Constants.ALL, new[] { LibLala.Constants.ALL })]
+        public void ToggleFilterItem_ChangesTheSelection(string[] selected, string item, string[] expected)
+        {
+            var selection = new List<string>(selected);
+
+            LibraryViewModel.ToggleFilterItem(selection, item);
+
+            Assert.That(selection, Is.EqualTo(expected));
         }
 
         [Test]

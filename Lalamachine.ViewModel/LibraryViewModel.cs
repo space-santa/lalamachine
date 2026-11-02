@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -34,9 +35,9 @@ namespace Lalamachine.ViewModel
         private readonly MusicLibModel _model;
         private readonly IDialogService _dialogs;
 
-        private string _genreFilter = "";
-        private string _artistFilter = "";
-        private string _albumFilter = "";
+        private IReadOnlyList<string> _genreFilter = Array.Empty<string>();
+        private IReadOnlyList<string> _artistFilter = Array.Empty<string>();
+        private IReadOnlyList<string> _albumFilter = Array.Empty<string>();
         private bool _scanning;
         private int _filesToScanCount1;
         private int _filesScannedCount1;
@@ -111,45 +112,30 @@ namespace Lalamachine.ViewModel
         public ICommand SetGenreFilterCommand => _setGenreFilterCommand;
         private void OnSetGenreFilter(object? obj)
         {
-            if (obj is null)
-            {
-                GenreFilter = "";
-                return;
-            }
-            GenreFilter = (string)obj;
+            GenreFilter = SelectedNames(obj);
         }
 
         private readonly DelegateCommand _setArtistFilterCommand;
         public ICommand SetArtistFilterCommand => _setArtistFilterCommand;
         private void OnSetArtistFilter(object? obj)
         {
-            if (obj is null)
-            {
-                ArtistFilter = "";
-                return;
-            }
-            ArtistFilter = (string)obj;
+            ArtistFilter = SelectedNames(obj);
         }
 
         private readonly DelegateCommand _setAlbumFilterCommand;
         public ICommand SetAlbumFilterCommand => _setAlbumFilterCommand;
         private void OnSetAlbumFilter(object? obj)
         {
-            if (obj is null)
-            {
-                AlbumFilter = "";
-                return;
-            }
-            AlbumFilter = (string)obj;
+            AlbumFilter = SelectedNames(obj);
         }
 
         private readonly DelegateCommand _clearSearchCommand;
         public ICommand ClearSearchCommand => _clearSearchCommand;
         private void ClearSearch(object? obj)
         {
-            _genreFilter = "";
-            _albumFilter = "";
-            _artistFilter = "";
+            _genreFilter = Array.Empty<string>();
+            _albumFilter = Array.Empty<string>();
+            _artistFilter = Array.Empty<string>();
             SearchString = "";
         }
 
@@ -170,7 +156,7 @@ namespace Lalamachine.ViewModel
         private void OnCreateNewPlaylistFromAlbumCommand(object? obj)
         {
             if (obj is null) { return; }
-            InvokeAddTrackToPlaylistEvent((string)obj, true);
+            InvokeAddTrackToPlaylistEvent(SelectedNames(obj), true);
         }
 
         private readonly DelegateCommand _addTracksFromAlbumCommand;
@@ -178,15 +164,15 @@ namespace Lalamachine.ViewModel
         private void OnAddTracksFromAlbumCommand(object? obj)
         {
             if (obj is null) { return; }
-            InvokeAddTrackToPlaylistEvent((string)obj, false);
+            InvokeAddTrackToPlaylistEvent(SelectedNames(obj), false);
         }
         #endregion
 
         #region Events
         public event EventHandler<AddTracksToPlaylistEventArgs>? AddTracksToPlaylistEvent;
-        private void InvokeAddTrackToPlaylistEvent(string name, bool newPlaylist)
+        private void InvokeAddTrackToPlaylistEvent(IEnumerable<string> albums, bool newPlaylist)
         {
-            var args = new AddTracksToPlaylistEventArgs(_model.GetAlbumTracks(name), newPlaylist);
+            var args = new AddTracksToPlaylistEventArgs(albums.SelectMany(album => _model.GetAlbumTracks(album)).ToList(), newPlaylist);
             AddTracksToPlaylistEvent?.Invoke(this, args);
         }
 
@@ -236,19 +222,49 @@ namespace Lalamachine.ViewModel
         // In this order, because the artists depend on the genre filter and the albums on both.
         private void ClearUnlistedFilters()
         {
-            if (_genreFilter.Length > 0 && !GenreList.Contains(_genreFilter))
+            _genreFilter = OnlyListed(_genreFilter, () => GenreList);
+            _artistFilter = OnlyListed(_artistFilter, () => ArtistList);
+            _albumFilter = OnlyListed(_albumFilter, () => AlbumList);
+        }
+
+        private static IReadOnlyList<string> OnlyListed(IReadOnlyList<string> filter, Func<ObservableCollection<string?>> getList)
+        {
+            if (filter.Count == 0)
             {
-                _genreFilter = "";
+                return filter;
             }
 
-            if (_artistFilter.Length > 0 && !ArtistList.Contains(_artistFilter))
+            var list = getList();
+            return filter.Where(name => list.Contains(name)).ToArray();
+        }
+
+        // What shift-clicking an item does to what its list has selected: it adds the item, or takes it out again.
+        // The list itself would select the whole range up to the item.
+        // -- all -- is never selected along with anything else, and it's what is left when nothing else is selected.
+        public static void ToggleFilterItem(IList selection, string item)
+        {
+            ArgumentNullException.ThrowIfNull(selection);
+
+            if (item == Constants.ALL)
             {
-                _artistFilter = "";
+                selection.Clear();
+                selection.Add(item);
+                return;
             }
 
-            if (_albumFilter.Length > 0 && !AlbumList.Contains(_albumFilter))
+            selection.Remove(Constants.ALL);
+            if (selection.Contains(item))
             {
-                _albumFilter = "";
+                selection.Remove(item);
+            }
+            else
+            {
+                selection.Add(item);
+            }
+
+            if (selection.Count == 0)
+            {
+                selection.Add(Constants.ALL);
             }
         }
 
@@ -291,52 +307,52 @@ namespace Lalamachine.ViewModel
             }
         }
 
-        public string GenreFilter
+        public IReadOnlyList<string> GenreFilter
         {
             get => _genreFilter;
-            set
+            private set
             {
-                // A list that gets replaced selects its selected item again, and that sets the same filter again.
+                // A list that gets replaced selects its selected items again, and that sets the same filter again.
                 // Without this check, setting it replaces the lists again, and so on until the stack overflows.
-                var filter = EmptyWhenNullOrAll(value);
-                if (filter == _genreFilter) { return; }
-                _genreFilter = filter;
+                if (_genreFilter.ToHashSet().SetEquals(value)) { return; }
+                _genreFilter = value;
                 NotifyPropertyChanged();
             }
         }
 
-        public string ArtistFilter
+        public IReadOnlyList<string> ArtistFilter
         {
             get => _artistFilter;
-            set
+            private set
             {
-                var filter = EmptyWhenNullOrAll(value);
-                if (filter == _artistFilter) { return; }
-                _artistFilter = filter;
+                if (_artistFilter.ToHashSet().SetEquals(value)) { return; }
+                _artistFilter = value;
                 NotifyPropertyChanged();
             }
         }
 
-        public string AlbumFilter
+        public IReadOnlyList<string> AlbumFilter
         {
             get => _albumFilter;
-            set
+            private set
             {
-                var filter = EmptyWhenNullOrAll(value);
-                if (filter == _albumFilter) { return; }
-                _albumFilter = filter;
+                if (_albumFilter.ToHashSet().SetEquals(value)) { return; }
+                _albumFilter = value;
                 NotifyPropertyChanged();
             }
         }
 
-        private static string EmptyWhenNullOrAll(string value)
+        // The names in what a list has selected. -- all -- means no filter, whatever else is selected with it.
+        private static string[] SelectedNames(object? selection)
         {
-            if (value == null || value == Constants.ALL)
+            var names = selection switch
             {
-                return "";
-            }
+                string name => new[] { name },
+                IEnumerable items => items.OfType<string>().ToArray(),
+                _ => Array.Empty<string>(),
+            };
 
-            return value;
+            return names.Contains(Constants.ALL) ? Array.Empty<string>() : names;
         }
 
         public async void ScanAsync(string path)

@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Lalamachine.ViewModel;
 
@@ -14,22 +15,35 @@ namespace Lalamachine.Wpf.View.Controls
             InitializeComponent();
         }
 
+        // Control too, the list's own handling of that would select -- all -- along with other items.
+        private void FilterList_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var list = (ListView)sender;
+            if ((Keyboard.Modifiers & (ModifierKeys.Shift | ModifierKeys.Control)) != 0
+                && e.OriginalSource is DependencyObject source
+                && ItemsControl.ContainerFromElement(list, source) is ListViewItem { Content: string item })
+            {
+                e.Handled = true;
+                LibraryViewModel.ToggleFilterItem(list.SelectedItems, item);
+            }
+        }
+
         private void GenreListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var context = (LibraryViewModel)DataContext;
-            context.SetGenreFilterCommand.Execute(GenreListView.SelectedItem);
+            context.SetGenreFilterCommand.Execute(GenreListView.SelectedItems);
         }
 
         private void ArtistListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var context = (LibraryViewModel)DataContext;
-            context.SetArtistFilterCommand.Execute(ArtistListView.SelectedItem);
+            context.SetArtistFilterCommand.Execute(ArtistListView.SelectedItems);
         }
 
         private void AlbumListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var context = (LibraryViewModel)DataContext;
-            context.SetAlbumFilterCommand.Execute(AlbumListView.SelectedItem);
+            context.SetAlbumFilterCommand.Execute(AlbumListView.SelectedItems);
         }
 
         private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)

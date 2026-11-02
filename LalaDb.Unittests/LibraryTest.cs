@@ -74,9 +74,9 @@ namespace LalaDb.Unittests
             await model.ScanAsync(_musicDir).ConfigureAwait(false);
             await model.ScanAsync(_musicDir).ConfigureAwait(false);
 
-            Assert.That(model.DisplayLib("", "", "", "")!.Select(x => x!.Title).Order(), Is.EqualTo(new[] { "A", "B" }));
-            Assert.That(model.ArtistList("", ""), Is.EqualTo(new[] { "Artist" }));
-            Assert.That(model.AlbumList("", "", ""), Is.EqualTo(new[] { "Album" }));
+            Assert.That(model.DisplayLib([], [], [], "")!.Select(x => x!.Title).Order(), Is.EqualTo(new[] { "A", "B" }));
+            Assert.That(model.ArtistList([], ""), Is.EqualTo(new[] { "Artist" }));
+            Assert.That(model.AlbumList([], [], ""), Is.EqualTo(new[] { "Album" }));
         }
 
         [Test]
@@ -146,13 +146,13 @@ namespace LalaDb.Unittests
             using var context = CreateContext(connection);
             var model = new MusicLibModel(context, () => CreateContext(connection));
             await model.ScanAsync(_musicDir).ConfigureAwait(false);
-            Assert.That(model.DisplayLib("", "", "", "")!.Select(x => x!.Title), Is.EqualTo(new[] { "Old" }));
+            Assert.That(model.DisplayLib([], [], [], "")!.Select(x => x!.Title), Is.EqualTo(new[] { "Old" }));
 
             File.Delete(oldPath);
             TestMp3.Write(Path.Combine(_musicDir, "new.mp3"), "New");
             await model.ScanAsync(_musicDir).ConfigureAwait(false);
 
-            Assert.That(model.DisplayLib("", "", "", "")!.Select(x => x!.Title), Is.EqualTo(new[] { "New" }));
+            Assert.That(model.DisplayLib([], [], [], "")!.Select(x => x!.Title), Is.EqualTo(new[] { "New" }));
         }
 
         [Test]
@@ -168,7 +168,7 @@ namespace LalaDb.Unittests
             var skipped = await model.ScanAsync(_musicDir).ConfigureAwait(false);
 
             Assert.That(skipped, Is.EqualTo(new[] { brokenPath }));
-            Assert.That(model.DisplayLib("", "", "", "")!.Select(x => x!.Title), Is.EqualTo(new[] { "Good" }));
+            Assert.That(model.DisplayLib([], [], [], "")!.Select(x => x!.Title), Is.EqualTo(new[] { "Good" }));
         }
 
         [Test]
@@ -183,7 +183,7 @@ namespace LalaDb.Unittests
 
             TestMp3.Write(Path.Combine(_musicDir, "a.mp3"), "A");
             await model.ScanAsync(_musicDir).ConfigureAwait(false);
-            Assert.That(model.DisplayLib("", "", "", "")!.Select(x => x!.Title), Is.EqualTo(new[] { "A" }));
+            Assert.That(model.DisplayLib([], [], [], "")!.Select(x => x!.Title), Is.EqualTo(new[] { "A" }));
         }
     }
 }
