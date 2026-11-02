@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
+#nullable disable
+
 namespace LalaDb.Migrations
 {
     [DbContext(typeof(LalaContext))]
@@ -12,15 +14,16 @@ namespace LalaDb.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.3-servicing-35854");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.14");
 
             modelBuilder.Entity("LalaDb.Data.Album", b =>
                 {
                     b.Property<int>("AlbumId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("AlbumId");
 
@@ -30,9 +33,11 @@ namespace LalaDb.Migrations
             modelBuilder.Entity("LalaDb.Data.Artist", b =>
                 {
                     b.Property<int>("ArtistId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ArtistId");
 
@@ -42,11 +47,14 @@ namespace LalaDb.Migrations
             modelBuilder.Entity("LalaDb.Data.ArtistTrack", b =>
                 {
                     b.Property<int>("ArtistTrackId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("ArtistId");
+                    b.Property<int>("ArtistId")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("TrackId");
+                    b.Property<int>("TrackId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("ArtistTrackId");
 
@@ -60,9 +68,11 @@ namespace LalaDb.Migrations
             modelBuilder.Entity("LalaDb.Data.Genre", b =>
                 {
                     b.Property<int>("GenreId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("GenreId");
 
@@ -72,11 +82,14 @@ namespace LalaDb.Migrations
             modelBuilder.Entity("LalaDb.Data.GenreTrack", b =>
                 {
                     b.Property<int>("GenreTrackId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("GenreId");
+                    b.Property<int>("GenreId")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("TrackId");
+                    b.Property<int>("TrackId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("GenreTrackId");
 
@@ -90,9 +103,11 @@ namespace LalaDb.Migrations
             modelBuilder.Entity("LalaDb.Data.Playlist", b =>
                 {
                     b.Property<int>("PlaylistId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("PlaylistId");
 
@@ -102,15 +117,20 @@ namespace LalaDb.Migrations
             modelBuilder.Entity("LalaDb.Data.PlaylistTrack", b =>
                 {
                     b.Property<int>("PlaylistTrackId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("Order");
+                    b.Property<int>("Order")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("PlaylistId");
+                    b.Property<int>("PlaylistId")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("TrackId");
+                    b.Property<int>("TrackId")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("TrackPath");
+                    b.Property<string>("TrackPath")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("PlaylistTrackId");
 
@@ -122,23 +142,38 @@ namespace LalaDb.Migrations
             modelBuilder.Entity("LalaDb.Data.Track", b =>
                 {
                     b.Property<int>("TrackId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("AlbumId");
+                    b.Property<int>("AlbumId")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Comment");
+                    b.Property<int>("BeatsPerMinute")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("DiscNumber");
+                    b.Property<string>("Comment")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("Length");
+                    b.Property<int>("DiscNumber")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Path");
+                    b.Property<string>("InitialKey")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("Title");
+                    b.Property<int>("Length")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("TrackNumber");
+                    b.Property<string>("Path")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("Year");
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TrackNumber")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("TrackId");
 
@@ -152,12 +187,18 @@ namespace LalaDb.Migrations
                     b.HasOne("LalaDb.Data.Artist", "Artist")
                         .WithMany("ArtistTracks")
                         .HasForeignKey("ArtistId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("LalaDb.Data.Track", "Track")
                         .WithMany("ArtistTracks")
                         .HasForeignKey("TrackId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Artist");
+
+                    b.Navigation("Track");
                 });
 
             modelBuilder.Entity("LalaDb.Data.GenreTrack", b =>
@@ -165,12 +206,18 @@ namespace LalaDb.Migrations
                     b.HasOne("LalaDb.Data.Genre", "Genre")
                         .WithMany("GenreTracks")
                         .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("LalaDb.Data.Track", "Track")
                         .WithMany("GenreTracks")
                         .HasForeignKey("TrackId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Genre");
+
+                    b.Navigation("Track");
                 });
 
             modelBuilder.Entity("LalaDb.Data.PlaylistTrack", b =>
@@ -178,7 +225,10 @@ namespace LalaDb.Migrations
                     b.HasOne("LalaDb.Data.Playlist", "Playlist")
                         .WithMany("Tracks")
                         .HasForeignKey("PlaylistId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Playlist");
                 });
 
             modelBuilder.Entity("LalaDb.Data.Track", b =>
@@ -186,7 +236,37 @@ namespace LalaDb.Migrations
                     b.HasOne("LalaDb.Data.Album", "Album")
                         .WithMany("Tracks")
                         .HasForeignKey("AlbumId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Album");
+                });
+
+            modelBuilder.Entity("LalaDb.Data.Album", b =>
+                {
+                    b.Navigation("Tracks");
+                });
+
+            modelBuilder.Entity("LalaDb.Data.Artist", b =>
+                {
+                    b.Navigation("ArtistTracks");
+                });
+
+            modelBuilder.Entity("LalaDb.Data.Genre", b =>
+                {
+                    b.Navigation("GenreTracks");
+                });
+
+            modelBuilder.Entity("LalaDb.Data.Playlist", b =>
+                {
+                    b.Navigation("Tracks");
+                });
+
+            modelBuilder.Entity("LalaDb.Data.Track", b =>
+                {
+                    b.Navigation("ArtistTracks");
+
+                    b.Navigation("GenreTracks");
                 });
 #pragma warning restore 612, 618
         }

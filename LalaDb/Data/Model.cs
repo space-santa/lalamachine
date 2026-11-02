@@ -44,6 +44,8 @@ namespace LalaDb.Data
         public int Length { get; set; }
         public int Year { get; set; }
         public int DiscNumber { get; set; }
+        public string? InitialKey { get; set; }
+        public int BeatsPerMinute { get; set; }
 
         public int AlbumId { get; set; }
         public virtual Album? Album { get; set; }

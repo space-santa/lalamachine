@@ -10,9 +10,11 @@ namespace LibLala.LibLalaTagReader
     {
         private readonly AlbumName _album;
         private readonly ArtistList _artist;
+        private readonly BeatsPerMinute _beatsPerMinute;
         private readonly Comment _comment;
         private readonly DiscNumber _discNumber;
         private readonly GenreList _genre;
+        private readonly InitialKey _initialKey;
         private readonly TrackLength _length;
         private readonly TitleName _title;
         private readonly TrackNumber _trackNumber;
@@ -22,9 +24,11 @@ namespace LibLala.LibLalaTagReader
         {
             _album = builder.Album;
             _artist = builder.Artist;
+            _beatsPerMinute = builder.BeatsPerMinute;
             _comment = builder.Comment;
             _discNumber = builder.DiscNumber;
             _genre = builder.Genre;
+            _initialKey = builder.InitialKey;
             _length = builder.Length;
             _title = builder.Title;
             TrackId = builder.TrackId;
@@ -40,8 +44,10 @@ namespace LibLala.LibLalaTagReader
             _artist = new ArtistList(other.Artist);
             _genre = new GenreList(other.Genre);
             _album = new AlbumName(other.Album);
+            _beatsPerMinute = new BeatsPerMinute(other.BeatsPerMinute);
             _comment = new Comment(other.Comment);
             _discNumber = new DiscNumber(other.DiscNumber);
+            _initialKey = new InitialKey(other.InitialKey);
             _length = new TrackLength(other.Length);
             _title = new TitleName(other.Title);
             _trackNumber = new TrackNumber(other.Track);
@@ -71,9 +77,11 @@ namespace LibLala.LibLalaTagReader
             y.CopyTo(z, x.Length);
 
             _artist = new ArtistList(z.ToList());
+            _beatsPerMinute = new BeatsPerMinute(file.Tag.BeatsPerMinute);
             _comment = new Comment(file.Tag.Comment ?? "");
             _discNumber = new DiscNumber(file.Tag.Disc);
             _genre = new GenreList(file.Tag.Genres.ToList());
+            _initialKey = new InitialKey(file.Tag.InitialKey ?? "");
             _length = new TrackLength(file.Properties.Duration);
             // Untagged files are common, show them under their file name rather than refusing them.
             _title = new TitleName(string.IsNullOrWhiteSpace(file.Tag.Title) ? System.IO.Path.GetFileNameWithoutExtension(path) : file.Tag.Title);
@@ -88,11 +96,18 @@ namespace LibLala.LibLalaTagReader
         public IList<string> Artist => _artist.ToStringList();
         public string ArtistString => _artist.ToCsvString();
 
+        public uint BeatsPerMinute => _beatsPerMinute.Value;
+        public string BeatsPerMinuteString => _beatsPerMinute.ToString();
+
         public string Comment => _comment.ToString();
         public uint DiscNumber => _discNumber.Value;
 
         public IList<string> Genre => _genre.ToStringList();
         public string GenreString => _genre.ToCsvString();
+
+        public string InitialKey => _initialKey.ToString();
+        public int InitialKeyNumber => _initialKey.Number;
+        public string InitialKeyLetter => _initialKey.Letter;
 
         public int Length => _length.TotalSeconds;
         public string LengthString => _length.ToString();

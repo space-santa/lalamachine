@@ -108,6 +108,17 @@ namespace Lalamachine.ViewModel
                         );
                     }
                     break;
+                case PlaylistColumnType.Bpm:
+                    // Plenty of tracks have no BPM. They stay at the bottom either way, so that they don't bury the ones that do.
+                    if (ascending)
+                    {
+                        Playlist = new ObservableCollection<PlaylistTags>(Playlist.OrderBy(x => x.BeatsPerMinute == 0).ThenBy(x => x.BeatsPerMinute));
+                    }
+                    else
+                    {
+                        Playlist = new ObservableCollection<PlaylistTags>(Playlist.OrderBy(x => x.BeatsPerMinute == 0).ThenByDescending(x => x.BeatsPerMinute));
+                    }
+                    break;
                 case PlaylistColumnType.Comment:
                     if (ascending)
                     {
@@ -150,6 +161,27 @@ namespace Lalamachine.ViewModel
                                 .ThenBy(x => x.Track)
                                 .ThenBy(x => x.DiscNumber)
                             );
+                    }
+                    break;
+                case PlaylistColumnType.Key:
+                    // Like BPM, tracks without a key stay at the bottom either way.
+                    if (ascending)
+                    {
+                        Playlist = new ObservableCollection<PlaylistTags>(
+                            Playlist
+                                .OrderBy(x => x.InitialKey.Length == 0)
+                                .ThenBy(x => x.InitialKeyNumber)
+                                .ThenBy(x => x.InitialKeyLetter)
+                        );
+                    }
+                    else
+                    {
+                        Playlist = new ObservableCollection<PlaylistTags>(
+                            Playlist
+                                .OrderBy(x => x.InitialKey.Length == 0)
+                                .ThenByDescending(x => x.InitialKeyNumber)
+                                .ThenByDescending(x => x.InitialKeyLetter)
+                        );
                     }
                     break;
                 case PlaylistColumnType.Length:

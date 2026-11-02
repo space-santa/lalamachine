@@ -1,4 +1,6 @@
-﻿using LibLala.DomainPrimitives;
+﻿using System.ComponentModel;
+using System.Linq;
+using LibLala.DomainPrimitives;
 using LibLala.LibLalaTagReader;
 using NSubstitute;
 using NUnit.Framework;
@@ -62,6 +64,70 @@ namespace Lalamachine.ViewModel.Unittests
             Assert.That(viewModel.NumberOfTracks, Is.EqualTo(1));
             Assert.That(notifications, Does.Contain(nameof(viewModel.NumberOfTracks)));
             Assert.That(notifications, Does.Contain(nameof(viewModel.TotalPlaytime)));
+        }
+
+        private static PlaylistBaseViewModel ViewModelWithKeys(params string[] keys)
+        {
+            var viewModel = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>());
+            foreach (var key in keys)
+            {
+                viewModel.AddTrack(new LibLalaTagsBuilder("bob", new UncheckedTrackPath("/path/to/bob"), 5).WithInitialKey(key).Build());
+            }
+            return viewModel;
+        }
+
+        private static PlaylistBaseViewModel ViewModelWithBeatsPerMinute(params uint[] values)
+        {
+            var viewModel = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>());
+            foreach (var value in values)
+            {
+                viewModel.AddTrack(new LibLalaTagsBuilder("bob", new UncheckedTrackPath("/path/to/bob"), 5).WithBeatsPerMinute(value).Build());
+            }
+            return viewModel;
+        }
+
+        // WPF passes the header's text with the spaces around it, Avalonia the column's Tag without.
+        [TestCase("Key")]
+        [TestCase(" Key ")]
+        public void SortByKey_Ascending_SortsByNumberThenLetter(string header)
+        {
+            var viewModel = ViewModelWithKeys("10A", "4B", "1A", "11B", "3A", "4A", "2A");
+
+            viewModel.SortCommand.Execute(new SortMessage(ListSortDirection.Ascending, new PlaylistColumn(header)));
+
+            Assert.That(viewModel.Playlist.Select(x => x.InitialKey), Is.EqualTo(new[] { "1A", "2A", "3A", "4A", "4B", "10A", "11B" }));
+        }
+
+        [Test]
+        public void SortByKey_Descending_IsTheReverse()
+        {
+            var viewModel = ViewModelWithKeys("10A", "4B", "1A", "11B", "3A", "4A", "2A");
+
+            viewModel.SortCommand.Execute(new SortMessage(ListSortDirection.Descending, new PlaylistColumn("Key")));
+
+            Assert.That(viewModel.Playlist.Select(x => x.InitialKey), Is.EqualTo(new[] { "11B", "10A", "4B", "4A", "3A", "2A", "1A" }));
+        }
+
+        [TestCase(ListSortDirection.Ascending, new[] { "2A", "10A", "Am", "" })]
+        [TestCase(ListSortDirection.Descending, new[] { "Am", "10A", "2A", "" })]
+        public void SortByKey_TrackWithoutKey_StaysAtTheBottom(ListSortDirection direction, string[] expected)
+        {
+            var viewModel = ViewModelWithKeys("", "Am", "10A", "2A");
+
+            viewModel.SortCommand.Execute(new SortMessage(direction, new PlaylistColumn("Key")));
+
+            Assert.That(viewModel.Playlist.Select(x => x.InitialKey), Is.EqualTo(expected));
+        }
+
+        [TestCase(ListSortDirection.Ascending, new uint[] { 87, 128, 172, 0, 0 })]
+        [TestCase(ListSortDirection.Descending, new uint[] { 172, 128, 87, 0, 0 })]
+        public void SortByBeatsPerMinute_TrackWithoutValue_StaysAtTheBottom(ListSortDirection direction, uint[] expected)
+        {
+            var viewModel = ViewModelWithBeatsPerMinute(0, 128, 87, 0, 172);
+
+            viewModel.SortCommand.Execute(new SortMessage(direction, new PlaylistColumn("BPM")));
+
+            Assert.That(viewModel.Playlist.Select(x => x.BeatsPerMinute), Is.EqualTo(expected));
         }
 
         private static PlaylistBaseViewModel ViewModelWithTracks(int numberOfTracks, ShuffleRepeatState state)

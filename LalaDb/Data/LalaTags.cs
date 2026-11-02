@@ -27,9 +27,11 @@ namespace LalaDb.Data
             // TODO: Make this not necessary.
             if (track!.Album?.Name is { }) { builder = builder.WithAlbum(track.Album.Name); }
             if (track!.ArtistTracks is { }) { builder = builder.WithArtist(ArtistTackListToStringList(track?.ArtistTracks)); }
+            if (track!.BeatsPerMinute is { }) { builder = builder.WithBeatsPerMinute((uint)track.BeatsPerMinute); }
             if (track!.Comment is { }) { builder = builder.WithComment(track.Comment); }
             if (track!.DiscNumber is { }) { builder = builder.WithDiscNumber((uint)track.DiscNumber); }
             if (track!.GenreTracks is { }) { builder = builder.WithGenre(GenreTackListToStringList(track?.GenreTracks)); }
+            if (track!.InitialKey is { }) { builder = builder.WithInitialKey(track.InitialKey); }
             if (track!.TrackId is { }) { builder = builder.WithTrackId(track.TrackId); }
             if (track!.TrackNumber is { }) { builder = builder.WithTrackNumber((uint)track.TrackNumber); }
             if (track!.Year is { }) { builder = builder.WithYear(track.Year); }

@@ -32,5 +32,27 @@ namespace LibLala.Unittests.Tagreader
             var tags = new LibLalaTagsBuilder(title: "bob", trackPath: new UncheckedTrackPath("/path/to/bob"), totalSeconds: 5).WithArtist(new List<string> { "Therapy?", "Therapy?" }).Build();
             Assert.That("Therapy?" == tags.ArtistString);
         }
+
+        [Test]
+        public void CopyKeepsInitialKeyAndBeatsPerMinute()
+        {
+            var tags = new LibLalaTagsBuilder("bob", new UncheckedTrackPath("/path/to/bob"), 5).WithInitialKey("10A").WithBeatsPerMinute(128).Build();
+
+            var copy = new LibLalaTags(tags);
+
+            Assert.That(copy.InitialKey, Is.EqualTo("10A"));
+            Assert.That(copy.InitialKeyNumber, Is.EqualTo(10));
+            Assert.That(copy.InitialKeyLetter, Is.EqualTo("A"));
+            Assert.That(copy.BeatsPerMinute, Is.EqualTo(128));
+            Assert.That(copy.BeatsPerMinuteString, Is.EqualTo("128"));
+        }
+
+        [Test]
+        public void TrackWithoutBeatsPerMinuteShowsNothing()
+        {
+            var tags = new LibLalaTagsBuilder("bob", new UncheckedTrackPath("/path/to/bob"), 5).Build();
+
+            Assert.That(tags.BeatsPerMinuteString, Is.Empty);
+        }
     }
 }

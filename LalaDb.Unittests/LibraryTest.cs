@@ -80,6 +80,50 @@ namespace LalaDb.Unittests
         }
 
         [Test]
+        public async Task ScanKeepsInitialKeyAndBeatsPerMinute()
+        {
+            TestMp3.Write(Path.Combine(_musicDir, "a.mp3"), "A", album: "Album", initialKey: "10A", beatsPerMinute: 128);
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            var model = new MusicLibModel(context, () => CreateContext(connection));
+
+            await model.ScanAsync(_musicDir).ConfigureAwait(false);
+
+            var track = model.GetAlbumTracks("Album").Single();
+            Assert.That(track.InitialKey, Is.EqualTo("10A"));
+            Assert.That(track.BeatsPerMinute, Is.EqualTo(128));
+        }
+
+        [Test]
+        public async Task ScanOfTrackWithoutInitialKeyAndBeatsPerMinuteLeavesThemEmpty()
+        {
+            TestMp3.Write(Path.Combine(_musicDir, "a.mp3"), "A", album: "Album");
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            var model = new MusicLibModel(context, () => CreateContext(connection));
+
+            await model.ScanAsync(_musicDir).ConfigureAwait(false);
+
+            var track = model.GetAlbumTracks("Album").Single();
+            Assert.That(track.InitialKey, Is.Empty);
+            Assert.That(track.BeatsPerMinuteString, Is.Empty);
+        }
+
+        [Test]
+        public void TrackFromBeforeTheColumnsExistedStillLoads()
+        {
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            context.Tracks!.Add(new Track { Title = "Old", Path = "/nowhere/old.mp3", Length = 100, TrackNumber = 1, DiscNumber = 1, Album = new Album { Name = "Album" } });
+            context.SaveChanges();
+
+            var track = new MusicLibModel(context, () => CreateContext(connection)).GetAlbumTracks("Album").Single();
+
+            Assert.That(track.InitialKey, Is.Empty);
+            Assert.That(track.BeatsPerMinuteString, Is.Empty);
+        }
+
+        [Test]
         public void ReusedScannerDbDoesNotDuplicateTracks()
         {
             TestMp3.Write(Path.Combine(_musicDir, "a.mp3"), "A");

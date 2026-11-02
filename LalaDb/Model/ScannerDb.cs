@@ -62,8 +62,10 @@ namespace LalaDb.Model
             }
 
             track.Album = albums[tags.Album];
+            track.BeatsPerMinute = (int)tags.BeatsPerMinute;
             track.Comment = tags.Comment;
             track.DiscNumber = (int)tags.DiscNumber;
+            track.InitialKey = tags.InitialKey;
             track.Length = tags.Length;
             track.Path = tags.Path;
             track.Title = tags.Title;

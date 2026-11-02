@@ -42,6 +42,8 @@
                     <GridViewColumn Header=" Disc " DisplayMemberBinding="{Binding Path=DiscNumber}" />
                     <GridViewColumn Header=" Title " DisplayMemberBinding="{Binding Path=Title}" />
                     <GridViewColumn Header=" Length " DisplayMemberBinding="{Binding Path=LengthString}" />
+                    <GridViewColumn Header=" Key " DisplayMemberBinding="{Binding Path=InitialKey}" />
+                    <GridViewColumn Header=" BPM " DisplayMemberBinding="{Binding Path=BeatsPerMinuteString}" />
                     <GridViewColumn Header=" Comment " DisplayMemberBinding="{Binding Path=Comment}" />
                     <GridViewColumn Header=" Album " DisplayMemberBinding="{Binding Path=Album}" />
                     <GridViewColumn Header=" Artist " DisplayMemberBinding="{Binding Path=ArtistString}" />
