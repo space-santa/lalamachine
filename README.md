@@ -36,7 +36,8 @@ lalamachine can copy a playlist to a Jellyfin server. The server only needs an A
 Good to know:
 
 - A track is found when its path in Jellyfin ends with its path inside your library folder, so both need the same
-  folders. Tracks Jellyfin doesn't have get listed, and you decide whether to push without them.
+  folders. It also has to be below the same folder in Jellyfin as most of the other tracks. Tracks Jellyfin doesn't have
+  get listed, and you decide whether to push without them.
 - A new playlist is private to the chosen user.
 - Pushing a playlist again replaces its tracks in Jellyfin, so changes made there get lost. It asks first.
 - The push is manual and one-way. Renaming a playlist in lalamachine creates a second one in Jellyfin on the next push,

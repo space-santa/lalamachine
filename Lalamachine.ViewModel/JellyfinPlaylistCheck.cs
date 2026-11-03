@@ -21,9 +21,15 @@ namespace Lalamachine.ViewModel
             ArgumentNullException.ThrowIfNull(library);
             ArgumentNullException.ThrowIfNull(playlists);
 
-            var matcher = new JellyfinTrackMatcher(libraryPath, library.Items);
+            var withTracks = playlists
+                .Select(x => (x.Name, Paths: x.TrackPaths.ToList()))
+                .Where(x => x.Paths.Count > 0)
+                .OrderBy(x => x.Name, StringComparer.CurrentCultureIgnoreCase)
+                .ToList();
             // A track can be in several playlists, the totals and lists have it once.
-            var matches = new Dictionary<string, JellyfinTrackMatch>();
+            var matches = new JellyfinTrackMatcher(libraryPath, library.Items)
+                .MatchAll(withTracks.SelectMany(x => x.Paths).Distinct())
+                .ToDictionary(x => x.TrackPath);
             var report = new StringBuilder();
 
             report.AppendLine(CultureInfo.InvariantCulture, $"Jellyfin has {library.Items.Count} tracks for {userName}.");
@@ -33,25 +39,10 @@ namespace Lalamachine.ViewModel
             }
             report.AppendLine();
 
-            foreach (var playlist in playlists.OrderBy(x => x.Name, StringComparer.CurrentCultureIgnoreCase))
+            foreach (var (name, paths) in withTracks)
             {
-                var paths = playlist.TrackPaths.ToList();
-                if (paths.Count == 0)
-                {
-                    continue;
-                }
-
-                var found = 0;
-                foreach (var path in paths)
-                {
-                    if (!matches.TryGetValue(path, out var match))
-                    {
-                        match = matcher.Match(path);
-                        matches[path] = match;
-                    }
-                    found += match.Status == JellyfinMatchStatus.Found ? 1 : 0;
-                }
-                report.AppendLine(CultureInfo.InvariantCulture, $"{playlist.Name}: {found} of {paths.Count}");
+                var found = paths.Count(x => matches[x].Status == JellyfinMatchStatus.Found);
+                report.AppendLine(CultureInfo.InvariantCulture, $"{name}: {found} of {paths.Count}");
             }
 
             if (matches.Count == 0)
@@ -63,9 +54,9 @@ namespace Lalamachine.ViewModel
                 var foundTracks = matches.Values.Where(x => x.Status == JellyfinMatchStatus.Found).ToList();
                 report.AppendLine();
                 report.AppendLine(CultureInfo.InvariantCulture, $"Altogether {foundTracks.Count} of {matches.Count} different tracks found.");
-                foreach (var root in foundTracks.GroupBy(x => x.JellyfinRoot, StringComparer.OrdinalIgnoreCase).OrderByDescending(x => x.Count()))
+                if (foundTracks.Count > 0)
                 {
-                    report.AppendLine(CultureInfo.InvariantCulture, $"In {root.Key}: {root.Count()}");
+                    report.AppendLine(CultureInfo.InvariantCulture, $"In {foundTracks[0].JellyfinRoot}: {foundTracks.Count}");
                 }
 
                 AppendUnresolved(report, libraryPath, matches.Values.ToList());

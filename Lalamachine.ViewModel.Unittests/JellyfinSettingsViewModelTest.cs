@@ -292,6 +292,59 @@ namespace Lalamachine.ViewModel.Unittests
             Assert.That(viewModel.IsBusy, Is.False);
         }
 
+        private void SaveServerAndBob()
+        {
+            _settings.ServerAddress = "http://server:8096";
+            _settings.ApiKey = "abc123";
+            _settings.UserId = s_bob.Id;
+            _settings.UserName = s_bob.Name;
+        }
+
+        [Test]
+        public void CheckOfWhatIsSavedDoesntMentionSaving()
+        {
+            SaveServerAndBob();
+            ServerHasTracks("/media/music/a.mp3");
+
+            CheckViewModel().CheckPlaylistsCommand.Execute(null);
+
+            _dialogs.Received(1).ShowMessageAsync(Arg.Is<string>(x => x.StartsWith("Jellyfin has 1 tracks for Bob.", System.StringComparison.Ordinal) && !x.Contains("isn't saved")));
+        }
+
+        [TestCase("ServerAddress")]
+        [TestCase("ApiKey")]
+        [TestCase("SelectedUser")]
+        public void CheckOfWhatIsntSavedSaysThatPushingGoesElsewhere(string changed)
+        {
+            SaveServerAndBob();
+            ServerHasTracks("/media/music/a.mp3");
+            var viewModel = CheckViewModel();
+            switch (changed)
+            {
+                case "ServerAddress": viewModel.ServerAddress = "http://other:8096"; break;
+                case "ApiKey": viewModel.ApiKey = "other"; break;
+                default: viewModel.SelectedUser = s_joe; break;
+            }
+
+            viewModel.CheckPlaylistsCommand.Execute(null);
+
+            _dialogs.Received(1).ShowMessageAsync(Arg.Is<string>(x => x.StartsWith("This check went by what's typed in, which isn't saved.", System.StringComparison.Ordinal) && x.Contains("House: 1 of 2")));
+        }
+
+        [Test]
+        public void SpacesAroundWhatIsTypedInDontMakeItUnsaved()
+        {
+            SaveServerAndBob();
+            ServerHasTracks("/media/music/a.mp3");
+            var viewModel = CheckViewModel();
+            viewModel.ServerAddress = " http://server:8096 ";
+            viewModel.ApiKey = " abc123 ";
+
+            viewModel.CheckPlaylistsCommand.Execute(null);
+
+            _dialogs.Received(1).ShowMessageAsync(Arg.Is<string>(x => !x.Contains("isn't saved")));
+        }
+
         [Test]
         public void CheckAsksTheServerWhatIsTypedIn()
         {

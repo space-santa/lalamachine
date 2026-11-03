@@ -147,11 +147,7 @@ namespace LalaDb.Model
 
         public IList<LalaTags> GetPlaylistTracks(string name)
         {
-            var trackPaths = PlaylistTracks
-                .Where(x => x.Playlist!.Name == name && x.TrackPath != null)
-                .OrderBy(x => x.Order)
-                .Select(x => x.TrackPath!)
-                .ToList();
+            var trackPaths = TrackPaths(name);
 
             // All in one query. The library has no index on the path, so one query per track gets slow for a long playlist.
             var tracks = Tracks

@@ -51,6 +51,28 @@ namespace LibLala.Unittests.Jellyfin
         }
 
         [Test]
+        public async Task PlaylistsWithoutAnIdOrNameAreLeftOut()
+        {
+            using var handler = new FakeHandler(() => Json("""{"Items":[{"Id":"1"},{"Name":"No ID"},{"Id":"","Name":""},{"Id":"p2","Name":"Techno"}],"TotalRecordCount":4}"""));
+            using var httpClient = new HttpClient(handler);
+
+            var playlists = await Client(httpClient).GetPlaylistsAsync("u").ConfigureAwait(false);
+
+            Assert.That(playlists, Is.EqualTo(new[] { new JellyfinPlaylist("p2", "Techno") }));
+        }
+
+        [Test]
+        public async Task EntriesWithoutAnIdAreLeftOut()
+        {
+            using var handler = new FakeHandler(() => Json("""{"Items":[{"PlaylistItemId":"e1"},{"Id":""},{"Id":"t2"}],"TotalRecordCount":3}"""));
+            using var httpClient = new HttpClient(handler);
+
+            var entries = await Client(httpClient).GetPlaylistEntriesAsync("p1", "u1").ConfigureAwait(false);
+
+            Assert.That(entries, Is.EqualTo(new[] { new JellyfinPlaylistEntry("t2", "t2") }));
+        }
+
+        [Test]
         public async Task ReadsTheEntriesOfAPlaylist()
         {
             using var handler = new FakeHandler(() => Json("""{"Items":[{"Id":"t1","PlaylistItemId":"e1"},{"Id":"t2"}],"TotalRecordCount":2}"""));

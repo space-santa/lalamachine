@@ -101,5 +101,74 @@ namespace LibLala.Unittests.Jellyfin
             Assert.That(match.Status, Is.EqualTo(JellyfinMatchStatus.NotFound));
             Assert.That(match.Candidates, Is.Empty);
         }
+
+        [Test]
+        public void AMatchOutsideTheFolderOfTheOthersIsNotFoundButShown()
+        {
+            var matches = Matcher(@"D:\Music", "/media/music/a.mp3", "/media/music/b.mp3", "/media/music/Old/BPM/x.mp3")
+                .MatchAll([@"D:\Music\a.mp3", @"D:\Music\BPM\x.mp3", @"D:\Music\b.mp3"]);
+
+            Assert.That(matches.Select(x => x.Status), Is.EqualTo(new[] { JellyfinMatchStatus.Found, JellyfinMatchStatus.NotFound, JellyfinMatchStatus.Found }));
+            Assert.That(matches[1].RelativePath, Is.EqualTo("BPM/x.mp3"));
+            Assert.That(matches[1].Candidates.Select(x => x.Path), Is.EqualTo(new[] { "/media/music/Old/BPM/x.mp3" }));
+            Assert.That(matches[1].JellyfinRoot, Is.Empty);
+        }
+
+        [Test]
+        public void TheFolderOfTheOthersDecidesBetweenSeveralMatches()
+        {
+            var matches = Matcher(@"D:\Music", "/media/music/a.mp3", "/media/music/Old/x.mp3", "/media/music/x.mp3")
+                .MatchAll([@"D:\Music\a.mp3", @"D:\Music\x.mp3"]);
+
+            Assert.That(matches[1].Status, Is.EqualTo(JellyfinMatchStatus.Found));
+            Assert.That(matches[1].Candidates.Single().Id, Is.EqualTo("id2"));
+            Assert.That(matches[1].JellyfinRoot, Is.EqualTo("/media/music/"));
+        }
+
+        [Test]
+        public void WithAsManyInTwoFoldersTheShorterOneCounts()
+        {
+            // In this order as well, the first one doesn't decide.
+            var matches = Matcher(@"D:\Music", "/media/music/Old/b.mp3", "/media/music/a.mp3")
+                .MatchAll([@"D:\Music\b.mp3", @"D:\Music\a.mp3"]);
+
+            Assert.That(matches.Select(x => x.Status), Is.EqualTo(new[] { JellyfinMatchStatus.NotFound, JellyfinMatchStatus.Found }));
+        }
+
+        [Test]
+        public void CaseDoesntCountForTheFolderEither()
+        {
+            var matches = Matcher(@"D:\Music", "/media/music/a.mp3", "/MEDIA/music/b.mp3")
+                .MatchAll([@"D:\Music\a.mp3", @"D:\Music\b.mp3"]);
+
+            Assert.That(matches.Select(x => x.Status), Is.All.EqualTo(JellyfinMatchStatus.Found));
+        }
+
+        [Test]
+        public void WithoutAFolderToGoBySeveralMatchesStayAmbiguous()
+        {
+            var matches = Matcher(@"D:\Music", "/media/music/a.mp3", "/backup/music/a.mp3")
+                .MatchAll([@"D:\Music\a.mp3"]);
+
+            Assert.That(matches.Single().Status, Is.EqualTo(JellyfinMatchStatus.Ambiguous));
+        }
+
+        [Test]
+        public void ASingleTrackHasNothingToBeComparedWith()
+        {
+            var matches = Matcher(@"D:\Music", "/media/music/Old/x.mp3").MatchAll([@"D:\Music\x.mp3"]);
+
+            Assert.That(matches.Single().Status, Is.EqualTo(JellyfinMatchStatus.Found));
+        }
+
+        [Test]
+        public void TheFolderDoesntChangeWhatWasntFound()
+        {
+            var matches = Matcher(@"D:\Music", "/media/music/a.mp3", "/media/music/Other/gone.mp3")
+                .MatchAll([@"D:\Music\a.mp3", @"D:\Music\Artist\gone.mp3", @"E:\Old\a.mp3"]);
+
+            Assert.That(matches.Select(x => x.Status), Is.EqualTo(new[] { JellyfinMatchStatus.Found, JellyfinMatchStatus.NotFound, JellyfinMatchStatus.OutsideLibrary }));
+            Assert.That(matches[1].Candidates.Select(x => x.Path), Is.EqualTo(new[] { "/media/music/Other/gone.mp3" }));
+        }
     }
 }

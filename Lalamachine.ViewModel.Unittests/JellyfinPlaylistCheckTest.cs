@@ -46,8 +46,21 @@ namespace Lalamachine.ViewModel.Unittests
                 new PlaylistPaths("House", [Local("a.mp3"), Local("b.mp3"), Local("c.mp3")]));
 
             Assert.That(report, Does.Contain("In /media/music/: 2"));
-            Assert.That(report, Does.Contain("In /other/: 1"));
-            Assert.That(report.IndexOf("/media/music/: 2", System.StringComparison.Ordinal), Is.LessThan(report.IndexOf("/other/: 1", System.StringComparison.Ordinal)));
+            Assert.That(report, Does.Not.Contain("In /other/"));
+            Assert.That(report, Does.Contain("House: 2 of 3"));
+            Assert.That(report, Does.Contain("same file name in Jellyfin: /other/c.mp3"));
+        }
+
+        [Test]
+        public void TheFolderGoesByTheTracksOfAllThePlaylists()
+        {
+            var report = Report(
+                Library("/media/music/a.mp3", "/media/music/b.mp3", "/media/music/Old/c.mp3"),
+                new PlaylistPaths("House", [Local("a.mp3"), Local("b.mp3")]),
+                new PlaylistPaths("Techno", [Local("c.mp3")]));
+
+            Assert.That(report, Does.Contain("Techno: 0 of 1"));
+            Assert.That(report, Does.Contain("Altogether 2 of 3 different tracks found."));
         }
 
         [Test]

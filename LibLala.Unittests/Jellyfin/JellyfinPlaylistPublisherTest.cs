@@ -22,6 +22,11 @@ namespace LibLala.Unittests.Jellyfin
         public const string UserId = "me";
 
         public List<JellyfinAudioItem> Tracks { get; } = [];
+        // When it says it has another number of tracks than it gives.
+        public int? ReportedTotal { get; set; }
+        public int LibraryReads { get; private set; }
+        // When a new playlist ends up with another track than the last one it was asked to have.
+        public string? LastTrackTurnsInto { get; set; }
         public Dictionary<string, Playlist> Playlists { get; } = [];
         public List<string> Writes { get; } = [];
         public string? FailOnWrite { get; set; }
@@ -37,7 +42,8 @@ namespace LibLala.Unittests.Jellyfin
 
         public Task<JellyfinAudioLibrary> GetAudioLibraryAsync(string userId, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(new JellyfinAudioLibrary(Tracks, Tracks.Count));
+            LibraryReads++;
+            return Task.FromResult(new JellyfinAudioLibrary(Tracks, ReportedTotal ?? Tracks.Count));
         }
 
         public Task<IReadOnlyList<JellyfinPlaylist>> GetPlaylistsAsync(string userId, CancellationToken cancellationToken = default)
@@ -55,7 +61,12 @@ namespace LibLala.Unittests.Jellyfin
         {
             Write("create");
             var id = $"new{Playlists.Count}";
-            Playlists[id] = new Playlist { Name = name, Owner = userId, Items = itemIds.ToList() };
+            var items = itemIds.ToList();
+            if (LastTrackTurnsInto is not null)
+            {
+                items[^1] = LastTrackTurnsInto;
+            }
+            Playlists[id] = new Playlist { Name = name, Owner = userId, Items = items };
             return Task.FromResult(id);
         }
 
@@ -164,6 +175,29 @@ namespace LibLala.Unittests.Jellyfin
         }
 
         [Test]
+        public async Task ATrackInAnotherFolderThanTheOthersIsNotInThePlan()
+        {
+            _jellyfin.Tracks.Add(new JellyfinAudioItem("id-old", "/media/music/Old/old.mp3"));
+
+            var plan = await Prepare("Mix", "a", "old", "b").ConfigureAwait(false);
+
+            Assert.That(plan.ItemIds, Is.EqualTo(new[] { "id-a", "id-b" }));
+            Assert.That(plan.Unresolved.Single().Status, Is.EqualTo(JellyfinMatchStatus.NotFound));
+        }
+
+        [TestCase(6, 2)]
+        [TestCase(4, 0)]
+        [TestCase(3, 0)]
+        public async Task PlanSaysHowManyTracksTheServerDidntGive(int reportedTotal, int notRead)
+        {
+            _jellyfin.ReportedTotal = reportedTotal;
+
+            var plan = await Prepare("Mix", "a").ConfigureAwait(false);
+
+            Assert.That(plan.LibraryTracksNotRead, Is.EqualTo(notRead));
+        }
+
+        [Test]
         public async Task ATrackFoundTwiceIsInThePlanOnce()
         {
             var plan = await _publisher.PrepareAsync("Mix", LibraryRoot, [Local("a"), Local("A"), Local("b")]).ConfigureAwait(false);
@@ -190,6 +224,8 @@ namespace LibLala.Unittests.Jellyfin
 
             Assert.That(async () => await Prepare("Mix", "a").ConfigureAwait(false), Throws.TypeOf<JellyfinException>().With.Message.Contains("2 playlists called Mix"));
             Assert.That(_jellyfin.Writes, Is.Empty);
+            // That's known after one request, and reading the library takes many.
+            Assert.That(_jellyfin.LibraryReads, Is.Zero);
         }
 
         [Test]
@@ -282,6 +318,15 @@ namespace LibLala.Unittests.Jellyfin
             var plan = await Prepare("Mix", "c", "b").ConfigureAwait(false);
 
             await Assert.ThatAsync(async () => await _publisher.PublishAsync(plan).ConfigureAwait(false), Throws.TypeOf<JellyfinException>().With.Message.Contains("didn't come out as it should: its tracks are in another order")).ConfigureAwait(false);
+        }
+
+        [Test]
+        public async Task OtherTracksAreNotReportedAsAnotherOrder()
+        {
+            _jellyfin.LastTrackTurnsInto = "id-d";
+            var plan = await Prepare("Mix", "a", "b").ConfigureAwait(false);
+
+            await Assert.ThatAsync(async () => await _publisher.PublishAsync(plan).ConfigureAwait(false), Throws.TypeOf<JellyfinException>().With.Message.Contains("didn't come out as it should: it has other tracks than it should")).ConfigureAwait(false);
         }
 
         [Test]

@@ -48,9 +48,38 @@ namespace LibLala.Jellyfin
             }
 
             var relativePath = path[_libraryRoot.Length..];
-            var sameName = _itemsByFileName[FileName(relativePath)].ToList();
             // With the slash, so that A/b.mp3 doesn't match XA/b.mp3.
-            var matches = sameName.Where(x => x.Path.EndsWith($"/{relativePath}", StringComparison.OrdinalIgnoreCase)).ToList();
+            return Result(trackPath, relativePath, x => x.EndsWith($"/{relativePath}", StringComparison.OrdinalIgnoreCase));
+        }
+
+        // One track alone can't tell when it's missing but its path is the end of another one deeper down, BPM/x.mp3 in
+        // /media/music/Old/BPM/x.mp3. So the folder that most of the tracks are in decides, also between several matches of a track.
+        // With as many in two folders it's the shorter one, the wrong one is the deeper one. A single track has nothing to go by.
+        public IReadOnlyList<JellyfinTrackMatch> MatchAll(IEnumerable<string> trackPaths)
+        {
+            ArgumentNullException.ThrowIfNull(trackPaths);
+
+            var matches = trackPaths.Select(Match).ToList();
+            var root = matches
+                .Where(x => x.Status == JellyfinMatchStatus.Found)
+                .GroupBy(x => x.JellyfinRoot, StringComparer.OrdinalIgnoreCase)
+                .OrderByDescending(x => x.Count())
+                .ThenBy(x => x.Key.Length)
+                .FirstOrDefault()?.Key;
+            if (root is null)
+            {
+                return matches;
+            }
+
+            return matches.Select(match => match.Status is JellyfinMatchStatus.Found or JellyfinMatchStatus.Ambiguous
+                ? Result(match.TrackPath, match.RelativePath, x => x.Equals($"{root}{match.RelativePath}", StringComparison.OrdinalIgnoreCase))
+                : match).ToList();
+        }
+
+        private JellyfinTrackMatch Result(string trackPath, string relativePath, Func<string, bool> isMatch)
+        {
+            var sameName = _itemsByFileName[FileName(relativePath)].ToList();
+            var matches = sameName.Where(x => isMatch(x.Path)).ToList();
 
             return matches.Count switch
             {

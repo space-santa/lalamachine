@@ -125,10 +125,11 @@ namespace Lalamachine.Desktop.Views
 
             // The computer shutting down doesn't wait for an answer.
             var unsaved = _playlistsViewModel.PlaylistsWithUnsavedOrder;
-            if (unsaved.Count > 0 && !_isCloseConfirmed && e.CloseReason != WindowCloseReason.OSShutdown)
+            var isPushing = _playlistsViewModel.IsPushing;
+            if ((unsaved.Count > 0 || isPushing) && !_isCloseConfirmed && e.CloseReason != WindowCloseReason.OSShutdown)
             {
                 e.Cancel = true;
-                ConfirmClose(unsaved);
+                ConfirmClose(unsaved, isPushing);
                 return;
             }
 
@@ -145,9 +146,11 @@ namespace Lalamachine.Desktop.Views
             }
         }
 
-        private async void ConfirmClose(IList<string> unsavedPlaylists)
+        private async void ConfirmClose(IList<string> unsavedPlaylists, bool isPushing)
         {
-            var isConfirmed = await _dialogs.ConfirmAsync($"The new order of {string.Join(", ", unsavedPlaylists)} isn't saved and will be lost. Close anyway?").ConfigureAwait(true);
+            var unsavedWarning = unsavedPlaylists.Count > 0 ? $"The new order of {string.Join(", ", unsavedPlaylists)} isn't saved and will be lost. " : "";
+            var pushWarning = isPushing ? "A playlist is being pushed to Jellyfin, closing now can leave it incomplete there. " : "";
+            var isConfirmed = await _dialogs.ConfirmAsync($"{unsavedWarning}{pushWarning}Close anyway?").ConfigureAwait(true);
             if (isConfirmed)
             {
                 _isCloseConfirmed = true;

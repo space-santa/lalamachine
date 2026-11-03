@@ -26,6 +26,8 @@ namespace Lalamachine.ViewModel
     // doesn't end up on disk, and neither does anything from a server that turned out to be the wrong one.
     public sealed class JellyfinSettingsViewModel : BaseNotifyPropertyChanged
     {
+        private const string NotSavedMessage = "This check went by what's typed in, which isn't saved. Push to Jellyfin goes by the saved settings until you press Save.";
+
         private readonly JellyfinSettings _settings;
         private readonly Func<string, string, IJellyfinClient> _createClient;
         private readonly IDialogService _dialogs;
@@ -201,7 +203,13 @@ namespace Lalamachine.ViewModel
                 IsBusy = false;
             }
 
-            await _dialogs.ShowMessageAsync(report).ConfigureAwait(true);
+            await _dialogs.ShowMessageAsync(IsSaved(user) ? report : $"{NotSavedMessage}{Environment.NewLine}{Environment.NewLine}{report}").ConfigureAwait(true);
+        }
+
+        // The check goes by what's typed in and the push by what's saved. When they differ, the check says nothing about the push.
+        private bool IsSaved(JellyfinUser user)
+        {
+            return ServerAddress.Trim() == _settings.ServerAddress && ApiKey.Trim() == _settings.ApiKey && user.Id == _settings.UserId;
         }
     }
 }

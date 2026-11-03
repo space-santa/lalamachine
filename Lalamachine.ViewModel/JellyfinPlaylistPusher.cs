@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LibLala.Jellyfin;
@@ -83,31 +84,45 @@ namespace Lalamachine.ViewModel
         {
             var message = new StringBuilder();
             message.AppendLine(CultureInfo.InvariantCulture, $"None of the tracks of {plan.PlaylistName} are in Jellyfin, so nothing was changed.");
+            AppendIncompleteRead(message, plan);
             JellyfinPlaylistCheck.AppendUnresolved(message, libraryPath, plan.Unresolved);
             return message.ToString().TrimEnd();
         }
 
-        private static string Question(JellyfinPushPlan plan, string libraryPath, int trackCount)
+        // Only when it makes a difference. When everything was found, it doesn't matter what else the server has.
+        private static void AppendIncompleteRead(StringBuilder message, JellyfinPushPlan plan)
+        {
+            if (plan.LibraryTracksNotRead > 0 && plan.Unresolved.Any(x => x.Status == JellyfinMatchStatus.NotFound))
+            {
+                message.AppendLine(CultureInfo.InvariantCulture, $"{plan.LibraryTracksNotRead} of the tracks Jellyfin reports couldn't be read: they came without a path, or the library changed in the meantime. So tracks listed as not found can be there after all.");
+            }
+        }
+
+        // These can be other ones than what the settings tab shows right now, so it's said each time.
+        private string Target => $"on {_settings.ServerAddress} for {_settings.UserName}";
+
+        private string Question(JellyfinPushPlan plan, string libraryPath, int trackCount)
         {
             var question = new StringBuilder();
             if (plan.ExistingPlaylistId is null)
             {
-                question.AppendLine(CultureInfo.InvariantCulture, $"Create the playlist {plan.PlaylistName} in Jellyfin with {plan.ItemIds.Count} of its {trackCount} tracks?");
+                question.AppendLine(CultureInfo.InvariantCulture, $"Create the playlist {plan.PlaylistName} in Jellyfin with {plan.ItemIds.Count} of its {trackCount} tracks, {Target}?");
             }
             else
             {
-                question.AppendLine(CultureInfo.InvariantCulture, $"Replace the {plan.ExistingTrackCount} tracks of the playlist {plan.PlaylistName} in Jellyfin with these {plan.ItemIds.Count}?");
+                question.AppendLine(CultureInfo.InvariantCulture, $"Replace the {plan.ExistingTrackCount} tracks of the playlist {plan.PlaylistName} in Jellyfin with these {plan.ItemIds.Count}, {Target}?");
                 question.AppendLine("Changes made to it in Jellyfin get lost.");
             }
+            AppendIncompleteRead(question, plan);
             JellyfinPlaylistCheck.AppendUnresolved(question, libraryPath, plan.Unresolved);
             return question.ToString().TrimEnd();
         }
 
-        private static string DoneMessage(JellyfinPushPlan plan)
+        private string DoneMessage(JellyfinPushPlan plan)
         {
             var done = plan.ExistingPlaylistId is null
-                ? $"Created the playlist {plan.PlaylistName} in Jellyfin with {plan.ItemIds.Count} tracks."
-                : $"The playlist {plan.PlaylistName} in Jellyfin has these {plan.ItemIds.Count} tracks now.";
+                ? $"Created the playlist {plan.PlaylistName} in Jellyfin with {plan.ItemIds.Count} tracks, {Target}."
+                : $"The playlist {plan.PlaylistName} in Jellyfin has these {plan.ItemIds.Count} tracks now, {Target}.";
             return plan.Unresolved.Count == 0 ? done : $"{done} {plan.Unresolved.Count} tracks were left out.";
         }
     }

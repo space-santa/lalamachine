@@ -154,7 +154,7 @@ namespace Lalamachine.ViewModel.Unittests
 
             await _dialogs.DidNotReceive().ConfirmAsync(Arg.Any<string>()).ConfigureAwait(false);
             Assert.That(_serverEntries, Is.EqualTo(new[] { "id-b", "id-a" }));
-            await _dialogs.Received(1).ShowMessageAsync("Created the playlist Mix in Jellyfin with 2 tracks.").ConfigureAwait(false);
+            await _dialogs.Received(1).ShowMessageAsync("Created the playlist Mix in Jellyfin with 2 tracks, on http://server:8096 for Bob.").ConfigureAwait(false);
         }
 
         [Test]
@@ -167,9 +167,9 @@ namespace Lalamachine.ViewModel.Unittests
 
             await CreatePusher().PushAsync("Mix", Paths("b", "a")).ConfigureAwait(false);
 
-            await _dialogs.Received(1).ConfirmAsync(Arg.Is<string>(x => x.Contains("Replace the 3 tracks of the playlist Mix in Jellyfin with these 2?") && x.Contains("get lost"))).ConfigureAwait(false);
+            await _dialogs.Received(1).ConfirmAsync(Arg.Is<string>(x => x.Contains("Replace the 3 tracks of the playlist Mix in Jellyfin with these 2, on http://server:8096 for Bob?") && x.Contains("get lost"))).ConfigureAwait(false);
             Assert.That(_serverEntries, Is.EqualTo(new[] { "id-b", "id-a" }));
-            await _dialogs.Received(1).ShowMessageAsync("The playlist Mix in Jellyfin has these 2 tracks now.").ConfigureAwait(false);
+            await _dialogs.Received(1).ShowMessageAsync("The playlist Mix in Jellyfin has these 2 tracks now, on http://server:8096 for Bob.").ConfigureAwait(false);
         }
 
         [Test]
@@ -195,9 +195,59 @@ namespace Lalamachine.ViewModel.Unittests
 
             await CreatePusher().PushAsync("Mix", Paths("c", "gone", "a")).ConfigureAwait(false);
 
-            await _dialogs.Received(1).ConfirmAsync(Arg.Is<string>(x => x.Contains("with 2 of its 3 tracks?") && x.Contains("Not found (1):") && x.Contains("gone.mp3"))).ConfigureAwait(false);
+            await _dialogs.Received(1).ConfirmAsync(Arg.Is<string>(x => x.Contains("with 2 of its 3 tracks, on http://server:8096 for Bob?") && x.Contains("Not found (1):") && x.Contains("gone.mp3"))).ConfigureAwait(false);
             Assert.That(_serverEntries, Is.EqualTo(new[] { "id-c", "id-a" }));
-            await _dialogs.Received(1).ShowMessageAsync("Created the playlist Mix in Jellyfin with 2 tracks. 1 tracks were left out.").ConfigureAwait(false);
+            await _dialogs.Received(1).ShowMessageAsync("Created the playlist Mix in Jellyfin with 2 tracks, on http://server:8096 for Bob. 1 tracks were left out.").ConfigureAwait(false);
+        }
+
+        private void ServerReportsMoreThanItGives(params string[] names)
+        {
+            var items = names.Select(x => new JellyfinAudioItem($"id-{x}", $"/media/music/{x}.mp3")).ToList();
+            _client.GetAudioLibraryAsync(Arg.Any<string>()).Returns(Task.FromResult(new JellyfinAudioLibrary(items, items.Count + 2)));
+        }
+
+        [Test]
+        public async Task AnIncompleteReadIsMentionedWhenATrackIsNotFound()
+        {
+            ServerReportsMoreThanItGives("a");
+            AnswerQuestionWith(false);
+
+            await CreatePusher().PushAsync("Mix", Paths("a", "gone")).ConfigureAwait(false);
+
+            await _dialogs.Received(1).ConfirmAsync(Arg.Is<string>(x => x.Contains("2 of the tracks Jellyfin reports couldn't be read") && x.Contains("Not found (1):"))).ConfigureAwait(false);
+        }
+
+        [Test]
+        public async Task AnIncompleteReadIsMentionedWhenNoTrackIsFound()
+        {
+            ServerReportsMoreThanItGives("a");
+
+            await CreatePusher().PushAsync("Mix", Paths("gone")).ConfigureAwait(false);
+
+            await _dialogs.Received(1).ShowMessageAsync(Arg.Is<string>(x => x.Contains("2 of the tracks Jellyfin reports couldn't be read"))).ConfigureAwait(false);
+        }
+
+        [Test]
+        public async Task AnIncompleteReadDoesntMatterWhenEverythingIsFound()
+        {
+            ServerReportsMoreThanItGives("a");
+
+            await CreatePusher().PushAsync("Mix", Paths("a")).ConfigureAwait(false);
+
+            await _dialogs.DidNotReceive().ConfirmAsync(Arg.Any<string>()).ConfigureAwait(false);
+            await _dialogs.Received(1).ShowMessageAsync("Created the playlist Mix in Jellyfin with 1 tracks, on http://server:8096 for Bob.").ConfigureAwait(false);
+        }
+
+        [Test]
+        public async Task AnIncompleteReadIsNotPartOfTheQuestionWhenEverythingIsFound()
+        {
+            ServerReportsMoreThanItGives("a");
+            ServerHasPlaylists("Mix");
+            AnswerQuestionWith(false);
+
+            await CreatePusher().PushAsync("Mix", Paths("a")).ConfigureAwait(false);
+
+            await _dialogs.Received(1).ConfirmAsync(Arg.Is<string>(x => !x.Contains("couldn't be read"))).ConfigureAwait(false);
         }
 
         [Test]

@@ -60,7 +60,8 @@ namespace LibLala.Jellyfin
         {
             ArgumentNullException.ThrowIfNull(userId);
 
-            // By ID, Jellyfin can't sort by anything unique, so a track could come up in two pages.
+            // By ID, Jellyfin can't sort by anything unique, so a track could come up in two pages. Another one is left out then,
+            // which ReportedTotal shows.
             var items = new Dictionary<string, JellyfinAudioItem>();
             var startIndex = 0;
             ItemsPage<JellyfinAudioItem> page;
@@ -91,7 +92,7 @@ namespace LibLala.Jellyfin
 
             var path = $"Items?userId={Uri.EscapeDataString(userId)}&recursive=true&includeItemTypes=Playlist&enableImages=false&enableUserData=false";
             var page = await GetItemsAsync<JellyfinPlaylist>(path, cancellationToken).ConfigureAwait(false);
-            return page.Items!;
+            return page.Items!.Where(x => !string.IsNullOrEmpty(x.Id) && !string.IsNullOrEmpty(x.Name)).ToList();
         }
 
         public async Task<IReadOnlyList<JellyfinPlaylistEntry>> GetPlaylistEntriesAsync(string playlistId, string userId, CancellationToken cancellationToken = default)
@@ -101,7 +102,7 @@ namespace LibLala.Jellyfin
 
             var path = $"Playlists/{Uri.EscapeDataString(playlistId)}/Items?userId={Uri.EscapeDataString(userId)}&enableImages=false&enableUserData=false";
             var page = await GetItemsAsync<PlaylistItem>(path, cancellationToken).ConfigureAwait(false);
-            return page.Items!.Select(x => new JellyfinPlaylistEntry(x.Id, x.PlaylistItemId ?? x.Id)).ToList();
+            return page.Items!.Where(x => !string.IsNullOrEmpty(x.Id)).Select(x => new JellyfinPlaylistEntry(x.Id, x.PlaylistItemId ?? x.Id)).ToList();
         }
 
         public async Task<string> CreatePlaylistAsync(string name, string userId, IReadOnlyList<string> itemIds, CancellationToken cancellationToken = default)
