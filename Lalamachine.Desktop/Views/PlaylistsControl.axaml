@@ -68,6 +68,15 @@
                         <Button Classes="text" Content="Save order" Command="{Binding SaveOrderCommand}" />
                         <Button Classes="text" Content="Discard" Command="{Binding DiscardOrderCommand}" Click="DiscardButton_Click" />
                     </StackPanel>
+                    <!-- Not with a new order that isn't saved, what gets pushed has to be what's on screen. -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" IsVisible="{Binding !HasUnsavedOrder}">
+                        <Label Content="Pushing..." IsVisible="{Binding $parent[UserControl].((vm:PlaylistsViewModel)DataContext).IsPushing}" />
+                        <Button Classes="text"
+                                Content="Push to Jellyfin"
+                                ToolTip.Tip="Creates this playlist in Jellyfin, or replaces the one with the same name there"
+                                Command="{Binding $parent[UserControl].((vm:PlaylistsViewModel)DataContext).PushPlaylistCommand}"
+                                IsEnabled="{Binding !$parent[UserControl].((vm:PlaylistsViewModel)DataContext).IsPushing}" />
+                    </StackPanel>
                 </Grid>
             </Grid>
         </Panel>

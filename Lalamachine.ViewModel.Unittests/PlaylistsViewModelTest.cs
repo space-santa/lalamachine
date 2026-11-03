@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -96,6 +97,67 @@ namespace Lalamachine.ViewModel.Unittests
             // A new context, so that this is what really is in the database.
             using var context = CreateContext();
             return new PlaylistModel(context).GetPlaylistTracks(name).Select(x => x.Title).ToArray();
+        }
+
+        [Test]
+        public void PushPlaylist_SendsTheSelectedPlaylistInItsSavedOrder()
+        {
+            ViewModelWith(("Mix", ["c", "a", "b"]), ("Other", ["a"]));
+            var pusher = Substitute.For<IPlaylistPusher>();
+            pusher.PushAsync(Arg.Any<string>(), Arg.Any<IReadOnlyList<string>>()).Returns(Task.CompletedTask);
+            var viewModel = new PlaylistsViewModel(_context, _dialogs, pusher);
+            var playlist = Select(viewModel, "Mix");
+            playlist.MoveTrack(playlist.Playlist[0], 2);
+            playlist.SaveOrderCommand.Execute(null);
+
+            viewModel.PushPlaylistCommand.Execute(null);
+
+            pusher.Received(1).PushAsync("Mix", Arg.Is<IReadOnlyList<string>>(x => x.SequenceEqual(new[] { PathOf("a"), PathOf("b"), PathOf("c") })));
+        }
+
+        [Test]
+        public void PushPlaylist_NotWithANewOrderThatIsntSaved()
+        {
+            ViewModelWith(("Mix", ["a", "b"]));
+            var pusher = Substitute.For<IPlaylistPusher>();
+            var viewModel = new PlaylistsViewModel(_context, _dialogs, pusher);
+            var playlist = Select(viewModel, "Mix");
+            playlist.MoveTrack(playlist.Playlist[0], 1);
+
+            viewModel.PushPlaylistCommand.Execute(null);
+
+            pusher.DidNotReceive().PushAsync(Arg.Any<string>(), Arg.Any<IReadOnlyList<string>>());
+            Assert.That(viewModel.IsPushing, Is.False);
+        }
+
+        [Test]
+        public void PushPlaylist_WaitsForTheOneThatIsRunning()
+        {
+            ViewModelWith(("Mix", ["a"]));
+            var pusher = Substitute.For<IPlaylistPusher>();
+            var running = new TaskCompletionSource();
+            pusher.PushAsync(Arg.Any<string>(), Arg.Any<IReadOnlyList<string>>()).Returns(running.Task);
+            var viewModel = new PlaylistsViewModel(_context, _dialogs, pusher);
+            Select(viewModel, "Mix");
+
+            viewModel.PushPlaylistCommand.Execute(null);
+            Assert.That(viewModel.IsPushing, Is.True);
+            viewModel.PushPlaylistCommand.Execute(null);
+
+            pusher.Received(1).PushAsync(Arg.Any<string>(), Arg.Any<IReadOnlyList<string>>());
+            running.SetResult();
+            Assert.That(viewModel.IsPushing, Is.False);
+        }
+
+        [Test]
+        public void PushPlaylist_DoesNothingWithoutAPusher()
+        {
+            var viewModel = ViewModelWith(("Mix", ["a"]));
+            Select(viewModel, "Mix");
+
+            viewModel.PushPlaylistCommand.Execute(null);
+
+            Assert.That(viewModel.IsPushing, Is.False);
         }
 
         private void NameTheNextPlaylist(string name)

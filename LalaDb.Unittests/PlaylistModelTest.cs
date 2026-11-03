@@ -68,6 +68,16 @@ namespace LalaDb.Unittests
         }
 
         [Test]
+        public void TrackPaths_AreInTheOrderOfThePlaylist()
+        {
+            CreateWith("list", "a", "b", "c");
+
+            _model.SaveOrder("list", [PathOf("c"), PathOf("a"), PathOf("b")]);
+
+            Assert.That(_model.TrackPaths("list"), Is.EqualTo(new[] { PathOf("c"), PathOf("a"), PathOf("b") }));
+        }
+
+        [Test]
         public void AddTracks_GoToTheEndInTheGivenOrder()
         {
             CreateWith("list", "b");

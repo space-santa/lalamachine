@@ -1,6 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Input;
+using LalaDb.Data;
+using LalaDb.Model;
+using LibLala.Jellyfin;
 using Settings;
 
 namespace Lalamachine.ViewModel
@@ -29,15 +33,30 @@ namespace Lalamachine.ViewModel
         private readonly IDialogService _dialogs;
         private bool _scanning;
 
-        public SettingsViewModel(IDialogService dialogs)
+        public SettingsViewModel(IDialogService dialogs, LalaContext context)
         {
             _dialogs = dialogs;
             _loadCommand = new DelegateCommand(OnLoad);
             _scanCommand = new DelegateCommand(OnScan);
             _settings = new SettingsSettings();
+            var playlists = new PlaylistModel(context);
+            // One for both, each instance keeps its own copy of what's in the file.
+            var jellyfinSettings = new JellyfinSettings();
+            IJellyfinClient CreateJellyfinClient(string serverAddress, string apiKey) => new JellyfinClient(serverAddress, apiKey);
+            Jellyfin = new JellyfinSettingsViewModel(
+                jellyfinSettings,
+                CreateJellyfinClient,
+                dialogs,
+                () => playlists.PlaylistNames().Select(name => new PlaylistPaths(name, playlists.TrackPaths(name))).ToList(),
+                () => LibraryPath);
+            JellyfinPusher = new JellyfinPlaylistPusher(jellyfinSettings, CreateJellyfinClient, dialogs, () => LibraryPath);
             Scanning = false;
             PropertyChanged += LibraryPathChanged;
         }
+
+        public JellyfinSettingsViewModel Jellyfin { get; }
+
+        public IPlaylistPusher JellyfinPusher { get; }
 
         private void LibraryPathChanged(object? sender, PropertyChangedEventArgs e)
         {

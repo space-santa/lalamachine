@@ -135,21 +135,19 @@ namespace LalaDb.Model
                 .ToList();
         }
 
+        // In the order of the playlist. All of them, also the ones the library doesn't have at the moment.
         public IList<string> TrackPaths(string name)
         {
             return PlaylistTracks
                 .Where(x => x.Playlist!.Name == name && x.TrackPath != null)
+                .OrderBy(x => x.Order)
                 .Select(x => x.TrackPath!)
                 .ToList();
         }
 
         public IList<LalaTags> GetPlaylistTracks(string name)
         {
-            var trackPaths = PlaylistTracks
-                .Where(x => x.Playlist!.Name == name && x.TrackPath != null)
-                .OrderBy(x => x.Order)
-                .Select(x => x.TrackPath!)
-                .ToList();
+            var trackPaths = TrackPaths(name);
 
             // All in one query. The library has no index on the path, so one query per track gets slow for a long playlist.
             var tracks = Tracks

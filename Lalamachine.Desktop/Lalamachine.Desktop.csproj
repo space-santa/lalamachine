@@ -5,7 +5,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\lalamachine.ico</ApplicationIcon>
-    <Version>4.99.17</Version>
+    <Version>4.99.18</Version>
   </PropertyGroup>
 
   <ItemGroup>
