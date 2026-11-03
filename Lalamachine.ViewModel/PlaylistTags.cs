@@ -7,6 +7,7 @@ namespace Lalamachine.ViewModel
     public class PlaylistTags : LibLalaTags, INotifyPropertyChanged
     {
         private bool _isPlaying;
+        private bool _isLiked;
 
         public PlaylistTags(LibLalaTags other) : base(other) { }
         public PlaylistTags(PlaylistTags other) : base(other)
@@ -17,6 +18,7 @@ namespace Lalamachine.ViewModel
             }
 
             IsPlaying = other.IsPlaying;
+            IsLiked = other.IsLiked;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -31,6 +33,16 @@ namespace Lalamachine.ViewModel
             set
             {
                 _isPlaying = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public bool IsLiked
+        {
+            get => _isLiked;
+            set
+            {
+                _isLiked = value;
                 NotifyPropertyChanged();
             }
         }

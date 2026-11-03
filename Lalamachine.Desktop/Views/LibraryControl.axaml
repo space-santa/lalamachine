@@ -20,8 +20,8 @@
                 <ListBox x:Name="AlbumList" ItemsSource="{Binding AlbumList}" SelectionMode="Multiple" SelectionChanged="AlbumList_SelectionChanged">
                     <ListBox.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="Add to current playlist" Command="{Binding AddTracksFromAlbumCommand}" CommandParameter="{Binding #AlbumList.SelectedItems}" />
-                            <MenuItem Header="Create new playlist" Command="{Binding CreateNewPlaylistFromAlbumCommand}" CommandParameter="{Binding #AlbumList.SelectedItems}" />
+                            <MenuItem Header="Add to queue" Command="{Binding AddAlbumsToQueueCommand}" CommandParameter="{Binding #AlbumList.SelectedItems}" />
+                            <MenuItem Header="Replace queue" Command="{Binding ReplaceQueueWithAlbumsCommand}" CommandParameter="{Binding #AlbumList.SelectedItems}" />
                         </ContextMenu>
                     </ListBox.ContextMenu>
                 </ListBox>

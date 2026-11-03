@@ -5,7 +5,8 @@
 lalamachine is just another music player. It features:
 
 - A library with nice filter and search functionality.
-- Playlists which can be exported into a folder.
+- A queue for what to listen to next.
+- Named playlists, and a heart on every track for the ones you like.
 
 ## Dependencies
 

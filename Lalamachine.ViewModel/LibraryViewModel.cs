@@ -60,8 +60,8 @@ namespace Lalamachine.ViewModel
             _startScanCommand = new DelegateCommand(OnStartScan);
             _clearSearchCommand = new DelegateCommand(ClearSearch);
             _updateListsCommand = new DelegateCommand(OnUpdateLists);
-            _createNewPlaylistFromAlbumCommand = new DelegateCommand(OnCreateNewPlaylistFromAlbumCommand);
-            _addTracksFromAlbumCommand = new DelegateCommand(OnAddTracksFromAlbumCommand);
+            _replaceQueueWithAlbumsCommand = new DelegateCommand(OnReplaceQueueWithAlbumsCommand);
+            _addAlbumsToQueueCommand = new DelegateCommand(OnAddAlbumsToQueueCommand);
 
             PropertyChanged += HandlePropertyChanged;
 
@@ -157,29 +157,29 @@ namespace Lalamachine.ViewModel
         public ICommand UpdateListsCommand => _updateListsCommand;
         private void OnUpdateLists(object? obj) { NotifyListsChanged(); }
 
-        private readonly DelegateCommand _createNewPlaylistFromAlbumCommand;
-        public ICommand CreateNewPlaylistFromAlbumCommand => _createNewPlaylistFromAlbumCommand;
-        private void OnCreateNewPlaylistFromAlbumCommand(object? obj)
+        private readonly DelegateCommand _replaceQueueWithAlbumsCommand;
+        public ICommand ReplaceQueueWithAlbumsCommand => _replaceQueueWithAlbumsCommand;
+        private void OnReplaceQueueWithAlbumsCommand(object? obj)
         {
             if (obj is null) { return; }
-            InvokeAddTrackToPlaylistEvent(SelectedNames(obj), true);
+            InvokeAddTracksToQueueEvent(SelectedNames(obj), true);
         }
 
-        private readonly DelegateCommand _addTracksFromAlbumCommand;
-        public ICommand AddTracksFromAlbumCommand => _addTracksFromAlbumCommand;
-        private void OnAddTracksFromAlbumCommand(object? obj)
+        private readonly DelegateCommand _addAlbumsToQueueCommand;
+        public ICommand AddAlbumsToQueueCommand => _addAlbumsToQueueCommand;
+        private void OnAddAlbumsToQueueCommand(object? obj)
         {
             if (obj is null) { return; }
-            InvokeAddTrackToPlaylistEvent(SelectedNames(obj), false);
+            InvokeAddTracksToQueueEvent(SelectedNames(obj), false);
         }
         #endregion
 
         #region Events
-        public event EventHandler<AddTracksToPlaylistEventArgs>? AddTracksToPlaylistEvent;
-        private void InvokeAddTrackToPlaylistEvent(IEnumerable<string> albums, bool newPlaylist)
+        public event EventHandler<AddTracksToQueueEventArgs>? AddTracksToQueueEvent;
+        private void InvokeAddTracksToQueueEvent(IEnumerable<string> albums, bool replaceQueue)
         {
-            var args = new AddTracksToPlaylistEventArgs(albums.SelectMany(album => _model.GetAlbumTracks(album)).ToList(), newPlaylist);
-            AddTracksToPlaylistEvent?.Invoke(this, args);
+            var args = new AddTracksToQueueEventArgs(albums.SelectMany(album => _model.GetAlbumTracks(album)).ToList(), replaceQueue);
+            AddTracksToQueueEvent?.Invoke(this, args);
         }
 
         public event EventHandler<DisplayLibChangedEventArgs>? DisplayLibChanged;

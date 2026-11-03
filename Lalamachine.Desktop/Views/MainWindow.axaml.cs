@@ -28,7 +28,8 @@ namespace Lalamachine.Desktop.Views
     {
         private readonly VlcAudioPlayer _audioPlayer;
         private readonly PlayerViewModel _player;
-        private readonly PlaylistViewModel _playlistViewModel;
+        private readonly QueueViewModel _queueViewModel;
+        private readonly PlaylistsViewModel _playlistsViewModel;
         private readonly ShuffleRepeatViewModel _shuffleRepeatViewModel;
         private readonly MainWindowSettings _settings;
         private readonly SettingsViewModel _settingsViewModel;
@@ -50,35 +51,43 @@ namespace Lalamachine.Desktop.Views
             var dialogs = new AvaloniaDialogService(this);
             _audioPlayer = new VlcAudioPlayer();
             _player = new PlayerViewModel(_audioPlayer, dialogs);
-            _playlistViewModel = new PlaylistViewModel(context, dialogs);
+            _playlistsViewModel = new PlaylistsViewModel(context, dialogs);
+            _queueViewModel = new QueueViewModel(context, dialogs, _playlistsViewModel);
             _shuffleRepeatViewModel = new ShuffleRepeatViewModel();
             _settingsViewModel = new SettingsViewModel(dialogs);
             _libraryViewModel = new LibraryViewModel(context, () => new LalaContext(optionsBuilder.Options), dialogs);
-            _libraryPlaylistViewModel = new LibraryPlaylistViewModel(dialogs);
+            _libraryPlaylistViewModel = new LibraryPlaylistViewModel(dialogs, _playlistsViewModel);
 
-            _shuffleRepeatViewModel.ShuffleRepeatChanged += _playlistViewModel.ShuffleRepeatChangedHandler;
+            _shuffleRepeatViewModel.ShuffleRepeatChanged += _queueViewModel.ShuffleRepeatChangedHandler;
+            _shuffleRepeatViewModel.ShuffleRepeatChanged += _playlistsViewModel.ShuffleRepeatChangedHandler;
             _shuffleRepeatViewModel.ShuffleRepeatChanged += _libraryPlaylistViewModel.ShuffleRepeatChangedHandler;
-            _player.ManualLoadEvent += _playlistViewModel.ManualLoadHandler;
+            _player.ManualLoadEvent += _queueViewModel.ManualLoadHandler;
 
-            _player.PlayNextTrackEvent += _playlistViewModel.PlayNextTrackHandler;
-            _player.PlayLastTrackEvent += _playlistViewModel.PlayLastTrackHandler;
+            _player.PlayNextTrackEvent += _queueViewModel.PlayNextTrackHandler;
+            _player.PlayLastTrackEvent += _queueViewModel.PlayLastTrackHandler;
+            _player.PlayNextPlaylistTrackEvent += _playlistsViewModel.PlayNextTrackHandler;
+            _player.PlayLastPlaylistTrackEvent += _playlistsViewModel.PlayLastTrackHandler;
             _player.PlayNextLibraryTrackEvent += _libraryPlaylistViewModel.PlayNextTrackHandler;
             _player.PlayLastLibraryTrackEvent += _libraryPlaylistViewModel.PlayLastTrackHandler;
 
-            _playlistViewModel.PlayTrackEvent += _player.PlayTrackHandler;
+            _queueViewModel.PlayTrackEvent += _player.PlayTrackHandler;
+            _playlistsViewModel.PlayTrackEvent += _player.PlayTrackHandler;
             _libraryPlaylistViewModel.PlayTrackEvent += _player.PlayTrackHandler;
-            _libraryPlaylistViewModel.AddLibraryTracksToPlaylistEvent += _playlistViewModel.AddTracksToPlaylistHandler;
+            _playlistsViewModel.AddTracksToQueueEvent += _queueViewModel.AddTracksToQueueHandler;
+            _libraryPlaylistViewModel.AddTracksToQueueEvent += _queueViewModel.AddTracksToQueueHandler;
 
             _settingsViewModel.StartScanEvent += StartScanHandler;
             _settingsViewModel.StartScanEvent += _libraryViewModel.StartScanHandler;
             _libraryViewModel.ScanningChanged += _settingsViewModel.ScanningChangedHandler;
+            _libraryViewModel.ScanningChanged += _playlistsViewModel.ScanningChangedHandler;
             _libraryViewModel.DisplayLibChanged += _libraryPlaylistViewModel.DisplayChangedHandler;
             _libraryViewModel.FiltersCleared += _libraryPlaylistViewModel.ClearKeyFilterHandler;
-            _libraryViewModel.AddTracksToPlaylistEvent += _playlistViewModel.AddTracksToPlaylistHandler;
+            _libraryViewModel.AddTracksToQueueEvent += _queueViewModel.AddTracksToQueueHandler;
 
             Player.DataContext = _player;
             Player.ShuffleRepeatButton.DataContext = _shuffleRepeatViewModel;
-            MainPlaylist.DataContext = _playlistViewModel;
+            Queue.DataContext = _queueViewModel;
+            Playlists.DataContext = _playlistsViewModel;
             SettingsPanel.DataContext = _settingsViewModel;
             Library.DataContext = _libraryViewModel;
             Library.LibraryPlaylist.DataContext = _libraryPlaylistViewModel;
@@ -125,7 +134,7 @@ namespace Lalamachine.Desktop.Views
         {
             try
             {
-                _playlistViewModel.SavePlaylist();
+                _queueViewModel.SavePlaylist();
             }
             finally
             {
@@ -136,7 +145,7 @@ namespace Lalamachine.Desktop.Views
 
         private void StartScanHandler(object? sender, StartScanEventArgs e)
         {
-            ListTabs.SelectedIndex = 1;
+            ListTabs.SelectedItem = LibraryTab;
         }
     }
 }

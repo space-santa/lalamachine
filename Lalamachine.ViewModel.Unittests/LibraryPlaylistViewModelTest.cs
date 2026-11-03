@@ -24,7 +24,7 @@ namespace Lalamachine.ViewModel.Unittests
 
         private static LibraryPlaylistViewModel ViewModelWith(params PlaylistTags[] tracks)
         {
-            var viewModel = new LibraryPlaylistViewModel(Substitute.For<IDialogService>());
+            var viewModel = new LibraryPlaylistViewModel(Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
             ShowLibrary(viewModel, tracks);
             return viewModel;
         }
@@ -317,6 +317,33 @@ namespace Lalamachine.ViewModel.Unittests
             ShowLibrary(viewModel, Track("a", "2A"));
 
             Assert.That(viewModel.CurrentIndex, Is.EqualTo(-1));
+        }
+
+        [Test]
+        public void NewLibrarySelection_MarksTheLikedTracks()
+        {
+            var trackPlaylists = Substitute.For<ITrackPlaylists>();
+            trackPlaylists.IsLiked("/path/to/a").Returns(true);
+            var viewModel = new LibraryPlaylistViewModel(Substitute.For<IDialogService>(), trackPlaylists);
+
+            ShowLibrary(viewModel, Track("a", "2A"), Track("b", "2A"));
+
+            Assert.That(viewModel.Playlist.Select(x => x.IsLiked), Is.EqualTo(new[] { true, false }));
+        }
+
+        // A filter makes a new list, but it's the same objects for the tracks that it let through before.
+        [Test]
+        public void LikedChanged_TrackHiddenByTheFilter_IsLikedWhenShownAgain()
+        {
+            var trackPlaylists = Substitute.For<ITrackPlaylists>();
+            var viewModel = new LibraryPlaylistViewModel(Substitute.For<IDialogService>(), trackPlaylists);
+            ShowLibrary(viewModel, Track("a", "2A"), Track("b", "10A"));
+            Tick(viewModel, "10A");
+
+            trackPlaylists.LikedChanged += Raise.EventWith(new LikedChangedEventArgs("/path/to/a", true));
+            viewModel.ClearKeyFilterCommand.Execute(null);
+
+            Assert.That(viewModel.Playlist.Select(x => x.IsLiked), Is.EqualTo(new[] { true, false }));
         }
 
         [TestCase(ShuffleRepeatState.RepeatOne, "/path/to/a")]

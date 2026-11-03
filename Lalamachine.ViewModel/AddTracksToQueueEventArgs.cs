@@ -4,14 +4,14 @@ using LibLala.LibLalaTagReader;
 
 namespace Lalamachine.ViewModel
 {
-    public class AddTracksToPlaylistEventArgs : EventArgs
+    public class AddTracksToQueueEventArgs : EventArgs
     {
-        public AddTracksToPlaylistEventArgs(IList<LibLalaTags> tracks, bool newPlaylist)
+        public AddTracksToQueueEventArgs(IList<LibLalaTags> tracks, bool replaceQueue)
         {
             Tracks = tracks;
-            NewPlaylist = newPlaylist;
+            ReplaceQueue = replaceQueue;
         }
         public IList<LibLalaTags> Tracks { get; }
-        public bool NewPlaylist { get; }
+        public bool ReplaceQueue { get; }
     }
 }

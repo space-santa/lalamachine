@@ -22,9 +22,22 @@ namespace Lalamachine.Desktop.Views
             return new MessageWindow(message).ShowDialog(owner);
         }
 
+        // False when the user cancels or closes the window.
+        public static Task<bool> ConfirmAsync(Window owner, string message)
+        {
+            var window = new MessageWindow(message);
+            window.CancelButton.IsVisible = true;
+            return window.ShowDialog<bool>(owner);
+        }
+
         private void OkButton_Click(object? sender, RoutedEventArgs e)
         {
-            Close();
+            Close(true);
+        }
+
+        private void CancelButton_Click(object? sender, RoutedEventArgs e)
+        {
+            Close(false);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Lalamachine.ViewModel.Unittests
         public void PlayNextTrackHandler_NoTracks_DoesNothing()
         {
             var wasCalled = false;
-            var viewModel = new PlaylistBaseViewModel("LIBRARY", Substitute.For<IDialogService>());
+            var viewModel = new PlaylistBaseViewModel("LIBRARY", Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayNextTrackHandler(null, new System.EventArgs());
             Assert.That(!wasCalled);
@@ -25,7 +25,7 @@ namespace Lalamachine.ViewModel.Unittests
         public void PlayNextTrackHandler_HasTracks_PlayNext()
         {
             var wasCalled = false;
-            var viewModel = new PlaylistBaseViewModel("LIBRARY", Substitute.For<IDialogService>());
+            var viewModel = new PlaylistBaseViewModel("LIBRARY", Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
             viewModel.AddTrack(new LibLalaTagsBuilder("bob", new UncheckedTrackPath("/path/to/bob"), 5).Build());
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayNextTrackHandler(null, new System.EventArgs());
@@ -36,7 +36,7 @@ namespace Lalamachine.ViewModel.Unittests
         public void PlayPreviousTrackHandler_NoTracks_DoesNothing()
         {
             var wasCalled = false;
-            var viewModel = new PlaylistBaseViewModel("LIBRARY", Substitute.For<IDialogService>());
+            var viewModel = new PlaylistBaseViewModel("LIBRARY", Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayLastTrackHandler(null, new System.EventArgs());
             Assert.That(!wasCalled);
@@ -46,7 +46,7 @@ namespace Lalamachine.ViewModel.Unittests
         public void PlayPreviousTrackHandler_HasTracks_PlayPrevious()
         {
             var wasCalled = false;
-            var viewModel = new PlaylistBaseViewModel("LIBRARY", Substitute.For<IDialogService>());
+            var viewModel = new PlaylistBaseViewModel("LIBRARY", Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
             viewModel.AddTrack(new LibLalaTagsBuilder("bob", new UncheckedTrackPath("/path/to/bob"), 5).Build());
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             viewModel.PlayLastTrackHandler(null, new System.EventArgs());
@@ -69,7 +69,7 @@ namespace Lalamachine.ViewModel.Unittests
 
         private static PlaylistBaseViewModel ViewModelWithKeys(params string[] keys)
         {
-            var viewModel = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>());
+            var viewModel = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
             foreach (var key in keys)
             {
                 viewModel.AddTrack(new LibLalaTagsBuilder("bob", new UncheckedTrackPath("/path/to/bob"), 5).WithInitialKey(key).Build());
@@ -79,7 +79,7 @@ namespace Lalamachine.ViewModel.Unittests
 
         private static PlaylistBaseViewModel ViewModelWithBeatsPerMinute(params uint[] values)
         {
-            var viewModel = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>());
+            var viewModel = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
             foreach (var value in values)
             {
                 viewModel.AddTrack(new LibLalaTagsBuilder("bob", new UncheckedTrackPath("/path/to/bob"), 5).WithBeatsPerMinute(value).Build());
@@ -131,7 +131,7 @@ namespace Lalamachine.ViewModel.Unittests
 
         private static PlaylistBaseViewModel ViewModelWithDiscs()
         {
-            var viewModel = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>());
+            var viewModel = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
             foreach (var (disc, track) in new (uint, uint)[] { (2, 1), (1, 2), (2, 2), (1, 1) })
             {
                 viewModel.AddTrack(new LibLalaTagsBuilder($"d{disc}t{track}", new UncheckedTrackPath("/path/to/bob"), 5).WithDiscNumber(disc).WithTrackNumber(track).Build());
@@ -155,29 +155,140 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
-        public void AddTracksToPlaylistHandler_NewPlaylist_ReplacesTheTracks()
+        public void AddTracksToQueueHandler_ReplaceQueue_ReplacesTheTracks()
         {
             var viewModel = ViewModelWithTracks(2, ShuffleRepeatState.None);
             var tracks = new LibLalaTags[] { new LibLalaTagsBuilder("new", new UncheckedTrackPath("/path/to/new"), 5).Build() };
 
-            viewModel.AddTracksToPlaylistHandler(null, new AddTracksToPlaylistEventArgs(tracks, true));
+            viewModel.AddTracksToQueueHandler(null, new AddTracksToQueueEventArgs(tracks, true));
 
             Assert.That(viewModel.Playlist.Select(x => x.Title), Is.EqualTo(new[] { "new" }));
         }
 
         [Test]
-        public void AddTracksToPlaylistHandler_NewPlaylistWithoutTracks_KeepsThePlaylist()
+        public void AddTracksToQueueHandler_ReplaceQueueWithoutTracks_KeepsTheQueue()
         {
             var viewModel = ViewModelWithTracks(2, ShuffleRepeatState.None);
 
-            viewModel.AddTracksToPlaylistHandler(null, new AddTracksToPlaylistEventArgs(new List<LibLalaTags>(), true));
+            viewModel.AddTracksToQueueHandler(null, new AddTracksToQueueEventArgs(new List<LibLalaTags>(), true));
 
             Assert.That(viewModel.Playlist.Select(x => x.Title), Is.EqualTo(new[] { "track0", "track1" }));
         }
 
+        [TestCase(2, 0, new[] { "track2", "track0", "track1" })]
+        [TestCase(0, 2, new[] { "track1", "track2", "track0" })]
+        [TestCase(1, 1, new[] { "track0", "track1", "track2" })]
+        [TestCase(1, 7, new[] { "track0", "track1", "track2" })]
+        public void MoveTrack_MovesItToThatIndex(int from, int to, string[] expected)
+        {
+            var viewModel = ViewModelWithTracks(3, ShuffleRepeatState.None);
+
+            viewModel.MoveTrack(viewModel.Playlist[from], to);
+
+            Assert.That(viewModel.Playlist.Select(x => x.Title), Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void AddTrack_LikedTrack_HasItsHeartFilled()
+        {
+            var trackPlaylists = Substitute.For<ITrackPlaylists>();
+            trackPlaylists.IsLiked("/path/to/liked").Returns(true);
+            var viewModel = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>(), trackPlaylists);
+
+            viewModel.AddTrack(new LibLalaTagsBuilder("liked", new UncheckedTrackPath("/path/to/liked"), 5).Build());
+            viewModel.AddTrack(new LibLalaTagsBuilder("other", new UncheckedTrackPath("/path/to/other"), 5).Build());
+
+            Assert.That(viewModel.Playlist.Select(x => x.IsLiked), Is.EqualTo(new[] { true, false }));
+        }
+
+        [Test]
+        public void LikedChanged_UpdatesEveryCopyOfThatTrack()
+        {
+            var trackPlaylists = Substitute.For<ITrackPlaylists>();
+            var viewModel = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>(), trackPlaylists);
+            var track = new LibLalaTagsBuilder("a", new UncheckedTrackPath("/path/to/a"), 5).Build();
+            viewModel.AddTrack(track);
+            viewModel.AddTrack(new LibLalaTagsBuilder("b", new UncheckedTrackPath("/path/to/b"), 5).Build());
+            viewModel.AddTrack(track);
+
+            trackPlaylists.LikedChanged += Raise.EventWith(new LikedChangedEventArgs("/path/to/a", true));
+
+            Assert.That(viewModel.Playlist.Select(x => x.IsLiked), Is.EqualTo(new[] { true, false, true }));
+        }
+
+        [Test]
+        public void ToggleLiked_GoesToTheNamedPlaylists()
+        {
+            var trackPlaylists = Substitute.For<ITrackPlaylists>();
+            var viewModel = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>(), trackPlaylists);
+            viewModel.AddTrack(new LibLalaTagsBuilder("a", new UncheckedTrackPath("/path/to/a"), 5).Build());
+
+            viewModel.ToggleLikedCommand.Execute(viewModel.Playlist[0]);
+
+            trackPlaylists.Received(1).ToggleLiked(viewModel.Playlist[0]);
+        }
+
+        [TestCase(0, "/path/to/track1")]
+        [TestCase(1, "/path/to/track2")]
+        public void PlayNextTrackHandler_PlayingTrackRemoved_PlaysWhatTookItsPlace(int playing, string expected)
+        {
+            var playedPath = "";
+            var viewModel = ViewModelWithTracks(3, ShuffleRepeatState.None);
+            viewModel.PlayTrackCommand.Execute(viewModel.Playlist[playing]);
+            viewModel.RemoveTrackCommand.Execute(viewModel.Playlist[playing]);
+            viewModel.PlayTrackEvent += (o, e) => playedPath = e.Path;
+
+            viewModel.PlayNextTrackHandler(null, new System.EventArgs());
+
+            Assert.That(playedPath, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void PlayNextTrackHandler_LastTrackPlayingAndRemoved_Stops()
+        {
+            var wasCalled = false;
+            var viewModel = ViewModelWithTracks(3, ShuffleRepeatState.None);
+            viewModel.PlayTrackCommand.Execute(viewModel.Playlist[2]);
+            viewModel.RemoveTrackCommand.Execute(viewModel.Playlist[2]);
+            viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
+
+            viewModel.PlayNextTrackHandler(null, new System.EventArgs());
+
+            Assert.That(!wasCalled);
+        }
+
+        [Test]
+        public void PlayPreviousTrackHandler_PlayingTrackRemoved_PlaysTheOneBeforeIt()
+        {
+            var playedPath = "";
+            var viewModel = ViewModelWithTracks(4, ShuffleRepeatState.None);
+            viewModel.PlayTrackCommand.Execute(viewModel.Playlist[2]);
+            viewModel.RemoveTrackCommand.Execute(viewModel.Playlist[2]);
+            viewModel.PlayTrackEvent += (o, e) => playedPath = e.Path;
+
+            viewModel.PlayLastTrackHandler(null, new System.EventArgs());
+
+            Assert.That(playedPath, Is.EqualTo("/path/to/track1"));
+        }
+
+        [Test]
+        public void PlayNextTrackHandler_RemovedThenPlayedAnother_GoesOnFromThatOne()
+        {
+            var playedPath = "";
+            var viewModel = ViewModelWithTracks(4, ShuffleRepeatState.None);
+            viewModel.PlayTrackCommand.Execute(viewModel.Playlist[2]);
+            viewModel.RemoveTrackCommand.Execute(viewModel.Playlist[2]);
+            viewModel.PlayTrackCommand.Execute(viewModel.Playlist[0]);
+            viewModel.PlayTrackEvent += (o, e) => playedPath = e.Path;
+
+            viewModel.PlayNextTrackHandler(null, new System.EventArgs());
+
+            Assert.That(playedPath, Is.EqualTo("/path/to/track1"));
+        }
+
         private static PlaylistBaseViewModel ViewModelWithTracks(int numberOfTracks, ShuffleRepeatState state)
         {
-            var viewModel = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>()) { PlaylistShuffleRepeatState = state };
+            var viewModel = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>()) { PlaylistShuffleRepeatState = state };
             for (var i = 0; i < numberOfTracks; ++i)
             {
                 viewModel.AddTrack(new LibLalaTagsBuilder($"track{i}", new UncheckedTrackPath($"/path/to/track{i}"), 5).Build());

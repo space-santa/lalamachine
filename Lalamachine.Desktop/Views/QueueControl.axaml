@@ -2,10 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:Lalamachine.Desktop"
              xmlns:vm="using:Lalamachine.ViewModel"
-             x:Class="Lalamachine.Desktop.Views.PlaylistControl"
-             x:DataType="vm:PlaylistViewModel">
+             x:Class="Lalamachine.Desktop.Views.QueueControl"
+             x:DataType="vm:QueueViewModel">
     <Grid RowDefinitions="*,Auto">
-        <DataGrid x:Name="PlaylistGrid"
+        <DataGrid x:Name="QueueGrid"
                   Grid.Row="0"
                   ItemsSource="{Binding Playlist}"
                   IsReadOnly="True"
@@ -13,16 +13,16 @@
                   CanUserReorderColumns="True"
                   CanUserResizeColumns="True"
                   CanUserSortColumns="True"
-                  GridLinesVisibility="None"
-                  DragDrop.AllowDrop="True">
+                  GridLinesVisibility="None">
             <DataGrid.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Remove" Command="{Binding RemoveTrackCommand}" CommandParameter="{Binding #PlaylistGrid.SelectedItem}" />
+                    <MenuItem Header="Remove" Command="{Binding RemoveTrackCommand}" CommandParameter="{Binding #QueueGrid.SelectedItem}" />
                     <MenuItem Header="Remove All" Command="{Binding RemoveAllTracksCommand}" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="🔊" CanUserSort="False" Binding="{Binding IsPlaying, Converter={x:Static local:Converters.PlaylistItemIsPlaying}}" />
+                <DataGridTemplateColumn CanUserSort="False" CellTemplate="{StaticResource HeartCell}" />
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Track" Tag="Track" Binding="{Binding Track}" />
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Disc" Tag="Disc" Binding="{Binding DiscNumber}" />
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Title" Tag="Title" Binding="{Binding Title}" />
@@ -36,10 +36,13 @@
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Year" Tag="Year" Binding="{Binding Year}" />
             </DataGrid.Columns>
         </DataGrid>
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Label Content="{Binding NumberOfTracks}" />
-            <Label Content="Tracks, Total Playtime:" />
-            <Label Content="{Binding TotalPlaytime, Converter={x:Static local:Converters.SecondsToTime}}" />
-        </StackPanel>
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <Label Content="{Binding NumberOfTracks}" />
+                <Label Content="Tracks, Total Playtime:" />
+                <Label Content="{Binding TotalPlaytime, Converter={x:Static local:Converters.SecondsToTime}}" />
+            </StackPanel>
+            <Button Grid.Column="1" Classes="text" Content="Save as playlist" Command="{Binding SaveAsPlaylistCommand}" IsEnabled="{Binding HasTracks}" />
+        </Grid>
     </Grid>
 </UserControl>

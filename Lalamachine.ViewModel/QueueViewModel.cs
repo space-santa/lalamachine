@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Input;
 using LalaDb.Data;
 using LalaDb.Model;
 using LibLala.LibLalaTagReader;
@@ -6,14 +8,25 @@ using LibLala.LibLalaTagReader;
 namespace Lalamachine.ViewModel
 {
 
-    public class PlaylistViewModel : PlaylistBaseViewModel
+    public class QueueViewModel : PlaylistBaseViewModel
     {
         private readonly PlaylistModel _playlistModel;
 
-        public PlaylistViewModel(LalaContext context, IDialogService dialogs) : base("MAIN", dialogs)
+        public QueueViewModel(LalaContext context, IDialogService dialogs, ITrackPlaylists trackPlaylists) : base("MAIN", dialogs, trackPlaylists)
         {
             _playlistModel = new PlaylistModel(context);
+            _saveAsPlaylistCommand = new DelegateCommand(OnSaveAsPlaylist);
             LoadLastPlaylist();
+        }
+
+        private readonly DelegateCommand _saveAsPlaylistCommand;
+        public ICommand SaveAsPlaylistCommand => _saveAsPlaylistCommand;
+        private async void OnSaveAsPlaylist(object? obj)
+        {
+            if (HasTracks)
+            {
+                await TrackPlaylists.SaveAsNewPlaylistAsync(Playlist.ToList<LibLalaTags>()).ConfigureAwait(true);
+            }
         }
 
         private void LoadLastPlaylist()

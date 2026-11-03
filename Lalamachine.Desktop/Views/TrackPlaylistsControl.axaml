@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Lalamachine.ViewModel"
+             x:Class="Lalamachine.Desktop.Views.TrackPlaylistsControl"
+             x:DataType="vm:TrackPlaylistChoices">
+    <DockPanel>
+        <Button DockPanel.Dock="Bottom" Classes="flyoutAction" Content="New playlist" Command="{Binding NewPlaylistCommand}" />
+        <ScrollViewer MaxHeight="500">
+            <ItemsControl ItemsSource="{Binding Choices}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:PlaylistChoice">
+                        <!-- Not as the content itself, that would take the first underscore in a name for an access key. -->
+                        <CheckBox IsChecked="{Binding ContainsTrack}">
+                            <TextBlock Text="{Binding Name}" />
+                        </CheckBox>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

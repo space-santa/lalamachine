@@ -362,66 +362,66 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
-        public void AddTracksFromAlbum_SeveralAlbums_AddsTheTracksOfAll()
+        public void AddAlbumsToQueue_SeveralAlbums_AddsTheTracksOfAll()
         {
             using var connection = OpenDatabase();
             using var context = CreateContext(connection);
             var viewModel = CreateViewModel(connection, context);
-            AddTracksToPlaylistEventArgs? args = null;
-            viewModel.AddTracksToPlaylistEvent += (o, e) => args = e;
+            AddTracksToQueueEventArgs? args = null;
+            viewModel.AddTracksToQueueEvent += (o, e) => args = e;
 
-            viewModel.AddTracksFromAlbumCommand.Execute(new[] { "AliceAlbum1", "BobAlbum2" });
+            viewModel.AddAlbumsToQueueCommand.Execute(new[] { "AliceAlbum1", "BobAlbum2" });
 
             Assert.That(args!.Tracks.Select(track => track.Title), Is.EqualTo(new[] { "a1", "b2" }));
-            Assert.That(args.NewPlaylist, Is.False);
+            Assert.That(args.ReplaceQueue, Is.False);
         }
 
         [Test]
-        public void CreateNewPlaylistFromAlbum_SeveralAlbums_AddsTheTracksOfAll()
+        public void ReplaceQueueWithAlbums_SeveralAlbums_AddsTheTracksOfAll()
         {
             using var connection = OpenDatabase();
             using var context = CreateContext(connection);
             var viewModel = CreateViewModel(connection, context);
-            AddTracksToPlaylistEventArgs? args = null;
-            viewModel.AddTracksToPlaylistEvent += (o, e) => args = e;
+            AddTracksToQueueEventArgs? args = null;
+            viewModel.AddTracksToQueueEvent += (o, e) => args = e;
 
-            viewModel.CreateNewPlaylistFromAlbumCommand.Execute(new[] { "AliceAlbum1", "BobAlbum2" });
+            viewModel.ReplaceQueueWithAlbumsCommand.Execute(new[] { "AliceAlbum1", "BobAlbum2" });
 
             Assert.That(args!.Tracks.Select(track => track.Title), Is.EqualTo(new[] { "a1", "b2" }));
-            Assert.That(args.NewPlaylist, Is.True);
+            Assert.That(args.ReplaceQueue, Is.True);
         }
 
-        private static string[] PlaylistAfterCreatingOneFrom(string[] selectedAlbums)
+        private static string[] QueueAfterReplacingItWith(string[] selectedAlbums)
         {
             using var connection = OpenDatabase();
             using var context = CreateContext(connection);
             var viewModel = CreateViewModel(connection, context);
-            var playlist = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>());
-            viewModel.AddTracksToPlaylistEvent += playlist.AddTracksToPlaylistHandler;
-            viewModel.AddTracksFromAlbumCommand.Execute(new[] { "AliceAlbum1" });
+            var queue = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
+            viewModel.AddTracksToQueueEvent += queue.AddTracksToQueueHandler;
+            viewModel.AddAlbumsToQueueCommand.Execute(new[] { "AliceAlbum1" });
 
-            viewModel.CreateNewPlaylistFromAlbumCommand.Execute(selectedAlbums);
+            viewModel.ReplaceQueueWithAlbumsCommand.Execute(selectedAlbums);
 
-            return playlist.Playlist.Select(track => track.Title).ToArray();
+            return queue.Playlist.Select(track => track.Title).ToArray();
         }
 
         // A list has nothing selected after a filter change.
         [Test]
-        public void CreateNewPlaylistFromAlbum_NothingSelected_KeepsThePlaylist()
+        public void ReplaceQueueWithAlbums_NothingSelected_KeepsTheQueue()
         {
-            Assert.That(PlaylistAfterCreatingOneFrom(System.Array.Empty<string>()), Is.EqualTo(new[] { "a1" }));
+            Assert.That(QueueAfterReplacingItWith(System.Array.Empty<string>()), Is.EqualTo(new[] { "a1" }));
         }
 
         [Test]
-        public void CreateNewPlaylistFromAlbum_AllSelected_KeepsThePlaylist()
+        public void ReplaceQueueWithAlbums_AllSelected_KeepsTheQueue()
         {
-            Assert.That(PlaylistAfterCreatingOneFrom(new[] { LibLala.Constants.ALL }), Is.EqualTo(new[] { "a1" }));
+            Assert.That(QueueAfterReplacingItWith(new[] { LibLala.Constants.ALL }), Is.EqualTo(new[] { "a1" }));
         }
 
         [Test]
-        public void CreateNewPlaylistFromAlbum_AlbumSelected_ReplacesThePlaylist()
+        public void ReplaceQueueWithAlbums_AlbumSelected_ReplacesTheQueue()
         {
-            Assert.That(PlaylistAfterCreatingOneFrom(new[] { "BobAlbum1" }), Is.EqualTo(new[] { "b1" }));
+            Assert.That(QueueAfterReplacingItWith(new[] { "BobAlbum1" }), Is.EqualTo(new[] { "b1" }));
         }
 
         [TestCase(new[] { LibLala.Constants.ALL, "Jazz" }, new[] { "Jazz" }, new[] { "Jazz" })]
@@ -497,7 +497,7 @@ namespace Lalamachine.ViewModel.Unittests
             context.Tracks!.Single(x => x.Title == "a1").InitialKey = "8A";
             context.SaveChanges();
             var viewModel = CreateViewModel(connection, context);
-            var playlist = new LibraryPlaylistViewModel(Substitute.For<IDialogService>());
+            var playlist = new LibraryPlaylistViewModel(Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
             viewModel.DisplayLibChanged += playlist.DisplayChangedHandler;
             viewModel.FiltersCleared += playlist.ClearKeyFilterHandler;
             viewModel.SetGenreFilterCommand.Execute("Rock");
@@ -551,7 +551,7 @@ namespace Lalamachine.ViewModel.Unittests
             context.Tracks!.Single(x => x.Title == "a1").InitialKey = "8A";
             context.SaveChanges();
             var viewModel = CreateViewModel(connection, context);
-            var playlist = new LibraryPlaylistViewModel(Substitute.For<IDialogService>());
+            var playlist = new LibraryPlaylistViewModel(Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
             viewModel.DisplayLibChanged += playlist.DisplayChangedHandler;
             viewModel.FiltersCleared += playlist.ClearKeyFilterHandler;
             viewModel.UpdateListsCommand.Execute(null);
