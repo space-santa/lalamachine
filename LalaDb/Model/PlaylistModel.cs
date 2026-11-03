@@ -135,10 +135,12 @@ namespace LalaDb.Model
                 .ToList();
         }
 
+        // In the order of the playlist. All of them, also the ones the library doesn't have at the moment.
         public IList<string> TrackPaths(string name)
         {
             return PlaylistTracks
                 .Where(x => x.Playlist!.Name == name && x.TrackPath != null)
+                .OrderBy(x => x.Order)
                 .Select(x => x.TrackPath!)
                 .ToList();
         }

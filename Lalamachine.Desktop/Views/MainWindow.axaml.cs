@@ -55,10 +55,10 @@ namespace Lalamachine.Desktop.Views
             _dialogs = new AvaloniaDialogService(this);
             _audioPlayer = new VlcAudioPlayer();
             _player = new PlayerViewModel(_audioPlayer, _dialogs);
-            _playlistsViewModel = new PlaylistsViewModel(context, _dialogs);
+            _settingsViewModel = new SettingsViewModel(_dialogs, context);
+            _playlistsViewModel = new PlaylistsViewModel(context, _dialogs, _settingsViewModel.JellyfinPusher);
             _queueViewModel = new QueueViewModel(context, _dialogs, _playlistsViewModel);
             _shuffleRepeatViewModel = new ShuffleRepeatViewModel();
-            _settingsViewModel = new SettingsViewModel(_dialogs);
             _libraryViewModel = new LibraryViewModel(context, () => new LalaContext(optionsBuilder.Options), _dialogs);
             _libraryPlaylistViewModel = new LibraryPlaylistViewModel(_dialogs, _playlistsViewModel);
 

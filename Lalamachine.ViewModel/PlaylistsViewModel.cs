@@ -17,19 +17,23 @@ namespace Lalamachine.ViewModel
 
         private readonly PlaylistModel _model;
         private readonly IDialogService _dialogs;
+        private readonly IPlaylistPusher? _pusher;
         private readonly HashSet<string> _likedPaths;
         private NamedPlaylistViewModel? _selectedPlaylist;
         // Not always the selected one, looking at another playlist doesn't stop this one from playing on.
         private NamedPlaylistViewModel? _playingPlaylist;
         private ShuffleRepeatState _shuffleRepeatState;
+        private bool _isPushing;
 
-        public PlaylistsViewModel(LalaContext context, IDialogService dialogs)
+        public PlaylistsViewModel(LalaContext context, IDialogService dialogs, IPlaylistPusher? pusher = null)
         {
             _model = new PlaylistModel(context);
             _dialogs = dialogs;
+            _pusher = pusher;
             _addPlaylistCommand = new DelegateCommand(OnAddPlaylist);
             _renamePlaylistCommand = new DelegateCommand(OnRenamePlaylist);
             _deletePlaylistCommand = new DelegateCommand(OnDeletePlaylist);
+            _pushPlaylistCommand = new DelegateCommand(OnPushPlaylist);
 
             var names = _model.PlaylistNames();
             if (!names.Contains(LibLala.Constants.LIKEDPLAYLISTNAME))
@@ -114,7 +118,35 @@ namespace Lalamachine.ViewModel
             Playlists.RemoveAt(index);
             playlist.Close();
         }
+
+        private readonly DelegateCommand _pushPlaylistCommand;
+        public ICommand PushPlaylistCommand => _pushPlaylistCommand;
+        private async void OnPushPlaylist(object? obj)
+        {
+            // The order on screen has to be the one in the database, that's what gets pushed. The UI only offers it then.
+            if (IsPushing || _pusher is null || SelectedPlaylist is not { HasUnsavedOrder: false } playlist) { return; }
+
+            IsPushing = true;
+            try
+            {
+                await _pusher.PushAsync(playlist.Name, _model.TrackPaths(playlist.Name).ToList()).ConfigureAwait(true);
+            }
+            finally
+            {
+                IsPushing = false;
+            }
+        }
         #endregion
+
+        public bool IsPushing
+        {
+            get => _isPushing;
+            private set
+            {
+                _isPushing = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         #region Events
         public event EventHandler<LikedChangedEventArgs>? LikedChanged;

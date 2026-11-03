@@ -16,6 +16,7 @@ namespace Lalamachine.ViewModel.Unittests
         private SettingsFile _settingsFile = null!;
         private JellyfinSettings _settings = null!;
         private IJellyfinClient _client = null!;
+        private IDialogService _dialogs = null!;
 
         [SetUp]
         public void SetUp()
@@ -24,11 +25,12 @@ namespace Lalamachine.ViewModel.Unittests
             _settingsFile.Load().Returns(new Dictionary<string, string>());
             _settings = new JellyfinSettings(_settingsFile);
             _client = Substitute.For<IJellyfinClient>();
+            _dialogs = Substitute.For<IDialogService>();
         }
 
         private JellyfinSettingsViewModel CreateViewModel()
         {
-            return new JellyfinSettingsViewModel(_settings, (_, _) => _client);
+            return new JellyfinSettingsViewModel(_settings, (_, _) => _client, _dialogs, () => [], () => "");
         }
 
         private void ServerHasUsers(params JellyfinUser[] users)
@@ -72,7 +74,7 @@ namespace Lalamachine.ViewModel.Unittests
             {
                 created.Add((serverAddress, apiKey));
                 return _client;
-            })
+            }, _dialogs, () => [], () => "")
             {
                 ServerAddress = "http://server:8096",
                 ApiKey = "abc123",
@@ -94,7 +96,7 @@ namespace Lalamachine.ViewModel.Unittests
             Assert.That(viewModel.Users, Is.EqualTo(new[] { s_bob, s_joe }));
             Assert.That(viewModel.SelectedUser, Is.Null);
             Assert.That(viewModel.Status, Does.Contain("Choose your user"));
-            Assert.That(viewModel.IsTesting, Is.False);
+            Assert.That(viewModel.IsBusy, Is.False);
         }
 
         [Test]
@@ -162,14 +164,14 @@ namespace Lalamachine.ViewModel.Unittests
 
             Assert.That(viewModel.Status, Is.EqualTo("The server doesn't accept this API key."));
             Assert.That(viewModel.SelectedUser, Is.EqualTo(s_bob));
-            Assert.That(viewModel.IsTesting, Is.False);
+            Assert.That(viewModel.IsBusy, Is.False);
         }
 
         [Test]
         public void AddressThatCantBeUsedShowsItsMessage()
         {
             // Not the fake here, the real client refuses the address when it is created.
-            var viewModel = new JellyfinSettingsViewModel(_settings, (serverAddress, apiKey) => new JellyfinClient(serverAddress, apiKey))
+            var viewModel = new JellyfinSettingsViewModel(_settings, (serverAddress, apiKey) => new JellyfinClient(serverAddress, apiKey), _dialogs, () => [], () => "")
             {
                 ServerAddress = "server:8096",
                 ApiKey = "abc123",
@@ -178,7 +180,7 @@ namespace Lalamachine.ViewModel.Unittests
             viewModel.TestConnectionCommand.Execute(null);
 
             Assert.That(viewModel.Status, Does.Contain("whole address"));
-            Assert.That(viewModel.IsTesting, Is.False);
+            Assert.That(viewModel.IsBusy, Is.False);
         }
 
         [Test]
@@ -190,7 +192,7 @@ namespace Lalamachine.ViewModel.Unittests
             var viewModel = CreateViewModel();
             viewModel.TestConnectionCommand.Execute(null);
 
-            Assert.That(viewModel.IsTesting, Is.True);
+            Assert.That(viewModel.IsBusy, Is.True);
             Assert.That(viewModel.Status, Is.EqualTo("Connecting..."));
             viewModel.TestConnectionCommand.Execute(null);
             viewModel.SaveCommand.Execute(null);
@@ -199,7 +201,7 @@ namespace Lalamachine.ViewModel.Unittests
             _settingsFile.DidNotReceive().Save(Arg.Any<Dictionary<string, string>>());
 
             answer.SetResult([s_bob]);
-            Assert.That(viewModel.IsTesting, Is.False);
+            Assert.That(viewModel.IsBusy, Is.False);
             Assert.That(viewModel.SelectedUser, Is.EqualTo(s_bob));
         }
 
@@ -262,6 +264,124 @@ namespace Lalamachine.ViewModel.Unittests
             Assert.That(nextViewModel.ServerAddress, Is.EqualTo("http://server:8096"));
             Assert.That(nextViewModel.ApiKey, Is.EqualTo("abc123"));
             Assert.That(nextViewModel.Users.Single(), Is.EqualTo(s_joe));
+        }
+
+        private JellyfinSettingsViewModel CheckViewModel(string libraryPath = @"D:\Music")
+        {
+            var playlists = new[] { new PlaylistPaths("House", [@"D:\Music\a.mp3", @"D:\Music\b.mp3"]) };
+            return new JellyfinSettingsViewModel(_settings, (_, _) => _client, _dialogs, () => playlists, () => libraryPath) { SelectedUser = s_bob };
+        }
+
+        private void ServerHasTracks(params string[] paths)
+        {
+            var items = paths.Select((path, index) => new JellyfinAudioItem($"id{index}", path)).ToList();
+            _client.GetAudioLibraryAsync(Arg.Any<string>()).Returns(Task.FromResult(new JellyfinAudioLibrary(items, items.Count)));
+        }
+
+        [Test]
+        public void CheckShowsTheReportForTheChosenUser()
+        {
+            ServerHasTracks("/media/music/a.mp3");
+            var viewModel = CheckViewModel();
+
+            viewModel.CheckPlaylistsCommand.Execute(null);
+
+            _client.Received(1).GetAudioLibraryAsync("id-bob");
+            _dialogs.Received(1).ShowMessageAsync(Arg.Is<string>(x => x.Contains("Jellyfin has 1 tracks for Bob.") && x.Contains("House: 1 of 2")));
+            Assert.That(viewModel.Status, Is.Empty);
+            Assert.That(viewModel.IsBusy, Is.False);
+        }
+
+        [Test]
+        public void CheckAsksTheServerWhatIsTypedIn()
+        {
+            var created = new List<(string ServerAddress, string ApiKey)>();
+            ServerHasTracks();
+            var viewModel = new JellyfinSettingsViewModel(_settings, (serverAddress, apiKey) =>
+            {
+                created.Add((serverAddress, apiKey));
+                return _client;
+            }, _dialogs, () => [], () => @"D:\Music")
+            {
+                ServerAddress = "http://server:8096",
+                ApiKey = "abc123",
+                SelectedUser = s_bob,
+            };
+
+            viewModel.CheckPlaylistsCommand.Execute(null);
+
+            Assert.That(created, Is.EqualTo(new[] { ("http://server:8096", "abc123") }));
+        }
+
+        [Test]
+        public void CheckNeedsAUser()
+        {
+            var viewModel = CheckViewModel();
+            viewModel.SelectedUser = null;
+
+            viewModel.CheckPlaylistsCommand.Execute(null);
+
+            Assert.That(viewModel.Status, Does.Contain("choose your user"));
+            _client.DidNotReceive().GetAudioLibraryAsync(Arg.Any<string>());
+            _dialogs.DidNotReceive().ShowMessageAsync(Arg.Any<string>());
+        }
+
+        [Test]
+        public void CheckNeedsALibraryFolder()
+        {
+            var viewModel = CheckViewModel(libraryPath: "");
+
+            viewModel.CheckPlaylistsCommand.Execute(null);
+
+            Assert.That(viewModel.Status, Does.Contain("library folder"));
+            _client.DidNotReceive().GetAudioLibraryAsync(Arg.Any<string>());
+        }
+
+        [Test]
+        public void CheckFailureShowsItsMessageAndNoReport()
+        {
+            _client.GetAudioLibraryAsync(Arg.Any<string>()).Returns(Task.FromException<JellyfinAudioLibrary>(new JellyfinException("The server didn't answer in time.")));
+            var viewModel = CheckViewModel();
+
+            viewModel.CheckPlaylistsCommand.Execute(null);
+
+            Assert.That(viewModel.Status, Is.EqualTo("The server didn't answer in time."));
+            Assert.That(viewModel.IsBusy, Is.False);
+            _dialogs.DidNotReceive().ShowMessageAsync(Arg.Any<string>());
+        }
+
+        [Test]
+        public void CheckDoesntSaveAnything()
+        {
+            ServerHasTracks("/media/music/a.mp3");
+            var viewModel = CheckViewModel();
+            viewModel.ServerAddress = "http://server:8096";
+            _settingsFile.ClearReceivedCalls();
+
+            viewModel.CheckPlaylistsCommand.Execute(null);
+
+            _settingsFile.DidNotReceive().Save(Arg.Any<Dictionary<string, string>>());
+        }
+
+        [Test]
+        public void WhileCheckingNothingElseStarts()
+        {
+            var answer = new TaskCompletionSource<JellyfinAudioLibrary>();
+            _client.GetAudioLibraryAsync(Arg.Any<string>()).Returns(answer.Task);
+            ServerHasUsers(s_bob);
+            var viewModel = CheckViewModel();
+            viewModel.CheckPlaylistsCommand.Execute(null);
+
+            Assert.That(viewModel.IsBusy, Is.True);
+            Assert.That(viewModel.Status, Does.Contain("Reading"));
+            viewModel.CheckPlaylistsCommand.Execute(null);
+            viewModel.TestConnectionCommand.Execute(null);
+            _client.Received(1).GetAudioLibraryAsync(Arg.Any<string>());
+            _client.DidNotReceive().GetUsersAsync();
+
+            answer.SetResult(new JellyfinAudioLibrary([], 0));
+            Assert.That(viewModel.IsBusy, Is.False);
+            _dialogs.Received(1).ShowMessageAsync(Arg.Any<string>());
         }
     }
 }

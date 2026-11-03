@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Authentication;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using LibLala.Jellyfin;
@@ -12,9 +14,13 @@ namespace LibLala.Unittests.Jellyfin
 {
     internal sealed class FakeHandler : HttpMessageHandler
     {
-        private readonly Func<HttpResponseMessage> _respond;
+        private readonly Func<HttpRequestMessage, HttpResponseMessage> _respond;
 
-        public FakeHandler(Func<HttpResponseMessage> respond)
+        public FakeHandler(Func<HttpResponseMessage> respond) : this(_ => respond())
+        {
+        }
+
+        public FakeHandler(Func<HttpRequestMessage, HttpResponseMessage> respond)
         {
             _respond = respond;
         }
@@ -22,15 +28,21 @@ namespace LibLala.Unittests.Jellyfin
         public Uri? RequestUri { get; private set; }
         public HttpMethod? RequestMethod { get; private set; }
         public string? RequestAuthorization { get; private set; }
+        public int RequestCount { get; private set; }
+        public string? RequestBody { get; private set; }
+        public long? RequestContentLength { get; private set; }
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             RequestUri = request.RequestUri;
             RequestMethod = request.Method;
             RequestAuthorization = request.Headers.Authorization?.ToString();
-            return Task.FromResult(_respond());
+            RequestContentLength = request.Content?.Headers.ContentLength;
+            RequestBody = request.Content is null ? null : await request.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            RequestCount++;
+            return _respond(request);
         }
     }
 
@@ -141,6 +153,14 @@ namespace LibLala.Unittests.Jellyfin
             Assert.That(e?.Message, Does.Contain(expected));
         }
 
+        [Test]
+        public async Task AServerErrorIsntBlamedOnTheAddress()
+        {
+            var e = await GetUsersFailure(() => Json("", HttpStatusCode.InternalServerError)).ConfigureAwait(false);
+
+            Assert.That(e?.Message, Is.EqualTo("The server answered with error 500."));
+        }
+
         [TestCase("<html>Router login</html>")]
         [TestCase("{\"Name\":\"Bob\"}")]
         [TestCase("null")]
@@ -204,6 +224,132 @@ namespace LibLala.Unittests.Jellyfin
             var users = await client.GetUsersAsync().ConfigureAwait(false);
 
             Assert.That(users.Select(x => x.Name), Is.EqualTo(new[] { "Bob" }));
+        }
+
+        private static string ItemsPage(int total, params (string Id, string? Path)[] items)
+        {
+            var json = items.Select(x => JsonSerializer.Serialize(new { Name = "A title", x.Id, x.Path, Type = "Audio" }));
+            return $$"""{"Items":[{{string.Join(",", json)}}],"TotalRecordCount":{{total}},"StartIndex":0}""";
+        }
+
+        private static (string Id, string? Path)[] Tracks(int first, int count)
+        {
+            return Enumerable.Range(first, count).Select(i => ($"id{i}", (string?)$"/media/{i}.mp3")).ToArray();
+        }
+
+        private static async Task<JellyfinAudioLibrary> GetLibrary(FakeHandler handler)
+        {
+            using var httpClient = new HttpClient(handler);
+            var client = new JellyfinClient("http://server:8096/jellyfin", "abc123", httpClient);
+            return await client.GetAudioLibraryAsync("user id").ConfigureAwait(false);
+        }
+
+        [Test]
+        public async Task AsksForTheTracksOfTheUserWithTheirPaths()
+        {
+            using var handler = new FakeHandler(() => Json(ItemsPage(1, ("id1", "/media/1.mp3"))));
+
+            var library = await GetLibrary(handler).ConfigureAwait(false);
+
+            Assert.That(library.Items, Is.EqualTo(new[] { new JellyfinAudioItem("id1", "/media/1.mp3") }));
+            Assert.That(library.ReportedTotal, Is.EqualTo(1));
+            Assert.That(handler.RequestMethod, Is.EqualTo(HttpMethod.Get));
+            Assert.That(handler.RequestAuthorization, Is.EqualTo("MediaBrowser Token=\"abc123\""));
+            Assert.That(handler.RequestUri?.AbsolutePath, Is.EqualTo("/jellyfin/Items"));
+            var query = handler.RequestUri?.Query;
+            Assert.That(query, Does.Contain("userId=user%20id"));
+            Assert.That(query, Does.Contain("recursive=true"));
+            Assert.That(query, Does.Contain("includeItemTypes=Audio"));
+            Assert.That(query, Does.Contain("fields=Path"));
+            Assert.That(query, Does.Contain("startIndex=0"));
+        }
+
+        [Test]
+        public async Task ReadsAllThePages()
+        {
+            var startIndexes = new List<string>();
+            using var handler = new FakeHandler(request =>
+            {
+                var query = request.RequestUri!.Query;
+                startIndexes.Add(query[(query.IndexOf("startIndex=", StringComparison.Ordinal) + "startIndex=".Length)..].Split('&')[0]);
+                return startIndexes.Count == 1 ? Json(ItemsPage(503, Tracks(0, 500))) : Json(ItemsPage(503, Tracks(500, 3)));
+            });
+
+            var library = await GetLibrary(handler).ConfigureAwait(false);
+
+            Assert.That(library.Items, Has.Count.EqualTo(503));
+            Assert.That(library.ReportedTotal, Is.EqualTo(503));
+            Assert.That(startIndexes, Is.EqualTo(new[] { "0", "500" }));
+        }
+
+        [Test]
+        public async Task StopsWhenAPageIsEmptyEvenIfMoreWereReported()
+        {
+            var pages = 0;
+            using var handler = new FakeHandler(() => Json(++pages == 1 ? ItemsPage(9, Tracks(0, 2)) : ItemsPage(9)));
+
+            var library = await GetLibrary(handler).ConfigureAwait(false);
+
+            Assert.That(handler.RequestCount, Is.EqualTo(2));
+            Assert.That(library.Items, Has.Count.EqualTo(2));
+            Assert.That(library.ReportedTotal, Is.EqualTo(9));
+        }
+
+        [Test]
+        public async Task ATrackInTwoPagesCountsOnce()
+        {
+            var pages = 0;
+            using var handler = new FakeHandler(() => Json(++pages == 1 ? ItemsPage(3, Tracks(0, 2)) : ItemsPage(3, Tracks(1, 1))));
+
+            var library = await GetLibrary(handler).ConfigureAwait(false);
+
+            Assert.That(library.Items.Select(x => x.Id), Is.EqualTo(new[] { "id0", "id1" }));
+            Assert.That(library.ReportedTotal, Is.EqualTo(3));
+        }
+
+        [Test]
+        public async Task TracksWithoutAPathAreLeftOutButStillCountAsReported()
+        {
+            using var handler = new FakeHandler(() => Json(ItemsPage(2, ("id1", "/media/1.mp3"), ("id2", null))));
+
+            var library = await GetLibrary(handler).ConfigureAwait(false);
+
+            Assert.That(library.Items.Select(x => x.Id), Is.EqualTo(new[] { "id1" }));
+            Assert.That(library.ReportedTotal, Is.EqualTo(2));
+        }
+
+        [Test]
+        public async Task NoPathsAtAllIsAFailure()
+        {
+            using var handler = new FakeHandler(() => Json(ItemsPage(2, ("id1", null), ("id2", null))));
+
+            var e = await Assert.ThrowsAsync<JellyfinException>(async () => await GetLibrary(handler).ConfigureAwait(false)).ConfigureAwait(false);
+
+            Assert.That(e?.Message, Does.Contain("doesn't say where the files are"));
+        }
+
+        [Test]
+        public async Task EmptyLibraryIsNotAFailure()
+        {
+            using var handler = new FakeHandler(() => Json(ItemsPage(0)));
+
+            var library = await GetLibrary(handler).ConfigureAwait(false);
+
+            Assert.That(library.Items, Is.Empty);
+            Assert.That(handler.RequestCount, Is.EqualTo(1));
+        }
+
+        [TestCase("<html>Router login</html>")]
+        [TestCase("null")]
+        [TestCase("[]")]
+        [TestCase("{\"TotalRecordCount\":3}")]
+        public async Task AnswerThatIsntAListOfItemsIsNotJellyfin(string body)
+        {
+            using var handler = new FakeHandler(() => Json(body));
+
+            var e = await Assert.ThrowsAsync<JellyfinException>(async () => await GetLibrary(handler).ConfigureAwait(false)).ConfigureAwait(false);
+
+            Assert.That(e?.Message, Does.Contain("doesn't look like a Jellyfin server"));
         }
     }
 }

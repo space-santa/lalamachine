@@ -20,7 +20,7 @@
                   RowDefinitions="Auto,Auto,Auto,Auto,Auto"
                   RowSpacing="4"
                   ColumnSpacing="8"
-                  IsEnabled="{Binding !IsTesting}">
+                  IsEnabled="{Binding !IsBusy}">
                 <TextBlock Grid.Row="0" Grid.Column="0" Classes="label" Text="Server address" />
                 <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ServerAddress}" PlaceholderText="http://192.168.1.10:8096" />
 
@@ -44,6 +44,7 @@
                 <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Spacing="4">
                     <Button Classes="text" Content="Test connection" Command="{Binding TestConnectionCommand}" />
                     <Button Classes="text" Content="Save" Command="{Binding SaveCommand}" />
+                    <Button Classes="text" Content="Check playlists" Command="{Binding CheckPlaylistsCommand}" ToolTip.Tip="Shows which tracks of the playlists Jellyfin has. Nothing gets changed." />
                 </StackPanel>
 
                 <TextBlock Grid.Row="4" Grid.Column="1" Classes="label" Text="{Binding Status}" TextWrapping="Wrap" />

@@ -8,7 +8,10 @@
         CanResize="False"
         WindowStartupLocation="CenterOwner">
     <StackPanel Margin="16" Spacing="16">
-        <SelectableTextBlock x:Name="MessageText" TextWrapping="Wrap" FontSize="18" Foreground="White" />
+        <!-- Some messages are long reports, the window has to fit on the screen. -->
+        <ScrollViewer MaxHeight="600" HorizontalScrollBarVisibility="Disabled">
+            <SelectableTextBlock x:Name="MessageText" TextWrapping="Wrap" FontSize="18" Foreground="White" />
+        </ScrollViewer>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
             <Button Content="OK" IsDefault="True" Click="OkButton_Click" />
             <Button x:Name="CancelButton" Content="Cancel" IsCancel="True" IsVisible="False" Click="CancelButton_Click" />

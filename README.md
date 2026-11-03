@@ -7,6 +7,7 @@ lalamachine is just another music player. It features:
 - A library with nice filter and search functionality.
 - A queue for what to listen to next.
 - Named playlists, and a heart on every track for the ones you like.
+- Pushing a playlist to your Jellyfin server, with the same tracks in the same order.
 
 ## Dependencies
 
@@ -20,6 +21,28 @@ Either use the installer from the release section, or clone the repo and
 ```bash
 dotnet run --project Lalamachine.Desktop
 ```
+
+## Jellyfin
+
+lalamachine can copy a playlist to a Jellyfin server. The server only needs an API key, no plugin.
+
+1. Create an API key in Jellyfin's dashboard.
+2. In lalamachine's settings, enter the server address and the key, press **Test connection**, choose your user and
+   press **Save**.
+3. Press **Check playlists** to see which of your tracks Jellyfin has. This changes nothing.
+4. Select a playlist and press **Push to Jellyfin**. If you changed its order, save or discard that first, the button
+   is hidden until then.
+
+Good to know:
+
+- A track is found when its path in Jellyfin ends with its path inside your library folder, so both need the same
+  folders. Tracks Jellyfin doesn't have get listed, and you decide whether to push without them.
+- A new playlist is private to the chosen user.
+- Pushing a playlist again replaces its tracks in Jellyfin, so changes made there get lost. It asks first.
+- The push is manual and one-way. Renaming a playlist in lalamachine creates a second one in Jellyfin on the next push,
+  and deleting one doesn't reach Jellyfin.
+- On Windows the API key is stored encrypted for your user. On macOS and Linux it's in a file only you can read, but
+  it isn't encrypted.
 
 ## Test
 
