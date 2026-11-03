@@ -22,15 +22,11 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 # The debug symbols of Skia and HarfBuzz, 100 MB that are no use to anyone who installs the app.
 Remove-Item (Join-Path $publishPath "libSkiaSharp.pdb"), (Join-Path $publishPath "libHarfBuzzSharp.pdb") -ErrorAction SilentlyContinue
 
-# The app's project file has the version, copy it into the installer project.
+# The app's project file has the version, the one in install-forge.ifp is only a placeholder.
 $version = ([xml](Get-Content $appProject -Raw)).Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1
 if (-not $version) { throw "No <Version> in $appProject" }
-$installer = Get-Content $installerProject -Raw
-$versioned = $installer -replace '(?<=<ProductInformation>[\s\S]*?<Version>)[^<]*(?=</Version>)', $version
-if ($versioned -ne $installer) {
-  [IO.File]::WriteAllText($installerProject, $versioned)
-  Write-Host "Set the installer version to $version in install-forge.ifp, commit that."
-}
+$versioned = [IO.File]::ReadAllText($installerProject) -replace '(?<=<ProductInformation>[\s\S]*?<Version>)[^<]*(?=</Version>)', $version
+if (([xml]$versioned).InstallForgeProject.ProductInformation.Version -ne $version) { throw "No <Version> in $installerProject" }
 
 # InstallForge packages a fixed list of files and folders. Don't let something new in the publish output silently go missing.
 $packaged = ([xml]$versioned).InstallForgeProject.InstallerConfiguration.InstallationFiles.InstallationFile | ForEach-Object { $_.'#text' }
@@ -41,16 +37,20 @@ $setup = "dist\lalamachine_$version.exe"
 New-Item -ItemType Directory -Force (Join-Path $PSScriptRoot "dist") | Out-Null
 # Not straight into dist\. A window showing that folder can hold the new file open, and the builder then can't add the setup's manifest.
 $stagedSetup = Join-Path ([IO.Path]::GetTempPath()) "lalamachine_$version.exe"
+# The builder can't be given a version, so it gets a copy of the project that has it. Its paths go by the current directory, not by where the file is.
+$stagedProject = Join-Path ([IO.Path]::GetTempPath()) "lalamachine_$version.ifp"
+[IO.File]::WriteAllText($stagedProject, $versioned)
 Push-Location $PSScriptRoot
 try {
   # The builder writes to stderr. Collect it rather than letting PowerShell turn it into an error.
   $ErrorActionPreference = "Continue"
-  $output = & $builder --no-color -i $installerProject -o $stagedSetup 2>&1 | ForEach-Object { "$_" }
+  $output = & $builder --no-color -i $stagedProject -o $stagedSetup 2>&1 | ForEach-Object { "$_" }
   $exitCode = $LASTEXITCODE
   $ErrorActionPreference = "Stop"
 }
 finally {
   Pop-Location
+  Remove-Item $stagedProject -ErrorAction SilentlyContinue
 }
 
 $output | Write-Host

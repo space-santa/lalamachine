@@ -52,8 +52,16 @@ dotnet test
 
 ## Release
 
-Needs [InstallForge](https://installforge.net) 1.6 or later. Set `<Version>` in `Lalamachine.Desktop\Lalamachine.Desktop.csproj`,
-then run `.\build-release.ps1`. It publishes the app and builds `dist\lalamachine_<version>.exe`.
+Needs [InstallForge](https://installforge.net) 1.6 or later.
+
+1. Run `.\prepare-release.ps1 <version>`. It sets `<Version>` in `Lalamachine.Desktop\Lalamachine.Desktop.csproj` and
+   turns the fragments in `changes\` into a new entry in `CHANGELOG`. Without a version it only shows what the entry
+   would look like.
+2. Look it over and commit it.
+3. Run `.\build-release.ps1`. It publishes the app and builds `dist\lalamachine_<version>.exe`.
+
+The project file is the only place with the version. The one in `install-forge.ifp` stays at 0.0.0, the script builds
+from a copy that has the real one.
 
 `install-forge.ifp` uses paths relative to the repository root, and InstallForge resolves them against the current
 directory. So build with the script, not from the InstallForge window. The window stores files you add there as
@@ -65,6 +73,7 @@ If you'd like to contribute to lalamachine,
 
 - Test. Either by using the app or by adding to the unit tests.
 - Write code and create a pull request. [There is a list of issues that wants to be resolved.](https://github.com/space-santa/lalamachine/issues)
+  If people using the app would notice your change, [add a changelog fragment](changes/README.md).
 - Let me know how you like the app and what functionality is missing.
 
 ## Licence
