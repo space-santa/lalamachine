@@ -10,7 +10,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="vm:PlaylistChoice">
                         <!-- Not as the content itself, that would take the first underscore in a name for an access key. -->
-                        <CheckBox IsChecked="{Binding ContainsTrack}">
+                        <CheckBox IsChecked="{Binding ContainsTracks}">
                             <TextBlock Text="{Binding Name}" />
                         </CheckBox>
                     </DataTemplate>

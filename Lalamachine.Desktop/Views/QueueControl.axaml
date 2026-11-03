@@ -42,7 +42,13 @@
                 <Label Content="Tracks, Total Playtime:" />
                 <Label Content="{Binding TotalPlaytime, Converter={x:Static local:Converters.SecondsToTime}}" />
             </StackPanel>
-            <Button Grid.Column="1" Classes="text" Content="Save as playlist" Command="{Binding SaveAsPlaylistCommand}" IsEnabled="{Binding HasTracks}" />
+            <Button Grid.Column="1"
+                    Classes="text"
+                    Content="Save as playlist"
+                    Command="{Binding SaveAsPlaylistCommand}"
+                    IsEnabled="{Binding CanSaveAsPlaylist}"
+                    ToolTip.Tip="Tracks added with Load can't be in a playlist."
+                    ToolTip.ShowOnDisabled="True" />
         </Grid>
     </Grid>
 </UserControl>

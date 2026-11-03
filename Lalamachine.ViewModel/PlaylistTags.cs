@@ -19,7 +19,11 @@ namespace Lalamachine.ViewModel
 
             IsPlaying = other.IsPlaying;
             IsLiked = other.IsLiked;
+            IsOutsideLibrary = other.IsOutsideLibrary;
         }
+
+        // Loaded by hand, also if the library happens to have the file. It can play in the queue but not be in a playlist.
+        public bool IsOutsideLibrary { get; init; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")

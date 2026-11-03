@@ -7,31 +7,33 @@ namespace Lalamachine.ViewModel
     public sealed class PlaylistChoice : BaseNotifyPropertyChanged
     {
         private readonly Action<bool> _changed;
-        private bool _containsTrack;
+        private bool _containsTracks;
 
-        public PlaylistChoice(string name, bool containsTrack, Action<bool> changed)
+        public PlaylistChoice(string name, bool containsTracks, Action<bool> changed)
         {
             Name = name;
-            _containsTrack = containsTrack;
+            _containsTracks = containsTracks;
             _changed = changed;
         }
 
         public string Name { get; }
 
-        public bool ContainsTrack
+        // True only if it has all of them. Ticking adds the ones it doesn't have, unticking removes them all.
+        public bool ContainsTracks
         {
-            get => _containsTrack;
+            get => _containsTracks;
             set
             {
-                if (value == _containsTrack) { return; }
-                _containsTrack = value;
-                NotifyPropertyChanged();
+                if (value == _containsTracks) { return; }
+                // First, if that fails it isn't ticked.
                 _changed(value);
+                _containsTracks = value;
+                NotifyPropertyChanged();
             }
         }
     }
 
-    // All the playlists, and which of them have a track. Ticking one changes it right away.
+    // All the playlists, and which of them have the tracks. Ticking one changes it right away.
     public sealed class TrackPlaylistChoices
     {
         public TrackPlaylistChoices(ObservableCollection<PlaylistChoice> choices, ICommand newPlaylistCommand)

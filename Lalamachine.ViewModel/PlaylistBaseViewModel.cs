@@ -73,6 +73,8 @@ namespace Lalamachine.ViewModel
             }
 
             Sort(sortMessage);
+            // Sorted, the place of a removed track doesn't mean anything any more.
+            _removedPlayingIndex = -1;
             NotifyPropertyChanged(nameof(Playlist));
         }
 
@@ -281,9 +283,14 @@ namespace Lalamachine.ViewModel
         {
             ArgumentNullException.ThrowIfNull(track);
 
+            var index = Playlist.IndexOf(track);
             if (track.IsPlaying)
             {
-                _removedPlayingIndex = Playlist.IndexOf(track);
+                _removedPlayingIndex = index;
+            }
+            else if (index >= 0 && index < _removedPlayingIndex)
+            {
+                --_removedPlayingIndex;
             }
             Playlist.Remove(track);
             NotifyPropertyChanged(nameof(Playlist));
@@ -316,8 +323,10 @@ namespace Lalamachine.ViewModel
         public ICommand ToggleLikedCommand => _toggleLikedCommand;
         private void OnToggleLikedCommand(object? obj)
         {
-            if (obj is null) { return; }
-            TrackPlaylists.ToggleLiked((PlaylistTags)obj);
+            if (obj is PlaylistTags { IsOutsideLibrary: false } track)
+            {
+                TrackPlaylists.ToggleLiked(track);
+            }
         }
         #endregion
 
@@ -400,7 +409,7 @@ namespace Lalamachine.ViewModel
                 return;
             }
 
-            foreach (var track in AllTracks.Where(x => x.Path == e.Path))
+            foreach (var track in AllTracks.Where(x => e.Paths.Contains(x.Path)))
             {
                 track.IsLiked = e.IsLiked;
             }
@@ -431,6 +440,8 @@ namespace Lalamachine.ViewModel
             // Not Move, the grid doesn't show that.
             Playlist.RemoveAt(oldIndex);
             Playlist.Insert(newIndex, track);
+            // What comes next after a removed playing track stays next, when another track moves across its place.
+            _removedPlayingIndex += (newIndex < _removedPlayingIndex ? 1 : 0) - (oldIndex < _removedPlayingIndex ? 1 : 0);
             NotifyPropertyChanged(nameof(Playlist));
         }
 
@@ -478,17 +489,21 @@ namespace Lalamachine.ViewModel
         {
             get
             {
-                var position = CurrentIndex >= 0 ? CurrentIndex : _removedPlayingIndex;
-                var previousIndex = Math.Clamp(position - 1, 0, Playlist.Count - 1);
+                var previousIndex = Math.Clamp(PlayingPosition - 1, 0, Playlist.Count - 1);
                 return Playlist[previousIndex];
             }
         }
 
+        // Of the playing track, or of the one that was playing until it got removed. -1 if there is neither.
+        protected int PlayingPosition => CurrentIndex >= 0 ? CurrentIndex : _removedPlayingIndex;
+
         public ObservableCollection<PlaylistTags> Playlist { get; private set; }
 
-        protected void ReplacePlaylist(IEnumerable<PlaylistTags> tracks)
+        // A place in the old list means nothing in a new one, so it takes the new place of a removed playing track, if it has one.
+        protected void ReplacePlaylist(IEnumerable<PlaylistTags> tracks, int removedPlayingIndex = -1)
         {
             Playlist = new ObservableCollection<PlaylistTags>(tracks);
+            _removedPlayingIndex = removedPlayingIndex;
         }
 
         public ShuffleRepeatState PlaylistShuffleRepeatState { get; set; }
@@ -569,7 +584,7 @@ namespace Lalamachine.ViewModel
             try
             {
                 var tags = new TagReader().Read(path);
-                AddTrack(tags);
+                AddTrack(new PlaylistTags(tags) { IsOutsideLibrary = true });
             }
             catch (TagReaderException ex)
             {

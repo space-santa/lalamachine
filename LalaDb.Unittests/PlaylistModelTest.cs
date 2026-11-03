@@ -55,10 +55,7 @@ namespace LalaDb.Unittests
         private void CreateWith(string playlist, params string[] titles)
         {
             _model.CreatePlaylist(playlist);
-            foreach (var title in titles)
-            {
-                _model.AddTrack(playlist, PathOf(title));
-            }
+            _model.AddTracks(playlist, titles.Select(PathOf));
         }
 
         [Test]
@@ -71,15 +68,27 @@ namespace LalaDb.Unittests
         }
 
         [Test]
-        public void AddTrack_GoesToTheEnd()
+        public void AddTracks_GoToTheEndInTheGivenOrder()
         {
-            CreateWith("list", "b", "a");
+            CreateWith("list", "b");
 
-            Assert.That(Titles("list"), Is.EqualTo(new[] { "b", "a" }));
+            _model.AddTracks("list", [PathOf("c"), PathOf("a")]);
+
+            Assert.That(Titles("list"), Is.EqualTo(new[] { "b", "c", "a" }));
         }
 
         [Test]
-        public void AddTrack_AlreadyThere_DoesNotAddItAgain()
+        public void AddTracks_SomeAlreadyThere_AddsOnlyTheOthers()
+        {
+            CreateWith("list", "a", "b");
+
+            _model.AddTracks("list", [PathOf("c"), PathOf("a")]);
+
+            Assert.That(Titles("list"), Is.EqualTo(new[] { "a", "b", "c" }));
+        }
+
+        [Test]
+        public void AddTracks_SameTrackTwice_AddsItOnce()
         {
             CreateWith("list", "a", "a");
 
@@ -87,35 +96,45 @@ namespace LalaDb.Unittests
         }
 
         [Test]
-        public void AddTrack_NoSuchPlaylist_DoesNothing()
+        public void AddTracks_NoSuchPlaylist_DoesNothing()
         {
-            _model.AddTrack("not there", PathOf("a"));
+            _model.AddTracks("not there", [PathOf("a")]);
 
             Assert.That(_model.PlaylistNames(), Is.Empty);
             Assert.That(_context.PlaylistTracks!.Count(), Is.EqualTo(0));
         }
 
         [Test]
-        public void AddTrack_AfterRemovingOne_DoesNotReuseItsPlace()
+        public void AddTracks_AfterRemovingOne_DoesNotReuseItsPlace()
         {
             CreateWith("list", "a", "b");
-            _model.RemoveTrack("list", PathOf("a"));
+            _model.RemoveTracks("list", [PathOf("a")]);
 
-            _model.AddTrack("list", PathOf("c"));
+            _model.AddTracks("list", [PathOf("c")]);
 
             Assert.That(Titles("list"), Is.EqualTo(new[] { "b", "c" }));
         }
 
         [Test]
-        public void RemoveTrack_OnlyFromThatPlaylist()
+        public void RemoveTracks_OnlyFromThatPlaylist()
         {
             CreateWith("one", "a", "b");
             CreateWith("two", "a");
 
-            _model.RemoveTrack("one", PathOf("a"));
+            _model.RemoveTracks("one", [PathOf("a")]);
 
             Assert.That(Titles("one"), Is.EqualTo(new[] { "b" }));
             Assert.That(Titles("two"), Is.EqualTo(new[] { "a" }));
+        }
+
+        [Test]
+        public void RemoveTracks_SeveralAtOnce_LeavesTheOthers()
+        {
+            CreateWith("list", "a", "b", "c");
+
+            _model.RemoveTracks("list", [PathOf("a"), PathOf("c")]);
+
+            Assert.That(Titles("list"), Is.EqualTo(new[] { "b" }));
         }
 
         [Test]
@@ -167,8 +186,7 @@ namespace LalaDb.Unittests
         public void SaveOrder_TrackNotInTheLibrary_StaysInThePlaylistAtTheEnd()
         {
             CreateWith("list", "a");
-            _model.AddTrack("list", "/unplugged/d.mp3");
-            _model.AddTrack("list", PathOf("b"));
+            _model.AddTracks("list", ["/unplugged/d.mp3", PathOf("b")]);
 
             _model.SaveOrder("list", new[] { PathOf("b"), PathOf("a") });
 
@@ -178,14 +196,40 @@ namespace LalaDb.Unittests
         }
 
         [Test]
-        public void PlaylistsContaining_ListsThePlaylistsWithTheTrack()
+        public void PlaylistsContainingAll_OneTrack_ListsThePlaylistsWithIt()
         {
             CreateWith("one", "a");
             CreateWith("two", "b");
             CreateWith("three", "a", "b");
 
-            Assert.That(_model.PlaylistsContaining(PathOf("a")), Is.EquivalentTo(new[] { "one", "three" }));
-            Assert.That(_model.PlaylistsContaining(PathOf("c")), Is.Empty);
+            Assert.That(_model.PlaylistsContainingAll([PathOf("a")]), Is.EquivalentTo(new[] { "one", "three" }));
+            Assert.That(_model.PlaylistsContainingAll([PathOf("c")]), Is.Empty);
+        }
+
+        [Test]
+        public void PlaylistsContainingAll_SeveralTracks_LeavesOutTheOnesWithOnlySomeOfThem()
+        {
+            CreateWith("one", "a");
+            CreateWith("two", "b");
+            CreateWith("three", "a", "b", "c");
+
+            Assert.That(_model.PlaylistsContainingAll([PathOf("a"), PathOf("b")]), Is.EqualTo(new[] { "three" }));
+        }
+
+        [Test]
+        public void PlaylistsContainingAll_SameTrackTwice_CountsItOnce()
+        {
+            CreateWith("one", "a");
+
+            Assert.That(_model.PlaylistsContainingAll([PathOf("a"), PathOf("a")]), Is.EqualTo(new[] { "one" }));
+        }
+
+        [Test]
+        public void PlaylistsContainingAll_NoTracks_IsEmpty()
+        {
+            CreateWith("one", "a");
+
+            Assert.That(_model.PlaylistsContainingAll([]), Is.Empty);
         }
 
         [Test]

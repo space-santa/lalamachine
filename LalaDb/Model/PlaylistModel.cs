@@ -75,23 +75,32 @@ namespace LalaDb.Model
             _context.SaveChanges();
         }
 
-        // Does nothing if the playlist already has the track.
-        public void AddTrack(string name, string path)
+        // To the end, in the given order. A playlist has each track once, so it skips the ones that are already there.
+        public void AddTracks(string name, IEnumerable<string> paths)
         {
             var playlist = Playlists.FirstOrDefault(x => x.Name == name);
-            if (playlist is null || PlaylistTracks.Any(x => x.PlaylistId == playlist.PlaylistId && x.TrackPath == path))
+            if (playlist is null)
             {
                 return;
             }
 
-            var lastOrder = PlaylistTracks.Where(x => x.PlaylistId == playlist.PlaylistId).Max(x => (int?)x.Order) ?? 0;
-            PlaylistTracks.Add(new PlaylistTrack { PlaylistId = playlist.PlaylistId, TrackPath = path, Order = lastOrder + 1 });
+            var rows = PlaylistTracks.Where(x => x.PlaylistId == playlist.PlaylistId);
+            var present = rows.Select(x => x.TrackPath).ToHashSet();
+            var order = rows.Max(x => (int?)x.Order) ?? 0;
+            foreach (var path in paths ?? [])
+            {
+                if (present.Add(path))
+                {
+                    PlaylistTracks.Add(new PlaylistTrack { PlaylistId = playlist.PlaylistId, TrackPath = path, Order = ++order });
+                }
+            }
             _context.SaveChanges();
         }
 
-        public void RemoveTrack(string name, string path)
+        public void RemoveTracks(string name, IEnumerable<string> paths)
         {
-            PlaylistTracks.RemoveRange(PlaylistTracks.Where(x => x.Playlist!.Name == name && x.TrackPath == path));
+            var removed = (paths ?? []).ToList();
+            PlaylistTracks.RemoveRange(PlaylistTracks.Where(x => x.Playlist!.Name == name && removed.Contains(x.TrackPath!)));
             _context.SaveChanges();
         }
 
@@ -114,12 +123,15 @@ namespace LalaDb.Model
             _context.SaveChanges();
         }
 
-        public IList<string> PlaylistsContaining(string path)
+        // The ones that have all of these tracks, not just some of them.
+        public IList<string> PlaylistsContainingAll(IEnumerable<string> paths)
         {
+            var distinctPaths = (paths ?? []).Distinct().ToList();
             return PlaylistTracks
-                .Where(x => x.TrackPath == path && x.Playlist!.Name != null)
-                .Select(x => x.Playlist!.Name!)
-                .Distinct()
+                .Where(x => distinctPaths.Contains(x.TrackPath!) && x.Playlist!.Name != null)
+                .GroupBy(x => x.Playlist!.Name!)
+                .Where(group => group.Select(x => x.TrackPath).Distinct().Count() == distinctPaths.Count)
+                .Select(group => group.Key)
                 .ToList();
         }
 

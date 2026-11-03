@@ -62,7 +62,7 @@ namespace Lalamachine.ViewModel
         {
             ArgumentNullException.ThrowIfNull(track);
 
-            _playlists.SetContainsTrack(this, track, false);
+            _playlists.SetContainsTracks(this, [track], false);
         }
 
         internal void Rename(string name)
@@ -87,10 +87,14 @@ namespace Lalamachine.ViewModel
             }
         }
 
-        // With new objects, a scan can have changed the tags of the tracks.
+        // With new objects, a scan can have changed the tags of the tracks. A new order that isn't saved stays.
         private void Load()
         {
-            var playingPath = Playlist.FirstOrDefault(x => x.IsPlaying)?.Path;
+            var shownTracks = Playlist.ToList();
+            var hadUnsavedOrder = HasUnsavedOrder;
+            var playingPath = shownTracks.FirstOrDefault(x => x.IsPlaying)?.Path;
+            var playingPosition = PlayingPosition;
+
             _savedTracks = _model.GetPlaylistTracks(Name).Select(x => new PlaylistTags(x)).ToList();
             foreach (var track in _savedTracks)
             {
@@ -98,25 +102,44 @@ namespace Lalamachine.ViewModel
             }
             MarkLiked(_savedTracks);
             _isLoaded = true;
-            ReplacePlaylist(_savedTracks);
+
+            // A playing track that the scan left out is like one that got removed, next and previous go on from its place.
+            var paths = _savedTracks.Select(x => x.Path).ToHashSet();
+            var removedPlayingIndex = playingPosition < 0 || _savedTracks.Any(x => x.IsPlaying)
+                ? -1
+                : shownTracks.Take(playingPosition).Count(x => paths.Contains(x.Path));
+            ReplacePlaylist(hadUnsavedOrder ? SavedTracksInOrderOf(shownTracks) : _savedTracks, removedPlayingIndex);
             NotifyPropertyChanged(nameof(Playlist));
         }
 
+        // Ones that weren't there before come back with a scan, they go to the end.
+        private IEnumerable<PlaylistTags> SavedTracksInOrderOf(IEnumerable<PlaylistTags> tracks)
+        {
+            var positions = new Dictionary<string, int>();
+            foreach (var track in tracks)
+            {
+                positions.TryAdd(track.Path, positions.Count);
+            }
+            return _savedTracks.OrderBy(x => positions.GetValueOrDefault(x.Path, int.MaxValue));
+        }
+
         // A playlist that isn't loaded yet gets its tracks from the database when it is.
-        internal void TrackAdded(LibLalaTags track)
+        internal void TracksAdded(IEnumerable<LibLalaTags> tracks)
         {
             if (!_isLoaded) { return; }
 
-            var added = new PlaylistTags(track);
-            // First, so that adding it to the list doesn't look like a change of the order.
-            _savedTracks.Add(added);
-            AddTrack(added);
+            // Some of them can be there already, and it has each track once.
+            var paths = _savedTracks.Select(x => x.Path).ToHashSet();
+            var added = tracks.Where(x => paths.Add(x.Path)).Select(x => new PlaylistTags(x)).ToList();
+            // First, so that adding them to the list doesn't look like a change of the order.
+            _savedTracks.AddRange(added);
+            AddTracks(added);
         }
 
-        internal void TrackRemoved(string path)
+        internal void TracksRemoved(IReadOnlySet<string> paths)
         {
-            _savedTracks.RemoveAll(x => x.Path == path);
-            foreach (var track in Playlist.Where(x => x.Path == path).ToList())
+            _savedTracks.RemoveAll(x => paths.Contains(x.Path));
+            foreach (var track in Playlist.Where(x => paths.Contains(x.Path)).ToList())
             {
                 base.RemoveTrack(track);
             }
@@ -130,7 +153,7 @@ namespace Lalamachine.ViewModel
             }
         }
 
-        // The playlist is gone. Without tracks, if it was playing there is just nothing to play next.
+        // The playlist is gone.
         internal void Close()
         {
             TrackPlaylists.LikedChanged -= LikedChangedHandler;

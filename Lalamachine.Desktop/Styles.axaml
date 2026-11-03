@@ -52,6 +52,7 @@
         <DataTemplate x:Key="HeartCell" x:DataType="vm:PlaylistTags">
             <Button Classes="heart"
                     Classes.liked="{Binding IsLiked}"
+                    IsVisible="{Binding !IsOutsideLibrary}"
                     Focusable="False"
                     Command="{Binding $parent[DataGrid].((vm:PlaylistBaseViewModel)DataContext).ToggleLikedCommand}"
                     CommandParameter="{Binding}">

@@ -50,6 +50,15 @@ namespace Lalamachine.ViewModel
 
         public ObservableCollection<NamedPlaylistViewModel> Playlists { get; }
 
+        // To go on with the same playlist after a restart. No such playlist is the same as nothing played yet.
+        public string PlayingPlaylistName
+        {
+            get => _playingPlaylist?.Name ?? "";
+            set => _playingPlaylist = Playlists.FirstOrDefault(x => x.Name == value);
+        }
+
+        public IList<string> PlaylistsWithUnsavedOrder => Playlists.Where(x => x.HasUnsavedOrder).Select(x => x.Name).ToList();
+
         public NamedPlaylistViewModel? SelectedPlaylist
         {
             get => _selectedPlaylist;
@@ -131,12 +140,27 @@ namespace Lalamachine.ViewModel
 
         public void PlayNextTrackHandler(object? sender, EventArgs e)
         {
-            (_playingPlaylist ?? SelectedPlaylist)?.PlayNextTrackHandler(sender, e);
+            PlaylistToGoOnWith()?.PlayNextTrackHandler(sender, e);
         }
 
         public void PlayLastTrackHandler(object? sender, EventArgs e)
         {
-            (_playingPlaylist ?? SelectedPlaylist)?.PlayLastTrackHandler(sender, e);
+            PlaylistToGoOnWith()?.PlayLastTrackHandler(sender, e);
+        }
+
+        private NamedPlaylistViewModel? PlaylistToGoOnWith()
+        {
+            // One that got deleted while playing stops the music. After that, next and previous go by what is on screen again.
+            if (_playingPlaylist is { } && !Playlists.Contains(_playingPlaylist))
+            {
+                _playingPlaylist = null;
+                return null;
+            }
+
+            // After a restart it isn't loaded yet.
+            var playlist = _playingPlaylist ?? SelectedPlaylist;
+            playlist?.EnsureLoaded();
+            return playlist;
         }
 
         public void ShuffleRepeatChangedHandler(object? sender, ChangeShuffleRepeatEventArgs e)
@@ -177,16 +201,16 @@ namespace Lalamachine.ViewModel
             ArgumentNullException.ThrowIfNull(track);
 
             var liked = Playlists.Single(x => x.IsLikedPlaylist);
-            SetContainsTrack(liked, track, !IsLiked(track.Path));
+            SetContainsTracks(liked, [track], !IsLiked(track.Path));
         }
 
-        public TrackPlaylistChoices ChoicesFor(LibLalaTags track)
+        public TrackPlaylistChoices ChoicesFor(IReadOnlyCollection<LibLalaTags> tracks)
         {
-            ArgumentNullException.ThrowIfNull(track);
+            ArgumentNullException.ThrowIfNull(tracks);
 
-            var containing = _model.PlaylistsContaining(track.Path);
+            var containing = _model.PlaylistsContainingAll(tracks.Select(x => x.Path));
             var choices = new ObservableCollection<PlaylistChoice>(
-                Playlists.Select(playlist => CreateChoice(playlist, track, containing.Contains(playlist.Name)))
+                Playlists.Select(playlist => CreateChoice(playlist, tracks, containing.Contains(playlist.Name)))
             );
 
             async void OnNewPlaylist(object? obj)
@@ -194,8 +218,8 @@ namespace Lalamachine.ViewModel
                 var playlist = await AskForNewPlaylistAsync().ConfigureAwait(true);
                 if (playlist is { })
                 {
-                    SetContainsTrack(playlist, track, true);
-                    choices.Insert(Playlists.IndexOf(playlist), CreateChoice(playlist, track, true));
+                    SetContainsTracks(playlist, tracks, true);
+                    choices.Insert(Playlists.IndexOf(playlist), CreateChoice(playlist, tracks, true));
                 }
             }
 
@@ -212,46 +236,56 @@ namespace Lalamachine.ViewModel
                 return;
             }
 
-            // The queue can have a track more than once, a playlist can't.
-            _model.SavePlaylist(playlist.Name, tracks.DistinctBy(x => x.Path).ToList());
+            // The queue can have a track more than once, a playlist can't. Adding takes care of that.
+            _model.AddTracks(playlist.Name, tracks.Select(x => x.Path));
             SelectedPlaylist = playlist;
         }
 
-        internal void SetContainsTrack(NamedPlaylistViewModel playlist, LibLalaTags track, bool containsTrack)
+        internal void SetContainsTracks(NamedPlaylistViewModel playlist, IReadOnlyCollection<LibLalaTags> tracks, bool containsTracks)
         {
-            // Before the playlist is told, that's what the heart of its new track goes by.
-            if (playlist.IsLikedPlaylist)
-            {
-                if (containsTrack)
-                {
-                    _likedPaths.Add(track.Path);
-                }
-                else
-                {
-                    _likedPaths.Remove(track.Path);
-                }
-            }
+            var paths = tracks.Select(x => x.Path).ToHashSet();
 
-            if (containsTrack)
+            // First, so that nothing else changes if it fails, e.g. because a scan is saving the library.
+            if (containsTracks)
             {
-                _model.AddTrack(playlist.Name, track.Path);
-                playlist.TrackAdded(track);
+                _model.AddTracks(playlist.Name, tracks.Select(x => x.Path));
             }
             else
             {
-                _model.RemoveTrack(playlist.Name, track.Path);
-                playlist.TrackRemoved(track.Path);
+                _model.RemoveTracks(playlist.Name, paths);
+            }
+
+            // Before the playlist is told, that's what the hearts of its new tracks go by.
+            if (playlist.IsLikedPlaylist)
+            {
+                if (containsTracks)
+                {
+                    _likedPaths.UnionWith(paths);
+                }
+                else
+                {
+                    _likedPaths.ExceptWith(paths);
+                }
+            }
+
+            if (containsTracks)
+            {
+                playlist.TracksAdded(tracks);
+            }
+            else
+            {
+                playlist.TracksRemoved(paths);
             }
 
             if (playlist.IsLikedPlaylist)
             {
-                LikedChanged?.Invoke(this, new LikedChangedEventArgs(track.Path, containsTrack));
+                LikedChanged?.Invoke(this, new LikedChangedEventArgs(paths, containsTracks));
             }
         }
 
-        private PlaylistChoice CreateChoice(NamedPlaylistViewModel playlist, LibLalaTags track, bool containsTrack)
+        private PlaylistChoice CreateChoice(NamedPlaylistViewModel playlist, IReadOnlyCollection<LibLalaTags> tracks, bool containsTracks)
         {
-            return new PlaylistChoice(playlist.Name, containsTrack, value => SetContainsTrack(playlist, track, value));
+            return new PlaylistChoice(playlist.Name, containsTracks, value => SetContainsTracks(playlist, tracks, value));
         }
 
         private NamedPlaylistViewModel CreatePlaylist(string name)

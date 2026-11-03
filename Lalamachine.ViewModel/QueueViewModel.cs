@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using LalaDb.Data;
@@ -16,14 +17,26 @@ namespace Lalamachine.ViewModel
         {
             _playlistModel = new PlaylistModel(context);
             _saveAsPlaylistCommand = new DelegateCommand(OnSaveAsPlaylist);
+            PropertyChanged += PlaylistChangedHandler;
             LoadLastPlaylist();
         }
+
+        private void PlaylistChangedHandler(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Playlist))
+            {
+                NotifyPropertyChanged(nameof(CanSaveAsPlaylist));
+            }
+        }
+
+        // The queue is the only place for a track that is outside the library.
+        public bool CanSaveAsPlaylist => HasTracks && !Playlist.Any(x => x.IsOutsideLibrary);
 
         private readonly DelegateCommand _saveAsPlaylistCommand;
         public ICommand SaveAsPlaylistCommand => _saveAsPlaylistCommand;
         private async void OnSaveAsPlaylist(object? obj)
         {
-            if (HasTracks)
+            if (CanSaveAsPlaylist)
             {
                 await TrackPlaylists.SaveAsNewPlaylistAsync(Playlist.ToList<LibLalaTags>()).ConfigureAwait(true);
             }

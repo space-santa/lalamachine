@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
 using LalaDb.Data;
@@ -21,6 +22,7 @@ namespace Lalamachine.Desktop.Views
         public int Left { get => GetInt(255); set => Set(value); }
         public int Top { get => GetInt(255); set => Set(value); }
         public bool Maximized { get => GetBool(false); set => Set(value); }
+        public string PlayingPlaylist { get => GetString(""); set => Set(value); }
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1001:Types that own disposable fields should be disposable", Justification = "The audio player is disposed when the window closes.")]
@@ -35,6 +37,8 @@ namespace Lalamachine.Desktop.Views
         private readonly SettingsViewModel _settingsViewModel;
         private readonly LibraryViewModel _libraryViewModel;
         private readonly LibraryPlaylistViewModel _libraryPlaylistViewModel;
+        private readonly AvaloniaDialogService _dialogs;
+        private bool _isCloseConfirmed;
 
         public MainWindow()
         {
@@ -48,15 +52,15 @@ namespace Lalamachine.Desktop.Views
 #pragma warning restore CA2000 // Dispose objects before losing scope
             context.Database.Migrate();
 
-            var dialogs = new AvaloniaDialogService(this);
+            _dialogs = new AvaloniaDialogService(this);
             _audioPlayer = new VlcAudioPlayer();
-            _player = new PlayerViewModel(_audioPlayer, dialogs);
-            _playlistsViewModel = new PlaylistsViewModel(context, dialogs);
-            _queueViewModel = new QueueViewModel(context, dialogs, _playlistsViewModel);
+            _player = new PlayerViewModel(_audioPlayer, _dialogs);
+            _playlistsViewModel = new PlaylistsViewModel(context, _dialogs);
+            _queueViewModel = new QueueViewModel(context, _dialogs, _playlistsViewModel);
             _shuffleRepeatViewModel = new ShuffleRepeatViewModel();
-            _settingsViewModel = new SettingsViewModel(dialogs);
-            _libraryViewModel = new LibraryViewModel(context, () => new LalaContext(optionsBuilder.Options), dialogs);
-            _libraryPlaylistViewModel = new LibraryPlaylistViewModel(dialogs, _playlistsViewModel);
+            _settingsViewModel = new SettingsViewModel(_dialogs);
+            _libraryViewModel = new LibraryViewModel(context, () => new LalaContext(optionsBuilder.Options), _dialogs);
+            _libraryPlaylistViewModel = new LibraryPlaylistViewModel(_dialogs, _playlistsViewModel);
 
             _shuffleRepeatViewModel.ShuffleRepeatChanged += _queueViewModel.ShuffleRepeatChangedHandler;
             _shuffleRepeatViewModel.ShuffleRepeatChanged += _playlistsViewModel.ShuffleRepeatChangedHandler;
@@ -93,6 +97,7 @@ namespace Lalamachine.Desktop.Views
             Library.LibraryPlaylist.DataContext = _libraryPlaylistViewModel;
 
             _settings = new MainWindowSettings();
+            _playlistsViewModel.PlayingPlaylistName = _settings.PlayingPlaylist;
             ListTabs.SelectedIndex = _settings.ActiveTab;
             Width = _settings.Width;
             Height = _settings.Height;
@@ -118,6 +123,16 @@ namespace Lalamachine.Desktop.Views
                 return;
             }
 
+            // The computer shutting down doesn't wait for an answer.
+            var unsaved = _playlistsViewModel.PlaylistsWithUnsavedOrder;
+            if (unsaved.Count > 0 && !_isCloseConfirmed && e.CloseReason != WindowCloseReason.OSShutdown)
+            {
+                e.Cancel = true;
+                ConfirmClose(unsaved);
+                return;
+            }
+
+            _settings.PlayingPlaylist = _playlistsViewModel.PlayingPlaylistName;
             _settings.ActiveTab = ListTabs.SelectedIndex;
             _settings.Maximized = WindowState == WindowState.Maximized;
             // A maximized window's size and position aren't the ones to restore it to.
@@ -127,6 +142,16 @@ namespace Lalamachine.Desktop.Views
                 _settings.Top = Position.Y;
                 _settings.Width = Width;
                 _settings.Height = Height;
+            }
+        }
+
+        private async void ConfirmClose(IList<string> unsavedPlaylists)
+        {
+            var isConfirmed = await _dialogs.ConfirmAsync($"The new order of {string.Join(", ", unsavedPlaylists)} isn't saved and will be lost. Close anyway?").ConfigureAwait(true);
+            if (isConfirmed)
+            {
+                _isCloseConfirmed = true;
+                Close();
             }
         }
 

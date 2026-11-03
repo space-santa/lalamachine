@@ -7,13 +7,13 @@ namespace Lalamachine.ViewModel
 {
     public class LikedChangedEventArgs : EventArgs
     {
-        public LikedChangedEventArgs(string path, bool isLiked)
+        public LikedChangedEventArgs(IReadOnlySet<string> paths, bool isLiked)
         {
-            Path = path;
+            Paths = paths;
             IsLiked = isLiked;
         }
 
-        public string Path { get; }
+        public IReadOnlySet<string> Paths { get; }
         public bool IsLiked { get; }
     }
 
@@ -27,7 +27,7 @@ namespace Lalamachine.ViewModel
 
         void ToggleLiked(LibLalaTags track);
 
-        TrackPlaylistChoices ChoicesFor(LibLalaTags track);
+        TrackPlaylistChoices ChoicesFor(IReadOnlyCollection<LibLalaTags> tracks);
 
         // Asks for the name.
         Task SaveAsNewPlaylistAsync(IEnumerable<LibLalaTags> tracks);

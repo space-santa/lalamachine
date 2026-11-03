@@ -211,9 +211,41 @@ namespace Lalamachine.ViewModel.Unittests
             viewModel.AddTrack(new LibLalaTagsBuilder("b", new UncheckedTrackPath("/path/to/b"), 5).Build());
             viewModel.AddTrack(track);
 
-            trackPlaylists.LikedChanged += Raise.EventWith(new LikedChangedEventArgs("/path/to/a", true));
+            trackPlaylists.LikedChanged += Raise.EventWith(new LikedChangedEventArgs(new HashSet<string> { "/path/to/a" }, true));
 
             Assert.That(viewModel.Playlist.Select(x => x.IsLiked), Is.EqualTo(new[] { true, false, true }));
+        }
+
+        [Test]
+        public void ManualLoad_AddsTheFileAsOutsideTheLibrary()
+        {
+            var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"{System.Guid.NewGuid():N}.mp3");
+            var frame = new byte[417];
+            frame[0] = 0xFF;
+            frame[1] = 0xFB;
+            frame[2] = 0x90;
+            frame[3] = 0x64;
+            System.IO.File.WriteAllBytes(path, Enumerable.Repeat(frame, 120).SelectMany(x => x).ToArray());
+            try
+            {
+                var viewModel = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
+
+                viewModel.ManualLoadHandler(null, new ManualLoadEventArgs(path));
+
+                Assert.That(viewModel.Playlist.Single().IsOutsideLibrary, Is.True);
+            }
+            finally
+            {
+                System.IO.File.Delete(path);
+            }
+        }
+
+        [Test]
+        public void AddTrack_FromTheLibrary_IsNotOutsideIt()
+        {
+            var viewModel = ViewModelWithTracks(1, ShuffleRepeatState.None);
+
+            Assert.That(viewModel.Playlist[0].IsOutsideLibrary, Is.False);
         }
 
         [Test]
@@ -284,6 +316,86 @@ namespace Lalamachine.ViewModel.Unittests
             viewModel.PlayNextTrackHandler(null, new System.EventArgs());
 
             Assert.That(playedPath, Is.EqualTo("/path/to/track1"));
+        }
+
+        [Test]
+        public void PlayNextTrackHandler_PlayingTrackRemovedThenAnEarlierOne_PlaysWhatTookItsPlace()
+        {
+            var playedPath = "";
+            var viewModel = ViewModelWithTracks(5, ShuffleRepeatState.None);
+            viewModel.PlayTrackCommand.Execute(viewModel.Playlist[2]);
+            viewModel.RemoveTrackCommand.Execute(viewModel.Playlist[2]);
+            viewModel.RemoveTrackCommand.Execute(viewModel.Playlist[0]);
+            viewModel.PlayTrackEvent += (o, e) => playedPath = e.Path;
+
+            viewModel.PlayNextTrackHandler(null, new System.EventArgs());
+
+            Assert.That(playedPath, Is.EqualTo("/path/to/track3"));
+        }
+
+        [Test]
+        public void PlayPreviousTrackHandler_PlayingTrackRemovedThenAnEarlierOne_PlaysTheOneBeforeIt()
+        {
+            var playedPath = "";
+            var viewModel = ViewModelWithTracks(5, ShuffleRepeatState.None);
+            viewModel.PlayTrackCommand.Execute(viewModel.Playlist[2]);
+            viewModel.RemoveTrackCommand.Execute(viewModel.Playlist[2]);
+            viewModel.RemoveTrackCommand.Execute(viewModel.Playlist[0]);
+            viewModel.PlayTrackEvent += (o, e) => playedPath = e.Path;
+
+            viewModel.PlayLastTrackHandler(null, new System.EventArgs());
+
+            Assert.That(playedPath, Is.EqualTo("/path/to/track1"));
+        }
+
+        [Test]
+        public void PlayNextTrackHandler_PlayingTrackRemovedThenALaterOne_PlaysWhatTookItsPlace()
+        {
+            var playedPath = "";
+            var viewModel = ViewModelWithTracks(5, ShuffleRepeatState.None);
+            viewModel.PlayTrackCommand.Execute(viewModel.Playlist[2]);
+            viewModel.RemoveTrackCommand.Execute(viewModel.Playlist[2]);
+            viewModel.RemoveTrackCommand.Execute(viewModel.Playlist[3]);
+            viewModel.PlayTrackEvent += (o, e) => playedPath = e.Path;
+
+            viewModel.PlayNextTrackHandler(null, new System.EventArgs());
+
+            Assert.That(playedPath, Is.EqualTo("/path/to/track3"));
+        }
+
+        // After removing track2 the list is 0, 1, 3, 4 and track3 is next. Moving others around it doesn't change that.
+        [TestCase(0, 3)]
+        [TestCase(3, 0)]
+        [TestCase(0, 1)]
+        [TestCase(1, 0)]
+        public void PlayNextTrackHandler_PlayingTrackRemovedThenOthersMoved_PlaysWhatTookItsPlace(int from, int to)
+        {
+            var playedPath = "";
+            var viewModel = ViewModelWithTracks(5, ShuffleRepeatState.None);
+            viewModel.PlayTrackCommand.Execute(viewModel.Playlist[2]);
+            viewModel.RemoveTrackCommand.Execute(viewModel.Playlist[2]);
+            viewModel.MoveTrack(viewModel.Playlist[from], to);
+            viewModel.PlayTrackEvent += (o, e) => playedPath = e.Path;
+
+            viewModel.PlayNextTrackHandler(null, new System.EventArgs());
+
+            Assert.That(playedPath, Is.EqualTo("/path/to/track3"));
+        }
+
+        // Sorted, the place it had doesn't mean anything any more.
+        [Test]
+        public void PlayNextTrackHandler_PlayingTrackRemovedThenSorted_StartsFromTheTop()
+        {
+            var playedPath = "";
+            var viewModel = ViewModelWithTracks(4, ShuffleRepeatState.None);
+            viewModel.PlayTrackCommand.Execute(viewModel.Playlist[2]);
+            viewModel.RemoveTrackCommand.Execute(viewModel.Playlist[2]);
+            viewModel.SortCommand.Execute(new SortMessage(ListSortDirection.Descending, new PlaylistColumn("Title")));
+            viewModel.PlayTrackEvent += (o, e) => playedPath = e.Path;
+
+            viewModel.PlayNextTrackHandler(null, new System.EventArgs());
+
+            Assert.That(playedPath, Is.EqualTo("/path/to/track3"));
         }
 
         private static PlaylistBaseViewModel ViewModelWithTracks(int numberOfTracks, ShuffleRepeatState state)

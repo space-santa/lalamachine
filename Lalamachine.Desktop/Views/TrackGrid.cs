@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -85,25 +87,27 @@ namespace Lalamachine.Desktop.Views
 
         private static void AddPlaylistChoices(DataGrid grid)
         {
-            // The row that was right-clicked. It can be one of several selected ones, and the keyboard's menu key has none.
-            PlaylistTags? clickedTrack = null;
-            grid.AddHandler(
-                InputElement.PointerPressedEvent,
-                (sender, e) => clickedTrack = e.GetCurrentPoint(grid).Properties.IsRightButtonPressed ? TrackAt(e.Source) : null,
-                RoutingStrategies.Tunnel);
-
             var menuItem = new MenuItem { Header = "Add to playlist..." };
-            menuItem.Click += (sender, e) =>
+            menuItem.Click += (sender, e) => ShowPlaylistChoices(grid);
+            if (grid.ContextMenu is { } contextMenu)
             {
-                if ((clickedTrack ?? grid.SelectedItem as PlaylistTags) is { } track)
+                contextMenu.Items.Insert(0, menuItem);
+                // A track that is outside the library can only be in the queue.
+                contextMenu.Opening += (sender, e) =>
                 {
-                    ShowPlaylistChoices(grid, track);
-                }
-            };
-            grid.ContextMenu?.Items.Insert(0, menuItem);
+                    var tracks = SelectedTracks(grid);
+                    menuItem.IsEnabled = tracks.Count > 0 && !tracks.Any(x => x.IsOutsideLibrary);
+                };
+            }
         }
 
-        private static void ShowPlaylistChoices(DataGrid grid, PlaylistTags track)
+        // Right-clicking a row selects it, unless it is one of several that already are.
+        private static List<PlaylistTags> SelectedTracks(DataGrid grid)
+        {
+            return grid.SelectedItems.OfType<PlaylistTags>().ToList();
+        }
+
+        private static void ShowPlaylistChoices(DataGrid grid)
         {
             if (grid.DataContext is not PlaylistBaseViewModel viewModel)
             {
@@ -112,7 +116,7 @@ namespace Lalamachine.Desktop.Views
 
             var flyout = new Flyout
             {
-                Content = new TrackPlaylistsControl { DataContext = viewModel.TrackPlaylists.ChoicesFor(track) },
+                Content = new TrackPlaylistsControl { DataContext = viewModel.TrackPlaylists.ChoicesFor(SelectedTracks(grid)) },
             };
             flyout.ShowAt(grid, showAtPointer: true);
         }

@@ -340,7 +340,7 @@ namespace Lalamachine.ViewModel.Unittests
             ShowLibrary(viewModel, Track("a", "2A"), Track("b", "10A"));
             Tick(viewModel, "10A");
 
-            trackPlaylists.LikedChanged += Raise.EventWith(new LikedChangedEventArgs("/path/to/a", true));
+            trackPlaylists.LikedChanged += Raise.EventWith(new LikedChangedEventArgs(new HashSet<string> { "/path/to/a" }, true));
             viewModel.ClearKeyFilterCommand.Execute(null);
 
             Assert.That(viewModel.Playlist.Select(x => x.IsLiked), Is.EqualTo(new[] { true, false }));
