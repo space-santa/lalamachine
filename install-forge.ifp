@@ -65,7 +65,7 @@
     </Finish>
   </InstallerConfiguration>
   <UninstallerConfiguration isPackaged="true">
-    <UninstallerExecutableFileName>Uninstall</UninstallerExecutableFileName>
+    <UninstallerExecutableFileName>Uninstall.exe</UninstallerExecutableFileName>
     <OpenWebURIAfterUninstallation isEnabled="false">https://</OpenWebURIAfterUninstallation>
     <CustomDisplayIcon isEnabled="false" iconFilePath="&lt;InstallPath&gt;\"/>
   </UninstallerConfiguration>
