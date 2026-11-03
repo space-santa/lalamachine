@@ -47,7 +47,7 @@ namespace LibLala.LibLalaTagReader
             _beatsPerMinute = new BeatsPerMinute(other.BeatsPerMinute);
             _comment = new Comment(other.Comment);
             _discNumber = new DiscNumber(other.DiscNumber);
-            _initialKey = new InitialKey(other.InitialKey);
+            _initialKey = other._initialKey;
             _length = new TrackLength(other.Length);
             _title = new TitleName(other.Title);
             _trackNumber = new TrackNumber(other.Track);

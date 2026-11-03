@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using LibLala.DomainPrimitives;
 using LibLala.LibLalaTagReader;
@@ -126,6 +127,52 @@ namespace Lalamachine.ViewModel.Unittests
             viewModel.SortCommand.Execute(new SortMessage(direction, new PlaylistColumn("BPM")));
 
             Assert.That(viewModel.Playlist.Select(x => x.BeatsPerMinute), Is.EqualTo(expected));
+        }
+
+        private static PlaylistBaseViewModel ViewModelWithDiscs()
+        {
+            var viewModel = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>());
+            foreach (var (disc, track) in new (uint, uint)[] { (2, 1), (1, 2), (2, 2), (1, 1) })
+            {
+                viewModel.AddTrack(new LibLalaTagsBuilder($"d{disc}t{track}", new UncheckedTrackPath("/path/to/bob"), 5).WithDiscNumber(disc).WithTrackNumber(track).Build());
+            }
+            return viewModel;
+        }
+
+        [TestCase("Album", ListSortDirection.Ascending)]
+        [TestCase("Album", ListSortDirection.Descending)]
+        [TestCase("Artist", ListSortDirection.Ascending)]
+        [TestCase("Artist", ListSortDirection.Descending)]
+        [TestCase("Genre", ListSortDirection.Ascending)]
+        [TestCase("Genre", ListSortDirection.Descending)]
+        public void Sort_AlbumWithSeveralDiscs_KeepsTheDiscsTogether(string column, ListSortDirection direction)
+        {
+            var viewModel = ViewModelWithDiscs();
+
+            viewModel.SortCommand.Execute(new SortMessage(direction, new PlaylistColumn(column)));
+
+            Assert.That(viewModel.Playlist.Select(x => x.Title), Is.EqualTo(new[] { "d1t1", "d1t2", "d2t1", "d2t2" }));
+        }
+
+        [Test]
+        public void AddTracksToPlaylistHandler_NewPlaylist_ReplacesTheTracks()
+        {
+            var viewModel = ViewModelWithTracks(2, ShuffleRepeatState.None);
+            var tracks = new LibLalaTags[] { new LibLalaTagsBuilder("new", new UncheckedTrackPath("/path/to/new"), 5).Build() };
+
+            viewModel.AddTracksToPlaylistHandler(null, new AddTracksToPlaylistEventArgs(tracks, true));
+
+            Assert.That(viewModel.Playlist.Select(x => x.Title), Is.EqualTo(new[] { "new" }));
+        }
+
+        [Test]
+        public void AddTracksToPlaylistHandler_NewPlaylistWithoutTracks_KeepsThePlaylist()
+        {
+            var viewModel = ViewModelWithTracks(2, ShuffleRepeatState.None);
+
+            viewModel.AddTracksToPlaylistHandler(null, new AddTracksToPlaylistEventArgs(new List<LibLalaTags>(), true));
+
+            Assert.That(viewModel.Playlist.Select(x => x.Title), Is.EqualTo(new[] { "track0", "track1" }));
         }
 
         private static PlaylistBaseViewModel ViewModelWithTracks(int numberOfTracks, ShuffleRepeatState state)

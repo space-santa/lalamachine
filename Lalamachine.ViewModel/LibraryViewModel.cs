@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using LalaDb.Data;
 using LalaDb.Model;
@@ -133,10 +134,14 @@ namespace Lalamachine.ViewModel
         public ICommand ClearSearchCommand => _clearSearchCommand;
         private void ClearSearch(object? obj)
         {
-            _genreFilter = Array.Empty<string>();
-            _albumFilter = Array.Empty<string>();
-            _artistFilter = Array.Empty<string>();
-            SearchString = "";
+            // The search box reports being emptied after this emptied it. Rebuilding everything again would be for nothing.
+            if (SearchString.Length > 0 || _genreFilter.Count > 0 || _artistFilter.Count > 0 || _albumFilter.Count > 0)
+            {
+                _genreFilter = Array.Empty<string>();
+                _albumFilter = Array.Empty<string>();
+                _artistFilter = Array.Empty<string>();
+                SearchString = "";
+            }
             FiltersCleared?.Invoke(this, EventArgs.Empty);
         }
 
@@ -272,6 +277,29 @@ namespace Lalamachine.ViewModel
             }
         }
 
+        // Select all and selecting a range with the keyboard are up to the list, and those select -- all -- along with other items.
+        // It stays if it's the one item that just got selected. Otherwise it goes, so that selecting all albums does select the albums.
+        public static void KeepAllOnItsOwn(IList selection, IList addedItems)
+        {
+            ArgumentNullException.ThrowIfNull(selection);
+            ArgumentNullException.ThrowIfNull(addedItems);
+
+            if (selection.Count < 2 || !selection.Contains(Constants.ALL))
+            {
+                return;
+            }
+
+            if (addedItems.Count == 1 && addedItems.Contains(Constants.ALL))
+            {
+                selection.Clear();
+                selection.Add(Constants.ALL);
+            }
+            else
+            {
+                selection.Remove(Constants.ALL);
+            }
+        }
+
         public bool Scanning
         {
             get => _scanning;
@@ -314,36 +342,28 @@ namespace Lalamachine.ViewModel
         public IReadOnlyList<string> GenreFilter
         {
             get => _genreFilter;
-            private set
-            {
-                // A list that gets replaced selects its selected items again, and that sets the same filter again.
-                // Without this check, setting it replaces the lists again, and so on until the stack overflows.
-                if (_genreFilter.ToHashSet().SetEquals(value)) { return; }
-                _genreFilter = value;
-                NotifyPropertyChanged();
-            }
+            private set => SetFilter(ref _genreFilter, value);
         }
 
         public IReadOnlyList<string> ArtistFilter
         {
             get => _artistFilter;
-            private set
-            {
-                if (_artistFilter.ToHashSet().SetEquals(value)) { return; }
-                _artistFilter = value;
-                NotifyPropertyChanged();
-            }
+            private set => SetFilter(ref _artistFilter, value);
         }
 
         public IReadOnlyList<string> AlbumFilter
         {
             get => _albumFilter;
-            private set
-            {
-                if (_albumFilter.ToHashSet().SetEquals(value)) { return; }
-                _albumFilter = value;
-                NotifyPropertyChanged();
-            }
+            private set => SetFilter(ref _albumFilter, value);
+        }
+
+        private void SetFilter(ref IReadOnlyList<string> filter, IReadOnlyList<string> value, [CallerMemberName] string propertyName = "")
+        {
+            // A list that gets replaced selects its selected items again, and that sets the same filter again.
+            // Without this check, setting it replaces the lists again, and so on until the stack overflows.
+            if (filter.ToHashSet().SetEquals(value)) { return; }
+            filter = value;
+            NotifyPropertyChanged(propertyName);
         }
 
         // The names in what a list has selected. -- all -- means no filter, whatever else is selected with it.

@@ -1,3 +1,5 @@
+using System;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -19,9 +21,11 @@ namespace Lalamachine.Desktop.Views
             InitializeComponent();
 
             // Tunnel, so that the list's own selection handling doesn't get to see these.
-            GenreList.AddHandler(PointerPressedEvent, FilterList_PointerPressed, RoutingStrategies.Tunnel);
-            ArtistList.AddHandler(PointerPressedEvent, FilterList_PointerPressed, RoutingStrategies.Tunnel);
-            AlbumList.AddHandler(PointerPressedEvent, FilterList_PointerPressed, RoutingStrategies.Tunnel);
+            foreach (var list in new[] { GenreList, ArtistList, AlbumList })
+            {
+                list.AddHandler(PointerPressedEvent, FilterList_PointerPressed, RoutingStrategies.Tunnel);
+                list.AddHandler(KeyDownEvent, FilterList_KeyDown, RoutingStrategies.Tunnel);
+            }
         }
 
         private void FilterList_PointerPressed(object? sender, PointerPressedEventArgs e)
@@ -29,37 +33,56 @@ namespace Lalamachine.Desktop.Views
             if (sender is ListBox { SelectedItems: { } selection } list
                 && (e.KeyModifiers & ToggleModifiers) != 0
                 && e.GetCurrentPoint(list).Properties.IsLeftButtonPressed
-                && (e.Source as Visual)?.FindAncestorOfType<ListBoxItem>(includeSelf: true)?.DataContext is string item)
+                && FilterItemAt(e.Source) is { } item)
             {
                 e.Handled = true;
                 LibraryViewModel.ToggleFilterItem(selection, item);
             }
         }
 
+        // The same with the keyboard. The list's own handling can leave nothing selected, which doesn't change the filter.
+        private void FilterList_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (sender is ListBox { SelectedItems: { } selection }
+                && e.Key is (Key.Space or Key.Enter)
+                && (e.KeyModifiers & ToggleModifiers) != 0
+                && FilterItemAt(e.Source) is { } item)
+            {
+                e.Handled = true;
+                LibraryViewModel.ToggleFilterItem(selection, item);
+            }
+        }
+
+        private static string? FilterItemAt(object? eventSource)
+        {
+            return (eventSource as Visual)?.FindAncestorOfType<ListBoxItem>(includeSelf: true)?.DataContext as string;
+        }
+
+        private void GenreList_SelectionChanged(object? sender, SelectionChangedEventArgs e) => UpdateFilter(GenreList, e, context => context.SetGenreFilterCommand);
+
+        private void ArtistList_SelectionChanged(object? sender, SelectionChangedEventArgs e) => UpdateFilter(ArtistList, e, context => context.SetArtistFilterCommand);
+
+        private void AlbumList_SelectionChanged(object? sender, SelectionChangedEventArgs e) => UpdateFilter(AlbumList, e, context => context.SetAlbumFilterCommand);
+
         // A list that gets replaced loses its selection, and selects its items again if the new list has them.
         // So only selected items change a filter. The view model clears the filter of an item that is gone.
         // Not SelectedItems, while the list gets replaced that still has the old items, which would set them as the filter again.
-        private void GenreList_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+        private void UpdateFilter(ListBox list, SelectionChangedEventArgs e, Func<LibraryViewModel, ICommand> setFilterCommand)
         {
-            if (DataContext is LibraryViewModel context && GenreList.Selection.SelectedItems is { Count: > 0 } selection)
+            if (list.SelectedItems is { } selectedItems)
             {
-                context.SetGenreFilterCommand.Execute(selection);
+                LibraryViewModel.KeepAllOnItsOwn(selectedItems, e.AddedItems);
             }
-        }
 
-        private void ArtistList_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-        {
-            if (DataContext is LibraryViewModel context && ArtistList.Selection.SelectedItems is { Count: > 0 } selection)
+            // A range goes on from its anchor. Left on -- all --, the first row, the next range would select that again.
+            if (list.Selection is { AnchorIndex: 0, Count: > 0 } model && !model.IsSelected(0))
             {
-                context.SetArtistFilterCommand.Execute(selection);
+                model.AnchorIndex = model.SelectedIndex;
             }
-        }
 
-        private void AlbumList_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-        {
-            if (DataContext is LibraryViewModel context && AlbumList.Selection.SelectedItems is { Count: > 0 } selection)
+            if (DataContext is LibraryViewModel context && list.Selection.SelectedItems is { Count: > 0 } selection)
             {
-                context.SetAlbumFilterCommand.Execute(selection);
+                setFilterCommand(context).Execute(selection);
             }
         }
 
@@ -96,10 +119,12 @@ namespace Lalamachine.Desktop.Views
             ArtistList.UnselectAll();
             AlbumList.UnselectAll();
             context.ClearSearchCommand.Execute(null);
+            // The view model has nothing to clear, and the binding nothing to update, for text too short to have been searched for.
+            SearchBox.Clear();
         }
 
         // Loaded fires on every return to the library tab, but the lists only change with a filter or a scan.
-        // Rebuilding them would also replace the library playlist, which loses track of the playing track.
+        // Rebuilding them would also replace the library playlist, which loses its sort order.
         private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
             if (!_listsLoaded && DataContext is LibraryViewModel context)

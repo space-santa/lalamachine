@@ -268,5 +268,72 @@ namespace Lalamachine.ViewModel.Unittests
 
             Assert.That(viewModel.CurrentIndex, Is.EqualTo(0));
         }
+
+        [Test]
+        public void NewLibrarySelection_WithThePlayingTrack_NextPlaysTheOneAfterIt()
+        {
+            var viewModel = ViewModelWith(Track("a", "2A"), Track("b", "2A"), Track("c", "2A"));
+            viewModel.PlayTrackCommand.Execute(viewModel.Playlist[1]);
+            var playedPath = "";
+            viewModel.PlayTrackEvent += (o, e) => playedPath = e.Path;
+
+            ShowLibrary(viewModel, Track("a", "2A"), Track("b", "2A"), Track("c", "2A"));
+
+            Assert.That(viewModel.CurrentIndex, Is.EqualTo(1));
+            viewModel.PlayNextTrackHandler(null, new System.EventArgs());
+            Assert.That(playedPath, Is.EqualTo("/path/to/c"));
+        }
+
+        [Test]
+        public void NewLibrarySelection_PlayingTrackComesBack_IsPlayingAgain()
+        {
+            var viewModel = ViewModelWith(Track("a", "2A"), Track("b", "2A"));
+            viewModel.PlayTrackCommand.Execute(viewModel.Playlist[1]);
+
+            ShowLibrary(viewModel, Track("c", "2A"));
+            Assert.That(viewModel.CurrentIndex, Is.EqualTo(-1));
+
+            ShowLibrary(viewModel, Track("a", "2A"), Track("b", "2A"));
+            Assert.That(viewModel.CurrentIndex, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void NewLibrarySelection_AfterPlayingAnotherTrack_OnlyMarksThatOne()
+        {
+            var viewModel = ViewModelWith(Track("a", "2A"), Track("b", "2A"));
+            viewModel.PlayTrackCommand.Execute(viewModel.Playlist[0]);
+            viewModel.PlayTrackCommand.Execute(viewModel.Playlist[1]);
+
+            ShowLibrary(viewModel, Track("a", "2A"), Track("b", "2A"));
+
+            Assert.That(viewModel.Playlist.Where(x => x.IsPlaying).Select(x => x.Title), Is.EqualTo(new[] { "b" }));
+        }
+
+        [Test]
+        public void NewLibrarySelection_NothingPlayedYet_MarksNothing()
+        {
+            var viewModel = ViewModelWith(Track("a", "2A"));
+
+            ShowLibrary(viewModel, Track("a", "2A"));
+
+            Assert.That(viewModel.CurrentIndex, Is.EqualTo(-1));
+        }
+
+        [TestCase(ShuffleRepeatState.RepeatOne, "/path/to/a")]
+        [TestCase(ShuffleRepeatState.RepeatAll, "/path/to/b")]
+        public void ShuffleRepeatChanged_AppliesToTheLibraryToo(ShuffleRepeatState state, string expected)
+        {
+            var viewModel = ViewModelWith(Track("a", "2A"), Track("b", "2A"));
+            var shuffleRepeat = new ShuffleRepeatViewModel();
+            shuffleRepeat.ShuffleRepeatChanged += viewModel.ShuffleRepeatChangedHandler;
+            viewModel.PlayTrackCommand.Execute(viewModel.Playlist[0]);
+            var playedPath = "";
+            viewModel.PlayTrackEvent += (o, e) => playedPath = e.Path;
+
+            shuffleRepeat.State = state;
+            viewModel.PlayNextTrackHandler(null, new System.EventArgs());
+
+            Assert.That(playedPath, Is.EqualTo(expected));
+        }
     }
 }

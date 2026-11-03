@@ -80,8 +80,8 @@ namespace Lalamachine.ViewModel
                         Playlist = new ObservableCollection<PlaylistTags>(
                             Playlist
                                 .OrderBy(x => x.Album)
-                                .ThenBy(x => x.Track)
                                 .ThenBy(x => x.DiscNumber)
+                                .ThenBy(x => x.Track)
                         );
                     }
                     else
@@ -89,8 +89,8 @@ namespace Lalamachine.ViewModel
                         Playlist = new ObservableCollection<PlaylistTags>(
                             Playlist
                                 .OrderByDescending(x => x.Album)
-                                .ThenBy(x => x.Track)
                                 .ThenBy(x => x.DiscNumber)
+                                .ThenBy(x => x.Track)
                         );
                     }
                     break;
@@ -101,8 +101,8 @@ namespace Lalamachine.ViewModel
                             Playlist
                                 .OrderBy(x => x.ArtistString)
                                 .ThenBy(x => x.Album)
-                                .ThenBy(x => x.Track)
                                 .ThenBy(x => x.DiscNumber)
+                                .ThenBy(x => x.Track)
                         );
                     }
                     else
@@ -111,8 +111,8 @@ namespace Lalamachine.ViewModel
                             Playlist
                                 .OrderByDescending(x => x.ArtistString)
                                 .ThenBy(x => x.Album)
-                                .ThenBy(x => x.Track)
                                 .ThenBy(x => x.DiscNumber)
+                                .ThenBy(x => x.Track)
                         );
                     }
                     break;
@@ -155,8 +155,8 @@ namespace Lalamachine.ViewModel
                                 .OrderBy(x => x.GenreString)
                                 .ThenBy(x => x.ArtistString)
                                 .ThenBy(x => x.Album)
-                                .ThenBy(x => x.Track)
                                 .ThenBy(x => x.DiscNumber)
+                                .ThenBy(x => x.Track)
                         );
                     }
                     else
@@ -166,8 +166,8 @@ namespace Lalamachine.ViewModel
                                 .OrderByDescending(x => x.GenreString)
                                 .ThenBy(x => x.ArtistString)
                                 .ThenBy(x => x.Album)
-                                .ThenBy(x => x.Track)
                                 .ThenBy(x => x.DiscNumber)
+                                .ThenBy(x => x.Track)
                             );
                     }
                     break;
@@ -358,7 +358,8 @@ namespace Lalamachine.ViewModel
                 return;
             }
 
-            if (e.NewPlaylist) { DeleteAllTracks(); }
+            // Nothing selected is no reason to lose the playlist, that's what Remove All is for.
+            if (e.NewPlaylist && e.Tracks.Count > 0) { DeleteAllTracks(); }
             AddTracks(e.Tracks);
         }
 

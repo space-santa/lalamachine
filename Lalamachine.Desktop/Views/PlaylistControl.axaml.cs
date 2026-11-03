@@ -72,8 +72,17 @@ namespace Lalamachine.Desktop.Views
 
             var playlist = viewModel.Playlist;
             var oldIndex = playlist.IndexOf(track);
-            // Below the last track means to the end.
-            var newIndex = TrackGrid.TrackAt(e.Source) is { } target ? playlist.IndexOf(target) : playlist.Count - 1;
+            // Below the last track means to the end, above the first one to the top.
+            var newIndex = playlist.Count - 1;
+            if (TrackGrid.TrackAt(e.Source) is { } target)
+            {
+                newIndex = playlist.IndexOf(target);
+            }
+            else if (TrackGrid.IsOnColumnHeader(e.Source))
+            {
+                newIndex = 0;
+            }
+
             if (oldIndex < 0 || newIndex < 0 || oldIndex == newIndex)
             {
                 return;

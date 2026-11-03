@@ -16,6 +16,6 @@ namespace LibLala
 
         public const string ALL = "-- all --";
 
-        public static CultureInfo CULTURE { get => new CultureInfo("en-AU"); }
+        public static CultureInfo CULTURE { get; } = CultureInfo.GetCultureInfo("en-AU");
     }
 }

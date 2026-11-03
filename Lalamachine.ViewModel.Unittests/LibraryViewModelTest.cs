@@ -391,6 +391,55 @@ namespace Lalamachine.ViewModel.Unittests
             Assert.That(args.NewPlaylist, Is.True);
         }
 
+        private static string[] PlaylistAfterCreatingOneFrom(string[] selectedAlbums)
+        {
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            var viewModel = CreateViewModel(connection, context);
+            var playlist = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>());
+            viewModel.AddTracksToPlaylistEvent += playlist.AddTracksToPlaylistHandler;
+            viewModel.AddTracksFromAlbumCommand.Execute(new[] { "AliceAlbum1" });
+
+            viewModel.CreateNewPlaylistFromAlbumCommand.Execute(selectedAlbums);
+
+            return playlist.Playlist.Select(track => track.Title).ToArray();
+        }
+
+        // A list has nothing selected after a filter change.
+        [Test]
+        public void CreateNewPlaylistFromAlbum_NothingSelected_KeepsThePlaylist()
+        {
+            Assert.That(PlaylistAfterCreatingOneFrom(System.Array.Empty<string>()), Is.EqualTo(new[] { "a1" }));
+        }
+
+        [Test]
+        public void CreateNewPlaylistFromAlbum_AllSelected_KeepsThePlaylist()
+        {
+            Assert.That(PlaylistAfterCreatingOneFrom(new[] { LibLala.Constants.ALL }), Is.EqualTo(new[] { "a1" }));
+        }
+
+        [Test]
+        public void CreateNewPlaylistFromAlbum_AlbumSelected_ReplacesThePlaylist()
+        {
+            Assert.That(PlaylistAfterCreatingOneFrom(new[] { "BobAlbum1" }), Is.EqualTo(new[] { "b1" }));
+        }
+
+        [TestCase(new[] { LibLala.Constants.ALL, "Jazz" }, new[] { "Jazz" }, new[] { "Jazz" })]
+        [TestCase(new[] { LibLala.Constants.ALL, "Jazz" }, new[] { LibLala.Constants.ALL }, new[] { LibLala.Constants.ALL })]
+        [TestCase(new[] { LibLala.Constants.ALL, "Jazz", "Rock" }, new[] { LibLala.Constants.ALL, "Rock" }, new[] { "Jazz", "Rock" })]
+        [TestCase(new[] { LibLala.Constants.ALL, "Jazz", "Rock" }, new[] { "Jazz", "Rock" }, new[] { "Jazz", "Rock" })]
+        [TestCase(new[] { "Jazz", "Rock" }, new[] { "Rock" }, new[] { "Jazz", "Rock" })]
+        [TestCase(new[] { LibLala.Constants.ALL }, new[] { LibLala.Constants.ALL }, new[] { LibLala.Constants.ALL })]
+        [TestCase(new string[0], new string[0], new string[0])]
+        public void KeepAllOnItsOwn_ChangesTheSelection(string[] selected, string[] added, string[] expected)
+        {
+            var selection = new List<string>(selected);
+
+            LibraryViewModel.KeepAllOnItsOwn(selection, added);
+
+            Assert.That(selection, Is.EqualTo(expected));
+        }
+
         [TestCase(new[] { "Rock" }, "Jazz", new[] { "Rock", "Jazz" })]
         [TestCase(new string[0], "Jazz", new[] { "Jazz" })]
         [TestCase(new[] { LibLala.Constants.ALL }, "Jazz", new[] { "Jazz" })]
@@ -475,6 +524,43 @@ namespace Lalamachine.ViewModel.Unittests
 
             Assert.That(notifications, Does.Contain(nameof(viewModel.ArtistList)));
             Assert.That(viewModel.ArtistList, Does.Contain("Bob"));
+        }
+
+        // The search box reports being emptied after clearing emptied it.
+        [Test]
+        public void ClearSearch_TwiceInARow_RebuildsOnce()
+        {
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            var viewModel = CreateViewModel(connection, context);
+            viewModel.SearchString = "Rock";
+            var rebuilds = 0;
+            viewModel.DisplayLibChanged += (o, e) => ++rebuilds;
+
+            viewModel.ClearSearchCommand.Execute(null);
+            viewModel.ClearSearchCommand.Execute(null);
+
+            Assert.That(rebuilds, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ClearSearch_OnlyKeyFilterSet_StillClearsIt()
+        {
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            context.Tracks!.Single(x => x.Title == "a1").InitialKey = "8A";
+            context.SaveChanges();
+            var viewModel = CreateViewModel(connection, context);
+            var playlist = new LibraryPlaylistViewModel(Substitute.For<IDialogService>());
+            viewModel.DisplayLibChanged += playlist.DisplayChangedHandler;
+            viewModel.FiltersCleared += playlist.ClearKeyFilterHandler;
+            viewModel.UpdateListsCommand.Execute(null);
+            playlist.KeyFilterOptions.Single(x => x.Key == "8A").IsSelected = true;
+
+            viewModel.ClearSearchCommand.Execute(null);
+
+            Assert.That(playlist.IsKeyFilterActive, Is.False);
+            Assert.That(playlist.Playlist.Select(track => track.Title).OrderBy(title => title), Is.EqualTo(new[] { "a1", "a2", "b1", "b2" }));
         }
     }
 }

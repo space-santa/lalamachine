@@ -15,6 +15,8 @@ namespace Lalamachine.Desktop.Services
         private readonly Timer _positionTimer;
         private double _volume = 1;
         private bool _isMuted;
+        private bool _hasAudioOutput = true;
+        private int _openedTracks;
         private bool _disposed;
 
         public VlcAudioPlayer()
@@ -26,14 +28,26 @@ namespace Lalamachine.Desktop.Services
             _mediaPlayer = new MediaPlayer(_libVlc);
             _mediaPlayer.LengthChanged += (sender, e) => Post(() => MediaOpened?.Invoke(this, EventArgs.Empty));
             // VLC ignores Play and seeking on a track that ended until it is stopped.
-            _mediaPlayer.EndReached += (sender, e) => Post(() =>
+            _mediaPlayer.EndReached += (sender, e) => PostForThisTrack(() =>
             {
                 _mediaPlayer.Stop();
                 MediaEnded?.Invoke(this, EventArgs.Empty);
             });
-            _mediaPlayer.EncounteredError += (sender, e) => Post(() => MediaFailed?.Invoke(this, EventArgs.Empty));
-            // VLC forgets volume and mute while it has no audio output, so set them again once a track plays.
-            _mediaPlayer.Playing += (sender, e) => Post(ApplyVolume);
+            _mediaPlayer.EncounteredError += (sender, e) => PostForThisTrack(() => MediaFailed?.Invoke(this, EventArgs.Empty));
+            // VLC forgets volume and mute while it has no audio output: after Stop, until a few milliseconds after Playing.
+            // It reports a volume of -1 when the output goes, and the volume of the new one when that comes. Set them again then.
+            _mediaPlayer.VolumeChanged += (sender, e) =>
+            {
+                var hasAudioOutput = e.Volume >= 0;
+                Post(() =>
+                {
+                    if (hasAudioOutput && !_hasAudioOutput)
+                    {
+                        ApplyVolume();
+                    }
+                    _hasAudioOutput = hasAudioOutput;
+                });
+            };
 
             // Poll the position instead of handling every one of VLC's many TimeChanged events.
             _positionTimer = new Timer(_ => Post(() => PositionChanged?.Invoke(this, EventArgs.Empty)), null, 200, 200);
@@ -81,6 +95,8 @@ namespace Lalamachine.Desktop.Services
             // The player keeps its own reference to the media.
             using var media = new Media(_libVlc, source);
             _mediaPlayer.Media = media;
+            // Only now, setting the media ends the old track and its thread. So no event of that track can still count as the new one's.
+            Interlocked.Increment(ref _openedTracks);
         }
 
         public void Play() => _mediaPlayer.Play();
@@ -111,6 +127,19 @@ namespace Lalamachine.Desktop.Services
                     action();
                 }
             }, null);
+        }
+
+        // The user can start another track before this gets to run, and what is posted must not happen to that one.
+        private void PostForThisTrack(Action action)
+        {
+            var track = Volatile.Read(ref _openedTracks);
+            Post(() =>
+            {
+                if (track == _openedTracks)
+                {
+                    action();
+                }
+            });
         }
     }
 }

@@ -44,17 +44,25 @@ namespace Lalamachine.Desktop
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Whatever went wrong, the user has to be told.")]
         private static Window CreateMainWindow()
         {
+            Window? window = null;
             try
             {
-                return new MainWindow();
+                window = new MainWindow();
+                // Here, rather than leaving it to the lifetime: what goes wrong in the first layout doesn't reach the dispatcher's handler.
+                window.Show();
+                return window;
             }
             catch (Exception e)
             {
                 LogException(e);
-                return new MessageWindow($"Lalamachine couldn't start: {e.Message}\n\nThe details are in {ErrorLogPath}")
+                var message = new MessageWindow($"Lalamachine couldn't start: {e.Message}\n\nThe details are in {ErrorLogPath}")
                 {
                     WindowStartupLocation = WindowStartupLocation.CenterScreen,
                 };
+                // In this order, closing the last window ends the app.
+                message.Show();
+                window?.Close();
+                return message;
             }
         }
 

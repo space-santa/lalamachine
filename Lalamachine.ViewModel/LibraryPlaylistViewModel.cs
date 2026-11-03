@@ -42,6 +42,7 @@ namespace Lalamachine.ViewModel
         // so that next, previous and adding the selection to a playlist all go by what is on screen.
         private List<PlaylistTags> _allTracks = new List<PlaylistTags>();
         private ObservableCollection<KeyFilterOption> _keyFilterOptions = new ObservableCollection<KeyFilterOption>();
+        private string? _playingPath;
 
         public LibraryPlaylistViewModel(IDialogService dialogs) : base("LIBRARY", dialogs)
         {
@@ -76,6 +77,11 @@ namespace Lalamachine.ViewModel
             }
 
             _allTracks = e.Tracks.ToList();
+            // These are new objects, also for the track that is playing. Next and previous go by which one is marked.
+            foreach (var track in _allTracks.Where(x => x.Path == _playingPath))
+            {
+                track.IsPlaying = true;
+            }
             UpdateKeyFilterOptions(SelectedKeys());
             ShowFilteredTracks();
         }
@@ -100,12 +106,18 @@ namespace Lalamachine.ViewModel
 
         protected override void InvokePlayTrackEvent(PlaylistTags tags)
         {
+            if (tags is null)
+            {
+                return;
+            }
+
             // The track that was playing can be one that the filter hides.
             foreach (var track in _allTracks)
             {
                 track.IsPlaying = false;
             }
 
+            _playingPath = tags.Path;
             base.InvokePlayTrackEvent(tags);
         }
 

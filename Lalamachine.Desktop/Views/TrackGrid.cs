@@ -23,6 +23,11 @@ namespace Lalamachine.Desktop.Views
             return (eventSource as Visual)?.FindAncestorOfType<DataGridRow>(includeSelf: true)?.DataContext as PlaylistTags;
         }
 
+        public static bool IsOnColumnHeader(object? eventSource)
+        {
+            return (eventSource as Visual)?.FindAncestorOfType<DataGridColumnHeader>(includeSelf: true) is not null;
+        }
+
         private static void Grid_DoubleTapped(object? sender, TappedEventArgs e)
         {
             if (sender is DataGrid { DataContext: PlaylistBaseViewModel viewModel } && TrackAt(e.Source) is { } track)

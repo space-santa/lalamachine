@@ -57,6 +57,7 @@ namespace Lalamachine.Desktop.Views
             _libraryPlaylistViewModel = new LibraryPlaylistViewModel(dialogs);
 
             _shuffleRepeatViewModel.ShuffleRepeatChanged += _playlistViewModel.ShuffleRepeatChangedHandler;
+            _shuffleRepeatViewModel.ShuffleRepeatChanged += _libraryPlaylistViewModel.ShuffleRepeatChangedHandler;
             _player.ManualLoadEvent += _playlistViewModel.ManualLoadHandler;
 
             _player.PlayNextTrackEvent += _playlistViewModel.PlayNextTrackHandler;
