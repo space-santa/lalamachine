@@ -39,11 +39,13 @@ if ($notPackaged) { throw "install-forge.ifp doesn't package these published fil
 
 $setup = "dist\lalamachine_$version.exe"
 New-Item -ItemType Directory -Force (Join-Path $PSScriptRoot "dist") | Out-Null
+# Not straight into dist\. A window showing that folder can hold the new file open, and the builder then can't add the setup's manifest.
+$stagedSetup = Join-Path ([IO.Path]::GetTempPath()) "lalamachine_$version.exe"
 Push-Location $PSScriptRoot
 try {
   # The builder writes to stderr. Collect it rather than letting PowerShell turn it into an error.
   $ErrorActionPreference = "Continue"
-  $output = & $builder --no-color -i $installerProject -o $setup 2>&1 | ForEach-Object { "$_" }
+  $output = & $builder --no-color -i $installerProject -o $stagedSetup 2>&1 | ForEach-Object { "$_" }
   $exitCode = $LASTEXITCODE
   $ErrorActionPreference = "Stop"
 }
@@ -55,5 +57,8 @@ $output | Write-Host
 if ($exitCode -ne 0) { exit $exitCode }
 # A missing icon is only a warning, but the setup would come out wrong.
 if ($output -match '^\[wrn\]') { throw "InstallForge reported warnings, see above." }
+# Without its manifest, the setup doesn't ask for admin rights. The builder doesn't always warn about that.
+if (-not [Text.Encoding]::ASCII.GetString([IO.File]::ReadAllBytes($stagedSetup)).Contains("requestedExecutionLevel")) { throw "The setup has no manifest: $stagedSetup" }
 
+Move-Item $stagedSetup (Join-Path $PSScriptRoot $setup) -Force
 Write-Host "Installer: $(Join-Path $PSScriptRoot $setup)"
