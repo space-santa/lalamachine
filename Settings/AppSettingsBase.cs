@@ -54,6 +54,21 @@ namespace Settings
             Save();
         }
 
+        // Encrypting the same value gives a different result every time, so compare what is stored by what it stands for.
+        protected void SetSecret(string value, [CallerMemberName] string key = "defaultSecret")
+        {
+            ArgumentNullException.ThrowIfNull(value);
+
+            if (GetSecret(key) == value) { return; }
+
+            Set(SecretProtector.Protect(value), key);
+        }
+
+        protected string GetSecret([CallerMemberName] string key = "defaultSecret")
+        {
+            return SecretProtector.Unprotect(GetString("", key));
+        }
+
         protected int GetInt(int initialValue = 0, [CallerMemberName] string key = "defaultInt")
         {
             if (_settings.TryGetValue(key, out var value) && int.TryParse(value, NumberStyles.Integer, LibLala.Constants.CULTURE, out var result))

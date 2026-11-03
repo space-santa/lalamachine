@@ -42,11 +42,16 @@ namespace Settings
         {
             // Write a temporary file first, so a crash mid-write can't leave a truncated settings file behind.
             var tempPath = $"{SettingsPath}.tmp";
-            using (var file = File.Create(tempPath))
+            using (var file = CreateFile(tempPath))
             {
                 JsonSerializer.Serialize(file, settings);
             }
             File.Move(tempPath, SettingsPath, overwrite: true);
+        }
+
+        protected virtual FileStream CreateFile(string path)
+        {
+            return File.Create(path);
         }
 
         private string SettingsDir { get; }

@@ -35,9 +35,12 @@ namespace Lalamachine.ViewModel
             _loadCommand = new DelegateCommand(OnLoad);
             _scanCommand = new DelegateCommand(OnScan);
             _settings = new SettingsSettings();
+            Jellyfin = new JellyfinSettingsViewModel();
             Scanning = false;
             PropertyChanged += LibraryPathChanged;
         }
+
+        public JellyfinSettingsViewModel Jellyfin { get; }
 
         private void LibraryPathChanged(object? sender, PropertyChangedEventArgs e)
         {

@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\LibLala\LibLala.csproj" />
   </ItemGroup>
 

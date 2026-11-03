@@ -13,6 +13,7 @@ namespace Settings.Unittests
         public bool TestBool { get => GetBool(); set => Set(value); }
         public double TestDouble { get => GetDouble(); set => Set(value); }
         public string TestString { get => GetString(); set => Set(value); }
+        public string TestSecret { get => GetSecret(); set => SetSecret(value); }
     }
 
     public class AppSettingsTest
@@ -87,6 +88,78 @@ namespace Settings.Unittests
             Assert.That(settings.TestInt, Is.EqualTo(0));
             Assert.That(settings.TestBool, Is.False);
             Assert.That(settings.TestDouble, Is.EqualTo(0.0));
+        }
+
+        [Test]
+        public void SecretCanBeReadBack()
+        {
+            var settingsFile = Substitute.For<SettingsFile>("Joe", "Bob");
+            settingsFile.Load().Returns(new Dictionary<string, string>());
+            var settings = new TestSettings(settingsFile)
+            {
+                TestSecret = "Bob's key"
+            };
+            Assert.That(settings.TestSecret, Is.EqualTo("Bob's key"));
+        }
+
+        [Test]
+        public void MissingSecretIsEmpty()
+        {
+            var settingsFile = Substitute.For<SettingsFile>("Joe", "Bob");
+            settingsFile.Load().Returns(new Dictionary<string, string>());
+            var settings = new TestSettings(settingsFile);
+            Assert.That(settings.TestSecret, Is.Empty);
+        }
+
+        [Test]
+        public void UnchangedSecretIsNotSavedAgain()
+        {
+            var settingsFile = Substitute.For<SettingsFile>("Joe", "Bob");
+            settingsFile.Load().Returns(new Dictionary<string, string>());
+            var settings = new TestSettings(settingsFile)
+            {
+                TestSecret = "Bob's key"
+            };
+            settings.TestSecret = "Bob's key";
+            settingsFile.Received(1).Save(Arg.Any<Dictionary<string, string>>());
+        }
+
+        [Test]
+        public void SecretCanBeRemoved()
+        {
+            var settingsFile = Substitute.For<SettingsFile>("Joe", "Bob");
+            settingsFile.Load().Returns(new Dictionary<string, string>());
+            var settings = new TestSettings(settingsFile)
+            {
+                TestSecret = "Bob's key"
+            };
+            settings.TestSecret = "";
+            Assert.That(settings.TestSecret, Is.Empty);
+            settingsFile.Received().Save(Arg.Is<Dictionary<string, string>>(x => x["TestSecret"] == ""));
+        }
+
+        [Test]
+        [Platform("Win")]
+        public void SecretIsNotStoredAsItIsOnWindows()
+        {
+            var settingsFile = Substitute.For<SettingsFile>("Joe", "Bob");
+            settingsFile.Load().Returns(new Dictionary<string, string>());
+            var settings = new TestSettings(settingsFile)
+            {
+                TestSecret = "Bob's key"
+            };
+            settingsFile.Received().Save(Arg.Is<Dictionary<string, string>>(x => x["TestSecret"] != "Bob's key"));
+        }
+
+        [TestCase("not base64 at all")]
+        [TestCase("AQIDBA==")]
+        [Platform("Win")]
+        public void SecretThatCantBeDecryptedIsEmptyOnWindows(string stored)
+        {
+            var settingsFile = Substitute.For<SettingsFile>("Joe", "Bob");
+            settingsFile.Load().Returns(new Dictionary<string, string> { ["TestSecret"] = stored });
+            var settings = new TestSettings(settingsFile);
+            Assert.That(settings.TestSecret, Is.Empty);
         }
     }
 }

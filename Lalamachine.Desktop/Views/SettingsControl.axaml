@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:Lalamachine.ViewModel"
+             xmlns:jellyfin="using:LibLala.Jellyfin"
              x:Class="Lalamachine.Desktop.Views.SettingsControl"
              x:DataType="vm:SettingsViewModel">
     <StackPanel>
@@ -11,5 +12,42 @@
             <TextBlock Classes="label" Text="{Binding LibraryPath}" />
         </StackPanel>
         <Label IsVisible="{Binding Scanning}" HorizontalAlignment="Center" FontSize="24" Content="Scanning..." />
+
+        <Label Classes="header" Margin="0,16,0,4" Content="Jellyfin" />
+        <Panel DataContext="{Binding Jellyfin}">
+            <Grid x:DataType="vm:JellyfinSettingsViewModel"
+                  ColumnDefinitions="Auto,*"
+                  RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                  RowSpacing="4"
+                  ColumnSpacing="8"
+                  IsEnabled="{Binding !IsTesting}">
+                <TextBlock Grid.Row="0" Grid.Column="0" Classes="label" Text="Server address" />
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ServerAddress}" PlaceholderText="http://192.168.1.10:8096" />
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Classes="label" Text="API key" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ApiKey}" PasswordChar="•" />
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Classes="label" Text="User" />
+                <ComboBox Grid.Row="2" Grid.Column="1"
+                          HorizontalAlignment="Stretch"
+                          ItemsSource="{Binding Users}"
+                          SelectedItem="{Binding SelectedUser}"
+                          PlaceholderText="Choose after testing the connection"
+                          ToolTip.Tip="The user the playlists will belong to">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="jellyfin:JellyfinUser">
+                            <TextBlock Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Spacing="4">
+                    <Button Classes="text" Content="Test connection" Command="{Binding TestConnectionCommand}" />
+                    <Button Classes="text" Content="Save" Command="{Binding SaveCommand}" />
+                </StackPanel>
+
+                <TextBlock Grid.Row="4" Grid.Column="1" Classes="label" Text="{Binding Status}" TextWrapping="Wrap" />
+            </Grid>
+        </Panel>
     </StackPanel>
 </UserControl>
