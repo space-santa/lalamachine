@@ -39,12 +39,12 @@ namespace Lalamachine.ViewModel
     public class LibraryPlaylistViewModel : PlaylistBaseViewModel
     {
         // All the tracks of the library's selection, in the order on screen. Playlist has the ones that the key filter lets through,
-        // so that next, previous and adding the selection to a playlist all go by what is on screen.
+        // so that next, previous and adding the selection to the queue all go by what is on screen.
         private List<PlaylistTags> _allTracks = new List<PlaylistTags>();
         private ObservableCollection<KeyFilterOption> _keyFilterOptions = new ObservableCollection<KeyFilterOption>();
         private string? _playingPath;
 
-        public LibraryPlaylistViewModel(IDialogService dialogs) : base("LIBRARY", dialogs)
+        public LibraryPlaylistViewModel(IDialogService dialogs, ITrackPlaylists trackPlaylists) : base("LIBRARY", dialogs, trackPlaylists)
         {
             _clearKeyFilterCommand = new DelegateCommand(OnClearKeyFilter);
         }
@@ -82,6 +82,7 @@ namespace Lalamachine.ViewModel
             {
                 track.IsPlaying = true;
             }
+            MarkLiked(_allTracks);
             UpdateKeyFilterOptions(SelectedKeys());
             ShowFilteredTracks();
         }
@@ -94,6 +95,8 @@ namespace Lalamachine.ViewModel
                 ClearKeyFilterCommand.Execute(null);
             }
         }
+
+        protected override IEnumerable<PlaylistTags> AllTracks => _allTracks;
 
         protected override void Sort(SortMessage sortMessage)
         {

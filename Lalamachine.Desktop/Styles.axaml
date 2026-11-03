@@ -1,5 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Lalamachine.ViewModel">
 
     <!-- Dark blue, white text, grey gradient buttons that turn orange. -->
     <Styles.Resources>
@@ -46,6 +47,18 @@
         <x:Double x:Key="DataGridRowSelectedHoveredBackgroundOpacity">1</x:Double>
         <x:Double x:Key="DataGridRowSelectedUnfocusedBackgroundOpacity">1</x:Double>
         <x:Double x:Key="DataGridRowSelectedHoveredUnfocusedBackgroundOpacity">1</x:Double>
+
+        <!-- The heart column of the grids of tracks. A cell's data context is its track, the grid's is the list. -->
+        <DataTemplate x:Key="HeartCell" x:DataType="vm:PlaylistTags">
+            <Button Classes="heart"
+                    Classes.liked="{Binding IsLiked}"
+                    IsVisible="{Binding !IsOutsideLibrary}"
+                    Focusable="False"
+                    Command="{Binding $parent[DataGrid].((vm:PlaylistBaseViewModel)DataContext).ToggleLikedCommand}"
+                    CommandParameter="{Binding}">
+                <Path Data="M12,21 C12,21 3,15 3,8.5 C3,5.5 5.4,3 8.2,3 C9.8,3 11.2,3.9 12,5.2 C12.8,3.9 14.2,3 15.8,3 C18.6,3 21,5.5 21,8.5 C21,15 12,21 12,21 Z" />
+            </Button>
+        </DataTemplate>
     </Styles.Resources>
 
     <Style Selector="Window">
@@ -154,12 +167,44 @@
     <Style Selector="Button.columnFilter.active">
         <Setter Property="Background" Value="DarkOrange" />
     </Style>
-    <Style Selector="Button.columnFilterClear">
+    <!-- A button with text at the bottom of a flyout. -->
+    <Style Selector="Button.flyoutAction">
         <Setter Property="MinHeight" Value="32" />
         <Setter Property="FontFamily" Value="Calibri" />
         <Setter Property="FontSize" Value="20" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="Margin" Value="0,8,0,0" />
+    </Style>
+
+    <!-- A button with a word or two instead of an icon. -->
+    <Style Selector="Button.text">
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="FontFamily" Value="Calibri" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="Padding" Value="8,2" />
+    </Style>
+
+    <!-- Empty or filled, white like the text so that it shows on a selected row too. -->
+    <Style Selector="Button.heart">
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="Padding" Value="4,0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style Selector="Button.heart:pointerover /template/ ContentPresenter#PART_ContentPresenter, Button.heart:pressed /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="Button.heart Path">
+        <Setter Property="Width" Value="18" />
+        <Setter Property="Height" Value="18" />
+        <Setter Property="Stretch" Value="Uniform" />
+        <Setter Property="Stroke" Value="White" />
+        <Setter Property="StrokeThickness" Value="1.5" />
+        <Setter Property="Fill" Value="Transparent" />
+    </Style>
+    <Style Selector="Button.heart.liked Path">
+        <Setter Property="Fill" Value="White" />
     </Style>
     <Style Selector="FlyoutPresenter CheckBox">
         <Setter Property="FontFamily" Value="Calibri" />

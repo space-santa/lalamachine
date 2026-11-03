@@ -25,6 +25,10 @@ namespace Lalamachine.Desktop.Services
 
         public Task ShowMessageAsync(string message) => MessageWindow.ShowAsync(_owner, message);
 
+        public Task<bool> ConfirmAsync(string message) => MessageWindow.ConfirmAsync(_owner, message);
+
+        public Task<string?> AskForTextAsync(string prompt, string text) => TextInputWindow.ShowAsync(_owner, prompt, text);
+
         public async Task<IReadOnlyList<string>> PickMusicFilesAsync()
         {
             var files = await _owner.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions

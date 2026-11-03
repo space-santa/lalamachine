@@ -17,16 +17,17 @@
                   GridLinesVisibility="None">
             <DataGrid.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Add selection to current playlist"
-                              Command="{Binding AddSelectionToPlaylistCommand}"
+                    <MenuItem Header="Add selection to queue"
+                              Command="{Binding AddSelectionToQueueCommand}"
                               CommandParameter="{Binding #LibraryPlaylistGrid.SelectedItems}" />
-                    <MenuItem Header="Create new playlist with selection"
-                              Command="{Binding CreateNewPlaylistFromSelectionCommand}"
+                    <MenuItem Header="Replace queue with selection"
+                              Command="{Binding ReplaceQueueWithSelectionCommand}"
                               CommandParameter="{Binding #LibraryPlaylistGrid.SelectedItems}" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="🔊" CanUserSort="False" Binding="{Binding IsPlaying, Converter={x:Static local:Converters.PlaylistItemIsPlaying}}" />
+                <DataGridTemplateColumn CanUserSort="False" CellTemplate="{StaticResource HeartCell}" />
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Track" Tag="Track" Binding="{Binding Track}" />
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Disc" Tag="Disc" Binding="{Binding DiscNumber}" />
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Title" Tag="Title" Binding="{Binding Title}" />
@@ -47,7 +48,7 @@
                                         <Flyout Placement="BottomEdgeAlignedLeft">
                                             <DockPanel>
                                                 <Button DockPanel.Dock="Bottom"
-                                                        Classes="columnFilterClear"
+                                                        Classes="flyoutAction"
                                                         Content="Clear filter"
                                                         Command="{Binding ClearKeyFilterCommand}" />
                                                 <ScrollViewer MaxHeight="500">

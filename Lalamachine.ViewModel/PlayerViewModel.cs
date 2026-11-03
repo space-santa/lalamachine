@@ -49,12 +49,17 @@ namespace Lalamachine.ViewModel
         }
 
         public event EventHandler? PlayNextTrackEvent;
+        public event EventHandler? PlayNextPlaylistTrackEvent;
         public event EventHandler? PlayNextLibraryTrackEvent;
         protected virtual void InvokePlayNextTrackEvent()
         {
             if (LastActivePlaylist == "MAIN")
             {
                 PlayNextTrackEvent?.Invoke(this, EventArgs.Empty);
+            }
+            else if (LastActivePlaylist == PlaylistsViewModel.ListName)
+            {
+                PlayNextPlaylistTrackEvent?.Invoke(this, EventArgs.Empty);
             }
             else
             {
@@ -67,12 +72,17 @@ namespace Lalamachine.ViewModel
         }
 
         public event EventHandler? PlayLastTrackEvent;
+        public event EventHandler? PlayLastPlaylistTrackEvent;
         public event EventHandler? PlayLastLibraryTrackEvent;
         protected virtual void OnPlayLastTrack(object? commandParameter)
         {
             if (LastActivePlaylist == "MAIN")
             {
                 PlayLastTrackEvent?.Invoke(this, EventArgs.Empty);
+            }
+            else if (LastActivePlaylist == PlaylistsViewModel.ListName)
+            {
+                PlayLastPlaylistTrackEvent?.Invoke(this, EventArgs.Empty);
             }
             else
             {

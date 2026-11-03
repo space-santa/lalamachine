@@ -9,6 +9,9 @@
         WindowStartupLocation="CenterOwner">
     <StackPanel Margin="16" Spacing="16">
         <SelectableTextBlock x:Name="MessageText" TextWrapping="Wrap" FontSize="18" Foreground="White" />
-        <Button Content="OK" IsDefault="True" HorizontalAlignment="Right" Click="OkButton_Click" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+            <Button Content="OK" IsDefault="True" Click="OkButton_Click" />
+            <Button x:Name="CancelButton" Content="Cancel" IsCancel="True" IsVisible="False" Click="CancelButton_Click" />
+        </StackPanel>
     </StackPanel>
 </Window>

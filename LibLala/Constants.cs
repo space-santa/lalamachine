@@ -14,6 +14,9 @@ namespace LibLala
 
         public const string MISCPLAYLISTNAME = "cs1m090";
 
+        // The playlist that the hearts of the tracks go by. It is always there, and can't be renamed or deleted.
+        public const string LIKEDPLAYLISTNAME = "Liked";
+
         public const string ALL = "-- all --";
 
         public static CultureInfo CULTURE { get; } = CultureInfo.GetCultureInfo("en-AU");

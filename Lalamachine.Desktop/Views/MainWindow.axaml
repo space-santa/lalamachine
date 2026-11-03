@@ -7,10 +7,13 @@
         Width="800" Height="800">
     <Grid RowDefinitions="*,Auto">
         <TabControl x:Name="ListTabs" Grid.Row="0">
-            <TabItem Header="Playlist">
-                <views:PlaylistControl x:Name="MainPlaylist" />
+            <TabItem Header="Queue">
+                <views:QueueControl x:Name="Queue" />
             </TabItem>
-            <TabItem Header="Library">
+            <TabItem Header="Playlists">
+                <views:PlaylistsControl x:Name="Playlists" />
+            </TabItem>
+            <TabItem x:Name="LibraryTab" Header="Library">
                 <views:LibraryControl x:Name="Library" />
             </TabItem>
             <TabItem Header="🛠">

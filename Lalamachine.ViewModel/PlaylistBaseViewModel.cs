@@ -25,21 +25,31 @@ namespace Lalamachine.ViewModel
     public class PlaylistBaseViewModel : BaseNotifyPropertyChanged
     {
         private readonly IDialogService _dialogs;
+        private string _name;
+        // Where the playing track was after it got removed, so that next and previous go on from there and not from the top.
+        private int _removedPlayingIndex = -1;
 
-        public PlaylistBaseViewModel(string name, IDialogService dialogs)
+        public PlaylistBaseViewModel(string name, IDialogService dialogs, ITrackPlaylists trackPlaylists)
         {
-            Name = name;
+            ArgumentNullException.ThrowIfNull(trackPlaylists);
+
+            _name = name;
             _dialogs = dialogs;
+            TrackPlaylists = trackPlaylists;
             Playlist = new ObservableCollection<PlaylistTags>();
             _playTrackCommand = new DelegateCommand(OnPlayTrackCommandHandler);
             _removeTrackCommand = new DelegateCommand(OnRemoveTrackCommandHandler);
             _removeAllTracksCommand = new DelegateCommand(OnRemoveAllTrackCommandHandler);
-            _createNewPlaylistFromSelectionCommand = new DelegateCommand(OnCreateNewPlaylistFromSelectionCommand);
-            _addSelectionToPlaylistCommand = new DelegateCommand(OnAddSelectionToPlaylistCommand);
+            _replaceQueueWithSelectionCommand = new DelegateCommand(OnReplaceQueueWithSelectionCommand);
+            _addSelectionToQueueCommand = new DelegateCommand(OnAddSelectionToQueueCommand);
+            _toggleLikedCommand = new DelegateCommand(OnToggleLikedCommand);
             _sortCommand = new DelegateCommand(OnSortCommandHandler);
 
             PropertyChanged += UpdatePlaylistInfoHandler;
+            TrackPlaylists.LikedChanged += LikedChangedHandler;
         }
+
+        public ITrackPlaylists TrackPlaylists { get; }
 
         private void UpdatePlaylistInfoHandler(object? sender, PropertyChangedEventArgs e)
         {
@@ -63,6 +73,8 @@ namespace Lalamachine.ViewModel
             }
 
             Sort(sortMessage);
+            // Sorted, the place of a removed track doesn't mean anything any more.
+            _removedPlayingIndex = -1;
             NotifyPropertyChanged(nameof(Playlist));
         }
 
@@ -264,8 +276,23 @@ namespace Lalamachine.ViewModel
         private void OnRemoveTrackCommandHandler(object? obj)
         {
             if (obj is null) { return; }
-            var selectedItem = (PlaylistTags)obj;
-            Playlist.Remove(selectedItem);
+            RemoveTrack((PlaylistTags)obj);
+        }
+
+        protected virtual void RemoveTrack(PlaylistTags track)
+        {
+            ArgumentNullException.ThrowIfNull(track);
+
+            var index = Playlist.IndexOf(track);
+            if (track.IsPlaying)
+            {
+                _removedPlayingIndex = index;
+            }
+            else if (index >= 0 && index < _removedPlayingIndex)
+            {
+                --_removedPlayingIndex;
+            }
+            Playlist.Remove(track);
             NotifyPropertyChanged(nameof(Playlist));
         }
 
@@ -276,29 +303,39 @@ namespace Lalamachine.ViewModel
             DeleteAllTracks();
         }
 
-        private readonly DelegateCommand _createNewPlaylistFromSelectionCommand;
-        public ICommand CreateNewPlaylistFromSelectionCommand => _createNewPlaylistFromSelectionCommand;
-        private void OnCreateNewPlaylistFromSelectionCommand(object? obj)
+        private readonly DelegateCommand _replaceQueueWithSelectionCommand;
+        public ICommand ReplaceQueueWithSelectionCommand => _replaceQueueWithSelectionCommand;
+        private void OnReplaceQueueWithSelectionCommand(object? obj)
         {
             if (obj is null) { return; }
-            InvokeAddLibraryTracksToPlaylistEvent(true, ConvertSelectedItemsToTagsList(obj));
+            InvokeAddTracksToQueueEvent(true, ConvertSelectedItemsToTagsList(obj));
         }
 
-        private readonly DelegateCommand _addSelectionToPlaylistCommand;
-        public ICommand AddSelectionToPlaylistCommand => _addSelectionToPlaylistCommand;
-        private void OnAddSelectionToPlaylistCommand(object? obj)
+        private readonly DelegateCommand _addSelectionToQueueCommand;
+        public ICommand AddSelectionToQueueCommand => _addSelectionToQueueCommand;
+        private void OnAddSelectionToQueueCommand(object? obj)
         {
             if (obj is null) { return; }
-            InvokeAddLibraryTracksToPlaylistEvent(false, ConvertSelectedItemsToTagsList(obj));
+            InvokeAddTracksToQueueEvent(false, ConvertSelectedItemsToTagsList(obj));
+        }
+
+        private readonly DelegateCommand _toggleLikedCommand;
+        public ICommand ToggleLikedCommand => _toggleLikedCommand;
+        private void OnToggleLikedCommand(object? obj)
+        {
+            if (obj is PlaylistTags { IsOutsideLibrary: false } track)
+            {
+                TrackPlaylists.ToggleLiked(track);
+            }
         }
         #endregion
 
         #region events
-        public event EventHandler<AddTracksToPlaylistEventArgs>? AddLibraryTracksToPlaylistEvent;
-        private void InvokeAddLibraryTracksToPlaylistEvent(bool newPlaylist, List<LibLalaTags> tags)
+        public event EventHandler<AddTracksToQueueEventArgs>? AddTracksToQueueEvent;
+        private void InvokeAddTracksToQueueEvent(bool replaceQueue, List<LibLalaTags> tags)
         {
-            var args = new AddTracksToPlaylistEventArgs(tags, newPlaylist);
-            AddLibraryTracksToPlaylistEvent?.Invoke(this, args);
+            var args = new AddTracksToQueueEventArgs(tags, replaceQueue);
+            AddTracksToQueueEvent?.Invoke(this, args);
         }
 
         public event EventHandler<PlayTrackEventArgs>? PlayTrackEvent;
@@ -314,6 +351,7 @@ namespace Lalamachine.ViewModel
                 item.IsPlaying = false;
             }
             tags.IsPlaying = true;
+            _removedPlayingIndex = -1;
             NotifyPropertyChanged(nameof(CurrentIndex));
             PlayTrackEvent?.Invoke(this, new PlayTrackEventArgs(tags.Path, Name));
         }
@@ -323,6 +361,7 @@ namespace Lalamachine.ViewModel
         {
             NotifyPropertyChanged(nameof(NumberOfTracks));
             NotifyPropertyChanged(nameof(TotalPlaytime));
+            NotifyPropertyChanged(nameof(HasTracks));
         }
 
         private static List<LibLalaTags> ConvertSelectedItemsToTagsList(object obj)
@@ -351,16 +390,59 @@ namespace Lalamachine.ViewModel
         public int NumberOfTracks => Playlist.Count;
         public int TotalPlaytime => Playlist.Sum(track => track.Length);
 
-        public void AddTracksToPlaylistHandler(object? sender, AddTracksToPlaylistEventArgs e)
+        public void AddTracksToQueueHandler(object? sender, AddTracksToQueueEventArgs e)
         {
             if (e is null)
             {
                 return;
             }
 
-            // Nothing selected is no reason to lose the playlist, that's what Remove All is for.
-            if (e.NewPlaylist && e.Tracks.Count > 0) { DeleteAllTracks(); }
+            // Nothing selected is no reason to lose the queue, that's what Remove All is for.
+            if (e.ReplaceQueue && e.Tracks.Count > 0) { DeleteAllTracks(); }
             AddTracks(e.Tracks);
+        }
+
+        public void LikedChangedHandler(object? sender, LikedChangedEventArgs e)
+        {
+            if (e is null)
+            {
+                return;
+            }
+
+            foreach (var track in AllTracks.Where(x => e.Paths.Contains(x.Path)))
+            {
+                track.IsLiked = e.IsLiked;
+            }
+        }
+
+        protected void MarkLiked(IEnumerable<PlaylistTags> tracks)
+        {
+            ArgumentNullException.ThrowIfNull(tracks);
+
+            foreach (var track in tracks)
+            {
+                track.IsLiked = TrackPlaylists.IsLiked(track.Path);
+            }
+        }
+
+        // The ones in Playlist, and whatever else a list has that it doesn't show right now.
+        protected virtual IEnumerable<PlaylistTags> AllTracks => Playlist;
+
+        // Moves it to where the track at that index is.
+        public void MoveTrack(PlaylistTags track, int newIndex)
+        {
+            var oldIndex = Playlist.IndexOf(track);
+            if (oldIndex < 0 || newIndex < 0 || newIndex >= Playlist.Count || oldIndex == newIndex)
+            {
+                return;
+            }
+
+            // Not Move, the grid doesn't show that.
+            Playlist.RemoveAt(oldIndex);
+            Playlist.Insert(newIndex, track);
+            // What comes next after a removed playing track stays next, when another track moves across its place.
+            _removedPlayingIndex += (newIndex < _removedPlayingIndex ? 1 : 0) - (oldIndex < _removedPlayingIndex ? 1 : 0);
+            NotifyPropertyChanged(nameof(Playlist));
         }
 
         public PlaylistTags? NextTrack
@@ -388,9 +470,11 @@ namespace Lalamachine.ViewModel
                     return Playlist[newIndex];
                 }
 
-                if (currentIndex < Playlist.Count - 1)
+                // What took the place of a playing track that got removed comes next.
+                var nextIndex = currentIndex >= 0 ? currentIndex + 1 : Math.Max(_removedPlayingIndex, 0);
+                if (nextIndex < Playlist.Count)
                 {
-                    return Playlist[currentIndex + 1];
+                    return Playlist[nextIndex];
                 }
 
                 if (PlaylistShuffleRepeatState == ShuffleRepeatState.RepeatAll)
@@ -405,20 +489,21 @@ namespace Lalamachine.ViewModel
         {
             get
             {
-                var previousIndex = 0;
-                if (CurrentIndex > 0)
-                {
-                    previousIndex = CurrentIndex - 1;
-                }
+                var previousIndex = Math.Clamp(PlayingPosition - 1, 0, Playlist.Count - 1);
                 return Playlist[previousIndex];
             }
         }
 
+        // Of the playing track, or of the one that was playing until it got removed. -1 if there is neither.
+        protected int PlayingPosition => CurrentIndex >= 0 ? CurrentIndex : _removedPlayingIndex;
+
         public ObservableCollection<PlaylistTags> Playlist { get; private set; }
 
-        protected void ReplacePlaylist(IEnumerable<PlaylistTags> tracks)
+        // A place in the old list means nothing in a new one, so it takes the new place of a removed playing track, if it has one.
+        protected void ReplacePlaylist(IEnumerable<PlaylistTags> tracks, int removedPlayingIndex = -1)
         {
             Playlist = new ObservableCollection<PlaylistTags>(tracks);
+            _removedPlayingIndex = removedPlayingIndex;
         }
 
         public ShuffleRepeatState PlaylistShuffleRepeatState { get; set; }
@@ -430,6 +515,9 @@ namespace Lalamachine.ViewModel
         }
         public void AddTrack(PlaylistTags tags)
         {
+            ArgumentNullException.ThrowIfNull(tags);
+
+            tags.IsLiked = TrackPlaylists.IsLiked(tags.Path);
             Playlist.Add(tags);
             NotifyPropertyChanged(nameof(Playlist));
         }
@@ -480,6 +568,7 @@ namespace Lalamachine.ViewModel
         public void DeleteAllTracks()
         {
             Playlist.Clear();
+            _removedPlayingIndex = -1;
             NotifyPropertyChanged(nameof(Playlist));
         }
         #endregion
@@ -495,7 +584,7 @@ namespace Lalamachine.ViewModel
             try
             {
                 var tags = new TagReader().Read(path);
-                AddTrack(tags);
+                AddTrack(new PlaylistTags(tags) { IsOutsideLibrary = true });
             }
             catch (TagReaderException ex)
             {
@@ -522,7 +611,16 @@ namespace Lalamachine.ViewModel
         }
 
         public bool HasTracks => Playlist.Count > 0;
-        public string Name { get; private set; }
+
+        public string Name
+        {
+            get => _name;
+            protected set
+            {
+                _name = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         public void ShuffleRepeatChangedHandler(object? sender, ChangeShuffleRepeatEventArgs e)
         {
