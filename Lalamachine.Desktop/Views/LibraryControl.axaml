@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="using:Lalamachine.Desktop.Views"
+             xmlns:vm="using:Lalamachine.ViewModel"
+             x:Class="Lalamachine.Desktop.Views.LibraryControl"
+             x:DataType="vm:LibraryViewModel"
+             Loaded="UserControl_Loaded">
+    <Grid RowDefinitions="*,Auto,*,Auto,Auto">
+        <Grid Grid.Row="0" ColumnDefinitions="*,*,*">
+            <DockPanel Grid.Column="0">
+                <Label DockPanel.Dock="Top" Classes="header" Content="{Binding GenreHeader}" />
+                <ListBox x:Name="GenreList" ItemsSource="{Binding GenreList}" SelectionMode="Multiple" SelectionChanged="GenreList_SelectionChanged" />
+            </DockPanel>
+            <DockPanel Grid.Column="1">
+                <Label DockPanel.Dock="Top" Classes="header" Content="{Binding ArtistHeader}" />
+                <ListBox x:Name="ArtistList" ItemsSource="{Binding ArtistList}" SelectionMode="Multiple" SelectionChanged="ArtistList_SelectionChanged" />
+            </DockPanel>
+            <DockPanel Grid.Column="2">
+                <Label DockPanel.Dock="Top" Classes="header" Content="{Binding AlbumHeader}" />
+                <ListBox x:Name="AlbumList" ItemsSource="{Binding AlbumList}" SelectionMode="Multiple" SelectionChanged="AlbumList_SelectionChanged">
+                    <ListBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Add to current playlist" Command="{Binding AddTracksFromAlbumCommand}" CommandParameter="{Binding #AlbumList.SelectedItems}" />
+                            <MenuItem Header="Create new playlist" Command="{Binding CreateNewPlaylistFromAlbumCommand}" CommandParameter="{Binding #AlbumList.SelectedItems}" />
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+                </ListBox>
+            </DockPanel>
+        </Grid>
+
+        <Grid Grid.Row="1" ColumnDefinitions="Auto,*">
+            <Button Grid.Column="0" Content="🧹" Click="ClearButton_Click" />
+            <!-- One way: the code behind decides when the typed text is long enough to search for. -->
+            <TextBox x:Name="SearchBox" Grid.Column="1" Text="{Binding SearchString, Mode=OneWay}" TextChanged="SearchBox_TextChanged" />
+        </Grid>
+
+        <views:LibraryPlaylistControl x:Name="LibraryPlaylist" Grid.Row="2" />
+
+        <Label Grid.Row="3" IsVisible="{Binding Scanning}" HorizontalAlignment="Center" FontSize="24" Content="Scanning..." />
+        <ProgressBar Grid.Row="4"
+                     Height="12"
+                     Foreground="DarkOrange"
+                     IsVisible="{Binding Scanning}"
+                     Minimum="0"
+                     Maximum="{Binding FilesToScanCount}"
+                     Value="{Binding FilesScannedCount}" />
+    </Grid>
+</UserControl>

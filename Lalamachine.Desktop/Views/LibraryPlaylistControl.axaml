@@ -1,0 +1,89 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:Lalamachine.Desktop"
+             xmlns:sys="using:System"
+             xmlns:vm="using:Lalamachine.ViewModel"
+             x:Class="Lalamachine.Desktop.Views.LibraryPlaylistControl"
+             x:DataType="vm:LibraryPlaylistViewModel">
+    <Grid RowDefinitions="*,Auto">
+        <DataGrid x:Name="LibraryPlaylistGrid"
+                  Grid.Row="0"
+                  ItemsSource="{Binding Playlist}"
+                  IsReadOnly="True"
+                  SelectionMode="Extended"
+                  CanUserReorderColumns="True"
+                  CanUserResizeColumns="True"
+                  CanUserSortColumns="True"
+                  GridLinesVisibility="None">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Add selection to current playlist"
+                              Command="{Binding AddSelectionToPlaylistCommand}"
+                              CommandParameter="{Binding #LibraryPlaylistGrid.SelectedItems}" />
+                    <MenuItem Header="Create new playlist with selection"
+                              Command="{Binding CreateNewPlaylistFromSelectionCommand}"
+                              CommandParameter="{Binding #LibraryPlaylistGrid.SelectedItems}" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <DataGrid.Columns>
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="🔊" CanUserSort="False" Binding="{Binding IsPlaying, Converter={x:Static local:Converters.PlaylistItemIsPlaying}}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Track" Tag="Track" Binding="{Binding Track}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Disc" Tag="Disc" Binding="{Binding DiscNumber}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Title" Tag="Title" Binding="{Binding Title}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Length" Tag="Length" Binding="{Binding LengthString}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Key" Tag="Key" Binding="{Binding InitialKey}">
+                    <DataGridTextColumn.HeaderTemplate>
+                        <DataTemplate x:DataType="sys:String">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <TextBlock Text="{Binding}" VerticalAlignment="Center" />
+                                <!-- A header's data context is its text. -->
+                                <Button x:DataType="vm:LibraryPlaylistViewModel"
+                                        DataContext="{Binding $parent[DataGrid].DataContext}"
+                                        Classes="columnFilter"
+                                        Classes.active="{Binding IsKeyFilterActive}"
+                                        ToolTip.Tip="Filter by key">
+                                    <PathIcon Width="12" Height="12" Data="M0,0 H12 L7,6 V12 L5,10 V6 Z" />
+                                    <Button.Flyout>
+                                        <Flyout Placement="BottomEdgeAlignedLeft">
+                                            <DockPanel>
+                                                <Button DockPanel.Dock="Bottom"
+                                                        Classes="columnFilterClear"
+                                                        Content="Clear filter"
+                                                        Command="{Binding ClearKeyFilterCommand}" />
+                                                <ScrollViewer MaxHeight="500">
+                                                    <ItemsControl ItemsSource="{Binding KeyFilterOptions}">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <UniformGrid Columns="2" />
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate x:DataType="vm:KeyFilterOption">
+                                                                <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}" />
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </ScrollViewer>
+                                            </DockPanel>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="BPM" Tag="BPM" Binding="{Binding BeatsPerMinuteString}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Comment" Tag="Comment" Binding="{Binding Comment}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Album" Tag="Album" Binding="{Binding Album}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Artist" Tag="Artist" Binding="{Binding ArtistString}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Genre" Tag="Genre" Binding="{Binding GenreString}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Year" Tag="Year" Binding="{Binding Year}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Label Content="{Binding NumberOfTracks}" />
+            <Label Content="Tracks, Total Playtime:" />
+            <Label Content="{Binding TotalPlaytime, Converter={x:Static local:Converters.SecondsToTime}}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

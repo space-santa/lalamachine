@@ -36,19 +36,16 @@ namespace LalaDb.Model
 
             return list;
         }
-        public string?[] ArtistList(string genreFilter, string searchString)
+        public string?[] ArtistList(IReadOnlyCollection<string> genreFilter, string searchString)
         {
             if (Scanning) { return Array.Empty<string>(); }
 
-            if (genreFilter is null)
-            {
-                genreFilter = "";
-            }
+            ArgumentNullException.ThrowIfNull(genreFilter);
 
-            if (genreFilter.Length > 0 && _context.GenreTracks != null)
+            if (genreFilter.Count > 0 && _context.GenreTracks != null)
             {
                 return _context.GenreTracks.AsEnumerable()
-                               .Where(x => x.Genre?.Name == genreFilter)
+                               .Where(x => IsIn(genreFilter, x.Genre?.Name))
                                .SelectMany(x =>
                                {
                                    if (x.Track != null && x.Track.ArtistTracks != null)
@@ -73,33 +70,26 @@ namespace LalaDb.Model
             return Array.Empty<string>();
         }
 
-        public string?[]? AlbumList(string artistFilter, string genreFilter, string searchString)
+        public string?[]? AlbumList(IReadOnlyCollection<string> artistFilter, IReadOnlyCollection<string> genreFilter, string searchString)
         {
             if (Scanning) { return Array.Empty<string>(); }
 
+            ArgumentNullException.ThrowIfNull(artistFilter);
+            ArgumentNullException.ThrowIfNull(genreFilter);
+
             string?[]? list;
 
-            if (artistFilter is null)
-            {
-                artistFilter = "";
-            }
-
-            if (genreFilter is null)
-            {
-                genreFilter = "";
-            }
-
-            if (artistFilter.Length > 0)
+            if (artistFilter.Count > 0)
             {
                 list = _context.ArtistTracks?.AsEnumerable()
-                               .Where(x => x.Artist?.Name == artistFilter)
+                               .Where(x => IsIn(artistFilter, x.Artist?.Name))
                                .Select(x => x.Track)
                                .Select(x => x?.Album?.Name).Distinct().ToArray();
             }
-            else if (genreFilter.Length > 0)
+            else if (genreFilter.Count > 0)
             {
                 list = _context.GenreTracks?.AsEnumerable()
-                               .Where(x => x.Genre?.Name == genreFilter)
+                               .Where(x => IsIn(genreFilter, x.Genre?.Name))
                                .Select(x => x.Track)
                                .Select(x => x?.Album?.Name).Distinct().ToArray();
             }
@@ -126,54 +116,35 @@ namespace LalaDb.Model
             return list;
         }
 
-        public Track?[]? DisplayLib(string albumFilter, string artistFilter, string genreFilter, string searchString)
+        public Track?[]? DisplayLib(IReadOnlyCollection<string> albumFilter, IReadOnlyCollection<string> artistFilter, IReadOnlyCollection<string> genreFilter, string searchString)
         {
             if (Scanning) { return Array.Empty<Track>(); }
 
+            ArgumentNullException.ThrowIfNull(albumFilter);
+            ArgumentNullException.ThrowIfNull(artistFilter);
+            ArgumentNullException.ThrowIfNull(genreFilter);
+
             Track?[]? list;
 
-            if (artistFilter is null)
+            if (albumFilter.Count > 0)
             {
-                artistFilter = "";
-            }
-
-            if (genreFilter is null)
-            {
-                genreFilter = "";
-            }
-
-            if (albumFilter is null)
-            {
-                albumFilter = "";
-            }
-
-            if (albumFilter.Length > 0)
-            {
-                try
+                var albums = _context.Albums?.AsEnumerable().Where(x => IsIn(albumFilter, x.Name)).ToArray();
+                if (albums is { Length: > 0 })
                 {
-                    var a = _context.Albums?.AsEnumerable().Single(x => x.Name == albumFilter);
-                    if (a != null && a.Tracks is { })
-                    {
-                        return a.Tracks.ToArray();
-                    }
-
-                    return Array.Empty<Track>();
-                }
-                catch (InvalidOperationException)
-                {
-                    //
+                    return albums.SelectMany(x => x.Tracks ?? Array.Empty<Track>()).ToArray();
                 }
             }
 
-            if (artistFilter.Length > 0)
+            // Distinct, a track with two of the selected artists or genres would be listed twice.
+            if (artistFilter.Count > 0)
             {
-                list = _context.ArtistTracks?.AsEnumerable().Where(x => x.Artist?.Name == artistFilter).Select(x => x.Track).ToArray();
+                list = _context.ArtistTracks?.AsEnumerable().Where(x => IsIn(artistFilter, x.Artist?.Name)).Select(x => x.Track).Distinct().ToArray();
                 return list;
             }
 
-            if (genreFilter.Length > 0)
+            if (genreFilter.Count > 0)
             {
-                list = _context.GenreTracks?.AsEnumerable().Where(x => x.Genre?.Name == genreFilter).Select(x => x.Track).ToArray();
+                list = _context.GenreTracks?.AsEnumerable().Where(x => IsIn(genreFilter, x.Genre?.Name)).Select(x => x.Track).Distinct().ToArray();
                 return list;
             }
 
@@ -201,6 +172,11 @@ namespace LalaDb.Model
             }
 
             return list;
+        }
+
+        private static bool IsIn(IReadOnlyCollection<string> filter, string? name)
+        {
+            return name is { } && filter.Contains(name);
         }
 
         public IList<LibLalaTags> GetAlbumTracks(string name)

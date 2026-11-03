@@ -4,7 +4,7 @@
   <Metadata productVersion="1.6.1" projectFileVersion="2.0"/>
   <ProductInformation>
     <Name>lalamachine</Name>
-    <Version>4.99.16</Version>
+    <Version>4.99.17</Version>
     <CompanyName>space-santa</CompanyName>
     <WebURI>https://github.com/space-santa/lalamachine</WebURI>
   </ProductInformation>
@@ -32,25 +32,25 @@
       <VisualStyle isEnabled="true"/>
     </UserInterface>
     <InstallationFiles defaultInstallationPath="&lt;ProgramFiles&gt;\&lt;Company&gt;\&lt;AppName&gt;\" isDefaultInstallationPathAlterable ="true">
-      <InstallationFile size="4.7 MB" type="dll">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\D3DCompiler_47_cor3.dll</InstallationFile>
-      <InstallationFile size="1.6 MB" type="dll">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\e_sqlite3.dll</InstallationFile>
-      <InstallationFile size="23.4 KB" type="pdb">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\LalaDb.pdb</InstallationFile>
-      <InstallationFile size="153.8 MB" type="exe">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\Lalamachine.Wpf.exe</InstallationFile>
-      <InstallationFile size="54.3 KB" type="pdb">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\Lalamachine.Wpf.pdb</InstallationFile>
-      <InstallationFile size="18.9 KB" type="pdb">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\LibLala.pdb</InstallationFile>
-      <InstallationFile size="154.3 KB" type="dll">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\PenImc_cor3.dll</InstallationFile>
-      <InstallationFile size="1.2 MB" type="dll">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\PresentationNative_cor3.dll</InstallationFile>
-      <InstallationFile size="12 KB" type="pdb">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\Settings.pdb</InstallationFile>
-      <InstallationFile size="117.1 KB" type="dll">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\vcruntime140_cor3.dll</InstallationFile>
-      <InstallationFile size="1.9 MB" type="dll">Lalamachine.Wpf\bin\Release\net10.0-windows\win-x64\publish\wpfgfx_cor3.dll</InstallationFile>
-      <InstallationFile size="99.2 KB" type="ico">Lalamachine.Wpf\assets\images\lalamachine-new.ico</InstallationFile>
+      <InstallationFile size="5.1 MB" type="dll">Lalamachine.Desktop\bin\Release\net10.0\win-x64\publish\av_libglesv2.dll</InstallationFile>
+      <InstallationFile size="1.9 MB" type="dll">Lalamachine.Desktop\bin\Release\net10.0\win-x64\publish\e_sqlite3.dll</InstallationFile>
+      <InstallationFile size="25.3 KB" type="pdb">Lalamachine.Desktop\bin\Release\net10.0\win-x64\publish\LalaDb.pdb</InstallationFile>
+      <InstallationFile size="88 MB" type="exe">Lalamachine.Desktop\bin\Release\net10.0\win-x64\publish\Lalamachine.Desktop.exe</InstallationFile>
+      <InstallationFile size="32 KB" type="pdb">Lalamachine.Desktop\bin\Release\net10.0\win-x64\publish\Lalamachine.Desktop.pdb</InstallationFile>
+      <InstallationFile size="25.7 KB" type="pdb">Lalamachine.Desktop\bin\Release\net10.0\win-x64\publish\Lalamachine.ViewModel.pdb</InstallationFile>
+      <InstallationFile size="1.7 MB" type="dll">Lalamachine.Desktop\bin\Release\net10.0\win-x64\publish\libHarfBuzzSharp.dll</InstallationFile>
+      <InstallationFile size="19.8 KB" type="pdb">Lalamachine.Desktop\bin\Release\net10.0\win-x64\publish\LibLala.pdb</InstallationFile>
+      <InstallationFile size="11.1 MB" type="dll">Lalamachine.Desktop\bin\Release\net10.0\win-x64\publish\libSkiaSharp.dll</InstallationFile>
+      <InstallationFile size="12.2 KB" type="pdb">Lalamachine.Desktop\bin\Release\net10.0\win-x64\publish\Settings.pdb</InstallationFile>
+      <InstallationFile size="106.4 MB" type="[Folder]">Lalamachine.Desktop\bin\Release\net10.0\win-x64\publish\libvlc</InstallationFile>
+      <InstallationFile size="99.2 KB" type="ico">Lalamachine.Desktop\Assets\lalamachine.ico</InstallationFile>
     </InstallationFiles>
     <Languages/>
     <Variables/>
     <Commands/>
     <Registry/>
     <Shortcuts defaultPath="&lt;Company&gt;\&lt;AppName&gt;\" isDefaultPathAlterable="false" isCreateStartmenuShortcutsForAllUsers="false" isCreateDesktopShortcutsForAllUsers="false">
-      <Shortcut destination="Startmenu" name="lalamachine" targetFile="&lt;InstallPath&gt;\Lalamachine.Wpf.exe" commandLineArguments="" iconFilePath="&lt;InstallPath&gt;\lalamachine-new.ico" iconIndex="0"/>
+      <Shortcut destination="Startmenu" name="lalamachine" targetFile="&lt;InstallPath&gt;\Lalamachine.Desktop.exe" commandLineArguments="" iconFilePath="&lt;InstallPath&gt;\lalamachine.ico" iconIndex="0"/>
     </Shortcuts>
     <Serials isDialogEnabled="false" count="1000" mask ="#####-#####-#####-#####"/>
     <SplashScreen isDialogEnabled="false" delayTime="2">
@@ -65,7 +65,7 @@
     </Finish>
   </InstallerConfiguration>
   <UninstallerConfiguration isPackaged="true">
-    <UninstallerExecutableFileName>Uninstall</UninstallerExecutableFileName>
+    <UninstallerExecutableFileName>Uninstall.exe</UninstallerExecutableFileName>
     <OpenWebURIAfterUninstallation isEnabled="false">https://</OpenWebURIAfterUninstallation>
     <CustomDisplayIcon isEnabled="false" iconFilePath="&lt;InstallPath&gt;\"/>
   </UninstallerConfiguration>
@@ -84,8 +84,8 @@
   </VisualUpdateConfiguration>
   <BuildConfiguration>
     <SetupFilePath>dist\lalamachine.exe</SetupFilePath>
-    <SetupIconPath>Lalamachine.Wpf\assets\images\lalamachine-new.ico</SetupIconPath>
-    <UninstallerIconPath>Lalamachine.Wpf\assets\images\lalamachine-new.ico</UninstallerIconPath>
+    <SetupIconPath>Lalamachine.Desktop\Assets\lalamachine.ico</SetupIconPath>
+    <UninstallerIconPath>Lalamachine.Desktop\Assets\lalamachine.ico</UninstallerIconPath>
     <Compression method="0" level="2"/>
     <CodeSigning isEnabled="false" signToolCommandLine="/n &quot;Subject&quot; /tr http://timestamp.digicert.com /td sha256 /fd sha256 &quot;&lt;ExecutableFilePath&gt;&quot;"/>
   </BuildConfiguration>

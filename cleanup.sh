@@ -3,8 +3,9 @@
 # List of directories
 directories=(
   "LalaDb"
-  "Lalamachine.Wpf.Unittests"
-  "Lalamachine.Wpf"
+  "Lalamachine.Desktop"
+  "Lalamachine.ViewModel.Unittests"
+  "Lalamachine.ViewModel"
   "LibLala.Unittests"
   "LibLala"
   "Settings.Unittests"

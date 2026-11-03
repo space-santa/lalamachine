@@ -2,20 +2,10 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "build-wpf",
-      "command": "dotnet",
-      "type": "process",
-      "args": [
-        "build",
-        "${workspaceFolder}/Lalamachine.Wpf/Lalamachine.Wpf.csproj"
-      ],
-      "problemMatcher": "$tsc"
-    },
-    {
       "label": "publish",
       "command": "dotnet",
       "type": "process",
-      "args": ["publish", "${workspaceFolder}/Lalamachine.Wpf/Lalamachine.Wpf.csproj", "-c", "Release"],
+      "args": ["publish", "${workspaceFolder}/Lalamachine.Desktop/Lalamachine.Desktop.csproj", "-c", "Release"],
       "problemMatcher": "$tsc"
     },
     {
@@ -26,7 +16,7 @@
         "watch",
         "run",
         "--project",
-        "${workspaceFolder}/Lalamachine.Wpf/Lalamachine.Wpf.csproj"
+        "${workspaceFolder}/Lalamachine.Desktop/Lalamachine.Desktop.csproj"
       ],
       "problemMatcher": "$tsc"
     }

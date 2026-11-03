@@ -4,7 +4,7 @@ namespace LibLala.DomainPrimitives
 {
     public enum PlaylistColumnType
     {
-        Track, Disc, Title, Length, Comment, Album, Artist, Genre, Year
+        Track, Disc, Title, Length, Key, Bpm, Comment, Album, Artist, Genre, Year
     }
     public class PlaylistColumn
     {
@@ -23,6 +23,8 @@ namespace LibLala.DomainPrimitives
                 "Disc" => PlaylistColumnType.Disc,
                 "Title" => PlaylistColumnType.Title,
                 "Length" => PlaylistColumnType.Length,
+                "Key" => PlaylistColumnType.Key,
+                "BPM" => PlaylistColumnType.Bpm,
                 "Comment" => PlaylistColumnType.Comment,
                 "Artist" => PlaylistColumnType.Artist,
                 "Album" => PlaylistColumnType.Album,

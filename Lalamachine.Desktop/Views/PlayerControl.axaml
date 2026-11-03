@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:Lalamachine.Desktop"
+             xmlns:vm="using:Lalamachine.ViewModel"
+             x:Class="Lalamachine.Desktop.Views.PlayerControl"
+             x:DataType="vm:PlayerViewModel">
+    <StackPanel Margin="0,8">
+        <Grid ColumnDefinitions="*,Auto,Auto,Auto">
+            <!-- Not a Label, that would take the first underscore in a title for an access key. -->
+            <TextBlock Grid.Column="0" Classes="label" Text="{Binding Source, Converter={x:Static local:Converters.SourceToTitle}}" />
+            <Label Grid.Column="1" Content="{Binding Position, Converter={x:Static local:Converters.SecondsToTime}}" />
+            <Label Grid.Column="2" Content="/" />
+            <Label Grid.Column="3" Content="{Binding Duration, Converter={x:Static local:Converters.SecondsToTime}}" />
+        </Grid>
+
+        <Grid ColumnDefinitions="Auto,*">
+            <!-- Its DataContext is the ShuffleRepeatViewModel, the MainWindow sets it. -->
+            <Button x:Name="ShuffleRepeatButton"
+                    Grid.Column="0"
+                    x:DataType="vm:ShuffleRepeatViewModel"
+                    Command="{Binding ChangeShuffleRepeatCommand}"
+                    Content="{Binding State, Converter={x:Static local:Converters.ShuffleRepeatContent}}" />
+            <Slider Grid.Column="1"
+                    Minimum="0" Maximum="{Binding Duration, Converter={x:Static local:Converters.AtLeastOne}}" Value="{Binding Position}"
+                    VerticalAlignment="Center" Margin="8,0" />
+        </Grid>
+
+        <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,*" Margin="0,8,0,0">
+            <Button Grid.Column="0" Content="⏮" Command="{Binding LastCommand}" />
+            <Button Grid.Column="1"
+                    Content="{Binding IsPlaying, Converter={x:Static local:Converters.IsPlayingDisplay}}"
+                    Command="{Binding ChangePlayPauseCommand}" />
+            <Button Grid.Column="2" Content="⏏" Command="{Binding LoadCommand}" />
+            <Button Grid.Column="3" Content="⏭" Command="{Binding NextCommand}" />
+            <Button Grid.Column="4"
+                    FontSize="{Binding Volume, Converter={x:Static local:Converters.VolumeSize}}"
+                    Content="{Binding IsMuted, Converter={x:Static local:Converters.MutedDisplay}}"
+                    Command="{Binding MuteCommand}"
+                    PointerWheelChanged="Volume_PointerWheelChanged" />
+            <Slider x:Name="VolumeSlider"
+                    Grid.Column="5"
+                    Minimum="0" Maximum="100" Value="{Binding Volume}"
+                    VerticalAlignment="Center" Margin="8,0"
+                    PointerWheelChanged="Volume_PointerWheelChanged" />
+        </Grid>
+    </StackPanel>
+</UserControl>

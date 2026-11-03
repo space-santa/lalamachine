@@ -9,9 +9,11 @@ namespace LibLala.LibLalaTagReader
     {
         public AlbumName Album { get; private set; }
         public ArtistList Artist { get; private set; }
+        public BeatsPerMinute BeatsPerMinute { get; private set; }
         public Comment Comment { get; private set; }
         public DiscNumber DiscNumber { get; private set; }
         public GenreList Genre { get; private set; }
+        public InitialKey InitialKey { get; private set; }
         public TrackLength Length { get; private set; }
         public TitleName Title { get; }
         public int? TrackId { get; private set; }
@@ -23,9 +25,11 @@ namespace LibLala.LibLalaTagReader
         {
             Album = new AlbumName("");
             Artist = new ArtistList(new List<string>());
+            BeatsPerMinute = new BeatsPerMinute(0);
             Comment = new Comment("");
             DiscNumber = new DiscNumber(1);
             Genre = new GenreList(new List<string>());
+            InitialKey = new InitialKey("");
             Length = new TrackLength(totalSeconds);
             Title = new TitleName(title);
             TrackNumber = new TrackNumber(1);
@@ -37,9 +41,11 @@ namespace LibLala.LibLalaTagReader
         {
             Album = new AlbumName("");
             Artist = new ArtistList(new List<string>());
+            BeatsPerMinute = new BeatsPerMinute(0);
             Comment = new Comment("");
             DiscNumber = new DiscNumber(1);
             Genre = new GenreList(new List<string>());
+            InitialKey = new InitialKey("");
             Length = new TrackLength(totalSeconds);
             Title = new TitleName(title);
             TrackNumber = new TrackNumber(1);
@@ -65,6 +71,12 @@ namespace LibLala.LibLalaTagReader
             return this;
         }
 
+        public LibLalaTagsBuilder WithBeatsPerMinute(uint beatsPerMinute)
+        {
+            BeatsPerMinute = new BeatsPerMinute(beatsPerMinute);
+            return this;
+        }
+
         public LibLalaTagsBuilder WithComment(string comment)
         {
             Comment = new Comment(comment);
@@ -86,6 +98,12 @@ namespace LibLala.LibLalaTagReader
         public LibLalaTagsBuilder WithGenre(IList<string> genre)
         {
             Genre = new GenreList(genre);
+            return this;
+        }
+
+        public LibLalaTagsBuilder WithInitialKey(string initialKey)
+        {
+            InitialKey = new InitialKey(initialKey);
             return this;
         }
 
