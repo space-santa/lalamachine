@@ -11,8 +11,8 @@ namespace Lalamachine.Desktop.Views
 {
     internal sealed class MainWindowSettings : AppSettings
     {
-        // The settings file is named after the second argument only. Not the WPF app's "MainWindowSettings",
-        // Avalonia's window position is in pixels, WPF's in device-independent units.
+        // The settings file is named after the second argument only. Not "MainWindowSettings", people may still have that
+        // file from the old WPF app. It has the window position in device-independent units, Avalonia's is in pixels.
         public MainWindowSettings() : base("Lalamachine.Desktop", "DesktopWindowSettings") { }
 
         public int ActiveTab { get => GetInt(0); set => Set(value); }
@@ -72,6 +72,7 @@ namespace Lalamachine.Desktop.Views
             _settingsViewModel.StartScanEvent += _libraryViewModel.StartScanHandler;
             _libraryViewModel.ScanningChanged += _settingsViewModel.ScanningChangedHandler;
             _libraryViewModel.DisplayLibChanged += _libraryPlaylistViewModel.DisplayChangedHandler;
+            _libraryViewModel.FiltersCleared += _libraryPlaylistViewModel.ClearKeyFilterHandler;
             _libraryViewModel.AddTracksToPlaylistEvent += _playlistViewModel.AddTracksToPlaylistHandler;
 
             Player.DataContext = _player;

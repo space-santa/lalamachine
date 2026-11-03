@@ -62,6 +62,14 @@ namespace Lalamachine.ViewModel
                 return;
             }
 
+            Sort(sortMessage);
+            NotifyPropertyChanged(nameof(Playlist));
+        }
+
+        protected virtual void Sort(SortMessage sortMessage)
+        {
+            ArgumentNullException.ThrowIfNull(sortMessage);
+
             var ascending = sortMessage.Direction == ListSortDirection.Ascending;
 
             switch (sortMessage.Column.ColumnType)
@@ -239,8 +247,6 @@ namespace Lalamachine.ViewModel
                 default:
                     return;
             }
-
-            NotifyPropertyChanged(nameof(Playlist));
         }
 
 
@@ -345,17 +351,6 @@ namespace Lalamachine.ViewModel
         public int NumberOfTracks => Playlist.Count;
         public int TotalPlaytime => Playlist.Sum(track => track.Length);
 
-        public void DisplayChangedHandler(object? sender, DisplayLibChangedEventArgs e)
-        {
-            if (e is null)
-            {
-                return;
-            }
-
-            DeleteAllTracks();
-            AddTracks(e.Tracks.ToList());
-        }
-
         public void AddTracksToPlaylistHandler(object? sender, AddTracksToPlaylistEventArgs e)
         {
             if (e is null)
@@ -419,6 +414,11 @@ namespace Lalamachine.ViewModel
         }
 
         public ObservableCollection<PlaylistTags> Playlist { get; private set; }
+
+        protected void ReplacePlaylist(IEnumerable<PlaylistTags> tracks)
+        {
+            Playlist = new ObservableCollection<PlaylistTags>(tracks);
+        }
 
         public ShuffleRepeatState PlaylistShuffleRepeatState { get; set; }
 

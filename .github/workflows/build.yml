@@ -16,7 +16,6 @@ jobs:
       - run: dotnet build lalamachine.sln
       - run: dotnet test lalamachine.sln --no-build
 
-  # The solution includes the WPF app, so build only what runs on macOS.
   build-macos:
     runs-on: macos-latest
     steps:

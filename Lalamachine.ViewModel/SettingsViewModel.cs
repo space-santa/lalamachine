@@ -7,7 +7,7 @@ namespace Lalamachine.ViewModel
 {
     public class SettingsSettings : AppSettings
     {
-        public SettingsSettings() : base("Lalamachine.Wpf", "SettingsSettings") { }
+        public SettingsSettings() : base("Lalamachine.Desktop", "SettingsSettings") { }
 
         public string LibraryPath { get => GetString(""); set => Set(value); }
     }

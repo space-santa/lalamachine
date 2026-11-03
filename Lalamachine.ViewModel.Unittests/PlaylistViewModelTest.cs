@@ -86,14 +86,12 @@ namespace Lalamachine.ViewModel.Unittests
             return viewModel;
         }
 
-        // WPF passes the header's text with the spaces around it, Avalonia the column's Tag without.
-        [TestCase("Key")]
-        [TestCase(" Key ")]
-        public void SortByKey_Ascending_SortsByNumberThenLetter(string header)
+        [Test]
+        public void SortByKey_Ascending_SortsByNumberThenLetter()
         {
             var viewModel = ViewModelWithKeys("10A", "4B", "1A", "11B", "3A", "4A", "2A");
 
-            viewModel.SortCommand.Execute(new SortMessage(ListSortDirection.Ascending, new PlaylistColumn(header)));
+            viewModel.SortCommand.Execute(new SortMessage(ListSortDirection.Ascending, new PlaylistColumn("Key")));
 
             Assert.That(viewModel.Playlist.Select(x => x.InitialKey), Is.EqualTo(new[] { "1A", "2A", "3A", "4A", "4B", "10A", "11B" }));
         }

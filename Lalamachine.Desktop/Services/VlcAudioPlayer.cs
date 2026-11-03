@@ -35,7 +35,7 @@ namespace Lalamachine.Desktop.Services
             // VLC forgets volume and mute while it has no audio output, so set them again once a track plays.
             _mediaPlayer.Playing += (sender, e) => Post(ApplyVolume);
 
-            // Like the WPF player, poll the position instead of handling every one of VLC's many TimeChanged events.
+            // Poll the position instead of handling every one of VLC's many TimeChanged events.
             _positionTimer = new Timer(_ => Post(() => PositionChanged?.Invoke(this, EventArgs.Empty)), null, 200, 200);
         }
 

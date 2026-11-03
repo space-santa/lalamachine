@@ -6,7 +6,7 @@ namespace Lalamachine.ViewModel
 {
     public class PlayerSettings : AppSettings
     {
-        public PlayerSettings() : base("Lalamachine.Wpf", "PlayerSettings") { }
+        public PlayerSettings() : base("Lalamachine.Desktop", "PlayerSettings") { }
 
         public double Volume { get => GetDouble(50); set => Set(value); }
         public bool IsMuted { get => GetBool(false); set => Set(value); }

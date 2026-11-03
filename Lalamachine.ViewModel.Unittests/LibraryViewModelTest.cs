@@ -441,6 +441,28 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
+        public void ClearSearch_ClearsTheKeyFilterToo()
+        {
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            context.Tracks!.Single(x => x.Title == "a1").InitialKey = "8A";
+            context.SaveChanges();
+            var viewModel = CreateViewModel(connection, context);
+            var playlist = new LibraryPlaylistViewModel(Substitute.For<IDialogService>());
+            viewModel.DisplayLibChanged += playlist.DisplayChangedHandler;
+            viewModel.FiltersCleared += playlist.ClearKeyFilterHandler;
+            viewModel.SetGenreFilterCommand.Execute("Rock");
+            playlist.KeyFilterOptions.Single(x => x.Key == "8A").IsSelected = true;
+            Assert.That(playlist.Playlist.Select(track => track.Title), Is.EqualTo(new[] { "a1" }));
+
+            viewModel.ClearSearchCommand.Execute(null);
+
+            Assert.That(playlist.Playlist.Select(track => track.Title).OrderBy(title => title), Is.EqualTo(new[] { "a1", "a2", "b1", "b2" }));
+            Assert.That(playlist.IsKeyFilterActive, Is.False);
+            Assert.That(playlist.KeyFilterOptions.Any(x => x.IsSelected), Is.False);
+        }
+
+        [Test]
         public void ClearSearch_NoSearchString_StillUpdatesTheLists()
         {
             using var connection = OpenDatabase();

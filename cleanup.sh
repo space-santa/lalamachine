@@ -6,7 +6,6 @@ directories=(
   "Lalamachine.Desktop"
   "Lalamachine.ViewModel.Unittests"
   "Lalamachine.ViewModel"
-  "Lalamachine.Wpf"
   "LibLala.Unittests"
   "LibLala"
   "Settings.Unittests"

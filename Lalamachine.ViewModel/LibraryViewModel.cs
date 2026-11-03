@@ -137,6 +137,7 @@ namespace Lalamachine.ViewModel
             _albumFilter = Array.Empty<string>();
             _artistFilter = Array.Empty<string>();
             SearchString = "";
+            FiltersCleared?.Invoke(this, EventArgs.Empty);
         }
 
         private readonly DelegateCommand _startScanCommand;
@@ -181,6 +182,9 @@ namespace Lalamachine.ViewModel
         {
             DisplayLibChanged?.Invoke(this, new DisplayLibChangedEventArgs(DisplayLib));
         }
+
+        // The filters of this view model are cleared by then. For the ones that live elsewhere, like the key filter.
+        public event EventHandler? FiltersCleared;
 
         public event EventHandler<ScanningChangedEventArgs>? ScanningChanged;
         private void NotifyScanningChanged()

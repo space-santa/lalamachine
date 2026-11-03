@@ -11,17 +11,6 @@
       "projectPath": "${workspaceFolder}/Lalamachine.Desktop/Lalamachine.Desktop.csproj"
     },
     {
-      "name": "Wpf",
-      "type": "coreclr",
-      "request": "launch",
-      "preLaunchTask": "build-wpf",
-      "program": "${workspaceFolder}/Lalamachine.Wpf/bin/Debug/net10.0-windows/win-x64/Lalamachine.Wpf.dll",
-      "args": [],
-      "cwd": "${workspaceFolder}/Lalamachine.Wpf",
-      "stopAtEntry": false,
-      "console": "internalConsole"
-    },
-    {
       "name": ".NET Core Attach",
       "type": "coreclr",
       "request": "attach",
