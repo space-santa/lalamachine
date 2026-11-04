@@ -161,6 +161,11 @@
         <Setter Property="FontSize" Value="20" />
     </Style>
 
+    <!-- A cell of the Key column names the key when hovered, TrackGrid gives the column this class. A key without a natural notation has no tooltip. -->
+    <Style Selector="DataGridCell.key" x:DataType="vm:PlaylistTags">
+        <Setter Property="ToolTip.Tip" Value="{Binding InitialKeyNaturalNotation}" />
+    </Style>
+
     <!-- The small button in a column header that opens the column's filter, orange while the filter is on. -->
     <Style Selector="Button.columnFilter">
         <Setter Property="MinHeight" Value="0" />

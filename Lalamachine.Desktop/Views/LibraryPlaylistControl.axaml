@@ -26,7 +26,7 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
-                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="🔊" CanUserSort="False" Binding="{Binding IsPlaying, Converter={x:Static local:Converters.PlaylistItemIsPlaying}}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="🔊" CanUserSort="False" Binding="{Binding IsPlaying, Mode=OneWay, Converter={x:Static local:Converters.PlaylistItemIsPlaying}}" />
                 <DataGridTemplateColumn CanUserSort="False" CellTemplate="{StaticResource HeartCell}" />
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Track" Tag="Track" Binding="{Binding Track}" />
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Disc" Tag="Disc" Binding="{Binding DiscNumber}" />

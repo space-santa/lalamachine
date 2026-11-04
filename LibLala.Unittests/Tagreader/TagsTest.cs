@@ -43,6 +43,7 @@ namespace LibLala.Unittests.Tagreader
             Assert.That(copy.InitialKey, Is.EqualTo("10A"));
             Assert.That(copy.InitialKeyNumber, Is.EqualTo(10));
             Assert.That(copy.InitialKeyLetter, Is.EqualTo("A"));
+            Assert.That(copy.InitialKeyNaturalNotation, Is.EqualTo("B minor"));
             Assert.That(copy.BeatsPerMinute, Is.EqualTo(128));
             Assert.That(copy.BeatsPerMinuteString, Is.EqualTo("128"));
         }

@@ -108,6 +108,7 @@ namespace LibLala.LibLalaTagReader
         public string InitialKey => _initialKey.ToString();
         public int InitialKeyNumber => _initialKey.Number;
         public string InitialKeyLetter => _initialKey.Letter;
+        public string? InitialKeyNaturalNotation => _initialKey.NaturalNotation;
 
         public int Length => _length.TotalSeconds;
         public string LengthString => _length.ToString();

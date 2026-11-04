@@ -22,6 +22,16 @@ namespace Lalamachine.Desktop.Views
             grid.DataContextChanged += (sender, e) => ClearSortIndicators(grid);
             grid.AddHandler(InputElement.DoubleTappedEvent, Grid_DoubleTapped, handledEventsToo: true);
             AddPlaylistChoices(grid);
+            AddKeyTooltips(grid);
+        }
+
+        // The style of this class is what shows the tooltip.
+        private static void AddKeyTooltips(DataGrid grid)
+        {
+            foreach (var column in grid.Columns.Where(x => "Key".Equals(x.Tag)))
+            {
+                column.CellStyleClasses.Add("key");
+            }
         }
 
         // Lets the user drag the tracks to change their order.
