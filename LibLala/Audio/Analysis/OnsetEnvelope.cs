@@ -4,8 +4,12 @@ using System.Collections.Generic;
 namespace LibLala.Audio.Analysis
 {
     // How much new sound starts, every 11.6 ms of a track: the spectral flux of all of it, of the bass, and of the click
-    // range. A kick drum is in both of these at once, a bass line only in the bass and a hi-hat only above.
-    internal sealed record Onsets(float[] All, float[] Bass, float[] Click);
+    // range. A kick drum is in both of these at once, a bass line only in the bass and a hi-hat only above. And how loud
+    // it is in 12 bands from 40 Hz to 11 kHz, BandCount values per hop, as the log of the energy.
+    internal sealed record Onsets(float[] All, float[] Bass, float[] Click, float[] Bands)
+    {
+        public const int BandCount = 12;
+    }
 
     internal static class OnsetEnvelope
     {
@@ -16,6 +20,7 @@ namespace LibLala.Audio.Analysis
         private const double BassHz = 150;
         private const double ClickFromHz = 1000;
         private const double ClickToHz = 5000;
+        private const double BandsFromHz = 40;
         private const double TopHz = 11000;
         private const int BlockSamples = 8192;
 
@@ -27,6 +32,12 @@ namespace LibLala.Audio.Analysis
             var allEnvelope = new List<float>(capacity);
             var bassEnvelope = new List<float>(capacity);
             var clickEnvelope = new List<float>(capacity);
+            var bandEnergies = new List<float>(capacity * Onsets.BandCount);
+            var bandEdges = new int[Onsets.BandCount + 1];
+            for (var b = 0; b <= Onsets.BandCount; b++)
+            {
+                bandEdges[b] = Math.Max(1, (int)Math.Round(BandsFromHz * Math.Pow(TopHz / BandsFromHz, (double)b / Onsets.BandCount) * Window / SampleRate));
+            }
             var fft = new RealFft(Window);
             var hann = new float[Window];
             for (var i = 0; i < Window; i++)
@@ -86,6 +97,15 @@ namespace LibLala.Audio.Analysis
                             }
                         }
                     }
+                    for (var b = 0; b < Onsets.BandCount; b++)
+                    {
+                        double energy = 0;
+                        for (var k = bandEdges[b]; k < Math.Max(bandEdges[b] + 1, bandEdges[b + 1]); k++)
+                        {
+                            energy += magnitudes[k] * magnitudes[k];
+                        }
+                        bandEnergies.Add((float)Math.Log(1e-6 + energy));
+                    }
                     allEnvelope.Add(all);
                     bassEnvelope.Add(bass);
                     clickEnvelope.Add(click);
@@ -96,7 +116,7 @@ namespace LibLala.Audio.Analysis
                 count -= start;
             }
 
-            return new Onsets([.. allEnvelope], [.. bassEnvelope], [.. clickEnvelope]);
+            return new Onsets([.. allEnvelope], [.. bassEnvelope], [.. clickEnvelope], [.. bandEnergies]);
         }
     }
 }

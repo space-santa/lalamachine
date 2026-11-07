@@ -592,15 +592,25 @@ namespace Lalamachine.ViewModel
             }
         }
 
+        // With NextTrackEventArgs, only says what it would play.
         public void PlayNextTrackHandler(object? sender, EventArgs e)
         {
             // Read NextTrack only once, in shuffle mode every read picks a different track.
             var nextTrack = NextTrack;
+            if (e is NextTrackEventArgs request)
+            {
+                request.Track = nextTrack;
+                request.List = nextTrack is null ? null : this;
+                return;
+            }
             if (nextTrack is { })
             {
                 InvokePlayTrackEvent(nextTrack);
             }
         }
+
+        // Plays it, like a double click.
+        public void PlayTrack(PlaylistTags track) => InvokePlayTrackEvent(track);
 
         public void PlayLastTrackHandler(object? sender, EventArgs e)
         {

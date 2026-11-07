@@ -57,6 +57,16 @@ namespace Lalamachine.Desktop.Services
         public event EventHandler? MediaEnded;
         public event EventHandler? MediaFailed;
         public event EventHandler? PositionChanged;
+        // VLC plays the tracks one after the other, there's never a transition.
+        public event EventHandler? TransitionDue
+        {
+            add { }
+            remove { }
+        }
+
+        public bool Transitions { get; set; }
+
+        public event EventHandler? MixedIn;
 
         public Uri? Source { get; private set; }
 
@@ -97,6 +107,14 @@ namespace Lalamachine.Desktop.Services
             _mediaPlayer.Media = media;
             // Only now, setting the media ends the old track and its thread. So no event of that track can still count as the new one's.
             Interlocked.Increment(ref _openedTracks);
+        }
+
+        // Without mixing: it takes over at once.
+        public void MixTo(Uri source)
+        {
+            Open(source);
+            Play();
+            MixedIn?.Invoke(this, EventArgs.Empty);
         }
 
         public void Play() => _mediaPlayer.Play();

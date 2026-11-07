@@ -109,5 +109,8 @@ namespace LalaDb.Data
         public double FirstBeat { get; set; }
         public double BeatDeviationMs { get; set; }
         public int BeatCount { get; set; }
+        public double FirstDownbeat { get; set; }
+        public double MusicStart { get; set; }
+        public double MusicEnd { get; set; }
     }
 }

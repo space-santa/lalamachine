@@ -17,6 +17,10 @@ namespace LibLala.Unittests.Audio
 
         public long Length { get; }
         public bool IsDisposed { get; private set; }
+        // The frame that Read reads next.
+        public long Position => _position;
+        // Called before the first Read.
+        public Action? BeforeFirstRead { get; set; }
         // Every sample 0.
         public bool Silent { get; init; }
         // Read and Seek throw an IOException from this frame on.
@@ -24,6 +28,8 @@ namespace LibLala.Unittests.Audio
 
         public int Read(Span<float> buffer)
         {
+            BeforeFirstRead?.Invoke();
+            BeforeFirstRead = null;
             if (_position >= FailsFrom)
             {
                 throw new IOException("The drive is gone.");
@@ -49,6 +55,52 @@ namespace LibLala.Unittests.Audio
         }
 
         public void Dispose() => IsDisposed = true;
+    }
+
+    // A sine at half of full scale.
+    internal sealed class SineDecoder : IAudioDecoder
+    {
+        private readonly double _hz;
+        private long _position;
+
+        public SineDecoder(double hz, long length)
+        {
+            _hz = hz;
+            Length = length;
+        }
+
+        public long Length { get; }
+
+        public int Read(Span<float> buffer)
+        {
+            var frames = (int)Math.Min(buffer.Length / AudioFormat.Channels, Length - _position);
+            for (var i = 0; i < frames; i++)
+            {
+                var sample = (float)(0.5 * Math.Sin(2 * Math.PI * _hz * (_position + i) / AudioFormat.SampleRate));
+                buffer[i * AudioFormat.Channels] = sample;
+                buffer[(i * AudioFormat.Channels) + 1] = sample;
+            }
+            _position += frames;
+            return frames;
+        }
+
+        public void Seek(long frame) => _position = frame;
+
+        public void Dispose() { }
+    }
+
+    // For tests that render and report played themselves: renders nothing ahead.
+    internal sealed class SilentOutput : IAudioOutput
+    {
+        public float Volume { get; set; } = 1;
+
+        public void Play() { }
+
+        public void Pause() { }
+
+        public void Reset() { }
+
+        public void Dispose() { }
     }
 
     // Works like AudioQueueOutput, with the queue's thread played by PlayBuffer.

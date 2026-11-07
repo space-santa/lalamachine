@@ -9,7 +9,7 @@ namespace LibLala.Audio.Analysis
     public static class BeatGridAnalyzer
     {
         // Goes up when the analysis changes, so that the library is analyzed again.
-        public const int Version = 1;
+        public const int Version = 2;
 
         private const double MinBpm = 60;
         private const double MaxBpm = 200;
@@ -21,19 +21,27 @@ namespace LibLala.Audio.Analysis
         private const double MinBeatSharpness = 2;
         // Too few beats in every stretch of 16 to tell: far from steady.
         private const double NoSectionsDeviationMs = 1000;
+        // Beats heard in a stretch of 16 for it to be the music, not an intro or outro.
+        private const int MusicBeatsPerSection = 12;
+        private const double MinCueAgreement = 0.6;
 
         // The onset envelope peaks at a frame that starts this long before the attack: the frame with the attack 70% of the
         // way in, where its window rises steeply. Measured with synthetic drums.
         private const double OnsetLead = 0.0323;
 
         // Null when there is no beat to find.
-        public static BeatGrid? Analyze(IAudioDecoder decoder, double? taggedBpm)
+        public static BeatGrid? Analyze(IAudioDecoder decoder, double? taggedBpm) => Analyze(decoder, taggedBpm, cueSeconds: []);
+
+        // Cues, like Mixed In Key's, are on the first beat of bars. They decide which beat is the first of a bar when most
+        // of them agree.
+        public static BeatGrid? Analyze(IAudioDecoder decoder, double? taggedBpm, IReadOnlyList<double> cueSeconds)
         {
             ArgumentNullException.ThrowIfNull(decoder);
-            return Analyze(OnsetEnvelope.Compute(decoder), OnsetEnvelope.HopSeconds, taggedBpm);
+            ArgumentNullException.ThrowIfNull(cueSeconds);
+            return Analyze(OnsetEnvelope.Compute(decoder), OnsetEnvelope.HopSeconds, taggedBpm, cueSeconds);
         }
 
-        internal static BeatGrid? Analyze(Onsets envelopes, double hopSeconds, double? taggedBpm)
+        internal static BeatGrid? Analyze(Onsets envelopes, double hopSeconds, double? taggedBpm, IReadOnlyList<double> cueSeconds)
         {
             // The bass counts three times for the tempo.
             var combined = new float[envelopes.All.Length];
@@ -93,7 +101,101 @@ namespace LibLala.Audio.Analysis
                 }
             }
 
-            return Fit(onsets, hopSeconds, best.Bpm, phase);
+            if (Fit(onsets, hopSeconds, best.Bpm, phase) is not { } line)
+            {
+                return null;
+            }
+
+            // Numbered from the first beat at or after the start of the track.
+            var period = line.Period;
+            var firstBeat = line.First + OnsetLead;
+            var shift = (int)Math.Floor(firstBeat / period);
+            firstBeat -= shift * period;
+            var heard = line.Heard.Select(number => number + shift).ToHashSet();
+            var (start, end) = MusicSpan(heard);
+            var downbeat = Downbeat(cueSeconds, firstBeat, period) ?? Downbeat(envelopes.Bands, hopSeconds, firstBeat, period);
+
+            return new BeatGrid(60 / period, firstBeat, line.DeviationMs, line.Heard.Count, firstBeat + (downbeat * period), firstBeat + (start * period), firstBeat + (end * period));
+        }
+
+        // The first and the last beat with at least 12 of 16 beats heard from there, or the first and last heard if there's no
+        // such stretch.
+        private static (int Start, int End) MusicSpan(HashSet<int> heard)
+        {
+            int? start = null;
+            int? end = null;
+            var first = heard.Min();
+            var last = heard.Max();
+            for (var number = first; number <= last && start is null; number++)
+            {
+                if (Enumerable.Range(number, BeatsPerSection).Count(heard.Contains) >= MusicBeatsPerSection)
+                {
+                    start = number;
+                }
+            }
+            for (var number = last; number >= first && end is null; number--)
+            {
+                if (Enumerable.Range(number - BeatsPerSection + 1, BeatsPerSection).Count(heard.Contains) >= MusicBeatsPerSection)
+                {
+                    end = number;
+                }
+            }
+            return start is { } s && end is { } e && s <= e ? (s, e) : (first, last);
+        }
+
+        // Which of the first four beats starts a bar, by the cues, when most of them agree.
+        private static int? Downbeat(IReadOnlyList<double> cueSeconds, double firstBeat, double period)
+        {
+            var positions = cueSeconds
+                .Select(cue => (int)Math.Round((cue - firstBeat) / period))
+                .Where(number => number >= 0)
+                .Select(number => number % 4)
+                .ToList();
+            if (positions.Count < 2)
+            {
+                return null;
+            }
+            var most = positions.GroupBy(position => position).MaxBy(g => g.Count())!;
+            return most.Count() >= MinCueAgreement * positions.Count ? most.Key : null;
+        }
+
+        // Without cues: where the sound changes most from one beat to the next. New parts of a track come in on the first beat
+        // of a bar. Squared, so that a few big changes count more than many small ones. Right for 77% of steady tracks, by
+        // Mixed In Key's cues.
+        private static int Downbeat(float[] bands, double hopSeconds, double firstBeat, double period)
+        {
+            var hops = bands.Length / Onsets.BandCount;
+            var changes = new double[4];
+            double[]? previous = null;
+            for (var number = 0; ; number++)
+            {
+                var from = (int)((firstBeat + (number * period) - OnsetLead) / hopSeconds);
+                var to = (int)((firstBeat + ((number + 1) * period) - OnsetLead) / hopSeconds);
+                if (to > hops)
+                {
+                    break;
+                }
+                from = Math.Max(0, from);
+                var current = new double[Onsets.BandCount];
+                for (var hop = from; hop < to; hop++)
+                {
+                    for (var b = 0; b < Onsets.BandCount; b++)
+                    {
+                        current[b] += bands[(hop * Onsets.BandCount) + b] / Math.Max(1, to - from);
+                    }
+                }
+                if (previous is not null)
+                {
+                    double change = 0;
+                    for (var b = 0; b < Onsets.BandCount; b++)
+                    {
+                        change += (current[b] - previous[b]) * (current[b] - previous[b]);
+                    }
+                    changes[number % 4] += change;
+                }
+                previous = current;
+            }
+            return Array.IndexOf(changes, changes.Max());
         }
 
         // Keeps what stands out of the 0.4 s around it, from 0 to 1.
@@ -247,9 +349,13 @@ namespace LibLala.Audio.Analysis
             return best;
         }
 
+        // A line through the beats heard: the time of beat 0 in the onset envelope, the seconds per beat, how far the music is
+        // off it, and the numbers of the beats heard on it.
+        private sealed record Line(double First, double Period, double DeviationMs, List<int> Heard);
+
         // Looks for the onset at each beat of the grid and fits a line through them, three times, leaving out the ones that
         // are far off the line before.
-        private static BeatGrid? Fit(float[] onsets, double hopSeconds, double bpm, double phase)
+        private static Line? Fit(float[] onsets, double hopSeconds, double bpm, double phase)
         {
             var period = 60 / bpm;
             var first = phase;
@@ -307,9 +413,7 @@ namespace LibLala.Audio.Analysis
                 .ToList();
             var deviation = sections.Count > 0 ? sections[(int)(sections.Count * 0.9)] : NoSectionsDeviationMs;
 
-            var firstBeat = first + OnsetLead;
-            firstBeat -= Math.Floor(firstBeat / period) * period;
-            return new BeatGrid(60 / period, firstBeat, deviation, beats.Count);
+            return new Line(first, period, deviation, beats.Select(b => b.Number).ToList());
         }
 
         // The strongest onset within search seconds of the time, placed between hops by a parabola through its neighbours.

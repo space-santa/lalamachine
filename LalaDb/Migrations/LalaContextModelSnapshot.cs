@@ -209,6 +209,15 @@ namespace LalaDb.Migrations
                     b.Property<double>("FirstBeat")
                         .HasColumnType("REAL");
 
+                    b.Property<double>("FirstDownbeat")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("MusicEnd")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("MusicStart")
+                        .HasColumnType("REAL");
+
                     b.Property<string>("Path")
                         .IsRequired()
                         .HasColumnType("TEXT");

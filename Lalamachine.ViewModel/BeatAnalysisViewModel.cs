@@ -7,6 +7,7 @@ using System.Threading;
 using LalaDb.Model;
 using LibLala.Audio;
 using LibLala.Audio.Analysis;
+using LibLala.LibLalaTagReader;
 
 namespace Lalamachine.ViewModel
 {
@@ -136,7 +137,7 @@ namespace Lalamachine.ViewModel
                     BeatGrid? grid;
                     using (var decoder = _openDecoder(track.Path))
                     {
-                        grid = BeatGridAnalyzer.Analyze(decoder, track.TaggedBeatsPerMinute > 0 ? track.TaggedBeatsPerMinute : null);
+                        grid = BeatGridAnalyzer.Analyze(decoder, track.TaggedBeatsPerMinute > 0 ? track.TaggedBeatsPerMinute : null, MixedInKeyCues.Read(track.Path));
                     }
                     lock (_saveGate)
                     {

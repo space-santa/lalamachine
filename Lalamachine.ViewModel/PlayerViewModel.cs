@@ -4,13 +4,16 @@ using Settings;
 
 namespace Lalamachine.ViewModel
 {
-    public class PlayerSettings : AppSettings
+    public class PlayerSettings : AppSettingsBase
     {
-        public PlayerSettings() : base("Lalamachine.Desktop", "PlayerSettings") { }
+        public PlayerSettings() : this(new SettingsFile("Lalamachine.Desktop", "PlayerSettings")) { }
+
+        public PlayerSettings(SettingsFile file) : base(file) { }
 
         public double Volume { get => GetDouble(50); set => Set(value); }
         public bool IsMuted { get => GetBool(false); set => Set(value); }
         public string LastActivePlaylist { get => GetString("MAIN"); set => Set(value); }
+        public bool Transitions { get => GetBool(true); set => Set(value); }
     }
 
     public class ManualLoadEventArgs : EventArgs
@@ -28,18 +31,29 @@ namespace Lalamachine.ViewModel
         private readonly IAudioPlayer _audioPlayer;
         private readonly IDialogService _dialogs;
         private readonly PlayerSettings _playerSettings;
+        // The track mixed in and the list it's from, until it takes over. Then the list is told to play it.
+        private NextTrackEventArgs? _mixing;
+        // While the list is told: it plays already.
+        private bool _isTakingOver;
 
-        public PlayerViewModel(IAudioPlayer audioPlayer, IDialogService dialogs)
+        public PlayerViewModel(IAudioPlayer audioPlayer, IDialogService dialogs) : this(audioPlayer, dialogs, new PlayerSettings())
         {
-            _playerSettings = new PlayerSettings();
+        }
+
+        public PlayerViewModel(IAudioPlayer audioPlayer, IDialogService dialogs, PlayerSettings settings)
+        {
+            _playerSettings = settings;
             _audioPlayer = audioPlayer;
             _dialogs = dialogs;
             IsMuted = _playerSettings.IsMuted;
             Volume = _playerSettings.Volume;
+            _audioPlayer.Transitions = _playerSettings.Transitions;
             _audioPlayer.MediaOpened += _audioPlayer_MediaOpened;
             _audioPlayer.MediaEnded += _audioPlayer_MediaEnded;
             _audioPlayer.MediaFailed += _audioPlayer_MediaFailed;
             _audioPlayer.PositionChanged += _audioPlayer_PositionChanged;
+            _audioPlayer.TransitionDue += _audioPlayer_TransitionDue;
+            _audioPlayer.MixedIn += _audioPlayer_MixedIn;
 
             _changePlayPauseCommand = new DelegateCommand(OnChangePlayPause);
             _loadCommand = new DelegateCommand(OnLoad);
@@ -51,19 +65,22 @@ namespace Lalamachine.ViewModel
         public event EventHandler? PlayNextTrackEvent;
         public event EventHandler? PlayNextPlaylistTrackEvent;
         public event EventHandler? PlayNextLibraryTrackEvent;
-        protected virtual void InvokePlayNextTrackEvent()
+        protected virtual void InvokePlayNextTrackEvent() => InvokePlayNextTrackEvent(EventArgs.Empty);
+
+        // With NextTrackEventArgs, the list only says what it would play.
+        protected virtual void InvokePlayNextTrackEvent(EventArgs args)
         {
             if (LastActivePlaylist == "MAIN")
             {
-                PlayNextTrackEvent?.Invoke(this, EventArgs.Empty);
+                PlayNextTrackEvent?.Invoke(this, args);
             }
             else if (LastActivePlaylist == PlaylistsViewModel.ListName)
             {
-                PlayNextPlaylistTrackEvent?.Invoke(this, EventArgs.Empty);
+                PlayNextPlaylistTrackEvent?.Invoke(this, args);
             }
             else
             {
-                PlayNextLibraryTrackEvent?.Invoke(this, EventArgs.Empty);
+                PlayNextLibraryTrackEvent?.Invoke(this, args);
             }
         }
         protected virtual void OnPlayNextTrack(object? commandParameter)
@@ -103,8 +120,15 @@ namespace Lalamachine.ViewModel
                 return;
             }
 
-            Source = e.Path;
             LastActivePlaylist = e.ListName;
+            if (_isTakingOver)
+            {
+                return;
+            }
+
+            // A track that's started ends the mixing.
+            _mixing = null;
+            Source = e.Path;
             Play();
         }
 
@@ -158,6 +182,18 @@ namespace Lalamachine.ViewModel
 
         public double Duration => _audioPlayer.Duration?.TotalSeconds ?? 0;
 
+        // Each track mixed into the next, like a DJ.
+        public bool Transitions
+        {
+            get => _audioPlayer.Transitions;
+            set
+            {
+                _audioPlayer.Transitions = value;
+                _playerSettings.Transitions = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public double Position
         {
             // Never past the end, the length of a track can be an estimate or unknown. A slider clamps a larger value to its
@@ -196,6 +232,44 @@ namespace Lalamachine.ViewModel
         {
             // E.g. the file is on a drive that isn't connected. Don't pretend to play it.
             IsPlaying = false;
+        }
+
+        // The list that plays decides what comes next, like at the end of a track, but doesn't go on to it yet: the track that
+        // plays is the current one until the transition is over.
+        private void _audioPlayer_TransitionDue(object? sender, EventArgs e)
+        {
+            if (!Transitions || !IsPlaying)
+            {
+                return;
+            }
+            var next = new NextTrackEventArgs();
+            InvokePlayNextTrackEvent(next);
+            if (next.Track is { } track)
+            {
+                _mixing = next;
+                _audioPlayer.MixTo(new Uri(track.Path));
+            }
+        }
+
+        // Now the list goes on to it.
+        private void _audioPlayer_MixedIn(object? sender, EventArgs e)
+        {
+            if (_mixing is { Track: { } track, List: { } list })
+            {
+                _mixing = null;
+                _isTakingOver = true;
+                try
+                {
+                    list.PlayTrack(track);
+                }
+                finally
+                {
+                    _isTakingOver = false;
+                }
+            }
+            NotifyPropertyChanged(nameof(Source));
+            NotifyPropertyChanged(nameof(Duration));
+            NotifyPropertyChanged(nameof(Position));
         }
 
         private void _audioPlayer_PositionChanged(object? sender, EventArgs e)

@@ -10,15 +10,15 @@ namespace LibLala.Audio
         private const double Hz = 1500;
         private const double Loudness = 0.5;
 
-        // Adds the clicks to the frames of the buffer, which start at the track's frame firstFrame.
-        public static void Add(Span<float> buffer, long firstFrame, BeatGrid grid)
+        // Adds the clicks to the frames of the buffer, which start at the track's frame firstFrame and move on by tempo.
+        public static void Add(Span<float> buffer, double firstFrame, double tempo, BeatGrid grid)
         {
             var beatFrames = grid.BeatSeconds * AudioFormat.SampleRate;
             var firstBeatFrame = grid.FirstBeat * AudioFormat.SampleRate;
             var frames = buffer.Length / AudioFormat.Channels;
             for (var i = 0; i < frames; i++)
             {
-                var sinceFirstBeat = firstFrame + i - firstBeatFrame;
+                var sinceFirstBeat = firstFrame + (i * tempo) - firstBeatFrame;
                 var sinceBeat = (sinceFirstBeat - (Math.Floor(sinceFirstBeat / beatFrames) * beatFrames)) / AudioFormat.SampleRate;
                 if (sinceBeat >= ClickSeconds)
                 {

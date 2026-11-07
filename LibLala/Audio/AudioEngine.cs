@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using LibLala.Audio.Mixing;
 
 namespace LibLala.Audio
 {
@@ -12,27 +13,57 @@ namespace LibLala.Audio
             Track = track;
         }
 
-        // The number Open returned for the track.
+        // The number Open or MixTo returned for the track.
         public int Track { get; }
     }
 
-    // Plays one track at a time through an output, which asks it for audio on its own thread. The rest is called from one
-    // thread. The events are raised on either, without holding a lock of the engine.
+    // Plays a track through an output, which asks it for audio on its own thread, and mixes the next one into it like a DJ:
+    // at the same tempo with the beats on top of each other, through a crossover that moves up from the bass, the one going
+    // out above it and the one coming in below it.
+    // The track going out is the current one until the transition is over: Position, Length and Seek are of it. A seek
+    // into the transition is a seek in the mix, the incoming track moves along. The rest is called from one thread. The
+    // events are raised on either, without holding a lock of the engine.
     public sealed class AudioEngine : IAudioRenderer, IDisposable
     {
+        // The filters and gains change in steps this long, 5.8 ms.
+        private const int StepFrames = 256;
+        // TransitionDue comes this long before the earliest transition, for the next track to be opened in time.
+        private const double DueLeadSeconds = 2;
+        // After a transition the track comes back to its own tempo over this many bars.
+        private const int TempoRampBars = 8;
+        // While two tracks play, peaks above this are rounded off instead of clipping.
+        private const float SoftClipFrom = 0.9f;
+        // A seek goes no closer to the end of a transition, so that dragging the position slider can't finish it: the next
+        // track would take over and the drag would go on in that one.
+        private const double SeekMarginSeconds = 0.5;
+        // When A is already past where the transition would be over, a short one, but not shorter than this.
+        private const double MinTransitionSeconds = 1;
+
         private readonly Lock _gate = new();
         private readonly IAudioOutput _output;
         // What Render made and the output didn't play yet, oldest first.
         private readonly Queue<Chunk> _rendered = new();
-        private IAudioDecoder? _decoder;
-        private BeatGrid? _grid;
+        private readonly float[] _deckBuffer = new float[StepFrames * AudioFormat.Channels];
+        // The track that plays, and goes out in a transition.
+        private Deck? _current;
+        // During a transition, the track that comes in. It takes over when the transition is over.
+        private Deck? _incoming;
+        private Transition? _transition;
+        private Ramp? _ramp;
         private volatile bool _clicks;
+        private volatile bool _transitions;
         private int _track;
-        // The frame of the track that Render reads next.
-        private long _renderPosition;
-        // The frame of the track that the output played up to.
+        // Frames rendered since the current track opened or moved. The transitions go by it.
+        private long _frame;
+        // Where the current track starts, until the output played some of it.
+        private double _start;
+        // Of what the output played: the track, where it is, and how long it is.
+        private int _playedTrack;
         private long _playedPosition;
-        private bool _isEndRendered;
+        private long _playedLength;
+        private bool _hasPlayed;
+        // Seconds of the current track at which TransitionDue is raised, NaN when it was.
+        private double? _dueAt;
         private bool _isEndPlayed;
         private bool _isFailed;
         // Only used on the calling thread.
@@ -44,10 +75,16 @@ namespace LibLala.Audio
             _output = createOutput(this);
         }
 
-        // The output played the last frame of the track. Raised once, until Seek or Play starts the track again.
+        // The output played the last frame of the current track. Raised once, until Seek or Play starts it again. Not for a
+        // track that a transition took over from.
         public event EventHandler<TrackEventArgs>? Ended;
         // The track can't be read any more, or the output can't play. Raised once per track.
         public event EventHandler<TrackEventArgs>? Failed;
+        // With Transitions on, the track gets close to where the next one would come in: time for MixTo. Raised once per
+        // track, again after a seek back to before it.
+        public event EventHandler<TrackEventArgs>? TransitionDue;
+        // The transition to the track that MixTo returned the number of is over, as played: it's the current track now.
+        public event EventHandler<TrackEventArgs>? TookOver;
 
         public float Volume
         {
@@ -55,33 +92,40 @@ namespace LibLala.Audio
             set => _output.Volume = value;
         }
 
-        // A click on every beat of the track's grid, to hear whether it's on the beat.
+        // A click on every beat of the tracks' grids, to hear whether they're on the beat.
         public bool Clicks
         {
             get => _clicks;
             set => _clicks = value;
         }
 
-        // In frames, 0 while no track is open.
+        // Raises TransitionDue.
+        public bool Transitions
+        {
+            get => _transitions;
+            set => _transitions = value;
+        }
+
+        // Of the current track as played, in frames, 0 while none is open.
         public long Length
         {
             get
             {
                 lock (_gate)
                 {
-                    return _decoder?.Length ?? 0;
+                    return _hasPlayed ? _playedLength : _current?.Decoder.Length ?? 0;
                 }
             }
         }
 
-        // In frames. Of what was played, the output can have more of the track waiting to be played.
+        // Of the current track, in frames. Of what was played, the output can have more waiting to be played.
         public long Position
         {
             get
             {
                 lock (_gate)
                 {
-                    return _playedPosition;
+                    return _current is null ? 0 : _hasPlayed ? _playedPosition : (long)Math.Round(_start);
                 }
             }
         }
@@ -99,12 +143,58 @@ namespace LibLala.Audio
         // Stops what plays and closes the track. Returns a new number, which no event carries.
         public int Close() => Replace(null, null);
 
+        // Takes over the decoder and mixes its track into the current one, where the planner says, or where the transition
+        // is when the current track is in it already. Past it, a short one. What came in before is dropped. Returns the
+        // number of the track, TookOver carries it, or 0 without taking over the decoder when there's no track to mix into.
+        // Throws an IOException when the decoder can't seek to where the track comes in, then nothing changed.
+        public int MixTo(IAudioDecoder decoder, BeatGrid? grid)
+        {
+            ArgumentNullException.ThrowIfNull(decoder);
+            Deck? dropped;
+            int track;
+            lock (_gate)
+            {
+                if (_current is not { } outgoing || _isFailed || _isEndPlayed)
+                {
+                    return 0;
+                }
+
+                var length = outgoing.Decoder.Length / (double)AudioFormat.SampleRate;
+                var now = outgoing.Position / AudioFormat.SampleRate;
+                var plan = TransitionPlanner.Plan(nowA: 0, length, outgoing.Grid, outgoing.Tempo, grid);
+                double? progress = null;
+                if (now >= SeekEnd(plan, outgoing.Tempo, length))
+                {
+                    // Past it already.
+                    plan = TransitionPlanner.Plan(now, length, outgoing.Grid, outgoing.Tempo, grid);
+                    plan = plan with { Seconds = Math.Max(plan.Seconds, MinTransitionSeconds) };
+                }
+                else if (now >= plan.StartA)
+                {
+                    progress = Progress(plan, outgoing.Tempo, now);
+                }
+
+                var incoming = new Deck(decoder, grid, _track + 1) { Tempo = plan.TempoB };
+                incoming.Seek(IncomingFrame(plan, progress ?? 0));
+                track = ++_track;
+                dropped = _incoming;
+                _incoming = incoming;
+                _transition = new Transition(plan, (long)Math.Round(plan.Seconds * AudioFormat.SampleRate));
+                if (progress is { } p)
+                {
+                    _transition.StartAt(_frame - (long)Math.Round(p * _transition.LengthFrames));
+                }
+            }
+            dropped?.Dispose();
+            return track;
+        }
+
         public void Play()
         {
             bool isAtEnd;
             lock (_gate)
             {
-                if (_decoder is null || _isFailed)
+                if (_current is null || _isFailed)
                 {
                     return;
                 }
@@ -141,8 +231,8 @@ namespace LibLala.Audio
             long position;
             lock (_gate)
             {
-                isAtEnd = _decoder is null || _isFailed || _isEndPlayed;
-                position = _playedPosition;
+                isAtEnd = _current is null || _isFailed || _isEndPlayed;
+                position = _hasPlayed ? _playedPosition : (long)Math.Round(_start);
             }
             if (!isAtEnd)
             {
@@ -150,17 +240,20 @@ namespace LibLala.Audio
             }
         }
 
+        // Of the current track. Without a transition, it comes back to its own tempo at once. With one, it is a seek in the
+        // mix: before it's due the transition is off, until it starts the incoming track waits, in it the incoming track is
+        // where it would be, and it doesn't go so close to the end that the transition would be over.
         public void Seek(long frame)
         {
             _output.Reset();
             long length;
             lock (_gate)
             {
-                if (_decoder is null || _isFailed)
+                if (_current is null || _isFailed)
                 {
                     return;
                 }
-                length = _decoder.Length;
+                length = _current.Decoder.Length;
             }
 
             // Only reset, the output keeps running and continues at once. Dragging the position slider seeks many times.
@@ -177,60 +270,77 @@ namespace LibLala.Audio
 
         public void Render(Span<float> buffer)
         {
-            int? failedTrack = null;
+            var events = new List<(EventHandler<TrackEventArgs>? Handler, int Track)>();
             lock (_gate)
             {
-                var read = 0;
-                var isEnd = false;
-                if (_decoder is not null && !_isFailed && !_isEndRendered)
+                buffer.Clear();
+                var frames = buffer.Length / AudioFormat.Channels;
+                var done = 0;
+                while (done < frames)
                 {
-                    try
+                    var step = Math.Min(StepFrames, frames - done);
+                    if (_transition is { IsStarted: false } waiting)
                     {
-                        read = _decoder.Read(buffer);
-                        isEnd = read < buffer.Length / AudioFormat.Channels;
+                        var until = FramesUntilStart(waiting);
+                        if (until <= 0.5)
+                        {
+                            waiting.StartAt(_frame);
+                        }
+                        else if (until < step)
+                        {
+                            step = (int)Math.Round(until);
+                        }
                     }
-                    catch (IOException)
-                    {
-                        _isFailed = true;
-                        failedTrack = _track;
-                    }
+
+                    MixStep(buffer.Slice(done * AudioFormat.Channels, step * AudioFormat.Channels), events);
+                    done += step;
+                    _frame += step;
+                    FinishTransition();
+                    CheckDue(events);
                 }
-                buffer[(read * AudioFormat.Channels)..].Clear();
-                if (_clicks && _grid is not null && read > 0)
-                {
-                    Metronome.Add(buffer[..(read * AudioFormat.Channels)], _renderPosition, _grid);
-                }
-                _renderPosition += read;
-                _isEndRendered |= isEnd;
-                _rendered.Enqueue(new Chunk(_renderPosition, isEnd));
+
+                var isEnd = _current is { IsEnded: true } && _transition is null;
+                _rendered.Enqueue(new Chunk(_current?.Track ?? 0, _current?.Position ?? 0, _current?.Decoder.Length ?? 0, isEnd));
             }
 
-            if (failedTrack is { } track)
+            foreach (var (handler, track) in events)
             {
-                Failed?.Invoke(this, new TrackEventArgs(track));
+                handler?.Invoke(this, new TrackEventArgs(track));
             }
         }
 
         public void Played()
         {
             int? endedTrack = null;
+            int? tookOver = null;
             lock (_gate)
             {
                 if (!_rendered.TryDequeue(out var chunk))
                 {
                     return;
                 }
-                _playedPosition = chunk.End;
-                if (chunk.IsEnd)
+                if (chunk.Track != _playedTrack)
+                {
+                    _playedTrack = chunk.Track;
+                    tookOver = chunk.Track;
+                }
+                _playedPosition = (long)Math.Round(chunk.Position);
+                _playedLength = chunk.Length;
+                _hasPlayed = true;
+                if (chunk.IsEnd && !_isEndPlayed)
                 {
                     _isEndPlayed = true;
-                    endedTrack = _track;
+                    endedTrack = chunk.Track;
                 }
             }
 
-            if (endedTrack is { } track)
+            if (tookOver is { } track)
             {
-                Ended?.Invoke(this, new TrackEventArgs(track));
+                TookOver?.Invoke(this, new TrackEventArgs(track));
+            }
+            if (endedTrack is { } ended)
+            {
+                Ended?.Invoke(this, new TrackEventArgs(ended));
             }
         }
 
@@ -239,8 +349,181 @@ namespace LibLala.Audio
             _output.Dispose();
             lock (_gate)
             {
-                _decoder?.Dispose();
-                _decoder = null;
+                _incoming?.Dispose();
+                _current?.Dispose();
+                _incoming = null;
+                _current = null;
+            }
+        }
+
+        // The second of A that a seek goes to at most while the transition is planned.
+        private static double SeekEnd(TransitionPlan plan, double tempoA, double lengthA) =>
+            Math.Min(plan.StartA + (plan.Seconds * tempoA), lengthA) - SeekMarginSeconds;
+
+        // How far into the transition A is at the second, from where it starts.
+        private static double Progress(TransitionPlan plan, double tempoA, double seconds) =>
+            (seconds - plan.StartA) / (plan.Seconds * tempoA);
+
+        // The frame of B that plays that far into the transition: B moves on at its own tempo times the one it plays at.
+        private static long IncomingFrame(TransitionPlan plan, double progress) =>
+            (long)Math.Round((plan.StartB + (progress * plan.Seconds * plan.TempoB)) * AudioFormat.SampleRate);
+
+        // One step: the incoming track and the current one, filtered and faded by how far the transition is.
+        private void MixStep(Span<float> buffer, List<(EventHandler<TrackEventArgs>?, int)> events)
+        {
+            var frames = buffer.Length / AudioFormat.Channels;
+            var transition = _transition;
+            var isRunning = transition is { IsStarted: true };
+            var from = isRunning ? transition!.Progress(_frame) : 0;
+            var to = isRunning ? transition!.Progress(_frame + frames) : 0;
+            var isBeatMatched = transition?.Plan.IsBeatMatched ?? false;
+
+            // First, so that it reads from where the step starts in the current track.
+            if (_incoming is { } incoming && isRunning)
+            {
+                incoming.Tempo = transition!.Plan.TempoB;
+                incoming.LowPass.Cutoff = TransitionShape.Crossover((from + to) / 2);
+                var gain = (TransitionShape.IncomingGain(from, isBeatMatched), TransitionShape.IncomingGain(to, isBeatMatched));
+                if (!RenderDeck(incoming, buffer, gain))
+                {
+                    // It can't be read any more, the current track plays on as if it had never come.
+                    incoming.Dispose();
+                    _incoming = null;
+                    _transition = null;
+                    transition = null;
+                    isRunning = false;
+                }
+            }
+
+            if (_current is { } current)
+            {
+                current.HighPass.Cutoff = isRunning ? TransitionShape.Crossover((from + to) / 2) : current.HighPass.Off;
+                if (!isRunning && _ramp is { } ramp)
+                {
+                    current.Tempo = ramp.Tempo(_frame);
+                    if (_frame >= ramp.EndFrame)
+                    {
+                        _ramp = null;
+                    }
+                }
+                var gain = isRunning ? (TransitionShape.OutgoingGain(from, isBeatMatched), TransitionShape.OutgoingGain(to, isBeatMatched)) : (1.0, 1.0);
+                if (!RenderDeck(current, buffer, gain))
+                {
+                    if (_incoming is not null && transition is not null)
+                    {
+                        // The incoming track takes over now.
+                        transition.StartAt(_frame - transition.LengthFrames);
+                    }
+                    else if (!_isFailed)
+                    {
+                        _isFailed = true;
+                        events.Add((Failed, current.Track));
+                    }
+                }
+                else if (transition is { IsStarted: false } && current.IsEnded)
+                {
+                    // It ended before it was planned to, maybe it's shorter than it said.
+                    transition.StartAt(_frame + frames);
+                }
+            }
+
+            if (isRunning && _incoming is not null)
+            {
+                SoftClip(buffer);
+            }
+        }
+
+        // Adds the deck to the buffer, filtered, with the gain going from the first to the second. False when it can't be read.
+        private bool RenderDeck(Deck deck, Span<float> buffer, (double From, double To) gain)
+        {
+            var samples = _deckBuffer.AsSpan(0, buffer.Length);
+            var start = deck.Position;
+            try
+            {
+                deck.Render(samples);
+            }
+            catch (IOException)
+            {
+                return false;
+            }
+            if (_clicks && deck.Grid is { } grid)
+            {
+                Metronome.Add(samples, start, deck.Tempo, grid);
+            }
+            deck.LowPass.Process(samples);
+            deck.HighPass.Process(samples);
+
+            var frames = buffer.Length / AudioFormat.Channels;
+            for (var i = 0; i < frames; i++)
+            {
+                var g = (float)(gain.From + ((gain.To - gain.From) * i / frames));
+                for (var c = 0; c < AudioFormat.Channels; c++)
+                {
+                    buffer[(i * AudioFormat.Channels) + c] += g * samples[(i * AudioFormat.Channels) + c];
+                }
+            }
+            return true;
+        }
+
+        private double FramesUntilStart(Transition transition)
+        {
+            if (_current is not { } current)
+            {
+                return 0;
+            }
+            return ((transition.Plan.StartA * AudioFormat.SampleRate) - current.Position) / current.Tempo;
+        }
+
+        // At the end the current track is gone and the incoming one takes over, coming back to its own tempo.
+        private void FinishTransition()
+        {
+            if (_transition is not { IsStarted: true } transition || _frame < transition.StartFrame + transition.LengthFrames)
+            {
+                return;
+            }
+            _current?.Dispose();
+            _current = _incoming;
+            _incoming = null;
+            _transition = null;
+            _dueAt = null;
+            if (_current is { } current)
+            {
+                current.LowPass.Cutoff = current.LowPass.Off;
+                if (current.Tempo != 1)
+                {
+                    var barFrames = 4 * 60.0 / ((current.Grid?.BeatsPerMinute ?? 120) * current.Tempo) * AudioFormat.SampleRate;
+                    _ramp = new Ramp(_frame, _frame + (long)(TempoRampBars * barFrames), current.Tempo);
+                }
+            }
+        }
+
+        private void CheckDue(List<(EventHandler<TrackEventArgs>?, int)> events)
+        {
+            if (!_transitions || _transition is not null || _current is not { IsEnded: false } current)
+            {
+                return;
+            }
+            _dueAt ??= DueAt(current);
+            if (_dueAt is { } dueAt && !double.IsNaN(dueAt) && current.Position / AudioFormat.SampleRate >= dueAt)
+            {
+                _dueAt = double.NaN;
+                events.Add((TransitionDue, current.Track));
+            }
+        }
+
+        private static double DueAt(Deck deck) => TransitionPlanner.EarliestStart(deck.Decoder.Length / (double)AudioFormat.SampleRate, deck.Grid) - DueLeadSeconds;
+
+        private static void SoftClip(Span<float> buffer)
+        {
+            const float room = 1 - SoftClipFrom;
+            for (var i = 0; i < buffer.Length; i++)
+            {
+                var x = buffer[i];
+                var size = Math.Abs(x);
+                if (size > SoftClipFrom)
+                {
+                    buffer[i] = MathF.CopySign(SoftClipFrom + (room * MathF.Tanh((size - SoftClipFrom) / room)), x);
+                }
             }
         }
 
@@ -249,50 +532,126 @@ namespace LibLala.Audio
             _isPlaying = false;
             _output.Pause();
             _output.Reset();
-            IAudioDecoder? old;
+            Deck? oldCurrent;
+            Deck? oldIncoming;
             int track;
             lock (_gate)
             {
-                old = _decoder;
-                _decoder = decoder;
-                _grid = grid;
+                oldCurrent = _current;
+                oldIncoming = _incoming;
                 track = ++_track;
+                _current = decoder is null ? null : new Deck(decoder, grid, track);
+                _incoming = null;
+                _transition = null;
+                _ramp = null;
                 _isFailed = false;
-                _isEndRendered = false;
                 _isEndPlayed = false;
                 _rendered.Clear();
-                _renderPosition = 0;
-                _playedPosition = 0;
+                _frame = 0;
+                _start = 0;
+                _playedTrack = track;
+                _hasPlayed = false;
+                _dueAt = null;
             }
-            old?.Dispose();
+            oldCurrent?.Dispose();
+            oldIncoming?.Dispose();
             return track;
         }
 
-        // Only while the output is stopped. False when the track failed.
+        // Of the current track, only while the output is stopped. False when it failed.
         private bool MoveTo(long frame)
         {
             int track;
+            int? tookOver = null;
             lock (_gate)
             {
                 _rendered.Clear();
-                _renderPosition = frame;
-                _playedPosition = frame;
-                _isEndRendered = false;
+                _frame = 0;
                 _isEndPlayed = false;
+                _ramp = null;
+                track = _current?.Track ?? 0;
+                if (_current is not { } current)
+                {
+                    return true;
+                }
+                // It took over while the output had the end of the transition still to play.
+                if (_playedTrack != current.Track)
+                {
+                    _playedTrack = current.Track;
+                    tookOver = current.Track;
+                }
+
+                var seconds = frame / (double)AudioFormat.SampleRate;
+                if (_transition is { } transition && _incoming is { } incoming)
+                {
+                    var plan = transition.Plan;
+                    var length = current.Decoder.Length / (double)AudioFormat.SampleRate;
+                    if (seconds < plan.StartA - DueLeadSeconds)
+                    {
+                        // Back to before it's due: no transition, until it's due again.
+                        incoming.Dispose();
+                        _incoming = null;
+                        _transition = null;
+                        _dueAt = null;
+                        current.HighPass.Cutoff = current.HighPass.Off;
+                    }
+                    else
+                    {
+                        seconds = Math.Max(0, Math.Min(seconds, SeekEnd(plan, current.Tempo, length)));
+                        frame = (long)Math.Round(seconds * AudioFormat.SampleRate);
+                        double? progress = seconds >= plan.StartA ? Progress(plan, current.Tempo, seconds) : null;
+                        try
+                        {
+                            incoming.Seek(IncomingFrame(plan, progress ?? 0));
+                            if (progress is { } p)
+                            {
+                                transition.StartAt(-(long)Math.Round(p * transition.LengthFrames));
+                            }
+                            else
+                            {
+                                transition.Wait();
+                                current.HighPass.Cutoff = current.HighPass.Off;
+                            }
+                        }
+                        catch (IOException)
+                        {
+                            incoming.Dispose();
+                            _incoming = null;
+                            _transition = null;
+                            current.HighPass.Cutoff = current.HighPass.Off;
+                        }
+                    }
+                }
+                else
+                {
+                    current.Tempo = 1;
+                    current.HighPass.Cutoff = current.HighPass.Off;
+                    current.LowPass.Cutoff = current.LowPass.Off;
+                    _dueAt = null;
+                }
+
+                _start = frame;
+                _hasPlayed = false;
                 try
                 {
-                    _decoder?.Seek(frame);
-                    return true;
+                    current.Seek(frame);
                 }
                 catch (IOException)
                 {
                     _isFailed = true;
-                    track = _track;
                 }
             }
 
-            Failed?.Invoke(this, new TrackEventArgs(track));
-            return false;
+            if (tookOver is { } took)
+            {
+                TookOver?.Invoke(this, new TrackEventArgs(took));
+            }
+            if (_isFailed)
+            {
+                Failed?.Invoke(this, new TrackEventArgs(track));
+                return false;
+            }
+            return true;
         }
 
         private void StartOutput()
@@ -308,13 +667,44 @@ namespace LibLala.Audio
                 lock (_gate)
                 {
                     _isFailed = true;
-                    track = _track;
+                    track = _current?.Track ?? 0;
                 }
                 Failed?.Invoke(this, new TrackEventArgs(track));
             }
         }
 
-        // End is the frame of the track after the chunk.
-        private readonly record struct Chunk(long End, bool IsEnd);
+        // Of the current track: the position after the chunk, its length, and whether the chunk has its end.
+        private readonly record struct Chunk(int Track, double Position, long Length, bool IsEnd);
+
+        private sealed class Transition
+        {
+            public Transition(TransitionPlan plan, long lengthFrames)
+            {
+                Plan = plan;
+                LengthFrames = Math.Max(1, lengthFrames);
+            }
+
+            public TransitionPlan Plan { get; }
+            public long LengthFrames { get; }
+            // The frame where the incoming track came in, or would have for where the transition is.
+            public long StartFrame { get; private set; }
+            public bool IsStarted { get; private set; }
+
+            public void StartAt(long frame)
+            {
+                StartFrame = frame;
+                IsStarted = true;
+            }
+
+            public void Wait() => IsStarted = false;
+
+            public double Progress(long frame) => Math.Clamp((frame - StartFrame) / (double)LengthFrames, 0, 1);
+        }
+
+        // The tempo going from where the transition left it to the track's own, from frame to frame.
+        private sealed record Ramp(long StartFrame, long EndFrame, double From)
+        {
+            public double Tempo(long frame) => frame >= EndFrame ? 1 : From + ((1 - From) * (frame - StartFrame) / (EndFrame - StartFrame));
+        }
     }
 }

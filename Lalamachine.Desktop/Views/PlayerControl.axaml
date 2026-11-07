@@ -13,14 +13,18 @@
             <Label Grid.Column="3" Content="{Binding Duration, Converter={x:Static local:Converters.SecondsToTime}}" />
         </Grid>
 
-        <Grid ColumnDefinitions="Auto,*">
+        <Grid ColumnDefinitions="Auto,Auto,*">
+            <ToggleButton Grid.Column="0"
+                          Content="🎛"
+                          IsChecked="{Binding Transitions}"
+                          ToolTip.Tip="Mix each track into the next, like a DJ" />
             <!-- Its DataContext is the ShuffleRepeatViewModel, the MainWindow sets it. -->
             <Button x:Name="ShuffleRepeatButton"
-                    Grid.Column="0"
+                    Grid.Column="1"
                     x:DataType="vm:ShuffleRepeatViewModel"
                     Command="{Binding ChangeShuffleRepeatCommand}"
                     Content="{Binding State, Converter={x:Static local:Converters.ShuffleRepeatContent}}" />
-            <Slider Grid.Column="1"
+            <Slider Grid.Column="2"
                     Minimum="0" Maximum="{Binding Duration, Converter={x:Static local:Converters.AtLeastOne}}" Value="{Binding Position}"
                     VerticalAlignment="Center" Margin="8,0" />
         </Grid>

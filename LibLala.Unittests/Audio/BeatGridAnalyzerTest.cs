@@ -94,6 +94,54 @@ namespace LibLala.Unittests.Audio
             Assert.That(grid.IsSteady, Is.True);
         }
 
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(3)]
+        public void TheFirstBeatOfABar_IsWhereTheSoundChanges(int downbeat)
+        {
+            using var decoder = new DrumDecoder(128, 0.25) { Downbeat = downbeat };
+
+            var grid = BeatGridAnalyzer.Analyze(decoder, taggedBpm: null)!;
+
+            Assert.That(grid.FirstDownbeat, Is.EqualTo(0.25 + (downbeat * 60 / 128.0)).Within(0.003));
+        }
+
+        [Test]
+        public void Cues_DecideTheFirstBeatOfABar()
+        {
+            using var decoder = new DrumDecoder(128, 0.25) { Downbeat = 0 };
+            var beat = 60 / 128.0;
+            // On the third beat of bars, a few ms late, like Mixed In Key's.
+            double[] cues = [0.25 + (2 * beat) + 0.045, 0.25 + (34 * beat) + 0.045, 0.25 + (66 * beat) + 0.045];
+
+            var grid = BeatGridAnalyzer.Analyze(decoder, taggedBpm: null, cues)!;
+
+            Assert.That(grid.FirstDownbeat, Is.EqualTo(0.25 + (2 * beat)).Within(0.003));
+        }
+
+        [Test]
+        public void CuesThatDisagree_AreLeftOut()
+        {
+            using var decoder = new DrumDecoder(128, 0.25) { Downbeat = 0 };
+            var beat = 60 / 128.0;
+            double[] cues = [0.25 + (2 * beat), 0.25 + (5 * beat), 0.25 + (11 * beat)];
+
+            var grid = BeatGridAnalyzer.Analyze(decoder, taggedBpm: null, cues)!;
+
+            Assert.That(grid.FirstDownbeat, Is.EqualTo(0.25).Within(0.003));
+        }
+
+        [Test]
+        public void TheMusic_IsWhereTheBeatsAre()
+        {
+            using var decoder = new DrumDecoder(128, 0.25, seconds: 120) { BeatsFrom = 10, BeatsUntil = 100 };
+
+            var grid = BeatGridAnalyzer.Analyze(decoder, taggedBpm: null)!;
+
+            Assert.That(grid.MusicStart, Is.EqualTo(10).Within(60 / 128.0));
+            Assert.That(grid.MusicEnd, Is.EqualTo(100).Within(60 / 128.0));
+        }
+
         [Test]
         public void Silence_HasNoGrid()
         {

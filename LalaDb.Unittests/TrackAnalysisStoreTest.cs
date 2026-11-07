@@ -55,7 +55,7 @@ namespace LalaDb.Unittests
             context.SaveChanges();
         }
 
-        private static readonly BeatGrid Grid = new(127.998, 0.312, 2.5, 400);
+        private static readonly BeatGrid Grid = new(127.998, 0.312, 2.5, 400, 1.249, 0.312, 180.5);
 
         [Test]
         public void ATrack_IsToBeAnalyzed_WithItsTaggedTempo()

@@ -9,13 +9,16 @@ namespace LibLala.Audio
         public const double SteadyDeviationMs = 8;
         public const int SteadyBeatCount = 64;
 
-        public BeatGrid(double beatsPerMinute, double firstBeat, double deviationMs, int beatCount)
+        public BeatGrid(double beatsPerMinute, double firstBeat, double deviationMs, int beatCount, double firstDownbeat, double musicStart, double musicEnd)
         {
             ArgumentOutOfRangeException.ThrowIfNegativeOrZero(beatsPerMinute);
             BeatsPerMinute = beatsPerMinute;
             FirstBeat = firstBeat;
             DeviationMs = deviationMs;
             BeatCount = beatCount;
+            FirstDownbeat = firstDownbeat;
+            MusicStart = musicStart;
+            MusicEnd = musicEnd;
         }
 
         public double BeatsPerMinute { get; }
@@ -30,7 +33,16 @@ namespace LibLala.Audio
         // The beats that were heard on the grid.
         public int BeatCount { get; }
 
+        // In seconds, the first beat of the first bar: one of the first four beats.
+        public double FirstDownbeat { get; }
+
+        // In seconds, the first and the last beat of the music, where the beats are heard most of the time. An intro or
+        // outro without beats is before or after.
+        public double MusicStart { get; }
+        public double MusicEnd { get; }
+
         public double BeatSeconds => 60 / BeatsPerMinute;
+        public double BarSeconds => 4 * BeatSeconds;
 
         // The beats of the track can be matched to another's by this grid.
         public bool IsSteady => BeatCount >= SteadyBeatCount && DeviationMs <= SteadyDeviationMs;

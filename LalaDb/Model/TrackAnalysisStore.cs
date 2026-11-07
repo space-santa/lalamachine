@@ -72,7 +72,7 @@ namespace LalaDb.Model
             {
                 return null;
             }
-            return new BeatGrid(analysis.BeatsPerMinute, analysis.FirstBeat, analysis.BeatDeviationMs, analysis.BeatCount);
+            return new BeatGrid(analysis.BeatsPerMinute, analysis.FirstBeat, analysis.BeatDeviationMs, analysis.BeatCount, analysis.FirstDownbeat, analysis.MusicStart, analysis.MusicEnd);
         }
 
         // The stamp of the file as it was before the analysis, a file changed since is analyzed again. Without a grid when the
@@ -94,6 +94,9 @@ namespace LalaDb.Model
             analysis.FirstBeat = grid?.FirstBeat ?? 0;
             analysis.BeatDeviationMs = grid?.DeviationMs ?? 0;
             analysis.BeatCount = grid?.BeatCount ?? 0;
+            analysis.FirstDownbeat = grid?.FirstDownbeat ?? 0;
+            analysis.MusicStart = grid?.MusicStart ?? 0;
+            analysis.MusicEnd = grid?.MusicEnd ?? 0;
             context.SaveChanges();
         }
     }

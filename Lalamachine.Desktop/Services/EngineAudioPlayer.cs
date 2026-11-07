@@ -12,23 +12,39 @@ namespace Lalamachine.Desktop.Services
     {
         private readonly SynchronizationContext _uiContext;
         private readonly Func<string, IAudioDecoder> _openDecoder;
-        private readonly Func<string, BeatGrid?>? _findGrid;
+        private readonly Func<string, BeatGrid?> _findGrid;
         private readonly AudioEngine _engine;
         private readonly Timer _positionTimer;
         // The engine's number of the open track. Its events about an earlier one are late, the user started another.
         private int _track;
+        // Of the track mixed in, until it takes over.
+        private int _mixTrack;
+        private Uri? _mixSource;
         private bool _isOpen;
         private double _volume = 1;
         private bool _isMuted;
         private bool _disposed;
 
-        // With findGrid, it clicks on the beats of the tracks' grids.
-        public EngineAudioPlayer(Func<IAudioRenderer, IAudioOutput> createOutput, Func<string, IAudioDecoder> openDecoder, Func<string, BeatGrid?>? findGrid)
+        // findGrid finds the beat grids of tracks, for the transitions. With clicks, they are heard.
+        public EngineAudioPlayer(Func<IAudioRenderer, IAudioOutput> createOutput, Func<string, IAudioDecoder> openDecoder, Func<string, BeatGrid?> findGrid, bool clicks)
         {
             _uiContext = SynchronizationContext.Current ?? new SynchronizationContext();
             _openDecoder = openDecoder;
             _findGrid = findGrid;
-            _engine = new AudioEngine(createOutput) { Clicks = findGrid is not null };
+            _engine = new AudioEngine(createOutput) { Clicks = clicks };
+            _engine.TransitionDue += (sender, e) => PostForTrack(e.Track, () => TransitionDue?.Invoke(this, EventArgs.Empty));
+            _engine.TookOver += (sender, e) => Post(() =>
+            {
+                if (e.Track != _mixTrack || _mixTrack == 0)
+                {
+                    return;
+                }
+                _track = _mixTrack;
+                _mixTrack = 0;
+                Source = _mixSource;
+                MediaOpened?.Invoke(this, EventArgs.Empty);
+                MixedIn?.Invoke(this, EventArgs.Empty);
+            });
             // Stopped, the output doesn't keep the Mac awake with silence.
             _engine.Ended += (sender, e) => PostForTrack(e.Track, () =>
             {
@@ -48,6 +64,8 @@ namespace Lalamachine.Desktop.Services
         public event EventHandler? MediaEnded;
         public event EventHandler? MediaFailed;
         public event EventHandler? PositionChanged;
+        public event EventHandler? TransitionDue;
+        public event EventHandler? MixedIn;
 
         public Uri? Source { get; private set; }
 
@@ -73,6 +91,12 @@ namespace Lalamachine.Desktop.Services
 
         public TimeSpan? Duration => _isOpen ? ToTime(_engine.Length) : null;
 
+        public bool Transitions
+        {
+            get => _engine.Transitions;
+            set => _engine.Transitions = value;
+        }
+
         public TimeSpan Position
         {
             get => ToTime(_engine.Position);
@@ -82,6 +106,7 @@ namespace Lalamachine.Desktop.Services
         public void Open(Uri source)
         {
             Source = source;
+            _mixTrack = 0;
             IAudioDecoder? decoder = null;
             try
             {
@@ -100,8 +125,32 @@ namespace Lalamachine.Desktop.Services
                 return;
             }
 
-            _track = _engine.Open(decoder, _findGrid?.Invoke(source.LocalPath));
+            _track = _engine.Open(decoder, _findGrid(source.LocalPath));
             PostForTrack(_track, () => MediaOpened?.Invoke(this, EventArgs.Empty));
+        }
+
+        public void MixTo(Uri source)
+        {
+            IAudioDecoder? decoder = null;
+            try
+            {
+                decoder = source.IsFile ? _openDecoder(source.LocalPath) : null;
+                if (decoder is not null && _engine.MixTo(decoder, _findGrid(source.LocalPath)) is var track and > 0)
+                {
+                    _mixTrack = track;
+                    _mixSource = source;
+                    return;
+                }
+            }
+            catch (IOException)
+            {
+            }
+            decoder?.Dispose();
+
+            // Can't be mixed in, then like any other: it fails or plays, and takes over at once.
+            Open(source);
+            Play();
+            Post(() => MixedIn?.Invoke(this, EventArgs.Empty));
         }
 
         public void Play() => _engine.Play();

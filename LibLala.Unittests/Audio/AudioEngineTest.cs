@@ -205,7 +205,7 @@ namespace LibLala.Unittests.Audio
         public void Clicks_AreOnTheBeatsOfTheGrid()
         {
             // 120 BPM, a beat every half second, the first at 0.1 s.
-            _engine.Open(new CountingDecoder(AudioFormat.SampleRate) { Silent = true }, new BeatGrid(120, 0.1, 1, 100));
+            _engine.Open(new CountingDecoder(AudioFormat.SampleRate) { Silent = true }, new BeatGrid(120, 0.1, 1, 100, 0.1, 0.1, 1));
             _engine.Clicks = true;
             var buffer = new float[AudioFormat.SampleRate * AudioFormat.Channels];
 
@@ -220,7 +220,7 @@ namespace LibLala.Unittests.Audio
         [Test]
         public void WithoutClicks_TheGridIsSilent()
         {
-            _engine.Open(new CountingDecoder(AudioFormat.SampleRate) { Silent = true }, new BeatGrid(120, 0.1, 1, 100));
+            _engine.Open(new CountingDecoder(AudioFormat.SampleRate) { Silent = true }, new BeatGrid(120, 0.1, 1, 100, 0.1, 0.1, 1));
             var buffer = new float[AudioFormat.SampleRate * AudioFormat.Channels];
 
             _engine.Render(buffer);

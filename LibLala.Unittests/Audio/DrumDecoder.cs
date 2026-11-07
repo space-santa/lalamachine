@@ -28,6 +28,11 @@ namespace LibLala.Unittests.Audio
         // A kick drum's beater, a 3 kHz tick at its start. An 808 has none.
         public bool HasClick { get; init; } = true;
         public bool HasHiHat { get; init; } = true;
+        // A pad chord that changes on the first beat of each bar: the beat with this number, and every fourth after it.
+        public int? Downbeat { get; init; }
+        // The drums only play in between, in seconds.
+        public double BeatsFrom { get; init; }
+        public double BeatsUntil { get; init; } = double.MaxValue;
         public double Noise { get; init; } = 0.02;
 
         public int Read(Span<float> buffer)
@@ -55,7 +60,14 @@ namespace LibLala.Unittests.Audio
             var beat = Math.Floor(sinceBeat / period);
             var t = sinceBeat - (beat * period);
             var sample = Noise * ((_random.NextDouble() * 2) - 1);
-            if (sinceBeat >= 0 && HasKick)
+            if (Downbeat is { } downbeat && sinceBeat >= 0)
+            {
+                var bar = (int)Math.Floor((beat - downbeat) / 4);
+                var root = 110 * Math.Pow(2, (bar * 5 % 12) / 12.0);
+                sample += 0.1 * (Math.Sin(2 * Math.PI * root * seconds) + Math.Sin(2 * Math.PI * root * 1.5 * seconds));
+            }
+            var drums = seconds >= BeatsFrom && seconds <= BeatsUntil;
+            if (sinceBeat >= 0 && HasKick && drums)
             {
                 // A sine falling from 120 to 50 Hz.
                 var phase = 2 * Math.PI * ((50 * t) + (70 * 0.03 * (1 - Math.Exp(-t / 0.03))));
@@ -66,7 +78,7 @@ namespace LibLala.Unittests.Audio
                 }
             }
             var sinceOffBeat = t - (period / 2);
-            if (sinceBeat >= 0 && sinceOffBeat >= 0 && HasHiHat)
+            if (sinceBeat >= 0 && sinceOffBeat >= 0 && HasHiHat && drums)
             {
                 sample += 0.2 * Math.Exp(-sinceOffBeat / 0.02) * ((_random.NextDouble() * 2) - 1);
             }
