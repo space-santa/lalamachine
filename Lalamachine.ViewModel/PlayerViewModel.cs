@@ -35,6 +35,9 @@ namespace Lalamachine.ViewModel
         private NextTrackEventArgs? _mixing;
         // While the list is told: it plays already.
         private bool _isTakingOver;
+        private bool _isDraggingPosition;
+        // The track changed while the position slider was held: where it's dragged to is of the track before.
+        private bool _isDragOfTrackBefore;
 
         public PlayerViewModel(IAudioPlayer audioPlayer, IDialogService dialogs) : this(audioPlayer, dialogs, new PlayerSettings())
         {
@@ -199,7 +202,30 @@ namespace Lalamachine.ViewModel
             // Never past the end, the length of a track can be an estimate or unknown. A slider clamps a larger value to its
             // maximum and writes that back through its binding, which would seek there.
             get => Math.Min(_audioPlayer.Position.TotalSeconds, Duration);
-            set => _audioPlayer.Position = new TimeSpan(0, 0, (int)value);
+            set
+            {
+                if (_isDragOfTrackBefore)
+                {
+                    return;
+                }
+                _audioPlayer.Position = new TimeSpan(0, 0, (int)value);
+            }
+        }
+
+        // The view says while the position slider is held. When another track starts meanwhile, the slider is at a place
+        // in the one before, and moved a little before it's let go, it would seek there in the new one, maybe to its end and
+        // on to the next.
+        public bool IsDraggingPosition
+        {
+            get => _isDraggingPosition;
+            set
+            {
+                _isDraggingPosition = value;
+                if (!value)
+                {
+                    _isDragOfTrackBefore = false;
+                }
+            }
         }
 
         private readonly DelegateCommand _changePlayPauseCommand;
@@ -225,6 +251,8 @@ namespace Lalamachine.ViewModel
 
         private void _audioPlayer_MediaOpened(object? sender, EventArgs e)
         {
+            // The position first, see Open.
+            NotifyPropertyChanged(nameof(Position));
             NotifyPropertyChanged(nameof(Duration));
         }
 
@@ -267,9 +295,16 @@ namespace Lalamachine.ViewModel
                     _isTakingOver = false;
                 }
             }
+            TrackChanged();
+        }
+
+        // The position before the duration, see Open.
+        private void TrackChanged()
+        {
+            _isDragOfTrackBefore = _isDraggingPosition;
             NotifyPropertyChanged(nameof(Source));
-            NotifyPropertyChanged(nameof(Duration));
             NotifyPropertyChanged(nameof(Position));
+            NotifyPropertyChanged(nameof(Duration));
         }
 
         private void _audioPlayer_PositionChanged(object? sender, EventArgs e)
@@ -307,11 +342,9 @@ namespace Lalamachine.ViewModel
         public void Open(string path)
         {
             _audioPlayer.Open(new Uri(path));
-            NotifyPropertyChanged(nameof(Source));
             // Reset the position slider right away. Left at the old track's position, it would get clamped to a shorter
             // new track's length once that is known, and seek there.
-            NotifyPropertyChanged(nameof(Position));
-            NotifyPropertyChanged(nameof(Duration));
+            TrackChanged();
         }
 
         public void Play()

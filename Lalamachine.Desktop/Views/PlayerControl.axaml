@@ -24,7 +24,8 @@
                     x:DataType="vm:ShuffleRepeatViewModel"
                     Command="{Binding ChangeShuffleRepeatCommand}"
                     Content="{Binding State, Converter={x:Static local:Converters.ShuffleRepeatContent}}" />
-            <Slider Grid.Column="2"
+            <Slider x:Name="PositionSlider"
+                    Grid.Column="2"
                     Minimum="0" Maximum="{Binding Duration, Converter={x:Static local:Converters.AtLeastOne}}" Value="{Binding Position}"
                     VerticalAlignment="Center" Margin="8,0" />
         </Grid>

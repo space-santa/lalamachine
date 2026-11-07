@@ -42,7 +42,8 @@ namespace Lalamachine.Desktop.Services
                 _track = _mixTrack;
                 _mixTrack = 0;
                 Source = _mixSource;
-                MediaOpened?.Invoke(this, EventArgs.Empty);
+                // Not MediaOpened as well: its new duration before the new position would let the slider clamp the old
+                // position to a shorter track's length and seek there.
                 MixedIn?.Invoke(this, EventArgs.Empty);
             });
             // Stopped, the output doesn't keep the Mac awake with silence.

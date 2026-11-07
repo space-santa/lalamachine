@@ -1,5 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
+using Lalamachine.ViewModel;
 
 namespace Lalamachine.Desktop.Views
 {
@@ -8,6 +10,18 @@ namespace Lalamachine.Desktop.Views
         public PlayerControl()
         {
             InitializeComponent();
+            // Held before the slider handles the press, it writes its value then already. Let go after it handled the release.
+            PositionSlider.AddHandler(PointerPressedEvent, (sender, e) => SetDraggingPosition(true), RoutingStrategies.Tunnel, handledEventsToo: true);
+            PositionSlider.AddHandler(PointerReleasedEvent, (sender, e) => SetDraggingPosition(false), RoutingStrategies.Bubble, handledEventsToo: true);
+            PositionSlider.AddHandler(PointerCaptureLostEvent, (sender, e) => SetDraggingPosition(false), RoutingStrategies.Bubble, handledEventsToo: true);
+        }
+
+        private void SetDraggingPosition(bool isDragging)
+        {
+            if (DataContext is PlayerViewModel player)
+            {
+                player.IsDraggingPosition = isDragging;
+            }
         }
 
         private void Volume_PointerWheelChanged(object? sender, PointerWheelEventArgs e)

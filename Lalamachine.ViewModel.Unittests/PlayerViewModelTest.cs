@@ -75,6 +75,55 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
+        public void WhenTheMixedInTrackTakesOver_ThePositionIsToldBeforeTheDuration()
+        {
+            // The other way round, the slider would clamp the old track's position to a shorter new track and seek there.
+            var changed = new List<string?>();
+            _viewModel.PropertyChanged += (sender, e) => changed.Add(e.PropertyName);
+            _player.TransitionDue += Raise.Event();
+
+            _player.MixedIn += Raise.Event();
+
+            Assert.That(changed.IndexOf(nameof(PlayerViewModel.Position)), Is.GreaterThanOrEqualTo(0).And.LessThan(changed.IndexOf(nameof(PlayerViewModel.Duration))));
+        }
+
+        [Test]
+        public void WhenATrackOpens_ThePositionIsToldBeforeTheDuration()
+        {
+            var changed = new List<string?>();
+            _viewModel.PropertyChanged += (sender, e) => changed.Add(e.PropertyName);
+
+            _player.MediaOpened += Raise.Event();
+
+            Assert.That(changed, Is.EqualTo(new[] { nameof(PlayerViewModel.Position), nameof(PlayerViewModel.Duration) }));
+        }
+
+        [Test]
+        public void DraggingThePosition_Seeks()
+        {
+            _viewModel.IsDraggingPosition = true;
+
+            _viewModel.Position = 100;
+
+            _player.Received(1).Position = TimeSpan.FromSeconds(100);
+        }
+
+        [Test]
+        public void WhileThePositionIsHeld_ATrackThatTookOver_IsntSeekedByIt_UntilItsLetGo()
+        {
+            _viewModel.IsDraggingPosition = true;
+            _player.TransitionDue += Raise.Event();
+            _player.MixedIn += Raise.Event();
+
+            _viewModel.Position = 290;
+            _player.DidNotReceive().Position = Arg.Any<TimeSpan>();
+
+            _viewModel.IsDraggingPosition = false;
+            _viewModel.Position = 10;
+            _player.Received(1).Position = TimeSpan.FromSeconds(10);
+        }
+
+        [Test]
         public void WithoutTransitions_NothingIsMixedIn()
         {
             _viewModel.Transitions = false;
