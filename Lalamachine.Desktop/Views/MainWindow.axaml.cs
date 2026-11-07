@@ -77,6 +77,9 @@ namespace Lalamachine.Desktop.Views
             _player.PlayLastPlaylistTrackEvent += _playlistsViewModel.PlayLastTrackHandler;
             _player.PlayNextLibraryTrackEvent += _libraryPlaylistViewModel.PlayNextTrackHandler;
             _player.PlayLastLibraryTrackEvent += _libraryPlaylistViewModel.PlayLastTrackHandler;
+            _player.PeekNextTrackEvent += _queueViewModel.PeekNextTrackHandler;
+            _player.PeekNextPlaylistTrackEvent += _playlistsViewModel.PeekNextTrackHandler;
+            _player.PeekNextLibraryTrackEvent += _libraryPlaylistViewModel.PeekNextTrackHandler;
 
             _queueViewModel.PlayTrackEvent += _player.PlayTrackHandler;
             _playlistsViewModel.PlayTrackEvent += _player.PlayTrackHandler;

@@ -98,6 +98,9 @@ namespace Lalamachine.ViewModel
 
         protected override IEnumerable<PlaylistTags> AllTracks => _allTracks;
 
+        // A scan makes new objects, the library has a track once.
+        protected override PlaylistTags? Listed(PlaylistTags track) => base.Listed(track) ?? _allTracks.FirstOrDefault(x => x.Path == track?.Path);
+
         protected override void Sort(SortMessage sortMessage)
         {
             // All of them, so that the ones the filter hides are in the same order when it lets them through again.

@@ -27,8 +27,10 @@ namespace Lalamachine.ViewModel.Unittests
                 _list.AddTrack(new LibLalaTagsBuilder(name, new UncheckedTrackPath($"/music/{name}.mp3"), 5).Build());
             }
             _viewModel.PlayNextTrackEvent += _list.PlayNextTrackHandler;
+            _viewModel.PeekNextTrackEvent += _list.PeekNextTrackHandler;
             _list.PlayTrackEvent += _viewModel.PlayTrackHandler;
             _list.PlayTrack(_list.Playlist[0]);
+            _player.MixTo(Arg.Any<Uri>()).Returns(true);
             _player.ClearReceivedCalls();
         }
 
@@ -75,27 +77,65 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
-        public void WhenTheMixedInTrackTakesOver_ThePositionIsToldBeforeTheDuration()
+        public void ATrackThatCantBeMixedIn_ComesWhenTheOneThatPlaysEnded()
         {
-            // The other way round, the slider would clamp the old track's position to a shorter new track and seek there.
+            _player.MixTo(Arg.Any<Uri>()).Returns(false);
+
+            _player.TransitionDue += Raise.Event();
+            _player.DidNotReceive().Open(Arg.Any<Uri>());
+            Assert.That(_list.CurrentIndex, Is.Zero);
+            _player.MediaEnded += Raise.Event();
+
+            _player.Received(1).Open(new Uri("/music/b.mp3"));
+        }
+
+        [Test]
+        public void NextDuringATransition_PlaysTheTrackThatWasMixedIn_NotWhatTheListWouldSayNow()
+        {
+            _player.TransitionDue += Raise.Event();
+            // Like shuffle mode, where it says another one each time.
+            _list.PlaylistShuffleRepeatState = ShuffleRepeatState.RepeatOne;
+
+            _viewModel.NextCommand.Execute(null);
+
+            _player.Received(1).Open(new Uri("/music/b.mp3"));
+        }
+
+        [Test]
+        public void NextDuringATransition_WhenTheIncomingTrackWasRemoved_PlaysWhatComesNextNow()
+        {
+            _player.TransitionDue += Raise.Event();
+            _list.RemoveTrackCommand.Execute(_list.Playlist[1]);
+
+            _viewModel.NextCommand.Execute(null);
+
+            _player.Received(1).Open(new Uri("/music/c.mp3"));
+        }
+
+        [Test]
+        public void WhenTheMixedInTrackWasRemoved_TheListGoesOnAfterIt()
+        {
+            _player.TransitionDue += Raise.Event();
+            _list.RemoveTrackCommand.Execute(_list.Playlist[1]);
+
+            _player.MixedIn += Raise.Event();
+            Assert.That(_list.CurrentIndex, Is.EqualTo(-1));
+            _player.DidNotReceive().Open(Arg.Any<Uri>());
+            _player.TransitionDue += Raise.Event();
+
+            _player.Received(1).MixTo(new Uri("/music/c.mp3"));
+        }
+
+        [Test]
+        public void WhenTheMixedInTrackTakesOver_ItsPositionAndDurationAreTold()
+        {
             var changed = new List<string?>();
             _viewModel.PropertyChanged += (sender, e) => changed.Add(e.PropertyName);
             _player.TransitionDue += Raise.Event();
 
             _player.MixedIn += Raise.Event();
 
-            Assert.That(changed.IndexOf(nameof(PlayerViewModel.Position)), Is.GreaterThanOrEqualTo(0).And.LessThan(changed.IndexOf(nameof(PlayerViewModel.Duration))));
-        }
-
-        [Test]
-        public void WhenATrackOpens_ThePositionIsToldBeforeTheDuration()
-        {
-            var changed = new List<string?>();
-            _viewModel.PropertyChanged += (sender, e) => changed.Add(e.PropertyName);
-
-            _player.MediaOpened += Raise.Event();
-
-            Assert.That(changed, Is.EqualTo(new[] { nameof(PlayerViewModel.Position), nameof(PlayerViewModel.Duration) }));
+            Assert.That(changed, Does.Contain(nameof(PlayerViewModel.Position)).And.Contain(nameof(PlayerViewModel.Duration)));
         }
 
         [Test]
@@ -106,6 +146,16 @@ namespace Lalamachine.ViewModel.Unittests
             _viewModel.Position = 100;
 
             _player.Received(1).Position = TimeSpan.FromSeconds(100);
+        }
+
+        // The slider writes back a position that it clamped to its maximum, when a track's duration changes before its
+        // position does: maybe the end of the new track.
+        [Test]
+        public void APositionWrittenBack_WhileTheUserDoesntMoveTheSlider_DoesntSeek()
+        {
+            _viewModel.Position = 45;
+
+            _player.DidNotReceive().Position = Arg.Any<TimeSpan>();
         }
 
         [Test]
@@ -119,6 +169,7 @@ namespace Lalamachine.ViewModel.Unittests
             _player.DidNotReceive().Position = Arg.Any<TimeSpan>();
 
             _viewModel.IsDraggingPosition = false;
+            _viewModel.IsDraggingPosition = true;
             _viewModel.Position = 10;
             _player.Received(1).Position = TimeSpan.FromSeconds(10);
         }

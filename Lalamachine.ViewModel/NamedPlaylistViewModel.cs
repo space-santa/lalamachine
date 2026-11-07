@@ -58,6 +58,9 @@ namespace Lalamachine.ViewModel
             NotifyPropertyChanged(nameof(Playlist));
         }
 
+        // A scan makes new objects, the playlist has a track once.
+        protected override PlaylistTags? Listed(PlaylistTags track) => base.Listed(track) ?? Playlist.FirstOrDefault(x => x.Path == track?.Path);
+
         protected override void RemoveTrack(PlaylistTags track)
         {
             ArgumentNullException.ThrowIfNull(track);

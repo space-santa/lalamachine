@@ -33,7 +33,7 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
-        public void PlayNextTrackHandler_AskedWhatsNext_SaysIt_AndDoesntPlayIt()
+        public void PeekNextTrackHandler_SaysWhatsNext_AndDoesntPlayIt()
         {
             var wasCalled = false;
             var viewModel = new PlaylistBaseViewModel("LIBRARY", Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
@@ -41,7 +41,7 @@ namespace Lalamachine.ViewModel.Unittests
             viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
             var request = new NextTrackEventArgs();
 
-            viewModel.PlayNextTrackHandler(null, request);
+            viewModel.PeekNextTrackHandler(null, request);
 
             Assert.That(request.Track?.Path, Is.EqualTo("/path/to/bob"));
             Assert.That(request.List, Is.SameAs(viewModel));

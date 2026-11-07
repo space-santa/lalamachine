@@ -25,12 +25,14 @@ namespace Lalamachine.ViewModel
         // Of the track coming in, as heard, from when it does until MixedIn. Null otherwise.
         TimeSpan? IncomingPosition { get; }
         TimeSpan? IncomingDuration { get; }
-        // Mixes each track into the next, like a DJ. A player that can't, plays them one after the other.
+        // Mixes each track into the next, like a DJ. A player that can't, plays them one after the other. Turned off, a
+        // transition that didn't start yet is called off.
         bool Transitions { get; set; }
 
         void Open(Uri source);
         // Mixes the track into the one that plays, after TransitionDue. The source stays the one that plays until MixedIn.
-        void MixTo(Uri source);
+        // False when it can't: the one that plays goes on to its end.
+        bool MixTo(Uri source);
         void Play();
         void Pause();
     }

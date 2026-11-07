@@ -10,6 +10,9 @@ namespace Lalamachine.Desktop.Services
     // created the player, i.e. the UI thread.
     internal sealed class EngineAudioPlayer : IAudioPlayer, IDisposable
     {
+        // While it plays, the position slider follows it this often.
+        private const int PositionMilliseconds = 200;
+
         private readonly SynchronizationContext _uiContext;
         private readonly Func<string, IAudioDecoder> _openDecoder;
         private readonly Func<string, BeatGrid?> _findGrid;
@@ -21,6 +24,7 @@ namespace Lalamachine.Desktop.Services
         private int _mixTrack;
         private Uri? _mixSource;
         private bool _isOpen;
+        private bool _isTicking;
         private double _volume = 1;
         private bool _isMuted;
         private bool _disposed;
@@ -33,32 +37,21 @@ namespace Lalamachine.Desktop.Services
             _findGrid = findGrid;
             _engine = new AudioEngine(createOutput) { Clicks = clicks };
             _engine.TransitionDue += (sender, e) => PostForTrack(e.Track, () => TransitionDue?.Invoke(this, EventArgs.Empty));
-            _engine.TookOver += (sender, e) => Post(() =>
-            {
-                if (e.Track != _mixTrack || _mixTrack == 0)
-                {
-                    return;
-                }
-                _track = _mixTrack;
-                _mixTrack = 0;
-                Source = _mixSource;
-                // Not MediaOpened as well: its new duration before the new position would let the slider clamp the old
-                // position to a shorter track's length and seek there.
-                MixedIn?.Invoke(this, EventArgs.Empty);
-            });
+            _engine.TookOver += (sender, e) => Post(() => TakeOver(e.Track));
             // Stopped, the output doesn't keep the Mac awake with silence.
             _engine.Ended += (sender, e) => PostForTrack(e.Track, () =>
             {
-                _engine.Stop();
+                Stop();
                 MediaEnded?.Invoke(this, EventArgs.Empty);
             });
             _engine.Failed += (sender, e) => PostForTrack(e.Track, () =>
             {
-                _engine.Stop();
+                Stop();
                 MediaFailed?.Invoke(this, EventArgs.Empty);
             });
 
-            _positionTimer = new Timer(_ => Post(() => PositionChanged?.Invoke(this, EventArgs.Empty)), null, 200, 200);
+            // Only while it plays, see Play.
+            _positionTimer = new Timer(_ => Post(() => PositionChanged?.Invoke(this, EventArgs.Empty)), null, Timeout.Infinite, Timeout.Infinite);
         }
 
         public event EventHandler? MediaOpened;
@@ -105,13 +98,24 @@ namespace Lalamachine.Desktop.Services
         public TimeSpan Position
         {
             get => ToTime(_engine.Position);
-            set => _engine.Seek((long)Math.Round(value.TotalSeconds * AudioFormat.SampleRate));
+            set
+            {
+                _engine.Seek((long)Math.Round(value.TotalSeconds * AudioFormat.SampleRate));
+                // Paused, no tick shows where it went.
+                if (!_isTicking)
+                {
+                    Post(() => PositionChanged?.Invoke(this, EventArgs.Empty));
+                }
+            }
         }
 
         public void Open(Uri source)
         {
             Source = source;
             _mixTrack = 0;
+            SetTicking(false);
+            // Before the decoder, which has to be given to the engine once it's open.
+            var grid = source.IsFile ? _findGrid(source.LocalPath) : null;
             IAudioDecoder? decoder = null;
             try
             {
@@ -130,37 +134,56 @@ namespace Lalamachine.Desktop.Services
                 return;
             }
 
-            _track = _engine.Open(decoder, _findGrid(source.LocalPath));
+            _track = _engine.Open(decoder, grid);
             PostForTrack(_track, () => MediaOpened?.Invoke(this, EventArgs.Empty));
         }
 
-        public void MixTo(Uri source)
+        // A track that can't be read now isn't mixed in. The one that plays goes on to its end, the next one is opened then
+        // and fails or plays like any other.
+        public bool MixTo(Uri source)
         {
-            IAudioDecoder? decoder = null;
+            if (!source.IsFile)
+            {
+                return false;
+            }
+            var grid = _findGrid(source.LocalPath);
+            IAudioDecoder decoder;
             try
             {
-                decoder = source.IsFile ? _openDecoder(source.LocalPath) : null;
-                if (decoder is not null && _engine.MixTo(decoder, _findGrid(source.LocalPath)) is var track and > 0)
+                decoder = _openDecoder(source.LocalPath);
+            }
+            catch (IOException)
+            {
+                return false;
+            }
+
+            try
+            {
+                if (_engine.MixTo(decoder, grid) is var track and > 0)
                 {
                     _mixTrack = track;
                     _mixSource = source;
-                    return;
+                    return true;
                 }
             }
             catch (IOException)
             {
             }
-            decoder?.Dispose();
-
-            // Can't be mixed in, then like any other: it fails or plays, and takes over at once.
-            Open(source);
-            Play();
-            Post(() => MixedIn?.Invoke(this, EventArgs.Empty));
+            decoder.Dispose();
+            return false;
         }
 
-        public void Play() => _engine.Play();
+        public void Play()
+        {
+            _engine.Play();
+            SetTicking(_isOpen);
+        }
 
-        public void Pause() => _engine.Pause();
+        public void Pause()
+        {
+            _engine.Pause();
+            SetTicking(false);
+        }
 
         public void Dispose()
         {
@@ -174,6 +197,50 @@ namespace Lalamachine.Desktop.Services
         // Cubed, so the slider follows how loud it sounds rather than the gain: half way is about half as loud.
         private void ApplyVolume() => _engine.Volume = _isMuted ? 0 : (float)Math.Pow(Math.Clamp(_volume, 0, 1), 3);
 
+        private void Stop()
+        {
+            _engine.Stop();
+            SetTicking(false);
+        }
+
+        // Idle, the app doesn't wake up five times a second for nothing.
+        private void SetTicking(bool isTicking)
+        {
+            if (isTicking != _isTicking)
+            {
+                _isTicking = isTicking;
+                var period = isTicking ? PositionMilliseconds : Timeout.Infinite;
+                _positionTimer.Change(period, period);
+            }
+        }
+
+        // The track mixed in is the current one now.
+        private void TakeOver(int track)
+        {
+            if (track != _mixTrack || _mixTrack == 0)
+            {
+                return;
+            }
+            _track = _mixTrack;
+            _mixTrack = 0;
+            Source = _mixSource;
+            MixedIn?.Invoke(this, EventArgs.Empty);
+        }
+
+        // An event of the track mixed in can come before its TookOver: the engine raises that when the output played the end
+        // of the transition, the others already when it rendered them. It's the current track then, first.
+        private void PostForTrack(int track, Action action)
+        {
+            Post(() =>
+            {
+                TakeOver(track);
+                if (track == _track)
+                {
+                    action();
+                }
+            });
+        }
+
         private void Post(Action action)
         {
             _uiContext.Post(_ =>
@@ -183,17 +250,6 @@ namespace Lalamachine.Desktop.Services
                     action();
                 }
             }, null);
-        }
-
-        private void PostForTrack(int track, Action action)
-        {
-            Post(() =>
-            {
-                if (track == _track)
-                {
-                    action();
-                }
-            });
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Lalamachine.ViewModel
         private readonly IAudioPlayer _audioPlayer;
         private readonly IDialogService _dialogs;
         private readonly PlayerSettings _playerSettings;
-        // The track mixed in and the list it's from, until it takes over. Then the list is told to play it.
+        // The track mixed in and the list it's from, until it takes over. Then the list is told it went on to it.
         private NextTrackEventArgs? _mixing;
         // While the list is told: it plays already.
         private bool _isTakingOver;
@@ -68,27 +68,51 @@ namespace Lalamachine.ViewModel
         public event EventHandler? PlayNextTrackEvent;
         public event EventHandler? PlayNextPlaylistTrackEvent;
         public event EventHandler? PlayNextLibraryTrackEvent;
-        protected virtual void InvokePlayNextTrackEvent() => InvokePlayNextTrackEvent(EventArgs.Empty);
-
-        // With NextTrackEventArgs, the list only says what it would play.
-        protected virtual void InvokePlayNextTrackEvent(EventArgs args)
+        protected virtual void InvokePlayNextTrackEvent()
         {
             if (LastActivePlaylist == "MAIN")
             {
-                PlayNextTrackEvent?.Invoke(this, args);
+                PlayNextTrackEvent?.Invoke(this, EventArgs.Empty);
             }
             else if (LastActivePlaylist == PlaylistsViewModel.ListName)
             {
-                PlayNextPlaylistTrackEvent?.Invoke(this, args);
+                PlayNextPlaylistTrackEvent?.Invoke(this, EventArgs.Empty);
             }
             else
             {
-                PlayNextLibraryTrackEvent?.Invoke(this, args);
+                PlayNextLibraryTrackEvent?.Invoke(this, EventArgs.Empty);
             }
         }
         protected virtual void OnPlayNextTrack(object? commandParameter)
         {
+            // During a transition, the track that comes in. Asked again, a list in shuffle mode would say another one.
+            if (_mixing is { Track: { } track, List: { } list } && list.PlayTrack(track))
+            {
+                return;
+            }
             InvokePlayNextTrackEvent();
+        }
+
+        // The list that plays says what it would play next, without going on to it.
+        public event EventHandler<NextTrackEventArgs>? PeekNextTrackEvent;
+        public event EventHandler<NextTrackEventArgs>? PeekNextPlaylistTrackEvent;
+        public event EventHandler<NextTrackEventArgs>? PeekNextLibraryTrackEvent;
+        private NextTrackEventArgs PeekNextTrack()
+        {
+            var next = new NextTrackEventArgs();
+            if (LastActivePlaylist == "MAIN")
+            {
+                PeekNextTrackEvent?.Invoke(this, next);
+            }
+            else if (LastActivePlaylist == PlaylistsViewModel.ListName)
+            {
+                PeekNextPlaylistTrackEvent?.Invoke(this, next);
+            }
+            else
+            {
+                PeekNextLibraryTrackEvent?.Invoke(this, next);
+            }
+            return next;
         }
 
         public event EventHandler? PlayLastTrackEvent;
@@ -199,12 +223,14 @@ namespace Lalamachine.ViewModel
 
         public double Position
         {
-            // Never past the end, the length of a track can be an estimate or unknown. A slider clamps a larger value to its
-            // maximum and writes that back through its binding, which would seek there.
+            // Never past the end, the length of a track can be an estimate or unknown.
             get => Math.Min(_audioPlayer.Position.TotalSeconds, Duration);
             set
             {
-                if (_isDragOfTrackBefore)
+                // Only a seek when the user moves the slider. It also writes back a value that it clamped to its maximum, when
+                // the track changed and its position and duration come one after the other. That would seek the new track
+                // to a place in the one before, maybe to its end and on to the next.
+                if (!_isDraggingPosition || _isDragOfTrackBefore)
                 {
                     return;
                 }
@@ -212,9 +238,8 @@ namespace Lalamachine.ViewModel
             }
         }
 
-        // The view says while the position slider is held. When another track starts meanwhile, the slider is at a place
-        // in the one before, and moved a little before it's let go, it would seek there in the new one, maybe to its end and
-        // on to the next.
+        // The view says while the user moves the position slider: holds it, or presses a key on it. When another track
+        // starts while it's held, the slider is at a place in the one before, it doesn't seek until it's let go.
         public bool IsDraggingPosition
         {
             get => _isDraggingPosition;
@@ -256,7 +281,6 @@ namespace Lalamachine.ViewModel
 
         private void _audioPlayer_MediaOpened(object? sender, EventArgs e)
         {
-            // The position first, see Open.
             NotifyPropertyChanged(nameof(Position));
             NotifyPropertyChanged(nameof(Duration));
         }
@@ -275,12 +299,11 @@ namespace Lalamachine.ViewModel
             {
                 return;
             }
-            var next = new NextTrackEventArgs();
-            InvokePlayNextTrackEvent(next);
+            var next = PeekNextTrack();
             if (next.Track is { } track)
             {
-                _mixing = next;
-                _audioPlayer.MixTo(new Uri(track.Path));
+                // Not mixed in, the next track comes when this one ended, like without transitions.
+                _mixing = _audioPlayer.MixTo(new Uri(track.Path)) ? next : null;
             }
         }
 
@@ -293,7 +316,7 @@ namespace Lalamachine.ViewModel
                 _isTakingOver = true;
                 try
                 {
-                    list.PlayTrack(track);
+                    list.WentOnTo(track);
                 }
                 finally
                 {
@@ -303,7 +326,6 @@ namespace Lalamachine.ViewModel
             TrackChanged();
         }
 
-        // The position before the duration, see Open.
         private void TrackChanged()
         {
             _isDragOfTrackBefore = _isDraggingPosition;
@@ -356,8 +378,7 @@ namespace Lalamachine.ViewModel
         public void Open(string path)
         {
             _audioPlayer.Open(new Uri(path));
-            // Reset the position slider right away. Left at the old track's position, it would get clamped to a shorter
-            // new track's length once that is known, and seek there.
+            // The new track's position right away, not the old one's until the next tick.
             TrackChanged();
         }
 

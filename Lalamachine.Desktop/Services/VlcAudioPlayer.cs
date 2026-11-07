@@ -66,7 +66,11 @@ namespace Lalamachine.Desktop.Services
 
         public bool Transitions { get; set; }
 
-        public event EventHandler? MixedIn;
+        public event EventHandler? MixedIn
+        {
+            add { }
+            remove { }
+        }
 
         public TimeSpan? IncomingPosition => null;
         public TimeSpan? IncomingDuration => null;
@@ -112,13 +116,7 @@ namespace Lalamachine.Desktop.Services
             Interlocked.Increment(ref _openedTracks);
         }
 
-        // Without mixing: it takes over at once.
-        public void MixTo(Uri source)
-        {
-            Open(source);
-            Play();
-            MixedIn?.Invoke(this, EventArgs.Empty);
-        }
+        public bool MixTo(Uri source) => false;
 
         public void Play() => _mediaPlayer.Play();
 
