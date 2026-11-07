@@ -11,11 +11,9 @@ using NUnit.Framework;
 
 namespace Lalamachine.ViewModel.Unittests
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1001:Types that own disposable fields should be disposable", Justification = "The teardown disposes them.")]
     public class BeatAnalysisViewModelTest
     {
         private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(10);
-        private SqliteConnection _connection = null!;
         private DbContextOptions<LalaContext> _options = null!;
         private TrackAnalysisStore _store = null!;
         private string _dir = "";
@@ -23,22 +21,23 @@ namespace Lalamachine.ViewModel.Unittests
         [SetUp]
         public void SetUp()
         {
-            _connection = new SqliteConnection("Data Source=:memory:");
-            _connection.Open();
-            _options = new DbContextOptionsBuilder<LalaContext>().UseSqlite(_connection).Options;
+            _dir = Path.Combine(Path.GetTempPath(), $"lalatest-{Guid.NewGuid()}");
+            Directory.CreateDirectory(_dir);
+            // A file, like the app's, and a connection for each context: the analysis reads and writes from threads of its
+            // own, one connection isn't for more than one thread at a time.
+            _options = new DbContextOptionsBuilder<LalaContext>().UseSqlite($"Data Source={Path.Combine(_dir, "musiclib.db")}").Options;
             using (var context = new LalaContext(_options))
             {
                 context.Database.Migrate();
             }
             _store = new TrackAnalysisStore(() => new LalaContext(_options));
-            _dir = Path.Combine(Path.GetTempPath(), $"lalatest-{Guid.NewGuid()}");
-            Directory.CreateDirectory(_dir);
         }
 
         [TearDown]
         public void TearDown()
         {
-            _connection.Dispose();
+            // Pooled connections keep the file open.
+            SqliteConnection.ClearAllPools();
             Directory.Delete(_dir, recursive: true);
         }
 
