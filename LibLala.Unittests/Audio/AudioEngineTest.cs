@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using LibLala.Audio;
 using NUnit.Framework;
@@ -198,6 +199,43 @@ namespace LibLala.Unittests.Audio
             _engine.Play();
 
             Assert.That(_failed, Is.EqualTo(new[] { track }));
+        }
+
+        [Test]
+        public void Clicks_AreOnTheBeatsOfTheGrid()
+        {
+            // 120 BPM, a beat every half second, the first at 0.1 s.
+            _engine.Open(new CountingDecoder(AudioFormat.SampleRate) { Silent = true }, new BeatGrid(120, 0.1, 1, 100));
+            _engine.Clicks = true;
+            var buffer = new float[AudioFormat.SampleRate * AudioFormat.Channels];
+
+            _engine.Render(buffer);
+
+            Assert.That(Loudest(buffer, 0, 0.099), Is.Zero);
+            Assert.That(Loudest(buffer, 0.1, 0.11), Is.GreaterThan(0.1));
+            Assert.That(Loudest(buffer, 0.14, 0.599), Is.Zero);
+            Assert.That(Loudest(buffer, 0.6, 0.61), Is.GreaterThan(0.1));
+        }
+
+        [Test]
+        public void WithoutClicks_TheGridIsSilent()
+        {
+            _engine.Open(new CountingDecoder(AudioFormat.SampleRate) { Silent = true }, new BeatGrid(120, 0.1, 1, 100));
+            var buffer = new float[AudioFormat.SampleRate * AudioFormat.Channels];
+
+            _engine.Render(buffer);
+
+            Assert.That(Loudest(buffer, 0, 1), Is.Zero);
+        }
+
+        private static float Loudest(float[] buffer, double from, double to)
+        {
+            var loudest = 0f;
+            for (var i = (int)(from * AudioFormat.SampleRate) * AudioFormat.Channels; i < Math.Min(buffer.Length, (int)(to * AudioFormat.SampleRate) * AudioFormat.Channels); i++)
+            {
+                loudest = Math.Max(loudest, Math.Abs(buffer[i]));
+            }
+            return loudest;
         }
 
         [Test]

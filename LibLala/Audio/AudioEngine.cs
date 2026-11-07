@@ -25,6 +25,8 @@ namespace LibLala.Audio
         // What Render made and the output didn't play yet, oldest first.
         private readonly Queue<Chunk> _rendered = new();
         private IAudioDecoder? _decoder;
+        private BeatGrid? _grid;
+        private volatile bool _clicks;
         private int _track;
         // The frame of the track that Render reads next.
         private long _renderPosition;
@@ -53,6 +55,13 @@ namespace LibLala.Audio
             set => _output.Volume = value;
         }
 
+        // A click on every beat of the track's grid, to hear whether it's on the beat.
+        public bool Clicks
+        {
+            get => _clicks;
+            set => _clicks = value;
+        }
+
         // In frames, 0 while no track is open.
         public long Length
         {
@@ -78,14 +87,17 @@ namespace LibLala.Audio
         }
 
         // Stops what plays and takes over the decoder. Returns the number of the track, the events carry it.
-        public int Open(IAudioDecoder decoder)
+        public int Open(IAudioDecoder decoder) => Open(decoder, null);
+
+        // With the track's beat grid, null when it has none or wasn't analyzed.
+        public int Open(IAudioDecoder decoder, BeatGrid? grid)
         {
             ArgumentNullException.ThrowIfNull(decoder);
-            return Replace(decoder);
+            return Replace(decoder, grid);
         }
 
         // Stops what plays and closes the track. Returns a new number, which no event carries.
-        public int Close() => Replace(null);
+        public int Close() => Replace(null, null);
 
         public void Play()
         {
@@ -184,6 +196,10 @@ namespace LibLala.Audio
                     }
                 }
                 buffer[(read * AudioFormat.Channels)..].Clear();
+                if (_clicks && _grid is not null && read > 0)
+                {
+                    Metronome.Add(buffer[..(read * AudioFormat.Channels)], _renderPosition, _grid);
+                }
                 _renderPosition += read;
                 _isEndRendered |= isEnd;
                 _rendered.Enqueue(new Chunk(_renderPosition, isEnd));
@@ -228,7 +244,7 @@ namespace LibLala.Audio
             }
         }
 
-        private int Replace(IAudioDecoder? decoder)
+        private int Replace(IAudioDecoder? decoder, BeatGrid? grid)
         {
             _isPlaying = false;
             _output.Pause();
@@ -239,6 +255,7 @@ namespace LibLala.Audio
             {
                 old = _decoder;
                 _decoder = decoder;
+                _grid = grid;
                 track = ++_track;
                 _isFailed = false;
                 _isEndRendered = false;

@@ -17,6 +17,8 @@ namespace LibLala.Unittests.Audio
 
         public long Length { get; }
         public bool IsDisposed { get; private set; }
+        // Every sample 0.
+        public bool Silent { get; init; }
         // Read and Seek throw an IOException from this frame on.
         public long FailsFrom { get; set; } = long.MaxValue;
 
@@ -30,8 +32,8 @@ namespace LibLala.Unittests.Audio
             var frames = (int)Math.Min(buffer.Length / AudioFormat.Channels, Length - _position);
             for (var i = 0; i < frames; i++)
             {
-                buffer[i * AudioFormat.Channels] = _position + i;
-                buffer[(i * AudioFormat.Channels) + 1] = _position + i;
+                buffer[i * AudioFormat.Channels] = Silent ? 0 : _position + i;
+                buffer[(i * AudioFormat.Channels) + 1] = Silent ? 0 : _position + i;
             }
             _position += frames;
             return frames;

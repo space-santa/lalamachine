@@ -12,6 +12,7 @@ namespace Lalamachine.Desktop.Services
     {
         private readonly SynchronizationContext _uiContext;
         private readonly Func<string, IAudioDecoder> _openDecoder;
+        private readonly Func<string, BeatGrid?>? _findGrid;
         private readonly AudioEngine _engine;
         private readonly Timer _positionTimer;
         // The engine's number of the open track. Its events about an earlier one are late, the user started another.
@@ -21,11 +22,13 @@ namespace Lalamachine.Desktop.Services
         private bool _isMuted;
         private bool _disposed;
 
-        public EngineAudioPlayer(Func<IAudioRenderer, IAudioOutput> createOutput, Func<string, IAudioDecoder> openDecoder)
+        // With findGrid, it clicks on the beats of the tracks' grids.
+        public EngineAudioPlayer(Func<IAudioRenderer, IAudioOutput> createOutput, Func<string, IAudioDecoder> openDecoder, Func<string, BeatGrid?>? findGrid)
         {
             _uiContext = SynchronizationContext.Current ?? new SynchronizationContext();
             _openDecoder = openDecoder;
-            _engine = new AudioEngine(createOutput);
+            _findGrid = findGrid;
+            _engine = new AudioEngine(createOutput) { Clicks = findGrid is not null };
             // Stopped, the output doesn't keep the Mac awake with silence.
             _engine.Ended += (sender, e) => PostForTrack(e.Track, () =>
             {
@@ -97,7 +100,7 @@ namespace Lalamachine.Desktop.Services
                 return;
             }
 
-            _track = _engine.Open(decoder);
+            _track = _engine.Open(decoder, _findGrid?.Invoke(source.LocalPath));
             PostForTrack(_track, () => MediaOpened?.Invoke(this, EventArgs.Empty));
         }
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace LalaDb.Data
 {
@@ -91,5 +92,22 @@ namespace LalaDb.Data
         public string? TrackPath { get; set; }
 
         public int Order { get; set; }
+    }
+
+    // What the analysis found in a track. Kept by path, not with the track: a scan replaces all tracks.
+    [Index(nameof(Path), IsUnique = true)]
+    public class TrackAnalysis
+    {
+        public int TrackAnalysisId { get; set; }
+        public string Path { get; set; } = "";
+        // The file as it was analyzed. When it changes, it is analyzed again.
+        public long FileSize { get; set; }
+        public long FileWriteTicks { get; set; }
+        public int AnalyzerVersion { get; set; }
+        // 0 when there was no beat.
+        public double BeatsPerMinute { get; set; }
+        public double FirstBeat { get; set; }
+        public double BeatDeviationMs { get; set; }
+        public int BeatCount { get; set; }
     }
 }
