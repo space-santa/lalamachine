@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using LibLala.Audio;
 using NUnit.Framework;
 
@@ -325,6 +327,142 @@ namespace LibLala.Unittests.Audio
             PlayFor(3);
 
             Assert.That(_tookOver, Is.EqualTo(new[] { trackB }));
+        }
+
+        [Test]
+        public void MixTo_SeeksTheIncomingTrack_WithoutKeepingTheOutputWaiting()
+        {
+            _engine.Open(_a, Grid());
+            _engine.Play();
+            PlayFor(23);
+            var rendered = false;
+            var b = new CountingDecoder(60 * Rate) { Silent = true };
+            // The output's thread wants audio while the file is read.
+            b.OnSeek = () => rendered = Task.Run(() => _engine.Render(new float[256 * AudioFormat.Channels])).Wait(TimeSpan.FromSeconds(5));
+
+            _engine.MixTo(b, Grid());
+
+            Assert.That(rendered, Is.True);
+        }
+
+        [Test]
+        public void MixTo_InTheTransition_ComesInWhereTheCurrentTrackGotTo_WhileTheFileWasRead()
+        {
+            _engine.Open(_a, Grid());
+            _engine.Play();
+            _engine.Seek(40 * Rate);
+            PlayFor(0.1);
+            var b = new CountingDecoder(50 * Rate) { Silent = true };
+            var seeks = 0;
+            b.OnSeek = () =>
+            {
+                if (seeks++ == 0)
+                {
+                    Task.Run(() => PlayFor(0.5)).Wait(TimeSpan.FromSeconds(5));
+                }
+            };
+
+            _engine.MixTo(b, Grid());
+            PlayFor(1);
+
+            // A rendered to 40.6 s when B came in, at 4 + 16.6 s.
+            Assert.That(b.Position / (double)Rate, Is.EqualTo(21.6).Within(0.02));
+        }
+
+        [Test]
+        public void MixTo_WhileTheTempoComesBackAfterATransition_HoldsItForThePlan()
+        {
+            // B at 125 BPM plays at 0.96 to come in, and goes back to 1 over 8 bars after it took over. Short, its own
+            // transition is due before that, at 38.32 s.
+            var gridB = new BeatGrid(125, 0, 2, 500, 0, 0, 70);
+            _engine.Open(_a, Grid());
+            _engine.Play();
+            PlayFor(23);
+            _engine.MixTo(new CountingDecoder(72 * Rate) { Silent = true }, gridB);
+            while (_due.Count < 2)
+            {
+                PlayFor(0.1);
+            }
+            Assert.That(_tookOver, Has.Count.EqualTo(1));
+
+            _engine.MixTo(new CountingDecoder(60 * Rate) { Silent = true }, gridB);
+            var before = _engine.Position;
+            PlayFor(0.8);
+            var between = _engine.Position;
+            PlayFor(0.8);
+
+            // As fast in both, still before its transition at 40.32 s.
+            Assert.That(_engine.Position / (double)Rate, Is.LessThan(40.32));
+            Assert.That(_engine.Position - between, Is.EqualTo(between - before).Within(10));
+        }
+
+        [Test]
+        public void ASeekAfterTheTransitionWasRendered_ButBeforeItWasHeard_DoesntSeekTheNextTrack()
+        {
+            _engine.Open(_a, Grid());
+            _engine.Play();
+            PlayFor(23);
+            var trackB = _engine.MixTo(new CountingDecoder(50 * Rate) { Silent = true }, Grid());
+            PlayFor(32.9);
+            // Past the end of the transition at 56 s of A, not played yet.
+            _engine.Render(new float[Rate / 5 * AudioFormat.Channels]);
+            Assert.That(_tookOver, Is.Empty);
+
+            // From A's position slider.
+            _engine.Seek(58 * Rate);
+
+            Assert.That(_tookOver, Is.EqualTo(new[] { trackB }));
+            // B came in at 4 s when A was at 24 s, and was heard until A was at 55.9 s.
+            Assert.That(_engine.Position / (double)Rate, Is.EqualTo(35.9).Within(0.01));
+            PlayFor(1);
+            Assert.That(_ended, Is.Empty);
+        }
+
+        [Test]
+        public void TurnedOff_ATransitionThatDidntStart_IsCalledOff()
+        {
+            var trackA = _engine.Open(_a, Grid());
+            _engine.Play();
+            PlayFor(23);
+            var b = new CountingDecoder(50 * Rate) { Silent = true };
+            _engine.MixTo(b, Grid());
+
+            _engine.Transitions = false;
+            PlayFor(37.5);
+
+            Assert.That(b.IsDisposed, Is.True);
+            Assert.That(_tookOver, Is.Empty);
+            Assert.That(_ended, Is.EqualTo(new[] { trackA }));
+        }
+
+        [Test]
+        public void TurnedOff_ATransitionThatStarted_GoesOn()
+        {
+            _engine.Open(_a, Grid());
+            _engine.Play();
+            PlayFor(23);
+            var trackB = _engine.MixTo(new CountingDecoder(50 * Rate) { Silent = true }, Grid());
+            PlayFor(2);
+
+            _engine.Transitions = false;
+            PlayFor(32);
+
+            Assert.That(_tookOver, Is.EqualTo(new[] { trackB }));
+        }
+
+        [Test]
+        public void TurnedOnAgain_TheTransitionIsDueAgain()
+        {
+            _engine.Open(_a, Grid());
+            _engine.Play();
+            PlayFor(23);
+            _engine.MixTo(new CountingDecoder(50 * Rate) { Silent = true }, Grid());
+            _engine.Transitions = false;
+
+            _engine.Transitions = true;
+            PlayFor(0.1);
+
+            Assert.That(_due, Has.Count.EqualTo(2));
         }
 
         [Test]

@@ -25,6 +25,8 @@ namespace LibLala.Unittests.Audio
         public bool Silent { get; init; }
         // Read and Seek throw an IOException from this frame on.
         public long FailsFrom { get; set; } = long.MaxValue;
+        // Called by each Seek, like reading the file there.
+        public Action? OnSeek { get; set; }
 
         public int Read(Span<float> buffer)
         {
@@ -47,6 +49,7 @@ namespace LibLala.Unittests.Audio
 
         public void Seek(long frame)
         {
+            OnSeek?.Invoke();
             if (frame >= FailsFrom)
             {
                 throw new IOException("The drive is gone.");
