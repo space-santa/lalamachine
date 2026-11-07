@@ -61,6 +61,10 @@ Needs [InstallForge](https://installforge.net) 1.6 or later.
 2. Look it over and commit it.
 3. Run `.\build-release.ps1`. It publishes the app and builds `dist\lalamachine_<version>.exe`.
 
+For macOS, run `./build-macos.sh` on a Mac after step 2. It builds `dist/lalamachine_<version>_<arch>.dmg` for the
+Mac's architecture, or pass `x64` or `arm64`. The app only has an ad-hoc signature, so macOS blocks a downloaded copy
+until it's signed with a Developer ID and notarized.
+
 The project file is the only place with the version. The one in `install-forge.ifp` stays at 0.0.0, the script builds
 from a copy that has the real one.
 
