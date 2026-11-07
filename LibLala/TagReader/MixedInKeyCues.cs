@@ -21,7 +21,10 @@ namespace LibLala.LibLalaTagReader
                 var candidates = new List<string>();
                 if (file.GetTag(TagLib.TagTypes.Id3v2) is TagLib.Id3v2.Tag id3)
                 {
-                    candidates.AddRange(id3.GetFrames<TagLib.Id3v2.AttachmentFrame>().Select(frame => Encoding.ASCII.GetString(frame.Data.Data)));
+                    // GEOB frames. Not a cover, which is an attachment too, of maybe megabytes.
+                    candidates.AddRange(id3.GetFrames<TagLib.Id3v2.AttachmentFrame>()
+                        .Where(frame => frame.Type == TagLib.PictureType.NotAPicture)
+                        .Select(frame => Encoding.ASCII.GetString(frame.Data.Data)));
                 }
                 if (file.GetTag(TagLib.TagTypes.Apple) is TagLib.Mpeg4.AppleTag apple && apple.GetDashBox("com.mixedinkey.mixedinkey", "cuepoints") is { } box)
                 {
