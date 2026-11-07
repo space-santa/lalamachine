@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using LalaDb.Data;
@@ -59,8 +60,21 @@ namespace LalaDb.Model
             return toAnalyze;
         }
 
-        // Null when the track wasn't analyzed as its file is now, or has no beat.
+        // Null when the track wasn't analyzed as its file is now, or has no beat. Also when the database can't be read right
+        // now, e.g. busy with the analysis: the track plays all the same, only not beat-matched.
         public BeatGrid? FindGrid(string path)
+        {
+            try
+            {
+                return FindGridIn(path);
+            }
+            catch (Exception e) when (e is DbException or IOException)
+            {
+                return null;
+            }
+        }
+
+        private BeatGrid? FindGridIn(string path)
         {
             using var context = _createContext();
             var analysis = context.Set<TrackAnalysis>().SingleOrDefault(a => a.Path == path);

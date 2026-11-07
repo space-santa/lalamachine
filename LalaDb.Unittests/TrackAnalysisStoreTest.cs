@@ -142,5 +142,17 @@ namespace LalaDb.Unittests
 
             Assert.That(_store.TracksToAnalyze(), Is.Empty);
         }
+
+        [Test]
+        public void FindGrid_InADatabaseThatCantBeRead_IsNull()
+        {
+            var path = AddTrack("a.mp3");
+            var broken = Path.Combine(_dir, "broken.db");
+            File.WriteAllText(broken, new string('x', 4096));
+            var options = new DbContextOptionsBuilder<LalaContext>().UseSqlite($"Data Source={broken};Pooling=False").Options;
+            var store = new TrackAnalysisStore(() => new LalaContext(options));
+
+            Assert.That(store.FindGrid(path), Is.Null);
+        }
     }
 }
