@@ -1,0 +1,128 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using LibLala.Audio;
+
+namespace LibLala.Unittests.Audio
+{
+    // Each sample is the number of its frame, so what plays shows where in the track it is from.
+    internal sealed class CountingDecoder : IAudioDecoder
+    {
+        private long _position;
+
+        public CountingDecoder(long length)
+        {
+            Length = length;
+        }
+
+        public long Length { get; }
+        public bool IsDisposed { get; private set; }
+        // Read and Seek throw an IOException from this frame on.
+        public long FailsFrom { get; set; } = long.MaxValue;
+
+        public int Read(Span<float> buffer)
+        {
+            if (_position >= FailsFrom)
+            {
+                throw new IOException("The drive is gone.");
+            }
+
+            var frames = (int)Math.Min(buffer.Length / AudioFormat.Channels, Length - _position);
+            for (var i = 0; i < frames; i++)
+            {
+                buffer[i * AudioFormat.Channels] = _position + i;
+                buffer[(i * AudioFormat.Channels) + 1] = _position + i;
+            }
+            _position += frames;
+            return frames;
+        }
+
+        public void Seek(long frame)
+        {
+            if (frame >= FailsFrom)
+            {
+                throw new IOException("The drive is gone.");
+            }
+            _position = frame;
+        }
+
+        public void Dispose() => IsDisposed = true;
+    }
+
+    // Works like AudioQueueOutput, with the queue's thread played by PlayBuffer.
+    internal sealed class FakeOutput : IAudioOutput
+    {
+        public const int FramesPerBuffer = 4;
+        public const int BufferCount = 3;
+
+        private readonly IAudioRenderer _renderer;
+        private readonly Queue<float[]> _queued = new();
+
+        public FakeOutput(IAudioRenderer renderer)
+        {
+            _renderer = renderer;
+        }
+
+        public float Volume { get; set; } = 1;
+        // Started and not paused, the device is held.
+        public bool IsRunning { get; private set; }
+        public int Starts { get; private set; }
+        public bool FailsToPlay { get; set; }
+
+        public void Play()
+        {
+            if (FailsToPlay)
+            {
+                throw new IOException("No speakers.");
+            }
+            if (_queued.Count == 0)
+            {
+                for (var i = 0; i < BufferCount; i++)
+                {
+                    _queued.Enqueue(Render());
+                }
+            }
+            if (!IsRunning)
+            {
+                Starts++;
+            }
+            IsRunning = true;
+        }
+
+        public void Pause() => IsRunning = false;
+
+        public void Reset() => _queued.Clear();
+
+        public void Dispose()
+        {
+            Pause();
+            Reset();
+        }
+
+        // Plays the oldest buffer and returns the frame numbers in it. The queue then renders it again.
+        public float[] PlayBuffer()
+        {
+            if (!IsRunning || _queued.Count == 0)
+            {
+                throw new InvalidOperationException("The output doesn't play.");
+            }
+            var played = _queued.Dequeue();
+            _renderer.Played();
+            _queued.Enqueue(Render());
+
+            var frames = new float[FramesPerBuffer];
+            for (var i = 0; i < FramesPerBuffer; i++)
+            {
+                frames[i] = played[i * AudioFormat.Channels];
+            }
+            return frames;
+        }
+
+        private float[] Render()
+        {
+            var buffer = new float[FramesPerBuffer * AudioFormat.Channels];
+            _renderer.Render(buffer);
+            return buffer;
+        }
+    }
+}

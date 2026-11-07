@@ -28,7 +28,7 @@ namespace Lalamachine.Desktop.Views
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1001:Types that own disposable fields should be disposable", Justification = "The audio player is disposed when the window closes.")]
     public partial class MainWindow : Window
     {
-        private readonly VlcAudioPlayer _audioPlayer;
+        private readonly IAudioPlayer _audioPlayer;
         private readonly PlayerViewModel _player;
         private readonly QueueViewModel _queueViewModel;
         private readonly PlaylistsViewModel _playlistsViewModel;
@@ -53,7 +53,7 @@ namespace Lalamachine.Desktop.Views
             context.Database.Migrate();
 
             _dialogs = new AvaloniaDialogService(this);
-            _audioPlayer = new VlcAudioPlayer();
+            _audioPlayer = AudioPlayerFactory.Create();
             _player = new PlayerViewModel(_audioPlayer, _dialogs);
             _settingsViewModel = new SettingsViewModel(_dialogs, context);
             _playlistsViewModel = new PlaylistsViewModel(context, _dialogs, _settingsViewModel.JellyfinPusher);
@@ -166,7 +166,7 @@ namespace Lalamachine.Desktop.Views
             }
             finally
             {
-                _audioPlayer.Dispose();
+                (_audioPlayer as IDisposable)?.Dispose();
                 base.OnClosed(e);
             }
         }
