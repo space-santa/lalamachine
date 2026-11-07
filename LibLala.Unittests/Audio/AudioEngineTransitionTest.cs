@@ -198,6 +198,26 @@ namespace LibLala.Unittests.Audio
         }
 
         [Test]
+        public void TheIncomingTrack_IsThereAsHeard_FromWhenItComesInUntilItTakesOver()
+        {
+            _engine.Open(_a, Grid());
+            _engine.Play();
+            PlayFor(23);
+            _engine.MixTo(new CountingDecoder(50 * Rate) { Silent = true }, Grid());
+
+            PlayFor(0.5);
+            Assert.That(_engine.IncomingPosition, Is.Null);
+            Assert.That(_engine.IncomingLength, Is.Null);
+            PlayFor(1);
+            // In at 24 s with its bar at 4 s, A is at 24.5 s.
+            Assert.That(_engine.IncomingPosition / (double)Rate, Is.EqualTo(4.5).Within(0.01));
+            Assert.That(_engine.IncomingLength, Is.EqualTo(50 * Rate));
+            PlayFor(32);
+            Assert.That(_tookOver, Has.Count.EqualTo(1));
+            Assert.That(_engine.IncomingPosition, Is.Null);
+        }
+
+        [Test]
         public void ASeekIntoTheTransition_PutsTheIncomingTrackWhereItWouldBe()
         {
             _engine.Open(_a, Grid());

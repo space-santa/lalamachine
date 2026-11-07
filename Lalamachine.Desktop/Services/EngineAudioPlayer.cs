@@ -98,6 +98,10 @@ namespace Lalamachine.Desktop.Services
             set => _engine.Transitions = value;
         }
 
+        public TimeSpan? IncomingPosition => _engine.IncomingPosition is { } frames ? ToTime(frames) : null;
+
+        public TimeSpan? IncomingDuration => _engine.IncomingLength is { } frames ? ToTime(frames) : null;
+
         public TimeSpan Position
         {
             get => ToTime(_engine.Position);

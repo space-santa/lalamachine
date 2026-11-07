@@ -124,6 +124,19 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
+        public void WhileTheNextTrackComesIn_ItIsShownAsHeard()
+        {
+            Assert.That(_viewModel.IsMixing, Is.False);
+
+            _player.IncomingPosition.Returns(TimeSpan.FromSeconds(5));
+            _player.IncomingDuration.Returns(TimeSpan.FromSeconds(251));
+
+            Assert.That(_viewModel.IsMixing, Is.True);
+            Assert.That(_viewModel.IncomingPosition, Is.EqualTo(5));
+            Assert.That(_viewModel.IncomingDuration, Is.EqualTo(251));
+        }
+
+        [Test]
         public void WithoutTransitions_NothingIsMixedIn()
         {
             _viewModel.Transitions = false;

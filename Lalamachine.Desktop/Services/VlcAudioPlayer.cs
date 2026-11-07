@@ -68,6 +68,9 @@ namespace Lalamachine.Desktop.Services
 
         public event EventHandler? MixedIn;
 
+        public TimeSpan? IncomingPosition => null;
+        public TimeSpan? IncomingDuration => null;
+
         public Uri? Source { get; private set; }
 
         public bool IsMuted

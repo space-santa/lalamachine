@@ -22,6 +22,9 @@ namespace Lalamachine.ViewModel
         // Null until the track is opened.
         TimeSpan? Duration { get; }
         TimeSpan Position { get; set; }
+        // Of the track coming in, as heard, from when it does until MixedIn. Null otherwise.
+        TimeSpan? IncomingPosition { get; }
+        TimeSpan? IncomingDuration { get; }
         // Mixes each track into the next, like a DJ. A player that can't, plays them one after the other.
         bool Transitions { get; set; }
 

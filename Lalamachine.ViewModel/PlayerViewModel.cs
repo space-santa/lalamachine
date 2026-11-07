@@ -228,6 +228,11 @@ namespace Lalamachine.ViewModel
             }
         }
 
+        // While the next track comes in: it as heard.
+        public bool IsMixing => _audioPlayer.IncomingPosition is not null;
+        public double IncomingPosition => _audioPlayer.IncomingPosition?.TotalSeconds ?? 0;
+        public double IncomingDuration => _audioPlayer.IncomingDuration?.TotalSeconds ?? 0;
+
         private readonly DelegateCommand _changePlayPauseCommand;
         public ICommand ChangePlayPauseCommand => _changePlayPauseCommand;
         private readonly DelegateCommand _loadCommand;
@@ -305,11 +310,20 @@ namespace Lalamachine.ViewModel
             NotifyPropertyChanged(nameof(Source));
             NotifyPropertyChanged(nameof(Position));
             NotifyPropertyChanged(nameof(Duration));
+            NotifyMixing();
+        }
+
+        private void NotifyMixing()
+        {
+            NotifyPropertyChanged(nameof(IsMixing));
+            NotifyPropertyChanged(nameof(IncomingPosition));
+            NotifyPropertyChanged(nameof(IncomingDuration));
         }
 
         private void _audioPlayer_PositionChanged(object? sender, EventArgs e)
         {
             NotifyPropertyChanged(nameof(Position));
+            NotifyMixing();
         }
 
         private void OnChangePlayPause(object? commandParameter)

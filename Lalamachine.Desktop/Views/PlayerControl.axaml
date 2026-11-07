@@ -5,12 +5,19 @@
              x:Class="Lalamachine.Desktop.Views.PlayerControl"
              x:DataType="vm:PlayerViewModel">
     <StackPanel Margin="0,8">
-        <Grid ColumnDefinitions="*,Auto,Auto,Auto">
+        <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto">
             <!-- Not a Label, that would take the first underscore in a title for an access key. -->
             <TextBlock Grid.Column="0" Classes="label" Text="{Binding Source, Converter={x:Static local:Converters.SourceToTitle}}" />
             <Label Grid.Column="1" Content="{Binding Position, Converter={x:Static local:Converters.SecondsToTime}}" />
             <Label Grid.Column="2" Content="/" />
             <Label Grid.Column="3" Content="{Binding Duration, Converter={x:Static local:Converters.SecondsToTime}}" />
+            <!-- While the next track comes in, it too. -->
+            <StackPanel Grid.Column="4" Orientation="Horizontal" IsVisible="{Binding IsMixing}">
+                <Label Content="→" />
+                <Label Content="{Binding IncomingPosition, Converter={x:Static local:Converters.SecondsToTime}}" />
+                <Label Content="/" />
+                <Label Content="{Binding IncomingDuration, Converter={x:Static local:Converters.SecondsToTime}}" />
+            </StackPanel>
         </Grid>
 
         <Grid ColumnDefinitions="Auto,Auto,*">

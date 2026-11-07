@@ -62,6 +62,9 @@ namespace LibLala.Audio
         private long _playedPosition;
         private long _playedLength;
         private bool _hasPlayed;
+        // Of the incoming track as played, while the transition runs.
+        private double? _playedIncomingPosition;
+        private long _playedIncomingLength;
         // Seconds of the current track at which TransitionDue is raised, NaN when it was.
         private double? _dueAt;
         private bool _isEndPlayed;
@@ -126,6 +129,29 @@ namespace LibLala.Audio
                 lock (_gate)
                 {
                     return _current is null ? 0 : _hasPlayed ? _playedPosition : (long)Math.Round(_start);
+                }
+            }
+        }
+
+        // Of the track that comes in, in frames, from when it's heard until it takes over. Null otherwise.
+        public long? IncomingPosition
+        {
+            get
+            {
+                lock (_gate)
+                {
+                    return _playedIncomingPosition is { } position ? (long)Math.Round(position) : null;
+                }
+            }
+        }
+
+        public long? IncomingLength
+        {
+            get
+            {
+                lock (_gate)
+                {
+                    return _playedIncomingPosition is null ? null : _playedIncomingLength;
                 }
             }
         }
@@ -300,7 +326,8 @@ namespace LibLala.Audio
                 }
 
                 var isEnd = _current is { IsEnded: true } && _transition is null;
-                _rendered.Enqueue(new Chunk(_current?.Track ?? 0, _current?.Position ?? 0, _current?.Decoder.Length ?? 0, isEnd));
+                var incoming = _transition is { IsStarted: true } ? _incoming : null;
+                _rendered.Enqueue(new Chunk(_current?.Track ?? 0, _current?.Position ?? 0, _current?.Decoder.Length ?? 0, isEnd, incoming?.Position, incoming?.Decoder.Length ?? 0));
             }
 
             foreach (var (handler, track) in events)
@@ -327,6 +354,8 @@ namespace LibLala.Audio
                 _playedPosition = (long)Math.Round(chunk.Position);
                 _playedLength = chunk.Length;
                 _hasPlayed = true;
+                _playedIncomingPosition = chunk.IncomingPosition;
+                _playedIncomingLength = chunk.IncomingLength;
                 if (chunk.IsEnd && !_isEndPlayed)
                 {
                     _isEndPlayed = true;
@@ -551,6 +580,7 @@ namespace LibLala.Audio
                 _start = 0;
                 _playedTrack = track;
                 _hasPlayed = false;
+                _playedIncomingPosition = null;
                 _dueAt = null;
             }
             oldCurrent?.Dispose();
@@ -632,6 +662,7 @@ namespace LibLala.Audio
 
                 _start = frame;
                 _hasPlayed = false;
+                _playedIncomingPosition = null;
                 try
                 {
                     current.Seek(frame);
@@ -673,8 +704,9 @@ namespace LibLala.Audio
             }
         }
 
-        // Of the current track: the position after the chunk, its length, and whether the chunk has its end.
-        private readonly record struct Chunk(int Track, double Position, long Length, bool IsEnd);
+        // Of the current track: the position after the chunk, its length, and whether the chunk has its end. And of the
+        // incoming track while the transition runs.
+        private readonly record struct Chunk(int Track, double Position, long Length, bool IsEnd, double? IncomingPosition, long IncomingLength);
 
         private sealed class Transition
         {
