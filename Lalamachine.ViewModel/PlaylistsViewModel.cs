@@ -175,6 +175,15 @@ namespace Lalamachine.ViewModel
             PlaylistToGoOnWith()?.PlayNextTrackHandler(sender, e);
         }
 
+        // Nothing after a playing one that got deleted, its one stop is at the end of the track.
+        public void PeekNextTrackHandler(object? sender, NextTrackEventArgs e)
+        {
+            if (!IsPlayingPlaylistDeleted)
+            {
+                PlaylistToAsk()?.PeekNextTrackHandler(sender, e);
+            }
+        }
+
         public void PlayLastTrackHandler(object? sender, EventArgs e)
         {
             PlaylistToGoOnWith()?.PlayLastTrackHandler(sender, e);
@@ -183,12 +192,18 @@ namespace Lalamachine.ViewModel
         private NamedPlaylistViewModel? PlaylistToGoOnWith()
         {
             // One that got deleted while playing stops the music. After that, next and previous go by what is on screen again.
-            if (_playingPlaylist is { } && !Playlists.Contains(_playingPlaylist))
+            if (IsPlayingPlaylistDeleted)
             {
                 _playingPlaylist = null;
                 return null;
             }
+            return PlaylistToAsk();
+        }
 
+        private bool IsPlayingPlaylistDeleted => _playingPlaylist is { } && !Playlists.Contains(_playingPlaylist);
+
+        private NamedPlaylistViewModel? PlaylistToAsk()
+        {
             // After a restart it isn't loaded yet.
             var playlist = _playingPlaylist ?? SelectedPlaylist;
             playlist?.EnsureLoaded();

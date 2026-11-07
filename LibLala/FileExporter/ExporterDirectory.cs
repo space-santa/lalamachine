@@ -12,6 +12,17 @@ namespace LibLala.FileExporter
 
     public class ExporterDirectory : IExporterDirectory
     {
+        private readonly TimeProvider _time;
+
+        public ExporterDirectory() : this(TimeProvider.System)
+        {
+        }
+
+        public ExporterDirectory(TimeProvider time)
+        {
+            _time = time;
+        }
+
         public bool Exists(string destination)
         {
             return Directory.Exists(destination);
@@ -24,7 +35,7 @@ namespace LibLala.FileExporter
 
         public string GetDirectorySuffix()
         {
-            return DateTime.Now.ToString("-yyyyMMdd_HHmmss", LibLala.Constants.CULTURE);
+            return _time.GetLocalNow().ToString("-yyyyMMdd_HHmmss", LibLala.Constants.CULTURE);
         }
     }
 }

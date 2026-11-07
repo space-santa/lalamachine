@@ -1,0 +1,1 @@
+Mix each track into the next like a DJ when it follows on its own: on the beat, at the same tempo, through filters that hand the bass over from one to the other. On macOS for now, the 🎛 button next to shuffle and repeat turns it on and off. After the update the app finds the beats of the library in the background, the settings show how far it is.
