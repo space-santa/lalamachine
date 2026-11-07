@@ -9,12 +9,11 @@ namespace Lalamachine.Desktop.Services
 {
     internal static class AudioPlayerFactory
     {
-        // On macOS lalamachine plays through its own engine, elsewhere through VLC until the engine runs there too.
-        // LALAMACHINE_AUDIO=vlc plays through VLC on macOS as well, to compare. LALAMACHINE_CLICK=1 clicks on the beats that
-        // the analysis found, to hear whether they're right.
+        // On macOS lalamachine plays through its own engine, elsewhere through VLC until the engine runs there too. The Mac
+        // app has no VLC. LALAMACHINE_CLICK=1 clicks on the beats that the analysis found, to hear whether they're right.
         public static IAudioPlayer Create(TrackAnalysisStore analyses)
         {
-            if (OperatingSystem.IsMacOS() && Environment.GetEnvironmentVariable("LALAMACHINE_AUDIO") != "vlc")
+            if (OperatingSystem.IsMacOS())
             {
                 var clicks = Environment.GetEnvironmentVariable("LALAMACHINE_CLICK") == "1";
                 return CreateForMac(analyses.FindGrid, clicks);
