@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Threading;
-using LibLala.LibLalaTagReader;
 using LibLala.MediaControls;
 
 namespace Lalamachine.ViewModel
@@ -11,20 +10,18 @@ namespace Lalamachine.ViewModel
     // pause, and seek.
     public sealed class MediaControlsViewModel : IDisposable
     {
-        // The system counts on from the position it was told. Off by more than this, it's told again: after a seek, or when
-        // the track played at another tempo after a transition.
+        // macOS counts on from the position it was told. Off by more than this, it's told again: after a seek, or when the
+        // track played at another tempo after a transition.
         private static readonly TimeSpan MaxDrift = TimeSpan.FromSeconds(1);
+        // Windows doesn't count on, its media session stays at the position it was told. Microsoft recommends telling it
+        // where the track is about this often while it plays.
+        private static readonly TimeSpan PlayingRefresh = TimeSpan.FromSeconds(5);
 
         private readonly PlayerViewModel _player;
         private readonly IMediaControls _controls;
         private readonly TimeProvider _time;
         // The commands come on the system's thread. Without a context, like in the tests, they're handled right away.
         private readonly SynchronizationContext? _uiContext;
-        private string _title = "";
-        private string _artist = "";
-        private string _album = "";
-        // The same array for the whole track, the controls make what they show of it once.
-        private byte[]? _cover;
         private NowPlaying? _shown;
         private long _shownAt;
         private bool _isDisposed;
@@ -44,8 +41,7 @@ namespace Lalamachine.ViewModel
             _uiContext = SynchronizationContext.Current;
             _player.PropertyChanged += Player_PropertyChanged;
             _controls.CommandReceived += Controls_CommandReceived;
-            ReadTags();
-            Show();
+            Show(Current());
         }
 
         public void Dispose()
@@ -64,19 +60,15 @@ namespace Lalamachine.ViewModel
         {
             switch (e.PropertyName)
             {
-                case nameof(PlayerViewModel.Source):
-                    ReadTags();
-                    Show();
-                    break;
+                case nameof(PlayerViewModel.Track):
                 case nameof(PlayerViewModel.IsPlaying):
                 case nameof(PlayerViewModel.Duration):
-                    Show();
-                    break;
                 // A few times a second.
                 case nameof(PlayerViewModel.Position):
-                    if (HasDrifted())
+                    var now = Current();
+                    if (!IsShown(now))
                     {
-                        Show();
+                        Show(now);
                     }
                     break;
                 default:
@@ -134,45 +126,49 @@ namespace Lalamachine.ViewModel
             }
         }
 
-        // Like the title and the cover in the player: a track without tags by its file name.
-        private void ReadTags()
+        private NowPlaying? Current()
         {
-            var source = _player.Source;
-            (_title, _artist, _album, _cover) = ("", "", "", null);
-            if (source.Length == 0)
+            if (_player.Source.Length == 0)
             {
-                return;
+                return null;
             }
-            _cover = CoverArt.Read(source);
+            var track = _player.Track;
+            return new NowPlaying(track.Title, track.Artist, track.Album, TimeSpan.FromSeconds(_player.Duration), TimeSpan.FromSeconds(_player.Position), _player.IsPlaying, track.Cover);
+        }
+
+        // Whether the system shows it already: the player says the same again, like the duration when the track opened, or
+        // the position where the system counted on to.
+        private bool IsShown(NowPlaying? now)
+        {
+            if (now is null || _shown is null)
+            {
+                return now is null && _shown is null;
+            }
+            if (now with { Position = _shown.Position } != _shown)
+            {
+                return false;
+            }
+            if (!_shown.IsPlaying)
+            {
+                return (now.Position - _shown.Position).Duration() <= MaxDrift;
+            }
+            var elapsed = _time.GetElapsedTime(_shownAt);
+            return elapsed < PlayingRefresh && (now.Position - (_shown.Position + elapsed)).Duration() <= MaxDrift;
+        }
+
+        // Kept as shown when the controls fail too: they're told again at the next change, not at each tick of the position.
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "The system's controls are an extra. When they fail, like a WinRT or Objective-C call that throws, the track plays on: this runs while the player changes tracks.")]
+        private void Show(NowPlaying? nowPlaying)
+        {
+            _shown = nowPlaying;
+            _shownAt = _time.GetTimestamp();
             try
             {
-                var tags = new TagReader().Read(source);
-                (_title, _artist, _album) = (tags.Title, tags.ArtistString, tags.Album);
+                _controls.Show(nowPlaying);
             }
-            catch (TagReaderException)
+            catch (Exception)
             {
             }
-            if (_title.Length == 0)
-            {
-                _title = System.IO.Path.GetFileNameWithoutExtension(source);
-            }
-        }
-
-        private void Show()
-        {
-            _shown = _player.Source.Length == 0 ? null : new NowPlaying(_title, _artist, _album, TimeSpan.FromSeconds(_player.Duration), TimeSpan.FromSeconds(_player.Position), _player.IsPlaying, _cover);
-            _shownAt = _time.GetTimestamp();
-            _controls.Show(_shown);
-        }
-
-        private bool HasDrifted()
-        {
-            if (_shown is null)
-            {
-                return _player.Source.Length > 0;
-            }
-            var counted = _shown.IsPlaying ? _shown.Position + _time.GetElapsedTime(_shownAt) : _shown.Position;
-            return (TimeSpan.FromSeconds(_player.Position) - counted).Duration() > MaxDrift;
         }
     }
 }

@@ -9,14 +9,14 @@
         <Border Grid.Column="0" Classes="cover">
             <Panel>
                 <TextBlock Text="♫" IsVisible="{Binding #Cover.Source, Converter={x:Static ObjectConverters.IsNull}}" />
-                <Image x:Name="Cover" Source="{Binding Source, Converter={x:Static local:Converters.SourceToCover}}" />
+                <Image x:Name="Cover" Source="{Binding Track.Cover, Converter={x:Static local:Converters.CoverToBitmap}}" />
             </Panel>
         </Border>
 
         <StackPanel Grid.Column="1">
             <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto">
                 <!-- Not a Label, that would take the first underscore in a title for an access key. -->
-                <TextBlock Grid.Column="0" Classes="label" Text="{Binding Source, Converter={x:Static local:Converters.SourceToTitle}}" />
+                <TextBlock Grid.Column="0" Classes="label" Text="{Binding Track, Converter={x:Static local:Converters.TrackToTitle}}" />
                 <Label Grid.Column="1" Content="{Binding Position, Converter={x:Static local:Converters.SecondsToTime}}" />
                 <Label Grid.Column="2" Content="/" />
                 <Label Grid.Column="3" Content="{Binding Duration, Converter={x:Static local:Converters.SecondsToTime}}" />

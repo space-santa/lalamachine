@@ -35,7 +35,7 @@
       <InstallationFile size="5.1 MB" type="dll">Lalamachine.Desktop\bin\Release\net10.0-windows10.0.19041.0\win-x64\publish\av_libglesv2.dll</InstallationFile>
       <InstallationFile size="1.9 MB" type="dll">Lalamachine.Desktop\bin\Release\net10.0-windows10.0.19041.0\win-x64\publish\e_sqlite3.dll</InstallationFile>
       <InstallationFile size="25.3 KB" type="pdb">Lalamachine.Desktop\bin\Release\net10.0-windows10.0.19041.0\win-x64\publish\LalaDb.pdb</InstallationFile>
-      <InstallationFile size="88 MB" type="exe">Lalamachine.Desktop\bin\Release\net10.0-windows10.0.19041.0\win-x64\publish\Lalamachine.Desktop.exe</InstallationFile>
+      <InstallationFile size="112.7 MB" type="exe">Lalamachine.Desktop\bin\Release\net10.0-windows10.0.19041.0\win-x64\publish\Lalamachine.Desktop.exe</InstallationFile>
       <InstallationFile size="32 KB" type="pdb">Lalamachine.Desktop\bin\Release\net10.0-windows10.0.19041.0\win-x64\publish\Lalamachine.Desktop.pdb</InstallationFile>
       <InstallationFile size="25.7 KB" type="pdb">Lalamachine.Desktop\bin\Release\net10.0-windows10.0.19041.0\win-x64\publish\Lalamachine.ViewModel.pdb</InstallationFile>
       <InstallationFile size="1.7 MB" type="dll">Lalamachine.Desktop\bin\Release\net10.0-windows10.0.19041.0\win-x64\publish\libHarfBuzzSharp.dll</InstallationFile>

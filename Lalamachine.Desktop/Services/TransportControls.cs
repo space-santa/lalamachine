@@ -18,6 +18,8 @@ namespace Lalamachine.Desktop.Services
         // The cover that the thumbnail is made of, and the stream that Windows reads it from.
         private byte[]? _cover;
         private InMemoryRandomAccessStream? _coverStream;
+        // What the display shows, null when it's cleared.
+        private NowPlaying? _shown;
         private bool _isDisposed;
 
         public TransportControls()
@@ -45,21 +47,30 @@ namespace Lalamachine.Desktop.Services
                 display.ClearAll();
                 display.Update();
                 _controls.PlaybackStatus = MediaPlaybackStatus.Closed;
+                // Out of the flyout, the media keys go to other apps.
+                _controls.IsEnabled = false;
                 SetCover(null);
+                _shown = null;
                 return;
             }
 
-            display.Type = MediaPlaybackType.Music;
-            display.MusicProperties.Title = nowPlaying.Title;
-            display.MusicProperties.Artist = nowPlaying.Artist;
-            display.MusicProperties.AlbumTitle = nowPlaying.Album;
-            // Made once for each track, not at each play, pause and seek.
-            if (!ReferenceEquals(nowPlaying.Cover, _cover))
+            // The track when it's another, not again at each play, pause and seek, or each time Windows is told where it is.
+            if (_shown is null || (_shown.Title, _shown.Artist, _shown.Album) != (nowPlaying.Title, nowPlaying.Artist, nowPlaying.Album) || !ReferenceEquals(nowPlaying.Cover, _cover))
             {
-                SetCover(nowPlaying.Cover);
-                display.Thumbnail = _coverStream is null ? null : RandomAccessStreamReference.CreateFromStream(_coverStream);
+                // Off at first: without, Windows has no media session of lalamachine's, nothing in the flyout and no media keys.
+                _controls.IsEnabled = true;
+                display.Type = MediaPlaybackType.Music;
+                display.MusicProperties.Title = nowPlaying.Title;
+                display.MusicProperties.Artist = nowPlaying.Artist;
+                display.MusicProperties.AlbumTitle = nowPlaying.Album;
+                if (!ReferenceEquals(nowPlaying.Cover, _cover))
+                {
+                    SetCover(nowPlaying.Cover);
+                    display.Thumbnail = _coverStream is null ? null : RandomAccessStreamReference.CreateFromStream(_coverStream);
+                }
+                display.Update();
             }
-            display.Update();
+            _shown = nowPlaying;
             // Which of play and pause a headphone's one button for both is.
             _controls.PlaybackStatus = nowPlaying.IsPlaying ? MediaPlaybackStatus.Playing : MediaPlaybackStatus.Paused;
             _controls.UpdateTimelineProperties(new SystemMediaTransportControlsTimelineProperties

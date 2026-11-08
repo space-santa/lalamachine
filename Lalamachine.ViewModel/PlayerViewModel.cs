@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
+using LibLala.LibLalaTagReader;
 using Settings;
 
 namespace Lalamachine.ViewModel
@@ -166,6 +167,9 @@ namespace Lalamachine.ViewModel
             set => Open(value);
         }
 
+        // What's shown of the track that plays, in the player and in the system's media controls. Read once for each track.
+        public TrackInfo Track { get; private set; } = TrackInfo.None;
+
         public string LastActivePlaylist
         {
             get => _playerSettings.LastActivePlaylist;
@@ -238,14 +242,14 @@ namespace Lalamachine.ViewModel
             }
         }
 
-        // From elsewhere than the position slider, like the system's media controls. Within the track.
+        // From elsewhere than the position slider, like the system's media controls. Within the track: not while its length
+        // isn't known, that would go back to its start.
         public void Seek(TimeSpan position)
         {
-            if (Source.Length == 0)
+            if (Source.Length == 0 || _audioPlayer.Duration is not { } duration)
             {
                 return;
             }
-            var duration = _audioPlayer.Duration ?? TimeSpan.Zero;
             _audioPlayer.Position = position < TimeSpan.Zero ? TimeSpan.Zero : position > duration ? duration : position;
             NotifyPropertyChanged(nameof(Position));
         }
@@ -346,7 +350,9 @@ namespace Lalamachine.ViewModel
         private void TrackChanged()
         {
             _isDragOfTrackBefore = _isDraggingPosition;
+            Track = TrackInfo.Read(Source);
             NotifyPropertyChanged(nameof(Source));
+            NotifyPropertyChanged(nameof(Track));
             NotifyPropertyChanged(nameof(Position));
             NotifyPropertyChanged(nameof(Duration));
             NotifyAsHeard();

@@ -66,6 +66,23 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
+        public void TheTrackThatPlays_IsShown_ByItsFileNameWhenItCantBeRead()
+        {
+            Assert.That(_viewModel.Track, Is.EqualTo(new TrackInfo("a", "", "", null)));
+        }
+
+        [Test]
+        public void WhenTheMixedInTrackTakesOver_ItIsShown()
+        {
+            _player.TransitionDue += Raise.Event();
+            _player.Source.Returns(UriOf("b"));
+
+            _player.MixedIn += Raise.Event();
+
+            Assert.That(_viewModel.Track.Title, Is.EqualTo("b"));
+        }
+
+        [Test]
         public void NextDuringATransition_PlaysTheTrackThatWasMixedIn_AndNothingIsSkipped()
         {
             _player.TransitionDue += Raise.Event();

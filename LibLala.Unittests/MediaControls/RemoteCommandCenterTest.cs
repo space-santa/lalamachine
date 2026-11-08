@@ -36,10 +36,37 @@ namespace LibLala.Unittests.MediaControls
             var received = new List<MediaCommand>();
             controls.CommandReceived += (sender, e) => received.Add(e.Command);
 
-            var status = SendToATarget(action);
+            var status = Send(controls.Target, action);
 
             Assert.That(received, Is.EqualTo(new[] { expected }));
             Assert.That(status, Is.Zero, "MPRemoteCommandHandlerStatusSuccess");
+        }
+
+        [Test]
+        public void WithTwoControlsOpen_ACommandGoesToTheControlsOfItsTarget_Once()
+        {
+            using var first = new RemoteCommandCenter();
+            using var second = new RemoteCommandCenter();
+            var received = new List<string>();
+            first.CommandReceived += (sender, e) => received.Add("first");
+            second.CommandReceived += (sender, e) => received.Add("second");
+
+            Send(first.Target, "lalamachineNext:");
+
+            Assert.That(received, Is.EqualTo(new[] { "first" }));
+        }
+
+        [Test]
+        public void ACommand_ToATargetOfNoControls_Fails()
+        {
+            using var controls = new RemoteCommandCenter();
+            var received = new List<MediaCommand>();
+            controls.CommandReceived += (sender, e) => received.Add(e.Command);
+
+            var status = SendToANewTarget("lalamachinePlay:");
+
+            Assert.That(received, Is.Empty);
+            Assert.That(status, Is.Not.Zero);
         }
 
         [Test]
@@ -52,7 +79,7 @@ namespace LibLala.Unittests.MediaControls
             var seekEvent = ObjectiveC.Send(ObjectiveC.Send(SeekEventClass.Value, "alloc"), "init");
             try
             {
-                SendToATarget("lalamachineSeek:", seekEvent);
+                Send(controls.Target, "lalamachineSeek:", seekEvent);
             }
             finally
             {
@@ -68,12 +95,21 @@ namespace LibLala.Unittests.MediaControls
             var received = new List<MediaCommand>();
             var controls = new RemoteCommandCenter();
             controls.CommandReceived += (sender, e) => received.Add(e.Command);
-            controls.Dispose();
+            // Kept, like macOS can still have it while it calls it.
+            var target = ObjectiveC.Send(controls.Target, "retain");
+            try
+            {
+                controls.Dispose();
 
-            var status = SendToATarget("lalamachinePlay:");
+                var status = Send(target, "lalamachinePlay:");
 
-            Assert.That(received, Is.Empty);
-            Assert.That(status, Is.Not.Zero);
+                Assert.That(received, Is.Empty);
+                Assert.That(status, Is.Not.Zero);
+            }
+            finally
+            {
+                ObjectiveC.Send(target, "release");
+            }
         }
 
         [Test]
@@ -196,13 +232,16 @@ namespace LibLala.Unittests.MediaControls
             }
         }
 
-        // Like macOS: a command calls the method of its target that was given with it. Any target of lalamachine's class.
-        private static long SendToATarget(string action, IntPtr commandEvent = default)
+        // Like macOS: a command calls the method of its target that was given with it. The MPRemoteCommandHandlerStatus.
+        private static long Send(IntPtr target, string action, IntPtr commandEvent = default) => ObjectiveC.Send(target, action, commandEvent);
+
+        // To a target of lalamachine's class that no controls made.
+        private static long SendToANewTarget(string action)
         {
             var target = ObjectiveC.Send(ObjectiveC.Send(ObjectiveC.GetClass("LalamachineRemoteCommandTarget"), "alloc"), "init");
             try
             {
-                return ObjectiveC.Send(target, action, commandEvent);
+                return Send(target, action);
             }
             finally
             {

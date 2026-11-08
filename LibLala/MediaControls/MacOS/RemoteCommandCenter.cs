@@ -55,9 +55,10 @@ namespace LibLala.MediaControls.MacOS
         // An NSImage, owned. Zero while there's none.
         private static IntPtr s_artworkImage;
 
-        // There's one command center for the app, its commands go to the controls that were opened last.
+        // There's one command center for the app. A command calls the target of each controls that are open, each target's
+        // controls get it.
         private static readonly Lock OpenGate = new();
-        private static RemoteCommandCenter? s_open;
+        private static readonly Dictionary<IntPtr, RemoteCommandCenter> OpenByTarget = [];
 
         private readonly IntPtr _target;
         private readonly IntPtr _infoCenter;
@@ -79,7 +80,7 @@ namespace LibLala.MediaControls.MacOS
                 _commands = [.. Commands.Select(command => ObjectiveC.Send(commandCenter, command.Getter))];
                 lock (OpenGate)
                 {
-                    s_open = this;
+                    OpenByTarget[_target] = this;
                 }
                 for (var i = 0; i < Commands.Length; i++)
                 {
@@ -94,6 +95,9 @@ namespace LibLala.MediaControls.MacOS
         }
 
         public event EventHandler<MediaCommandEventArgs>? CommandReceived;
+
+        // The commands' target, for the tests to call its methods like macOS does. Released when the controls are disposed.
+        internal IntPtr Target => _target;
 
         public void Show(NowPlaying? nowPlaying)
         {
@@ -151,10 +155,7 @@ namespace LibLala.MediaControls.MacOS
             _isDisposed = true;
             lock (OpenGate)
             {
-                if (s_open == this)
-                {
-                    s_open = null;
-                }
+                OpenByTarget.Remove(_target);
             }
 
             var pool = ObjectiveC.AutoreleasePoolPush();
@@ -182,18 +183,18 @@ namespace LibLala.MediaControls.MacOS
         {
             try
             {
-                RemoteCommandCenter? open;
+                RemoteCommandCenter? controls;
                 lock (OpenGate)
                 {
-                    open = s_open;
+                    OpenByTarget.TryGetValue(self, out controls);
                 }
-                if (open is null || !CommandOfAction.TryGetValue(action, out var command))
+                if (controls is null || !CommandOfAction.TryGetValue(action, out var command))
                 {
                     return Failed;
                 }
                 // MPChangePlaybackPositionCommandEvent's, in seconds.
                 var position = command == MediaCommand.Seek ? TimeSpan.FromSeconds(ObjectiveC.SendForDouble(commandEvent, ObjectiveC.Selector("positionTime"))) : TimeSpan.Zero;
-                open.CommandReceived?.Invoke(open, new MediaCommandEventArgs(command, position));
+                controls.CommandReceived?.Invoke(controls, new MediaCommandEventArgs(command, position));
                 return Handled;
             }
             catch (Exception)

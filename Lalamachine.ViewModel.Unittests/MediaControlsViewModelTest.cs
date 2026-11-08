@@ -108,19 +108,60 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
-        public void WhileItPlaysOnAsCounted_ItIsntShownAgain()
+        public void ATrackThatStarts_IsShownPausedThenPlaying_NotEachTimeThePlayerSaysTheSame()
+        {
+            _shown.Clear();
+
+            PlayTrack("a");
+            _audioPlayer.MediaOpened += Raise.Event();
+
+            Assert.That(_shown.ConvertAll(shown => shown?.IsPlaying), Is.EqualTo(new bool?[] { false, true }));
+        }
+
+        [Test]
+        public void ATrackThatFollows_IsShownOnce()
+        {
+            PlayTrack("a");
+            _shown.Clear();
+
+            PlayTrack("b");
+            _audioPlayer.MediaOpened += Raise.Event();
+
+            Assert.That(_shown, Is.EqualTo(new NowPlaying?[] { new NowPlaying("b", "", "", TimeSpan.FromSeconds(300), TimeSpan.Zero, IsPlaying: true) }));
+        }
+
+        [Test]
+        public void WhileItPlaysOnAsCounted_ItIsntShownAgain_ForFiveSeconds()
         {
             PlayTrack("a");
             var count = _shown.Count;
 
-            for (var second = 1; second <= 10; second++)
-            {
-                _time.Advance(TimeSpan.FromSeconds(1));
-                _audioPlayer.Position.Returns(TimeSpan.FromSeconds(second + 0.5));
-                _audioPlayer.PositionChanged += Raise.Event();
-            }
+            PlayOn(4);
 
             Assert.That(_shown, Has.Count.EqualTo(count));
+        }
+
+        [Test]
+        public void WhileItPlays_ItIsShownWhereItIs_EveryFiveSeconds()
+        {
+            PlayTrack("a");
+            var count = _shown.Count;
+
+            PlayOn(10);
+
+            Assert.That(_shown, Has.Count.EqualTo(count + 2));
+            Assert.That(_shown[^1]?.Position, Is.EqualTo(TimeSpan.FromSeconds(10.5)));
+        }
+
+        [Test]
+        public void ControlsThatFail_DontStopTheTrack()
+        {
+            _controls.When(controls => controls.Show(Arg.Any<NowPlaying?>())).Do(_ => throw new InvalidOperationException("The system's controls failed."));
+
+            PlayTrack("a");
+
+            _audioPlayer.Received(1).Play();
+            Assert.That(_player.IsPlaying, Is.True);
         }
 
         [Test]
@@ -228,6 +269,18 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
+        public void Seek_WhileTheLengthIsntKnown_DoesNothing()
+        {
+            PlayTrack("a");
+            _audioPlayer.Duration.Returns((TimeSpan?)null);
+            _audioPlayer.ClearReceivedCalls();
+
+            Press(MediaCommand.Seek, TimeSpan.FromSeconds(120));
+
+            _audioPlayer.DidNotReceive().Position = Arg.Any<TimeSpan>();
+        }
+
+        [Test]
         public void Seek_WithoutATrack_DoesNothing()
         {
             Press(MediaCommand.Seek, TimeSpan.FromSeconds(120));
@@ -277,6 +330,17 @@ namespace Lalamachine.ViewModel.Unittests
         {
             _controls.CommandReceived += Raise.EventWith(new MediaCommandEventArgs(command, position));
             _ui.RunAll();
+        }
+
+        // A second at a time, half a second ahead of where it started.
+        private void PlayOn(int seconds)
+        {
+            for (var second = 1; second <= seconds; second++)
+            {
+                _time.Advance(TimeSpan.FromSeconds(1));
+                _audioPlayer.Position.Returns(TimeSpan.FromSeconds(second + 0.5));
+                _audioPlayer.PositionChanged += Raise.Event();
+            }
         }
 
         // One that isn't there.
