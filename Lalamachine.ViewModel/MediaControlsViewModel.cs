@@ -6,8 +6,9 @@ using LibLala.MediaControls;
 
 namespace Lalamachine.ViewModel
 {
-    // Lets the operating system's media controls play, pause and skip, like the buttons of Bluetooth headphones. For that,
-    // the system has to know what plays, so it's told about each track, play and pause, and seek.
+    // Lets the operating system's media controls play, pause, skip and seek, like the buttons of Bluetooth headphones and the
+    // Control Center. For that, the system has to know what plays, so it's told about each track with its cover, play and
+    // pause, and seek.
     public sealed class MediaControlsViewModel : IDisposable
     {
         // The system counts on from the position it was told. Off by more than this, it's told again: after a seek, or when
@@ -22,6 +23,8 @@ namespace Lalamachine.ViewModel
         private string _title = "";
         private string _artist = "";
         private string _album = "";
+        // The same array for the whole track, the controls make what they show of it once.
+        private byte[]? _cover;
         private NowPlaying? _shown;
         private long _shownAt;
         private bool _isDisposed;
@@ -85,22 +88,22 @@ namespace Lalamachine.ViewModel
         {
             if (_uiContext is null)
             {
-                Execute(e.Command);
+                Execute(e);
             }
             else
             {
-                _uiContext.Post(_ => Execute(e.Command), null);
+                _uiContext.Post(_ => Execute(e), null);
             }
         }
 
-        private void Execute(MediaCommand command)
+        private void Execute(MediaCommandEventArgs command)
         {
             // It can have been on its way to the UI thread.
             if (_isDisposed)
             {
                 return;
             }
-            switch (command)
+            switch (command.Command)
             {
                 case MediaCommand.Play:
                     if (!_player.IsPlaying)
@@ -123,20 +126,24 @@ namespace Lalamachine.ViewModel
                 case MediaCommand.Previous:
                     _player.LastCommand.Execute(null);
                     break;
+                case MediaCommand.Seek:
+                    _player.Seek(command.Position);
+                    break;
                 default:
                     break;
             }
         }
 
-        // Like the title in the player: a track without tags by its file name.
+        // Like the title and the cover in the player: a track without tags by its file name.
         private void ReadTags()
         {
             var source = _player.Source;
-            (_title, _artist, _album) = ("", "", "");
+            (_title, _artist, _album, _cover) = ("", "", "", null);
             if (source.Length == 0)
             {
                 return;
             }
+            _cover = CoverArt.Read(source);
             try
             {
                 var tags = new TagReader().Read(source);
@@ -153,7 +160,7 @@ namespace Lalamachine.ViewModel
 
         private void Show()
         {
-            _shown = _player.Source.Length == 0 ? null : new NowPlaying(_title, _artist, _album, TimeSpan.FromSeconds(_player.Duration), TimeSpan.FromSeconds(_player.Position), _player.IsPlaying);
+            _shown = _player.Source.Length == 0 ? null : new NowPlaying(_title, _artist, _album, TimeSpan.FromSeconds(_player.Duration), TimeSpan.FromSeconds(_player.Position), _player.IsPlaying, _cover);
             _shownAt = _time.GetTimestamp();
             _controls.Show(_shown);
         }

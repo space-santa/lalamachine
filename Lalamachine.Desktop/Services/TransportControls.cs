@@ -1,8 +1,10 @@
 #if WINDOWS
 using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 using LibLala.MediaControls;
 using Windows.Media;
 using Windows.Media.Playback;
+using Windows.Storage.Streams;
 
 namespace Lalamachine.Desktop.Services
 {
@@ -13,6 +15,9 @@ namespace Lalamachine.Desktop.Services
     {
         private readonly MediaPlayer _mediaPlayer;
         private readonly SystemMediaTransportControls _controls;
+        // The cover that the thumbnail is made of, and the stream that Windows reads it from.
+        private byte[]? _cover;
+        private InMemoryRandomAccessStream? _coverStream;
         private bool _isDisposed;
 
         public TransportControls()
@@ -26,6 +31,7 @@ namespace Lalamachine.Desktop.Services
             _controls.IsNextEnabled = true;
             _controls.IsPreviousEnabled = true;
             _controls.ButtonPressed += OnButtonPressed;
+            _controls.PlaybackPositionChangeRequested += OnPlaybackPositionChangeRequested;
         }
 
         public event EventHandler<MediaCommandEventArgs>? CommandReceived;
@@ -39,6 +45,7 @@ namespace Lalamachine.Desktop.Services
                 display.ClearAll();
                 display.Update();
                 _controls.PlaybackStatus = MediaPlaybackStatus.Closed;
+                SetCover(null);
                 return;
             }
 
@@ -46,6 +53,12 @@ namespace Lalamachine.Desktop.Services
             display.MusicProperties.Title = nowPlaying.Title;
             display.MusicProperties.Artist = nowPlaying.Artist;
             display.MusicProperties.AlbumTitle = nowPlaying.Album;
+            // Made once for each track, not at each play, pause and seek.
+            if (!ReferenceEquals(nowPlaying.Cover, _cover))
+            {
+                SetCover(nowPlaying.Cover);
+                display.Thumbnail = _coverStream is null ? null : RandomAccessStreamReference.CreateFromStream(_coverStream);
+            }
             display.Update();
             // Which of play and pause a headphone's one button for both is.
             _controls.PlaybackStatus = nowPlaying.IsPlaying ? MediaPlaybackStatus.Playing : MediaPlaybackStatus.Paused;
@@ -67,7 +80,31 @@ namespace Lalamachine.Desktop.Services
             }
             _isDisposed = true;
             _controls.ButtonPressed -= OnButtonPressed;
+            _controls.PlaybackPositionChangeRequested -= OnPlaybackPositionChangeRequested;
             _mediaPlayer.Dispose();
+            SetCover(null);
+        }
+
+        // Windows reads the picture from the stream when it shows it, so the stream stays open until the next cover. A
+        // stream of Windows's own: it reads from a copy of it, which a .NET stream made into one can't make.
+        private void SetCover(byte[]? cover)
+        {
+            _cover = cover;
+            _coverStream?.Dispose();
+            _coverStream = null;
+            if (cover is null)
+            {
+                return;
+            }
+            _coverStream = new InMemoryRandomAccessStream();
+            // Into memory, there's nothing that it would wait for on the UI thread.
+            _coverStream.WriteAsync(cover.AsBuffer()).AsTask().GetAwaiter().GetResult();
+            _coverStream.Seek(0);
+        }
+
+        private void OnPlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)
+        {
+            CommandReceived?.Invoke(this, new MediaCommandEventArgs(MediaCommand.Seek, args.RequestedPlaybackPosition));
         }
 
         private void OnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)

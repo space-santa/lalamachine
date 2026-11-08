@@ -11,6 +11,10 @@ namespace LibLala.MediaControls.MacOS
     internal static unsafe partial class ObjectiveC
     {
         private const string LibObjC = "/usr/lib/libobjc.A.dylib";
+        private const string LibSystem = "/usr/lib/libSystem.B.dylib";
+        // Block_layout's flags.
+        private const int BlockIsGlobal = 1 << 28;
+        private const int BlockHasSignature = 1 << 30;
 
         [LibraryImport(LibObjC, EntryPoint = "objc_getClass", StringMarshalling = StringMarshalling.Utf8)]
         public static partial IntPtr GetClass(string name);
@@ -60,10 +64,27 @@ namespace LibLala.MediaControls.MacOS
         public static partial IntPtr Send(IntPtr receiver, IntPtr selector, char* characters, nuint length);
 
         [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+        public static partial IntPtr Send(IntPtr receiver, IntPtr selector, byte* bytes, nuint length);
+
+        [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+        public static partial IntPtr Send(IntPtr receiver, IntPtr selector, CGSize size);
+
+        [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+        public static partial IntPtr Send(IntPtr receiver, IntPtr selector, CGSize size, IntPtr argument);
+
+        // Two doubles come back in registers, on Intel too: not objc_msgSend_stret, that's for bigger structs.
+        [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+        public static partial CGSize SendForSize(IntPtr receiver, IntPtr selector);
+
+        [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
         public static partial nuint SendForUnsigned(IntPtr receiver, IntPtr selector);
 
         [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
         public static partial double SendForDouble(IntPtr receiver, IntPtr selector);
+
+        [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static partial bool SendForBool(IntPtr receiver, IntPtr selector);
 
         public static IntPtr Send(IntPtr receiver, string selector) => Send(receiver, Selector(selector));
 
@@ -85,5 +106,56 @@ namespace LibLala.MediaControls.MacOS
         public static IntPtr Number(nuint value) => Send(GetClass("NSNumber"), Selector("numberWithUnsignedInteger:"), value);
 
         public static string? ToManagedString(IntPtr nsString) => nsString == IntPtr.Zero ? null : Marshal.PtrToStringUTF8(Send(nsString, "UTF8String"));
+
+        // A block, Objective-C's closure, that calls the function: it takes the block, then the block's arguments. Like a block
+        // literal that captures nothing, it's global: copying it gives the same block, and it's never freed. Make it once.
+        // The signature is the block's type encoding, like "@24@?0{CGSize=dd}8" for NSImage *(^)(CGSize).
+        public static IntPtr CreateGlobalBlock(IntPtr function, string signature)
+        {
+            var descriptor = (BlockDescriptor*)NativeMemory.Alloc((nuint)sizeof(BlockDescriptor));
+            *descriptor = new BlockDescriptor
+            {
+                Size = (nuint)sizeof(BlockLiteral),
+                Signature = Marshal.StringToCoTaskMemUTF8(signature),
+            };
+            var block = (BlockLiteral*)NativeMemory.Alloc((nuint)sizeof(BlockLiteral));
+            *block = new BlockLiteral
+            {
+                // The class of a global block, its address that is.
+                Isa = NativeLibrary.GetExport(NativeLibrary.Load(LibSystem), "_NSConcreteGlobalBlock"),
+                Flags = BlockIsGlobal | BlockHasSignature,
+                Invoke = function,
+                Descriptor = descriptor,
+            };
+            return (IntPtr)block;
+        }
+
+        // Block_layout, without the variables that a block captures.
+        [StructLayout(LayoutKind.Sequential)]
+        private struct BlockLiteral
+        {
+            public IntPtr Isa;
+            public int Flags;
+            public int Reserved;
+            public IntPtr Invoke;
+            public BlockDescriptor* Descriptor;
+        }
+
+        // Block_descriptor_1, then Block_descriptor_3's signature: there's no copy and dispose for a global block.
+        [StructLayout(LayoutKind.Sequential)]
+        private struct BlockDescriptor
+        {
+            public nuint Reserved;
+            public nuint Size;
+            public IntPtr Signature;
+        }
+    }
+
+    // CGFloat is a double on 64-bit Macs.
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct CGSize
+    {
+        public double Width;
+        public double Height;
     }
 }

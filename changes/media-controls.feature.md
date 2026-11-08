@@ -1,1 +1,1 @@
-Play, pause and skip tracks with the buttons of Bluetooth headphones and the keyboard's media keys, also while lalamachine is in the background. The track that plays shows in Now Playing in macOS's Control Center, and in the media flyout on Windows.
+Play, pause and skip tracks with the buttons of Bluetooth headphones and the keyboard's media keys, also while lalamachine is in the background. The track that plays shows with its cover in Now Playing in macOS's Control Center, and in the media flyout on Windows. Drag the position there to go to another part of the track.

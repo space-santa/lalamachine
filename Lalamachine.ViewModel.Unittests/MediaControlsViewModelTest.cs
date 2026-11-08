@@ -5,6 +5,7 @@ using System.Threading;
 using LibLala.MediaControls;
 using NSubstitute;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Lalamachine.ViewModel.Unittests
 {
@@ -61,6 +62,38 @@ namespace Lalamachine.ViewModel.Unittests
             PlayTrack("a");
 
             Assert.That(_shown[^1], Is.EqualTo(new NowPlaying("a", "", "", TimeSpan.FromSeconds(300), TimeSpan.Zero, IsPlaying: true)));
+        }
+
+        [Test]
+        public void ATrackThatPlays_IsShown_WithItsTagsAndCover_TheSameCoverEachTime()
+        {
+            var path = Path.Combine(Path.GetTempPath(), $"lalatest-{Guid.NewGuid()}.mp3");
+            try
+            {
+                TestMp3.Write(path, "Netherworld", "Somebody", "Underground");
+                AddCover(path, [0xFF, 0xD8, 0xFF, 0xE0, 1]);
+
+                PlayPath(path);
+                var playing = _shown[^1];
+                _player.Pause();
+                var paused = _shown[^1];
+
+                Assert.That((playing?.Title, playing?.Artist, playing?.Album), Is.EqualTo(("Netherworld", "Somebody", "Underground")));
+                Assert.That(playing?.Cover, Is.EqualTo(new byte[] { 0xFF, 0xD8, 0xFF, 0xE0, 1 }));
+                Assert.That(paused?.Cover, Is.SameAs(playing?.Cover));
+            }
+            finally
+            {
+                File.Delete(path);
+            }
+        }
+
+        [Test]
+        public void ATrackWithoutACover_IsShownWithout()
+        {
+            PlayTrack("a");
+
+            Assert.That(_shown[^1]?.Cover, Is.Null);
         }
 
         [Test]
@@ -174,6 +207,35 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
+        public void Seek_GoesThere_AndIsShown()
+        {
+            PlayTrack("a");
+
+            Press(MediaCommand.Seek, TimeSpan.FromSeconds(120));
+
+            Assert.That(_audioPlayer.Position, Is.EqualTo(TimeSpan.FromSeconds(120)));
+            Assert.That(_shown[^1]?.Position, Is.EqualTo(TimeSpan.FromSeconds(120)));
+        }
+
+        [Test]
+        public void Seek_PastTheEnd_GoesToTheEnd()
+        {
+            PlayTrack("a");
+
+            Press(MediaCommand.Seek, TimeSpan.FromSeconds(301));
+
+            Assert.That(_audioPlayer.Position, Is.EqualTo(TimeSpan.FromSeconds(300)));
+        }
+
+        [Test]
+        public void Seek_WithoutATrack_DoesNothing()
+        {
+            Press(MediaCommand.Seek, TimeSpan.FromSeconds(120));
+
+            _audioPlayer.DidNotReceive().Position = Arg.Any<TimeSpan>();
+        }
+
+        [Test]
         public void ACommand_IsHandledOnTheUIThread()
         {
             PlayTrack("a");
@@ -211,17 +273,27 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         // On the system's thread, then on the UI thread.
-        private void Press(MediaCommand command)
+        private void Press(MediaCommand command, TimeSpan position = default)
         {
-            _controls.CommandReceived += Raise.EventWith(new MediaCommandEventArgs(command));
+            _controls.CommandReceived += Raise.EventWith(new MediaCommandEventArgs(command, position));
             _ui.RunAll();
         }
 
-        private void PlayTrack(string name)
+        // One that isn't there.
+        private void PlayTrack(string name) => PlayPath(Path.GetFullPath($"/music/{name}.mp3"));
+
+        private void PlayPath(string path)
         {
-            var path = Path.GetFullPath($"/music/{name}.mp3");
             _audioPlayer.Source.Returns(new Uri(path));
             _player.PlayTrackHandler(this, new PlayTrackEventArgs(path, "MAIN"));
+        }
+
+        private static void AddCover(string path, byte[] picture)
+        {
+            using var file = TagLib.File.Create(path);
+            var id3 = (TagLib.Id3v2.Tag)file.GetTag(TagLib.TagTypes.Id3v2, create: true);
+            id3.AddFrame(new TagLib.Id3v2.AttachmentFrame(new TagLib.Picture(new TagLib.ByteVector(picture)) { Type = TagLib.PictureType.FrontCover, MimeType = "image/jpeg" }));
+            file.Save();
         }
 
         private sealed class ManualTime : TimeProvider

@@ -238,6 +238,18 @@ namespace Lalamachine.ViewModel
             }
         }
 
+        // From elsewhere than the position slider, like the system's media controls. Within the track.
+        public void Seek(TimeSpan position)
+        {
+            if (Source.Length == 0)
+            {
+                return;
+            }
+            var duration = _audioPlayer.Duration ?? TimeSpan.Zero;
+            _audioPlayer.Position = position < TimeSpan.Zero ? TimeSpan.Zero : position > duration ? duration : position;
+            NotifyPropertyChanged(nameof(Position));
+        }
+
         // The view says while the user moves the position slider: holds it, or presses a key on it. When another track
         // starts while it's held, the slider is at a place in the one before, it doesn't seek until it's let go.
         public bool IsDraggingPosition

@@ -12,9 +12,11 @@ namespace LibLala.MediaControls.MacOS
     // Center, MPNowPlayingInfoCenter shows the track there. macOS sends the commands to the app that played last and said what
     // it plays, on the main thread.
     [SupportedOSPlatform("macos")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2216:Disposable types should declare finalizer", Justification = "A finalizer would release the Objective-C objects on its own thread, while macOS can use them. Undisposed, they go with the app.")]
     public sealed class RemoteCommandCenter : IMediaControls
     {
         private const string MediaPlayerPath = "/System/Library/Frameworks/MediaPlayer.framework/MediaPlayer";
+        private const string AppKitPath = "/System/Library/Frameworks/AppKit.framework/AppKit";
         // Lalamachine's own Objective-C class for the commands' target.
         private const string TargetClassName = "LalamachineRemoteCommandTarget";
 
@@ -36,12 +38,22 @@ namespace LibLala.MediaControls.MacOS
             ("togglePlayPauseCommand", "lalamachineTogglePlayPause:", MediaCommand.TogglePlayPause),
             ("nextTrackCommand", "lalamachineNext:", MediaCommand.Next),
             ("previousTrackCommand", "lalamachinePrevious:", MediaCommand.Previous),
+            // The position slider in the Control Center.
+            ("changePlaybackPositionCommand", "lalamachineSeek:", MediaCommand.Seek),
         ];
 
-        // Loaded before its classes are looked up. It stays loaded, a framework can't be unloaded anyway.
-        private static readonly IntPtr MediaPlayer = NativeLibrary.Load(MediaPlayerPath);
+        // Loaded before their classes are looked up, AppKit for NSImage: the app has it already, the tests don't. They stay
+        // loaded, a framework can't be unloaded anyway.
+        private static readonly IntPtr MediaPlayer = LoadFrameworks();
         private static readonly Dictionary<IntPtr, MediaCommand> CommandOfAction = Commands.ToDictionary(command => ObjectiveC.Selector(command.Action), command => command.Command);
         private static readonly IntPtr TargetClass = CreateTargetClass();
+
+        // MPMediaItemArtwork asks this block for the picture. All of them get the one picture that's shown, there's only
+        // ever one artwork that's shown.
+        private static readonly IntPtr ArtworkBlock = CreateArtworkBlock();
+        private static readonly Lock ArtworkGate = new();
+        // An NSImage, owned. Zero while there's none.
+        private static IntPtr s_artworkImage;
 
         // There's one command center for the app, its commands go to the controls that were opened last.
         private static readonly Lock OpenGate = new();
@@ -50,6 +62,9 @@ namespace LibLala.MediaControls.MacOS
         private readonly IntPtr _target;
         private readonly IntPtr _infoCenter;
         private readonly IntPtr[] _commands;
+        // The cover that the artwork is made of, and the MPMediaItemArtwork, owned. Zero for a cover that isn't a picture.
+        private byte[]? _cover;
+        private IntPtr _artwork;
         private bool _isDisposed;
 
         public RemoteCommandCenter()
@@ -101,6 +116,15 @@ namespace LibLala.MediaControls.MacOS
                 if (nowPlaying.Album.Length > 0)
                 {
                     Put(info, "MPMediaItemPropertyAlbumTitle", ObjectiveC.String(nowPlaying.Album));
+                }
+                // Made once for each track, not at each play, pause and seek.
+                if (!ReferenceEquals(nowPlaying.Cover, _cover))
+                {
+                    ShowCover(nowPlaying.Cover);
+                }
+                if (_artwork != IntPtr.Zero)
+                {
+                    Put(info, "MPMediaItemPropertyArtwork", _artwork);
                 }
                 Put(info, "MPMediaItemPropertyPlaybackDuration", ObjectiveC.Number(nowPlaying.Duration.TotalSeconds));
                 Put(info, "MPNowPlayingInfoPropertyElapsedPlaybackTime", ObjectiveC.Number(nowPlaying.Position.TotalSeconds));
@@ -167,7 +191,9 @@ namespace LibLala.MediaControls.MacOS
                 {
                     return Failed;
                 }
-                open.CommandReceived?.Invoke(open, new MediaCommandEventArgs(command));
+                // MPChangePlaybackPositionCommandEvent's, in seconds.
+                var position = command == MediaCommand.Seek ? TimeSpan.FromSeconds(ObjectiveC.SendForDouble(commandEvent, ObjectiveC.Selector("positionTime"))) : TimeSpan.Zero;
+                open.CommandReceived?.Invoke(open, new MediaCommandEventArgs(command, position));
                 return Handled;
             }
             catch (Exception)
@@ -194,10 +220,94 @@ namespace LibLala.MediaControls.MacOS
             return cls;
         }
 
+        // The artwork block's function: (the block, the size it's for) → NSImage *, autoreleased like what a method returns.
+        // The picture as it is, at any size: macOS scales it.
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Nothing may be thrown back into native code, macOS gets no picture instead.")]
+        private static IntPtr OnArtworkRequested(IntPtr block, CGSize size)
+        {
+            try
+            {
+                lock (ArtworkGate)
+                {
+                    // Retained here: the picture can be replaced while it's on its way.
+                    return s_artworkImage == IntPtr.Zero ? IntPtr.Zero : ObjectiveC.Send(ObjectiveC.Send(s_artworkImage, "retain"), "autorelease");
+                }
+            }
+            catch (Exception)
+            {
+                return IntPtr.Zero;
+            }
+        }
+
+        private static unsafe IntPtr CreateArtworkBlock() =>
+            // NSImage *(^)(CGSize): returns an object, takes the block and a struct of two doubles.
+            ObjectiveC.CreateGlobalBlock((IntPtr)(delegate* unmanaged[Cdecl]<IntPtr, CGSize, IntPtr>)&OnArtworkRequested, "@24@?0{CGSize=dd}8");
+
+        private static IntPtr LoadFrameworks()
+        {
+            NativeLibrary.Load(AppKitPath);
+            return NativeLibrary.Load(MediaPlayerPath);
+        }
+
+        // Owned, zero when it isn't a picture that macOS can read.
+        private static unsafe IntPtr CreateImage(byte[] picture)
+        {
+            IntPtr data;
+            fixed (byte* bytes = picture)
+            {
+                // A copy, autoreleased.
+                data = ObjectiveC.Send(ObjectiveC.GetClass("NSData"), ObjectiveC.Selector("dataWithBytes:length:"), bytes, (nuint)picture.Length);
+            }
+            var image = ObjectiveC.Send(ObjectiveC.Send(ObjectiveC.GetClass("NSImage"), "alloc"), "initWithData:", data);
+            // It takes any data, whether it's a picture shows when it's read.
+            if (image != IntPtr.Zero && !ObjectiveC.SendForBool(image, ObjectiveC.Selector("isValid")))
+            {
+                ObjectiveC.Send(image, "release");
+                return IntPtr.Zero;
+            }
+            return image;
+        }
+
+        // Takes the image, gives the one before up.
+        private static void SetArtworkImage(IntPtr image)
+        {
+            IntPtr before;
+            lock (ArtworkGate)
+            {
+                before = s_artworkImage;
+                s_artworkImage = image;
+            }
+            if (before != IntPtr.Zero)
+            {
+                ObjectiveC.Send(before, "release");
+            }
+        }
+
+        // Inside a pool.
+        private void ShowCover(byte[]? cover)
+        {
+            _cover = cover;
+            if (_artwork != IntPtr.Zero)
+            {
+                ObjectiveC.Send(_artwork, "release");
+                _artwork = IntPtr.Zero;
+            }
+            var image = cover is null ? IntPtr.Zero : CreateImage(cover);
+            SetArtworkImage(image);
+            if (image != IntPtr.Zero)
+            {
+                var size = ObjectiveC.SendForSize(image, ObjectiveC.Selector("size"));
+                _artwork = ObjectiveC.Send(ObjectiveC.Send(ObjectiveC.GetClass("MPMediaItemArtwork"), "alloc"), ObjectiveC.Selector("initWithBoundsSize:requestHandler:"), size, ArtworkBlock);
+            }
+        }
+
+        // Inside a pool.
         private void Clear()
         {
             ObjectiveC.Send(_infoCenter, "setNowPlayingInfo:", IntPtr.Zero);
             ObjectiveC.Send(_infoCenter, ObjectiveC.Selector("setPlaybackState:"), StoppedState);
+            ShowCover(null);
         }
 
         // MediaPlayer's keys are NSString constants that it exports.
