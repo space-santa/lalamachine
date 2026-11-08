@@ -7,6 +7,15 @@
     <Grid ColumnDefinitions="240,*">
         <DockPanel Grid.Column="0">
             <Label DockPanel.Dock="Top" Classes="header" Content="Playlists" />
+            <!-- First, so that it is the lowest one. -->
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="4">
+                <Button Classes="text"
+                        Content="Pull from Jellyfin"
+                        ToolTip.Tip="Gets a playlist from Jellyfin, with the tracks the library here has. Replaces the one with the same name here."
+                        Command="{Binding PullPlaylistCommand}"
+                        IsEnabled="{Binding !IsPulling}" />
+                <Label Content="Pulling..." IsVisible="{Binding IsPulling}" />
+            </StackPanel>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
                 <Button Content="➕" ToolTip.Tip="New playlist" Command="{Binding AddPlaylistCommand}" />
                 <Button Content="✏" ToolTip.Tip="Rename playlist" Command="{Binding RenamePlaylistCommand}" IsEnabled="{Binding SelectedPlaylist.CanRenameAndDelete, FallbackValue=False}" />

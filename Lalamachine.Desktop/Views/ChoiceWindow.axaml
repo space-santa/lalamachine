@@ -1,0 +1,19 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Lalamachine.Desktop.Views.ChoiceWindow"
+        Title="lalamachine"
+        Icon="/Assets/lalamachine.ico"
+        SizeToContent="Height"
+        Width="480"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner">
+    <DockPanel Margin="16">
+        <TextBlock DockPanel.Dock="Top" x:Name="PromptText" TextWrapping="Wrap" FontSize="18" Foreground="White" Margin="0,0,0,16" />
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,16,0,0">
+            <Button x:Name="OkButton" Content="OK" IsDefault="True" IsEnabled="False" Click="OkButton_Click" />
+            <Button Content="Cancel" IsCancel="True" Click="CancelButton_Click" />
+        </StackPanel>
+        <!-- With a height of its own, so that a long list scrolls instead of making the window higher than the screen. -->
+        <ListBox x:Name="ChoiceList" MaxHeight="400" SelectionChanged="ChoiceList_SelectionChanged" DoubleTapped="ChoiceList_DoubleTapped" />
+    </DockPanel>
+</Window>

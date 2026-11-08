@@ -102,7 +102,7 @@ namespace LibLala.Jellyfin
 
             var path = $"Playlists/{Uri.EscapeDataString(playlistId)}/Items?userId={Uri.EscapeDataString(userId)}&enableImages=false&enableUserData=false";
             var page = await GetItemsAsync<PlaylistItem>(path, cancellationToken).ConfigureAwait(false);
-            return page.Items!.Where(x => !string.IsNullOrEmpty(x.Id)).Select(x => new JellyfinPlaylistEntry(x.Id, x.PlaylistItemId ?? x.Id)).ToList();
+            return page.Items!.Where(x => !string.IsNullOrEmpty(x.Id)).Select(x => new JellyfinPlaylistEntry(x.Id, x.PlaylistItemId ?? x.Id, x.Name ?? "")).ToList();
         }
 
         public async Task<string> CreatePlaylistAsync(string name, string userId, IReadOnlyList<string> itemIds, CancellationToken cancellationToken = default)
@@ -212,7 +212,7 @@ namespace LibLala.Jellyfin
 
         private sealed record ItemsPage<T>(IReadOnlyList<T>? Items, int TotalRecordCount);
 
-        private sealed record PlaylistItem(string Id, string? PlaylistItemId);
+        private sealed record PlaylistItem(string Id, string? PlaylistItemId, string? Name);
 
         private sealed record CreatedPlaylist(string? Id);
 

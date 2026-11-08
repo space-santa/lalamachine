@@ -9,7 +9,8 @@ namespace LibLala.Jellyfin
     public sealed record JellyfinPlaylist(string Id, string Name);
 
     // EntryId is what removing it from the playlist goes by. Jellyfin uses the track's ID for that at the moment, but it hasn't always.
-    public sealed record JellyfinPlaylistEntry(string ItemId, string EntryId);
+    // Name is the track's title, to show one that has no path.
+    public sealed record JellyfinPlaylistEntry(string ItemId, string EntryId, string Name = "");
 
     // What pushing a playlist is going to do, for the user to decide on before anything changes.
     // ExistingPlaylistId: the playlist in Jellyfin that gets replaced, null when a new one gets created.

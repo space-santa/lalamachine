@@ -1,0 +1,1 @@
+Add a button to pull a playlist from your Jellyfin server into the Playlists tab, also one lalamachine doesn't have yet. The tracks are the ones from your library, in the same order. A playlist with the same name gets its tracks replaced, after asking.
