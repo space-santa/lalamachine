@@ -1,6 +1,8 @@
 using System;
 using System.Globalization;
+using System.IO;
 using Avalonia.Data.Converters;
+using Avalonia.Media.Imaging;
 using Lalamachine.ViewModel;
 using LibLala.LibLalaTagReader;
 
@@ -34,6 +36,11 @@ namespace Lalamachine.Desktop
 
         public static readonly IValueConverter SourceToTitle = new FuncValueConverter<string?, string>(TitleOf);
 
+        public static readonly IValueConverter SourceToCover = new FuncValueConverter<string?, Bitmap?>(CoverOf);
+
+        // Twice as wide as Border.cover, sharp on a screen with a high resolution too. Not the thousands of pixels a cover can have.
+        private const int CoverWidth = 2 * 136;
+
         private static string FormatSeconds(double seconds)
         {
             var timeSpan = new TimeSpan(0, 0, (int)seconds);
@@ -66,6 +73,26 @@ namespace Lalamachine.Desktop
             catch (TagReaderException)
             {
                 return System.IO.Path.GetFileNameWithoutExtension(source);
+            }
+        }
+
+        // Null when the track has no cover, or one that can't be shown.
+        private static Bitmap? CoverOf(string? source)
+        {
+            if (string.IsNullOrEmpty(source) || CoverArt.Read(source) is not { } image)
+            {
+                return null;
+            }
+
+            try
+            {
+                using var stream = new MemoryStream(image);
+                return Bitmap.DecodeToWidth(stream, CoverWidth);
+            }
+            catch (ArgumentException)
+            {
+                // Not an image, or one in a format that Avalonia can't read.
+                return null;
             }
         }
     }

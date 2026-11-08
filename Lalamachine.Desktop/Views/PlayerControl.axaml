@@ -4,58 +4,68 @@
              xmlns:vm="using:Lalamachine.ViewModel"
              x:Class="Lalamachine.Desktop.Views.PlayerControl"
              x:DataType="vm:PlayerViewModel">
-    <StackPanel Margin="0,8">
-        <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto">
-            <!-- Not a Label, that would take the first underscore in a title for an access key. -->
-            <TextBlock Grid.Column="0" Classes="label" Text="{Binding Source, Converter={x:Static local:Converters.SourceToTitle}}" />
-            <Label Grid.Column="1" Content="{Binding Position, Converter={x:Static local:Converters.SecondsToTime}}" />
-            <Label Grid.Column="2" Content="/" />
-            <Label Grid.Column="3" Content="{Binding Duration, Converter={x:Static local:Converters.SecondsToTime}}" />
-            <!-- After a transition, until the track is back at its own tempo. -->
-            <Label Grid.Column="4" Content="{Binding BeatsPerMinute, Converter={x:Static local:Converters.BeatsPerMinuteDisplay}}" IsVisible="{Binding IsOffTempo}" />
-            <!-- While the next track comes in, it too. -->
-            <StackPanel Grid.Column="5" Orientation="Horizontal" IsVisible="{Binding IsMixing}">
-                <Label Content="→" />
-                <Label Content="{Binding IncomingPosition, Converter={x:Static local:Converters.SecondsToTime}}" />
-                <Label Content="/" />
-                <Label Content="{Binding IncomingDuration, Converter={x:Static local:Converters.SecondsToTime}}" />
-            </StackPanel>
-        </Grid>
+    <!-- The cover at the left, the title, the sliders and their buttons next to it. -->
+    <Grid ColumnDefinitions="Auto,*" Margin="0,8">
+        <Border Grid.Column="0" Classes="cover">
+            <Panel>
+                <TextBlock Text="♫" IsVisible="{Binding #Cover.Source, Converter={x:Static ObjectConverters.IsNull}}" />
+                <Image x:Name="Cover" Source="{Binding Source, Converter={x:Static local:Converters.SourceToCover}}" />
+            </Panel>
+        </Border>
 
-        <Grid ColumnDefinitions="Auto,Auto,*">
-            <ToggleButton Grid.Column="0"
-                          Content="🎛"
-                          IsChecked="{Binding Transitions}"
-                          ToolTip.Tip="Mix each track into the next, like a DJ" />
-            <!-- Its DataContext is the ShuffleRepeatViewModel, the MainWindow sets it. -->
-            <Button x:Name="ShuffleRepeatButton"
-                    Grid.Column="1"
-                    x:DataType="vm:ShuffleRepeatViewModel"
-                    Command="{Binding ChangeShuffleRepeatCommand}"
-                    Content="{Binding State, Converter={x:Static local:Converters.ShuffleRepeatContent}}" />
-            <Slider x:Name="PositionSlider"
-                    Grid.Column="2"
-                    Minimum="0" Maximum="{Binding Duration, Converter={x:Static local:Converters.AtLeastOne}}" Value="{Binding Position}"
-                    VerticalAlignment="Center" Margin="8,0" />
-        </Grid>
+        <StackPanel Grid.Column="1">
+            <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto">
+                <!-- Not a Label, that would take the first underscore in a title for an access key. -->
+                <TextBlock Grid.Column="0" Classes="label" Text="{Binding Source, Converter={x:Static local:Converters.SourceToTitle}}" />
+                <Label Grid.Column="1" Content="{Binding Position, Converter={x:Static local:Converters.SecondsToTime}}" />
+                <Label Grid.Column="2" Content="/" />
+                <Label Grid.Column="3" Content="{Binding Duration, Converter={x:Static local:Converters.SecondsToTime}}" />
+                <!-- After a transition, until the track is back at its own tempo. -->
+                <Label Grid.Column="4" Content="{Binding BeatsPerMinute, Converter={x:Static local:Converters.BeatsPerMinuteDisplay}}" IsVisible="{Binding IsOffTempo}" />
+                <!-- While the next track comes in, it too. -->
+                <StackPanel Grid.Column="5" Orientation="Horizontal" IsVisible="{Binding IsMixing}">
+                    <Label Content="→" />
+                    <Label Content="{Binding IncomingPosition, Converter={x:Static local:Converters.SecondsToTime}}" />
+                    <Label Content="/" />
+                    <Label Content="{Binding IncomingDuration, Converter={x:Static local:Converters.SecondsToTime}}" />
+                </StackPanel>
+            </Grid>
 
-        <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,*" Margin="0,8,0,0">
-            <Button Grid.Column="0" Content="⏮" Command="{Binding LastCommand}" />
-            <Button Grid.Column="1"
-                    Content="{Binding IsPlaying, Converter={x:Static local:Converters.IsPlayingDisplay}}"
-                    Command="{Binding ChangePlayPauseCommand}" />
-            <Button Grid.Column="2" Content="⏏" Command="{Binding LoadCommand}" />
-            <Button Grid.Column="3" Content="⏭" Command="{Binding NextCommand}" />
-            <Button Grid.Column="4"
-                    FontSize="{Binding Volume, Converter={x:Static local:Converters.VolumeSize}}"
-                    Content="{Binding IsMuted, Converter={x:Static local:Converters.MutedDisplay}}"
-                    Command="{Binding MuteCommand}"
-                    PointerWheelChanged="Volume_PointerWheelChanged" />
-            <Slider x:Name="VolumeSlider"
-                    Grid.Column="5"
-                    Minimum="0" Maximum="100" Value="{Binding Volume}"
-                    VerticalAlignment="Center" Margin="8,0"
-                    PointerWheelChanged="Volume_PointerWheelChanged" />
-        </Grid>
-    </StackPanel>
+            <Grid ColumnDefinitions="Auto,Auto,*">
+                <ToggleButton Grid.Column="0"
+                              Content="🎛"
+                              IsChecked="{Binding Transitions}"
+                              ToolTip.Tip="Mix each track into the next, like a DJ" />
+                <!-- Its DataContext is the ShuffleRepeatViewModel, the MainWindow sets it. -->
+                <Button x:Name="ShuffleRepeatButton"
+                        Grid.Column="1"
+                        x:DataType="vm:ShuffleRepeatViewModel"
+                        Command="{Binding ChangeShuffleRepeatCommand}"
+                        Content="{Binding State, Converter={x:Static local:Converters.ShuffleRepeatContent}}" />
+                <Slider x:Name="PositionSlider"
+                        Grid.Column="2"
+                        Minimum="0" Maximum="{Binding Duration, Converter={x:Static local:Converters.AtLeastOne}}" Value="{Binding Position}"
+                        VerticalAlignment="Center" Margin="8,0" />
+            </Grid>
+
+            <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,*" Margin="0,8,0,0">
+                <Button Grid.Column="0" Content="⏮" Command="{Binding LastCommand}" />
+                <Button Grid.Column="1"
+                        Content="{Binding IsPlaying, Converter={x:Static local:Converters.IsPlayingDisplay}}"
+                        Command="{Binding ChangePlayPauseCommand}" />
+                <Button Grid.Column="2" Content="⏏" Command="{Binding LoadCommand}" />
+                <Button Grid.Column="3" Content="⏭" Command="{Binding NextCommand}" />
+                <Button Grid.Column="4"
+                        FontSize="{Binding Volume, Converter={x:Static local:Converters.VolumeSize}}"
+                        Content="{Binding IsMuted, Converter={x:Static local:Converters.MutedDisplay}}"
+                        Command="{Binding MuteCommand}"
+                        PointerWheelChanged="Volume_PointerWheelChanged" />
+                <Slider x:Name="VolumeSlider"
+                        Grid.Column="5"
+                        Minimum="0" Maximum="100" Value="{Binding Volume}"
+                        VerticalAlignment="Center" Margin="8,0"
+                        PointerWheelChanged="Volume_PointerWheelChanged" />
+            </Grid>
+        </StackPanel>
+    </Grid>
 </UserControl>
