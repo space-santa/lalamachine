@@ -41,6 +41,8 @@ namespace Lalamachine.Desktop.Views
         private readonly AvaloniaDialogService _dialogs;
         // Null where lalamachine can't decode tracks itself.
         private readonly BeatAnalysisViewModel? _beatAnalysis;
+        // Null where lalamachine doesn't have the system's media controls.
+        private readonly MediaControlsViewModel? _mediaControls;
         private bool _isCloseConfirmed;
 
         public MainWindow()
@@ -59,6 +61,12 @@ namespace Lalamachine.Desktop.Views
             var analyses = new TrackAnalysisStore(() => new LalaContext(optionsBuilder.Options));
             _audioPlayer = AudioPlayerFactory.Create(analyses);
             _player = new PlayerViewModel(_audioPlayer, _dialogs);
+#pragma warning disable CA2000 // Dispose objects before losing scope. The view model owns the controls, it disposes them.
+            if (MediaControlsFactory.Create() is { } mediaControls)
+            {
+                _mediaControls = new MediaControlsViewModel(_player, mediaControls);
+            }
+#pragma warning restore CA2000 // Dispose objects before losing scope
             _settingsViewModel = new SettingsViewModel(_dialogs, context);
             _playlistsViewModel = new PlaylistsViewModel(context, _dialogs, _settingsViewModel.JellyfinPusher, _settingsViewModel.JellyfinPuller);
             _queueViewModel = new QueueViewModel(context, _dialogs, _playlistsViewModel);
@@ -183,6 +191,7 @@ namespace Lalamachine.Desktop.Views
             finally
             {
                 _beatAnalysis?.Dispose();
+                _mediaControls?.Dispose();
                 (_audioPlayer as IDisposable)?.Dispose();
                 base.OnClosed(e);
             }
