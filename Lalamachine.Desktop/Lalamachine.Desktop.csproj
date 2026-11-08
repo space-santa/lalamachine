@@ -17,12 +17,8 @@
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="12.1.2" />
     <PackageReference Include="Avalonia.Desktop" Version="12.1.4" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.4" />
+    <!-- For Linux, where it finds the system's VLC. macOS and Windows play through lalamachine's own engine. -->
     <PackageReference Include="LibVLCSharp" Version="3.10.2" />
-  </ItemGroup>
-
-  <!-- LibVLC itself for Windows. On Linux LibVLCSharp finds the system's VLC, macOS plays through lalamachine's own engine. -->
-  <ItemGroup>
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.24" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
   </ItemGroup>
 
   <ItemGroup>
