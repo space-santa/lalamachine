@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LibLala.Audio;
+using LibLala.Audio.Mixing;
 using NUnit.Framework;
 
 namespace LibLala.Unittests.Audio
@@ -183,7 +184,51 @@ namespace LibLala.Unittests.Audio
         }
 
         [Test]
-        public void TemposTooFarApart_Crossfade_AtTheEndOfTheMusic()
+        public void TemposTooFarApart_TheNextTrackComesInOnTheDownbeatWhereTheMusicEnds()
+        {
+            _engine.Open(_a, Grid());
+            _engine.Play();
+            PlayFor(23);
+            long? aWhenBCameIn = null;
+            long? bWhenItCameIn = null;
+            var b = new CountingDecoder(60 * Rate) { Silent = true };
+            b.BeforeFirstRead = () => (aWhenBCameIn, bWhenItCameIn) = (_a.Position, b.Position);
+
+            var trackB = _engine.MixTo(b, Grid(bpm: 140));
+            PlayFor(33.1);
+
+            // The music ends with the bar at 56 s, the file 4 s later. B's first bar at 3.43 s is heard then, faded in
+            // before.
+            var lead = TransitionPlanner.CutSeconds * Rate;
+            Assert.That(aWhenBCameIn, Is.EqualTo((56 * Rate) - lead).Within(1));
+            Assert.That(bWhenItCameIn, Is.EqualTo((480.0 / 140 * Rate) - lead).Within(1));
+            Assert.That(_tookOver, Is.EqualTo(new[] { trackB }));
+        }
+
+        [Test]
+        public void ACut_OnlyFades()
+        {
+            // A only has bass. Through the crossover, it would be gone half way through.
+            _engine.Open(new SineDecoder(60, 60 * Rate), Grid());
+            _engine.Play();
+            PlayFor(23);
+            _engine.MixTo(new CountingDecoder(60 * Rate) { Silent = true }, Grid(bpm: 140));
+            PlayFor(32.9);
+
+            // To half way through the cut at 55.98 s: A at 55.99 s, the bass peaks at 55.9875 s.
+            var buffer = new float[(int)(0.09 * Rate) * AudioFormat.Channels];
+            _engine.Render(buffer);
+            var peak = 0f;
+            for (var i = buffer.Length - (Rate / 200 * AudioFormat.Channels); i < buffer.Length; i++)
+            {
+                peak = Math.Max(peak, Math.Abs(buffer[i]));
+            }
+
+            Assert.That(peak, Is.GreaterThan(0.3));
+        }
+
+        [Test]
+        public void WithoutAGrid_TheNextTrackCrossfades_AtTheEndOfTheMusic()
         {
             _engine.Open(_a, Grid());
             _engine.Play();
@@ -192,10 +237,9 @@ namespace LibLala.Unittests.Audio
             var b = new CountingDecoder(60 * Rate) { Silent = true };
             b.BeforeFirstRead = () => aWhenBCameIn = _a.Position;
 
-            _engine.MixTo(b, Grid(bpm: 140));
+            _engine.MixTo(b, null);
             PlayFor(35);
 
-            // The music ends with the bar at 56 s, the file 4 s later.
             Assert.That(aWhenBCameIn, Is.EqualTo(52 * Rate));
         }
 

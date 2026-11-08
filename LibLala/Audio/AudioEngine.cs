@@ -36,7 +36,7 @@ namespace LibLala.Audio
         // A seek goes no closer to the end of a transition, so that dragging the position slider can't finish it: the next
         // track would take over and the drag would go on in that one.
         private const double SeekMarginSeconds = 0.5;
-        // When A is already past where the transition would be over, a short one, but not shorter than this.
+        // When A is already past where the transition would be over, a short crossfade, but not shorter than this.
         private const double MinTransitionSeconds = 1;
 
         private readonly Lock _gate = new();
@@ -443,9 +443,12 @@ namespace LibLala.Audio
             double? progress = null;
             if (now >= SeekEnd(plan, outgoing.Tempo, length))
             {
-                // Past it already.
+                // Past it already. A crossfade close to the end of the file would be too short, a cut is meant to be.
                 plan = TransitionPlanner.Plan(now, length, outgoing.Grid, outgoing.Tempo, grid);
-                plan = plan with { Seconds = Math.Max(plan.Seconds, MinTransitionSeconds) };
+                if (plan.Kind == TransitionKind.Crossfade)
+                {
+                    plan = plan with { Seconds = Math.Max(plan.Seconds, MinTransitionSeconds) };
+                }
             }
             else if (now >= plan.StartA)
             {
@@ -462,14 +465,15 @@ namespace LibLala.Audio
             var isRunning = transition is { IsStarted: true };
             var from = isRunning ? transition!.Progress(_frame) : 0;
             var to = isRunning ? transition!.Progress(_frame + frames) : 0;
-            var isBeatMatched = transition?.Plan.IsBeatMatched ?? false;
+            var kind = transition?.Plan.Kind ?? TransitionKind.Crossfade;
+            var isFiltered = kind != TransitionKind.Cut;
 
             // First, so that it reads from where the step starts in the current track.
             if (_incoming is { } incoming && isRunning)
             {
                 incoming.Tempo = transition!.Plan.TempoB;
-                incoming.LowPass.Cutoff = TransitionShape.Crossover((from + to) / 2);
-                var gain = (TransitionShape.IncomingGain(from, isBeatMatched), TransitionShape.IncomingGain(to, isBeatMatched));
+                incoming.LowPass.Cutoff = isFiltered ? TransitionShape.Crossover((from + to) / 2) : incoming.LowPass.Off;
+                var gain = (TransitionShape.IncomingGain(from, kind), TransitionShape.IncomingGain(to, kind));
                 if (!RenderDeck(incoming, buffer, gain))
                 {
                     // It can't be read any more, the current track plays on as if it had never come.
@@ -483,7 +487,7 @@ namespace LibLala.Audio
 
             if (_current is { } current)
             {
-                current.HighPass.Cutoff = isRunning ? TransitionShape.Crossover((from + to) / 2) : current.HighPass.Off;
+                current.HighPass.Cutoff = isRunning && isFiltered ? TransitionShape.Crossover((from + to) / 2) : current.HighPass.Off;
                 if (!isRunning && _ramp is { } ramp)
                 {
                     current.Tempo = ramp.Tempo(_frame);
@@ -492,7 +496,7 @@ namespace LibLala.Audio
                         _ramp = null;
                     }
                 }
-                var gain = isRunning ? (TransitionShape.OutgoingGain(from, isBeatMatched), TransitionShape.OutgoingGain(to, isBeatMatched)) : (1.0, 1.0);
+                var gain = isRunning ? (TransitionShape.OutgoingGain(from, kind), TransitionShape.OutgoingGain(to, kind)) : (1.0, 1.0);
                 if (!RenderDeck(current, buffer, gain))
                 {
                     if (_incoming is not null && transition is not null)
