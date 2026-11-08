@@ -60,7 +60,7 @@ namespace LibLala.Unittests.Audio
         public void Dispose() => IsDisposed = true;
     }
 
-    // A sine at half of full scale.
+    // A sine, at half of full scale unless said otherwise.
     internal sealed class SineDecoder : IAudioDecoder
     {
         private readonly double _hz;
@@ -73,13 +73,14 @@ namespace LibLala.Unittests.Audio
         }
 
         public long Length { get; }
+        public double Amplitude { get; init; } = 0.5;
 
         public int Read(Span<float> buffer)
         {
             var frames = (int)Math.Min(buffer.Length / AudioFormat.Channels, Length - _position);
             for (var i = 0; i < frames; i++)
             {
-                var sample = (float)(0.5 * Math.Sin(2 * Math.PI * _hz * (_position + i) / AudioFormat.SampleRate));
+                var sample = (float)(Amplitude * Math.Sin(2 * Math.PI * _hz * (_position + i) / AudioFormat.SampleRate));
                 buffer[i * AudioFormat.Channels] = sample;
                 buffer[(i * AudioFormat.Channels) + 1] = sample;
             }

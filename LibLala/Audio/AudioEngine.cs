@@ -31,8 +31,6 @@ namespace LibLala.Audio
         private const double DueLeadSeconds = 2;
         // After a transition the track comes back to its own tempo over this many bars.
         private const int TempoRampBars = 8;
-        // While two tracks play, peaks above this are rounded off instead of clipping.
-        private const float SoftClipFrom = 0.9f;
         // A seek goes no closer to the end of a transition, so that dragging the position slider can't finish it: the next
         // track would take over and the drag would go on in that one.
         private const double SeekMarginSeconds = 0.5;
@@ -44,6 +42,11 @@ namespace LibLala.Audio
         // What Render made and the output didn't play yet, oldest first.
         private readonly Queue<Chunk> _rendered = new();
         private readonly float[] _deckBuffer = new float[StepFrames * AudioFormat.Channels];
+        // A step of the mix on its way into the limiter.
+        private readonly float[] _mixBuffer = new float[StepFrames * AudioFormat.Channels];
+        // While two tracks play, the mix goes through it: two loud tracks add up to more than full scale. Else it's out of
+        // the way, the mix comes out as it is.
+        private readonly Limiter _limiter = new();
         // What Render raises once it let go of the lock. Only used by Render, under the lock.
         private readonly List<(EventHandler<TrackEventArgs>? Handler, int Track)> _events = [];
         // The track that plays, and goes out in a transition.
@@ -332,6 +335,14 @@ namespace LibLala.Audio
                 var done = 0;
                 while (done < frames)
                 {
+                    if (_limiter.Held > 0 && (_limiter.Held < Limiter.LookAheadFrames || (_transition is not { IsStarted: true } && _limiter.IsIdle)))
+                    {
+                        // One track again and nothing left to turn down: what the limiter holds comes out, then the mix as
+                        // it is.
+                        done += _limiter.Drain(buffer[(done * AudioFormat.Channels)..]);
+                        continue;
+                    }
+
                     var step = Math.Min(StepFrames, frames - done);
                     if (_transition is { IsStarted: false } waiting)
                     {
@@ -346,14 +357,30 @@ namespace LibLala.Audio
                         }
                     }
 
-                    MixStep(buffer.Slice(done * AudioFormat.Channels, step * AudioFormat.Channels));
+                    if (_transition is { IsStarted: true } && _limiter.Held == 0)
+                    {
+                        Prime();
+                    }
+
+                    var output = buffer.Slice(done * AudioFormat.Channels, step * AudioFormat.Channels);
+                    if (_limiter.Held > 0)
+                    {
+                        var mix = _mixBuffer.AsSpan(0, output.Length);
+                        mix.Clear();
+                        MixStep(mix);
+                        _limiter.Process(mix, output, limit: _transition is { IsStarted: true });
+                    }
+                    else
+                    {
+                        MixStep(output);
+                    }
                     done += step;
                     _frame += step;
                     FinishTransition();
                     CheckDue();
                 }
 
-                var isEnd = _current is { IsEnded: true } && _transition is null;
+                var isEnd = _current is { IsEnded: true } && _transition is null && _limiter.Held == 0;
                 var incoming = _transition is { IsStarted: true } ? _incoming : null;
                 _rendered.Enqueue(new Chunk(_current?.Track ?? 0, _current?.Position ?? 0, _current?.Decoder.Length ?? 0, isEnd, incoming?.Position, incoming?.Decoder.Length ?? 0));
                 if (_events.Count > 0)
@@ -516,10 +543,22 @@ namespace LibLala.Audio
                     transition.StartAt(_frame + frames);
                 }
             }
+        }
 
-            if (isRunning && _incoming is not null)
+        // Two tracks play from here: the mix goes ahead of what comes out, for the limiter to see their peaks coming.
+        private void Prime()
+        {
+            for (var left = Limiter.LookAheadFrames; left > 0;)
             {
-                SoftClip(buffer);
+                var step = Math.Min(StepFrames, left);
+                var mix = _mixBuffer.AsSpan(0, step * AudioFormat.Channels);
+                mix.Clear();
+                MixStep(mix);
+                _limiter.Prime(mix);
+                left -= step;
+                _frame += step;
+                FinishTransition();
+                CheckDue();
             }
         }
 
@@ -603,20 +642,6 @@ namespace LibLala.Audio
 
         private static double DueAt(Deck deck) => TransitionPlanner.EarliestStart(deck.Decoder.Length / (double)AudioFormat.SampleRate, deck.Grid) - DueLeadSeconds;
 
-        private static void SoftClip(Span<float> buffer)
-        {
-            const float room = 1 - SoftClipFrom;
-            for (var i = 0; i < buffer.Length; i++)
-            {
-                var x = buffer[i];
-                var size = Math.Abs(x);
-                if (size > SoftClipFrom)
-                {
-                    buffer[i] = MathF.CopySign(SoftClipFrom + (room * MathF.Tanh((size - SoftClipFrom) / room)), x);
-                }
-            }
-        }
-
         private int Replace(IAudioDecoder? decoder, BeatGrid? grid)
         {
             _isPlaying = false;
@@ -637,6 +662,7 @@ namespace LibLala.Audio
                 _isFailed = false;
                 _isEndPlayed = false;
                 _rendered.Clear();
+                _limiter.Clear();
                 _frame = 0;
                 _start = 0;
                 _playedTrack = track;
@@ -657,6 +683,7 @@ namespace LibLala.Audio
             lock (_gate)
             {
                 _rendered.Clear();
+                _limiter.Clear();
                 _frame = 0;
                 _isEndPlayed = false;
                 _ramp = null;

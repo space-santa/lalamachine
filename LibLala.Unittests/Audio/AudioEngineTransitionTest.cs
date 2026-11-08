@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using LibLala.Audio;
 using LibLala.Audio.Mixing;
@@ -101,6 +102,35 @@ namespace LibLala.Unittests.Audio
             MixAt23Seconds(new CountingDecoder(60 * Rate) { Silent = true }, new SineDecoder(60, 60 * Rate));
 
             Assert.That(PlayFor(17.5), Is.EqualTo(0.5).Within(0.02));
+        }
+
+        [Test]
+        public void TwoLoudTracks_StayUnderTheCeiling()
+        {
+            // A's highs and B's bass go through the crossover at full level most of the way, together nearly twice full scale.
+            MixAt23Seconds(new SineDecoder(5000, 60 * Rate) { Amplitude = 0.9 }, new SineDecoder(60, 60 * Rate) { Amplitude = 0.9 });
+            PlayFor(1);
+
+            var peaks = Enumerable.Range(0, 320).Select(i => PlayFor(0.1)).ToList();
+
+            Assert.That(peaks.Max(), Is.LessThanOrEqualTo(Limiter.Ceiling + 1e-6));
+            // Half way, both are there.
+            Assert.That(peaks[160], Is.EqualTo(Limiter.Ceiling).Within(0.01));
+        }
+
+        [Test]
+        public void AfterTheTransition_TheNextTrackComesOutAsItIs()
+        {
+            // Every sample of B is far above full scale, the limiter turns it all the way down while A is there.
+            var b = new CountingDecoder(60 * Rate);
+            MixAt23Seconds(_a, b);
+            PlayFor(33 + 2);
+            var position = _engine.Position;
+
+            var buffer = new float[100 * AudioFormat.Channels];
+            _engine.Render(buffer);
+
+            Assert.That(Enumerable.Range(0, 100).Select(i => buffer[i * AudioFormat.Channels]), Is.EqualTo(Enumerable.Range(0, 100).Select(i => (float)(position + i))));
         }
 
         [Test]
