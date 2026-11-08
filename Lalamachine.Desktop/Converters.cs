@@ -34,9 +34,15 @@ namespace Lalamachine.Desktop
 
         public static readonly IValueConverter VolumeSize = new FuncValueConverter<double, double>(volume => Math.Floor(16.0 / 100 * volume + 12));
 
-        public static readonly IValueConverter SourceToTitle = new FuncValueConverter<string?, string>(TitleOf);
+        // The artist too, before the title.
+        public static readonly IValueConverter TrackToTitle = new FuncValueConverter<TrackInfo?, string>(track => track switch
+        {
+            null => "",
+            { Artist.Length: > 0 } => $"{track.Artist} - {track.Title}",
+            _ => track.Title,
+        });
 
-        public static readonly IValueConverter SourceToCover = new FuncValueConverter<string?, Bitmap?>(CoverOf);
+        public static readonly IValueConverter CoverToBitmap = new FuncValueConverter<byte[]?, Bitmap?>(BitmapOf);
 
         // Twice as wide as Border.cover, sharp on a screen with a high resolution too. Not the thousands of pixels a cover can have.
         private const int CoverWidth = 2 * 136;
@@ -58,35 +64,17 @@ namespace Lalamachine.Desktop
             }
         }
 
-        private static string TitleOf(string? source)
-        {
-            if (string.IsNullOrEmpty(source))
-            {
-                return "";
-            }
-
-            try
-            {
-                var tags = new TagReader().Read(source);
-                return $"{tags.ArtistString} - {tags.Title}";
-            }
-            catch (TagReaderException)
-            {
-                return System.IO.Path.GetFileNameWithoutExtension(source);
-            }
-        }
-
         // Null when the track has no cover, or one that can't be shown.
-        private static Bitmap? CoverOf(string? source)
+        private static Bitmap? BitmapOf(byte[]? cover)
         {
-            if (string.IsNullOrEmpty(source) || CoverArt.Read(source) is not { } image)
+            if (cover is null)
             {
                 return null;
             }
 
             try
             {
-                using var stream = new MemoryStream(image);
+                using var stream = new MemoryStream(cover);
                 return Bitmap.DecodeToWidth(stream, CoverWidth);
             }
             catch (ArgumentException)

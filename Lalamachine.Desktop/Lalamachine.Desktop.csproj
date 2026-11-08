@@ -3,6 +3,12 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
+    <!-- For Windows, with its WinRT APIs for the media controls: for a Windows runtime, like publish -r win-x64 on any
+         system, and for none when built on Windows. -p:ForWindows=true elsewhere sees that it compiles. -->
+    <ForWindows Condition="'$(ForWindows)' == '' And '$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier.StartsWith('win'))</ForWindows>
+    <ForWindows Condition="'$(ForWindows)' == '' And '$(OS)' == 'Windows_NT'">true</ForWindows>
+    <TargetFramework Condition="'$(ForWindows)' == 'true'">net10.0-windows10.0.19041.0</TargetFramework>
+    <EnableWindowsTargeting Condition="'$(ForWindows)' == 'true'">true</EnableWindowsTargeting>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\lalamachine.ico</ApplicationIcon>
     <Version>4.99.18</Version>

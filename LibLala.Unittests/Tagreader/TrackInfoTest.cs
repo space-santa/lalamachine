@@ -7,7 +7,7 @@ using TestHelpers;
 
 namespace LibLala.Unittests.Tagreader
 {
-    public class CoverArtTest
+    public class TrackInfoTest
     {
         private static readonly byte[] Cover = [0xFF, 0xD8, 0xFF, 0xE0, 1];
         private static readonly byte[] Logo = [0xFF, 0xD8, 0xFF, 0xE0, 2];
@@ -28,9 +28,42 @@ namespace LibLala.Unittests.Tagreader
         }
 
         [Test]
-        public void Read_OfATrackWithoutPictures_IsNull()
+        public void Read_GivesTitleArtistAndAlbum()
         {
-            Assert.That(CoverArt.Read(_path), Is.Null);
+            TestMp3.Write(_path, "Netherworld", "Somebody", "Underground");
+
+            Assert.That(TrackInfo.Read(_path), Is.EqualTo(new TrackInfo("Netherworld", "Somebody", "Underground", null)));
+        }
+
+        [Test]
+        public void Read_OfATrackWithoutTags_GivesItsFileName()
+        {
+            TestMp3.Write(_path);
+
+            Assert.That(TrackInfo.Read(_path), Is.EqualTo(new TrackInfo(Path.GetFileNameWithoutExtension(_path), "", "", null)));
+        }
+
+        [Test]
+        public void Read_OfAFileWhoseNameLooksEscaped_ReadsThatFile()
+        {
+            // Not "100% Club".
+            File.Delete(_path);
+            _path = Path.Combine(Path.GetTempPath(), $"lalatest-{Guid.NewGuid()} 100%25 Club.mp3");
+            TestMp3.Write(_path, "Live", "Somebody");
+
+            Assert.That(TrackInfo.Read(_path), Is.EqualTo(new TrackInfo("Live", "Somebody", "", null)));
+        }
+
+        [Test]
+        public void Read_OfNothing_IsNone()
+        {
+            Assert.That(TrackInfo.Read(""), Is.SameAs(TrackInfo.None));
+        }
+
+        [Test]
+        public void Read_OfATrackWithoutPictures_HasNoCover()
+        {
+            Assert.That(TrackInfo.Read(_path).Cover, Is.Null);
         }
 
         [Test]
@@ -38,7 +71,7 @@ namespace LibLala.Unittests.Tagreader
         {
             AddPictures(Picture(TagLib.PictureType.PublisherLogo, Logo), Picture(TagLib.PictureType.FrontCover, Cover));
 
-            Assert.That(CoverArt.Read(_path), Is.EqualTo(Cover));
+            Assert.That(TrackInfo.Read(_path).Cover, Is.EqualTo(Cover));
         }
 
         [Test]
@@ -46,7 +79,7 @@ namespace LibLala.Unittests.Tagreader
         {
             AddPictures(Picture(TagLib.PictureType.Other, Cover));
 
-            Assert.That(CoverArt.Read(_path), Is.EqualTo(Cover));
+            Assert.That(TrackInfo.Read(_path).Cover, Is.EqualTo(Cover));
         }
 
         [Test]
@@ -60,23 +93,23 @@ namespace LibLala.Unittests.Tagreader
                 Description = "Key",
             });
 
-            Assert.That(CoverArt.Read(_path), Is.Null);
+            Assert.That(TrackInfo.Read(_path).Cover, Is.Null);
         }
 
         [Test]
-        public void Read_OfAFileThatIsntAudio_IsNull()
+        public void Read_OfAFileThatIsntAudio_GivesItsFileName()
         {
             TestMp3.WriteBroken(_path);
 
-            Assert.That(CoverArt.Read(_path), Is.Null);
+            Assert.That(TrackInfo.Read(_path), Is.EqualTo(new TrackInfo(Path.GetFileNameWithoutExtension(_path), "", "", null)));
         }
 
         [Test]
-        public void Read_OfAFileThatIsntThere_IsNull()
+        public void Read_OfAFileThatIsntThere_GivesItsFileName()
         {
             File.Delete(_path);
 
-            Assert.That(CoverArt.Read(_path), Is.Null);
+            Assert.That(TrackInfo.Read(_path), Is.EqualTo(new TrackInfo(Path.GetFileNameWithoutExtension(_path), "", "", null)));
         }
 
         private static TagLib.Picture Picture(TagLib.PictureType type, byte[] data) =>

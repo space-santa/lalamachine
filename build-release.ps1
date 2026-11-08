@@ -5,7 +5,7 @@ $ErrorActionPreference = "Stop"
 
 $appProject = Join-Path $PSScriptRoot "Lalamachine.Desktop\Lalamachine.Desktop.csproj"
 $installerProject = Join-Path $PSScriptRoot "install-forge.ifp"
-$publishDir = "Lalamachine.Desktop\bin\Release\net10.0\win-x64\publish"
+$publishDir = "Lalamachine.Desktop\bin\Release\net10.0-windows10.0.19041.0\win-x64\publish"
 $publishPath = Join-Path $PSScriptRoot $publishDir
 
 $builder = (Get-Command ifbuildx86.exe -ErrorAction SilentlyContinue).Source

@@ -13,6 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\LibLala.Unittests\TestMp3.cs" Link="TestMp3.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Lalamachine.ViewModel\Lalamachine.ViewModel.csproj" />
   </ItemGroup>
 
