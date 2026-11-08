@@ -14,7 +14,8 @@ jobs:
         with:
           dotnet-version: 10.0.x
       - run: dotnet build lalamachine.sln
-      - run: dotnet test lalamachine.sln --no-build
+      # Not the tests that need speakers, a runner may have none.
+      - run: dotnet test lalamachine.sln --no-build --filter "TestCategory!=AudioDevice"
 
   build-macos:
     runs-on: macos-latest

@@ -38,7 +38,7 @@ namespace Lalamachine.Desktop.Services
             _engine = new AudioEngine(createOutput) { Clicks = clicks };
             _engine.TransitionDue += (sender, e) => PostForTrack(e.Track, () => TransitionDue?.Invoke(this, EventArgs.Empty));
             _engine.TookOver += (sender, e) => Post(() => TakeOver(e.Track));
-            // Stopped, the output doesn't keep the Mac awake with silence.
+            // Stopped, the output doesn't keep the computer awake with silence.
             _engine.Ended += (sender, e) => PostForTrack(e.Track, () =>
             {
                 Stop();

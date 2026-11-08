@@ -97,7 +97,7 @@ namespace Lalamachine.Desktop.Views
 
             if (AudioPlayerFactory.DecoderFactory() is { } openDecoder)
             {
-                // A quarter of the cores, the analysis shouldn't make the Mac's fans spin up.
+                // A quarter of the cores, the analysis shouldn't make the computer's fans spin up.
                 _beatAnalysis = new BeatAnalysisViewModel(analyses, openDecoder, Math.Clamp(Environment.ProcessorCount / 4, 1, 4));
                 _libraryViewModel.ScanningChanged += _beatAnalysis.ScanningChangedHandler;
                 SettingsPanel.BeatAnalysisStatus.DataContext = _beatAnalysis;
