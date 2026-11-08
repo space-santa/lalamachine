@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using LibLala.DomainPrimitives;
 using LibLala.LibLalaTagReader;
 using NSubstitute;
@@ -18,13 +19,13 @@ namespace Lalamachine.ViewModel.Unittests
         public void SetUp()
         {
             _player = Substitute.For<IAudioPlayer>();
-            _player.Source.Returns(new Uri("file:///music/a.mp3"));
+            _player.Source.Returns(UriOf("a"));
             _viewModel = new PlayerViewModel(_player, Substitute.For<IDialogService>(), new PlayerSettings(new InMemorySettingsFile()));
             // Wired like the queue in the main window.
             _list = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
             foreach (var name in new[] { "a", "b", "c" })
             {
-                _list.AddTrack(new LibLalaTagsBuilder(name, new UncheckedTrackPath($"/music/{name}.mp3"), 5).Build());
+                _list.AddTrack(new LibLalaTagsBuilder(name, new UncheckedTrackPath(PathOf(name)), 5).Build());
             }
             _viewModel.PlayNextTrackEvent += _list.PlayNextTrackHandler;
             _viewModel.PeekNextTrackEvent += _list.PeekNextTrackHandler;
@@ -46,7 +47,7 @@ namespace Lalamachine.ViewModel.Unittests
         {
             _player.TransitionDue += Raise.Event();
 
-            _player.Received(1).MixTo(new Uri("/music/b.mp3"));
+            _player.Received(1).MixTo(UriOf("b"));
             _player.DidNotReceive().Open(Arg.Any<Uri>());
             Assert.That(_list.CurrentIndex, Is.Zero);
             Assert.That(_viewModel.IsPlaying, Is.True);
@@ -72,7 +73,7 @@ namespace Lalamachine.ViewModel.Unittests
             _viewModel.NextCommand.Execute(null);
             _player.MixedIn += Raise.Event();
 
-            _player.Received(1).Open(new Uri("/music/b.mp3"));
+            _player.Received(1).Open(UriOf("b"));
             Assert.That(_list.CurrentIndex, Is.EqualTo(1));
         }
 
@@ -86,7 +87,7 @@ namespace Lalamachine.ViewModel.Unittests
             Assert.That(_list.CurrentIndex, Is.Zero);
             _player.MediaEnded += Raise.Event();
 
-            _player.Received(1).Open(new Uri("/music/b.mp3"));
+            _player.Received(1).Open(UriOf("b"));
         }
 
         [Test]
@@ -98,7 +99,7 @@ namespace Lalamachine.ViewModel.Unittests
 
             _viewModel.NextCommand.Execute(null);
 
-            _player.Received(1).Open(new Uri("/music/b.mp3"));
+            _player.Received(1).Open(UriOf("b"));
         }
 
         [Test]
@@ -109,7 +110,7 @@ namespace Lalamachine.ViewModel.Unittests
 
             _viewModel.NextCommand.Execute(null);
 
-            _player.Received(1).Open(new Uri("/music/c.mp3"));
+            _player.Received(1).Open(UriOf("c"));
         }
 
         [Test]
@@ -123,7 +124,7 @@ namespace Lalamachine.ViewModel.Unittests
             _player.DidNotReceive().Open(Arg.Any<Uri>());
             _player.TransitionDue += Raise.Event();
 
-            _player.Received(1).MixTo(new Uri("/music/c.mp3"));
+            _player.Received(1).MixTo(UriOf("c"));
         }
 
         [Test]
@@ -250,6 +251,11 @@ namespace Lalamachine.ViewModel.Unittests
 
             _player.DidNotReceive().MixTo(Arg.Any<Uri>());
         }
+
+        // Rooted where the tests run, /music on macOS and C:\music on Windows: a URI takes a path only when it's rooted.
+        private static string PathOf(string name) => Path.GetFullPath($"/music/{name}.mp3");
+
+        private static Uri UriOf(string name) => new(PathOf(name));
 
         private sealed class InMemorySettingsFile : SettingsFile
         {
