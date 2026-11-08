@@ -22,8 +22,8 @@ namespace LibLala.Audio.Mixing
         public const int Bars = 16;
         // Shorter, the filters would sweep too fast to sound like a mix.
         public const int MinBars = 4;
-        // Further, stretching would be heard.
-        public const double MaxTempoChange = 0.08;
+        // Further, SoundTouch's stretching is heard: 7% was, grainy.
+        public const double MaxTempoChange = 0.05;
         public const double CrossfadeSeconds = 4;
         // Long enough not to click.
         public const double CutSeconds = 0.02;

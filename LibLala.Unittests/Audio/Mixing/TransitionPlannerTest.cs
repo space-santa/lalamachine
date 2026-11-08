@@ -88,6 +88,8 @@ namespace LibLala.Unittests.Audio.Mixing
         // B's bars from 0 s, its music from 4 s: at 140 BPM in the bar from 3.43 s, at 100 BPM in the one from 2.4 s.
         [TestCase(140, 480.0 / 140)]
         [TestCase(100, 2.4)]
+        // 7% slower, like 138 BPM into 128.
+        [TestCase(120 * 138 / 128.0, 480 / (120 * 138 / 128.0))]
         public void TemposTooFarApart_CutOnTheDownbeatWhereTheMusicEnds(double bpmB, double firstBarB)
         {
             var plan = TransitionPlanner.Plan(nowA: 100, lengthA: 310, Grid(), tempoA: 1, Grid(bpm: bpmB));
