@@ -45,6 +45,12 @@ namespace LibLala.MediaControls.MacOS
         // Loaded before their classes are looked up, AppKit for NSImage: the app has it already, the tests don't. They stay
         // loaded, a framework can't be unloaded anyway.
         private static readonly IntPtr MediaPlayer = LoadFrameworks();
+        // Here, after the frameworks: the runtime sets the static fields in this order, but not before one of them is used.
+        // A class looked up before MediaPlayer is loaded is nil, and every message to nil does nothing, without an error.
+        private static readonly IntPtr CommandCenterClass = FindClass("MPRemoteCommandCenter");
+        private static readonly IntPtr InfoCenterClass = FindClass("MPNowPlayingInfoCenter");
+        private static readonly IntPtr ArtworkClass = FindClass("MPMediaItemArtwork");
+        private static readonly IntPtr ImageClass = FindClass("NSImage");
         private static readonly Dictionary<IntPtr, MediaCommand> CommandOfAction = Commands.ToDictionary(command => ObjectiveC.Selector(command.Action), command => command.Command);
         private static readonly IntPtr TargetClass = CreateTargetClass();
 
@@ -73,8 +79,8 @@ namespace LibLala.MediaControls.MacOS
             var pool = ObjectiveC.AutoreleasePoolPush();
             try
             {
-                var commandCenter = ObjectiveC.Send(ObjectiveC.GetClass("MPRemoteCommandCenter"), "sharedCommandCenter");
-                _infoCenter = ObjectiveC.Send(ObjectiveC.GetClass("MPNowPlayingInfoCenter"), "defaultCenter");
+                var commandCenter = ObjectiveC.Send(CommandCenterClass, "sharedCommandCenter");
+                _infoCenter = ObjectiveC.Send(InfoCenterClass, "defaultCenter");
                 // Owned until Dispose: a command doesn't keep its target.
                 _target = ObjectiveC.Send(ObjectiveC.Send(TargetClass, "alloc"), "init");
                 _commands = [.. Commands.Select(command => ObjectiveC.Send(commandCenter, command.Getter))];
@@ -251,6 +257,13 @@ namespace LibLala.MediaControls.MacOS
             return NativeLibrary.Load(MediaPlayerPath);
         }
 
+        // Of the frameworks loaded above.
+        private static IntPtr FindClass(string name)
+        {
+            var cls = ObjectiveC.GetClass(name);
+            return cls != IntPtr.Zero ? cls : throw new InvalidOperationException($"macOS has no Objective-C class {name}.");
+        }
+
         // Owned, zero when it isn't a picture that macOS can read.
         private static unsafe IntPtr CreateImage(byte[] picture)
         {
@@ -260,7 +273,7 @@ namespace LibLala.MediaControls.MacOS
                 // A copy, autoreleased.
                 data = ObjectiveC.Send(ObjectiveC.GetClass("NSData"), ObjectiveC.Selector("dataWithBytes:length:"), bytes, (nuint)picture.Length);
             }
-            var image = ObjectiveC.Send(ObjectiveC.Send(ObjectiveC.GetClass("NSImage"), "alloc"), "initWithData:", data);
+            var image = ObjectiveC.Send(ObjectiveC.Send(ImageClass, "alloc"), "initWithData:", data);
             // It takes any data, whether it's a picture shows when it's read.
             if (image != IntPtr.Zero && !ObjectiveC.SendForBool(image, ObjectiveC.Selector("isValid")))
             {
@@ -299,7 +312,7 @@ namespace LibLala.MediaControls.MacOS
             if (image != IntPtr.Zero)
             {
                 var size = ObjectiveC.SendForSize(image, ObjectiveC.Selector("size"));
-                _artwork = ObjectiveC.Send(ObjectiveC.Send(ObjectiveC.GetClass("MPMediaItemArtwork"), "alloc"), ObjectiveC.Selector("initWithBoundsSize:requestHandler:"), size, ArtworkBlock);
+                _artwork = ObjectiveC.Send(ObjectiveC.Send(ArtworkClass, "alloc"), ObjectiveC.Selector("initWithBoundsSize:requestHandler:"), size, ArtworkBlock);
             }
         }
 
