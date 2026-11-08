@@ -59,9 +59,16 @@ namespace LibLala.Unittests.FileExporter
         [Test]
         public void ExporterDirectory_GetDirectorySuffix_IsProperlyFormattedCurrentDateTime()
         {
-            var expected = DateTime.Now.ToString("-yyyyMMdd_HHmmss", LibLala.Constants.CULTURE);
-            var exporterDirectory = new ExporterDirectory();
-            Assert.That(expected == exporterDirectory.GetDirectorySuffix());
+            // A clock of its own: read twice, the real one can be in the next second the second time.
+            var exporterDirectory = new ExporterDirectory(new FixedTime(new DateTimeOffset(2018, 3, 4, 11, 22, 33, TimeSpan.Zero)));
+            Assert.That(exporterDirectory.GetDirectorySuffix(), Is.EqualTo("-20180304_112233"));
+        }
+
+        private sealed class FixedTime(DateTimeOffset now) : TimeProvider
+        {
+            public override DateTimeOffset GetUtcNow() => now;
+
+            public override TimeZoneInfo LocalTimeZone => TimeZoneInfo.Utc;
         }
     }
 }

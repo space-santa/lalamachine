@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
 using LalaDb.Data;
+using LalaDb.Model;
 using Lalamachine.Desktop.Services;
 using Lalamachine.ViewModel;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,7 @@ namespace Lalamachine.Desktop.Views
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1001:Types that own disposable fields should be disposable", Justification = "The audio player is disposed when the window closes.")]
     public partial class MainWindow : Window
     {
-        private readonly VlcAudioPlayer _audioPlayer;
+        private readonly IAudioPlayer _audioPlayer;
         private readonly PlayerViewModel _player;
         private readonly QueueViewModel _queueViewModel;
         private readonly PlaylistsViewModel _playlistsViewModel;
@@ -38,6 +39,8 @@ namespace Lalamachine.Desktop.Views
         private readonly LibraryViewModel _libraryViewModel;
         private readonly LibraryPlaylistViewModel _libraryPlaylistViewModel;
         private readonly AvaloniaDialogService _dialogs;
+        // Null where lalamachine can't decode tracks itself.
+        private readonly BeatAnalysisViewModel? _beatAnalysis;
         private bool _isCloseConfirmed;
 
         public MainWindow()
@@ -53,7 +56,8 @@ namespace Lalamachine.Desktop.Views
             context.Database.Migrate();
 
             _dialogs = new AvaloniaDialogService(this);
-            _audioPlayer = new VlcAudioPlayer();
+            var analyses = new TrackAnalysisStore(() => new LalaContext(optionsBuilder.Options));
+            _audioPlayer = AudioPlayerFactory.Create(analyses);
             _player = new PlayerViewModel(_audioPlayer, _dialogs);
             _settingsViewModel = new SettingsViewModel(_dialogs, context);
             _playlistsViewModel = new PlaylistsViewModel(context, _dialogs, _settingsViewModel.JellyfinPusher);
@@ -73,6 +77,9 @@ namespace Lalamachine.Desktop.Views
             _player.PlayLastPlaylistTrackEvent += _playlistsViewModel.PlayLastTrackHandler;
             _player.PlayNextLibraryTrackEvent += _libraryPlaylistViewModel.PlayNextTrackHandler;
             _player.PlayLastLibraryTrackEvent += _libraryPlaylistViewModel.PlayLastTrackHandler;
+            _player.PeekNextTrackEvent += _queueViewModel.PeekNextTrackHandler;
+            _player.PeekNextPlaylistTrackEvent += _playlistsViewModel.PeekNextTrackHandler;
+            _player.PeekNextLibraryTrackEvent += _libraryPlaylistViewModel.PeekNextTrackHandler;
 
             _queueViewModel.PlayTrackEvent += _player.PlayTrackHandler;
             _playlistsViewModel.PlayTrackEvent += _player.PlayTrackHandler;
@@ -87,6 +94,15 @@ namespace Lalamachine.Desktop.Views
             _libraryViewModel.DisplayLibChanged += _libraryPlaylistViewModel.DisplayChangedHandler;
             _libraryViewModel.FiltersCleared += _libraryPlaylistViewModel.ClearKeyFilterHandler;
             _libraryViewModel.AddTracksToQueueEvent += _queueViewModel.AddTracksToQueueHandler;
+
+            if (AudioPlayerFactory.DecoderFactory() is { } openDecoder)
+            {
+                // A quarter of the cores, the analysis shouldn't make the computer's fans spin up.
+                _beatAnalysis = new BeatAnalysisViewModel(analyses, openDecoder, Math.Clamp(Environment.ProcessorCount / 4, 1, 4));
+                _libraryViewModel.ScanningChanged += _beatAnalysis.ScanningChangedHandler;
+                SettingsPanel.BeatAnalysisStatus.DataContext = _beatAnalysis;
+                _beatAnalysis.Start();
+            }
 
             Player.DataContext = _player;
             Player.ShuffleRepeatButton.DataContext = _shuffleRepeatViewModel;
@@ -166,7 +182,8 @@ namespace Lalamachine.Desktop.Views
             }
             finally
             {
-                _audioPlayer.Dispose();
+                _beatAnalysis?.Dispose();
+                (_audioPlayer as IDisposable)?.Dispose();
                 base.OnClosed(e);
             }
         }

@@ -16,4 +16,9 @@
     <ProjectReference Include="..\LibLala\LibLala.csproj" />
   </ItemGroup>
 
+  <!-- Made with ffmpeg and LAME, the tests can't encode real audio themselves. -->
+  <ItemGroup>
+    <None Update="Audio\Files\*.mp3" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

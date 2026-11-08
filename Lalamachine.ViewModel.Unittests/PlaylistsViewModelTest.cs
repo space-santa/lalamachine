@@ -363,6 +363,26 @@ namespace Lalamachine.ViewModel.Unittests
             Assert.That(playedPath, Is.EqualTo(PathOf("c")));
         }
 
+        // Asked for a track to mix in before the end, which is no next yet.
+        [Test]
+        public void DeletePlaylist_WhilePlaying_NothingIsNextToMixIn_AndNextAfterThatStillStops()
+        {
+            var viewModel = ViewModelWith(("Aaa", ["a", "b"]), ("Bbb", ["c"]));
+            var playlist = Select(viewModel, "Aaa");
+            playlist.PlayTrackCommand.Execute(playlist.Playlist[0]);
+            _dialogs.ConfirmAsync(Arg.Any<string>()).Returns(Task.FromResult(true));
+            viewModel.DeletePlaylistCommand.Execute(null);
+            var playedPath = "";
+            viewModel.PlayTrackEvent += (o, e) => playedPath = e.Path;
+            var next = new NextTrackEventArgs();
+
+            viewModel.PeekNextTrackHandler(null, next);
+            Assert.That(next.Track, Is.Null);
+
+            viewModel.PlayNextTrackHandler(null, System.EventArgs.Empty);
+            Assert.That(playedPath, Is.Empty);
+        }
+
         [Test]
         public void DeletePlaylist_WhilePlaying_PreviousAfterThatPlaysTheSelectedPlaylist()
         {
@@ -1153,6 +1173,22 @@ namespace Lalamachine.ViewModel.Unittests
 
             Assert.That(Titles(playlist), Is.EqualTo(new[] { "new title", "b" }));
             Assert.That(playlist.CurrentIndex, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ScanDuringATransition_TheTrackMixedInIsStillTheListedOne()
+        {
+            var viewModel = ViewModelWith(("Aaa", ["a", "b", "c"]));
+            var playlist = Select(viewModel, "Aaa");
+            playlist.PlayTrackCommand.Execute(playlist.Playlist[0]);
+            var next = new NextTrackEventArgs();
+            viewModel.PeekNextTrackHandler(null, next);
+            viewModel.ScanningChangedHandler(null, new ScanningChangedEventArgs(false));
+
+            playlist.WentOnTo(next.Track!);
+
+            Assert.That(playlist.CurrentIndex, Is.EqualTo(1));
+            Assert.That(playlist.NextTrack?.Path, Is.EqualTo(PathOf("c")));
         }
 
         private void RemoveFromLibrary(string title)

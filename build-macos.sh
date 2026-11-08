@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Publishes the app, wraps it in lalamachine.app and builds dist/lalamachine_<version>_<arch>.dmg.
 # Usage: ./build-macos.sh [x64|arm64], defaults to the architecture of this Mac.
-# Has to run on macOS: the LibVLC package for the Mac is only referenced when building there.
+# Has to run on macOS: it signs the app and makes the disk image with macOS's tools.
 
 root="$(cd "$(dirname "$0")" && pwd)"
 project="$root/Lalamachine.Desktop/Lalamachine.Desktop.csproj"
@@ -74,10 +74,6 @@ plutil -lint "$app/Contents/Info.plist" > /dev/null
 
 if [ ! -x "$app/Contents/MacOS/Lalamachine.Desktop" ]; then
   echo "The publish output has no Lalamachine.Desktop executable, Info.plist points at it." >&2
-  exit 1
-fi
-if [ ! -f "$app/Contents/MacOS/libvlc/$rid/lib/libvlc.dylib" ]; then
-  echo "LibVLC for $rid is missing from the publish output, the app couldn't play anything." >&2
   exit 1
 fi
 

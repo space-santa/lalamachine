@@ -42,7 +42,6 @@
       <InstallationFile size="19.8 KB" type="pdb">Lalamachine.Desktop\bin\Release\net10.0\win-x64\publish\LibLala.pdb</InstallationFile>
       <InstallationFile size="11.1 MB" type="dll">Lalamachine.Desktop\bin\Release\net10.0\win-x64\publish\libSkiaSharp.dll</InstallationFile>
       <InstallationFile size="12.2 KB" type="pdb">Lalamachine.Desktop\bin\Release\net10.0\win-x64\publish\Settings.pdb</InstallationFile>
-      <InstallationFile size="106.4 MB" type="[Folder]">Lalamachine.Desktop\bin\Release\net10.0\win-x64\publish\libvlc</InstallationFile>
       <InstallationFile size="99.2 KB" type="ico">Lalamachine.Desktop\Assets\lalamachine.ico</InstallationFile>
     </InstallationFiles>
     <Languages/>

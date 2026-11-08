@@ -172,7 +172,11 @@ namespace Lalamachine.Desktop.Views
                 var dragStart = _dragStart;
                 _dragStart = null;
                 using var data = new DataTransfer();
-                data.Add(DataTransferItem.Create(TrackFormat, track));
+                var item = DataTransferItem.Create(TrackFormat, track);
+                // An in-process format doesn't go on the macOS pasteboard, and a drag without anything on it ends the app:
+                // "There must be 1 draggingItem per pasteboardItem". The path as text is something for it.
+                item.SetText(track.Path);
+                data.Add(item);
                 await DragDrop.DoDragDropAsync(dragStart, data, DragDropEffects.Move).ConfigureAwait(true);
             }
 
