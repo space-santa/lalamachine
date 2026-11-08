@@ -95,6 +95,10 @@ namespace Lalamachine.Desktop.Services
 
         public TimeSpan? IncomingDuration => _engine.IncomingLength is { } frames ? ToTime(frames) : null;
 
+        public double Tempo => _engine.Tempo;
+
+        public double? BeatsPerMinute => _engine.BeatsPerMinute;
+
         public TimeSpan Position
         {
             get => ToTime(_engine.Position);

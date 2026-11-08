@@ -26,6 +26,8 @@ namespace Lalamachine.Desktop
         public static readonly IValueConverter SecondsToTime = new FuncValueConverter<object?, string>(value => FormatSeconds(Convert.ToDouble(value, CultureInfo.InvariantCulture)));
 
         // With a maximum of 0, i.e. before a track is loaded, a slider shows its thumb at the end.
+        public static readonly IValueConverter BeatsPerMinuteDisplay = new FuncValueConverter<double, string>(bpm => $"@ {Math.Round(bpm).ToString(CultureInfo.InvariantCulture)} BPM");
+
         public static readonly IValueConverter AtLeastOne = new FuncValueConverter<double, double>(value => Math.Max(value, 1));
 
         public static readonly IValueConverter VolumeSize = new FuncValueConverter<double, double>(volume => Math.Floor(16.0 / 100 * volume + 12));

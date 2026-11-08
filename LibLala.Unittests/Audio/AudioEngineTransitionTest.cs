@@ -471,6 +471,35 @@ namespace LibLala.Unittests.Audio
         }
 
         [Test]
+        public void AfterATransition_TheTempoAsPlayed_IsTheOneBeforeUntilTheTrackIsBackAtItsOwn()
+        {
+            _engine.Open(_a, Grid());
+            _engine.Play();
+            PlayFor(23);
+            Assert.That((_engine.Tempo, _engine.BeatsPerMinute), Is.EqualTo((1.0, 120.0)));
+
+            // B at 125 BPM comes in at 0.96, and goes back to 1 over 8 bars of 2 s after it took over at 56 s of A.
+            _engine.MixTo(new CountingDecoder(60 * Rate) { Silent = true }, Grid(bpm: 125));
+            PlayFor(33.1);
+            Assert.That(_tookOver, Has.Count.EqualTo(1));
+            Assert.That(_engine.Tempo, Is.EqualTo(0.96).Within(0.001));
+            Assert.That(_engine.BeatsPerMinute, Is.EqualTo(120).Within(0.1));
+            PlayFor(8);
+            Assert.That(_engine.BeatsPerMinute, Is.EqualTo(122.5).Within(0.1));
+            PlayFor(8.5);
+
+            Assert.That((_engine.Tempo, _engine.BeatsPerMinute), Is.EqualTo((1.0, 125.0)));
+        }
+
+        [Test]
+        public void WithoutAGrid_ThereAreNoBeatsPerMinute()
+        {
+            _engine.Open(_a, null);
+
+            Assert.That((_engine.Tempo, _engine.BeatsPerMinute), Is.EqualTo((1.0, (double?)null)));
+        }
+
+        [Test]
         public void ASeekAfterTheTransitionWasRendered_ButBeforeItWasHeard_DoesntSeekTheNextTrack()
         {
             _engine.Open(_a, Grid());

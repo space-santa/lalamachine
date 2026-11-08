@@ -74,6 +74,8 @@ namespace Lalamachine.Desktop.Services
 
         public TimeSpan? IncomingPosition => null;
         public TimeSpan? IncomingDuration => null;
+        public double Tempo => 1;
+        public double? BeatsPerMinute => null;
 
         public Uri? Source { get; private set; }
 

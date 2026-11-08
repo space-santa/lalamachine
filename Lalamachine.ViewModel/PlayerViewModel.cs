@@ -258,6 +258,11 @@ namespace Lalamachine.ViewModel
         public double IncomingPosition => _audioPlayer.IncomingPosition?.TotalSeconds ?? 0;
         public double IncomingDuration => _audioPlayer.IncomingDuration?.TotalSeconds ?? 0;
 
+        // While the track plays at another tempo than its own, after a transition until it's back at its own: the beats per
+        // minute heard. Not when they round to its own.
+        public bool IsOffTempo => _audioPlayer.BeatsPerMinute is { } heard && Math.Round(heard) != Math.Round(heard / _audioPlayer.Tempo);
+        public double BeatsPerMinute => _audioPlayer.BeatsPerMinute ?? 0;
+
         private readonly DelegateCommand _changePlayPauseCommand;
         public ICommand ChangePlayPauseCommand => _changePlayPauseCommand;
         private readonly DelegateCommand _loadCommand;
@@ -332,20 +337,23 @@ namespace Lalamachine.ViewModel
             NotifyPropertyChanged(nameof(Source));
             NotifyPropertyChanged(nameof(Position));
             NotifyPropertyChanged(nameof(Duration));
-            NotifyMixing();
+            NotifyAsHeard();
         }
 
-        private void NotifyMixing()
+        // What changes as it plays, besides the position.
+        private void NotifyAsHeard()
         {
             NotifyPropertyChanged(nameof(IsMixing));
             NotifyPropertyChanged(nameof(IncomingPosition));
             NotifyPropertyChanged(nameof(IncomingDuration));
+            NotifyPropertyChanged(nameof(IsOffTempo));
+            NotifyPropertyChanged(nameof(BeatsPerMinute));
         }
 
         private void _audioPlayer_PositionChanged(object? sender, EventArgs e)
         {
             NotifyPropertyChanged(nameof(Position));
-            NotifyMixing();
+            NotifyAsHeard();
         }
 
         private void OnChangePlayPause(object? commandParameter)

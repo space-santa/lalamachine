@@ -70,6 +70,9 @@ namespace LibLala.Audio
         // Of the incoming track as played, while the transition runs.
         private double? _playedIncomingPosition;
         private long _playedIncomingLength;
+        // Of the current track as played: the tempo it plays at, of its own, and its beats per minute at it.
+        private double _playedTempo = 1;
+        private double? _playedBeatsPerMinute;
         // Seconds of the current track at which TransitionDue is raised, NaN when it was.
         private double? _dueAt;
         private bool _isEndPlayed;
@@ -176,6 +179,30 @@ namespace LibLala.Audio
                 lock (_gate)
                 {
                     return _playedIncomingPosition is null ? null : _playedIncomingLength;
+                }
+            }
+        }
+
+        // Of the current track as played, of its own: 1 at its own tempo. Else after a transition, until it's back at it.
+        public double Tempo
+        {
+            get
+            {
+                lock (_gate)
+                {
+                    return _hasPlayed ? _playedTempo : _current?.Tempo ?? 1;
+                }
+            }
+        }
+
+        // Of the current track as played, by its beat grid at the tempo it plays at. Null when it has none.
+        public double? BeatsPerMinute
+        {
+            get
+            {
+                lock (_gate)
+                {
+                    return _hasPlayed ? _playedBeatsPerMinute : BeatsPerMinuteOf(_current);
                 }
             }
         }
@@ -382,7 +409,7 @@ namespace LibLala.Audio
 
                 var isEnd = _current is { IsEnded: true } && _transition is null && _limiter.Held == 0;
                 var incoming = _transition is { IsStarted: true } ? _incoming : null;
-                _rendered.Enqueue(new Chunk(_current?.Track ?? 0, _current?.Position ?? 0, _current?.Decoder.Length ?? 0, isEnd, incoming?.Position, incoming?.Decoder.Length ?? 0));
+                _rendered.Enqueue(new Chunk(_current?.Track ?? 0, _current?.Position ?? 0, _current?.Decoder.Length ?? 0, isEnd, incoming?.Position, incoming?.Decoder.Length ?? 0, _current?.Tempo ?? 1, BeatsPerMinuteOf(_current)));
                 if (_events.Count > 0)
                 {
                     events = [.. _events];
@@ -416,6 +443,8 @@ namespace LibLala.Audio
                 _hasPlayed = true;
                 _playedIncomingPosition = chunk.IncomingPosition;
                 _playedIncomingLength = chunk.IncomingLength;
+                _playedTempo = chunk.Tempo;
+                _playedBeatsPerMinute = chunk.BeatsPerMinute;
                 if (chunk.IsEnd && !_isEndPlayed)
                 {
                     _isEndPlayed = true;
@@ -456,6 +485,8 @@ namespace LibLala.Audio
         // The frame of B that plays that far into the transition: B moves on at its own tempo times the one it plays at.
         private static long IncomingFrame(TransitionPlan plan, double progress) =>
             (long)Math.Round((plan.StartB + (progress * plan.Seconds * plan.TempoB)) * AudioFormat.SampleRate);
+
+        private static double? BeatsPerMinuteOf(Deck? deck) => deck?.Grid is { } grid ? grid.BeatsPerMinute * deck.Tempo : null;
 
         // The current track, when it plays on for something to be mixed into it.
         private Deck? TrackToMixInto() => _isFailed || _isEndPlayed ? null : _current;
@@ -796,7 +827,7 @@ namespace LibLala.Audio
 
         // Of the current track: the position after the chunk, its length, and whether the chunk has its end. And of the
         // incoming track while the transition runs.
-        private readonly record struct Chunk(int Track, double Position, long Length, bool IsEnd, double? IncomingPosition, long IncomingLength);
+        private readonly record struct Chunk(int Track, double Position, long Length, bool IsEnd, double? IncomingPosition, long IncomingLength, double Tempo, double? BeatsPerMinute);
 
         private sealed class Transition
         {

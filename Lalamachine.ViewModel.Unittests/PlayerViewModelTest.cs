@@ -187,6 +187,39 @@ namespace Lalamachine.ViewModel.Unittests
             Assert.That(_viewModel.IncomingDuration, Is.EqualTo(251));
         }
 
+        // Netherworld, 138 BPM, after it came in at 128.
+        [TestCase(129.4, 129.4 / 138, true)]
+        [TestCase(137.6, 137.6 / 138, false)]
+        [TestCase(138, 1, false)]
+        public void OffItsOwnTempo_TheBeatsPerMinuteHeardShow(double heard, double tempo, bool isShown)
+        {
+            _player.BeatsPerMinute.Returns(heard);
+            _player.Tempo.Returns(tempo);
+
+            Assert.That(_viewModel.IsOffTempo, Is.EqualTo(isShown));
+            Assert.That(_viewModel.BeatsPerMinute, Is.EqualTo(heard));
+        }
+
+        [Test]
+        public void WithoutKnownBeats_NoBeatsPerMinuteShow()
+        {
+            _player.BeatsPerMinute.Returns((double?)null);
+            _player.Tempo.Returns(0.95);
+
+            Assert.That(_viewModel.IsOffTempo, Is.False);
+        }
+
+        [Test]
+        public void AsTheTrackPlays_TheBeatsPerMinuteHeardFollow()
+        {
+            var changed = new List<string?>();
+            _viewModel.PropertyChanged += (sender, e) => changed.Add(e.PropertyName);
+
+            _player.PositionChanged += Raise.Event();
+
+            Assert.That(changed, Does.Contain(nameof(PlayerViewModel.IsOffTempo)).And.Contain(nameof(PlayerViewModel.BeatsPerMinute)));
+        }
+
         [Test]
         public void WithoutTransitions_NothingIsMixedIn()
         {
