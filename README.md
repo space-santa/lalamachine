@@ -7,7 +7,7 @@ lalamachine is just another music player. It features:
 - A library with nice filter and search functionality.
 - A queue for what to listen to next.
 - Named playlists, and a heart on every track for the ones you like.
-- Pushing a playlist to your Jellyfin server, with the same tracks in the same order.
+- Pushing a playlist to your Jellyfin server and pulling one from it, with the same tracks in the same order.
 
 ## Dependencies
 
@@ -24,7 +24,7 @@ dotnet run --project Lalamachine.Desktop
 
 ## Jellyfin
 
-lalamachine can copy a playlist to a Jellyfin server. The server only needs an API key, no plugin.
+lalamachine can copy a playlist to a Jellyfin server and back. The server only needs an API key, no plugin.
 
 1. Create an API key in Jellyfin's dashboard.
 2. In lalamachine's settings, enter the server address and the key, press **Test connection**, choose your user and
@@ -32,6 +32,9 @@ lalamachine can copy a playlist to a Jellyfin server. The server only needs an A
 3. Press **Check playlists** to see which of your tracks Jellyfin has. This changes nothing.
 4. Select a playlist and press **Push to Jellyfin**. If you changed its order, save or discard that first, the button
    is hidden until then.
+5. To get a playlist from Jellyfin, press **Pull from Jellyfin** below the list of playlists and choose one. It can be
+   one that lalamachine doesn't have yet. If you changed the order of the one with the same name here, save or discard
+   that first.
 
 Good to know:
 
@@ -40,8 +43,13 @@ Good to know:
   get listed, and you decide whether to push without them.
 - A new playlist is private to the chosen user.
 - Pushing a playlist again replaces its tracks in Jellyfin, so changes made there get lost. It asks first.
-- The push is manual and one-way. Renaming a playlist in lalamachine creates a second one in Jellyfin on the next push,
-  and deleting one doesn't reach Jellyfin.
+- Pulling works the same the other way round. It finds the tracks the same way, so a pulled playlist pushes back as the
+  same one. A playlist with the same name in lalamachine gets its tracks replaced, after asking. Tracks the library
+  doesn't have get listed, and you decide whether to pull without them. A playlist in lalamachine has each track once,
+  so a track that is in it twice in Jellyfin comes once, where it comes first.
+- Pulling Liked changes which tracks have a heart.
+- Pushing and pulling are manual. Renaming a playlist on one side creates a second one on the other side the next time,
+  and deleting one doesn't reach the other side.
 - On Windows the API key is stored encrypted for your user. On macOS and Linux it's in a file only you can read, but
   it isn't encrypted.
 

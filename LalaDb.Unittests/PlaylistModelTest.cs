@@ -126,6 +126,66 @@ namespace LalaDb.Unittests
         }
 
         [Test]
+        public void ReplaceTracks_HasOnlyTheNewOnesInTheGivenOrder()
+        {
+            CreateWith("list", "a", "b");
+
+            _model.ReplaceTracks("list", [PathOf("c"), PathOf("a")]);
+
+            Assert.That(Titles("list"), Is.EqualTo(new[] { "c", "a" }));
+        }
+
+        [Test]
+        public void ReplaceTracks_KeepsTheOneNotInTheLibraryOnlyWhenGiven()
+        {
+            CreateWith("list", "a");
+            _model.AddTracks("list", ["/nowhere/gone.mp3"]);
+
+            _model.ReplaceTracks("list", ["/nowhere/gone.mp3", PathOf("b"), "/nowhere/other.mp3"]);
+
+            Assert.That(_model.TrackPaths("list"), Is.EqualTo(new[] { "/nowhere/gone.mp3", PathOf("b"), "/nowhere/other.mp3" }));
+        }
+
+        [Test]
+        public void ReplaceTracks_SameTrackTwice_HasItOnce()
+        {
+            CreateWith("list");
+
+            _model.ReplaceTracks("list", [PathOf("b"), PathOf("a"), PathOf("b")]);
+
+            Assert.That(Titles("list"), Is.EqualTo(new[] { "b", "a" }));
+        }
+
+        [Test]
+        public void ReplaceTracks_OnlyOfThatPlaylist()
+        {
+            CreateWith("one", "a");
+            CreateWith("two", "a");
+
+            _model.ReplaceTracks("one", [PathOf("b")]);
+
+            Assert.That(Titles("one"), Is.EqualTo(new[] { "b" }));
+            Assert.That(Titles("two"), Is.EqualTo(new[] { "a" }));
+        }
+
+        [Test]
+        public void ReplaceTracks_NoSuchPlaylist_DoesNothing()
+        {
+            _model.ReplaceTracks("not there", [PathOf("a")]);
+
+            Assert.That(_model.PlaylistNames(), Is.Empty);
+            Assert.That(_context.PlaylistTracks!.Count(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void LibraryTrackPaths_AreAllTracksOfTheLibrary()
+        {
+            CreateWith("list", "a");
+
+            Assert.That(_model.LibraryTrackPaths(), Is.EquivalentTo(new[] { PathOf("a"), PathOf("b"), PathOf("c") }));
+        }
+
+        [Test]
         public void RemoveTracks_OnlyFromThatPlaylist()
         {
             CreateWith("one", "a", "b");

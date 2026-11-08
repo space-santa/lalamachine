@@ -60,7 +60,7 @@ namespace Lalamachine.Desktop.Views
             _audioPlayer = AudioPlayerFactory.Create(analyses);
             _player = new PlayerViewModel(_audioPlayer, _dialogs);
             _settingsViewModel = new SettingsViewModel(_dialogs, context);
-            _playlistsViewModel = new PlaylistsViewModel(context, _dialogs, _settingsViewModel.JellyfinPusher);
+            _playlistsViewModel = new PlaylistsViewModel(context, _dialogs, _settingsViewModel.JellyfinPusher, _settingsViewModel.JellyfinPuller);
             _queueViewModel = new QueueViewModel(context, _dialogs, _playlistsViewModel);
             _shuffleRepeatViewModel = new ShuffleRepeatViewModel();
             _libraryViewModel = new LibraryViewModel(context, () => new LalaContext(optionsBuilder.Options), _dialogs);

@@ -54,7 +54,7 @@ namespace LibLala.Unittests.Jellyfin
         public Task<IReadOnlyList<JellyfinPlaylistEntry>> GetPlaylistEntriesAsync(string playlistId, string userId, CancellationToken cancellationToken = default)
         {
             var items = Playlists[playlistId].Items;
-            return Task.FromResult<IReadOnlyList<JellyfinPlaylistEntry>>(items.Select((x, i) => new JellyfinPlaylistEntry(x, EntriesHaveTheirOwnIds ? $"entry{i}-{x}" : x)).ToList());
+            return Task.FromResult<IReadOnlyList<JellyfinPlaylistEntry>>(items.Select((x, i) => new JellyfinPlaylistEntry(x, EntriesHaveTheirOwnIds ? $"entry{i}-{x}" : x, $"Title of {x}")).ToList());
         }
 
         public Task<string> CreatePlaylistAsync(string name, string userId, IReadOnlyList<string> itemIds, CancellationToken cancellationToken = default)
