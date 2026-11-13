@@ -108,6 +108,7 @@ namespace LibLala.LibLalaTagReader
         public string InitialKey => _initialKey.ToString();
         public int InitialKeyNumber => _initialKey.Number;
         public string InitialKeyLetter => _initialKey.Letter;
+        public string? InitialKeyNaturalNotation => _initialKey.NaturalNotation;
 
         // For what the analysis finds in a track whose tags have no key or tempo, while the track is listed.
         protected void SetInitialKey(string initialKey)

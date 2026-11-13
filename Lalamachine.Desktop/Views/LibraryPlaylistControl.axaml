@@ -27,7 +27,7 @@
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
                 <!-- The Tag is the column's name, see TrackGrid. -->
-                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="🔊" Tag="Playing" CanUserSort="False" Binding="{Binding IsPlaying, Converter={x:Static local:Converters.PlaylistItemIsPlaying}}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="🔊" Tag="Playing" CanUserSort="False" Binding="{Binding IsPlaying, Mode=OneWay, Converter={x:Static local:Converters.PlaylistItemIsPlaying}}" />
                 <DataGridTemplateColumn Tag="Liked" CanUserSort="False" CellTemplate="{StaticResource HeartCell}" />
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Title" Tag="Title" Binding="{Binding Title}" />
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Length" Tag="Length" Binding="{Binding LengthString}" />
