@@ -9,6 +9,7 @@ namespace Lalamachine.Desktop.Views
             InitializeComponent();
             TrackGrid.Attach(QueueGrid);
             TrackGrid.EnableReorder(QueueGrid);
+            TrackGrid.RememberColumnOrder(QueueGrid, "Queue");
         }
     }
 }

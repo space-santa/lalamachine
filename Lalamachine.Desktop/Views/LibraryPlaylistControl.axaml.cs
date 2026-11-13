@@ -8,6 +8,7 @@ namespace Lalamachine.Desktop.Views
         {
             InitializeComponent();
             TrackGrid.Attach(LibraryPlaylistGrid);
+            TrackGrid.RememberColumnOrder(LibraryPlaylistGrid, "Library");
         }
     }
 }
