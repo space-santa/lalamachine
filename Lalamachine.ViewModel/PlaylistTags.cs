@@ -58,6 +58,7 @@ namespace Lalamachine.ViewModel
             {
                 SetInitialKey(initialKey);
                 NotifyPropertyChanged(nameof(InitialKey));
+                NotifyPropertyChanged(nameof(InitialKeyNaturalNotation));
             }
             if (beatsPerMinute is { } value && value != BeatsPerMinute)
             {

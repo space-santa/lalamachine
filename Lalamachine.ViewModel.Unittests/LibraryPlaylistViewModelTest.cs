@@ -357,8 +357,8 @@ namespace Lalamachine.ViewModel.Unittests
             viewModel.TrackAnalyzedHandler(null, new TrackAnalyzedEventArgs("/path/to/b", "8A", 128));
 
             Assert.That(viewModel.Playlist[1], Is.SameAs(track));
-            Assert.That((track.InitialKey, track.BeatsPerMinuteString), Is.EqualTo(("8A", "128")));
-            Assert.That(changed, Is.EquivalentTo(new[] { nameof(PlaylistTags.InitialKey), nameof(PlaylistTags.BeatsPerMinute), nameof(PlaylistTags.BeatsPerMinuteString) }));
+            Assert.That((track.InitialKey, track.InitialKeyNaturalNotation, track.BeatsPerMinuteString), Is.EqualTo(("8A", "A minor", "128")));
+            Assert.That(changed, Is.EquivalentTo(new[] { nameof(PlaylistTags.InitialKey), nameof(PlaylistTags.InitialKeyNaturalNotation), nameof(PlaylistTags.BeatsPerMinute), nameof(PlaylistTags.BeatsPerMinuteString) }));
             Assert.That(viewModel.KeyFilterOptions.Select(x => x.Key), Is.EqualTo(new[] { "8A", "10A" }));
         }
 
