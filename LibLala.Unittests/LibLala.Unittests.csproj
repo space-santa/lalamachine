@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <IsPackable>false</IsPackable>
+    <!-- For the Objective-C methods that tests give macOS to call. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +16,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LibLala\LibLala.csproj" />
+  </ItemGroup>
+
+  <!-- Made with ffmpeg and LAME, the tests can't encode real audio themselves. -->
+  <ItemGroup>
+    <None Update="Audio\Files\*.mp3" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

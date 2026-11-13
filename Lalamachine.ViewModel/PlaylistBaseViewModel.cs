@@ -415,6 +415,20 @@ namespace Lalamachine.ViewModel
             }
         }
 
+        // The analysis found the key or the tempo of a track whose tags have none: it shows right away, where the track is.
+        public virtual void TrackAnalyzedHandler(object? sender, TrackAnalyzedEventArgs e)
+        {
+            if (e is null)
+            {
+                return;
+            }
+
+            foreach (var track in AllTracks.Where(x => x.Path == e.Path))
+            {
+                track.ShowDetected(e.InitialKey, e.BeatsPerMinute);
+            }
+        }
+
         protected void MarkLiked(IEnumerable<PlaylistTags> tracks)
         {
             ArgumentNullException.ThrowIfNull(tracks);
@@ -601,6 +615,54 @@ namespace Lalamachine.ViewModel
                 InvokePlayTrackEvent(nextTrack);
             }
         }
+
+        // Says what it would play next, without playing it.
+        public void PeekNextTrackHandler(object? sender, NextTrackEventArgs e)
+        {
+            if (e is null)
+            {
+                return;
+            }
+
+            e.Track = NextTrack;
+            e.List = e.Track is null ? null : this;
+        }
+
+        // Plays it, like a double click. False when it isn't listed any more, then nothing changes.
+        public bool PlayTrack(PlaylistTags track)
+        {
+            ArgumentNullException.ThrowIfNull(track);
+
+            if (Listed(track) is not { } listed)
+            {
+                return false;
+            }
+            InvokePlayTrackEvent(listed);
+            return true;
+        }
+
+        // The player went on to the track that PeekNextTrackHandler said, it plays now. Removed meanwhile, it's like a playing
+        // track that got removed: what came after the one before it comes next.
+        public void WentOnTo(PlaylistTags track)
+        {
+            ArgumentNullException.ThrowIfNull(track);
+
+            if (PlayTrack(track))
+            {
+                return;
+            }
+
+            var nextIndex = CurrentIndex >= 0 ? CurrentIndex + 1 : _removedPlayingIndex;
+            foreach (var item in AllTracks)
+            {
+                item.IsPlaying = false;
+            }
+            _removedPlayingIndex = nextIndex;
+            NotifyPropertyChanged(nameof(CurrentIndex));
+        }
+
+        // The track as it's listed, null when it isn't any more. Not by its path, the queue can have a track twice.
+        protected virtual PlaylistTags? Listed(PlaylistTags track) => AllTracks.Contains(track) ? track : null;
 
         public void PlayLastTrackHandler(object? sender, EventArgs e)
         {

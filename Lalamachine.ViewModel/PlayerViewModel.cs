@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Windows.Input;
+using LibLala.LibLalaTagReader;
 using Settings;
 
 namespace Lalamachine.ViewModel
 {
-    public class PlayerSettings : AppSettings
+    public class PlayerSettings : AppSettingsBase
     {
-        public PlayerSettings() : base("Lalamachine.Desktop", "PlayerSettings") { }
+        public PlayerSettings() : this(new SettingsFile("Lalamachine.Desktop", "PlayerSettings")) { }
+
+        public PlayerSettings(SettingsFile file) : base(file) { }
 
         public double Volume { get => GetDouble(50); set => Set(value); }
         public bool IsMuted { get => GetBool(false); set => Set(value); }
         public string LastActivePlaylist { get => GetString("MAIN"); set => Set(value); }
+        public bool Transitions { get => GetBool(true); set => Set(value); }
     }
 
     public class ManualLoadEventArgs : EventArgs
@@ -28,18 +32,32 @@ namespace Lalamachine.ViewModel
         private readonly IAudioPlayer _audioPlayer;
         private readonly IDialogService _dialogs;
         private readonly PlayerSettings _playerSettings;
+        // The track mixed in and the list it's from, until it takes over. Then the list is told it went on to it.
+        private NextTrackEventArgs? _mixing;
+        // While the list is told: it plays already.
+        private bool _isTakingOver;
+        private bool _isDraggingPosition;
+        // The track changed while the position slider was held: where it's dragged to is of the track before.
+        private bool _isDragOfTrackBefore;
 
-        public PlayerViewModel(IAudioPlayer audioPlayer, IDialogService dialogs)
+        public PlayerViewModel(IAudioPlayer audioPlayer, IDialogService dialogs) : this(audioPlayer, dialogs, new PlayerSettings())
         {
-            _playerSettings = new PlayerSettings();
+        }
+
+        public PlayerViewModel(IAudioPlayer audioPlayer, IDialogService dialogs, PlayerSettings settings)
+        {
+            _playerSettings = settings;
             _audioPlayer = audioPlayer;
             _dialogs = dialogs;
             IsMuted = _playerSettings.IsMuted;
             Volume = _playerSettings.Volume;
+            _audioPlayer.Transitions = _playerSettings.Transitions;
             _audioPlayer.MediaOpened += _audioPlayer_MediaOpened;
             _audioPlayer.MediaEnded += _audioPlayer_MediaEnded;
             _audioPlayer.MediaFailed += _audioPlayer_MediaFailed;
             _audioPlayer.PositionChanged += _audioPlayer_PositionChanged;
+            _audioPlayer.TransitionDue += _audioPlayer_TransitionDue;
+            _audioPlayer.MixedIn += _audioPlayer_MixedIn;
 
             _changePlayPauseCommand = new DelegateCommand(OnChangePlayPause);
             _loadCommand = new DelegateCommand(OnLoad);
@@ -68,7 +86,34 @@ namespace Lalamachine.ViewModel
         }
         protected virtual void OnPlayNextTrack(object? commandParameter)
         {
+            // During a transition, the track that comes in. Asked again, a list in shuffle mode would say another one.
+            if (_mixing is { Track: { } track, List: { } list } && list.PlayTrack(track))
+            {
+                return;
+            }
             InvokePlayNextTrackEvent();
+        }
+
+        // The list that plays says what it would play next, without going on to it.
+        public event EventHandler<NextTrackEventArgs>? PeekNextTrackEvent;
+        public event EventHandler<NextTrackEventArgs>? PeekNextPlaylistTrackEvent;
+        public event EventHandler<NextTrackEventArgs>? PeekNextLibraryTrackEvent;
+        private NextTrackEventArgs PeekNextTrack()
+        {
+            var next = new NextTrackEventArgs();
+            if (LastActivePlaylist == "MAIN")
+            {
+                PeekNextTrackEvent?.Invoke(this, next);
+            }
+            else if (LastActivePlaylist == PlaylistsViewModel.ListName)
+            {
+                PeekNextPlaylistTrackEvent?.Invoke(this, next);
+            }
+            else
+            {
+                PeekNextLibraryTrackEvent?.Invoke(this, next);
+            }
+            return next;
         }
 
         public event EventHandler? PlayLastTrackEvent;
@@ -103,8 +148,15 @@ namespace Lalamachine.ViewModel
                 return;
             }
 
-            Source = e.Path;
             LastActivePlaylist = e.ListName;
+            if (_isTakingOver)
+            {
+                return;
+            }
+
+            // A track that's started ends the mixing.
+            _mixing = null;
+            Source = e.Path;
             Play();
         }
 
@@ -114,6 +166,9 @@ namespace Lalamachine.ViewModel
             get => _audioPlayer.Source?.LocalPath ?? "";
             set => Open(value);
         }
+
+        // What's shown of the track that plays, in the player and in the system's media controls. Read once for each track.
+        public TrackInfo Track { get; private set; } = TrackInfo.None;
 
         public string LastActivePlaylist
         {
@@ -158,13 +213,71 @@ namespace Lalamachine.ViewModel
 
         public double Duration => _audioPlayer.Duration?.TotalSeconds ?? 0;
 
+        // Each track mixed into the next, like a DJ.
+        public bool Transitions
+        {
+            get => _audioPlayer.Transitions;
+            set
+            {
+                _audioPlayer.Transitions = value;
+                _playerSettings.Transitions = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public double Position
         {
-            // Never past the end, the length of a track can be an estimate or unknown. A slider clamps a larger value to its
-            // maximum and writes that back through its binding, which would seek there.
+            // Never past the end, the length of a track can be an estimate or unknown.
             get => Math.Min(_audioPlayer.Position.TotalSeconds, Duration);
-            set => _audioPlayer.Position = new TimeSpan(0, 0, (int)value);
+            set
+            {
+                // Only a seek when the user moves the slider. It also writes back a value that it clamped to its maximum, when
+                // the track changed and its position and duration come one after the other. That would seek the new track
+                // to a place in the one before, maybe to its end and on to the next.
+                if (!_isDraggingPosition || _isDragOfTrackBefore)
+                {
+                    return;
+                }
+                _audioPlayer.Position = new TimeSpan(0, 0, (int)value);
+            }
         }
+
+        // From elsewhere than the position slider, like the system's media controls. Within the track: not while its length
+        // isn't known, that would go back to its start.
+        public void Seek(TimeSpan position)
+        {
+            if (Source.Length == 0 || _audioPlayer.Duration is not { } duration)
+            {
+                return;
+            }
+            _audioPlayer.Position = position < TimeSpan.Zero ? TimeSpan.Zero : position > duration ? duration : position;
+            NotifyPropertyChanged(nameof(Position));
+        }
+
+        // The view says while the user moves the position slider: holds it, or presses a key on it. When another track
+        // starts while it's held, the slider is at a place in the one before, it doesn't seek until it's let go.
+        public bool IsDraggingPosition
+        {
+            get => _isDraggingPosition;
+            set
+            {
+                _isDraggingPosition = value;
+                if (!value)
+                {
+                    _isDragOfTrackBefore = false;
+                }
+            }
+        }
+
+        // While the next track comes in: it as heard.
+        public bool IsMixing => _audioPlayer.IncomingPosition is not null;
+        public double IncomingPosition => _audioPlayer.IncomingPosition?.TotalSeconds ?? 0;
+        public double IncomingDuration => _audioPlayer.IncomingDuration?.TotalSeconds ?? 0;
+
+        // While the track plays at another tempo than its own, after a transition until it's back at its own: the beats per
+        // minute heard. Not when they round to its own.
+        public bool IsOffTempo => _audioPlayer.BeatsPerMinute is { } heard && Math.Round(heard) != Math.Round(heard / _audioPlayer.Tempo);
+        public double BeatsPerMinute => _audioPlayer.BeatsPerMinute ?? 0;
 
         private readonly DelegateCommand _changePlayPauseCommand;
         public ICommand ChangePlayPauseCommand => _changePlayPauseCommand;
@@ -189,6 +302,7 @@ namespace Lalamachine.ViewModel
 
         private void _audioPlayer_MediaOpened(object? sender, EventArgs e)
         {
+            NotifyPropertyChanged(nameof(Position));
             NotifyPropertyChanged(nameof(Duration));
         }
 
@@ -198,9 +312,66 @@ namespace Lalamachine.ViewModel
             IsPlaying = false;
         }
 
+        // The list that plays decides what comes next, like at the end of a track, but doesn't go on to it yet: the track that
+        // plays is the current one until the transition is over.
+        private void _audioPlayer_TransitionDue(object? sender, EventArgs e)
+        {
+            if (!Transitions || !IsPlaying)
+            {
+                return;
+            }
+            var next = PeekNextTrack();
+            if (next.Track is { } track)
+            {
+                // Not mixed in, the next track comes when this one ended, like without transitions.
+                _mixing = _audioPlayer.MixTo(new Uri(track.Path)) ? next : null;
+            }
+        }
+
+        // Now the list goes on to it.
+        private void _audioPlayer_MixedIn(object? sender, EventArgs e)
+        {
+            if (_mixing is { Track: { } track, List: { } list })
+            {
+                _mixing = null;
+                _isTakingOver = true;
+                try
+                {
+                    list.WentOnTo(track);
+                }
+                finally
+                {
+                    _isTakingOver = false;
+                }
+            }
+            TrackChanged();
+        }
+
+        private void TrackChanged()
+        {
+            _isDragOfTrackBefore = _isDraggingPosition;
+            Track = TrackInfo.Read(Source);
+            NotifyPropertyChanged(nameof(Source));
+            NotifyPropertyChanged(nameof(Track));
+            NotifyPropertyChanged(nameof(Position));
+            NotifyPropertyChanged(nameof(Duration));
+            NotifyAsHeard();
+        }
+
+        // What changes as it plays, besides the position.
+        private void NotifyAsHeard()
+        {
+            NotifyPropertyChanged(nameof(IsMixing));
+            NotifyPropertyChanged(nameof(IncomingPosition));
+            NotifyPropertyChanged(nameof(IncomingDuration));
+            NotifyPropertyChanged(nameof(IsOffTempo));
+            NotifyPropertyChanged(nameof(BeatsPerMinute));
+        }
+
         private void _audioPlayer_PositionChanged(object? sender, EventArgs e)
         {
             NotifyPropertyChanged(nameof(Position));
+            NotifyAsHeard();
         }
 
         private void OnChangePlayPause(object? commandParameter)
@@ -233,11 +404,8 @@ namespace Lalamachine.ViewModel
         public void Open(string path)
         {
             _audioPlayer.Open(new Uri(path));
-            NotifyPropertyChanged(nameof(Source));
-            // Reset the position slider right away. Left at the old track's position, it would get clamped to a shorter
-            // new track's length once that is known, and seek there.
-            NotifyPropertyChanged(nameof(Position));
-            NotifyPropertyChanged(nameof(Duration));
+            // The new track's position right away, not the old one's until the next tick.
+            TrackChanged();
         }
 
         public void Play()

@@ -33,6 +33,23 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
+        public void PeekNextTrackHandler_SaysWhatsNext_AndDoesntPlayIt()
+        {
+            var wasCalled = false;
+            var viewModel = new PlaylistBaseViewModel("LIBRARY", Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
+            viewModel.AddTrack(new LibLalaTagsBuilder("bob", new UncheckedTrackPath("/path/to/bob"), 5).Build());
+            viewModel.PlayTrackEvent += (o, e) => wasCalled = true;
+            var request = new NextTrackEventArgs();
+
+            viewModel.PeekNextTrackHandler(null, request);
+
+            Assert.That(request.Track?.Path, Is.EqualTo("/path/to/bob"));
+            Assert.That(request.List, Is.SameAs(viewModel));
+            Assert.That(!wasCalled);
+            Assert.That(viewModel.CurrentIndex, Is.EqualTo(-1));
+        }
+
+        [Test]
         public void PlayPreviousTrackHandler_NoTracks_DoesNothing()
         {
             var wasCalled = false;
@@ -65,6 +82,31 @@ namespace Lalamachine.ViewModel.Unittests
             Assert.That(viewModel.NumberOfTracks, Is.EqualTo(1));
             Assert.That(notifications, Does.Contain(nameof(viewModel.NumberOfTracks)));
             Assert.That(notifications, Does.Contain(nameof(viewModel.TotalPlaytime)));
+        }
+
+        [Test]
+        public void TrackAnalyzed_ShowsWhatWasFound_WhereverTheTrackIsListed()
+        {
+            // The queue can have a track twice.
+            var viewModel = ViewModelWithKeys("", "");
+            viewModel.AddTrack(new LibLalaTagsBuilder("alice", new UncheckedTrackPath("/path/to/alice"), 5).Build());
+
+            viewModel.TrackAnalyzedHandler(null, new TrackAnalyzedEventArgs("/path/to/bob", "8A", 128));
+
+            Assert.That(viewModel.Playlist.Select(x => x.InitialKey), Is.EqualTo(new[] { "8A", "8A", "" }));
+            Assert.That(viewModel.Playlist.Select(x => x.BeatsPerMinuteString), Is.EqualTo(new[] { "128", "128", "" }));
+        }
+
+        [Test]
+        public void TrackAnalyzed_NothingFound_TakesAwayWhatWasFoundBefore()
+        {
+            // The file changed, and what was a track with a beat and a key is a recording of rain now.
+            var viewModel = ViewModelWithKeys("");
+            viewModel.TrackAnalyzedHandler(null, new TrackAnalyzedEventArgs("/path/to/bob", "8A", 128));
+
+            viewModel.TrackAnalyzedHandler(null, new TrackAnalyzedEventArgs("/path/to/bob", "", 0));
+
+            Assert.That((viewModel.Playlist[0].InitialKey, viewModel.Playlist[0].BeatsPerMinuteString), Is.EqualTo(("", "")));
         }
 
         private static PlaylistBaseViewModel ViewModelWithKeys(params string[] keys)

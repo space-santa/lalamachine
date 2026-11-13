@@ -75,13 +75,13 @@ namespace LibLala.Unittests.Jellyfin
         [Test]
         public async Task ReadsTheEntriesOfAPlaylist()
         {
-            using var handler = new FakeHandler(() => Json("""{"Items":[{"Id":"t1","PlaylistItemId":"e1"},{"Id":"t2"}],"TotalRecordCount":2}"""));
+            using var handler = new FakeHandler(() => Json("""{"Items":[{"Id":"t1","PlaylistItemId":"e1","Name":"One"},{"Id":"t2"}],"TotalRecordCount":2}"""));
             using var httpClient = new HttpClient(handler);
 
             var entries = await Client(httpClient).GetPlaylistEntriesAsync("p 1", "u1").ConfigureAwait(false);
 
             // Without an entry ID it goes by the track, like current versions do.
-            Assert.That(entries, Is.EqualTo(new[] { new JellyfinPlaylistEntry("t1", "e1"), new JellyfinPlaylistEntry("t2", "t2") }));
+            Assert.That(entries, Is.EqualTo(new[] { new JellyfinPlaylistEntry("t1", "e1", "One"), new JellyfinPlaylistEntry("t2", "t2", "") }));
             Assert.That(handler.RequestUri?.AbsolutePath, Is.EqualTo("/Playlists/p%201/Items"));
             Assert.That(handler.RequestUri?.Query, Does.Contain("userId=u1"));
         }

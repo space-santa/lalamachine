@@ -21,18 +21,19 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
-                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="🔊" CanUserSort="False" Binding="{Binding IsPlaying, Mode=OneWay, Converter={x:Static local:Converters.PlaylistItemIsPlaying}}" />
-                <DataGridTemplateColumn CanUserSort="False" CellTemplate="{StaticResource HeartCell}" />
-                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Track" Tag="Track" Binding="{Binding Track}" />
-                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Disc" Tag="Disc" Binding="{Binding DiscNumber}" />
+                <!-- The Tag is the column's name, see TrackGrid. -->
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="🔊" Tag="Playing" CanUserSort="False" Binding="{Binding IsPlaying, Mode=OneWay, Converter={x:Static local:Converters.PlaylistItemIsPlaying}}" />
+                <DataGridTemplateColumn Tag="Liked" CanUserSort="False" CellTemplate="{StaticResource HeartCell}" />
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Title" Tag="Title" Binding="{Binding Title}" />
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Length" Tag="Length" Binding="{Binding LengthString}" />
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Key" Tag="Key" Binding="{Binding InitialKey}" />
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="BPM" Tag="BPM" Binding="{Binding BeatsPerMinuteString}" />
-                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Comment" Tag="Comment" Binding="{Binding Comment}" />
-                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Album" Tag="Album" Binding="{Binding Album}" />
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Artist" Tag="Artist" Binding="{Binding ArtistString}" />
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Genre" Tag="Genre" Binding="{Binding GenreString}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Track" Tag="Track" Binding="{Binding Track}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Disc" Tag="Disc" Binding="{Binding DiscNumber}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Comment" Tag="Comment" Binding="{Binding Comment}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Album" Tag="Album" Binding="{Binding Album}" />
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Year" Tag="Year" Binding="{Binding Year}" />
             </DataGrid.Columns>
         </DataGrid>

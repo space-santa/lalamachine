@@ -10,11 +10,11 @@ namespace LibLala.LibLalaTagReader
     {
         private readonly AlbumName _album;
         private readonly ArtistList _artist;
-        private readonly BeatsPerMinute _beatsPerMinute;
+        private BeatsPerMinute _beatsPerMinute;
         private readonly Comment _comment;
         private readonly DiscNumber _discNumber;
         private readonly GenreList _genre;
-        private readonly InitialKey _initialKey;
+        private InitialKey _initialKey;
         private readonly TrackLength _length;
         private readonly TitleName _title;
         private readonly TrackNumber _trackNumber;
@@ -109,6 +109,17 @@ namespace LibLala.LibLalaTagReader
         public int InitialKeyNumber => _initialKey.Number;
         public string InitialKeyLetter => _initialKey.Letter;
         public string? InitialKeyNaturalNotation => _initialKey.NaturalNotation;
+
+        // For what the analysis finds in a track whose tags have no key or tempo, while the track is listed.
+        protected void SetInitialKey(string initialKey)
+        {
+            _initialKey = new InitialKey(initialKey);
+        }
+
+        protected void SetBeatsPerMinute(uint beatsPerMinute)
+        {
+            _beatsPerMinute = new BeatsPerMinute(beatsPerMinute);
+        }
 
         public int Length => _length.TotalSeconds;
         public string LengthString => _length.ToString();

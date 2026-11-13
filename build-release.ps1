@@ -5,7 +5,7 @@ $ErrorActionPreference = "Stop"
 
 $appProject = Join-Path $PSScriptRoot "Lalamachine.Desktop\Lalamachine.Desktop.csproj"
 $installerProject = Join-Path $PSScriptRoot "install-forge.ifp"
-$publishDir = "Lalamachine.Desktop\bin\Release\net10.0\win-x64\publish"
+$publishDir = "Lalamachine.Desktop\bin\Release\net10.0-windows10.0.19041.0\win-x64\publish"
 $publishPath = Join-Path $PSScriptRoot $publishDir
 
 $builder = (Get-Command ifbuildx86.exe -ErrorAction SilentlyContinue).Source
@@ -15,8 +15,8 @@ if (-not (Test-Path $builder)) { throw "Building the installer needs InstallForg
 # The installer packages whole folders, don't let it pick up what an earlier publish left there.
 if (Test-Path $publishPath) { Remove-Item $publishPath -Recurse -Force }
 
-# Self-contained, so that the installer doesn't need .NET. LibVLC needs its files on disk, only this platform's.
-dotnet publish $appProject -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:VlcWindowsX86Enabled=false -p:VlcWindowsArm64Enabled=false
+# Self-contained, so that the installer doesn't need .NET.
+dotnet publish $appProject -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 # The debug symbols of Skia and HarfBuzz, 100 MB that are no use to anyone who installs the app.

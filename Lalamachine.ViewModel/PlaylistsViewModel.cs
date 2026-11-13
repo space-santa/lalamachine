@@ -10,7 +10,7 @@ using LibLala.LibLalaTagReader;
 
 namespace Lalamachine.ViewModel
 {
-    public sealed class PlaylistsViewModel : BaseNotifyPropertyChanged, ITrackPlaylists
+    public sealed class PlaylistsViewModel : BaseNotifyPropertyChanged, ITrackPlaylists, ILocalPlaylists
     {
         // For the player to know where to get the next track from.
         public const string ListName = "PLAYLISTS";
@@ -18,22 +18,26 @@ namespace Lalamachine.ViewModel
         private readonly PlaylistModel _model;
         private readonly IDialogService _dialogs;
         private readonly IPlaylistPusher? _pusher;
+        private readonly IPlaylistPuller? _puller;
         private readonly HashSet<string> _likedPaths;
         private NamedPlaylistViewModel? _selectedPlaylist;
         // Not always the selected one, looking at another playlist doesn't stop this one from playing on.
         private NamedPlaylistViewModel? _playingPlaylist;
         private ShuffleRepeatState _shuffleRepeatState;
         private bool _isPushing;
+        private bool _isPulling;
 
-        public PlaylistsViewModel(LalaContext context, IDialogService dialogs, IPlaylistPusher? pusher = null)
+        public PlaylistsViewModel(LalaContext context, IDialogService dialogs, IPlaylistPusher? pusher = null, IPlaylistPuller? puller = null)
         {
             _model = new PlaylistModel(context);
             _dialogs = dialogs;
             _pusher = pusher;
+            _puller = puller;
             _addPlaylistCommand = new DelegateCommand(OnAddPlaylist);
             _renamePlaylistCommand = new DelegateCommand(OnRenamePlaylist);
             _deletePlaylistCommand = new DelegateCommand(OnDeletePlaylist);
             _pushPlaylistCommand = new DelegateCommand(OnPushPlaylist);
+            _pullPlaylistCommand = new DelegateCommand(OnPullPlaylist);
 
             var names = _model.PlaylistNames();
             if (!names.Contains(LibLala.Constants.LIKEDPLAYLISTNAME))
@@ -136,6 +140,23 @@ namespace Lalamachine.ViewModel
                 IsPushing = false;
             }
         }
+
+        private readonly DelegateCommand _pullPlaylistCommand;
+        public ICommand PullPlaylistCommand => _pullPlaylistCommand;
+        private async void OnPullPlaylist(object? obj)
+        {
+            if (IsPulling || _puller is null) { return; }
+
+            IsPulling = true;
+            try
+            {
+                await _puller.PullAsync(this).ConfigureAwait(true);
+            }
+            finally
+            {
+                IsPulling = false;
+            }
+        }
         #endregion
 
         public bool IsPushing
@@ -146,6 +167,62 @@ namespace Lalamachine.ViewModel
                 _isPushing = value;
                 NotifyPropertyChanged();
             }
+        }
+
+        public bool IsPulling
+        {
+            get => _isPulling;
+            private set
+            {
+                _isPulling = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        LocalPlaylist? ILocalPlaylists.Find(string name)
+        {
+            return Named(name) is { } playlist ? new LocalPlaylist(playlist.Name, _model.TrackPaths(playlist.Name).Count, playlist.HasUnsavedOrder) : null;
+        }
+
+        // Shows it, it's what the user just asked for.
+        void ILocalPlaylists.Replace(string name, IReadOnlyList<string> trackPaths)
+        {
+            ArgumentNullException.ThrowIfNull(trackPaths);
+
+            var playlist = Named(name);
+            if (playlist is null)
+            {
+                _model.CreatePlaylist(name);
+                playlist = CreatePlaylist(name);
+                Playlists.Insert(IndexFor(name), playlist);
+            }
+
+            var before = _model.TrackPaths(playlist.Name).ToHashSet();
+            _model.ReplaceTracks(playlist.Name, trackPaths);
+
+            // Before the playlist loads its new tracks, that's what their hearts go by.
+            var after = trackPaths.ToHashSet();
+            var unliked = playlist.IsLikedPlaylist ? before.Except(after).ToHashSet() : [];
+            var liked = playlist.IsLikedPlaylist ? after.Except(before).ToHashSet() : [];
+            _likedPaths.ExceptWith(unliked);
+            _likedPaths.UnionWith(liked);
+
+            playlist.Reload();
+            SelectedPlaylist = playlist;
+
+            if (unliked.Count > 0)
+            {
+                LikedChanged?.Invoke(this, new LikedChangedEventArgs(unliked, false));
+            }
+            if (liked.Count > 0)
+            {
+                LikedChanged?.Invoke(this, new LikedChangedEventArgs(liked, true));
+            }
+        }
+
+        private NamedPlaylistViewModel? Named(string name)
+        {
+            return Playlists.FirstOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
         #region Events
@@ -175,6 +252,15 @@ namespace Lalamachine.ViewModel
             PlaylistToGoOnWith()?.PlayNextTrackHandler(sender, e);
         }
 
+        // Nothing after a playing one that got deleted, its one stop is at the end of the track.
+        public void PeekNextTrackHandler(object? sender, NextTrackEventArgs e)
+        {
+            if (!IsPlayingPlaylistDeleted)
+            {
+                PlaylistToAsk()?.PeekNextTrackHandler(sender, e);
+            }
+        }
+
         public void PlayLastTrackHandler(object? sender, EventArgs e)
         {
             PlaylistToGoOnWith()?.PlayLastTrackHandler(sender, e);
@@ -183,12 +269,18 @@ namespace Lalamachine.ViewModel
         private NamedPlaylistViewModel? PlaylistToGoOnWith()
         {
             // One that got deleted while playing stops the music. After that, next and previous go by what is on screen again.
-            if (_playingPlaylist is { } && !Playlists.Contains(_playingPlaylist))
+            if (IsPlayingPlaylistDeleted)
             {
                 _playingPlaylist = null;
                 return null;
             }
+            return PlaylistToAsk();
+        }
 
+        private bool IsPlayingPlaylistDeleted => _playingPlaylist is { } && !Playlists.Contains(_playingPlaylist);
+
+        private NamedPlaylistViewModel? PlaylistToAsk()
+        {
             // After a restart it isn't loaded yet.
             var playlist = _playingPlaylist ?? SelectedPlaylist;
             playlist?.EnsureLoaded();
@@ -220,6 +312,14 @@ namespace Lalamachine.ViewModel
             foreach (var playlist in Playlists)
             {
                 playlist.Reload();
+            }
+        }
+
+        public void TrackAnalyzedHandler(object? sender, TrackAnalyzedEventArgs e)
+        {
+            foreach (var playlist in Playlists)
+            {
+                playlist.TrackAnalyzedHandler(sender, e);
             }
         }
 

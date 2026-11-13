@@ -91,12 +91,12 @@ namespace LibLala.Jellyfin
 
         // Windows has backslashes, and macOS stores some letters as a base letter plus an accent. Case doesn't count either,
         // the same files can be on a file system that ignores it.
-        private static string Normalize(string path)
+        internal static string Normalize(string path)
         {
             return path.Replace('\\', '/').Normalize(NormalizationForm.FormC);
         }
 
-        private static string FileName(string normalizedPath)
+        internal static string FileName(string normalizedPath)
         {
             return normalizedPath[(normalizedPath.LastIndexOf('/') + 1)..];
         }

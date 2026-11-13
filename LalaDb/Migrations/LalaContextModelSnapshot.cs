@@ -182,6 +182,61 @@ namespace LalaDb.Migrations
                     b.ToTable("Tracks");
                 });
 
+            modelBuilder.Entity("LalaDb.Data.TrackAnalysis", b =>
+                {
+                    b.Property<int>("TrackAnalysisId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("AnalyzerVersion")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("BeatCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("BeatDeviationMs")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("BeatsPerMinute")
+                        .HasColumnType("REAL");
+
+                    b.Property<long>("FileSize")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("FileWriteTicks")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("FirstBeat")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("FirstDownbeat")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("KeyAnalyzerVersion")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("MusicEnd")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("MusicStart")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("TrackAnalysisId");
+
+                    b.HasIndex("Path")
+                        .IsUnique();
+
+                    b.ToTable("TrackAnalyses");
+                });
+
             modelBuilder.Entity("LalaDb.Data.ArtistTrack", b =>
                 {
                     b.HasOne("LalaDb.Data.Artist", "Artist")

@@ -160,6 +160,140 @@ namespace Lalamachine.ViewModel.Unittests
             Assert.That(viewModel.IsPushing, Is.False);
         }
 
+        [Test]
+        public void PullPlaylist_ReplacesTheTracksAndShowsThePlaylist()
+        {
+            ViewModelWith(("Mix", ["a", "b"]));
+            var puller = Substitute.For<IPlaylistPuller>();
+            puller.PullAsync(Arg.Any<ILocalPlaylists>()).Returns(x =>
+            {
+                x.Arg<ILocalPlaylists>().Replace("Mix", [PathOf("c"), PathOf("a")]);
+                return Task.CompletedTask;
+            });
+            var viewModel = new PlaylistsViewModel(_context, _dialogs, null, puller);
+            var playlist = Select(viewModel, "Mix");
+            Select(viewModel, Liked);
+
+            viewModel.PullPlaylistCommand.Execute(null);
+
+            Assert.That(viewModel.SelectedPlaylist, Is.SameAs(playlist));
+            Assert.That(Titles(playlist), Is.EqualTo(new[] { "c", "a" }));
+            Assert.That(playlist.HasUnsavedOrder, Is.False);
+            Assert.That(SavedTitles("Mix"), Is.EqualTo(new[] { "c", "a" }));
+            Assert.That(viewModel.IsPulling, Is.False);
+        }
+
+        [Test]
+        public void PullPlaylist_KeepsTheNameHereWhenItOnlyDiffersInCase()
+        {
+            var viewModel = ViewModelWith(("Mix", ["a"]));
+            ILocalPlaylists playlists = viewModel;
+
+            playlists.Replace("MIX", [PathOf("b")]);
+
+            Assert.That(Names(viewModel), Is.EqualTo(new[] { Liked, "Mix" }));
+            Assert.That(SavedTitles("Mix"), Is.EqualTo(new[] { "b" }));
+        }
+
+        [Test]
+        public void PullPlaylist_CreatesANewOneInItsPlace()
+        {
+            var viewModel = ViewModelWith(("Aaa", ["a"]), ("Ccc", ["c"]));
+            ILocalPlaylists playlists = viewModel;
+
+            playlists.Replace("Bbb", [PathOf("b"), PathOf("a")]);
+
+            Assert.That(Names(viewModel), Is.EqualTo(new[] { Liked, "Aaa", "Bbb", "Ccc" }));
+            Assert.That(viewModel.SelectedPlaylist!.Name, Is.EqualTo("Bbb"));
+            Assert.That(Titles(viewModel.SelectedPlaylist), Is.EqualTo(new[] { "b", "a" }));
+            Assert.That(SavedTitles("Bbb"), Is.EqualTo(new[] { "b", "a" }));
+        }
+
+        [Test]
+        public void PullPlaylist_FindsThePlaylistHereIgnoringCase()
+        {
+            var viewModel = ViewModelWith(("Mix", ["a", "b"]));
+            new PlaylistModel(_context).AddTracks("Mix", ["/nowhere/gone.mp3"]);
+            ILocalPlaylists playlists = viewModel;
+
+            // Also the track the library doesn't have, it gets replaced as well.
+            Assert.That(playlists.Find("mix"), Is.EqualTo(new LocalPlaylist("Mix", 3, false)));
+            Assert.That(playlists.Find("Other"), Is.Null);
+        }
+
+        [Test]
+        public void PullPlaylist_FindSaysWhenThereIsANewOrderThatIsntSaved()
+        {
+            var viewModel = ViewModelWith(("Mix", ["a", "b"]));
+            var playlist = Select(viewModel, "Mix");
+            playlist.MoveTrack(playlist.Playlist[0], 1);
+
+            Assert.That(((ILocalPlaylists)viewModel).Find("Mix")!.HasUnsavedOrder, Is.True);
+        }
+
+        [Test]
+        public void PullPlaylist_IntoLikedChangesTheHearts()
+        {
+            var viewModel = ViewModelWith((Liked, ["a", "b"]), ("Mix", ["a", "b", "c"]));
+            var mix = Select(viewModel, "Mix");
+            var changes = new List<(string[] Paths, bool IsLiked)>();
+            viewModel.LikedChanged += (o, e) => changes.Add((e.Paths.ToArray(), e.IsLiked));
+
+            ((ILocalPlaylists)viewModel).Replace(Liked, [PathOf("c"), PathOf("b")]);
+
+            Assert.That(viewModel.IsLiked(PathOf("a")), Is.False);
+            Assert.That(viewModel.IsLiked(PathOf("b")), Is.True);
+            Assert.That(viewModel.IsLiked(PathOf("c")), Is.True);
+            Assert.That(changes, Has.Count.EqualTo(2));
+            Assert.That(changes[0].Paths, Is.EqualTo(new[] { PathOf("a") }));
+            Assert.That(changes[0].IsLiked, Is.False);
+            Assert.That(changes[1].Paths, Is.EqualTo(new[] { PathOf("c") }));
+            Assert.That(changes[1].IsLiked, Is.True);
+            Assert.That(mix.Playlist.Select(x => x.IsLiked), Is.EqualTo(new[] { false, true, true }));
+            Assert.That(viewModel.SelectedPlaylist!.Playlist.Select(x => x.IsLiked), Is.All.True);
+        }
+
+        [Test]
+        public void PullPlaylist_IntoAnotherPlaylistLeavesTheHearts()
+        {
+            var viewModel = ViewModelWith((Liked, ["a"]), ("Mix", ["a"]));
+            var likedChanges = 0;
+            viewModel.LikedChanged += (o, e) => ++likedChanges;
+
+            ((ILocalPlaylists)viewModel).Replace("Mix", [PathOf("b")]);
+
+            Assert.That(viewModel.IsLiked(PathOf("a")), Is.True);
+            Assert.That(likedChanges, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void PullPlaylist_WaitsForTheOneThatIsRunning()
+        {
+            ViewModelWith();
+            var puller = Substitute.For<IPlaylistPuller>();
+            var running = new TaskCompletionSource();
+            puller.PullAsync(Arg.Any<ILocalPlaylists>()).Returns(running.Task);
+            var viewModel = new PlaylistsViewModel(_context, _dialogs, null, puller);
+
+            viewModel.PullPlaylistCommand.Execute(null);
+            Assert.That(viewModel.IsPulling, Is.True);
+            viewModel.PullPlaylistCommand.Execute(null);
+
+            puller.Received(1).PullAsync(Arg.Any<ILocalPlaylists>());
+            running.SetResult();
+            Assert.That(viewModel.IsPulling, Is.False);
+        }
+
+        [Test]
+        public void PullPlaylist_DoesNothingWithoutAPuller()
+        {
+            var viewModel = ViewModelWith();
+
+            viewModel.PullPlaylistCommand.Execute(null);
+
+            Assert.That(viewModel.IsPulling, Is.False);
+        }
+
         private void NameTheNextPlaylist(string name)
         {
             _dialogs.AskForTextAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(Task.FromResult<string?>(name));
@@ -361,6 +495,26 @@ namespace Lalamachine.ViewModel.Unittests
 
             viewModel.PlayNextTrackHandler(null, System.EventArgs.Empty);
             Assert.That(playedPath, Is.EqualTo(PathOf("c")));
+        }
+
+        // Asked for a track to mix in before the end, which is no next yet.
+        [Test]
+        public void DeletePlaylist_WhilePlaying_NothingIsNextToMixIn_AndNextAfterThatStillStops()
+        {
+            var viewModel = ViewModelWith(("Aaa", ["a", "b"]), ("Bbb", ["c"]));
+            var playlist = Select(viewModel, "Aaa");
+            playlist.PlayTrackCommand.Execute(playlist.Playlist[0]);
+            _dialogs.ConfirmAsync(Arg.Any<string>()).Returns(Task.FromResult(true));
+            viewModel.DeletePlaylistCommand.Execute(null);
+            var playedPath = "";
+            viewModel.PlayTrackEvent += (o, e) => playedPath = e.Path;
+            var next = new NextTrackEventArgs();
+
+            viewModel.PeekNextTrackHandler(null, next);
+            Assert.That(next.Track, Is.Null);
+
+            viewModel.PlayNextTrackHandler(null, System.EventArgs.Empty);
+            Assert.That(playedPath, Is.Empty);
         }
 
         [Test]
@@ -1141,6 +1295,20 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
+        public void TrackAnalyzed_ShowsWhatWasFound_InEveryPlaylistThatHasTheTrack()
+        {
+            var viewModel = ViewModelWith(("Aaa", ["a", "b"]), ("Bbb", ["b"]));
+            var first = Select(viewModel, "Aaa");
+            var second = Select(viewModel, "Bbb");
+
+            viewModel.TrackAnalyzedHandler(null, new TrackAnalyzedEventArgs(PathOf("b"), "8A", 128));
+
+            Assert.That(first.Playlist.Select(x => x.InitialKey), Is.EqualTo(new[] { "", "8A" }));
+            Assert.That(second.Playlist.Select(x => x.BeatsPerMinuteString), Is.EqualTo(new[] { "128" }));
+            Assert.That(first.HasUnsavedOrder, Is.False);
+        }
+
+        [Test]
         public void ScanFinished_ShowsTheNewTagsAndKeepsThePlayingTrack()
         {
             var viewModel = ViewModelWith(("Aaa", ["a", "b"]));
@@ -1153,6 +1321,22 @@ namespace Lalamachine.ViewModel.Unittests
 
             Assert.That(Titles(playlist), Is.EqualTo(new[] { "new title", "b" }));
             Assert.That(playlist.CurrentIndex, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ScanDuringATransition_TheTrackMixedInIsStillTheListedOne()
+        {
+            var viewModel = ViewModelWith(("Aaa", ["a", "b", "c"]));
+            var playlist = Select(viewModel, "Aaa");
+            playlist.PlayTrackCommand.Execute(playlist.Playlist[0]);
+            var next = new NextTrackEventArgs();
+            viewModel.PeekNextTrackHandler(null, next);
+            viewModel.ScanningChangedHandler(null, new ScanningChangedEventArgs(false));
+
+            playlist.WentOnTo(next.Track!);
+
+            Assert.That(playlist.CurrentIndex, Is.EqualTo(1));
+            Assert.That(playlist.NextTrack?.Path, Is.EqualTo(PathOf("c")));
         }
 
         private void RemoveFromLibrary(string title)

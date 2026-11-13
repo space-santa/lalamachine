@@ -4,8 +4,11 @@ using System.ComponentModel;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
+using Avalonia.Styling;
 using Avalonia.VisualTree;
 using Lalamachine.ViewModel;
 using LibLala.DomainPrimitives;
@@ -15,6 +18,12 @@ namespace Lalamachine.Desktop.Views
     // What the grids of tracks have in common.
     internal static class TrackGrid
     {
+        private const string AscendingIndicator = " ▲";
+        private const string DescendingIndicator = " ▼";
+
+        // One for all grids, see ColumnOrderSettings.
+        private static readonly Lazy<ColumnOrderSettings> ColumnOrders = new(() => new ColumnOrderSettings());
+
         public static void Attach(DataGrid grid)
         {
             grid.Sorting += Sort;
@@ -46,9 +55,10 @@ namespace Lalamachine.Desktop.Views
             return (eventSource as Visual)?.FindAncestorOfType<DataGridRow>(includeSelf: true)?.DataContext as PlaylistTags;
         }
 
-        private static bool IsOnColumnHeader(object? eventSource)
+        // On a header or on the empty part of the row of headers, right of the last column.
+        private static bool IsOnColumnHeaders(object? eventSource)
         {
-            return (eventSource as Visual)?.FindAncestorOfType<DataGridColumnHeader>(includeSelf: true) is not null;
+            return (eventSource as Visual)?.FindAncestorOfType<DataGridColumnHeadersPresenter>(includeSelf: true) is not null;
         }
 
         // The heart of a track is for clicking, not for playing or dragging the track.
@@ -65,14 +75,65 @@ namespace Lalamachine.Desktop.Views
             }
         }
 
+        // Shows the columns in the order the user dragged them to the last time. Right-clicking the headers has the default
+        // order back. Every grid has its own order, under its name.
+        public static void RememberColumnOrder(DataGrid grid, string gridName)
+        {
+            // The one in the XAML.
+            var defaultOrder = grid.Columns.Select(ColumnName).ToList();
+            Arrange(grid, ColumnOrders.Value.OrderOf(gridName, defaultOrder));
+            // Only after the user dragged a column, not when the order is set here.
+            grid.ColumnReordered += (sender, e) => ColumnOrders.Value.SetOrderOf(gridName, ColumnOrder(grid), defaultOrder);
+
+            var restoreItem = new MenuItem { Header = "Restore default column order" };
+            restoreItem.Click += (sender, e) =>
+            {
+                Arrange(grid, defaultOrder);
+                ColumnOrders.Value.ResetOrderOf(gridName);
+            };
+            var menu = new ContextMenu { Items = { restoreItem } };
+            menu.Opening += (sender, e) => restoreItem.IsEnabled = !ColumnOrder(grid).SequenceEqual(defaultOrder);
+            // On the row of headers, not on each header: the empty part right of the last column is a header that is
+            // disabled, a click there goes through it. With a background, the row gets it, not the grid behind it.
+            grid.Styles.Add(new Style(x => x.OfType<DataGridColumnHeadersPresenter>())
+            {
+                Setters =
+                {
+                    new Setter(Control.ContextMenuProperty, menu),
+                    new Setter(Panel.BackgroundProperty, Brushes.Transparent),
+                },
+            });
+        }
+
+        // The Tag is the column's name. A sorted column's header also shows the direction.
+        private static string ColumnName(DataGridColumn column)
+        {
+            return column.Tag as string ?? throw new InvalidOperationException("A column of tracks has no name in its Tag.");
+        }
+
+        private static List<string> ColumnOrder(DataGrid grid)
+        {
+            return grid.Columns.OrderBy(x => x.DisplayIndex).Select(ColumnName).ToList();
+        }
+
+        private static void Arrange(DataGrid grid, IReadOnlyList<string> order)
+        {
+            var columns = grid.Columns.ToDictionary(ColumnName);
+            // Moving a column to a place shifts the ones from there on, not the ones before it.
+            for (var i = 0; i < order.Count; i++)
+            {
+                columns[order[i]].DisplayIndex = i;
+            }
+        }
+
         public static void ClearSortIndicators(DataGrid grid)
         {
             foreach (var column in grid.Columns)
             {
-                // The Tag is the column's name, the header also shows the sort direction.
-                if (column.Tag is string columnName)
+                // Only the headers with a direction: the name of the ♥ column isn't its header, it has none.
+                if (column.Header is string header && (header.EndsWith(AscendingIndicator, StringComparison.Ordinal) || header.EndsWith(DescendingIndicator, StringComparison.Ordinal)))
                 {
-                    column.Header = columnName;
+                    column.Header = ColumnName(column);
                 }
             }
         }
@@ -86,11 +147,11 @@ namespace Lalamachine.Desktop.Views
                 return;
             }
 
-            var ascendingHeader = $"{columnName} ▲";
+            var ascendingHeader = columnName + AscendingIndicator;
             var direction = ascendingHeader.Equals(e.Column.Header) ? ListSortDirection.Descending : ListSortDirection.Ascending;
 
             ClearSortIndicators(grid);
-            e.Column.Header = direction == ListSortDirection.Ascending ? ascendingHeader : $"{columnName} ▼";
+            e.Column.Header = direction == ListSortDirection.Ascending ? ascendingHeader : columnName + DescendingIndicator;
 
             viewModel.SortCommand.Execute(new SortMessage(direction, new PlaylistColumn(columnName)));
         }
@@ -182,7 +243,11 @@ namespace Lalamachine.Desktop.Views
                 var dragStart = _dragStart;
                 _dragStart = null;
                 using var data = new DataTransfer();
-                data.Add(DataTransferItem.Create(TrackFormat, track));
+                var item = DataTransferItem.Create(TrackFormat, track);
+                // An in-process format doesn't go on the macOS pasteboard, and a drag without anything on it ends the app:
+                // "There must be 1 draggingItem per pasteboardItem". The path as text is something for it.
+                item.SetText(track.Path);
+                data.Add(item);
                 await DragDrop.DoDragDropAsync(dragStart, data, DragDropEffects.Move).ConfigureAwait(true);
             }
 
@@ -206,7 +271,7 @@ namespace Lalamachine.Desktop.Views
                 {
                     newIndex = playlist.IndexOf(target);
                 }
-                else if (IsOnColumnHeader(e.Source))
+                else if (IsOnColumnHeaders(e.Source))
                 {
                     newIndex = 0;
                 }

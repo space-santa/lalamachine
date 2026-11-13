@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace LalaDb.Data
 {
@@ -91,5 +92,30 @@ namespace LalaDb.Data
         public string? TrackPath { get; set; }
 
         public int Order { get; set; }
+    }
+
+    // What the analysis found in a track. Kept by path, not with the track: a scan replaces all tracks.
+    [Index(nameof(Path), IsUnique = true)]
+    public class TrackAnalysis
+    {
+        public int TrackAnalysisId { get; set; }
+        public string Path { get; set; } = "";
+        // The file as it was analyzed. When it changes, it is analyzed again.
+        public long FileSize { get; set; }
+        public long FileWriteTicks { get; set; }
+        public int AnalyzerVersion { get; set; }
+        // 0 when there was no beat.
+        public double BeatsPerMinute { get; set; }
+        public double FirstBeat { get; set; }
+        public double BeatDeviationMs { get; set; }
+        public int BeatCount { get; set; }
+        public double FirstDownbeat { get; set; }
+        public double MusicStart { get; set; }
+        public double MusicEnd { get; set; }
+        // The version of the key analysis that looked for the key, 0 when none did: a track with a key in its tags isn't
+        // looked at.
+        public int KeyAnalyzerVersion { get; set; }
+        // On the Camelot wheel, like 8A. Empty when there was no key to find.
+        public string Key { get; set; } = "";
     }
 }

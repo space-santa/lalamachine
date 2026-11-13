@@ -12,6 +12,9 @@
             <TextBlock Classes="label" Text="{Binding LibraryPath}" />
         </StackPanel>
         <Label IsVisible="{Binding Scanning}" HorizontalAlignment="Center" FontSize="24" Content="Scanning..." />
+        <!-- Its own view model, the main window sets it where lalamachine analyzes tracks. -->
+        <TextBlock x:Name="AnalysisStatus" x:DataType="vm:TrackAnalysisViewModel" Classes="label"
+                   Text="{Binding Status}" IsVisible="{Binding IsAnalyzing, FallbackValue=False}" />
 
         <Label Classes="header" Margin="0,16,0,4" Content="Jellyfin" />
         <Panel DataContext="{Binding Jellyfin}">

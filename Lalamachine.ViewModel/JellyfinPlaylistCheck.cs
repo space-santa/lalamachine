@@ -14,7 +14,7 @@ namespace Lalamachine.ViewModel
     {
         // A wrong library folder can make it thousands of tracks. Some are enough to see what's going on.
         private const int MaxListedTracks = 50;
-        private const int MaxListedSameNames = 3;
+        internal const int MaxListedSameNames = 3;
 
         public static string Report(string libraryPath, JellyfinAudioLibrary library, string userName, IEnumerable<PlaylistPaths> playlists)
         {
@@ -88,7 +88,7 @@ namespace Lalamachine.ViewModel
             return matches.Where(x => x.Status == status).ToList();
         }
 
-        private static void AppendTracks(StringBuilder report, string title, List<JellyfinTrackMatch> tracks, Func<JellyfinTrackMatch, string> name, Func<JellyfinTrackMatch, IEnumerable<string>> details)
+        internal static void AppendTracks<T>(StringBuilder report, string title, List<T> tracks, Func<T, string> name, Func<T, IEnumerable<string>> details)
         {
             if (tracks.Count == 0)
             {

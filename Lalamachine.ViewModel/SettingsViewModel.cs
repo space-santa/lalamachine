@@ -50,6 +50,7 @@ namespace Lalamachine.ViewModel
                 () => playlists.PlaylistNames().Select(name => new PlaylistPaths(name, playlists.TrackPaths(name))).ToList(),
                 () => LibraryPath);
             JellyfinPusher = new JellyfinPlaylistPusher(jellyfinSettings, CreateJellyfinClient, dialogs, () => LibraryPath);
+            JellyfinPuller = new JellyfinPlaylistPuller(jellyfinSettings, CreateJellyfinClient, dialogs, () => LibraryPath, () => playlists.LibraryTrackPaths());
             Scanning = false;
             PropertyChanged += LibraryPathChanged;
         }
@@ -57,6 +58,8 @@ namespace Lalamachine.ViewModel
         public JellyfinSettingsViewModel Jellyfin { get; }
 
         public IPlaylistPusher JellyfinPusher { get; }
+
+        public IPlaylistPuller JellyfinPuller { get; }
 
         private void LibraryPathChanged(object? sender, PropertyChangedEventArgs e)
         {

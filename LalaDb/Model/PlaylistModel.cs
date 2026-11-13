@@ -97,6 +97,24 @@ namespace LalaDb.Model
             _context.SaveChanges();
         }
 
+        // In the given order, each once. All at once, so that it is either the old tracks or the new ones.
+        public void ReplaceTracks(string name, IEnumerable<string> paths)
+        {
+            var playlist = Playlists.FirstOrDefault(x => x.Name == name);
+            if (playlist is null)
+            {
+                return;
+            }
+
+            PlaylistTracks.RemoveRange(PlaylistTracks.Where(x => x.PlaylistId == playlist.PlaylistId));
+            var order = 0;
+            foreach (var path in (paths ?? []).Distinct())
+            {
+                PlaylistTracks.Add(new PlaylistTrack { PlaylistId = playlist.PlaylistId, TrackPath = path, Order = ++order });
+            }
+            _context.SaveChanges();
+        }
+
         public void RemoveTracks(string name, IEnumerable<string> paths)
         {
             var removed = (paths ?? []).ToList();
@@ -145,6 +163,12 @@ namespace LalaDb.Model
                 .ToList();
         }
 
+        // All the tracks a playlist can be made of.
+        public IList<string> LibraryTrackPaths()
+        {
+            return Tracks.Where(x => x.Path != null).Select(x => x.Path!).ToList();
+        }
+
         public IList<LalaTags> GetPlaylistTracks(string name)
         {
             var trackPaths = TrackPaths(name);
@@ -161,6 +185,7 @@ namespace LalaDb.Model
                 .GroupBy(track => track.Path!)
                 .ToDictionary(group => group.Key, group => group.First());
 
+            var detected = DetectedTags.Load(_context);
             var tagList = new List<LalaTags>();
             foreach (var trackPath in trackPaths)
             {
@@ -172,7 +197,7 @@ namespace LalaDb.Model
 
                 try
                 {
-                    tagList.Add(LalaTags.Build(track));
+                    tagList.Add(LalaTags.Build(track, detected));
                 }
                 catch (System.ArgumentException)
                 {

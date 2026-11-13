@@ -38,6 +38,8 @@
 *.exe binary
 *.out binary
 *.app binary
+# Audio
+*.mp3 binary
 # Graphics
 *.png binary
 *.jpg binary
