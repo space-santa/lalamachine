@@ -1,3 +1,6 @@
+* Sat Nov 14 2026 space-santa 5.1.0
+  * Hovering over a track's key shows it in natural notation, so 8A shows A minor and 8B shows C major.
+
 * Fri Nov 13 2026 space-santa 5.0.0
   * Migrate the app from WPF to Avalonia UI.
   * The lists of tracks show Title, Length, Key, BPM, Artist and Genre first. Drag a column's header to move the column, the app remembers where it is. Right-click the headers to restore the default order.

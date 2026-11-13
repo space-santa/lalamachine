@@ -11,7 +11,7 @@
     <EnableWindowsTargeting Condition="'$(ForWindows)' == 'true'">true</EnableWindowsTargeting>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\lalamachine.ico</ApplicationIcon>
-    <Version>5.0.0</Version>
+    <Version>5.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
