@@ -1,3 +1,22 @@
+* Fri Nov 13 2026 space-santa 5.0.0
+  * Migrate the app from WPF to Avalonia UI.
+  * The lists of tracks show Title, Length, Key, BPM, Artist and Genre first. Drag a column's header to move the column, the app remembers where it is. Right-click the headers to restore the default order.
+  * Show the cover of the track that plays at the bottom left, next to the player's buttons. It's the picture in the track's tags, a track without one shows a note there.
+  * Add a button to pull a playlist from your Jellyfin server into the Playlists tab, also one lalamachine doesn't have yet. The tracks are the ones from your library, in the same order. A playlist with the same name gets its tracks replaced, after asking.
+  * Add a button to push a playlist to your Jellyfin server, with the same tracks in the same order. The settings have the connection to the server and a check of which tracks it has.
+  * Add Key and BPM columns, read from the tags of the tracks. Scan the library again to fill them.
+  * Find the key and the tempo of tracks that have none in their tags, and show them in the Key and BPM columns. The key is in Camelot notation, as Mixed In Key writes it: 8A, 9B and so on. The tempo shows for tracks with a steady beat, between 80 and 160 BPM. The app finds both in the background after a scan, the settings show how far it is. What the tags say stays as it is, and the files aren't changed.
+  * Add a filter by key to the library's tracks, in the header of the Key column.
+  * Allow selecting more than one genre, artist or album to filter the library by.
+  * Add a heart on every track for the ones you like. They go in a playlist called Liked.
+  * Play, pause and skip tracks with the buttons of Bluetooth headphones and the keyboard's media keys, also while lalamachine is in the background. The track that plays shows with its cover in Now Playing in macOS's Control Center, and in the media flyout on Windows. Drag the position there to go to another part of the track.
+  * Add a Playlists tab to create, rename, delete and reorder named playlists.
+  * Turn the Playlist tab into the Queue, for what to listen to next. It can be saved as a named playlist.
+  * Mix each track into the next like a DJ when it follows on its own: on the beat, at the same tempo, through filters that hand the bass over from one to the other. Tracks whose tempos are too far apart for that follow right on the downbeat where the music ends. On macOS and Windows, the 🎛 button next to shuffle and repeat turns it on and off. After the update the app finds the beats of the library in the background, the settings show how far it is.
+  * On Windows the app plays through its own audio engine like on macOS, and doesn't come with VLC any more: it takes about 100 MB less space.
+  * Bugfix: A track without an artist shows just its title in the player, without a dash in front.
+  * Bugfix: Uninstalling from the Windows settings works now.
+
 The versions after 3.7.1 up to 4.99.17 weren't recorded here.
 
 * Fri Jun 15 2018 space-santa 3.7.1-1
