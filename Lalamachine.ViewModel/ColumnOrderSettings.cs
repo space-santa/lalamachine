@@ -25,8 +25,17 @@ namespace Lalamachine.ViewModel
             return saved.Where(defaultOrder.Contains).Concat(defaultOrder).Distinct().ToList();
         }
 
-        public void SetOrderOf(string grid, IEnumerable<string> order)
+        // The default order isn't saved: it's the same as nothing saved, which follows the default when an update changes it.
+        public void SetOrderOf(string grid, IReadOnlyList<string> order, IReadOnlyList<string> defaultOrder)
         {
+            ArgumentNullException.ThrowIfNull(order);
+
+            if (order.SequenceEqual(defaultOrder))
+            {
+                ResetOrderOf(grid);
+                return;
+            }
+
             Set(string.Join(Separator, order), grid);
         }
 

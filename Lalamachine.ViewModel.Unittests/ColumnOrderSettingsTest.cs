@@ -23,7 +23,7 @@ namespace Lalamachine.ViewModel.Unittests
         [Test]
         public void OrderOf_IsTheSavedOrder()
         {
-            _settings.SetOrderOf("Library", ["Key", "BPM", "Title", "Length"]);
+            _settings.SetOrderOf("Library", ["Key", "BPM", "Title", "Length"], DefaultOrder);
 
             Assert.That(_settings.OrderOf("Library", DefaultOrder), Is.EqualTo(new[] { "Key", "BPM", "Title", "Length" }));
         }
@@ -31,7 +31,7 @@ namespace Lalamachine.ViewModel.Unittests
         [Test]
         public void OrderOf_IsTheOneOfTheGrid()
         {
-            _settings.SetOrderOf("Library", ["Key", "BPM", "Title", "Length"]);
+            _settings.SetOrderOf("Library", ["Key", "BPM", "Title", "Length"], DefaultOrder);
 
             Assert.That(_settings.OrderOf("Queue", DefaultOrder), Is.EqualTo(DefaultOrder));
         }
@@ -40,7 +40,7 @@ namespace Lalamachine.ViewModel.Unittests
         public void OrderOf_IsKept_AfterTheAppStartsAgain()
         {
             var file = new InMemorySettingsFile();
-            new ColumnOrderSettings(file).SetOrderOf("Library", ["Key", "BPM", "Title", "Length"]);
+            new ColumnOrderSettings(file).SetOrderOf("Library", ["Key", "BPM", "Title", "Length"], DefaultOrder);
 
             Assert.That(new ColumnOrderSettings(file).OrderOf("Library", DefaultOrder), Is.EqualTo(new[] { "Key", "BPM", "Title", "Length" }));
         }
@@ -48,7 +48,7 @@ namespace Lalamachine.ViewModel.Unittests
         [Test]
         public void OrderOf_IsTheDefault_AfterReset()
         {
-            _settings.SetOrderOf("Library", ["Key", "BPM", "Title", "Length"]);
+            _settings.SetOrderOf("Library", ["Key", "BPM", "Title", "Length"], DefaultOrder);
 
             _settings.ResetOrderOf("Library");
 
@@ -56,9 +56,30 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
+        public void OrderOf_FollowsANewDefault_WhenTheDefaultWasSaved()
+        {
+            // E.g. a column dragged away and back.
+            _settings.SetOrderOf("Library", DefaultOrder, DefaultOrder);
+
+            string[] newDefaultOrder = ["Title", "Comment", "Length", "Key", "BPM"];
+            Assert.That(_settings.OrderOf("Library", newDefaultOrder), Is.EqualTo(newDefaultOrder));
+        }
+
+        [Test]
+        public void OrderOf_IsTheDefault_AfterTheDefaultWasSavedOverAnother()
+        {
+            _settings.SetOrderOf("Library", ["Key", "BPM", "Title", "Length"], DefaultOrder);
+
+            _settings.SetOrderOf("Library", DefaultOrder, DefaultOrder);
+
+            string[] newDefaultOrder = ["Length", "Title", "Key", "BPM"];
+            Assert.That(_settings.OrderOf("Library", newDefaultOrder), Is.EqualTo(newDefaultOrder));
+        }
+
+        [Test]
         public void OrderOf_PutsANewColumnAtTheEnd()
         {
-            _settings.SetOrderOf("Library", ["Key", "Title", "Length"]);
+            _settings.SetOrderOf("Library", ["Key", "Title", "Length"], DefaultOrder);
 
             Assert.That(_settings.OrderOf("Library", DefaultOrder), Is.EqualTo(new[] { "Key", "Title", "Length", "BPM" }));
         }
@@ -66,7 +87,7 @@ namespace Lalamachine.ViewModel.Unittests
         [Test]
         public void OrderOf_LeavesOutAColumnThatIsGone()
         {
-            _settings.SetOrderOf("Library", ["Key", "Comment", "BPM", "Title", "Length"]);
+            _settings.SetOrderOf("Library", ["Key", "Comment", "BPM", "Title", "Length"], DefaultOrder);
 
             Assert.That(_settings.OrderOf("Library", DefaultOrder), Is.EqualTo(new[] { "Key", "BPM", "Title", "Length" }));
         }

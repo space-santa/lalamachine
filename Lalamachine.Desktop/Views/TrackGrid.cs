@@ -45,9 +45,10 @@ namespace Lalamachine.Desktop.Views
             return (eventSource as Visual)?.FindAncestorOfType<DataGridRow>(includeSelf: true)?.DataContext as PlaylistTags;
         }
 
-        private static bool IsOnColumnHeader(object? eventSource)
+        // On a header or on the empty part of the row of headers, right of the last column.
+        private static bool IsOnColumnHeaders(object? eventSource)
         {
-            return (eventSource as Visual)?.FindAncestorOfType<DataGridColumnHeader>(includeSelf: true) is not null;
+            return (eventSource as Visual)?.FindAncestorOfType<DataGridColumnHeadersPresenter>(includeSelf: true) is not null;
         }
 
         // The heart of a track is for clicking, not for playing or dragging the track.
@@ -72,7 +73,7 @@ namespace Lalamachine.Desktop.Views
             var defaultOrder = grid.Columns.Select(ColumnName).ToList();
             Arrange(grid, ColumnOrders.Value.OrderOf(gridName, defaultOrder));
             // Only after the user dragged a column, not when the order is set here.
-            grid.ColumnReordered += (sender, e) => ColumnOrders.Value.SetOrderOf(gridName, ColumnOrder(grid));
+            grid.ColumnReordered += (sender, e) => ColumnOrders.Value.SetOrderOf(gridName, ColumnOrder(grid), defaultOrder);
 
             var restoreItem = new MenuItem { Header = "Restore default column order" };
             restoreItem.Click += (sender, e) =>
@@ -260,7 +261,7 @@ namespace Lalamachine.Desktop.Views
                 {
                     newIndex = playlist.IndexOf(target);
                 }
-                else if (IsOnColumnHeader(e.Source))
+                else if (IsOnColumnHeaders(e.Source))
                 {
                     newIndex = 0;
                 }
