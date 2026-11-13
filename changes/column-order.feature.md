@@ -1,0 +1,1 @@
+The lists of tracks show Title, Length, Key, BPM, Artist and Genre first. Drag a column's header to move the column, the app remembers where it is. Right-click the headers to restore the default order.

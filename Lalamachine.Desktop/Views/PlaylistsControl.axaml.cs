@@ -10,6 +10,7 @@ namespace Lalamachine.Desktop.Views
             InitializeComponent();
             TrackGrid.Attach(PlaylistGrid);
             TrackGrid.EnableReorder(PlaylistGrid);
+            TrackGrid.RememberColumnOrder(PlaylistGrid, "Playlists");
         }
 
         private void DiscardButton_Click(object? sender, RoutedEventArgs e)
