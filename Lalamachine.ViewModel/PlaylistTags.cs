@@ -50,5 +50,21 @@ namespace Lalamachine.ViewModel
                 NotifyPropertyChanged();
             }
         }
+
+        // What the analysis found in a track whose tags have no key, or no tempo. Null for the one that the tags have.
+        public void ShowDetected(string? initialKey, uint? beatsPerMinute)
+        {
+            if (initialKey is not null && initialKey != InitialKey)
+            {
+                SetInitialKey(initialKey);
+                NotifyPropertyChanged(nameof(InitialKey));
+            }
+            if (beatsPerMinute is { } value && value != BeatsPerMinute)
+            {
+                SetBeatsPerMinute(value);
+                NotifyPropertyChanged(nameof(BeatsPerMinute));
+                NotifyPropertyChanged(nameof(BeatsPerMinuteString));
+            }
+        }
     }
 }

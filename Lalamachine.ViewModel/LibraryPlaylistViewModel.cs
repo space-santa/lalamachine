@@ -96,6 +96,16 @@ namespace Lalamachine.ViewModel
             }
         }
 
+        public override void TrackAnalyzedHandler(object? sender, TrackAnalyzedEventArgs e)
+        {
+            base.TrackAnalyzedHandler(sender, e);
+            // A key that no track had so far is one to filter by now.
+            if (e?.InitialKey is { } key && KeyFilterOptions.All(x => x.Key != key) && _allTracks.Any(x => x.Path == e.Path))
+            {
+                UpdateKeyFilterOptions(SelectedKeys());
+            }
+        }
+
         protected override IEnumerable<PlaylistTags> AllTracks => _allTracks;
 
         // A scan makes new objects, the library has a track once.

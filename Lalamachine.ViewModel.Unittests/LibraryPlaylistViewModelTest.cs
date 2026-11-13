@@ -346,6 +346,79 @@ namespace Lalamachine.ViewModel.Unittests
             Assert.That(viewModel.Playlist.Select(x => x.IsLiked), Is.EqualTo(new[] { true, false }));
         }
 
+        [Test]
+        public void TrackAnalyzed_ShowsWhatWasFoundOnTheTrack_AndItsKeyIsOneToFilterBy()
+        {
+            var viewModel = ViewModelWith(Track("a", "10A"), Track("b", ""));
+            var track = viewModel.Playlist[1];
+            var changed = new List<string>();
+            track.PropertyChanged += (o, e) => changed.Add(e.PropertyName ?? "");
+
+            viewModel.TrackAnalyzedHandler(null, new TrackAnalyzedEventArgs("/path/to/b", "8A", 128));
+
+            Assert.That(viewModel.Playlist[1], Is.SameAs(track));
+            Assert.That((track.InitialKey, track.BeatsPerMinuteString), Is.EqualTo(("8A", "128")));
+            Assert.That(changed, Is.EquivalentTo(new[] { nameof(PlaylistTags.InitialKey), nameof(PlaylistTags.BeatsPerMinute), nameof(PlaylistTags.BeatsPerMinuteString) }));
+            Assert.That(viewModel.KeyFilterOptions.Select(x => x.Key), Is.EqualTo(new[] { "8A", "10A" }));
+        }
+
+        [Test]
+        public void TrackAnalyzed_WithAKeyThatIsListed_LeavesTheFilterAsItIs()
+        {
+            var viewModel = ViewModelWith(Track("a", "10A"), Track("b", ""), Track("c", "2A"));
+            Tick(viewModel, "2A");
+            var options = viewModel.KeyFilterOptions;
+
+            viewModel.TrackAnalyzedHandler(null, new TrackAnalyzedEventArgs("/path/to/b", "10A", 128));
+
+            Assert.That(viewModel.KeyFilterOptions, Is.SameAs(options));
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "c" }));
+        }
+
+        [Test]
+        public void TrackAnalyzed_ATrackThatTheKeyFilterHides_HasWhatWasFoundWhenItShowsAgain()
+        {
+            var viewModel = ViewModelWith(Track("a", "10A"), Track("b", ""));
+            Tick(viewModel, "10A");
+
+            viewModel.TrackAnalyzedHandler(null, new TrackAnalyzedEventArgs("/path/to/b", "8A", 128));
+            viewModel.ClearKeyFilterCommand.Execute(null);
+
+            Assert.That(viewModel.Playlist.Select(x => x.InitialKey), Is.EqualTo(new[] { "10A", "8A" }));
+        }
+
+        [Test]
+        public void TrackAnalyzed_OnlyTheTempo_LeavesTheKeyOfTheTags()
+        {
+            var viewModel = ViewModelWith(Track("a", "10A"));
+
+            viewModel.TrackAnalyzedHandler(null, new TrackAnalyzedEventArgs("/path/to/a", null, 128));
+
+            Assert.That((viewModel.Playlist[0].InitialKey, viewModel.Playlist[0].BeatsPerMinute), Is.EqualTo(("10A", 128u)));
+        }
+
+        [Test]
+        public void TrackAnalyzed_OnlyTheKey_LeavesTheTempoOfTheTags()
+        {
+            var viewModel = ViewModelWith(Track("a", "", beatsPerMinute: 140));
+
+            viewModel.TrackAnalyzedHandler(null, new TrackAnalyzedEventArgs("/path/to/a", "8A", null));
+
+            Assert.That((viewModel.Playlist[0].InitialKey, viewModel.Playlist[0].BeatsPerMinute), Is.EqualTo(("8A", 140u)));
+        }
+
+        [Test]
+        public void TrackAnalyzed_ATrackThatIsntListed_ChangesNothing()
+        {
+            var viewModel = ViewModelWith(Track("a", ""));
+            var options = viewModel.KeyFilterOptions;
+
+            viewModel.TrackAnalyzedHandler(null, new TrackAnalyzedEventArgs("/path/to/other", "8A", 128));
+
+            Assert.That(viewModel.Playlist[0].InitialKey, Is.Empty);
+            Assert.That(viewModel.KeyFilterOptions, Is.SameAs(options));
+        }
+
         [TestCase(ShuffleRepeatState.RepeatOne, "/path/to/a")]
         [TestCase(ShuffleRepeatState.RepeatAll, "/path/to/b")]
         public void ShuffleRepeatChanged_AppliesToTheLibraryToo(ShuffleRepeatState state, string expected)

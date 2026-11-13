@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LalaDb.Data;
+using LibLala.Audio.Analysis;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
@@ -487,6 +488,37 @@ namespace Lalamachine.ViewModel.Unittests
             Assert.That(viewModel.AlbumFilter, Is.Empty);
             Assert.That(viewModel.SearchString, Is.Empty);
             Assert.That(Titles(viewModel), Is.EqualTo(new[] { "a1", "a2", "b1", "b2" }));
+        }
+
+        [Test]
+        public void DisplayLib_TracksWithoutKeyOrTempoInTheirTags_ShowWhatTheAnalysisFound()
+        {
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            var tagged = context.Tracks!.Single(x => x.Title == "a1");
+            tagged.InitialKey = "5B";
+            tagged.BeatsPerMinute = 140;
+            foreach (var title in new[] { "a1", "a2" })
+            {
+                context.Add(new TrackAnalysis
+                {
+                    Path = $"/nowhere/{title}.mp3",
+                    Key = "8A",
+                    KeyAnalyzerVersion = KeyAnalyzer.Version,
+                    BeatsPerMinute = 127.998,
+                    BeatDeviationMs = 2,
+                    BeatCount = 400,
+                    AnalyzerVersion = BeatGridAnalyzer.Version,
+                });
+            }
+            context.SaveChanges();
+            var viewModel = CreateViewModel(connection, context);
+
+            var shown = viewModel.DisplayLib.ToDictionary(track => track.Title, track => (track.InitialKey, track.BeatsPerMinuteString));
+
+            Assert.That(shown["a1"], Is.EqualTo(("5B", "140")));
+            Assert.That(shown["a2"], Is.EqualTo(("8A", "128")));
+            Assert.That(shown["b1"], Is.EqualTo(("", "")));
         }
 
         [Test]

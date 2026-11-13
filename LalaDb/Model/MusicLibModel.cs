@@ -174,6 +174,9 @@ namespace LalaDb.Model
             return list;
         }
 
+        // What the analysis found for the tracks of DisplayLib whose tags have no key or tempo.
+        public DetectedTags LoadDetectedTags() => DetectedTags.Load(_context);
+
         private static bool IsIn(IReadOnlyCollection<string> filter, string? name)
         {
             return name is { } && filter.Contains(name);
@@ -191,9 +194,10 @@ namespace LalaDb.Model
 
             if (tracks is null) { return tagList; }
 
+            var detected = DetectedTags.Load(_context);
             foreach (var track in tracks)
             {
-                var lalaTags = LalaTags.Build(track);
+                var lalaTags = LalaTags.Build(track, detected);
                 tagList.Add(lalaTags);
             }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LalaDb.Model;
 using LibLala.DomainPrimitives;
 using LibLala.LibLalaTagReader;
 using LibLala.Utils;
@@ -10,14 +11,22 @@ namespace LalaDb.Data
     public class LalaTags : LibLalaTags
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>")]
-        public static LalaTags Build(Track track)
+        public static LalaTags Build(Track track) => Build(track, DetectedTags.None);
+
+        // A track without a key or a tempo in its tags gets what the analysis found.
+        public static LalaTags Build(Track track, DetectedTags detected)
         {
             ArgumentNullException.ThrowIfNull(track);
+            ArgumentNullException.ThrowIfNull(detected);
 
             if (track.Title is null || track.Path is null)
             {
                 throw new System.ArgumentException(paramName: nameof(track), message: "A valid track must have title and path.");
             }
+
+            // From the tags, or else what the analysis found.
+            var beatsPerMinute = track.BeatsPerMinute > 0 ? (uint)track.BeatsPerMinute : detected.BeatsPerMinuteOf(track.Path);
+            var initialKey = string.IsNullOrWhiteSpace(track.InitialKey) ? detected.KeyOf(track.Path) : track.InitialKey;
 
             // The file was checked when it was scanned. Checking again here would make a whole playlist fail to load
             // just because one drive is unplugged.
@@ -27,11 +36,11 @@ namespace LalaDb.Data
             // TODO: Make this not necessary.
             if (track!.Album?.Name is { }) { builder = builder.WithAlbum(track.Album.Name); }
             if (track!.ArtistTracks is { }) { builder = builder.WithArtist(ArtistTackListToStringList(track?.ArtistTracks)); }
-            if (track!.BeatsPerMinute is { }) { builder = builder.WithBeatsPerMinute((uint)track.BeatsPerMinute); }
+            builder = builder.WithBeatsPerMinute(beatsPerMinute);
             if (track!.Comment is { }) { builder = builder.WithComment(track.Comment); }
             if (track!.DiscNumber is { }) { builder = builder.WithDiscNumber((uint)track.DiscNumber); }
             if (track!.GenreTracks is { }) { builder = builder.WithGenre(GenreTackListToStringList(track?.GenreTracks)); }
-            if (track!.InitialKey is { }) { builder = builder.WithInitialKey(track.InitialKey); }
+            builder = builder.WithInitialKey(initialKey);
             if (track!.TrackId is { }) { builder = builder.WithTrackId(track.TrackId); }
             if (track!.TrackNumber is { }) { builder = builder.WithTrackNumber((uint)track.TrackNumber); }
             if (track!.Year is { }) { builder = builder.WithYear(track.Year); }

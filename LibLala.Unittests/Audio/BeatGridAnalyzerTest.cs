@@ -9,7 +9,7 @@ namespace LibLala.Unittests.Audio
     {
         [TestCase(128, 0.25)]
         [TestCase(127.3, 0.31)]
-        [TestCase(174, 0.1)]
+        [TestCase(150, 0.1)]
         [TestCase(93.5, 0.6)]
         public void ASteadyBeat_IsFoundToTheMillisecond(double bpm, double firstBeat)
         {
@@ -45,6 +45,30 @@ namespace LibLala.Unittests.Audio
 
             var offBy = (grid.FirstBeat - 0.25) / (60 / 128.0);
             Assert.That(offBy - Math.Round(offBy), Is.EqualTo(0).Within(0.02));
+        }
+
+        // Where Mixed In Key has the tempo of nearly every track: drum and bass in half time, a slow track in double time.
+        [TestCase(174, 87)]
+        [TestCase(165, 82.5)]
+        [TestCase(70, 140)]
+        public void WithoutATag_TheTempoIsTheOneBetween80And160(double played, double counted)
+        {
+            using var decoder = new DrumDecoder(played, 0.1);
+
+            var grid = BeatGridAnalyzer.Analyze(decoder, taggedBpm: null)!;
+
+            Assert.That(grid.BeatsPerMinute, Is.EqualTo(counted).Within(0.005));
+            Assert.That(grid.IsSteady, Is.True);
+        }
+
+        [TestCase(2, true, true)]
+        [TestCase(2, false, false)]
+        [TestCase(3, false, true)]
+        [TestCase(1, true, false)]
+        public void WhatTheVersionBeforeFound_IsStillRight_ForATrackWithATaggedTempo(int version, bool hasTaggedTempo, bool isCurrent)
+        {
+            Assert.That(BeatGridAnalyzer.Version, Is.EqualTo(3));
+            Assert.That(BeatGridAnalyzer.IsCurrent(version, hasTaggedTempo), Is.EqualTo(isCurrent));
         }
 
         [Test]

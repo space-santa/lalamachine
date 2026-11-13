@@ -112,5 +112,10 @@ namespace LalaDb.Data
         public double FirstDownbeat { get; set; }
         public double MusicStart { get; set; }
         public double MusicEnd { get; set; }
+        // The version of the key analysis that looked for the key, 0 when none did: a track with a key in its tags isn't
+        // looked at.
+        public int KeyAnalyzerVersion { get; set; }
+        // On the Camelot wheel, like 8A. Empty when there was no key to find.
+        public string Key { get; set; } = "";
     }
 }

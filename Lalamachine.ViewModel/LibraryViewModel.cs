@@ -486,15 +486,17 @@ namespace Lalamachine.ViewModel
 
                 var list = _model.DisplayLib(AlbumFilter, ArtistFilter, GenreFilter, SearchString);
 
-                if (list is null) { return displayLib; }
+                // Nothing to list during a scan, and nothing to ask the database for.
+                if (list is null || list.Length == 0) { return displayLib; }
 
+                var detected = _model.LoadDetectedTags();
                 foreach (var track in list)
                 {
                     if (track is { })
                     {
                         try
                         {
-                            displayLib.Add(new PlaylistTags(LalaTags.Build(track)));
+                            displayLib.Add(new PlaylistTags(LalaTags.Build(track, detected)));
                         }
                         catch (ArgumentException)
                         {

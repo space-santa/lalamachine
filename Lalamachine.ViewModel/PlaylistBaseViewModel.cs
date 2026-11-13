@@ -415,6 +415,20 @@ namespace Lalamachine.ViewModel
             }
         }
 
+        // The analysis found the key or the tempo of a track whose tags have none: it shows right away, where the track is.
+        public virtual void TrackAnalyzedHandler(object? sender, TrackAnalyzedEventArgs e)
+        {
+            if (e is null)
+            {
+                return;
+            }
+
+            foreach (var track in AllTracks.Where(x => x.Path == e.Path))
+            {
+                track.ShowDetected(e.InitialKey, e.BeatsPerMinute);
+            }
+        }
+
         protected void MarkLiked(IEnumerable<PlaylistTags> tracks)
         {
             ArgumentNullException.ThrowIfNull(tracks);

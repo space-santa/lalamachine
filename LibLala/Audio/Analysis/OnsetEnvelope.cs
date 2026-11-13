@@ -26,7 +26,8 @@ namespace LibLala.Audio.Analysis
 
         public static double HopSeconds => (double)Hop / SampleRate;
 
-        public static Onsets Compute(IAudioDecoder decoder)
+        // The key analyzer, if there is one, gets all that is read from the decoder.
+        public static Onsets Compute(IAudioDecoder decoder, KeyAnalyzer? keyAnalyzer)
         {
             var capacity = (int)(decoder.Length / 2 / Hop) + 1;
             var allEnvelope = new List<float>(capacity);
@@ -60,6 +61,8 @@ namespace LibLala.Audio.Analysis
             int read;
             while ((read = decoder.Read(block)) > 0)
             {
+                keyAnalyzer?.Add(block.AsSpan(0, read * AudioFormat.Channels));
+
                 // Two stereo frames to one mono sample.
                 for (var i = 0; i + 1 < read; i += 2)
                 {

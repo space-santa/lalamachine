@@ -212,6 +212,13 @@ namespace LalaDb.Migrations
                     b.Property<double>("FirstDownbeat")
                         .HasColumnType("REAL");
 
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("KeyAnalyzerVersion")
+                        .HasColumnType("INTEGER");
+
                     b.Property<double>("MusicEnd")
                         .HasColumnType("REAL");
 

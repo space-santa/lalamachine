@@ -1295,6 +1295,20 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
+        public void TrackAnalyzed_ShowsWhatWasFound_InEveryPlaylistThatHasTheTrack()
+        {
+            var viewModel = ViewModelWith(("Aaa", ["a", "b"]), ("Bbb", ["b"]));
+            var first = Select(viewModel, "Aaa");
+            var second = Select(viewModel, "Bbb");
+
+            viewModel.TrackAnalyzedHandler(null, new TrackAnalyzedEventArgs(PathOf("b"), "8A", 128));
+
+            Assert.That(first.Playlist.Select(x => x.InitialKey), Is.EqualTo(new[] { "", "8A" }));
+            Assert.That(second.Playlist.Select(x => x.BeatsPerMinuteString), Is.EqualTo(new[] { "128" }));
+            Assert.That(first.HasUnsavedOrder, Is.False);
+        }
+
+        [Test]
         public void ScanFinished_ShowsTheNewTagsAndKeepsThePlayingTrack()
         {
             var viewModel = ViewModelWith(("Aaa", ["a", "b"]));
