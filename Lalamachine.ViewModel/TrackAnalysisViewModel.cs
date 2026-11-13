@@ -11,9 +11,26 @@ using LibLala.LibLalaTagReader;
 
 namespace Lalamachine.ViewModel
 {
-    // Finds the beats of the library's tracks that aren't analyzed yet, in the background on threads of low priority. Stops
-    // for a scan and starts again after it. Its properties change on the thread that created it, i.e. the UI thread.
-    public sealed class BeatAnalysisViewModel : BaseNotifyPropertyChanged, IDisposable
+    // What the analysis found in a track whose tags have no key, or no tempo: null for the one that the tags have, an empty
+    // key or 0 when there is none to find.
+    public sealed class TrackAnalyzedEventArgs : EventArgs
+    {
+        public TrackAnalyzedEventArgs(string path, string? initialKey, uint? beatsPerMinute)
+        {
+            Path = path;
+            InitialKey = initialKey;
+            BeatsPerMinute = beatsPerMinute;
+        }
+
+        public string Path { get; }
+        public string? InitialKey { get; }
+        public uint? BeatsPerMinute { get; }
+    }
+
+    // Finds the beats of the library's tracks that aren't analyzed yet, and the key of the ones whose tags have none, in the
+    // background on threads of low priority. Stops for a scan and starts again after it. Its properties change and its
+    // event is raised on the thread that created it, i.e. the UI thread.
+    public sealed class TrackAnalysisViewModel : BaseNotifyPropertyChanged, IDisposable
     {
         private readonly TrackAnalysisStore _store;
         private readonly Func<string, IAudioDecoder> _openDecoder;
@@ -26,7 +43,7 @@ namespace Lalamachine.ViewModel
         private int _analyzed;
         private bool _isAnalyzing;
 
-        public BeatAnalysisViewModel(TrackAnalysisStore store, Func<string, IAudioDecoder> openDecoder, int threadCount)
+        public TrackAnalysisViewModel(TrackAnalysisStore store, Func<string, IAudioDecoder> openDecoder, int threadCount)
         {
             _store = store;
             _openDecoder = openDecoder;
@@ -44,7 +61,10 @@ namespace Lalamachine.ViewModel
             }
         }
 
-        public string Status => _toAnalyze > 0 ? $"Finding the beats of the tracks: {_analyzed} of {_toAnalyze}" : "Finding the beats of the tracks";
+        public string Status => _toAnalyze > 0 ? $"Finding the beats and keys of the tracks: {_analyzed} of {_toAnalyze}" : "Finding the beats and keys of the tracks";
+
+        // For the lists that show the track: its tags have no key or tempo, this is what there is to show instead.
+        public event EventHandler<TrackAnalyzedEventArgs>? TrackAnalyzed;
 
         // Stops a run that is going on and starts over with what isn't analyzed now.
         public void Start()
@@ -132,17 +152,15 @@ namespace Lalamachine.ViewModel
         {
             while (!token.IsCancellationRequested && queue.TryDequeue(out var track))
             {
+                TrackAnalyzedEventArgs? found = null;
                 try
                 {
-                    BeatGrid? grid;
-                    using (var decoder = _openDecoder(track.Path))
-                    {
-                        grid = BeatGridAnalyzer.Analyze(decoder, track.TaggedBeatsPerMinute > 0 ? track.TaggedBeatsPerMinute : null, MixedInKeyCues.Read(track.Path));
-                    }
+                    var (grid, key) = Analyze(track);
                     lock (_saveGate)
                     {
-                        _store.Save(track.Path, track.Stamp, grid);
+                        _store.Save(track, grid, key);
                     }
+                    found = Found(track, grid, key);
                 }
                 catch (IOException)
                 {
@@ -157,8 +175,37 @@ namespace Lalamachine.ViewModel
                 {
                     _analyzed++;
                     NotifyPropertyChanged(nameof(Status));
+                    if (found is not null)
+                    {
+                        TrackAnalyzed?.Invoke(this, found);
+                    }
                 });
             }
+        }
+
+        private (BeatGrid? Grid, MusicalKey? Key) Analyze(TrackToAnalyze track)
+        {
+            using var decoder = _openDecoder(track.Path);
+            var keyAnalyzer = track.NeedsKey ? new KeyAnalyzer() : null;
+            BeatGrid? grid = null;
+            if (track.NeedsGrid)
+            {
+                // The key analysis hears what the beat analysis reads, so that the track is decoded once.
+                grid = BeatGridAnalyzer.Analyze(decoder, track.TaggedBeatsPerMinute > 0 ? track.TaggedBeatsPerMinute : null, MixedInKeyCues.Read(track.Path), keyAnalyzer);
+            }
+            else
+            {
+                keyAnalyzer?.Read(decoder);
+            }
+            return (grid, keyAnalyzer?.Key());
+        }
+
+        // Null when the tags have both, or what they don't have wasn't looked for this time.
+        private static TrackAnalyzedEventArgs? Found(TrackToAnalyze track, BeatGrid? grid, MusicalKey? key)
+        {
+            var initialKey = track.NeedsKey ? key?.Camelot ?? "" : null;
+            uint? beatsPerMinute = track.NeedsGrid && track.TaggedBeatsPerMinute <= 0 ? grid?.ShownBeatsPerMinute ?? 0 : null;
+            return initialKey is null && beatsPerMinute is null ? null : new TrackAnalyzedEventArgs(track.Path, initialKey, beatsPerMinute);
         }
 
         // What comes from a run that was stopped since is dropped. Its source may be disposed, it is only compared.

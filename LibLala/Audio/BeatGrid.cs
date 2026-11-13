@@ -45,6 +45,19 @@ namespace LibLala.Audio
         public double BarSeconds => 4 * BeatSeconds;
 
         // The beats of the track can be matched to another's by this grid.
-        public bool IsSteady => BeatCount >= SteadyBeatCount && DeviationMs <= SteadyDeviationMs;
+        public bool IsSteady => IsSteadyOf(DeviationMs, BeatCount);
+
+        // The tempo to show for a track whose tags have none, as a whole number like the tags have it. 0 for none: only a
+        // steady grid has a tempo to rely on. In a DJ's library a steady grid found without the tag has the tempo that Mixed
+        // In Key tagged for 95% of the tracks, any grid for 72%, and a third of the classical ones.
+        public uint ShownBeatsPerMinute => ShownBeatsPerMinuteOf(BeatsPerMinute, DeviationMs, BeatCount);
+
+        // The same for a grid as it is stored.
+        public static uint ShownBeatsPerMinuteOf(double beatsPerMinute, double deviationMs, int beatCount)
+        {
+            return beatsPerMinute > 0 && IsSteadyOf(deviationMs, beatCount) ? (uint)Math.Round(beatsPerMinute) : 0;
+        }
+
+        private static bool IsSteadyOf(double deviationMs, int beatCount) => beatCount >= SteadyBeatCount && deviationMs <= SteadyDeviationMs;
     }
 }

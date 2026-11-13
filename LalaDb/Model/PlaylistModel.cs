@@ -185,6 +185,7 @@ namespace LalaDb.Model
                 .GroupBy(track => track.Path!)
                 .ToDictionary(group => group.Key, group => group.First());
 
+            var detected = DetectedTags.Load(_context);
             var tagList = new List<LalaTags>();
             foreach (var trackPath in trackPaths)
             {
@@ -196,7 +197,7 @@ namespace LalaDb.Model
 
                 try
                 {
-                    tagList.Add(LalaTags.Build(track));
+                    tagList.Add(LalaTags.Build(track, detected));
                 }
                 catch (System.ArgumentException)
                 {

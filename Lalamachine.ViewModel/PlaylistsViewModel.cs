@@ -315,6 +315,14 @@ namespace Lalamachine.ViewModel
             }
         }
 
+        public void TrackAnalyzedHandler(object? sender, TrackAnalyzedEventArgs e)
+        {
+            foreach (var playlist in Playlists)
+            {
+                playlist.TrackAnalyzedHandler(sender, e);
+            }
+        }
+
         public bool IsLiked(string path)
         {
             return _likedPaths.Contains(path);

@@ -40,7 +40,7 @@ namespace Lalamachine.Desktop.Views
         private readonly LibraryPlaylistViewModel _libraryPlaylistViewModel;
         private readonly AvaloniaDialogService _dialogs;
         // Null where lalamachine can't decode tracks itself.
-        private readonly BeatAnalysisViewModel? _beatAnalysis;
+        private readonly TrackAnalysisViewModel? _trackAnalysis;
         // Null where lalamachine doesn't have the system's media controls.
         private readonly MediaControlsViewModel? _mediaControls;
         private bool _isCloseConfirmed;
@@ -106,10 +106,13 @@ namespace Lalamachine.Desktop.Views
             if (AudioPlayerFactory.DecoderFactory() is { } openDecoder)
             {
                 // A quarter of the cores, the analysis shouldn't make the computer's fans spin up.
-                _beatAnalysis = new BeatAnalysisViewModel(analyses, openDecoder, Math.Clamp(Environment.ProcessorCount / 4, 1, 4));
-                _libraryViewModel.ScanningChanged += _beatAnalysis.ScanningChangedHandler;
-                SettingsPanel.BeatAnalysisStatus.DataContext = _beatAnalysis;
-                _beatAnalysis.Start();
+                _trackAnalysis = new TrackAnalysisViewModel(analyses, openDecoder, Math.Clamp(Environment.ProcessorCount / 4, 1, 4));
+                _libraryViewModel.ScanningChanged += _trackAnalysis.ScanningChangedHandler;
+                _trackAnalysis.TrackAnalyzed += _queueViewModel.TrackAnalyzedHandler;
+                _trackAnalysis.TrackAnalyzed += _playlistsViewModel.TrackAnalyzedHandler;
+                _trackAnalysis.TrackAnalyzed += _libraryPlaylistViewModel.TrackAnalyzedHandler;
+                SettingsPanel.AnalysisStatus.DataContext = _trackAnalysis;
+                _trackAnalysis.Start();
             }
 
             Player.DataContext = _player;
@@ -190,7 +193,7 @@ namespace Lalamachine.Desktop.Views
             }
             finally
             {
-                _beatAnalysis?.Dispose();
+                _trackAnalysis?.Dispose();
                 _mediaControls?.Dispose();
                 (_audioPlayer as IDisposable)?.Dispose();
                 base.OnClosed(e);
