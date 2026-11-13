@@ -119,9 +119,16 @@ namespace LibLala.Audio.Analysis
             return new BeatGrid(60 / period, firstBeat, line.DeviationMs, line.Heard.Count, firstBeat + (downbeat * period), firstBeat + (start * period), firstBeat + (end * period));
         }
 
-        // The tempo that the beats are at, to about a thousandth. Null when the onsets don't repeat.
+        // The tempo that the beats are at, to about a thousandth. Null when the onsets don't repeat at any tempo from 60 to
+        // 200 BPM, with a tag or without.
         private static double? Tempo(float[] onsets, (double Index, float Strength)[] peaks, double hopSeconds, double? taggedBpm)
         {
+            var repeats = TempoCandidates(onsets, hopSeconds).ToList();
+            if (repeats.Count == 0)
+            {
+                return null;
+            }
+
             if (taggedBpm is not > 0)
             {
                 // Without a tag, the tempo that the music is counted in, and the sharpest fold near it.
@@ -130,16 +137,12 @@ namespace LibLala.Audio.Analysis
 
             // With one, the tagged tempo unless the onsets repeat a lot more sharply at another. Candidates for that: the
             // tempos at which the onsets repeat most, with double and half of them, the autocorrelation often prefers one of
-            // those over the tempo the music is counted in.
-            var candidates = TempoCandidates(onsets, hopSeconds)
+            // those over the tempo the music is counted in. Never none: the tempos it repeats at are from 60 to 200 BPM.
+            var candidates = repeats
                 .SelectMany(bpm => new[] { bpm, bpm * 2, bpm / 2 })
                 .Where(bpm => bpm is >= MinBpm and <= MaxBpm)
                 .Select(bpm => Fold(peaks, hopSeconds, bpm, range: 0.008, step: 0.0005))
                 .ToList();
-            if (candidates.Count == 0)
-            {
-                return null;
-            }
 
             var tagged = Fold(peaks, hopSeconds, taggedBpm.Value, range: 0.015, step: 0.0005);
             if (tagged.Sharpness >= TagSharpnessShare * candidates.Max(c => c.Sharpness))

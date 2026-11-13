@@ -93,6 +93,48 @@ namespace LibLala.Unittests.Audio
         }
 
         [Test]
+        public void HalfAFrame_IsRefused()
+        {
+            var analyzer = new KeyAnalyzer();
+
+            Assert.That(() => analyzer.Add(new float[3]), Throws.ArgumentException);
+        }
+
+        [Test]
+        public void SamplesThatArentNumbers_AreLeftOut()
+        {
+            // A broken file: a stretch that decodes to NaN in the middle of the chords.
+            var key = new MusicalKey(9, isMinor: true);
+            using var decoder = new ChordsDecoder(key);
+            var analyzer = new KeyAnalyzer();
+            var block = new float[4096 * AudioFormat.Channels];
+            for (var i = 0; decoder.Read(block) is var read && read > 0; i++)
+            {
+                if (i == 50)
+                {
+                    block.AsSpan(0, 1000).Fill(float.NaN);
+                }
+                analyzer.Add(block.AsSpan(0, read * AudioFormat.Channels));
+            }
+
+            Assert.That(analyzer.Key(), Is.EqualTo(key));
+        }
+
+        [Test]
+        public void ATrackOfOnlySamplesThatArentNumbers_HasNoKey()
+        {
+            var analyzer = new KeyAnalyzer();
+            var block = new float[44100 * AudioFormat.Channels];
+            block.AsSpan().Fill(float.NaN);
+            for (var i = 0; i < 20; i++)
+            {
+                analyzer.Add(block);
+            }
+
+            Assert.That(analyzer.Key(), Is.Null);
+        }
+
+        [Test]
         public void TheBeatAnalysis_LetsTheKeyAnalyzerHearTheTrack()
         {
             var key = new MusicalKey(7, isMinor: true);

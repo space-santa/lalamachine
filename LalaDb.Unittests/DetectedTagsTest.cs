@@ -116,7 +116,6 @@ namespace LalaDb.Unittests
 
             Assert.That(tags.InitialKey, Is.Empty);
             Assert.That(tags.BeatsPerMinuteString, Is.Empty);
-            Assert.That(LalaTags.Build(track).InitialKey, Is.Empty);
         }
 
         [Test]

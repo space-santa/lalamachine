@@ -77,9 +77,14 @@ namespace LibLala.Audio.Analysis
             }
         }
 
-        // The next frames of the track, as AudioFormat has them.
+        // The next frames of the track, as AudioFormat has them: whole frames, left and right.
         public void Add(ReadOnlySpan<float> frames)
         {
+            if (frames.Length % AudioFormat.Channels != 0)
+            {
+                throw new ArgumentException($"Not a whole number of frames of {AudioFormat.Channels} samples.", nameof(frames));
+            }
+
             var offset = 0;
             while (offset < frames.Length)
             {
@@ -131,7 +136,7 @@ namespace LibLala.Audio.Analysis
                     total += _pitches[bin];
                 }
             }
-            if (total <= 0)
+            if (!double.IsFinite(total) || total <= 0)
             {
                 return null;
             }
@@ -170,7 +175,8 @@ namespace LibLala.Audio.Analysis
                     power += sample * sample;
                     _frame[i] = sample * Hann[i];
                 }
-                if (power / Window < SilencePower)
+                // A frame with samples that aren't numbers, from a broken file, says nothing about the key either.
+                if (!double.IsFinite(power) || power / Window < SilencePower)
                 {
                     continue;
                 }

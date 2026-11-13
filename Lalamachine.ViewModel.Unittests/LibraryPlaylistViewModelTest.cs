@@ -363,16 +363,54 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
-        public void TrackAnalyzed_WithAKeyThatIsListed_LeavesTheFilterAsItIs()
+        public void TrackAnalyzed_WithAKeyThatIsListed_LeavesTheOptionsAsTheyAre()
         {
-            var viewModel = ViewModelWith(Track("a", "10A"), Track("b", ""), Track("c", "2A"));
+            var viewModel = ViewModelWith(Track("a", "10A"), Track("b", ""), Track("c", "2A"), Track("d", ""));
             Tick(viewModel, "2A");
             var options = viewModel.KeyFilterOptions;
+            var playlist = viewModel.Playlist;
 
             viewModel.TrackAnalyzedHandler(null, new TrackAnalyzedEventArgs("/path/to/b", "10A", 128));
 
             Assert.That(viewModel.KeyFilterOptions, Is.SameAs(options));
+            Assert.That(viewModel.Playlist, Is.SameAs(playlist));
             Assert.That(Titles(viewModel), Is.EqualTo(new[] { "c" }));
+        }
+
+        [Test]
+        public void TrackAnalyzed_TheLastTrackWithoutAKeyGetsOne_NoKeyIsNoOptionAnyMore_AndTheSelectionStays()
+        {
+            var viewModel = ViewModelWith(Track("a", "10A"), Track("b", ""), Track("c", "2A"));
+            Tick(viewModel, "2A");
+
+            viewModel.TrackAnalyzedHandler(null, new TrackAnalyzedEventArgs("/path/to/b", "10A", 128));
+
+            Assert.That(viewModel.KeyFilterOptions.Select(x => (x.Key, x.IsSelected)), Is.EqualTo(new[] { ("2A", true), ("10A", false) }));
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "c" }));
+        }
+
+        [Test]
+        public void TrackAnalyzed_ATrackThatTheKeyFilterHid_ShowsWhenItGetsASelectedKey()
+        {
+            var viewModel = ViewModelWith(Track("a", "10A"), Track("b", ""), Track("c", "2A"));
+            Tick(viewModel, "10A");
+
+            viewModel.TrackAnalyzedHandler(null, new TrackAnalyzedEventArgs("/path/to/b", "10A", 128));
+
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "a", "b" }));
+        }
+
+        [Test]
+        public void TrackAnalyzed_ATrackListedWithoutAKey_GoesWhenItGetsOne_AndNoKeyStaysSelected()
+        {
+            var viewModel = ViewModelWith(Track("a", "10A"), Track("b", ""));
+            Tick(viewModel, "");
+
+            viewModel.TrackAnalyzedHandler(null, new TrackAnalyzedEventArgs("/path/to/b", "8A", 128));
+
+            Assert.That(Titles(viewModel), Is.Empty);
+            Assert.That(viewModel.KeyFilterOptions.Select(x => (x.Key, x.IsSelected)), Is.EqualTo(new[] { ("8A", false), ("10A", false), ("", true) }));
+            Assert.That(viewModel.IsKeyFilterActive, Is.True);
         }
 
         [Test]

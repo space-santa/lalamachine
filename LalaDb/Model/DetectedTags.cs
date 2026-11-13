@@ -18,8 +18,6 @@ namespace LalaDb.Model
             _byPath = byPath;
         }
 
-        public static DetectedTags None { get; } = new(new Dictionary<string, (string Key, uint BeatsPerMinute)>(StringComparer.Ordinal));
-
         // As the analysis has them now, also from a context that has read them before.
         public static DetectedTags Load(LalaContext context)
         {

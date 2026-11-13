@@ -98,11 +98,33 @@ namespace Lalamachine.ViewModel
 
         public override void TrackAnalyzedHandler(object? sender, TrackAnalyzedEventArgs e)
         {
-            base.TrackAnalyzedHandler(sender, e);
-            // A key that no track had so far is one to filter by now.
-            if (e?.InitialKey is { } key && KeyFilterOptions.All(x => x.Key != key) && _allTracks.Any(x => x.Path == e.Path))
+            if (e is null)
             {
-                UpdateKeyFilterOptions(SelectedKeys());
+                return;
+            }
+
+            var selectedKeys = SelectedKeys();
+            var tracks = _allTracks.Where(x => x.Path == e.Path).ToList();
+            var wereLetThrough = tracks.Select(x => IsLetThrough(x, selectedKeys)).ToList();
+            base.TrackAnalyzedHandler(sender, e);
+            if (e.InitialKey is null || tracks.Count == 0)
+            {
+                return;
+            }
+
+            // The keys to filter by are the ones the tracks have now: one that no track had is new, and "(no key)" goes when
+            // the last track without one got one. The selected ones stay.
+            var keys = _allTracks.Select(x => x.InitialKey).Concat(selectedKeys).ToHashSet();
+            if (!keys.SetEquals(KeyFilterOptions.Select(x => x.Key)))
+            {
+                UpdateKeyFilterOptions(selectedKeys);
+            }
+
+            // A track that the filter hid can have a selected key now, or one that it let through not any more. Only then is
+            // the list replaced, that loses what is selected in it.
+            if (!tracks.Select(x => IsLetThrough(x, selectedKeys)).SequenceEqual(wereLetThrough))
+            {
+                ShowFilteredTracks();
             }
         }
 
@@ -168,7 +190,13 @@ namespace Lalamachine.ViewModel
         private IEnumerable<PlaylistTags> FilteredTracks()
         {
             var selectedKeys = SelectedKeys();
-            return selectedKeys.Count == 0 ? _allTracks : _allTracks.Where(x => selectedKeys.Contains(x.InitialKey));
+            return _allTracks.Where(x => IsLetThrough(x, selectedKeys));
+        }
+
+        // Without a key selected, the filter lets all tracks through.
+        private static bool IsLetThrough(PlaylistTags track, HashSet<string> selectedKeys)
+        {
+            return selectedKeys.Count == 0 || selectedKeys.Contains(track.InitialKey);
         }
     }
 }

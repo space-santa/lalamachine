@@ -10,10 +10,8 @@ namespace LalaDb.Data
 {
     public class LalaTags : LibLalaTags
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>")]
-        public static LalaTags Build(Track track) => Build(track, DetectedTags.None);
-
         // A track without a key or a tempo in its tags gets what the analysis found.
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>")]
         public static LalaTags Build(Track track, DetectedTags detected)
         {
             ArgumentNullException.ThrowIfNull(track);
