@@ -149,14 +149,21 @@ namespace LibLala.Unittests.Audio
             Assert.That(_due[0].Seconds, Is.EqualTo(6).Within(0.11));
         }
 
-        // Plays A until it's at the second as heard.
-        private void PlayTo(double secondsOfA)
+        // Plays in tenths until the condition holds. Fails after the seconds of audio, rather than going on.
+        private void PlayUntil(Func<bool> condition, double seconds = 120)
         {
-            while (_engine.Position < secondsOfA * Rate)
+            for (var played = 0.0; !condition(); played += 0.1)
             {
+                if (played >= seconds)
+                {
+                    Assert.Fail($"Not after {seconds} s.");
+                }
                 PlayFor(0.1);
             }
         }
+
+        // Plays A until it's at the second as heard.
+        private void PlayTo(double secondsOfA) => PlayUntil(() => _engine.Position >= secondsOfA * Rate);
 
         // When it's due at 6 s of A: A's tempo goes halfway to B's from 8 s to 24 s, where B comes in.
         private void MixWhenDue(IAudioDecoder b, double bpmB)
@@ -192,19 +199,13 @@ namespace LibLala.Unittests.Audio
             Assert.That(_engine.IncomingPosition, Is.Null);
 
             // A's beats from 24 s every 0.5 s, B's from its bar at 3.84 s every 0.48 s: as many of each.
-            while (_engine.IncomingPosition is null)
-            {
-                PlayFor(0.1);
-            }
+            PlayUntil(() => _engine.IncomingPosition is not null);
             Assert.That(_engine.Position / (double)Rate, Is.InRange(24, 24.11));
-            Assert.That((_engine.IncomingPosition.Value / (double)Rate - 3.84) / 0.48, Is.EqualTo((_engine.Position / (double)Rate - 24) / 0.5).Within(0.02));
+            Assert.That((_engine.IncomingPosition!.Value / (double)Rate - 3.84) / 0.48, Is.EqualTo((_engine.Position / (double)Rate - 24) / 0.5).Within(0.02));
             PlayTo(40);
             Assert.That((_engine.IncomingPosition!.Value / (double)Rate - 3.84) / 0.48, Is.EqualTo((_engine.Position / (double)Rate - 24) / 0.5).Within(0.02));
 
-            while (_tookOver.Count == 0)
-            {
-                PlayFor(0.1);
-            }
+            PlayUntil(() => _tookOver.Count > 0);
             Assert.That(_engine.BeatsPerMinute, Is.EqualTo(Math.Sqrt(120 * 125.0)).Within(0.05));
             PlayFor(17);
             Assert.That((_engine.Tempo, _engine.BeatsPerMinute), Is.EqualTo((1.0, 125.0)));
@@ -494,6 +495,29 @@ namespace LibLala.Unittests.Audio
         }
 
         [Test]
+        public void ASeekAfterItWasDue_ButLongBeforeACrossfade_KeepsIt()
+        {
+            _engine.Open(_a, Grid());
+            _engine.Play();
+            PlayFor(6.1);
+            Assert.That(_due, Has.Count.EqualTo(1));
+            var b = new CountingDecoder(60 * Rate) { Silent = true };
+            _engine.MixTo(b, null);
+
+            // Like the position slider dragged from where it was due at 6 s to before the crossfade at 52 s.
+            foreach (var second in new[] { 7, 20, 30, 49 })
+            {
+                _engine.Seek(second * Rate);
+                PlayFor(0.1);
+            }
+
+            Assert.That(b.IsDisposed, Is.False);
+            Assert.That(_due, Has.Count.EqualTo(1));
+            PlayTo(52.2);
+            Assert.That(_engine.IncomingPosition, Is.Not.Null);
+        }
+
+        [Test]
         public void ASeekToBeforeTheTransitionStarts_LetsTheIncomingTrackWait()
         {
             _engine.Open(_a, Grid());
@@ -594,10 +618,7 @@ namespace LibLala.Unittests.Audio
             _engine.Play();
             PlayFor(23);
             _engine.MixTo(new CountingDecoder(72 * Rate) { Silent = true }, gridB);
-            while (_due.Count < 2)
-            {
-                PlayFor(0.1);
-            }
+            PlayUntil(() => _due.Count == 2);
             Assert.That(_tookOver, Has.Count.EqualTo(1));
 
             _engine.MixTo(new CountingDecoder(60 * Rate) { Silent = true }, gridB);
@@ -614,6 +635,27 @@ namespace LibLala.Unittests.Audio
             Assert.That(_engine.Tempo, Is.EqualTo(0.96).Within(0.001));
             // At its own for the transition at 40.32 s, the next track's is the same.
             PlayTo(40.4);
+            Assert.That(_engine.Tempo, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void MixTo_WhileTheTempoComesBackAfterATransition_NotOnTheBeat_LetsItComeBack()
+        {
+            // As above, B goes back to 1 from 0.96 over 8 bars of 1.92 s from 30.72 s, its own transition due right then.
+            // The next track crossfades, B's tempo doesn't matter to it.
+            var gridB = new BeatGrid(125, 0, 2, 500, 0, 0, 70);
+            _engine.Open(_a, Grid());
+            _engine.Play();
+            PlayFor(23);
+            _engine.MixTo(new CountingDecoder(72 * Rate) { Silent = true }, gridB);
+            PlayUntil(() => _due.Count == 2);
+            Assert.That(_tookOver, Has.Count.EqualTo(1));
+
+            _engine.MixTo(new CountingDecoder(60 * Rate) { Silent = true }, null);
+            PlayTo(38.4);
+            Assert.That(_engine.Tempo, Is.EqualTo(0.98).Within(0.002));
+            PlayTo(46.2);
+
             Assert.That(_engine.Tempo, Is.EqualTo(1));
         }
 

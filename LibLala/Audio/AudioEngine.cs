@@ -27,7 +27,8 @@ namespace LibLala.Audio
     {
         // The filters and gains change in steps this long, 5.8 ms.
         private const int StepFrames = 256;
-        // TransitionDue comes this long before the earliest transition, for the next track to be opened in time.
+        // TransitionDue comes this long before the next track can first change how the current one plays: where its tempo
+        // would start going to the next one's before a transition on the beat. For the next track to be opened in time.
         private const double DueLeadSeconds = 2;
         // A seek goes no closer to the end of a transition, so that dragging the position slider can't finish it: the next
         // track would take over and the drag would go on in that one.
@@ -52,7 +53,9 @@ namespace LibLala.Audio
         // During a transition, the track that comes in. It takes over when the transition is over.
         private Deck? _incoming;
         private Transition? _transition;
-        private Ramp? _ramp;
+        // The current track's tempo by where it is: on its way to the one it plays at in a transition on the beat, or back to
+        // its own after one. Null, it stays as it is.
+        private TempoRamp? _tempoRamp;
         private volatile bool _clicks;
         private volatile bool _transitions;
         private int _track;
@@ -89,8 +92,9 @@ namespace LibLala.Audio
         public event EventHandler<TrackEventArgs>? Ended;
         // The track can't be read any more, or the output can't play. Raised once per track.
         public event EventHandler<TrackEventArgs>? Failed;
-        // With Transitions on, the track gets close to where the next one would come in: time for MixTo. Raised once per
-        // track, again after a seek back to before it.
+        // With Transitions on, the track gets close to where the next one would first change how it plays, its tempo going
+        // to the next one's before a transition on the beat: time for MixTo. Raised once per track, again after a seek back
+        // to before it.
         public event EventHandler<TrackEventArgs>? TransitionDue;
         // The transition to the track that MixTo returned the number of is over, as played: it's the current track now.
         public event EventHandler<TrackEventArgs>? TookOver;
@@ -186,7 +190,8 @@ namespace LibLala.Audio
             }
         }
 
-        // Of the current track as played, of its own: 1 at its own tempo. Else after a transition, until it's back at it.
+        // Of the current track as played, of its own: 1 at its own tempo. Else in the bars before a transition on the beat
+        // and through it, or after one until it's back at its own.
         public double Tempo
         {
             get
@@ -226,9 +231,10 @@ namespace LibLala.Audio
         // Takes over the decoder and mixes its track into the current one, where the planner says, or where the transition
         // is when the current track is in it already. Past it, a short one. What came in before is dropped. Returns the
         // number of the track, TookOver carries it, or 0 without taking over the decoder when there's no track to mix into.
-        // Throws an IOException when the decoder can't seek to where the track comes in, then nothing changed. The current
-        // track's tempo goes halfway to the incoming track's in the bars before the transition, from where it is now: one
-        // still coming back from the transition before stays there until then.
+        // Throws an IOException when the decoder can't seek to where the track comes in, then nothing changed. For a
+        // transition on the beat, the current track's tempo goes halfway to the incoming track's in the bars before it, from
+        // where it is now: one still coming back from the transition before stays there until then. For another, it goes on
+        // coming back.
         public int MixTo(IAudioDecoder decoder, BeatGrid? grid)
         {
             ArgumentNullException.ThrowIfNull(decoder);
@@ -266,7 +272,10 @@ namespace LibLala.Audio
                 dropped = _incoming;
                 _incoming = incoming;
                 _transition = new Transition(plan, (long)Math.Round(plan.Seconds * AudioFormat.SampleRate));
-                _ramp = null;
+                if (plan.Kind == TransitionKind.BeatMatched)
+                {
+                    _tempoRamp = plan.RampA;
+                }
                 if (progress is { } p)
                 {
                     _transition.StartAt(_frame - (long)Math.Round(p * _transition.LengthFrames));
@@ -556,18 +565,9 @@ namespace LibLala.Audio
             if (_current is { } current)
             {
                 current.HighPass.Cutoff = isRunning && isFiltered ? TransitionShape.Crossover((from + to) / 2) : current.HighPass.Off;
-                if (transition is not null)
+                if (_tempoRamp is { } ramp)
                 {
-                    // Before the transition, on its way to the tempo it plays at in it.
-                    current.Tempo = transition.Plan.RampA.At(current.Position / AudioFormat.SampleRate);
-                }
-                else if (_ramp is { } ramp)
-                {
-                    current.Tempo = ramp.Tempo(_frame);
-                    if (_frame >= ramp.EndFrame)
-                    {
-                        _ramp = null;
-                    }
+                    current.Tempo = ramp.At(current.Position / AudioFormat.SampleRate);
                 }
                 var gain = isRunning ? (TransitionShape.OutgoingGain(from, kind), TransitionShape.OutgoingGain(to, kind)) : (1.0, 1.0);
                 if (!RenderDeck(current, buffer, gain))
@@ -668,15 +668,24 @@ namespace LibLala.Audio
             }
         }
 
-        // From the tempo it plays at, over the bars of a ramp as heard.
+        // From the tempo it plays at, over the bars of a ramp from where it is. Without a grid, of 120 BPM.
         private void RampToOwnTempo(Deck deck)
         {
-            _ramp = null;
-            if (deck.Tempo != 1)
-            {
-                var barFrames = 4 * 60.0 / ((deck.Grid?.BeatsPerMinute ?? 120) * deck.Tempo) * AudioFormat.SampleRate;
-                _ramp = new Ramp(_frame, _frame + (long)(TransitionPlanner.RampBars * barFrames), deck.Tempo);
-            }
+            var now = deck.Position / AudioFormat.SampleRate;
+            var bar = deck.Grid?.BarSeconds ?? 2;
+            _tempoRamp = deck.Tempo == 1 ? null : new TempoRamp(now, now + (TransitionPlanner.RampBars * bar), deck.Tempo, 1);
+        }
+
+        // No transition from here, nor what came in for it: the current track is at its own tempo at once, unfiltered.
+        private void CallOff(Deck current)
+        {
+            _incoming?.Dispose();
+            _incoming = null;
+            _transition = null;
+            _tempoRamp = null;
+            current.Tempo = 1;
+            current.HighPass.Cutoff = current.HighPass.Off;
+            current.LowPass.Cutoff = current.LowPass.Off;
         }
 
         private void CheckDue()
@@ -711,7 +720,7 @@ namespace LibLala.Audio
                 _current = decoder is null ? null : new Deck(decoder, grid, track);
                 _incoming = null;
                 _transition = null;
-                _ramp = null;
+                _tempoRamp = null;
                 _isFailed = false;
                 _isEndPlayed = false;
                 _rendered.Clear();
@@ -739,7 +748,7 @@ namespace LibLala.Audio
                 _limiter.Clear();
                 _frame = 0;
                 _isEndPlayed = false;
-                _ramp = null;
+                _tempoRamp = null;
                 track = _current?.Track ?? 0;
                 if (_current is not { } current)
                 {
@@ -755,54 +764,39 @@ namespace LibLala.Audio
                 }
 
                 var seconds = frame / (double)AudioFormat.SampleRate;
-                if (_transition is { } transition && _incoming is { } incoming)
+                // Called off only before where it's due, as CheckDue has it: after that, it would be due again at once.
+                if (_transition is { } transition && _incoming is { } incoming && seconds >= DueAt(current))
                 {
                     var plan = transition.Plan;
                     var length = current.Decoder.Length / (double)AudioFormat.SampleRate;
-                    if (seconds < plan.RampA.Start - DueLeadSeconds)
+                    seconds = Math.Max(0, Math.Min(seconds, SeekEnd(plan, length)));
+                    frame = (long)Math.Round(seconds * AudioFormat.SampleRate);
+                    // One on the beat goes by its tempo. Without, it's at its own at once.
+                    _tempoRamp = plan.Kind == TransitionKind.BeatMatched ? plan.RampA : null;
+                    current.Tempo = _tempoRamp?.At(seconds) ?? 1;
+                    double? progress = seconds >= plan.StartA ? Progress(plan, seconds) : null;
+                    try
                     {
-                        // Back to before it's due: no transition, until it's due again.
-                        incoming.Dispose();
-                        _incoming = null;
-                        _transition = null;
-                        _dueAt = null;
-                        current.Tempo = 1;
-                        current.HighPass.Cutoff = current.HighPass.Off;
-                    }
-                    else
-                    {
-                        seconds = Math.Max(0, Math.Min(seconds, SeekEnd(plan, length)));
-                        frame = (long)Math.Round(seconds * AudioFormat.SampleRate);
-                        current.Tempo = plan.RampA.At(seconds);
-                        double? progress = seconds >= plan.StartA ? Progress(plan, seconds) : null;
-                        try
+                        incoming.Seek(IncomingFrame(plan, progress ?? 0));
+                        if (progress is { } p)
                         {
-                            incoming.Seek(IncomingFrame(plan, progress ?? 0));
-                            if (progress is { } p)
-                            {
-                                transition.StartAt(-(long)Math.Round(p * transition.LengthFrames));
-                            }
-                            else
-                            {
-                                transition.Wait();
-                                current.HighPass.Cutoff = current.HighPass.Off;
-                            }
+                            transition.StartAt(-(long)Math.Round(p * transition.LengthFrames));
                         }
-                        catch (IOException)
+                        else
                         {
-                            incoming.Dispose();
-                            _incoming = null;
-                            _transition = null;
-                            current.Tempo = 1;
+                            transition.Wait();
                             current.HighPass.Cutoff = current.HighPass.Off;
                         }
+                    }
+                    catch (IOException)
+                    {
+                        CallOff(current);
                     }
                 }
                 else
                 {
-                    current.Tempo = 1;
-                    current.HighPass.Cutoff = current.HighPass.Off;
-                    current.LowPass.Cutoff = current.LowPass.Off;
+                    // Without one, or back to before it's due: none until it's due again.
+                    CallOff(current);
                     _dueAt = null;
                 }
 
@@ -877,12 +871,6 @@ namespace LibLala.Audio
             public void Wait() => IsStarted = false;
 
             public double Progress(long frame) => Math.Clamp((frame - StartFrame) / (double)LengthFrames, 0, 1);
-        }
-
-        // The tempo going from where the transition left it to the track's own, from frame to frame.
-        private sealed record Ramp(long StartFrame, long EndFrame, double From)
-        {
-            public double Tempo(long frame) => frame >= EndFrame ? 1 : From + ((1 - From) * (frame - StartFrame) / (EndFrame - StartFrame));
         }
     }
 }

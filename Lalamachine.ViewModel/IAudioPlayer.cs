@@ -25,7 +25,8 @@ namespace Lalamachine.ViewModel
         // Of the track coming in, as heard, from when it does until MixedIn. Null otherwise.
         TimeSpan? IncomingPosition { get; }
         TimeSpan? IncomingDuration { get; }
-        // Of the track as heard, of its own: 1 at its own tempo. Else after a transition, until it's back at it.
+        // Of the track as heard, of its own: 1 at its own tempo. Else in the bars before a transition on the beat and
+        // through it, or after one until it's back at its own.
         double Tempo { get; }
         // Of the track as heard, by its beats at the tempo it plays at. Null when they aren't known.
         double? BeatsPerMinute { get; }

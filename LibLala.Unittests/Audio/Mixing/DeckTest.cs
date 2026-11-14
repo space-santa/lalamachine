@@ -67,7 +67,7 @@ namespace LibLala.Unittests.Audio.Mixing
                 }
                 var before = deck.Position;
                 deck.Render(step);
-                Assert.That(deck.Position - before, Is.EqualTo(256 * deck.Tempo).Within(0.005 * AudioFormat.SampleRate), $"step {i}");
+                Assert.That(deck.Position - before, Is.EqualTo(256 * deck.Tempo).Within(1), $"step {i}");
                 // Nor quieter, the sine peaks in every step.
                 Assert.That(Enumerable.Range(0, 256).Max(f => Math.Abs(step[f * AudioFormat.Channels])), Is.GreaterThan(0.49), $"step {i}");
                 heard.AddRange(Enumerable.Range(0, 256).Select(f => step[f * AudioFormat.Channels]));
