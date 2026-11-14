@@ -19,10 +19,70 @@ namespace LibLala.Unittests.Audio.Mixing
             Assert.That(plan.Kind, Is.EqualTo(TransitionKind.BeatMatched));
             // The bar after the last beat starts at 300 s.
             Assert.That(plan.StartA, Is.EqualTo(300 - 32).Within(1e-9));
-            Assert.That(plan.Seconds, Is.EqualTo(32).Within(1e-9));
-            Assert.That(plan.TempoB, Is.EqualTo(120 / 124.0).Within(1e-9));
+            Assert.That(plan.Seconds, Is.EqualTo(32 / plan.TempoA).Within(1e-9));
             // B's bars start at 0.5 s, every 60/124*4 s; its music in the bar from 8.24 s.
             Assert.That(plan.StartB, Is.EqualTo(0.5 + (4 * 4 * 60 / 124.0)).Within(1e-9));
+        }
+
+        [Test]
+        public void BothTracks_GoHalfwayToTheOthersTempo()
+        {
+            var plan = TransitionPlanner.Plan(nowA: 100, lengthA: 310, Grid(), tempoA: 1, Grid(bpm: 124));
+
+            // Both at 121.98 BPM, A 1.65% faster and B 1.63% slower.
+            Assert.That(plan.TempoA, Is.EqualTo(Math.Sqrt(124 / 120.0)).Within(1e-9));
+            Assert.That(plan.TempoB, Is.EqualTo(Math.Sqrt(120 / 124.0)).Within(1e-9));
+            Assert.That(120 * plan.TempoA, Is.EqualTo(124 * plan.TempoB).Within(1e-9));
+        }
+
+        [Test]
+        public void TheCurrentTrack_GoesToItsTempo_InThe8BarsBeforeTheTransition()
+        {
+            var plan = TransitionPlanner.Plan(nowA: 100, lengthA: 310, Grid(), tempoA: 1, Grid(bpm: 124));
+
+            Assert.That(plan.RampA, Is.EqualTo(new TempoRamp(268 - 16, 268, 1, plan.TempoA)));
+            Assert.That(plan.RampA.At(260), Is.EqualTo((1 + plan.TempoA) / 2).Within(1e-9));
+        }
+
+        // 10% apart, each 4.9% off its own tempo. 11%, each would be 5.4%.
+        [TestCase(132, true)]
+        [TestCase(120 * 1.11, false)]
+        [TestCase(120 / 1.1, true)]
+        [TestCase(120 / 1.11, false)]
+        public void TemposUpTo10PercentApart_AreBeatMatched(double bpmB, bool isBeatMatched)
+        {
+            var plan = TransitionPlanner.Plan(nowA: 100, lengthA: 310, Grid(), tempoA: 1, Grid(bpm: bpmB));
+
+            Assert.That(plan.Kind, Is.EqualTo(isBeatMatched ? TransitionKind.BeatMatched : TransitionKind.Cut));
+        }
+
+        [Test]
+        public void LateForSomeOfTheBarsBefore_TheCurrentTrackGoesToItsTempoInTheWholeBarsLeft()
+        {
+            var plan = TransitionPlanner.Plan(nowA: 0, lengthA: 310, Grid(), tempoA: 1, Grid(bpm: 124), rampFromA: 261);
+
+            Assert.That(plan.StartA, Is.EqualTo(268).Within(1e-9));
+            Assert.That(plan.RampA, Is.EqualTo(new TempoRamp(262, 268, 1, Math.Sqrt(124 / 120.0))));
+        }
+
+        [Test]
+        public void WithoutABarBefore_TheIncomingTrackGoesAllTheWayToTheCurrentOnesTempo()
+        {
+            var plan = TransitionPlanner.Plan(nowA: 0, lengthA: 310, Grid(), tempoA: 1, Grid(bpm: 124), rampFromA: 267);
+
+            Assert.That(plan.Kind, Is.EqualTo(TransitionKind.BeatMatched));
+            Assert.That(plan.StartA, Is.EqualTo(268).Within(1e-9));
+            Assert.That(plan.RampA, Is.EqualTo(TempoRamp.None(268, 1)));
+            Assert.That(plan.TempoB, Is.EqualTo(120 / 124.0).Within(1e-9));
+            Assert.That(plan.Seconds, Is.EqualTo(32).Within(1e-9));
+        }
+
+        [Test]
+        public void WithoutABarBefore_TemposMoreThan5PercentApart_Cut()
+        {
+            var plan = TransitionPlanner.Plan(nowA: 0, lengthA: 310, Grid(), tempoA: 1, Grid(bpm: 128), rampFromA: 267);
+
+            AssertCut(plan, 300, 480.0 / 128);
         }
 
         [Test]
@@ -57,10 +117,21 @@ namespace LibLala.Unittests.Audio.Mixing
         }
 
         [Test]
-        public void AStretchedTrack_GoesOverAtItsTempo()
+        public void AStretchedTrack_GoesHalfwayFromItsTempo()
         {
             var plan = TransitionPlanner.Plan(nowA: 100, lengthA: 310, Grid(), tempoA: 1.02, Grid(bpm: 124));
 
+            Assert.That(plan.RampA.From, Is.EqualTo(1.02));
+            Assert.That(plan.TempoA, Is.EqualTo(Math.Sqrt(124 / 120.0)).Within(1e-9));
+            Assert.That(plan.TempoB, Is.EqualTo(Math.Sqrt(120 / 124.0)).Within(1e-9));
+        }
+
+        [Test]
+        public void AStretchedTrack_WithoutABarBefore_GoesOverAtItsTempo()
+        {
+            var plan = TransitionPlanner.Plan(nowA: 0, lengthA: 310, Grid(), tempoA: 1.02, Grid(bpm: 124), rampFromA: 267);
+
+            Assert.That(plan.TempoA, Is.EqualTo(1.02));
             Assert.That(plan.TempoB, Is.EqualTo(120 * 1.02 / 124).Within(1e-9));
             Assert.That(plan.Seconds, Is.EqualTo(32 / 1.02).Within(1e-9));
         }
@@ -72,6 +143,7 @@ namespace LibLala.Unittests.Audio.Mixing
 
             Assert.That(plan.StartA, Is.EqualTo(286));
             Assert.That(plan.Seconds, Is.EqualTo(14));
+            Assert.That(plan.RampA, Is.EqualTo(TempoRamp.None(286, 1)));
         }
 
         // B's first bar on the downbeat at time A's music is over, at its own tempo.
@@ -88,14 +160,15 @@ namespace LibLala.Unittests.Audio.Mixing
         // B's bars from 0 s, its music from 4 s: at 140 BPM in the bar from 3.43 s, at 100 BPM in the one from 2.4 s.
         [TestCase(140, 480.0 / 140)]
         [TestCase(100, 2.4)]
-        // 7% slower, like 138 BPM into 128.
-        [TestCase(120 * 138 / 128.0, 480 / (120 * 138 / 128.0))]
+        // 11% faster, like 128 BPM into 142: each would be 5.4% off its own.
+        [TestCase(120 * 142 / 128.0, 480 / (120 * 142 / 128.0))]
         public void TemposTooFarApart_CutOnTheDownbeatWhereTheMusicEnds(double bpmB, double firstBarB)
         {
             var plan = TransitionPlanner.Plan(nowA: 100, lengthA: 310, Grid(), tempoA: 1, Grid(bpm: bpmB));
 
             AssertCut(plan, 300, firstBarB);
             Assert.That(plan.StartA, Is.EqualTo(300 - TransitionPlanner.CutSeconds).Within(1e-9));
+            Assert.That(plan.RampA, Is.EqualTo(TempoRamp.None(plan.StartA, 1)));
         }
 
         [Test]
@@ -152,9 +225,9 @@ namespace LibLala.Unittests.Audio.Mixing
         }
 
         [Test]
-        public void TheEarliestStart_IsThatOfABeatMatchedTransition()
+        public void TheEarliestStart_IsWhereTheCurrentTrackGoesToItsTempoForABeatMatchedTransition()
         {
-            Assert.That(TransitionPlanner.EarliestStart(310, Grid()), Is.EqualTo(268).Within(1e-9));
+            Assert.That(TransitionPlanner.EarliestStart(310, Grid()), Is.EqualTo(268 - 16).Within(1e-9));
             Assert.That(TransitionPlanner.EarliestStart(310, null), Is.EqualTo(306));
             Assert.That(TransitionPlanner.EarliestStart(310, Grid(deviationMs: 30)), Is.EqualTo(296));
         }

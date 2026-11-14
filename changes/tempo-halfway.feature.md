@@ -1,0 +1,1 @@
+When a track is mixed into the next, both go halfway to the other's tempo: the one that plays changes its tempo over the 8 bars before the next one comes in, and the next one goes back to its own over 8 bars after. Neither changes by more than 5%, so tracks up to 10% apart in tempo are now mixed on the beat instead of following on the downbeat.

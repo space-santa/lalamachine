@@ -14,15 +14,35 @@ namespace LibLala.Audio.Mixing
     }
 
     // How track A goes over into track B. StartA is the second of A where B comes in, Seconds how long it takes as heard,
-    // StartB the second of B it comes in with, TempoB the tempo B plays at, of its own, for its beats to be A's.
-    internal sealed record TransitionPlan(double StartA, double Seconds, double StartB, double TempoB, TransitionKind Kind);
+    // StartB the second of B it comes in with, TempoB the tempo B plays at, of its own, for its beats to be A's. Before,
+    // A goes to the tempo it plays at through the transition by RampA, which is over at StartA.
+    internal sealed record TransitionPlan(double StartA, double Seconds, double StartB, double TempoB, TransitionKind Kind, TempoRamp RampA)
+    {
+        // Of A's own, through the transition.
+        public double TempoA => RampA.To;
+    }
+
+    // A track's tempo going from From to To, by where the track is: from its second Start to its second End. Of the
+    // track's own, before Start it's From, after End To.
+    internal readonly record struct TempoRamp(double Start, double End, double From, double To)
+    {
+        // The tempo stays as it is.
+        public static TempoRamp None(double second, double tempo) => new(second, second, tempo, tempo);
+
+        public double At(double second) =>
+            second >= End ? To : second <= Start ? From : From + ((To - From) * (second - Start) / (End - Start));
+    }
 
     internal static class TransitionPlanner
     {
         public const int Bars = 16;
         // Shorter, the filters would sweep too fast to sound like a mix.
         public const int MinBars = 4;
-        // Further, SoundTouch's stretching is heard: 7% was, grainy.
+        // Before the transition A goes halfway to B's tempo over this many bars, after it B goes back to its own over as many.
+        public const int RampBars = 8;
+        // Fewer, A's tempo would jump. Without the room for it A keeps its tempo, and B goes all the way.
+        public const int MinRampBars = 1;
+        // For each track. Further, SoundTouch's stretching is heard: 7% was, grainy.
         public const double MaxTempoChange = 0.05;
         public const double CrossfadeSeconds = 4;
         // Long enough not to click.
@@ -30,30 +50,39 @@ namespace LibLala.Audio.Mixing
         // A transition doesn't start sooner than this from what plays: what's rendered can't change.
         private const double MinLeadSeconds = 0.05;
 
-        // The earliest second of A where the next track can come in, for asking what the next track is in time. Its tempo
-        // decides how, so it can be later.
+        // The earliest second of A where the next track can change how it plays, for asking what the next track is in time:
+        // where A's tempo starts going to B's before a beat matched transition. B's tempo decides how, so it can be later.
         public static double EarliestStart(double lengthA, BeatGrid? gridA)
         {
             var crossfade = Math.Max(0, (gridA is null ? lengthA : MusicEnd(gridA, lengthA)) - CrossfadeSeconds);
-            return gridA is { IsSteady: true } ? Math.Clamp(MusicEnd(gridA, lengthA) - (Bars * gridA.BarSeconds), 0, crossfade) : crossfade;
+            return gridA is { IsSteady: true } ? Math.Clamp(MusicEnd(gridA, lengthA) - ((RampBars + Bars) * gridA.BarSeconds), 0, crossfade) : crossfade;
         }
 
-        // nowA is the second of A that plays next. A plays at tempoA of its own.
-        public static TransitionPlan Plan(double nowA, double lengthA, BeatGrid? gridA, double tempoA, BeatGrid? gridB)
+        // nowA is the second of A that plays next, A plays at tempoA of its own there. Nothing starts before it, and A's
+        // tempo doesn't change before rampFromA either: with nowA 0 the transition is where it would be from the start of A,
+        // while A's tempo only changes from where it plays.
+        public static TransitionPlan Plan(double nowA, double lengthA, BeatGrid? gridA, double tempoA, BeatGrid? gridB, double rampFromA = 0)
         {
             if (gridA is { IsSteady: true } && gridB is { IsSteady: true })
             {
-                var tempoB = gridA.BeatsPerMinute * tempoA / gridB.BeatsPerMinute;
-                if (Math.Abs(Math.Log(tempoB)) <= Math.Log(1 + MaxTempoChange))
+                // The last bars of A's music, with B's first bars over them. Too late for all of them, from A's next bar.
+                var bar = gridA.BarSeconds;
+                var end = MusicEnd(gridA, lengthA);
+                var start = Math.Max(end - (Bars * bar), DownbeatAtOrAfter(gridA, nowA + MinLeadSeconds));
+                var bars = (int)Math.Round((end - start) / bar);
+                if (bars >= MinBars)
                 {
-                    // The last bars of A's music, with B's first bars over them. Too late for all of them, from A's next bar.
-                    var bar = gridA.BarSeconds;
-                    var end = MusicEnd(gridA, lengthA);
-                    var start = Math.Max(end - (Bars * bar), DownbeatAtOrAfter(gridA, nowA + MinLeadSeconds));
-                    var bars = (int)Math.Round((end - start) / bar);
-                    if (bars >= MinBars)
+                    // Each goes halfway, so that neither changes much: A in the bars before, B through the transition. Too
+                    // late for all of those bars, A in the whole bars left. Without them, B goes all the way to A's tempo.
+                    var rampStart = Math.Max(start - (RampBars * bar), DownbeatAtOrAfter(gridA, Math.Max(nowA, rampFromA) + MinLeadSeconds));
+                    var halfway = Math.Sqrt(gridB.BeatsPerMinute / gridA.BeatsPerMinute);
+                    var rampA = Math.Round((start - rampStart) / bar) >= MinRampBars && IsWithinReach(halfway)
+                        ? new TempoRamp(rampStart, start, tempoA, halfway)
+                        : TempoRamp.None(start, tempoA);
+                    var tempoB = gridA.BeatsPerMinute * rampA.To / gridB.BeatsPerMinute;
+                    if (IsWithinReach(tempoB))
                     {
-                        return new TransitionPlan(start, bars * bar / tempoA, FirstBar(gridB), tempoB, TransitionKind.BeatMatched);
+                        return new TransitionPlan(start, bars * bar / rampA.To, FirstBar(gridB), tempoB, TransitionKind.BeatMatched, rampA);
                     }
                 }
 
@@ -65,8 +94,11 @@ namespace LibLala.Audio.Mixing
             var crossfadeEnd = gridA is null ? lengthA : MusicEnd(gridA, lengthA);
             var crossfadeStart = Math.Max(nowA + MinLeadSeconds, crossfadeEnd - CrossfadeSeconds);
             var seconds = Math.Max(0, Math.Min(CrossfadeSeconds, lengthA - crossfadeStart)) / tempoA;
-            return new TransitionPlan(crossfadeStart, seconds, 0, 1, TransitionKind.Crossfade);
+            return new TransitionPlan(crossfadeStart, seconds, 0, 1, TransitionKind.Crossfade, TempoRamp.None(crossfadeStart, tempoA));
         }
+
+        // The tempo, of the track's own, isn't so far from it that the stretching is heard.
+        private static bool IsWithinReach(double tempo) => Math.Abs(Math.Log(tempo)) <= Math.Log(1 + MaxTempoChange) + 1e-12;
 
         // On the downbeat where A's music ends, or the next one when A is past it. B fades in before its first bar, so that
         // this is heard whole.
@@ -77,7 +109,7 @@ namespace LibLala.Audio.Mixing
             var downbeat = Math.Max(MusicEnd(gridA, lengthA), DownbeatAtOrAfter(gridA, nowA + MinLeadSeconds + (lead * tempoA)));
             // Without a downbeat left in the file, at its end.
             var startA = Math.Max(Math.Min(downbeat, lengthA) - (lead * tempoA), nowA + MinLeadSeconds);
-            return new TransitionPlan(startA, CutSeconds, firstBar - lead, 1, TransitionKind.Cut);
+            return new TransitionPlan(startA, CutSeconds, firstBar - lead, 1, TransitionKind.Cut, TempoRamp.None(startA, tempoA));
         }
 
         // Where A's music is over: the bar after its last beat. A last hit on the first beat of a bar ends it right there. On

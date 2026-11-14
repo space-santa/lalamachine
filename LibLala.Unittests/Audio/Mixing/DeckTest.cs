@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using LibLala.Audio;
 using LibLala.Audio.Mixing;
 using NUnit.Framework;
@@ -47,6 +50,33 @@ namespace LibLala.Unittests.Audio.Mixing
 
             Assert.That(deck.IsEnded, Is.True);
             Assert.That(rendered, Is.EqualTo(5 / 0.9 * AudioFormat.SampleRate).Within(0.2 * AudioFormat.SampleRate));
+        }
+
+        // Like a track that starts going to the next one's tempo while it plays.
+        [Test]
+        public void GoingIntoTheStretching_ItGoesOnWithoutAJump()
+        {
+            using var deck = new Deck(new SineDecoder(440, 100000), null, 1);
+            var step = new float[256 * AudioFormat.Channels];
+            var heard = new List<float>();
+            for (var i = 0; i < 40; i++)
+            {
+                if (i == 20)
+                {
+                    deck.Tempo = 1.0001;
+                }
+                var before = deck.Position;
+                deck.Render(step);
+                Assert.That(deck.Position - before, Is.EqualTo(256 * deck.Tempo).Within(1), $"step {i}");
+                // Nor quieter, the sine peaks in every step.
+                Assert.That(Enumerable.Range(0, 256).Max(f => Math.Abs(step[f * AudioFormat.Channels])), Is.GreaterThan(0.49), $"step {i}");
+                heard.AddRange(Enumerable.Range(0, 256).Select(f => step[f * AudioFormat.Channels]));
+            }
+
+            // A 440 Hz sine at 0.5 moves by at most this from one frame to the next.
+            var most = 0.5 * 2 * Math.PI * 440 / AudioFormat.SampleRate;
+            var jumps = Enumerable.Range(1, heard.Count - 1).Select(f => Math.Abs(heard[f] - heard[f - 1])).ToList();
+            Assert.That(jumps.Max(), Is.LessThan(most * 1.1), $"at frame {jumps.IndexOf(jumps.Max()) + 1}");
         }
 
         [Test]
