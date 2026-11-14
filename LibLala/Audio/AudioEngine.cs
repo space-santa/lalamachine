@@ -29,8 +29,6 @@ namespace LibLala.Audio
         private const int StepFrames = 256;
         // TransitionDue comes this long before the earliest transition, for the next track to be opened in time.
         private const double DueLeadSeconds = 2;
-        // After a transition the track comes back to its own tempo over this many bars.
-        private const int TempoRampBars = 8;
         // A seek goes no closer to the end of a transition, so that dragging the position slider can't finish it: the next
         // track would take over and the drag would go on in that one.
         private const double SeekMarginSeconds = 0.5;
@@ -126,6 +124,11 @@ namespace LibLala.Audio
                         calledOff = _incoming;
                         _incoming = null;
                         _transition = null;
+                        // From where its tempo went for the transition already.
+                        if (_current is { } current)
+                        {
+                            RampToOwnTempo(current);
+                        }
                     }
                     else if (value && _transition is null)
                     {
@@ -223,8 +226,9 @@ namespace LibLala.Audio
         // Takes over the decoder and mixes its track into the current one, where the planner says, or where the transition
         // is when the current track is in it already. Past it, a short one. What came in before is dropped. Returns the
         // number of the track, TookOver carries it, or 0 without taking over the decoder when there's no track to mix into.
-        // Throws an IOException when the decoder can't seek to where the track comes in, then nothing changed. A tempo that
-        // is still coming back from the transition before stays where it is now, the plan goes by it.
+        // Throws an IOException when the decoder can't seek to where the track comes in, then nothing changed. The current
+        // track's tempo goes halfway to the incoming track's in the bars before the transition, from where it is now: one
+        // still coming back from the transition before stays there until then.
         public int MixTo(IAudioDecoder decoder, BeatGrid? grid)
         {
             ArgumentNullException.ThrowIfNull(decoder);
@@ -325,7 +329,8 @@ namespace LibLala.Audio
 
         // Of the current track. Without a transition, it comes back to its own tempo at once. With one, it is a seek in the
         // mix: before it's due the transition is off, until it starts the incoming track waits, in it the incoming track is
-        // where it would be, and it doesn't go so close to the end that the transition would be over.
+        // where it would be, and it doesn't go so close to the end that the transition would be over. The current track is
+        // at the tempo it would be at there.
         public void Seek(long frame)
         {
             _output.Reset();
@@ -475,12 +480,12 @@ namespace LibLala.Audio
         }
 
         // The second of A that a seek goes to at most while the transition is planned.
-        private static double SeekEnd(TransitionPlan plan, double tempoA, double lengthA) =>
-            Math.Min(plan.StartA + (plan.Seconds * tempoA), lengthA) - SeekMarginSeconds;
+        private static double SeekEnd(TransitionPlan plan, double lengthA) =>
+            Math.Min(plan.StartA + (plan.Seconds * plan.TempoA), lengthA) - SeekMarginSeconds;
 
         // How far into the transition A is at the second, from where it starts.
-        private static double Progress(TransitionPlan plan, double tempoA, double seconds) =>
-            (seconds - plan.StartA) / (plan.Seconds * tempoA);
+        private static double Progress(TransitionPlan plan, double seconds) =>
+            (seconds - plan.StartA) / (plan.Seconds * plan.TempoA);
 
         // The frame of B that plays that far into the transition: B moves on at its own tempo times the one it plays at.
         private static long IncomingFrame(TransitionPlan plan, double progress) =>
@@ -492,14 +497,15 @@ namespace LibLala.Audio
         private Deck? TrackToMixInto() => _isFailed || _isEndPlayed ? null : _current;
 
         // How the track comes into the current one from where that is now, how far into the transition that is already,
-        // null before it, and the frame the track comes in with.
+        // null before it, and the frame the track comes in with. Where the transition would be from the start, the current
+        // track's tempo only changes from now: in the transition already, it stays.
         private static (TransitionPlan Plan, double? Progress, long IncomingFrame) PlanMix(Deck outgoing, BeatGrid? grid)
         {
             var length = outgoing.Decoder.Length / (double)AudioFormat.SampleRate;
             var now = outgoing.Position / AudioFormat.SampleRate;
-            var plan = TransitionPlanner.Plan(nowA: 0, length, outgoing.Grid, outgoing.Tempo, grid);
+            var plan = TransitionPlanner.Plan(nowA: 0, length, outgoing.Grid, outgoing.Tempo, grid, rampFromA: now);
             double? progress = null;
-            if (now >= SeekEnd(plan, outgoing.Tempo, length))
+            if (now >= SeekEnd(plan, length))
             {
                 // Past it already. A crossfade close to the end of the file would be too short, a cut is meant to be.
                 plan = TransitionPlanner.Plan(now, length, outgoing.Grid, outgoing.Tempo, grid);
@@ -510,7 +516,7 @@ namespace LibLala.Audio
             }
             else if (now >= plan.StartA)
             {
-                progress = Progress(plan, outgoing.Tempo, now);
+                progress = Progress(plan, now);
             }
             return (plan, progress, IncomingFrame(plan, progress ?? 0));
         }
@@ -540,13 +546,22 @@ namespace LibLala.Audio
                     _transition = null;
                     transition = null;
                     isRunning = false;
+                    if (_current is { } stays)
+                    {
+                        RampToOwnTempo(stays);
+                    }
                 }
             }
 
             if (_current is { } current)
             {
                 current.HighPass.Cutoff = isRunning && isFiltered ? TransitionShape.Crossover((from + to) / 2) : current.HighPass.Off;
-                if (!isRunning && _ramp is { } ramp)
+                if (transition is not null)
+                {
+                    // Before the transition, on its way to the tempo it plays at in it.
+                    current.Tempo = transition.Plan.RampA.At(current.Position / AudioFormat.SampleRate);
+                }
+                else if (_ramp is { } ramp)
                 {
                     current.Tempo = ramp.Tempo(_frame);
                     if (_frame >= ramp.EndFrame)
@@ -649,11 +664,18 @@ namespace LibLala.Audio
             if (_current is { } current)
             {
                 current.LowPass.Cutoff = current.LowPass.Off;
-                if (current.Tempo != 1)
-                {
-                    var barFrames = 4 * 60.0 / ((current.Grid?.BeatsPerMinute ?? 120) * current.Tempo) * AudioFormat.SampleRate;
-                    _ramp = new Ramp(_frame, _frame + (long)(TempoRampBars * barFrames), current.Tempo);
-                }
+                RampToOwnTempo(current);
+            }
+        }
+
+        // From the tempo it plays at, over the bars of a ramp as heard.
+        private void RampToOwnTempo(Deck deck)
+        {
+            _ramp = null;
+            if (deck.Tempo != 1)
+            {
+                var barFrames = 4 * 60.0 / ((deck.Grid?.BeatsPerMinute ?? 120) * deck.Tempo) * AudioFormat.SampleRate;
+                _ramp = new Ramp(_frame, _frame + (long)(TransitionPlanner.RampBars * barFrames), deck.Tempo);
             }
         }
 
@@ -737,20 +759,22 @@ namespace LibLala.Audio
                 {
                     var plan = transition.Plan;
                     var length = current.Decoder.Length / (double)AudioFormat.SampleRate;
-                    if (seconds < plan.StartA - DueLeadSeconds)
+                    if (seconds < plan.RampA.Start - DueLeadSeconds)
                     {
                         // Back to before it's due: no transition, until it's due again.
                         incoming.Dispose();
                         _incoming = null;
                         _transition = null;
                         _dueAt = null;
+                        current.Tempo = 1;
                         current.HighPass.Cutoff = current.HighPass.Off;
                     }
                     else
                     {
-                        seconds = Math.Max(0, Math.Min(seconds, SeekEnd(plan, current.Tempo, length)));
+                        seconds = Math.Max(0, Math.Min(seconds, SeekEnd(plan, length)));
                         frame = (long)Math.Round(seconds * AudioFormat.SampleRate);
-                        double? progress = seconds >= plan.StartA ? Progress(plan, current.Tempo, seconds) : null;
+                        current.Tempo = plan.RampA.At(seconds);
+                        double? progress = seconds >= plan.StartA ? Progress(plan, seconds) : null;
                         try
                         {
                             incoming.Seek(IncomingFrame(plan, progress ?? 0));
@@ -769,6 +793,7 @@ namespace LibLala.Audio
                             incoming.Dispose();
                             _incoming = null;
                             _transition = null;
+                            current.Tempo = 1;
                             current.HighPass.Cutoff = current.HighPass.Off;
                         }
                     }
