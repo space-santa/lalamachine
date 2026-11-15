@@ -215,13 +215,21 @@ namespace LibLala.Unittests.Audio.Mixing
 
         // Like an intro on a beat that jumps in a break, off the grid of the rest, or a long one without beats.
         [Test]
-        public void MusicThatStartsFurtherIn_TheTrackComesInFromItsStart_OnTheDownbeatWhereTheMusicEnds()
+        public void MusicThatStartsFurtherIn_TheTrackComesInFromItsStart_ThroughACrossfade()
         {
             var plan = TransitionPlanner.Plan(nowA: 100, lengthA: 310, Grid(), tempoA: 1, Grid(firstDownbeat: 0.5, musicStart: 66.5));
 
-            AssertCut(plan, 300, 0);
+            AssertCrossfadeFromTheStart(plan);
+        }
+
+        // Over where A's music ends.
+        private static void AssertCrossfadeFromTheStart(TransitionPlan plan)
+        {
+            Assert.That(plan.Kind, Is.EqualTo(TransitionKind.Crossfade));
+            Assert.That(plan.StartA, Is.EqualTo(300 - TransitionPlanner.CrossfadeSeconds));
+            Assert.That(plan.Seconds, Is.EqualTo(TransitionPlanner.CrossfadeSeconds));
             Assert.That(plan.StartB, Is.Zero);
-            Assert.That(plan.StartA, Is.EqualTo(300));
+            Assert.That(plan.TempoB, Is.EqualTo(1));
         }
 
         // B's intro on a grid of its own, the rest of B on another beat from 60 s.
@@ -264,7 +272,7 @@ namespace LibLala.Unittests.Audio.Mixing
             // 124 BPM, 33 bars in.
             var plan = TransitionPlanner.Plan(nowA: 100, lengthA: 310, Grid(), tempoA: 1, WithIntro(Grid(bpm: 124, musicStart: 33 * 240 / 124.0)));
 
-            AssertCut(plan, 300, 0);
+            AssertCrossfadeFromTheStart(plan);
         }
 
         [Test]
