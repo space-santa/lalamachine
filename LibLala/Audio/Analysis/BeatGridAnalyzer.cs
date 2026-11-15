@@ -9,10 +9,14 @@ namespace LibLala.Audio.Analysis
     public static class BeatGridAnalyzer
     {
         // Goes up when the analysis changes, so that the library is analyzed again.
-        public const int Version = 3;
-        // Version 3 finds the tempo of a track without a tagged one in another way, and changes nothing else: what version
-        // 2 found in a track with a tagged tempo is what this one finds.
-        private const int SameWithTagSinceVersion = 2;
+        public const int Version = 4;
+        // The grids from this version on are good to play by until the track is analyzed again. Version 3 found the tempo
+        // of a track without a tagged one in another way, version 4 moves the beats where Mixed In Key's cues say.
+        private const int PlayableSinceVersion = 2;
+        // What version 3 found, and version 2 in a track with a tagged tempo, is what this version finds unless the cues
+        // move the beats. Its tempo too.
+        private const int SameUnlessCuesMoveSinceVersion = 3;
+        private const int SameWithTagUnlessCuesMoveSinceVersion = 2;
 
         private const double MinBpm = 60;
         private const double MaxBpm = 200;
@@ -33,15 +37,42 @@ namespace LibLala.Audio.Analysis
         // Beats heard in a stretch of 16 for it to be the music, not an intro or outro.
         private const int MusicBeatsPerSection = 12;
         private const double MinCueAgreement = 0.6;
+        // Mixed In Key's cues are this long after the kick's attack, in our decoders' time.
+        private const double CueLateSeconds = 0.045;
+        // How far from a quarter of a beat a cue may be to be on it, in beats.
+        private const double CueQuarterTolerance = 0.1;
+        // A kick is in the bass: at least this much of the bass onsets at the beats found have to be at the cues for them
+        // to move the beats. In a DJ's library it was 0.19 and more for every track whose cues moved its beats, 0.06 and
+        // less for hi-hats on 16ths in synthetic drums.
+        private const double MinCueBassShare = 0.1;
 
         // The onset envelope peaks at a frame that starts this long before the attack: the frame with the attack 70% of the
         // way in, where its window rises steeply. Measured with synthetic drums.
         private const double OnsetLead = 0.0323;
 
         // Whether what a version of the analysis found in a track is what this one finds.
-        public static bool IsCurrent(int version, bool hasTaggedTempo)
+        public static bool IsCurrent(int version) => version == Version;
+
+        // Whether a grid that a version of the analysis found is good to play by, until the track is analyzed again.
+        public static bool IsPlayable(int version) => version is >= PlayableSinceVersion and <= Version;
+
+        // Whether what a version found is what this one finds, unless the cues move the beats: see CuesMayMove.
+        public static bool IsCurrentUnlessCuesMove(int version, bool hasTaggedTempo)
         {
-            return version == Version || (hasTaggedTempo && version >= SameWithTagSinceVersion && version < Version);
+            return version is >= SameUnlessCuesMoveSinceVersion and < Version
+                || (hasTaggedTempo && version is >= SameWithTagUnlessCuesMoveSinceVersion and < Version);
+        }
+
+        // Whether the tempo that a version found in a track without a tagged one is the tempo this one finds.
+        public static bool HasCurrentTempo(int version) => version is >= SameUnlessCuesMoveSinceVersion and <= Version;
+
+        // Whether the cues may move the beats of a grid that an earlier version found, see IsCurrentUnlessCuesMove. When
+        // they don't, the grid is what this version finds in the track.
+        public static bool CuesMayMove(BeatGrid grid, IReadOnlyList<double> cueSeconds)
+        {
+            ArgumentNullException.ThrowIfNull(grid);
+            ArgumentNullException.ThrowIfNull(cueSeconds);
+            return CueQuarters(cueSeconds, grid.FirstBeat, grid.BeatSeconds) != 0;
         }
 
         // Null when there is no beat to find.
@@ -83,13 +114,13 @@ namespace LibLala.Audio.Analysis
             // The beat is where the kick is. All onsets together often pile up higher on the off-beat, where hi-hats are, and
             // the bass alone where a bass line plays between the kicks. A kick is in the bass and the click range at once.
             // Measured against Mixed In Key's cues in a DJ's library: all onsets put 28% of steady tracks half a beat off,
-            // the kick 6%. From the raw flux, a moving average taken off loses some kicks.
+            // the kick 16%. From the raw flux, a moving average taken off loses some kicks.
             var phase = best.Phase;
             var bass = Scale(envelopes.Bass);
+            var bassPeaks = Peaks(bass);
             var expectedBeats = onsets.Length * hopSeconds * best.Bpm / 60;
-            foreach (var beats in new[] { Kicks(bass, Scale(envelopes.Click)), bass })
+            foreach (var beatPeaks in new[] { Peaks(Kicks(bass, Scale(envelopes.Click))), bassPeaks })
             {
-                var beatPeaks = Peaks(beats);
                 if (beatPeaks.Length < expectedBeats / 4)
                 {
                     continue;
@@ -105,6 +136,28 @@ namespace LibLala.Audio.Analysis
             if (Fit(onsets, hopSeconds, best.Bpm, phase) is not { } line)
             {
                 return null;
+            }
+
+            // Still, a bass line on the off-beat under the hi-hat is in the bass and the click range too, and can be louder
+            // than the kick. Mixed In Key's cues are on the kick: when most of them are a quarter or half a beat off the
+            // beats, and the bass is heard there too, the beats are where they are. The onsets there place them to the
+            // millisecond. Unless those aren't steady and less so than the ones before, or heard less often: other sounds
+            // around the kicks. Then the beats before, moved. Without the bass, the cues aren't on a kick: hi-hats on 16ths,
+            // say. Measured against the cues in a DJ's library, this puts 252 of 268 steady tracks that were a half or a
+            // quarter beat off on the beat, and leaves the others as they were.
+            if (CueQuarters(cueSeconds, line.First + OnsetLead, line.Period) is var quarters and not 0)
+            {
+                var atCues = line.First + (quarters * line.Period / 4);
+                var piles = Piles(bassPeaks, hopSeconds, 60 / line.Period);
+                if (PileNear(piles, atCues, line.Period) >= MinCueBassShare * PileNear(piles, line.First, line.Period)
+                    && Fit(onsets, hopSeconds, 60 / line.Period, atCues) is { } moved)
+                {
+                    var isSteadier = BeatGrid.IsSteadyOf(moved.DeviationMs, moved.Heard.Count)
+                        || (moved.DeviationMs <= line.DeviationMs && moved.Heard.Count >= line.Heard.Count);
+                    // Each beat heard moved back to the kick that starts it, keeping its number: the music starts and ends
+                    // with the kicks it did.
+                    line = isSteadier ? moved : line with { First = atCues - line.Period };
+                }
             }
 
             // Numbered from the first beat at or after the start of the track.
@@ -177,6 +230,21 @@ namespace LibLala.Audio.Analysis
             return start is { } s && end is { } e && s <= e ? (s, e) : (first, last);
         }
 
+        // How many quarters of a beat after the beats most cues are, less how late they are: 0 to 3. 0 also without cues,
+        // or when they don't agree. A cue that is on no quarter counts against that.
+        private static int CueQuarters(IReadOnlyList<double> cueSeconds, double firstBeat, double period)
+        {
+            if (cueSeconds.Count < 2)
+            {
+                return 0;
+            }
+            var quarters = cueSeconds
+                .Select(cue => (cue - CueLateSeconds - firstBeat) / period * 4)
+                .Where(quarter => Math.Abs(quarter - Math.Round(quarter)) <= CueQuarterTolerance * 4)
+                .Select(quarter => (((int)Math.Round(quarter) % 4) + 4) % 4);
+            return MostAgreedOn(quarters, cueSeconds.Count) ?? 0;
+        }
+
         // Which of the first four beats starts a bar, by the cues, when most of them agree.
         private static int? Downbeat(IReadOnlyList<double> cueSeconds, double firstBeat, double period)
         {
@@ -185,12 +253,14 @@ namespace LibLala.Audio.Analysis
                 .Where(number => number >= 0)
                 .Select(number => number % 4)
                 .ToList();
-            if (positions.Count < 2)
-            {
-                return null;
-            }
-            var most = positions.GroupBy(position => position).MaxBy(g => g.Count())!;
-            return most.Count() >= MinCueAgreement * positions.Count ? most.Key : null;
+            return positions.Count < 2 ? null : MostAgreedOn(positions, positions.Count);
+        }
+
+        // What most of the cues are on, when that is 60% of all of them or more.
+        private static int? MostAgreedOn(IEnumerable<int> positions, int all)
+        {
+            var most = positions.GroupBy(position => position).MaxBy(g => g.Count());
+            return most is not null && most.Count() >= MinCueAgreement * all ? most.Key : null;
         }
 
         // Without cues: where the sound changes most from one beat to the next. New parts of a track come in on the first beat
@@ -395,29 +465,19 @@ namespace LibLala.Audio.Analysis
         // tempo, the highest pile over the average one, and the phase of that pile in seconds.
         private static (double Bpm, double Sharpness, double Phase) Fold((double Index, float Strength)[] peaks, double hopSeconds, double bpm, double range, double step)
         {
-            var histogram = new double[PhaseBins];
             var best = (Bpm: bpm, Sharpness: 0.0, Phase: 0.0);
             for (var candidate = bpm * (1 - range); candidate <= bpm * (1 + range); candidate += bpm * step)
             {
-                Array.Clear(histogram);
-                var beatsPerHop = hopSeconds * candidate / 60;
-                foreach (var (index, strength) in peaks)
-                {
-                    var phase = index * beatsPerHop;
-                    phase -= Math.Floor(phase);
-                    histogram[(int)(phase * PhaseBins) % PhaseBins] += strength;
-                }
-
+                var piles = Piles(peaks, hopSeconds, candidate);
                 double highest = 0;
                 double total = 0;
                 var highestBin = 0;
                 for (var bin = 0; bin < PhaseBins; bin++)
                 {
-                    var smoothed = histogram[(bin + PhaseBins - 1) % PhaseBins] + (2 * histogram[bin]) + histogram[(bin + 1) % PhaseBins];
-                    total += smoothed;
-                    if (smoothed > highest)
+                    total += piles[bin];
+                    if (piles[bin] > highest)
                     {
-                        highest = smoothed;
+                        highest = piles[bin];
                         highestBin = bin;
                     }
                 }
@@ -428,6 +488,35 @@ namespace LibLala.Audio.Analysis
                 }
             }
             return best;
+        }
+
+        // The onsets folded at a tempo: how much of them is at each of the phases of a beat, the phases either side counting
+        // half.
+        private static double[] Piles((double Index, float Strength)[] peaks, double hopSeconds, double bpm)
+        {
+            var histogram = new double[PhaseBins];
+            var beatsPerHop = hopSeconds * bpm / 60;
+            foreach (var (index, strength) in peaks)
+            {
+                var phase = index * beatsPerHop;
+                phase -= Math.Floor(phase);
+                histogram[(int)(phase * PhaseBins) % PhaseBins] += strength;
+            }
+            var piles = new double[PhaseBins];
+            for (var bin = 0; bin < PhaseBins; bin++)
+            {
+                piles[bin] = histogram[(bin + PhaseBins - 1) % PhaseBins] + (2 * histogram[bin]) + histogram[(bin + 1) % PhaseBins];
+            }
+            return piles;
+        }
+
+        // The highest pile within a 16th of a beat of a time, in seconds.
+        private static double PileNear(double[] piles, double seconds, double period)
+        {
+            var phase = seconds / period;
+            var bin = (int)((phase - Math.Floor(phase)) * PhaseBins);
+            var near = PhaseBins / 16;
+            return Enumerable.Range(bin - near, (2 * near) + 1).Max(b => piles[((b % PhaseBins) + PhaseBins) % PhaseBins]);
         }
 
         // A line through the beats heard: the time of beat 0 in the onset envelope, the seconds per beat, how far the music is

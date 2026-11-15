@@ -31,7 +31,8 @@ namespace LalaDb.Model
                     a => a.Path,
                     a => (
                         Key: a.KeyAnalyzerVersion == KeyAnalyzer.Version ? a.Key : "",
-                        BeatsPerMinute: a.AnalyzerVersion == BeatGridAnalyzer.Version ? BeatGrid.ShownBeatsPerMinuteOf(a.BeatsPerMinute, a.BeatDeviationMs, a.BeatCount) : 0),
+                        // Also from a version before that found it as this one does, until the track is analyzed again.
+                        BeatsPerMinute: BeatGridAnalyzer.HasCurrentTempo(a.AnalyzerVersion) ? BeatGrid.ShownBeatsPerMinuteOf(a.BeatsPerMinute, a.BeatDeviationMs, a.BeatCount) : 0),
                     StringComparer.Ordinal);
             return new DetectedTags(byPath);
         }

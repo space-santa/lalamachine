@@ -79,6 +79,35 @@ namespace LibLala.Unittests.Audio.Mixing
             Assert.That(jumps.Max(), Is.LessThan(most * 1.1), $"at frame {jumps.IndexOf(jumps.Max()) + 1}");
         }
 
+        // In a transition both tracks are stretched, their kicks hit together only if each comes where Position says.
+        [TestCase(0.976)]
+        [TestCase(1.025)]
+        public void Stretched_TheKicksComeWherePositionHasThem(double tempo)
+        {
+            using var deck = new Deck(new DrumDecoder(120, 0.25, seconds: 30) { HasHiHat = false, Noise = 0 }, null, 1) { Tempo = tempo };
+            var step = new float[256 * AudioFormat.Channels];
+            var heard = new List<float>();
+            var positions = new List<double>();
+            while (!deck.IsEnded)
+            {
+                positions.Add(deck.Position);
+                deck.Render(step);
+                heard.AddRange(Enumerable.Range(0, 256).Select(f => step[f * AudioFormat.Channels]));
+            }
+
+            var offs = new List<double>();
+            for (var kick = 0.25 * AudioFormat.SampleRate; kick < 28 * AudioFormat.SampleRate; kick += 0.5 * AudioFormat.SampleRate)
+            {
+                // Where Position passes it, and where the kick rises out of the silence before it.
+                var k = positions.FindIndex(p => p > kick) - 1;
+                var expected = (k + ((kick - positions[k]) / (positions[k + 1] - positions[k]))) * 256;
+                var attack = Enumerable.Range((int)expected - 1000, 3000).First(f => Math.Abs(heard[f]) > 0.1);
+                offs.Add((attack - expected) * 1000 / AudioFormat.SampleRate);
+            }
+
+            Assert.That(offs, Has.All.InRange(-3.0, 3.0), string.Join(" ", offs.Select(ms => ms.ToString("F1", System.Globalization.CultureInfo.InvariantCulture))));
+        }
+
         [Test]
         public void Seek_AtItsOwnTempo_ReadsAsItIsAgain()
         {

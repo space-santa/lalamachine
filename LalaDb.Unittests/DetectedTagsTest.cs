@@ -127,7 +127,8 @@ namespace LalaDb.Unittests
             {
                 var analysis = context.Set<TrackAnalysis>().Single();
                 analysis.KeyAnalyzerVersion = KeyAnalyzer.Version - 1;
-                analysis.AnalyzerVersion = BeatGridAnalyzer.Version - 1;
+                // It found the tempo of a track without a tagged one in another way.
+                analysis.AnalyzerVersion = 2;
                 context.SaveChanges();
             }
 
@@ -135,6 +136,21 @@ namespace LalaDb.Unittests
 
             Assert.That(tags.InitialKey, Is.Empty);
             Assert.That(tags.BeatsPerMinute, Is.Zero);
+        }
+
+        // Version 4 only moves the beats where the cues say, the tempo is what version 3 found.
+        [Test]
+        public void TheTempoThatAVersionBeforeFoundAsThisOneDoes_ShowsUntilTheTrackIsAnalyzedAgain()
+        {
+            var track = AddTrack("a");
+            AddAnalysis("a", "8A", 127.998);
+            using (var context = new LalaContext(_options))
+            {
+                context.Set<TrackAnalysis>().Single().AnalyzerVersion = 3;
+                context.SaveChanges();
+            }
+
+            Assert.That(Build(track).BeatsPerMinute, Is.EqualTo(128));
         }
 
         [Test]

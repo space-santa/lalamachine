@@ -185,13 +185,18 @@ namespace Lalamachine.ViewModel
 
         private (BeatGrid? Grid, MusicalKey? Key) Analyze(TrackToAnalyze track)
         {
+            // Opened first: a file that can't be read now isn't saved, and is tried again next time.
             using var decoder = _openDecoder(track.Path);
             var keyAnalyzer = track.NeedsKey ? new KeyAnalyzer() : null;
-            BeatGrid? grid = null;
-            if (track.NeedsGrid)
+            IReadOnlyList<double> cues = track.NeedsGrid ? MixedInKeyCues.Read(track.Path) : [];
+            // What an earlier version found, when the cues don't move its beats, is what this one finds: the track isn't
+            // decoded for it.
+            var isEarlierCurrent = track.Earlier is not null && !BeatGridAnalyzer.CuesMayMove(track.Earlier, cues);
+            var grid = isEarlierCurrent ? track.Earlier : null;
+            if (track.NeedsGrid && !isEarlierCurrent)
             {
                 // The key analysis hears what the beat analysis reads, so that the track is decoded once.
-                grid = BeatGridAnalyzer.Analyze(decoder, track.TaggedBeatsPerMinute > 0 ? track.TaggedBeatsPerMinute : null, MixedInKeyCues.Read(track.Path), keyAnalyzer);
+                grid = BeatGridAnalyzer.Analyze(decoder, track.TaggedBeatsPerMinute > 0 ? track.TaggedBeatsPerMinute : null, cues, keyAnalyzer);
             }
             else
             {

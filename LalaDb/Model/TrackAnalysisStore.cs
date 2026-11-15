@@ -20,8 +20,9 @@ namespace LalaDb.Model
         }
     }
 
-    // A track and what to look for in it: the beats, the key, or both.
-    public sealed record TrackToAnalyze(string Path, FileStamp Stamp, int TaggedBeatsPerMinute, bool NeedsGrid, bool NeedsKey);
+    // A track and what to look for in it: the beats, the key, or both. With the grid that an earlier version of the analysis
+    // found, when this one finds the same unless the cues move its beats: see BeatGridAnalyzer.CuesMayMove.
+    public sealed record TrackToAnalyze(string Path, FileStamp Stamp, int TaggedBeatsPerMinute, bool NeedsGrid, bool NeedsKey, BeatGrid? Earlier = null);
 
     // The analyses of the tracks, by path. Each call has its own context, so it can be used from any thread.
     public class TrackAnalysisStore
@@ -39,7 +40,7 @@ namespace LalaDb.Model
         {
             using var context = _createContext();
             var analyzed = context.Set<TrackAnalysis>()
-                .Select(a => new { a.Path, a.FileSize, a.FileWriteTicks, a.AnalyzerVersion, a.KeyAnalyzerVersion })
+                .Select(a => new { a.Path, a.FileSize, a.FileWriteTicks, a.AnalyzerVersion, a.KeyAnalyzerVersion, Grid = new { a.BeatsPerMinute, a.FirstBeat, a.BeatDeviationMs, a.BeatCount, a.FirstDownbeat, a.MusicStart, a.MusicEnd } })
                 .ToDictionary(a => a.Path, StringComparer.Ordinal);
             var tracks = context.Set<Track>()
                 .Where(t => t.Path != null)
@@ -59,11 +60,16 @@ namespace LalaDb.Model
                 {
                     analysis = null;
                 }
-                var needsGrid = analysis is null || !BeatGridAnalyzer.IsCurrent(analysis.AnalyzerVersion, hasTaggedTempo: track.BeatsPerMinute > 0);
+                var needsGrid = analysis is null || !BeatGridAnalyzer.IsCurrent(analysis.AnalyzerVersion);
                 var needsKey = string.IsNullOrWhiteSpace(track.InitialKey) && analysis?.KeyAnalyzerVersion != KeyAnalyzer.Version;
+                var earlier = needsGrid
+                    && analysis is { Grid: var grid } && grid.BeatsPerMinute > 0
+                    && BeatGridAnalyzer.IsCurrentUnlessCuesMove(analysis.AnalyzerVersion, hasTaggedTempo: track.BeatsPerMinute > 0)
+                    ? new BeatGrid(grid.BeatsPerMinute, grid.FirstBeat, grid.BeatDeviationMs, grid.BeatCount, grid.FirstDownbeat, grid.MusicStart, grid.MusicEnd)
+                    : null;
                 if (needsGrid || needsKey)
                 {
-                    toAnalyze.Add(new TrackToAnalyze(track.Path, stamp, track.BeatsPerMinute, needsGrid, needsKey));
+                    toAnalyze.Add(new TrackToAnalyze(track.Path, stamp, track.BeatsPerMinute, needsGrid, needsKey, earlier));
                 }
             }
             return toAnalyze;
@@ -87,9 +93,8 @@ namespace LalaDb.Model
         {
             using var context = _createContext();
             var analysis = context.Set<TrackAnalysis>().SingleOrDefault(a => a.Path == path);
-            // A grid that was found with a tagged tempo, or else one that is about to be found again and good to play by
-            // until then.
-            if (analysis is null || !BeatGridAnalyzer.IsCurrent(analysis.AnalyzerVersion, hasTaggedTempo: true) || analysis.BeatsPerMinute <= 0)
+            // Also one that is about to be found again, good to play by until then.
+            if (analysis is null || !BeatGridAnalyzer.IsPlayable(analysis.AnalyzerVersion) || analysis.BeatsPerMinute <= 0)
             {
                 return null;
             }
