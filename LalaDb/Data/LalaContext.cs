@@ -17,5 +17,6 @@ namespace LalaDb.Data
         public DbSet<GenreTrack>? GenreTracks { get; set; }
         public DbSet<PlaylistTrack>? PlaylistTracks { get; set; }
         public DbSet<TrackAnalysis>? TrackAnalyses { get; set; }
+        public DbSet<TrackWaveform>? TrackWaveforms { get; set; }
     }
 }

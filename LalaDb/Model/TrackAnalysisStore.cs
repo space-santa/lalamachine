@@ -20,14 +20,18 @@ namespace LalaDb.Model
         }
     }
 
-    // A track and what to look for in it: the beats, the key, or both. With the grid that an earlier version of the analysis
-    // found, when this one finds the same unless the cues move its beats: see BeatGridAnalyzer.CuesMayMove.
-    public sealed record TrackToAnalyze(string Path, FileStamp Stamp, int TaggedBeatsPerMinute, bool NeedsGrid, bool NeedsKey, BeatGrid? Earlier = null);
+    // A track and what to look for in it: the beats, the key, the waveform, or more of them. With the grid that an earlier
+    // version of the analysis found, when this one finds the same unless the cues move its beats: see
+    // BeatGridAnalyzer.CuesMayMove.
+    public sealed record TrackToAnalyze(string Path, FileStamp Stamp, int TaggedBeatsPerMinute, bool NeedsGrid, bool NeedsKey, bool NeedsWaveform, BeatGrid? Earlier = null);
 
-    // The analyses of the tracks, by path. Each call has its own context, so it can be used from any thread.
+    // The analyses and waveforms of the tracks, by path. Each call has its own context, so it can be used from any thread.
     public class TrackAnalysisStore
     {
         private readonly Func<LalaContext> _createContext;
+        // One SQLite connection writes at a time anyway, and this way two never wait for each other. Nor do the analysis and
+        // the player both add the waveform of the same track.
+        private readonly System.Threading.Lock _writeGate = new();
 
         public TrackAnalysisStore(Func<LalaContext> createContext)
         {
@@ -42,6 +46,11 @@ namespace LalaDb.Model
             var analyzed = context.Set<TrackAnalysis>()
                 .Select(a => new { a.Path, a.FileSize, a.FileWriteTicks, a.AnalyzerVersion, a.KeyAnalyzerVersion, Grid = new { a.BeatsPerMinute, a.FirstBeat, a.BeatDeviationMs, a.BeatCount, a.FirstDownbeat, a.MusicStart, a.MusicEnd } })
                 .ToDictionary(a => a.Path, StringComparer.Ordinal);
+            // Not the levels, only whether they are of the file as it is now.
+            var waveforms = context.Set<TrackWaveform>()
+                .Where(w => w.Version == Waveform.Version)
+                .Select(w => new { w.Path, w.FileSize, w.FileWriteTicks })
+                .ToDictionary(w => w.Path, w => new FileStamp(w.FileSize, w.FileWriteTicks), StringComparer.Ordinal);
             var tracks = context.Set<Track>()
                 .Where(t => t.Path != null)
                 .Select(t => new { Path = t.Path!, t.BeatsPerMinute, t.InitialKey })
@@ -67,9 +76,10 @@ namespace LalaDb.Model
                     && BeatGridAnalyzer.IsCurrentUnlessCuesMove(analysis.AnalyzerVersion, hasTaggedTempo: track.BeatsPerMinute > 0)
                     ? new BeatGrid(grid.BeatsPerMinute, grid.FirstBeat, grid.BeatDeviationMs, grid.BeatCount, grid.FirstDownbeat, grid.MusicStart, grid.MusicEnd)
                     : null;
-                if (needsGrid || needsKey)
+                var needsWaveform = !waveforms.TryGetValue(track.Path, out var waveformStamp) || waveformStamp != stamp;
+                if (needsGrid || needsKey || needsWaveform)
                 {
-                    toAnalyze.Add(new TrackToAnalyze(track.Path, stamp, track.BeatsPerMinute, needsGrid, needsKey, earlier));
+                    toAnalyze.Add(new TrackToAnalyze(track.Path, stamp, track.BeatsPerMinute, needsGrid, needsKey, needsWaveform, earlier));
                 }
             }
             return toAnalyze;
@@ -105,13 +115,61 @@ namespace LalaDb.Model
             return new BeatGrid(analysis.BeatsPerMinute, analysis.FirstBeat, analysis.BeatDeviationMs, analysis.BeatCount, analysis.FirstDownbeat, analysis.MusicStart, analysis.MusicEnd);
         }
 
+        // Null when there is none of the file as it is now, by this version. Also when the database can't be read right now:
+        // then the player reads it from the file.
+        public Waveform? FindWaveform(string path)
+        {
+            try
+            {
+                return FindWaveformIn(path);
+            }
+            catch (Exception e) when (e is DbException or IOException)
+            {
+                return null;
+            }
+        }
+
+        // Of a track that played before the analysis got to it, so that the analysis doesn't read it again. Its stamp is of
+        // the file as it was before it was read, like the analysis's.
+        public void SaveWaveform(string path, FileStamp stamp, Waveform waveform)
+        {
+            ArgumentNullException.ThrowIfNull(waveform);
+
+            lock (_writeGate)
+            {
+                using var context = _createContext();
+                SetWaveform(context, path, stamp, waveform);
+                context.SaveChanges();
+            }
+        }
+
+        private Waveform? FindWaveformIn(string path)
+        {
+            using var context = _createContext();
+            var stored = context.Set<TrackWaveform>().SingleOrDefault(w => w.Path == path);
+            if (stored is null || stored.Version != Waveform.Version || FileStamp.Of(path) != new FileStamp(stored.FileSize, stored.FileWriteTicks))
+            {
+                return null;
+            }
+            return Waveform.FromBytes(stored.Levels);
+        }
+
         // What was looked for in the track, as it says, and nothing else: a grid found earlier in the same file stays when
         // only the key was looked for. Its stamp is of the file as it was before the analysis, a file changed since is
-        // analyzed again. Without a grid when the track has no beat, without a key when it has none.
-        public void Save(TrackToAnalyze track, BeatGrid? grid, MusicalKey? key)
+        // analyzed again. Without a grid when the track has no beat, without a key when it has none. A waveform that was
+        // looked for and isn't there is looked for again next time.
+        public void Save(TrackToAnalyze track, BeatGrid? grid, MusicalKey? key, Waveform? waveform)
         {
             ArgumentNullException.ThrowIfNull(track);
 
+            lock (_writeGate)
+            {
+                SaveAnalysis(track, grid, key, waveform);
+            }
+        }
+
+        private void SaveAnalysis(TrackToAnalyze track, BeatGrid? grid, MusicalKey? key, Waveform? waveform)
+        {
             using var context = _createContext();
             var analyses = context.Set<TrackAnalysis>();
             var analysis = analyses.SingleOrDefault(a => a.Path == track.Path);
@@ -140,7 +198,26 @@ namespace LalaDb.Model
                 analysis.KeyAnalyzerVersion = track.NeedsKey ? KeyAnalyzer.Version : 0;
                 analysis.Key = key?.Camelot ?? "";
             }
+            if (track.NeedsWaveform && waveform is not null)
+            {
+                SetWaveform(context, track.Path, track.Stamp, waveform);
+            }
             context.SaveChanges();
+        }
+
+        private static void SetWaveform(LalaContext context, string path, FileStamp stamp, Waveform waveform)
+        {
+            var waveforms = context.Set<TrackWaveform>();
+            var stored = waveforms.SingleOrDefault(w => w.Path == path);
+            if (stored is null)
+            {
+                stored = new TrackWaveform { Path = path };
+                waveforms.Add(stored);
+            }
+            stored.FileSize = stamp.Size;
+            stored.FileWriteTicks = stamp.WriteTicks;
+            stored.Version = Waveform.Version;
+            stored.Levels = waveform.ToBytes();
         }
     }
 }

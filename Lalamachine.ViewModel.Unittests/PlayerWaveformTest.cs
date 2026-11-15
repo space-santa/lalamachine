@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using LibLala.Audio.Analysis;
 using LibLala.DomainPrimitives;
 using LibLala.LibLalaTagReader;
 using NSubstitute;
@@ -17,8 +18,9 @@ namespace Lalamachine.ViewModel.Unittests
     {
         private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(10);
         // How long the tracks are, in seconds, to tell their waveforms apart. One that isn't here can't be read.
-        private static readonly Dictionary<string, double> Seconds = new() { [PathOf("a")] = 1, [PathOf("b")] = 2, [PathOf("c")] = 3 };
+        private static readonly Dictionary<string, double> Seconds = new() { ["a"] = 1, ["b"] = 2, ["c"] = 3 };
 
+        private string _dir = "";
         private SynchronizationContext? _previousContext;
         private PostedActions _ui = null!;
         private IAudioPlayer _player = null!;
@@ -27,10 +29,22 @@ namespace Lalamachine.ViewModel.Unittests
         private PlaylistBaseViewModel _list = null!;
         private ConcurrentQueue<string> _opened = null!;
         private ManualResetEventSlim _gateOfA = null!;
+        // Of a track that can't be read: it fails when the gate opens.
+        private ManualResetEventSlim _gateOfGone = null!;
+        // What the analysis stored, and what the player stored of the tracks it read.
+        private ConcurrentDictionary<string, Waveform> _stored = null!;
 
         [SetUp]
         public void SetUp()
         {
+            // Files, for the stamps that a waveform is stored with.
+            _dir = Path.Combine(Path.GetTempPath(), $"lalatest-{Guid.NewGuid()}");
+            Directory.CreateDirectory(_dir);
+            foreach (var name in Seconds.Keys)
+            {
+                File.WriteAllBytes(PathOf(name), [1]);
+            }
+
             // The view model is on the UI thread, which runs what's posted to it when the test says so.
             _previousContext = SynchronizationContext.Current;
             _ui = new PostedActions();
@@ -38,11 +52,22 @@ namespace Lalamachine.ViewModel.Unittests
 
             _opened = new ConcurrentQueue<string>();
             _gateOfA = new ManualResetEventSlim(initialState: true);
-            _waveforms = new WaveformReader(path =>
-            {
-                _opened.Enqueue(path);
-                return Seconds.TryGetValue(path, out var seconds) ? new ToneDecoder(seconds) { Gate = path == PathOf("a") ? _gateOfA : null } : throw new IOException("No such file.");
-            });
+            _gateOfGone = new ManualResetEventSlim(initialState: true);
+            _stored = new ConcurrentDictionary<string, Waveform>();
+            _waveforms = new WaveformReader(
+                path =>
+                {
+                    _opened.Enqueue(path);
+                    var name = Path.GetFileNameWithoutExtension(path);
+                    if (!Seconds.TryGetValue(name, out var seconds))
+                    {
+                        _gateOfGone.Wait();
+                        throw new IOException("No such file.");
+                    }
+                    return new ToneDecoder(seconds) { Gate = name == "a" ? _gateOfA : null };
+                },
+                path => _stored.GetValueOrDefault(path),
+                (path, stamp, waveform) => _stored[path] = waveform);
             _player = Substitute.For<IAudioPlayer>();
             _player.MixTo(Arg.Any<Uri>()).Returns(true);
             _viewModel = new PlayerViewModel(_player, Substitute.For<IDialogService>(), new PlayerSettings(new InMemorySettingsFile()), _waveforms);
@@ -60,9 +85,12 @@ namespace Lalamachine.ViewModel.Unittests
         public void TearDown()
         {
             _gateOfA.Set();
+            _gateOfGone.Set();
             _waveforms.Dispose();
             _gateOfA.Dispose();
+            _gateOfGone.Dispose();
             SynchronizationContext.SetSynchronizationContext(_previousContext);
+            Directory.Delete(_dir, recursive: true);
         }
 
         [Test]
@@ -105,17 +133,29 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
-        public void ATrackPlayedAgain_IsShownAtOnce_AndNotReadAgain()
+        public void ATrackPlayedBefore_IsntReadFromItsFileAgain()
         {
+            foreach (var name in new[] { "a", "b", "c" })
+            {
+                Play(name);
+                Assert.That(ShownSeconds(), Is.EqualTo(Seconds[name]));
+            }
+
             Play("a");
+
             Assert.That(ShownSeconds(), Is.EqualTo(1));
-            Play("b");
-            Assert.That(ShownSeconds(), Is.EqualTo(2));
+            Assert.That(_opened, Is.EqualTo(new[] { PathOf("a"), PathOf("b"), PathOf("c") }));
+        }
+
+        [Test]
+        public void ATrackTheAnalysisGotTo_IsntReadFromItsFile()
+        {
+            _stored[PathOf("a")] = Waveform.FromBytes(new byte[20]);
 
             Play("a");
 
-            Assert.That(SecondsOf(_viewModel), Is.EqualTo(1));
-            Assert.That(_opened, Is.EqualTo(new[] { PathOf("a"), PathOf("b") }));
+            Assert.That(ShownSeconds(), Is.EqualTo(1));
+            Assert.That(_opened, Is.Empty);
         }
 
         [Test]
@@ -141,14 +181,13 @@ namespace Lalamachine.ViewModel.Unittests
             Play("a");
             Assert.That(ShownSeconds(), Is.EqualTo(1));
 
+            _gateOfGone.Reset();
             Play("gone");
-            SpinWait.SpinUntil(() =>
-            {
-                _ui.Run();
-                return _opened.Contains(PathOf("gone")) && _waveforms.Read(PathOf("gone")).IsCompleted;
-            }, Timeout);
-            _ui.Run();
+            _gateOfGone.Set();
+            // Till what comes after the read is run.
+            Assert.That(SpinWait.SpinUntil(() => _ui.Run() > 0, Timeout), Is.True);
 
+            Assert.That(_opened, Does.Contain(PathOf("gone")));
             Assert.That(_viewModel.Waveform, Is.Null);
         }
 
@@ -170,11 +209,10 @@ namespace Lalamachine.ViewModel.Unittests
             return SecondsOf(_viewModel);
         }
 
-        private static double? SecondsOf(PlayerViewModel viewModel) => viewModel.Waveform is { } waveform ? Math.Round(waveform.SliceCount * LibLala.Audio.Analysis.Waveform.SliceSeconds, 3) : null;
+        private static double? SecondsOf(PlayerViewModel viewModel) => viewModel.Waveform is { } waveform ? Math.Round(waveform.SliceCount * Waveform.SliceSeconds, 3) : null;
 
-        // Rooted where the tests run, /music on macOS and C:\music on Windows: a URI takes a path only when it's rooted.
-        private static string PathOf(string name) => Path.GetFullPath($"/music/{name}.mp3");
+        private string PathOf(string name) => Path.Combine(_dir, $"{name}.mp3");
 
-        private static Uri UriOf(string name) => new(PathOf(name));
+        private Uri UriOf(string name) => new(PathOf(name));
     }
 }

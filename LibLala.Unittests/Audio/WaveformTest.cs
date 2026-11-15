@@ -94,6 +94,60 @@ namespace LibLala.Unittests.Audio
         }
 
         [Test]
+        public void ALengthThatsWayOff_TakesNoMoreMemory()
+        {
+            // Read for its length, it would take gigabytes before the first frame.
+            using var decoder = new LevelsDecoder((0.5f, 0.5f, Seconds(1))) { SaysLength = 1L << 42 };
+
+            var waveform = Waveform.Read(decoder, CancellationToken.None);
+
+            Assert.That(waveform.SliceCount, Is.EqualTo(20));
+        }
+
+        [Test]
+        public void BuiltFromWhatsRead_InPiecesThatArentSlices_ItIsTheSameAsRead()
+        {
+            var levels = new[] { (0.6f, 0.8f, Seconds(1)), (0.1f, 0.3f, Seconds(0.5)), (0.5f, -0.5f, Waveform.SliceFrames / 3) };
+            using var decoder = new LevelsDecoder(levels);
+            using var pieces = new LevelsDecoder(levels);
+            var builder = new WaveformBuilder();
+            var piece = new float[1001 * AudioFormat.Channels];
+            int read;
+            while ((read = pieces.Read(piece)) > 0)
+            {
+                builder.Add(piece.AsSpan(0, read * AudioFormat.Channels));
+            }
+
+            var built = builder.Build();
+
+            var whole = Waveform.Read(decoder, CancellationToken.None);
+            Assert.That(built.SliceCount, Is.EqualTo(whole.SliceCount));
+            Assert.That(built.Bars(whole.SliceCount, whole.SliceCount * Waveform.SliceSeconds), Is.EqualTo(whole.Bars(whole.SliceCount, whole.SliceCount * Waveform.SliceSeconds)).Within(1e-6));
+        }
+
+        [Test]
+        public void Stored_ItLooksTheSame()
+        {
+            using var decoder = new LevelsDecoder((0.6f, 0.8f, Seconds(1)), (0.02f, 0.02f, Seconds(1)), (0.3f, 0.4f, Seconds(0.5)), (0, 0, Seconds(0.5)));
+            var waveform = Waveform.Read(decoder, CancellationToken.None);
+
+            var stored = Waveform.FromBytes(waveform.ToBytes());
+
+            Assert.That(stored.SliceCount, Is.EqualTo(waveform.SliceCount));
+            Assert.That(stored.Bars(30, 3), Is.EqualTo(waveform.Bars(30, 3)).Within(1.0 / byte.MaxValue));
+        }
+
+        [Test]
+        public void ASilentTrack_IsStoredAsSilent()
+        {
+            using var decoder = new LevelsDecoder((0, 0, Seconds(1)));
+
+            var stored = Waveform.Read(decoder, CancellationToken.None).ToBytes();
+
+            Assert.That(stored, Has.Length.EqualTo(20).And.All.EqualTo(0));
+        }
+
+        [Test]
         public void Stopped_ItThrows()
         {
             using var decoder = new LevelsDecoder((0.5f, 0.5f, Seconds(1)));

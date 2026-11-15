@@ -43,13 +43,10 @@ namespace Lalamachine.ViewModel
         // The track changed while the position slider was held: where it's dragged to is of the track before.
         private bool _isDragOfTrackBefore;
 
-        public PlayerViewModel(IAudioPlayer audioPlayer, IDialogService dialogs, WaveformReader? waveforms) : this(audioPlayer, dialogs, new PlayerSettings(), waveforms)
+        // The player settings of the app's settings folder, unless others are given.
+        public PlayerViewModel(IAudioPlayer audioPlayer, IDialogService dialogs, PlayerSettings? settings = null, WaveformReader? waveforms = null)
         {
-        }
-
-        public PlayerViewModel(IAudioPlayer audioPlayer, IDialogService dialogs, PlayerSettings settings, WaveformReader? waveforms = null)
-        {
-            _playerSettings = settings;
+            _playerSettings = settings ?? new PlayerSettings();
             _waveforms = waveforms;
             _audioPlayer = audioPlayer;
             _dialogs = dialogs;
@@ -372,7 +369,8 @@ namespace Lalamachine.ViewModel
             ShowWaveform();
         }
 
-        // Once it's read: at once when it was read before, and never the one of a track that played before.
+        // Once it's read: at once for the track mixed in, read before it took over. Never the one of a track that played
+        // before.
         private async void ShowWaveform()
         {
             var source = Source;

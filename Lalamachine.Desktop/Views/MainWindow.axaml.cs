@@ -63,8 +63,8 @@ namespace Lalamachine.Desktop.Views
             var analyses = new TrackAnalysisStore(() => new LalaContext(optionsBuilder.Options));
             var openDecoder = AudioPlayerFactory.DecoderFactory();
             _audioPlayer = AudioPlayerFactory.Create(analyses);
-            _waveforms = openDecoder is null ? null : new WaveformReader(openDecoder);
-            _player = new PlayerViewModel(_audioPlayer, _dialogs, _waveforms);
+            _waveforms = openDecoder is null ? null : new WaveformReader(openDecoder, analyses.FindWaveform, analyses.SaveWaveform);
+            _player = new PlayerViewModel(_audioPlayer, _dialogs, waveforms: _waveforms);
 #pragma warning disable CA2000 // Dispose objects before losing scope. The view model owns the controls, it disposes them.
             if (MediaControlsFactory.Create() is { } mediaControls)
             {

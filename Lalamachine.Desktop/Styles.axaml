@@ -77,8 +77,7 @@
                            Orientation="Horizontal"
                            Minimum="{TemplateBinding Minimum}"
                            Maximum="{TemplateBinding Maximum}"
-                           Value="{TemplateBinding Value, Mode=TwoWay}"
-                           IsDirectionReversed="{TemplateBinding IsDirectionReversed}">
+                           Value="{TemplateBinding Value, Mode=TwoWay}">
                         <Track.DecreaseButton>
                             <RepeatButton Name="PART_DecreaseButton" Focusable="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Template="{StaticResource WaveformSliderPart}" />
                         </Track.DecreaseButton>

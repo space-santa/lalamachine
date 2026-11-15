@@ -2,24 +2,31 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using LalaDb.Model;
 using LibLala.Audio;
 using LibLala.Audio.Analysis;
 
 namespace Lalamachine.ViewModel
 {
-    // Reads the waveforms of tracks in the background, each on a thread of its own. Keeps the last few: for a track that
-    // plays again, and for the one mixed in, which is read before it takes over. Used from the UI thread only.
+    // Reads the waveforms of the track that plays and the one mixed in, each on a thread of its own: the one the analysis
+    // stored, or else from the file, and then it's stored. Used from the UI thread only.
     public sealed class WaveformReader : IDisposable
     {
-        private const int Kept = 4;
+        // The track that plays and the one mixed in, which is read before it takes over. A read still going on is stopped
+        // when it drops out: the user went on to another track.
+        private const int Kept = 2;
 
         private readonly Func<string, IAudioDecoder> _openDecoder;
-        // The one asked for last at the end. A read still going on is stopped when it drops out.
+        private readonly Func<string, Waveform?> _findStored;
+        private readonly Action<string, FileStamp, Waveform> _store;
+        // The one asked for last at the end.
         private readonly List<(string Path, Task<Waveform?> Waveform, CancellationTokenSource Reading)> _kept = [];
 
-        public WaveformReader(Func<string, IAudioDecoder> openDecoder)
+        public WaveformReader(Func<string, IAudioDecoder> openDecoder, Func<string, Waveform?> findStored, Action<string, FileStamp, Waveform> store)
         {
             _openDecoder = openDecoder;
+            _findStored = findStored;
+            _store = store;
         }
 
         // Null when the track can't be read. Then it's read again the next time it's asked for, the drive may be back.
@@ -43,7 +50,8 @@ namespace Lalamachine.ViewModel
             // The token, not the source: it's disposed when the read drops out.
             var token = reading.Token;
             var waveform = new TaskCompletionSource<Waveform?>(TaskCreationOptions.RunContinuationsAsynchronously);
-            new Thread(() => waveform.SetResult(ReadFile(path, token))) { IsBackground = true, Name = "Waveform" }.Start();
+            // Low, like the analysis: the player's threads come first.
+            new Thread(() => waveform.SetResult(ReadFile(path, token))) { IsBackground = true, Priority = ThreadPriority.BelowNormal, Name = "Waveform" }.Start();
             _kept.Add((path, waveform.Task, reading));
             if (_kept.Count > Kept)
             {
@@ -73,13 +81,37 @@ namespace Lalamachine.ViewModel
         {
             try
             {
+                if (_findStored(path) is { } stored)
+                {
+                    return stored;
+                }
+                // Of the file as it was before it was read, like the analysis's: one that changes meanwhile is read again.
+                var stamp = FileStamp.Of(path);
                 using var decoder = _openDecoder(path);
-                return Waveform.Read(decoder, token);
+                var waveform = Waveform.Read(decoder, token);
+                if (stamp is { } before)
+                {
+                    Store(path, before, waveform);
+                }
+                return waveform;
             }
             catch (Exception)
             {
                 // Stopped, a file that can't be read now, or a decoder's surprise.
                 return null;
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "The waveform is shown all the same.")]
+        private void Store(string path, FileStamp stamp, Waveform waveform)
+        {
+            try
+            {
+                _store(path, stamp, waveform);
+            }
+            catch (Exception)
+            {
+                // A database that is busy for too long: read again the next time it plays, or by the analysis.
             }
         }
     }

@@ -237,6 +237,37 @@ namespace LalaDb.Migrations
                     b.ToTable("TrackAnalyses");
                 });
 
+            modelBuilder.Entity("LalaDb.Data.TrackWaveform", b =>
+                {
+                    b.Property<int>("TrackWaveformId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("FileSize")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("FileWriteTicks")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<byte[]>("Levels")
+                        .IsRequired()
+                        .HasColumnType("BLOB");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("TrackWaveformId");
+
+                    b.HasIndex("Path")
+                        .IsUnique();
+
+                    b.ToTable("TrackWaveforms");
+                });
+
             modelBuilder.Entity("LalaDb.Data.ArtistTrack", b =>
                 {
                     b.HasOne("LalaDb.Data.Artist", "Artist")

@@ -10,12 +10,16 @@ namespace Lalamachine.ViewModel.Unittests
 
         public override void Post(SendOrPostCallback d, object? state) => _posted.Enqueue((d, state));
 
-        public void Run()
+        // How many there were.
+        public int Run()
         {
+            var count = 0;
             while (_posted.TryDequeue(out var posted))
             {
                 posted.Callback(posted.State);
+                count++;
             }
+            return count;
         }
     }
 }
