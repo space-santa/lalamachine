@@ -247,6 +247,17 @@ namespace LibLala.Unittests.Audio.Mixing
             AssertCut(plan, 300, 0.3);
         }
 
+        // Like one stored by a version of the analysis that held more for steady.
+        [Test]
+        public void AnIntroThatIsntSteady_TheTrackComesInWithTheRest()
+        {
+            var plan = TransitionPlanner.Plan(nowA: 100, lengthA: 310, Grid(), tempoA: 1, WithIntro(Grid(bpm: 124, deviationMs: 9, firstDownbeat: 0.3, musicStart: 0.3)));
+
+            Assert.That(plan.Kind, Is.EqualTo(TransitionKind.BeatMatched));
+            Assert.That(plan.StartB, Is.EqualTo(1.1 + (30 * 240 / 124.1)).Within(1e-9));
+            Assert.That(plan.TempoB, Is.EqualTo(Math.Sqrt(120 / 124.1)).Within(1e-9));
+        }
+
         [Test]
         public void AnIntroWhoseMusicStartsFurtherIn_TheTrackComesInFromItsStart()
         {

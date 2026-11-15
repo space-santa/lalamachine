@@ -55,6 +55,10 @@ namespace LibLala.Audio.Analysis
         // 16 bars in or later have an intro of their own by this, 2 on a beat of their own that the cues confirm. Of the
         // intros found a quarter of a beat off the rest, the cues had 5 on the rest's beats and none on their own.
         private const double IntroBeatTolerance = 0.1;
+        // An intro is at the tempo of the rest, as far as the intro's tempo is looked for around it. Not at one the onsets
+        // repeat at more sharply, like double or three quarters of it, whose beats are on the rest's now and then. In a DJ's
+        // library every intro but one was within 0.12% of the rest's tempo, that one at three quarters of it.
+        private const double IntroTempoTolerance = 0.02;
 
         // The onset envelope peaks at a frame that starts this long before the attack: the frame with the attack 70% of the
         // way in, where its window rises steeply. Measured with synthetic drums.
@@ -120,10 +124,17 @@ namespace LibLala.Audio.Analysis
             var end = grid.MusicStart - (grid.BeatSeconds / 2);
             var introCues = cueSeconds.Where(cue => cue < end).ToList();
             var intro = Find(envelopes.Before((int)(end / hopSeconds)), hopSeconds, grid.BeatsPerMinute, introCues);
-            var isIntro = intro is { IsSteady: true }
+            return intro is not null && IsIntroOf(intro, grid, introCues) ? grid with { Intro = intro } : grid;
+        }
+
+        // Whether a grid found before the music is an intro's, to mix in with: steady for 16 bars or more, at the tempo of
+        // the rest, and on its beats unless the cues say it's on a beat of its own.
+        internal static bool IsIntroOf(BeatGrid intro, BeatGrid grid, IReadOnlyList<double> introCues)
+        {
+            return intro.IsSteady
+                && Math.Abs((intro.BeatsPerMinute / grid.BeatsPerMinute) - 1) <= IntroTempoTolerance
                 && intro.MusicEndBar - intro.MusicStartBar >= IntroBars
                 && (IsOnTheBeatsOf(intro, grid) || CueQuarter(introCues, intro.FirstBeat, intro.BeatSeconds) == 0);
-            return isIntro ? grid with { Intro = intro } : grid;
         }
 
         // Whether the intro's beats are where the grid has beats, at the start of its music and at the end.
@@ -189,8 +200,10 @@ namespace LibLala.Audio.Analysis
             // beats, and the bass is heard there too, the beats are where they are. The onsets there place them to the
             // millisecond. Unless those aren't steady and less so than the ones before, or heard less often: other sounds
             // around the kicks. Then the beats before, moved. Without the bass, the cues aren't on a kick: hi-hats on 16ths,
-            // say. Measured against the cues in a DJ's library, this puts 252 of 268 steady tracks that were a half or a
-            // quarter beat off on the beat, and leaves the others as they were.
+            // say. Nor when the beats before are steady and the onsets at the cues are steady in another part of the track,
+            // most of the cues in it: an intro on a beat of its own, which gets a grid of its own. Measured against the cues in a DJ's library,
+            // this puts 252 of 268 steady tracks that were a half or a quarter beat off on the beat, and leaves the others as
+            // they were.
             if (CueQuarter(cueSeconds, line.First + OnsetLead, line.Period) is { } quarters and not 0)
             {
                 var atCues = line.First + (quarters * line.Period / 4);
@@ -202,7 +215,14 @@ namespace LibLala.Audio.Analysis
                         || (moved.DeviationMs <= line.DeviationMs && moved.Heard.Count >= line.Heard.Count);
                     // Each beat heard moved back to the kick that starts it, keeping its number: the music starts and ends
                     // with the kicks it did.
-                    line = isSteadier ? moved : line with { First = atCues - line.Period };
+                    if (!isSteadier)
+                    {
+                        line = line with { First = atCues - line.Period };
+                    }
+                    else if (!BeatGrid.IsSteadyOf(line.DeviationMs, line.Heard.Count) || IsHeardInTheMusicOf(moved, line))
+                    {
+                        line = moved;
+                    }
                 }
             }
 
@@ -249,6 +269,20 @@ namespace LibLala.Audio.Analysis
                 return tagged.Bpm;
             }
             return candidates.MaxBy(c => c.Sharpness * Prior(c.Bpm)).Bpm;
+        }
+
+        // Whether the beats of one line are heard in at least half of the music of the other.
+        private static bool IsHeardInTheMusicOf(Line line, Line other)
+        {
+            var (start, end) = MusicSeconds(line);
+            var (otherStart, otherEnd) = MusicSeconds(other);
+            return Math.Min(end, otherEnd) - Math.Max(start, otherStart) >= (otherEnd - otherStart) / 2;
+        }
+
+        private static (double Start, double End) MusicSeconds(Line line)
+        {
+            var (start, end) = MusicSpan([.. line.Heard]);
+            return (line.First + (start * line.Period), line.First + (end * line.Period));
         }
 
         // The first and the last beat with at least 12 of 16 beats heard from there, or the first and last heard if there's no

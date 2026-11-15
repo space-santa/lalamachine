@@ -68,8 +68,9 @@ namespace LibLala.Audio.Mixing
         // while A's tempo only changes from where it plays.
         public static TransitionPlan Plan(double nowA, double lengthA, BeatGrid? gridA, double tempoA, BeatGrid? gridB, double rampFromA = 0)
         {
-            // B comes in with its intro, when that has a grid of its own: A is gone before B's beats are on another grid.
-            var entryB = gridB?.Intro ?? gridB;
+            // B comes in with its intro, when that has a steady grid of its own: A is gone before B's beats are on another
+            // grid.
+            var entryB = gridB?.Intro is { IsSteady: true } intro ? intro : gridB;
             if (gridA is { IsSteady: true } && entryB is { IsSteady: true })
             {
                 // Without the grid to go by where B starts, B from its start right after A's music.

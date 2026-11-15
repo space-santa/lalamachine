@@ -364,6 +364,23 @@ namespace LibLala.Unittests.Audio
             Assert.That(intro.Intro, Is.Null);
         }
 
+        // Most of the cues in the intro, on its beat: they aren't on the rest's, whose beats stay where they are.
+        [Test]
+        public void AnIntroOnABeatOfItsOwn_WithMostOfTheCues_LeavesTheRestOnItsBeat()
+        {
+            var beat = 60 / 128.0;
+            using var decoder = IntroAndBreak(beatsLater: 0.3);
+            double[] cues = [0.25 + 0.045, 0.25 + (32 * beat) + 0.045, 0.25 + (64 * beat) + 0.045, 0.25 + (160.3 * beat) + 0.045];
+
+            var grid = BeatGridAnalyzer.Analyze(decoder, taggedBpm: 128, cues)!;
+
+            Assert.That(OffBeat(grid.FirstBeat - 0.25, beat), Is.EqualTo(0.3).Within(0.01));
+            Assert.That(grid.MusicStart, Is.EqualTo(70).Within(beat));
+            Assert.That(grid.MusicEnd, Is.EqualTo(150).Within(4 * beat));
+            Assert.That(grid.Intro, Is.Not.Null);
+            Assert.That(grid.Intro!.FirstBeat, Is.EqualTo(0.25).Within(0.003));
+        }
+
         // Found a part of a beat off the rest, an intro is more often off its kick than on a beat of its own.
         [Test]
         public void AnIntroOnABeatOfItsOwn_WithoutCuesThatSaySo_HasNone()
@@ -384,6 +401,20 @@ namespace LibLala.Unittests.Audio
             var grid = BeatGridAnalyzer.Analyze(decoder, taggedBpm: 128, IntroAndBreakCues(0.3))!;
 
             Assert.That(grid.Intro, Is.Null);
+        }
+
+        // 90 BPM from 0.25 s, the intro 96 of its beats long and the rest from 100 s. An intro found at double, or at three quarters with hits on every third beat
+        // like a 4:3 rhythm, is on the rest's beats where it starts and ends, but isn't at its tempo.
+        [TestCase(90.05, true)]
+        [TestCase(180, false)]
+        [TestCase(67.5, false)]
+        public void AnIntro_IsAtTheTempoOfTheRest(double introBpm, bool isIntro)
+        {
+            var grid = new BeatGrid(90, 0.25, 2, 300, 0.25, 100, 250);
+            var beats = (int)Math.Round(96 * introBpm / 90);
+            var intro = new BeatGrid(introBpm, 0.25, 2, beats, 0.25, 0.25, 0.25 + (beats * 60 / introBpm));
+
+            Assert.That(BeatGridAnalyzer.IsIntroOf(intro, grid, []), Is.EqualTo(isIntro));
         }
 
         // Its drums hardly louder than the noise: by how they stand out of the louder rest, they aren't heard.

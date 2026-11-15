@@ -264,6 +264,25 @@ namespace LalaDb.Unittests
             Assert.That(_store.FindGrid(path), Is.EqualTo(Grid));
         }
 
+        // So that it isn't lost when it is saved again as what this version finds.
+        [Test]
+        public void WhatTheBeatAnalysisBeforeFound_IsFoundAgain_WithItsIntro()
+        {
+            AddTrack("a.mp3");
+            var withIntro = new BeatGrid(127.998, 0.312, 2.5, 400, 1.249, 70.6, 180.5) { Intro = new BeatGrid(128.01, 0.2, 1.5, 120, 0.2, 0.2, 55.4) };
+            SaveAnalysis(withIntro);
+            using (var context = new LalaContext(_options))
+            {
+                context.Set<TrackAnalysis>().Single().AnalyzerVersion = BeatGridAnalyzer.Version - 1;
+                context.SaveChanges();
+            }
+
+            var earlier = _store.TracksToAnalyze().Single().Earlier;
+
+            Assert.That(earlier, Is.EqualTo(withIntro));
+            Assert.That(earlier!.Intro, Is.EqualTo(withIntro.Intro));
+        }
+
         [Test]
         public void WhereTheBeatAnalysisBeforeFoundNoBeat_ItIsLookedForAgain()
         {
