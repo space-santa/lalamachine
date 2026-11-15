@@ -27,17 +27,15 @@ namespace Lalamachine.ViewModel
         public uint? BeatsPerMinute { get; }
     }
 
-    // Finds the beats of the library's tracks that aren't analyzed yet, and the key of the ones whose tags have none, in the
-    // background on threads of low priority. Stops for a scan and starts again after it. Its properties change and its
-    // event is raised on the thread that created it, i.e. the UI thread.
+    // Finds the beats of the library's tracks that aren't analyzed yet, and the key of the ones whose tags have none, and
+    // reads their waveforms, in the background on threads of low priority. Stops for a scan and starts again after it. Its
+    // properties change and its event is raised on the thread that created it, i.e. the UI thread.
     public sealed class TrackAnalysisViewModel : BaseNotifyPropertyChanged, IDisposable
     {
         private readonly TrackAnalysisStore _store;
         private readonly Func<string, IAudioDecoder> _openDecoder;
         private readonly int _threadCount;
         private readonly SynchronizationContext _uiContext;
-        // One SQLite connection writes at a time anyway, and this way two never wait for each other.
-        private readonly Lock _saveGate = new();
         private CancellationTokenSource? _run;
         private int _toAnalyze;
         private int _analyzed;
@@ -61,7 +59,7 @@ namespace Lalamachine.ViewModel
             }
         }
 
-        public string Status => _toAnalyze > 0 ? $"Finding the beats and keys of the tracks: {_analyzed} of {_toAnalyze}" : "Finding the beats and keys of the tracks";
+        public string Status => _toAnalyze > 0 ? $"Finding the beats, keys and waveforms of the tracks: {_analyzed} of {_toAnalyze}" : "Finding the beats, keys and waveforms of the tracks";
 
         // For the lists that show the track: its tags have no key or tempo, this is what there is to show instead.
         public event EventHandler<TrackAnalyzedEventArgs>? TrackAnalyzed;
@@ -155,11 +153,8 @@ namespace Lalamachine.ViewModel
                 TrackAnalyzedEventArgs? found = null;
                 try
                 {
-                    var (grid, key) = Analyze(track);
-                    lock (_saveGate)
-                    {
-                        _store.Save(track, grid, key);
-                    }
+                    var (grid, key, waveform) = Analyze(track);
+                    _store.Save(track, grid, key, waveform);
                     found = Found(track, grid, key);
                 }
                 catch (IOException)
@@ -183,10 +178,12 @@ namespace Lalamachine.ViewModel
             }
         }
 
-        private (BeatGrid? Grid, MusicalKey? Key) Analyze(TrackToAnalyze track)
+        private (BeatGrid? Grid, MusicalKey? Key, Waveform? Waveform) Analyze(TrackToAnalyze track)
         {
-            // Opened first: a file that can't be read now isn't saved, and is tried again next time.
-            using var decoder = _openDecoder(track.Path);
+            var waveform = track.NeedsWaveform ? new WaveformBuilder() : null;
+            // Opened first: a file that can't be read now isn't saved, and is tried again next time. The waveform is built from
+            // what the other analyses read, so that the track is decoded once.
+            using var decoder = WithWaveform(_openDecoder(track.Path), waveform);
             var keyAnalyzer = track.NeedsKey ? new KeyAnalyzer() : null;
             IReadOnlyList<double> cues = track.NeedsGrid ? MixedInKeyCues.Read(track.Path) : [];
             // What an earlier version found, when the cues don't move its beats, is what this one finds: the track isn't
@@ -198,11 +195,28 @@ namespace Lalamachine.ViewModel
                 // The key analysis hears what the beat analysis reads, so that the track is decoded once.
                 grid = BeatGridAnalyzer.Analyze(decoder, track.TaggedBeatsPerMinute > 0 ? track.TaggedBeatsPerMinute : null, cues, keyAnalyzer);
             }
-            else
+            else if (keyAnalyzer is not null)
             {
-                keyAnalyzer?.Read(decoder);
+                keyAnalyzer.Read(decoder);
             }
-            return (grid, keyAnalyzer?.Key());
+            else if (waveform is not null)
+            {
+                ReadToEnd(decoder);
+            }
+            return (grid, keyAnalyzer?.Key(), waveform?.Build());
+        }
+
+        private static IAudioDecoder WithWaveform(IAudioDecoder decoder, WaveformBuilder? waveform) => waveform is null ? decoder : new WaveformDecoder(decoder, waveform);
+
+        private static void ReadToEnd(IAudioDecoder decoder)
+        {
+            var block = new float[8192 * AudioFormat.Channels];
+            int read;
+            do
+            {
+                read = decoder.Read(block);
+            }
+            while (read > 0);
         }
 
         // Null when the tags have both, or what they don't have wasn't looked for this time.
@@ -223,6 +237,33 @@ namespace Lalamachine.ViewModel
                     action();
                 }
             }, null);
+        }
+
+        // Builds the waveform from what's read from the decoder, which it disposes of.
+        private sealed class WaveformDecoder : IAudioDecoder
+        {
+            private readonly IAudioDecoder _decoder;
+            private readonly WaveformBuilder _waveform;
+
+            public WaveformDecoder(IAudioDecoder decoder, WaveformBuilder waveform)
+            {
+                _decoder = decoder;
+                _waveform = waveform;
+            }
+
+            public long Length => _decoder.Length;
+
+            public int Read(Span<float> buffer)
+            {
+                var read = _decoder.Read(buffer);
+                _waveform.Add(buffer[..(read * AudioFormat.Channels)]);
+                return read;
+            }
+
+            // Not done by the analyses: the waveform would have a part twice, or not at all.
+            public void Seek(long frame) => throw new NotSupportedException();
+
+            public void Dispose() => _decoder.Dispose();
         }
     }
 }

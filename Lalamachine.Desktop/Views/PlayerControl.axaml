@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:Lalamachine.Desktop"
              xmlns:vm="using:Lalamachine.ViewModel"
+             xmlns:views="using:Lalamachine.Desktop.Views"
              x:Class="Lalamachine.Desktop.Views.PlayerControl"
              x:DataType="vm:PlayerViewModel">
     <!-- The cover at the left, the title, the sliders and their buttons next to it. -->
@@ -42,10 +43,11 @@
                         x:DataType="vm:ShuffleRepeatViewModel"
                         Command="{Binding ChangeShuffleRepeatCommand}"
                         Content="{Binding State, Converter={x:Static local:Converters.ShuffleRepeatContent}}" />
-                <Slider x:Name="PositionSlider"
-                        Grid.Column="2"
-                        Minimum="0" Maximum="{Binding Duration, Converter={x:Static local:Converters.AtLeastOne}}" Value="{Binding Position}"
-                        VerticalAlignment="Center" Margin="8,0" />
+                <views:WaveformSlider x:Name="PositionSlider"
+                                      Grid.Column="2"
+                                      Minimum="0" Maximum="{Binding Duration, Converter={x:Static local:Converters.AtLeastOne}}" Value="{Binding Position}"
+                                      Waveform="{Binding Waveform}"
+                                      VerticalAlignment="Center" Margin="8,0" />
             </Grid>
 
             <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,*" Margin="0,8,0,0">

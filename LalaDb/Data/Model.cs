@@ -118,4 +118,19 @@ namespace LalaDb.Data
         // On the Camelot wheel, like 8A. Empty when there was no key to find.
         public string Key { get; set; } = "";
     }
+
+    // How loud a track is along its length, as Waveform stores it. Kept by path like the analysis, and apart from it: the
+    // player stores the waveform of a track that plays before the analysis got to it.
+    [Index(nameof(Path), IsUnique = true)]
+    public class TrackWaveform
+    {
+        public int TrackWaveformId { get; set; }
+        public string Path { get; set; } = "";
+        // The file as it was read. When it changes, it is read again.
+        public long FileSize { get; set; }
+        public long FileWriteTicks { get; set; }
+        public int Version { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "A blob column.")]
+        public byte[] Levels { get; set; } = [];
+    }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -132,7 +131,7 @@ namespace Lalamachine.ViewModel.Unittests
         {
             var path = AddTrack("a.mp3", initialKey: "5A", beatsPerMinute: taggedBeatsPerMinute);
             var grid = new BeatGrid(127.998, 0.312, 2.5, 400, 1.249, 0.312, 180.5);
-            _store.Save(_store.TracksToAnalyze().Single(), grid, key: null);
+            _store.Save(_store.TracksToAnalyze().Single(), grid, key: null, waveform: null);
             using (var context = new LalaContext(_options))
             {
                 context.Set<TrackAnalysis>().Single().AnalyzerVersion = version;
@@ -144,6 +143,31 @@ namespace Lalamachine.ViewModel.Unittests
             Assert.That(_store.FindGrid(path), Is.EqualTo(isKept ? grid : null));
             Assert.That(Analysis(path).AnalyzerVersion, Is.EqualTo(BeatGridAnalyzer.Version));
             Assert.That(found.Select(e => e.BeatsPerMinute), Is.EqualTo(taggedBeatsPerMinute > 0 ? Array.Empty<uint?>() : new uint?[] { isKept ? 128u : 0u }));
+            Assert.That(_store.TracksToAnalyze(), Is.Empty);
+        }
+
+        [Test]
+        public void TheWaveformOfAnAnalyzedTrack_IsStored()
+        {
+            var path = AddTrack("a.mp3", initialKey: "5A", beatsPerMinute: 128);
+
+            Analyze(path => new ChordDecoder());
+
+            Assert.That(_store.FindWaveform(path)?.SliceCount * Waveform.SliceSeconds, Is.EqualTo(20).Within(1e-9));
+        }
+
+        [Test]
+        public void ATrackAnalyzedBeforeThereWereWaveforms_IsOnlyReadForItsWaveform()
+        {
+            var path = AddTrack("a.mp3", initialKey: "5A", beatsPerMinute: 128);
+            var grid = new BeatGrid(127.998, 0.312, 2.5, 400, 1.249, 0.312, 180.5);
+            _store.Save(_store.TracksToAnalyze().Single(), grid, key: null, waveform: null);
+
+            var found = Analyze(path => new ChordDecoder());
+
+            Assert.That(found, Is.Empty);
+            Assert.That(_store.FindGrid(path), Is.EqualTo(grid));
+            Assert.That(_store.FindWaveform(path)?.SliceCount * Waveform.SliceSeconds, Is.EqualTo(20).Within(1e-9));
             Assert.That(_store.TracksToAnalyze(), Is.Empty);
         }
 
@@ -198,22 +222,6 @@ namespace Lalamachine.ViewModel.Unittests
             Assert.That(analysis.IsAnalyzing, Is.True);
             Assert.That(SpinWait.SpinUntil(() => !analysis.IsAnalyzing, Timeout), Is.True);
             Assert.That(_store.TracksToAnalyze(), Is.Empty);
-        }
-
-        // What is posted to it waits until the test runs it, like on a UI thread.
-        private sealed class PostedActions : SynchronizationContext
-        {
-            private readonly ConcurrentQueue<(SendOrPostCallback Callback, object? State)> _posted = new();
-
-            public override void Post(SendOrPostCallback d, object? state) => _posted.Enqueue((d, state));
-
-            public void Run()
-            {
-                while (_posted.TryDequeue(out var posted))
-                {
-                    posted.Callback(posted.State);
-                }
-            }
         }
 
         // Twenty seconds of a C major chord over its root, without a beat.

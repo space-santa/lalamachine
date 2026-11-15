@@ -4,6 +4,7 @@ using System.Linq;
 using LalaDb.Data;
 using LalaDb.Model;
 using LibLala.Audio;
+using LibLala.Audio.Analysis;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
@@ -59,7 +60,7 @@ namespace LalaDb.Unittests
         // Saves what the store says is to be looked for in the one track there is.
         private void SaveAnalysis(BeatGrid? grid, MusicalKey? key = null)
         {
-            _store.Save(_store.TracksToAnalyze().Single(), grid, key);
+            _store.Save(_store.TracksToAnalyze().Single(), grid, key, Levels);
         }
 
         private TrackAnalysis Analysis(string path)
@@ -70,6 +71,7 @@ namespace LalaDb.Unittests
 
         private static readonly BeatGrid Grid = new(127.998, 0.312, 2.5, 400, 1.249, 0.312, 180.5);
         private static readonly MusicalKey AMinor = new(9, isMinor: true);
+        private static readonly Waveform Levels = Waveform.FromBytes([255, 128, 0, 64]);
 
         [Test]
         public void ATrack_IsToBeAnalyzed_WithItsTaggedTempo()
@@ -81,7 +83,7 @@ namespace LalaDb.Unittests
             Assert.That(track.Path, Is.EqualTo(path));
             Assert.That(track.TaggedBeatsPerMinute, Is.EqualTo(128));
             Assert.That(track.Stamp, Is.EqualTo(FileStamp.Of(path)));
-            Assert.That((track.NeedsGrid, track.NeedsKey), Is.EqualTo((true, false)));
+            Assert.That((track.NeedsGrid, track.NeedsKey, track.NeedsWaveform), Is.EqualTo((true, false, true)));
         }
 
         [Test]
@@ -123,9 +125,9 @@ namespace LalaDb.Unittests
         {
             var path = AddTrack("a.mp3");
             var track = _store.TracksToAnalyze().Single();
-            _store.Save(track, grid: null, key: null);
+            _store.Save(track, grid: null, key: null, Levels);
 
-            _store.Save(track, Grid, key: null);
+            _store.Save(track, Grid, key: null, Levels);
 
             Assert.That(_store.FindGrid(path), Is.EqualTo(Grid));
             using var context = new LalaContext(_options);
@@ -198,9 +200,9 @@ namespace LalaDb.Unittests
             }
 
             var track = _store.TracksToAnalyze().Single();
-            _store.Save(track, grid: null, AMinor);
+            _store.Save(track, grid: null, AMinor, waveform: null);
 
-            Assert.That((track.NeedsGrid, track.NeedsKey), Is.EqualTo((false, true)));
+            Assert.That((track.NeedsGrid, track.NeedsKey, track.NeedsWaveform), Is.EqualTo((false, true, false)));
             Assert.That(_store.FindGrid(path), Is.EqualTo(Grid));
             Assert.That(Analysis(path).Key, Is.EqualTo("8A"));
             Assert.That(_store.TracksToAnalyze(), Is.Empty);
@@ -293,6 +295,75 @@ namespace LalaDb.Unittests
             var store = new TrackAnalysisStore(() => new LalaContext(options));
 
             Assert.That(store.FindGrid(path), Is.Null);
+            Assert.That(store.FindWaveform(path), Is.Null);
+        }
+
+        [Test]
+        public void AStoredWaveform_IsFound_AndIsntReadAgain()
+        {
+            var path = AddTrack("a.mp3");
+
+            SaveAnalysis(Grid);
+
+            Assert.That(_store.FindWaveform(path)?.ToBytes(), Is.EqualTo(Levels.ToBytes()));
+            Assert.That(_store.TracksToAnalyze(), Is.Empty);
+        }
+
+        [Test]
+        public void AnAnalyzedTrackWithoutAWaveform_IsReadForItsWaveformOnly_AndKeepsItsGrid()
+        {
+            var path = AddTrack("a.mp3");
+            _store.Save(_store.TracksToAnalyze().Single(), Grid, key: null, waveform: null);
+
+            var track = _store.TracksToAnalyze().Single();
+            _store.Save(track, grid: null, key: null, Levels);
+
+            Assert.That((track.NeedsGrid, track.NeedsKey, track.NeedsWaveform), Is.EqualTo((false, false, true)));
+            Assert.That(_store.FindGrid(path), Is.EqualTo(Grid));
+            Assert.That(_store.FindWaveform(path), Is.Not.Null);
+            Assert.That(_store.TracksToAnalyze(), Is.Empty);
+        }
+
+        [Test]
+        public void TheWaveformOfAChangedFile_IsGone_AndReadAgain()
+        {
+            var path = AddTrack("a.mp3");
+            SaveAnalysis(Grid);
+
+            File.WriteAllBytes(path, [1, 2, 3, 4]);
+
+            Assert.That(_store.FindWaveform(path), Is.Null);
+            Assert.That(_store.TracksToAnalyze().Single().NeedsWaveform, Is.True);
+        }
+
+        [Test]
+        public void AWaveformOfAnotherVersion_IsReadAgain()
+        {
+            var path = AddTrack("a.mp3");
+            SaveAnalysis(Grid);
+            using (var context = new LalaContext(_options))
+            {
+                context.Set<TrackWaveform>().Single().Version = Waveform.Version - 1;
+                context.SaveChanges();
+            }
+
+            Assert.That(_store.FindWaveform(path), Is.Null);
+            Assert.That(_store.TracksToAnalyze().Select(t => (t.NeedsGrid, t.NeedsWaveform)), Is.EqualTo(new[] { (false, true) }));
+        }
+
+        [Test]
+        public void AWaveformThePlayerRead_IsntReadByTheAnalysis_AndIsReplacedWhenItIs()
+        {
+            var path = AddTrack("a.mp3");
+
+            _store.SaveWaveform(path, FileStamp.Of(path)!.Value, Waveform.FromBytes([1, 2]));
+            var track = _store.TracksToAnalyze().Single();
+            _store.SaveWaveform(path, FileStamp.Of(path)!.Value, Levels);
+
+            Assert.That((track.NeedsGrid, track.NeedsWaveform), Is.EqualTo((true, false)));
+            Assert.That(_store.FindWaveform(path)?.ToBytes(), Is.EqualTo(Levels.ToBytes()));
+            using var context = new LalaContext(_options);
+            Assert.That(context.Set<TrackWaveform>().Count(), Is.EqualTo(1));
         }
     }
 }
