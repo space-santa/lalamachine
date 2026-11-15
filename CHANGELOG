@@ -1,3 +1,9 @@
+* Sun Nov 15 2026 space-santa 5.2.0
+  * When a track is mixed into the next, both go halfway to the other's tempo: the one that plays changes its tempo over the 8 bars before the next one comes in, and the next one goes back to its own over 8 bars after. Neither changes by more than 5%, so tracks up to 10% apart in tempo are now mixed on the beat instead of following on the downbeat.
+  * On macOS and Windows the position slider shows the track's waveform, so you can see where the breakdowns and drops are before you get there. It's orange up to where the track plays; click or drag anywhere on it to go there. The app reads the waveforms in the background along with the beats and keys, and keeps them: after the update it reads each track once more.
+  * Bugfix: Tracks whose beats were found half or a quarter of a beat off are mixed on the beat now, where Mixed In Key's cue points say the beat is: about one in six of the tracks with a steady beat. After the update the app finds the beats of those tracks again in the background, and mixes by the beats it had until then.
+  * Bugfix: In a transition the kicks of both tracks hit together, instead of up to 20 ms apart while their tempos are changed, and a track whose tempo is changed sounds cleaner.
+
 * Sat Nov 14 2026 space-santa 5.1.0
   * Hovering over a track's key shows it in natural notation, so 8A shows A minor and 8B shows C major.
 

@@ -1,1 +1,0 @@
-On macOS and Windows the position slider shows the track's waveform, so you can see where the breakdowns and drops are before you get there. It's orange up to where the track plays; click or drag anywhere on it to go there. The app reads the waveforms in the background along with the beats and keys, and keeps them: after the update it reads each track once more.
