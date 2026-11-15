@@ -40,6 +40,8 @@ namespace Lalamachine.Desktop.Views
         private readonly LibraryPlaylistViewModel _libraryPlaylistViewModel;
         private readonly AvaloniaDialogService _dialogs;
         // Null where lalamachine can't decode tracks itself.
+        private readonly WaveformReader? _waveforms;
+        // Null where lalamachine can't decode tracks itself.
         private readonly TrackAnalysisViewModel? _trackAnalysis;
         // Null where lalamachine doesn't have the system's media controls.
         private readonly MediaControlsViewModel? _mediaControls;
@@ -59,8 +61,10 @@ namespace Lalamachine.Desktop.Views
 
             _dialogs = new AvaloniaDialogService(this);
             var analyses = new TrackAnalysisStore(() => new LalaContext(optionsBuilder.Options));
+            var openDecoder = AudioPlayerFactory.DecoderFactory();
             _audioPlayer = AudioPlayerFactory.Create(analyses);
-            _player = new PlayerViewModel(_audioPlayer, _dialogs);
+            _waveforms = openDecoder is null ? null : new WaveformReader(openDecoder);
+            _player = new PlayerViewModel(_audioPlayer, _dialogs, _waveforms);
 #pragma warning disable CA2000 // Dispose objects before losing scope. The view model owns the controls, it disposes them.
             if (MediaControlsFactory.Create() is { } mediaControls)
             {
@@ -103,7 +107,7 @@ namespace Lalamachine.Desktop.Views
             _libraryViewModel.FiltersCleared += _libraryPlaylistViewModel.ClearKeyFilterHandler;
             _libraryViewModel.AddTracksToQueueEvent += _queueViewModel.AddTracksToQueueHandler;
 
-            if (AudioPlayerFactory.DecoderFactory() is { } openDecoder)
+            if (openDecoder is not null)
             {
                 // A quarter of the cores, the analysis shouldn't make the computer's fans spin up.
                 _trackAnalysis = new TrackAnalysisViewModel(analyses, openDecoder, Math.Clamp(Environment.ProcessorCount / 4, 1, 4));
@@ -194,6 +198,7 @@ namespace Lalamachine.Desktop.Views
             finally
             {
                 _trackAnalysis?.Dispose();
+                _waveforms?.Dispose();
                 _mediaControls?.Dispose();
                 (_audioPlayer as IDisposable)?.Dispose();
                 base.OnClosed(e);

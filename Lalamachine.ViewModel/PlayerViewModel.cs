@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
+using LibLala.Audio.Analysis;
 using LibLala.LibLalaTagReader;
 using Settings;
 
@@ -32,6 +33,8 @@ namespace Lalamachine.ViewModel
         private readonly IAudioPlayer _audioPlayer;
         private readonly IDialogService _dialogs;
         private readonly PlayerSettings _playerSettings;
+        // Null where lalamachine can't decode tracks itself.
+        private readonly WaveformReader? _waveforms;
         // The track mixed in and the list it's from, until it takes over. Then the list is told it went on to it.
         private NextTrackEventArgs? _mixing;
         // While the list is told: it plays already.
@@ -40,13 +43,14 @@ namespace Lalamachine.ViewModel
         // The track changed while the position slider was held: where it's dragged to is of the track before.
         private bool _isDragOfTrackBefore;
 
-        public PlayerViewModel(IAudioPlayer audioPlayer, IDialogService dialogs) : this(audioPlayer, dialogs, new PlayerSettings())
+        public PlayerViewModel(IAudioPlayer audioPlayer, IDialogService dialogs, WaveformReader? waveforms) : this(audioPlayer, dialogs, new PlayerSettings(), waveforms)
         {
         }
 
-        public PlayerViewModel(IAudioPlayer audioPlayer, IDialogService dialogs, PlayerSettings settings)
+        public PlayerViewModel(IAudioPlayer audioPlayer, IDialogService dialogs, PlayerSettings settings, WaveformReader? waveforms = null)
         {
             _playerSettings = settings;
+            _waveforms = waveforms;
             _audioPlayer = audioPlayer;
             _dialogs = dialogs;
             IsMuted = _playerSettings.IsMuted;
@@ -169,6 +173,10 @@ namespace Lalamachine.ViewModel
 
         // What's shown of the track that plays, in the player and in the system's media controls. Read once for each track.
         public TrackInfo Track { get; private set; } = TrackInfo.None;
+
+        // How loud the track that plays is along its length, shown as its position slider. Null while it's read, and when
+        // it can't be.
+        public Waveform? Waveform { get; private set; }
 
         public string LastActivePlaylist
         {
@@ -325,6 +333,11 @@ namespace Lalamachine.ViewModel
             {
                 // Not mixed in, the next track comes when this one ended, like without transitions.
                 _mixing = _audioPlayer.MixTo(new Uri(track.Path)) ? next : null;
+                // Shown right away when it takes over.
+                if (_mixing is not null)
+                {
+                    _ = _waveforms?.Read(new Uri(track.Path).LocalPath);
+                }
             }
         }
 
@@ -356,6 +369,31 @@ namespace Lalamachine.ViewModel
             NotifyPropertyChanged(nameof(Position));
             NotifyPropertyChanged(nameof(Duration));
             NotifyAsHeard();
+            ShowWaveform();
+        }
+
+        // Once it's read: at once when it was read before, and never the one of a track that played before.
+        private async void ShowWaveform()
+        {
+            var source = Source;
+            var read = source.Length > 0 ? _waveforms?.Read(source) : null;
+            if (read is not { IsCompleted: true } && Waveform is not null)
+            {
+                Waveform = null;
+                NotifyPropertyChanged(nameof(Waveform));
+            }
+            if (read is null)
+            {
+                return;
+            }
+
+            var waveform = await read.ConfigureAwait(true);
+            // Another track may play by now.
+            if (Source == source && waveform != Waveform)
+            {
+                Waveform = waveform;
+                NotifyPropertyChanged(nameof(Waveform));
+            }
         }
 
         // What changes as it plays, besides the position.

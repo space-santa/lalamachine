@@ -1,0 +1,1 @@
+The position slider shows the track's waveform, so you can see where the breakdowns and drops are before you get there. It's orange up to where the track plays; click or drag anywhere on it to go there.

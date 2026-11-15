@@ -1,6 +1,7 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:Lalamachine.ViewModel">
+        xmlns:vm="using:Lalamachine.ViewModel"
+        xmlns:views="using:Lalamachine.Desktop.Views">
 
     <!-- Dark blue, white text, grey gradient buttons that turn orange. -->
     <Styles.Resources>
@@ -59,6 +60,46 @@
                 <Path Data="M12,21 C12,21 3,15 3,8.5 C3,5.5 5.4,3 8.2,3 C9.8,3 11.2,3.9 12,5.2 C12.8,3.9 14.2,3 15.8,3 C18.6,3 21,5.5 21,8.5 C21,15 12,21 12,21 Z" />
             </Button>
         </DataTemplate>
+
+        <!-- The position slider, as high as the buttons next to it. The slider draws the waveform, orange up to where the
+             track plays. Over it, a track as large as the slider and nothing to see on it: the slider seeks to wherever
+             either side of it is pressed, and follows a drag from there. -->
+        <ControlTemplate x:Key="WaveformSliderPart" TargetType="RepeatButton">
+            <Border Background="Transparent" />
+        </ControlTemplate>
+        <ControlTheme x:Key="{x:Type views:WaveformSlider}" TargetType="views:WaveformSlider">
+            <Setter Property="Height" Value="48" />
+            <Setter Property="PlayedBrush" Value="DarkOrange" />
+            <Setter Property="UnplayedBrush" Value="#B3FFFFFF" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Track Name="PART_Track"
+                           Orientation="Horizontal"
+                           Minimum="{TemplateBinding Minimum}"
+                           Maximum="{TemplateBinding Maximum}"
+                           Value="{TemplateBinding Value, Mode=TwoWay}"
+                           IsDirectionReversed="{TemplateBinding IsDirectionReversed}">
+                        <Track.DecreaseButton>
+                            <RepeatButton Name="PART_DecreaseButton" Focusable="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Template="{StaticResource WaveformSliderPart}" />
+                        </Track.DecreaseButton>
+                        <Track.IncreaseButton>
+                            <RepeatButton Name="PART_IncreaseButton" Focusable="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Template="{StaticResource WaveformSliderPart}" />
+                        </Track.IncreaseButton>
+                        <!-- Where the colours meet is where the track plays. -->
+                        <Thumb Width="0">
+                            <Thumb.Template>
+                                <ControlTemplate>
+                                    <Panel />
+                                </ControlTemplate>
+                            </Thumb.Template>
+                        </Thumb>
+                    </Track>
+                </ControlTemplate>
+            </Setter>
+            <Style Selector="^:pointerover">
+                <Setter Property="UnplayedBrush" Value="White" />
+            </Style>
+        </ControlTheme>
     </Styles.Resources>
 
     <Style Selector="Window">

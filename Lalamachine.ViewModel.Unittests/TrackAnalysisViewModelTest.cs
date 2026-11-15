@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -198,22 +197,6 @@ namespace Lalamachine.ViewModel.Unittests
             Assert.That(analysis.IsAnalyzing, Is.True);
             Assert.That(SpinWait.SpinUntil(() => !analysis.IsAnalyzing, Timeout), Is.True);
             Assert.That(_store.TracksToAnalyze(), Is.Empty);
-        }
-
-        // What is posted to it waits until the test runs it, like on a UI thread.
-        private sealed class PostedActions : SynchronizationContext
-        {
-            private readonly ConcurrentQueue<(SendOrPostCallback Callback, object? State)> _posted = new();
-
-            public override void Post(SendOrPostCallback d, object? state) => _posted.Enqueue((d, state));
-
-            public void Run()
-            {
-                while (_posted.TryDequeue(out var posted))
-                {
-                    posted.Callback(posted.State);
-                }
-            }
         }
 
         // Twenty seconds of a C major chord over its root, without a beat.
