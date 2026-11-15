@@ -43,6 +43,12 @@ namespace LibLala.Unittests.Audio
         // The drums only play in between, in seconds.
         public double BeatsFrom { get; init; }
         public double BeatsUntil { get; init; } = double.MaxValue;
+        // A break without drums, in seconds. After it the beats are this much of a beat later, and before it the drums are
+        // this loud.
+        public double BreakFrom { get; init; } = double.MaxValue;
+        public double BreakUntil { get; init; } = double.MaxValue;
+        public double BeatsLaterAfterBreak { get; init; }
+        public double DrumsBeforeBreak { get; init; } = 1;
         public double Noise { get; init; } = 0.02;
 
         public int Read(Span<float> buffer)
@@ -66,7 +72,7 @@ namespace LibLala.Unittests.Audio
         {
             var period = 60 / _bpm;
             var drifted = seconds - (_driftMs / 1000 * Math.Sin(2 * Math.PI * seconds / 30));
-            var sinceBeat = drifted - _firstBeat;
+            var sinceBeat = drifted - _firstBeat - (seconds >= BreakUntil ? BeatsLaterAfterBreak * period : 0);
             var beat = Math.Floor(sinceBeat / period);
             var t = sinceBeat - (beat * period);
             var sample = Noise * ((_random.NextDouble() * 2) - 1);
@@ -76,37 +82,40 @@ namespace LibLala.Unittests.Audio
                 var root = 110 * Math.Pow(2, (bar * 5 % 12) / 12.0);
                 sample += 0.1 * (Math.Sin(2 * Math.PI * root * seconds) + Math.Sin(2 * Math.PI * root * 1.5 * seconds));
             }
-            var drums = seconds >= BeatsFrom && seconds <= BeatsUntil;
+            var drums = seconds >= BeatsFrom && seconds <= BeatsUntil && (seconds < BreakFrom || seconds >= BreakUntil);
+            var loudness = seconds < BreakFrom ? DrumsBeforeBreak : 1;
             var sinceKick = sinceBeat - (KickDriftMs / 1000 * Math.Sin(2 * Math.PI * seconds / 20));
             var k = sinceKick - (Math.Floor(sinceKick / period) * period);
+            double hits = 0;
             if (sinceKick >= 0 && HasKick && drums)
             {
                 // A sine falling from 120 to 50 Hz.
                 var phase = 2 * Math.PI * ((50 * k) + (70 * 0.03 * (1 - Math.Exp(-k / 0.03))));
-                sample += 0.8 * Math.Exp(-k / 0.08) * Math.Sin(phase);
+                hits += 0.8 * Math.Exp(-k / 0.08) * Math.Sin(phase);
                 if (HasClick)
                 {
-                    sample += 0.3 * Math.Exp(-k / 0.004) * Math.Sin(2 * Math.PI * 3000 * k);
+                    hits += 0.3 * Math.Exp(-k / 0.004) * Math.Sin(2 * Math.PI * 3000 * k);
                 }
             }
             var sinceOffBeat = t - (period / 2);
             if (sinceBeat >= 0 && sinceOffBeat >= 0 && HasHiHat && drums)
             {
-                sample += 0.2 * Math.Exp(-sinceOffBeat / 0.02) * ((_random.NextDouble() * 2) - 1);
+                hits += 0.2 * Math.Exp(-sinceOffBeat / 0.02) * ((_random.NextDouble() * 2) - 1);
             }
             foreach (var sixteenth in Sixteenths)
             {
                 var sinceSixteenth = t - (sixteenth * period);
                 if (sinceBeat >= 0 && sinceSixteenth >= 0 && SixteenthHiHat > 0 && drums)
                 {
-                    sample += SixteenthHiHat * Math.Exp(-sinceSixteenth / 0.02) * ((_random.NextDouble() * 2) - 1);
+                    hits += SixteenthHiHat * Math.Exp(-sinceSixteenth / 0.02) * ((_random.NextDouble() * 2) - 1);
                 }
             }
             var sinceBassNote = t - ((BassNoteAt ?? 0) * period);
             if (sinceBeat >= 0 && sinceBassNote >= 0 && BassNoteAt is not null && drums)
             {
-                sample += 0.8 * Math.Exp(-sinceBassNote / 0.08) * Math.Sin(2 * Math.PI * 55 * sinceBassNote);
+                hits += 0.8 * Math.Exp(-sinceBassNote / 0.08) * Math.Sin(2 * Math.PI * 55 * sinceBassNote);
             }
+            sample += loudness * hits;
             return (float)sample;
         }
     }

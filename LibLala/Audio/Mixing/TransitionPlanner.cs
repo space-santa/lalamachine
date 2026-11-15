@@ -9,7 +9,8 @@ namespace LibLala.Audio.Mixing
         // Each at its own tempo, without a grid to put the beats on top of each other, through the crossover.
         Crossfade,
         // Steady beats that can't be matched: A plays to the end of its music, B's first bar comes right on that downbeat.
-        // Only faded, so that neither clicks, too short for the crossover.
+        // Or the start of B, when its music starts too far in to skip to. Only faded, so that neither clicks, too short
+        // for the crossover.
         Cut,
     }
 
@@ -44,6 +45,10 @@ namespace LibLala.Audio.Mixing
         public const int MinRampBars = 1;
         // For each track. Further, SoundTouch's stretching is heard: 7% was, grainy.
         public const double MaxTempoChange = 0.05;
+        // B comes in with the bar its music starts in when that's this many bars in or fewer, 9 in 10 tracks with a steady
+        // beat start in the first 14. Further in, too much of B would be skipped: a long intro without beats, or one whose
+        // beats weren't found.
+        public const int MaxSkippedBars = 32;
         public const double CrossfadeSeconds = 4;
         // Long enough not to click.
         public const double CutSeconds = 0.02;
@@ -63,8 +68,16 @@ namespace LibLala.Audio.Mixing
         // while A's tempo only changes from where it plays.
         public static TransitionPlan Plan(double nowA, double lengthA, BeatGrid? gridA, double tempoA, BeatGrid? gridB, double rampFromA = 0)
         {
-            if (gridA is { IsSteady: true } && gridB is { IsSteady: true })
+            // B comes in with its intro, when that has a grid of its own: A is gone before B's beats are on another grid.
+            var entryB = gridB?.Intro ?? gridB;
+            if (gridA is { IsSteady: true } && entryB is { IsSteady: true })
             {
+                // Without the grid to go by where B starts, B from its start right after A's music.
+                if (entryB.MusicStartBar > MaxSkippedBars)
+                {
+                    return Cut(nowA, lengthA, gridA, tempoA, firstBarB: 0);
+                }
+
                 // The last bars of A's music, with B's first bars over them. Too late for all of them, from A's next bar.
                 var bar = gridA.BarSeconds;
                 var end = MusicEnd(gridA, lengthA);
@@ -75,19 +88,19 @@ namespace LibLala.Audio.Mixing
                     // Each goes halfway, so that neither changes much: A in the bars before, B through the transition. Too
                     // late for all of those bars, A in the whole bars left. Without them, B goes all the way to A's tempo.
                     var rampStart = Math.Max(start - (RampBars * bar), DownbeatAtOrAfter(gridA, Math.Max(nowA, rampFromA) + MinLeadSeconds));
-                    var halfway = Math.Sqrt(gridB.BeatsPerMinute / gridA.BeatsPerMinute);
+                    var halfway = Math.Sqrt(entryB.BeatsPerMinute / gridA.BeatsPerMinute);
                     var rampA = Math.Round((start - rampStart) / bar) >= MinRampBars && IsWithinReach(halfway)
                         ? new TempoRamp(rampStart, start, tempoA, halfway)
                         : TempoRamp.None(start, tempoA);
-                    var tempoB = gridA.BeatsPerMinute * rampA.To / gridB.BeatsPerMinute;
+                    var tempoB = gridA.BeatsPerMinute * rampA.To / entryB.BeatsPerMinute;
                     if (IsWithinReach(tempoB))
                     {
-                        return new TransitionPlan(start, bars * bar / rampA.To, FirstBar(gridB), tempoB, TransitionKind.BeatMatched, rampA);
+                        return new TransitionPlan(start, bars * bar / rampA.To, FirstBar(entryB), tempoB, TransitionKind.BeatMatched, rampA);
                     }
                 }
 
                 // Too far apart, or too late: rather than beats at two tempos over each other, one after the other.
-                return Cut(nowA, lengthA, gridA, tempoA, gridB);
+                return Cut(nowA, lengthA, gridA, tempoA, FirstBar(entryB));
             }
 
             // Over by the end of A's music, not in a tail after it.
@@ -100,16 +113,15 @@ namespace LibLala.Audio.Mixing
         // The tempo, of the track's own, isn't so far from it that the stretching is heard.
         private static bool IsWithinReach(double tempo) => Math.Abs(Math.Log(tempo)) <= Math.Log(1 + MaxTempoChange) + 1e-12;
 
-        // On the downbeat where A's music ends, or the next one when A is past it. B fades in before its first bar, so that
-        // this is heard whole.
-        private static TransitionPlan Cut(double nowA, double lengthA, BeatGrid gridA, double tempoA, BeatGrid gridB)
+        // On the downbeat where A's music ends, or the next one when A is past it, B's second firstBarB comes. B fades in
+        // before it, so that its first bar is heard whole.
+        private static TransitionPlan Cut(double nowA, double lengthA, BeatGrid gridA, double tempoA, double firstBarB)
         {
-            var firstBar = FirstBar(gridB);
-            var lead = Math.Min(CutSeconds, firstBar);
+            var lead = Math.Min(CutSeconds, firstBarB);
             var downbeat = Math.Max(MusicEnd(gridA, lengthA), DownbeatAtOrAfter(gridA, nowA + MinLeadSeconds + (lead * tempoA)));
             // Without a downbeat left in the file, at its end.
             var startA = Math.Max(Math.Min(downbeat, lengthA) - (lead * tempoA), nowA + MinLeadSeconds);
-            return new TransitionPlan(startA, CutSeconds, firstBar - lead, 1, TransitionKind.Cut, TempoRamp.None(startA, tempoA));
+            return new TransitionPlan(startA, CutSeconds, firstBarB - lead, 1, TransitionKind.Cut, TempoRamp.None(startA, tempoA));
         }
 
         // Where A's music is over: the bar after its last beat. A last hit on the first beat of a bar ends it right there. On
@@ -132,11 +144,7 @@ namespace LibLala.Audio.Mixing
         }
 
         // B comes in with the bar its music starts in, or its first whole bar.
-        private static double FirstBar(BeatGrid grid)
-        {
-            var bars = Math.Floor((grid.MusicStart + (grid.BeatSeconds / 4) - grid.FirstDownbeat) / grid.BarSeconds);
-            return grid.FirstDownbeat + (Math.Max(0, bars) * grid.BarSeconds);
-        }
+        private static double FirstBar(BeatGrid grid) => grid.FirstDownbeat + (grid.MusicStartBar * grid.BarSeconds);
     }
 
     // How the transition sounds, over its course p from 0 to 1. A crossover that moves up: A is high-passed and B low-passed

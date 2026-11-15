@@ -212,6 +212,27 @@ namespace LalaDb.Migrations
                     b.Property<double>("FirstDownbeat")
                         .HasColumnType("REAL");
 
+                    b.Property<int>("IntroBeatCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("IntroBeatDeviationMs")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("IntroBeatsPerMinute")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("IntroFirstBeat")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("IntroFirstDownbeat")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("IntroMusicEnd")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("IntroMusicStart")
+                        .HasColumnType("REAL");
+
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasColumnType("TEXT");

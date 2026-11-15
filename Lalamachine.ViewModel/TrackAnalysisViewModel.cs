@@ -186,9 +186,9 @@ namespace Lalamachine.ViewModel
             using var decoder = WithWaveform(_openDecoder(track.Path), waveform);
             var keyAnalyzer = track.NeedsKey ? new KeyAnalyzer() : null;
             IReadOnlyList<double> cues = track.NeedsGrid ? MixedInKeyCues.Read(track.Path) : [];
-            // What an earlier version found, when the cues don't move its beats, is what this one finds: the track isn't
-            // decoded for it.
-            var isEarlierCurrent = track.Earlier is not null && !BeatGridAnalyzer.CuesMayMove(track.Earlier, cues);
+            // What an earlier version found, when it can't have changed, is what this one finds: the track isn't decoded for
+            // it.
+            var isEarlierCurrent = track.Earlier is not null && !BeatGridAnalyzer.MayChange(track.Earlier, cues);
             var grid = isEarlierCurrent ? track.Earlier : null;
             if (track.NeedsGrid && !isEarlierCurrent)
             {

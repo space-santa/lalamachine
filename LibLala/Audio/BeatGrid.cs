@@ -41,8 +41,20 @@ namespace LibLala.Audio
         public double MusicStart { get; }
         public double MusicEnd { get; }
 
+        // A grid of its own for an intro before the music, whose beats weren't heard on this grid: quieter than the rest,
+        // or on a beat of their own, like one that jumps in a break. Steady, for 16 bars or more. Null without one.
+        public BeatGrid? Intro { get; init; }
+
         public double BeatSeconds => 60 / BeatsPerMinute;
         public double BarSeconds => 4 * BeatSeconds;
+
+        // The bar the music starts in, counted from the first downbeat. A music start just before a downbeat is in the bar
+        // from it.
+        internal int MusicStartBar => (int)Math.Max(0, Math.Floor((MusicStart + (BeatSeconds / 4) - FirstDownbeat) / BarSeconds));
+
+        // The bar after the last beat of the music, counted the same. A last hit on the first beat of a bar ends the music
+        // right there.
+        internal int MusicEndBar => (int)Math.Ceiling((MusicEnd - (BeatSeconds / 4) - FirstDownbeat) / BarSeconds);
 
         // The beats of the track can be matched to another's by this grid.
         public bool IsSteady => IsSteadyOf(DeviationMs, BeatCount);

@@ -9,14 +9,15 @@ namespace LibLala.Audio.Analysis
     public static class BeatGridAnalyzer
     {
         // Goes up when the analysis changes, so that the library is analyzed again.
-        public const int Version = 4;
+        public const int Version = 5;
         // The grids from this version on are good to play by until the track is analyzed again. Version 3 found the tempo
-        // of a track without a tagged one in another way, version 4 moves the beats where Mixed In Key's cues say.
+        // of a track without a tagged one in another way, version 4 moves the beats where Mixed In Key's cues say, version
+        // 5 finds a grid of its own for an intro.
         private const int PlayableSinceVersion = 2;
-        // What version 3 found, and version 2 in a track with a tagged tempo, is what this version finds unless the cues
-        // move the beats. Its tempo too.
-        private const int SameUnlessCuesMoveSinceVersion = 3;
-        private const int SameWithTagUnlessCuesMoveSinceVersion = 2;
+        // What version 3 found, and version 2 in a track with a tagged tempo, is what this version finds unless it may
+        // change: see MayChange. Its tempo too.
+        private const int SameUnlessChangedSinceVersion = 3;
+        private const int SameWithTagUnlessChangedSinceVersion = 2;
 
         private const double MinBpm = 60;
         private const double MaxBpm = 200;
@@ -45,6 +46,15 @@ namespace LibLala.Audio.Analysis
         // to move the beats. In a DJ's library it was 0.19 and more for every track whose cues moved its beats, 0.06 and
         // less for hi-hats on 16ths in synthetic drums.
         private const double MinCueBassShare = 0.1;
+        // With the music this many bars in or later, the part before it is looked at on its own, for an intro whose beats
+        // weren't heard on the grid of the rest. As long as that at least for a grid of its own, to mix in with.
+        private const int IntroBars = 16;
+        // An intro's beats are the rest's when they're this close to where the rest's grid has them, in beats. When they're
+        // further, they're on a beat of their own only if the cues say so: an intro found a quarter of a beat off the rest
+        // is more often off its kick than the beat jumps. In a DJ's library, 24 of the 106 steady tracks whose music starts
+        // 16 bars in or later have an intro of their own by this, 2 on a beat of their own that the cues confirm. Of the
+        // intros found a quarter of a beat off the rest, the cues had 5 on the rest's beats and none on their own.
+        private const double IntroBeatTolerance = 0.1;
 
         // The onset envelope peaks at a frame that starts this long before the attack: the frame with the attack 70% of the
         // way in, where its window rises steeply. Measured with synthetic drums.
@@ -56,24 +66,30 @@ namespace LibLala.Audio.Analysis
         // Whether a grid that a version of the analysis found is good to play by, until the track is analyzed again.
         public static bool IsPlayable(int version) => version is >= PlayableSinceVersion and <= Version;
 
-        // Whether what a version found is what this one finds, unless the cues move the beats: see CuesMayMove.
-        public static bool IsCurrentUnlessCuesMove(int version, bool hasTaggedTempo)
+        // Whether what a version found is what this one finds, unless it may change: see MayChange.
+        public static bool IsCurrentUnlessChanged(int version, bool hasTaggedTempo)
         {
-            return version is >= SameUnlessCuesMoveSinceVersion and < Version
-                || (hasTaggedTempo && version is >= SameWithTagUnlessCuesMoveSinceVersion and < Version);
+            return version is >= SameUnlessChangedSinceVersion and < Version
+                || (hasTaggedTempo && version is >= SameWithTagUnlessChangedSinceVersion and < Version);
         }
 
         // Whether the tempo that a version found in a track without a tagged one is the tempo this one finds.
-        public static bool HasCurrentTempo(int version) => version is >= SameUnlessCuesMoveSinceVersion and <= Version;
+        public static bool HasCurrentTempo(int version) => version is >= SameUnlessChangedSinceVersion and <= Version;
 
-        // Whether the cues may move the beats of a grid that an earlier version found, see IsCurrentUnlessCuesMove. When
-        // they don't, the grid is what this version finds in the track.
-        public static bool CuesMayMove(BeatGrid grid, IReadOnlyList<double> cueSeconds)
+        // Whether this version may find another grid than one an earlier version found, see IsCurrentUnlessChanged: when
+        // the cues may move its beats, or there may be an intro with a grid of its own. When not, the grid is what this
+        // version finds in the track.
+        public static bool MayChange(BeatGrid grid, IReadOnlyList<double> cueSeconds)
         {
             ArgumentNullException.ThrowIfNull(grid);
             ArgumentNullException.ThrowIfNull(cueSeconds);
-            return CueQuarters(cueSeconds, grid.FirstBeat, grid.BeatSeconds) != 0;
+            return CuesMayMove(grid, cueSeconds) || MayHaveIntro(grid);
         }
+
+        internal static bool CuesMayMove(BeatGrid grid, IReadOnlyList<double> cueSeconds) => CueQuarter(cueSeconds, grid.FirstBeat, grid.BeatSeconds) is not (null or 0);
+
+        // Whether the part before the music is looked at for an intro: only before steady beats, to mix in with.
+        internal static bool MayHaveIntro(BeatGrid grid) => grid.IsSteady && grid.MusicStartBar >= IntroBars;
 
         // Null when there is no beat to find.
         public static BeatGrid? Analyze(IAudioDecoder decoder, double? taggedBpm) => Analyze(decoder, taggedBpm, cueSeconds: []);
@@ -91,6 +107,36 @@ namespace LibLala.Audio.Analysis
         }
 
         internal static BeatGrid? Analyze(Onsets envelopes, double hopSeconds, double? taggedBpm, IReadOnlyList<double> cueSeconds)
+        {
+            var grid = Find(envelopes, hopSeconds, taggedBpm, cueSeconds);
+            if (grid is null || !MayHaveIntro(grid))
+            {
+                return grid;
+            }
+
+            // The part before the music on its own: the onsets there count by how they stand out of it, not of the louder
+            // music after. Up to the music's first beat, at the tempo of the music unless they repeat a lot more sharply at
+            // another.
+            var end = grid.MusicStart - (grid.BeatSeconds / 2);
+            var introCues = cueSeconds.Where(cue => cue < end).ToList();
+            var intro = Find(envelopes.Before((int)(end / hopSeconds)), hopSeconds, grid.BeatsPerMinute, introCues);
+            var isIntro = intro is { IsSteady: true }
+                && intro.MusicEndBar - intro.MusicStartBar >= IntroBars
+                && (IsOnTheBeatsOf(intro, grid) || CueQuarter(introCues, intro.FirstBeat, intro.BeatSeconds) == 0);
+            return isIntro ? grid with { Intro = intro } : grid;
+        }
+
+        // Whether the intro's beats are where the grid has beats, at the start of its music and at the end.
+        private static bool IsOnTheBeatsOf(BeatGrid intro, BeatGrid grid)
+        {
+            return new[] { intro.MusicStart, intro.MusicEnd }.All(beat =>
+            {
+                var beats = (beat - grid.FirstBeat) / grid.BeatSeconds;
+                return Math.Abs(beats - Math.Round(beats)) <= IntroBeatTolerance;
+            });
+        }
+
+        private static BeatGrid? Find(Onsets envelopes, double hopSeconds, double? taggedBpm, IReadOnlyList<double> cueSeconds)
         {
             // The bass counts three times for the tempo.
             var combined = new float[envelopes.All.Length];
@@ -145,7 +191,7 @@ namespace LibLala.Audio.Analysis
             // around the kicks. Then the beats before, moved. Without the bass, the cues aren't on a kick: hi-hats on 16ths,
             // say. Measured against the cues in a DJ's library, this puts 252 of 268 steady tracks that were a half or a
             // quarter beat off on the beat, and leaves the others as they were.
-            if (CueQuarters(cueSeconds, line.First + OnsetLead, line.Period) is var quarters and not 0)
+            if (CueQuarter(cueSeconds, line.First + OnsetLead, line.Period) is { } quarters and not 0)
             {
                 var atCues = line.First + (quarters * line.Period / 4);
                 var piles = Piles(bassPeaks, hopSeconds, 60 / line.Period);
@@ -230,19 +276,19 @@ namespace LibLala.Audio.Analysis
             return start is { } s && end is { } e && s <= e ? (s, e) : (first, last);
         }
 
-        // How many quarters of a beat after the beats most cues are, less how late they are: 0 to 3. 0 also without cues,
-        // or when they don't agree. A cue that is on no quarter counts against that.
-        private static int CueQuarters(IReadOnlyList<double> cueSeconds, double firstBeat, double period)
+        // How many quarters of a beat after the beats most cues are, less how late they are: 0 to 3. Null with fewer than
+        // two cues, or when they don't agree. A cue that is on no quarter counts against that.
+        private static int? CueQuarter(IReadOnlyList<double> cueSeconds, double firstBeat, double period)
         {
             if (cueSeconds.Count < 2)
             {
-                return 0;
+                return null;
             }
             var quarters = cueSeconds
                 .Select(cue => (cue - CueLateSeconds - firstBeat) / period * 4)
                 .Where(quarter => Math.Abs(quarter - Math.Round(quarter)) <= CueQuarterTolerance * 4)
                 .Select(quarter => (((int)Math.Round(quarter) % 4) + 4) % 4);
-            return MostAgreedOn(quarters, cueSeconds.Count) ?? 0;
+            return MostAgreedOn(quarters, cueSeconds.Count);
         }
 
         // Which of the first four beats starts a bar, by the cues, when most of them agree.

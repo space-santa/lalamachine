@@ -112,6 +112,14 @@ namespace LalaDb.Data
         public double FirstDownbeat { get; set; }
         public double MusicStart { get; set; }
         public double MusicEnd { get; set; }
+        // The grid of the intro, when it has one of its own: see BeatGrid.Intro. 0 when it hasn't.
+        public double IntroBeatsPerMinute { get; set; }
+        public double IntroFirstBeat { get; set; }
+        public double IntroBeatDeviationMs { get; set; }
+        public int IntroBeatCount { get; set; }
+        public double IntroFirstDownbeat { get; set; }
+        public double IntroMusicStart { get; set; }
+        public double IntroMusicEnd { get; set; }
         // The version of the key analysis that looked for the key, 0 when none did: a track with a key in its tags isn't
         // looked at.
         public int KeyAnalyzerVersion { get; set; }

@@ -21,8 +21,7 @@ namespace LalaDb.Model
     }
 
     // A track and what to look for in it: the beats, the key, the waveform, or more of them. With the grid that an earlier
-    // version of the analysis found, when this one finds the same unless the cues move its beats: see
-    // BeatGridAnalyzer.CuesMayMove.
+    // version of the analysis found, when this one finds the same unless it may change: see BeatGridAnalyzer.MayChange.
     public sealed record TrackToAnalyze(string Path, FileStamp Stamp, int TaggedBeatsPerMinute, bool NeedsGrid, bool NeedsKey, bool NeedsWaveform, BeatGrid? Earlier = null);
 
     // The analyses and waveforms of the tracks, by path. Each call has its own context, so it can be used from any thread.
@@ -73,7 +72,7 @@ namespace LalaDb.Model
                 var needsKey = string.IsNullOrWhiteSpace(track.InitialKey) && analysis?.KeyAnalyzerVersion != KeyAnalyzer.Version;
                 var earlier = needsGrid
                     && analysis is { Grid: var grid } && grid.BeatsPerMinute > 0
-                    && BeatGridAnalyzer.IsCurrentUnlessCuesMove(analysis.AnalyzerVersion, hasTaggedTempo: track.BeatsPerMinute > 0)
+                    && BeatGridAnalyzer.IsCurrentUnlessChanged(analysis.AnalyzerVersion, hasTaggedTempo: track.BeatsPerMinute > 0)
                     ? new BeatGrid(grid.BeatsPerMinute, grid.FirstBeat, grid.BeatDeviationMs, grid.BeatCount, grid.FirstDownbeat, grid.MusicStart, grid.MusicEnd)
                     : null;
                 var needsWaveform = !waveforms.TryGetValue(track.Path, out var waveformStamp) || waveformStamp != stamp;
@@ -112,7 +111,10 @@ namespace LalaDb.Model
             {
                 return null;
             }
-            return new BeatGrid(analysis.BeatsPerMinute, analysis.FirstBeat, analysis.BeatDeviationMs, analysis.BeatCount, analysis.FirstDownbeat, analysis.MusicStart, analysis.MusicEnd);
+            var intro = analysis.IntroBeatsPerMinute > 0
+                ? new BeatGrid(analysis.IntroBeatsPerMinute, analysis.IntroFirstBeat, analysis.IntroBeatDeviationMs, analysis.IntroBeatCount, analysis.IntroFirstDownbeat, analysis.IntroMusicStart, analysis.IntroMusicEnd)
+                : null;
+            return new BeatGrid(analysis.BeatsPerMinute, analysis.FirstBeat, analysis.BeatDeviationMs, analysis.BeatCount, analysis.FirstDownbeat, analysis.MusicStart, analysis.MusicEnd) { Intro = intro };
         }
 
         // Null when there is none of the file as it is now, by this version. Also when the database can't be read right now:
@@ -192,6 +194,14 @@ namespace LalaDb.Model
                 analysis.FirstDownbeat = grid?.FirstDownbeat ?? 0;
                 analysis.MusicStart = grid?.MusicStart ?? 0;
                 analysis.MusicEnd = grid?.MusicEnd ?? 0;
+                var intro = grid?.Intro;
+                analysis.IntroBeatsPerMinute = intro?.BeatsPerMinute ?? 0;
+                analysis.IntroFirstBeat = intro?.FirstBeat ?? 0;
+                analysis.IntroBeatDeviationMs = intro?.DeviationMs ?? 0;
+                analysis.IntroBeatCount = intro?.BeatCount ?? 0;
+                analysis.IntroFirstDownbeat = intro?.FirstDownbeat ?? 0;
+                analysis.IntroMusicStart = intro?.MusicStart ?? 0;
+                analysis.IntroMusicEnd = intro?.MusicEnd ?? 0;
             }
             if (track.NeedsKey || !isSameFile)
             {

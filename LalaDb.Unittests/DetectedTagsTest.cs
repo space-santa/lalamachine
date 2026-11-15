@@ -138,7 +138,8 @@ namespace LalaDb.Unittests
             Assert.That(tags.BeatsPerMinute, Is.Zero);
         }
 
-        // Version 4 only moves the beats where the cues say, the tempo is what version 3 found.
+        // Version 4 only moves the beats where the cues say and version 5 only adds intros, the tempo is what version 3
+        // found.
         [Test]
         public void TheTempoThatAVersionBeforeFoundAsThisOneDoes_ShowsUntilTheTrackIsAnalyzedAgain()
         {
