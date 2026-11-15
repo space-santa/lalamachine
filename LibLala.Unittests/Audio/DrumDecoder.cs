@@ -11,6 +11,8 @@ namespace LibLala.Unittests.Audio
         private readonly double _bpm;
         private readonly double _firstBeat;
         private readonly double _driftMs;
+        // Of a beat, where the 16ths between the kick and the off-beat are.
+        private static readonly double[] Sixteenths = [0.25, 0.75];
         private readonly Random _random = new(7);
         private long _position;
 
@@ -28,6 +30,14 @@ namespace LibLala.Unittests.Audio
         // A kick drum's beater, a 3 kHz tick at its start. An 808 has none.
         public bool HasClick { get; init; } = true;
         public bool HasHiHat { get; init; } = true;
+        // Hi-hats this loud on the 16ths between the kicks and the off-beat hi-hats, a quarter and three quarters into each
+        // beat.
+        public double SixteenthHiHat { get; init; }
+        // A bass note this far into each beat, as loud as the kick. With a hi-hat there it is in the bass and the click range
+        // at once, like a kick: on the off-beat, or on a 16th with SixteenthHiHat.
+        public double? BassNoteAt { get; init; }
+        // The kicks alone move ahead and back by up to that many ms, over 20 s.
+        public double KickDriftMs { get; init; }
         // A pad chord that changes on the first beat of each bar: the beat with this number, and every fourth after it.
         public int? Downbeat { get; init; }
         // The drums only play in between, in seconds.
@@ -67,20 +77,35 @@ namespace LibLala.Unittests.Audio
                 sample += 0.1 * (Math.Sin(2 * Math.PI * root * seconds) + Math.Sin(2 * Math.PI * root * 1.5 * seconds));
             }
             var drums = seconds >= BeatsFrom && seconds <= BeatsUntil;
-            if (sinceBeat >= 0 && HasKick && drums)
+            var sinceKick = sinceBeat - (KickDriftMs / 1000 * Math.Sin(2 * Math.PI * seconds / 20));
+            var k = sinceKick - (Math.Floor(sinceKick / period) * period);
+            if (sinceKick >= 0 && HasKick && drums)
             {
                 // A sine falling from 120 to 50 Hz.
-                var phase = 2 * Math.PI * ((50 * t) + (70 * 0.03 * (1 - Math.Exp(-t / 0.03))));
-                sample += 0.8 * Math.Exp(-t / 0.08) * Math.Sin(phase);
+                var phase = 2 * Math.PI * ((50 * k) + (70 * 0.03 * (1 - Math.Exp(-k / 0.03))));
+                sample += 0.8 * Math.Exp(-k / 0.08) * Math.Sin(phase);
                 if (HasClick)
                 {
-                    sample += 0.3 * Math.Exp(-t / 0.004) * Math.Sin(2 * Math.PI * 3000 * t);
+                    sample += 0.3 * Math.Exp(-k / 0.004) * Math.Sin(2 * Math.PI * 3000 * k);
                 }
             }
             var sinceOffBeat = t - (period / 2);
             if (sinceBeat >= 0 && sinceOffBeat >= 0 && HasHiHat && drums)
             {
                 sample += 0.2 * Math.Exp(-sinceOffBeat / 0.02) * ((_random.NextDouble() * 2) - 1);
+            }
+            foreach (var sixteenth in Sixteenths)
+            {
+                var sinceSixteenth = t - (sixteenth * period);
+                if (sinceBeat >= 0 && sinceSixteenth >= 0 && SixteenthHiHat > 0 && drums)
+                {
+                    sample += SixteenthHiHat * Math.Exp(-sinceSixteenth / 0.02) * ((_random.NextDouble() * 2) - 1);
+                }
+            }
+            var sinceBassNote = t - ((BassNoteAt ?? 0) * period);
+            if (sinceBeat >= 0 && sinceBassNote >= 0 && BassNoteAt is not null && drums)
+            {
+                sample += 0.8 * Math.Exp(-sinceBassNote / 0.08) * Math.Sin(2 * Math.PI * 55 * sinceBassNote);
             }
             return (float)sample;
         }

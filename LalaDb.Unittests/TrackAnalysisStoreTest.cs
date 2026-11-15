@@ -225,22 +225,38 @@ namespace LalaDb.Unittests
             Assert.That(Analysis(path).KeyAnalyzerVersion, Is.Zero);
         }
 
-        // Version 3 of the beat analysis only finds the tempo of tracks without a tagged one in another way.
-        [TestCase(128, false)]
-        [TestCase(0, true)]
-        public void WhatTheBeatAnalysisBeforeFound_IsKeptForATrackWithATaggedTempo_AndFoundAgainForOneWithout(int taggedBeatsPerMinute, bool isAnalyzedAgain)
+        // With what it found when that's what this version finds unless the cues move the beats: version 2 found the tempo
+        // of a track without a tagged one in another way.
+        [TestCase(2, 128, true)]
+        [TestCase(3, 128, true)]
+        [TestCase(3, 0, true)]
+        [TestCase(2, 0, false)]
+        public void WhatTheBeatAnalysisBeforeFound_IsFoundAgain_AndPlayedByUntilThen(int version, int taggedBeatsPerMinute, bool isEarlier)
         {
             var path = AddTrack("a.mp3", taggedBeatsPerMinute);
             SaveAnalysis(Grid);
             using (var context = new LalaContext(_options))
             {
-                context.Set<TrackAnalysis>().Single().AnalyzerVersion = 2;
+                context.Set<TrackAnalysis>().Single().AnalyzerVersion = version;
                 context.SaveChanges();
             }
 
-            Assert.That(_store.TracksToAnalyze().Select(t => (t.Path, t.NeedsGrid)), Is.EqualTo(isAnalyzedAgain ? new[] { (path, true) } : []));
-            // Good to play by either way.
+            Assert.That(_store.TracksToAnalyze().Select(t => (t.Path, t.NeedsGrid, t.Earlier)), Is.EqualTo(new[] { (path, true, isEarlier ? Grid : null) }));
             Assert.That(_store.FindGrid(path), Is.EqualTo(Grid));
+        }
+
+        [Test]
+        public void WhereTheBeatAnalysisBeforeFoundNoBeat_ItIsLookedForAgain()
+        {
+            AddTrack("a.mp3", beatsPerMinute: 128);
+            SaveAnalysis(grid: null);
+            using (var context = new LalaContext(_options))
+            {
+                context.Set<TrackAnalysis>().Single().AnalyzerVersion = 3;
+                context.SaveChanges();
+            }
+
+            Assert.That(_store.TracksToAnalyze().Single().Earlier, Is.Null);
         }
 
         [Test]
@@ -254,7 +270,7 @@ namespace LalaDb.Unittests
                 context.SaveChanges();
             }
 
-            Assert.That(_store.TracksToAnalyze().Select(t => t.Path), Is.EqualTo(new[] { path }));
+            Assert.That(_store.TracksToAnalyze().Select(t => (t.Path, t.Earlier)), Is.EqualTo(new[] { (path, (BeatGrid?)null) }));
             Assert.That(_store.FindGrid(path), Is.Null);
         }
 

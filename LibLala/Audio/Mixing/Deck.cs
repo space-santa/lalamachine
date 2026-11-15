@@ -10,10 +10,17 @@ namespace LibLala.Audio.Mixing
     {
         // Small, so that a changing tempo changes in small steps.
         private const int InputFrames = 1024;
+        // SoundTouch puts the track together from pieces this long, each from where it fits on best within the seek
+        // window, overlapping by so much. By its own choice for these tempos, about 70 ms, a seek window of 18 ms and 8 ms,
+        // a kick came up to 10 ms off where Position has it, and as much again in the other track of a transition: they
+        // flammed. With these, 90% of kicks are within 2 ms, measured in tracks of a DJ's library, and it sounds better.
+        private const int SequenceMs = 40;
+        private const int SeekWindowMs = 3;
+        private const int OverlapMs = 6;
 
         private readonly float[] _input = new float[InputFrames * AudioFormat.Channels];
         // What went into SoundTouch and didn't come out yet, oldest first. SoundTouch puts out frames/tempo for each, within
-        // a few ms, measured.
+        // a few ms, see SequenceMs.
         private readonly Queue<Fed> _fed = new();
         private SoundTouchProcessor? _stretcher;
         // Of the oldest in _fed, the frames that came out already.
@@ -95,7 +102,13 @@ namespace LibLala.Audio.Mixing
 
         private int RenderStretched(Span<float> buffer, int frames)
         {
-            _stretcher ??= new SoundTouchProcessor { SampleRate = AudioFormat.SampleRate, Channels = AudioFormat.Channels };
+            if (_stretcher is null)
+            {
+                _stretcher = new SoundTouchProcessor { SampleRate = AudioFormat.SampleRate, Channels = AudioFormat.Channels };
+                _stretcher.SetSetting(SettingId.SequenceDurationMs, SequenceMs);
+                _stretcher.SetSetting(SettingId.SeekWindowDurationMs, SeekWindowMs);
+                _stretcher.SetSetting(SettingId.OverlapDurationMs, OverlapMs);
+            }
             var rendered = 0;
             while (rendered < frames)
             {

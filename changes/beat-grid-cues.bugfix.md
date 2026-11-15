@@ -1,0 +1,1 @@
+Tracks whose beats were found half or a quarter of a beat off are mixed on the beat now, where Mixed In Key's cue points say the beat is: about one in six of the tracks with a steady beat. After the update the app finds the beats of those tracks again in the background, and mixes by the beats it had until then.

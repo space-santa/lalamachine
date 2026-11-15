@@ -58,6 +58,6 @@ namespace LibLala.Audio
             return beatsPerMinute > 0 && IsSteadyOf(deviationMs, beatCount) ? (uint)Math.Round(beatsPerMinute) : 0;
         }
 
-        private static bool IsSteadyOf(double deviationMs, int beatCount) => beatCount >= SteadyBeatCount && deviationMs <= SteadyDeviationMs;
+        internal static bool IsSteadyOf(double deviationMs, int beatCount) => beatCount >= SteadyBeatCount && deviationMs <= SteadyDeviationMs;
     }
 }
