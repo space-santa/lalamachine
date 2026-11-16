@@ -500,7 +500,8 @@ namespace LibLala.Audio
         private static long IncomingFrame(TransitionPlan plan, double progress) =>
             (long)Math.Round((plan.StartB + (progress * plan.Seconds * plan.TempoB)) * AudioFormat.SampleRate);
 
-        private static double? BeatsPerMinuteOf(Deck? deck) => deck?.Grid is { } grid ? grid.BeatsPerMinute * deck.Tempo : null;
+        // By the grid the beats are on where it plays: in an intro with a grid of its own, the intro's.
+        private static double? BeatsPerMinuteOf(Deck? deck) => deck?.Grid is { } grid ? grid.At(deck.Position / AudioFormat.SampleRate).BeatsPerMinute * deck.Tempo : null;
 
         // The current track, when it plays on for something to be mixed into it.
         private Deck? TrackToMixInto() => _isFailed || _isEndPlayed ? null : _current;

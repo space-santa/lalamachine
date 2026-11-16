@@ -121,7 +121,7 @@ namespace LibLala.Audio.Analysis
             // The part before the music on its own: the onsets there count by how they stand out of it, not of the louder
             // music after. Up to the music's first beat, at the tempo of the music unless they repeat a lot more sharply at
             // another.
-            var end = grid.MusicStart - (grid.BeatSeconds / 2);
+            var end = grid.IntroEnd;
             var introCues = cueSeconds.Where(cue => cue < end).ToList();
             var intro = Find(envelopes.Before((int)(end / hopSeconds)), hopSeconds, grid.BeatsPerMinute, introCues);
             return intro is not null && IsIntroOf(intro, grid, introCues) ? grid with { Intro = intro } : grid;
@@ -200,10 +200,11 @@ namespace LibLala.Audio.Analysis
             // beats, and the bass is heard there too, the beats are where they are. The onsets there place them to the
             // millisecond. Unless those aren't steady and less so than the ones before, or heard less often: other sounds
             // around the kicks. Then the beats before, moved. Without the bass, the cues aren't on a kick: hi-hats on 16ths,
-            // say. Nor when the beats before are steady and the onsets at the cues are steady in another part of the track,
-            // most of the cues in it: an intro on a beat of its own, which gets a grid of its own. Measured against the cues in a DJ's library,
-            // this puts 252 of 268 steady tracks that were a half or a quarter beat off on the beat, and leaves the others as
-            // they were.
+            // say. Nor when the beats before are steady and the onsets at the cues are steady only before their music: an
+            // intro on a beat of its own, most of the cues in it, which gets a grid of its own. The bars of the rest are then
+            // where the cues in it say, when enough of them agree. Measured against the cues in a DJ's library, this puts 252
+            // of 268 steady tracks that were a half or a quarter beat off on the beat, and leaves the others as they were.
+            IReadOnlyList<double> musicCues = [];
             if (CueQuarter(cueSeconds, line.First + OnsetLead, line.Period) is { } quarters and not 0)
             {
                 var atCues = line.First + (quarters * line.Period / 4);
@@ -219,9 +220,15 @@ namespace LibLala.Audio.Analysis
                     {
                         line = line with { First = atCues - line.Period };
                     }
-                    else if (!BeatGrid.IsSteadyOf(line.DeviationMs, line.Heard.Count) || IsHeardInTheMusicOf(moved, line))
+                    else if (!BeatGrid.IsSteadyOf(line.DeviationMs, line.Heard.Count) || !IsBefore(moved, line))
                     {
                         line = moved;
+                    }
+                    else
+                    {
+                        // A beat that jumps by more than half a beat leaves the intro's bars counted apart from the rest's.
+                        var musicStart = MusicSeconds(line).Start - (line.Period / 2);
+                        musicCues = [.. cueSeconds.Where(cue => cue >= musicStart)];
                     }
                 }
             }
@@ -233,7 +240,7 @@ namespace LibLala.Audio.Analysis
             firstBeat -= shift * period;
             var heard = line.Heard.Select(number => number + shift).ToHashSet();
             var (start, end) = MusicSpan(heard);
-            var downbeat = Downbeat(cueSeconds, firstBeat, period) ?? Downbeat(envelopes.Bands, hopSeconds, firstBeat, period);
+            var downbeat = Downbeat(musicCues, firstBeat, period) ?? Downbeat(cueSeconds, firstBeat, period) ?? Downbeat(envelopes.Bands, hopSeconds, firstBeat, period);
 
             return new BeatGrid(60 / period, firstBeat, line.DeviationMs, line.Heard.Count, firstBeat + (downbeat * period), firstBeat + (start * period), firstBeat + (end * period));
         }
@@ -271,12 +278,12 @@ namespace LibLala.Audio.Analysis
             return candidates.MaxBy(c => c.Sharpness * Prior(c.Bpm)).Bpm;
         }
 
-        // Whether the beats of one line are heard in at least half of the music of the other.
-        private static bool IsHeardInTheMusicOf(Line line, Line other)
+        // Whether the music of one line is over where the other's starts. Give or take the beats that MusicSpan may place
+        // each of them past the last beat heard, or before the first.
+        private static bool IsBefore(Line line, Line other)
         {
-            var (start, end) = MusicSeconds(line);
-            var (otherStart, otherEnd) = MusicSeconds(other);
-            return Math.Min(end, otherEnd) - Math.Max(start, otherStart) >= (otherEnd - otherStart) / 2;
+            var leeway = 2 * (BeatsPerSection - MusicBeatsPerSection) * other.Period;
+            return MusicSeconds(line).End <= MusicSeconds(other).Start + leeway;
         }
 
         private static (double Start, double End) MusicSeconds(Line line)

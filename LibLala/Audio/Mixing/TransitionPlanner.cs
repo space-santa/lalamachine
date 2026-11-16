@@ -121,12 +121,12 @@ namespace LibLala.Audio.Mixing
             return new TransitionPlan(startA, CutSeconds, firstBar - lead, 1, TransitionKind.Cut, TempoRamp.None(startA, tempoA));
         }
 
-        // Where A's music is over: the bar after its last beat. A last hit on the first beat of a bar ends it right there. On
-        // a downbeat in any case, the transition starts a whole number of bars before: when the bar after the last beat
-        // isn't in the file any more, the bar before.
+        // Where A's music is over: the bar after its last beat, see BeatGrid.MusicEndBar. On a downbeat in any case, the
+        // transition starts a whole number of bars before: when the bar after the last beat isn't in the file any more, the
+        // bar before.
         private static double MusicEnd(BeatGrid grid, double length)
         {
-            var end = DownbeatAtOrAfter(grid, grid.MusicEnd - (grid.BeatSeconds / 4));
+            var end = grid.FirstDownbeat + (grid.MusicEndBar * grid.BarSeconds);
             while (end > length && end - grid.BarSeconds > 0)
             {
                 end -= grid.BarSeconds;

@@ -381,6 +381,41 @@ namespace LibLala.Unittests.Audio
             Assert.That(grid.Intro!.FirstBeat, Is.EqualTo(0.25).Within(0.003));
         }
 
+        // A beat that jumps by more than half a beat in the break: the intro's bars are counted apart from the rest's. The
+        // rest's start where its own cues say, the intro's where the intro's do.
+        [Test]
+        public void AnIntroOnABeatOfItsOwn_WithMostOfTheCues_LeavesTheRestsBarsToTheCuesInIt()
+        {
+            var beat = 60 / 128.0;
+            using var decoder = IntroAndBreak(beatsLater: 1.3);
+            double[] cues = [.. new[] { 0, 16, 32, 64, 161.3, 193.3 }.Select(beats => 0.25 + (beats * beat) + 0.045)];
+
+            var grid = BeatGridAnalyzer.Analyze(decoder, taggedBpm: 128, cues)!;
+
+            Assert.That(OffBeat(grid.FirstBeat - 0.25, beat), Is.EqualTo(0.3).Within(0.01));
+            Assert.That(OffBeat(grid.FirstDownbeat - (0.25 + (161.3 * beat)), 4 * beat), Is.EqualTo(0).Within(0.01).Or.EqualTo(1).Within(0.01));
+            Assert.That(grid.Intro, Is.Not.Null);
+            Assert.That(OffBeat(grid.Intro!.FirstDownbeat - 0.25, 4 * beat), Is.EqualTo(0).Within(0.01).Or.EqualTo(1).Within(0.01));
+        }
+
+        // An intro longer than the rest, on a beat of its own, is where the beats are found first. The cues, most of them in
+        // the rest, move them onto the rest's beat all the same, and the intro gets a grid of its own.
+        [Test]
+        public void ALongIntroOnABeatOfItsOwn_WithMostOfTheCuesInTheRest_PutsTheBeatsOnTheRests()
+        {
+            var beat = 60 / 128.0;
+            using var decoder = new DrumDecoder(128, 0.25, seconds: 150) { BreakFrom = 90, BreakUntil = 110, BeatsLaterAfterBreak = 0.3 };
+            double[] cues = [.. new[] { 0, 32, 236.3, 252.3, 268.3, 284.3 }.Select(beats => 0.25 + (beats * beat) + 0.045)];
+
+            var grid = BeatGridAnalyzer.Analyze(decoder, taggedBpm: 128, cues)!;
+
+            Assert.That(OffBeat(grid.FirstBeat - 0.25, beat), Is.EqualTo(0.3).Within(0.01));
+            Assert.That(grid.MusicStart, Is.EqualTo(110).Within(beat));
+            Assert.That(grid.MusicEnd, Is.EqualTo(150).Within(4 * beat));
+            Assert.That(grid.Intro, Is.Not.Null);
+            Assert.That(grid.Intro!.FirstBeat, Is.EqualTo(0.25).Within(0.003));
+        }
+
         // Found a part of a beat off the rest, an intro is more often off its kick than on a beat of its own.
         [Test]
         public void AnIntroOnABeatOfItsOwn_WithoutCuesThatSaySo_HasNone()

@@ -218,12 +218,12 @@ namespace LibLala.Unittests.Audio
         }
 
         [Test]
-        public void Clicks_AreOnTheBeatsOfTheIntro_UntilTheBarAfterItsMusic()
+        public void Clicks_AreOnTheBeatsOfTheIntro_UntilHalfABeatBeforeTheMusic()
         {
-            // The intro's beats from 0.05 s, its music over by 0.55 s: its bar after that from 2.05 s. The rest's beats from
-            // 0.1 s.
+            // The intro's beats from 0.05 s, its music over by 0.55 s. The rest's beats from 0.1 s, its music from 1.1 s, in
+            // the bar of the intro's that starts at 0.05 s and ends at 2.05 s.
             var intro = new BeatGrid(120, 0.05, 1, 100, 0.05, 0.05, 0.55);
-            _engine.Open(new CountingDecoder(3 * AudioFormat.SampleRate) { Silent = true }, new BeatGrid(120, 0.1, 1, 100, 0.1, 2.1, 3) { Intro = intro });
+            _engine.Open(new CountingDecoder(3 * AudioFormat.SampleRate) { Silent = true }, new BeatGrid(120, 0.1, 1, 100, 0.1, 1.1, 3) { Intro = intro });
             _engine.Clicks = true;
             var buffer = new float[3 * AudioFormat.SampleRate * AudioFormat.Channels];
 
@@ -231,9 +231,9 @@ namespace LibLala.Unittests.Audio
 
             Assert.That(Loudest(buffer, 0.05, 0.06), Is.GreaterThan(0.1));
             Assert.That(Loudest(buffer, 0.09, 0.549), Is.Zero);
-            Assert.That(Loudest(buffer, 1.55, 1.56), Is.GreaterThan(0.1));
-            Assert.That(Loudest(buffer, 1.59, 2.099), Is.Zero);
-            Assert.That(Loudest(buffer, 2.1, 2.11), Is.GreaterThan(0.1));
+            Assert.That(Loudest(buffer, 0.55, 0.56), Is.GreaterThan(0.1));
+            Assert.That(Loudest(buffer, 0.59, 1.099), Is.Zero);
+            Assert.That(Loudest(buffer, 1.1, 1.11), Is.GreaterThan(0.1));
         }
 
         [Test]
