@@ -62,31 +62,45 @@ namespace LibLala.Unittests.Audio
             Assert.That(grid.IsSteady, Is.True);
         }
 
-        [TestCase(4, true, true)]
+        [TestCase(5, true, true)]
+        [TestCase(4, false, true)]
         [TestCase(3, false, true)]
         [TestCase(2, false, true)]
         [TestCase(1, false, false)]
-        [TestCase(5, false, false)]
+        [TestCase(6, false, false)]
         public void WhatAVersionBeforeFound_IsFoundAgain_AndPlayedByUntilThen(int version, bool isCurrent, bool isPlayable)
         {
-            Assert.That(BeatGridAnalyzer.Version, Is.EqualTo(4));
+            Assert.That(BeatGridAnalyzer.Version, Is.EqualTo(5));
             Assert.That(BeatGridAnalyzer.IsCurrent(version), Is.EqualTo(isCurrent));
             Assert.That(BeatGridAnalyzer.IsPlayable(version), Is.EqualTo(isPlayable));
         }
 
-        // Version 4 only moves the beats where the cues say: otherwise it finds what version 3 found, and what version 2
-        // found with a tagged tempo. The tempo too, which shows for a track without a tagged one.
+        // Version 4 only moves the beats where the cues say, version 5 only adds intros: otherwise it finds what version 4
+        // and 3 found, and what version 2 found with a tagged tempo. The tempo too, which shows for a track without a tagged
+        // one.
+        [TestCase(4, false, true, true)]
         [TestCase(3, false, true, true)]
         [TestCase(3, true, true, true)]
         [TestCase(2, true, true, false)]
         [TestCase(2, false, false, false)]
         [TestCase(1, true, false, false)]
-        [TestCase(4, false, false, true)]
-        [TestCase(5, true, false, false)]
-        public void WhatAVersionBeforeFound_IsWhatThisOneFinds_UnlessTheCuesMoveTheBeats(int version, bool hasTaggedTempo, bool isCurrentUnlessCuesMove, bool hasCurrentTempo)
+        [TestCase(5, false, false, true)]
+        [TestCase(6, true, false, false)]
+        public void WhatAVersionBeforeFound_IsWhatThisOneFinds_UnlessItMayChange(int version, bool hasTaggedTempo, bool isCurrentUnlessChanged, bool hasCurrentTempo)
         {
-            Assert.That(BeatGridAnalyzer.IsCurrentUnlessCuesMove(version, hasTaggedTempo), Is.EqualTo(isCurrentUnlessCuesMove));
+            Assert.That(BeatGridAnalyzer.IsCurrentUnlessChanged(version, hasTaggedTempo), Is.EqualTo(isCurrentUnlessChanged));
             Assert.That(BeatGridAnalyzer.HasCurrentTempo(version), Is.EqualTo(hasCurrentTempo));
+        }
+
+        // 128 BPM, a bar is 1.875 s: the music 16 bars in starts at 30.25 s.
+        [TestCase(30.25, 2, true)]
+        [TestCase(30.25, 30, false)]
+        [TestCase(28.3, 2, false)]
+        public void AGrid_MayChange_WhenItsSteadyMusicStarts16BarsInOrLater(double musicStart, double deviationMs, bool mayChange)
+        {
+            var grid = new BeatGrid(128, 0.25, deviationMs, 256, 0.25, musicStart, 119);
+
+            Assert.That(BeatGridAnalyzer.MayChange(grid, []), Is.EqualTo(mayChange));
         }
 
         [Test]
@@ -308,6 +322,150 @@ namespace LibLala.Unittests.Audio
 
             Assert.That(grid.MusicStart, Is.EqualTo(10).Within(60 / 128.0));
             Assert.That(grid.MusicEnd, Is.EqualTo(100).Within(60 / 128.0));
+        }
+
+        [Test]
+        public void MusicFromTheStart_HasNoIntro()
+        {
+            using var decoder = new DrumDecoder(128, 0.25, seconds: 120) { BeatsFrom = 10, BeatsUntil = 100 };
+
+            Assert.That(BeatGridAnalyzer.Analyze(decoder, taggedBpm: null)!.Intro, Is.Null);
+        }
+
+        // 128 BPM from 0.25 s, the intro's drums until 40 s and the rest's from 70 s, longer: the grid is the rest's.
+        private static DrumDecoder IntroAndBreak(double beatsLater, double introDrums = 1, double introUntil = 40) =>
+            new(128, 0.25, seconds: 150) { BreakFrom = introUntil, BreakUntil = 70, BeatsLaterAfterBreak = beatsLater, DrumsBeforeBreak = introDrums };
+
+        // On the first beat of bars like Mixed In Key's: two in the intro, two in the rest.
+        private static double[] IntroAndBreakCues(double beatsLater)
+        {
+            var beat = 60 / 128.0;
+            return [0.25 + 0.045, 0.25 + (32 * beat) + 0.045, 0.25 + ((160 + beatsLater) * beat) + 0.045, 0.25 + ((192 + beatsLater) * beat) + 0.045];
+        }
+
+        [Test]
+        public void AnIntroOnABeatOfItsOwn_HasAGridOfItsOwn_WhereTheCuesSaySo()
+        {
+            var beat = 60 / 128.0;
+            using var decoder = IntroAndBreak(beatsLater: 0.3);
+
+            var grid = BeatGridAnalyzer.Analyze(decoder, taggedBpm: 128, IntroAndBreakCues(0.3))!;
+
+            Assert.That(OffBeat(grid.FirstBeat - 0.25, beat), Is.EqualTo(0.3).Within(0.01));
+            Assert.That(grid.MusicStart, Is.EqualTo(70).Within(beat));
+            Assert.That(grid.Intro, Is.Not.Null);
+            var intro = grid.Intro!;
+            Assert.That(intro.IsSteady, Is.True);
+            Assert.That(intro.BeatsPerMinute, Is.EqualTo(128).Within(0.01));
+            Assert.That(intro.FirstBeat, Is.EqualTo(0.25).Within(0.003));
+            Assert.That(intro.FirstDownbeat, Is.EqualTo(0.25).Within(0.003));
+            Assert.That(intro.MusicStart, Is.EqualTo(0.25).Within(beat));
+            Assert.That(intro.MusicEnd, Is.EqualTo(40).Within(beat));
+            Assert.That(intro.Intro, Is.Null);
+        }
+
+        // Most of the cues in the intro, on its beat: they aren't on the rest's, whose beats stay where they are.
+        [Test]
+        public void AnIntroOnABeatOfItsOwn_WithMostOfTheCues_LeavesTheRestOnItsBeat()
+        {
+            var beat = 60 / 128.0;
+            using var decoder = IntroAndBreak(beatsLater: 0.3);
+            double[] cues = [0.25 + 0.045, 0.25 + (32 * beat) + 0.045, 0.25 + (64 * beat) + 0.045, 0.25 + (160.3 * beat) + 0.045];
+
+            var grid = BeatGridAnalyzer.Analyze(decoder, taggedBpm: 128, cues)!;
+
+            Assert.That(OffBeat(grid.FirstBeat - 0.25, beat), Is.EqualTo(0.3).Within(0.01));
+            Assert.That(grid.MusicStart, Is.EqualTo(70).Within(beat));
+            Assert.That(grid.MusicEnd, Is.EqualTo(150).Within(4 * beat));
+            Assert.That(grid.Intro, Is.Not.Null);
+            Assert.That(grid.Intro!.FirstBeat, Is.EqualTo(0.25).Within(0.003));
+        }
+
+        // A beat that jumps by more than half a beat in the break: the intro's bars are counted apart from the rest's. The
+        // rest's start where its own cues say, the intro's where the intro's do.
+        [Test]
+        public void AnIntroOnABeatOfItsOwn_WithMostOfTheCues_LeavesTheRestsBarsToTheCuesInIt()
+        {
+            var beat = 60 / 128.0;
+            using var decoder = IntroAndBreak(beatsLater: 1.3);
+            double[] cues = [.. new[] { 0, 16, 32, 64, 161.3, 193.3 }.Select(beats => 0.25 + (beats * beat) + 0.045)];
+
+            var grid = BeatGridAnalyzer.Analyze(decoder, taggedBpm: 128, cues)!;
+
+            Assert.That(OffBeat(grid.FirstBeat - 0.25, beat), Is.EqualTo(0.3).Within(0.01));
+            Assert.That(OffBeat(grid.FirstDownbeat - (0.25 + (161.3 * beat)), 4 * beat), Is.EqualTo(0).Within(0.01).Or.EqualTo(1).Within(0.01));
+            Assert.That(grid.Intro, Is.Not.Null);
+            Assert.That(OffBeat(grid.Intro!.FirstDownbeat - 0.25, 4 * beat), Is.EqualTo(0).Within(0.01).Or.EqualTo(1).Within(0.01));
+        }
+
+        // An intro longer than the rest, on a beat of its own, is where the beats are found first. The cues, most of them in
+        // the rest, move them onto the rest's beat all the same, and the intro gets a grid of its own.
+        [Test]
+        public void ALongIntroOnABeatOfItsOwn_WithMostOfTheCuesInTheRest_PutsTheBeatsOnTheRests()
+        {
+            var beat = 60 / 128.0;
+            using var decoder = new DrumDecoder(128, 0.25, seconds: 150) { BreakFrom = 90, BreakUntil = 110, BeatsLaterAfterBreak = 0.3 };
+            double[] cues = [.. new[] { 0, 32, 236.3, 252.3, 268.3, 284.3 }.Select(beats => 0.25 + (beats * beat) + 0.045)];
+
+            var grid = BeatGridAnalyzer.Analyze(decoder, taggedBpm: 128, cues)!;
+
+            Assert.That(OffBeat(grid.FirstBeat - 0.25, beat), Is.EqualTo(0.3).Within(0.01));
+            Assert.That(grid.MusicStart, Is.EqualTo(110).Within(beat));
+            Assert.That(grid.MusicEnd, Is.EqualTo(150).Within(4 * beat));
+            Assert.That(grid.Intro, Is.Not.Null);
+            Assert.That(grid.Intro!.FirstBeat, Is.EqualTo(0.25).Within(0.003));
+        }
+
+        // Found a part of a beat off the rest, an intro is more often off its kick than on a beat of its own.
+        [Test]
+        public void AnIntroOnABeatOfItsOwn_WithoutCuesThatSaySo_HasNone()
+        {
+            using var decoder = IntroAndBreak(beatsLater: 0.3);
+
+            var grid = BeatGridAnalyzer.Analyze(decoder, taggedBpm: 128)!;
+
+            Assert.That(grid.MusicStart, Is.EqualTo(70).Within(60 / 128.0));
+            Assert.That(grid.Intro, Is.Null);
+        }
+
+        [Test]
+        public void AnIntroOfFewerThan16Bars_HasNoGridOfItsOwn()
+        {
+            using var decoder = IntroAndBreak(beatsLater: 0.3, introUntil: 28);
+
+            var grid = BeatGridAnalyzer.Analyze(decoder, taggedBpm: 128, IntroAndBreakCues(0.3))!;
+
+            Assert.That(grid.Intro, Is.Null);
+        }
+
+        // 90 BPM from 0.25 s, the intro 96 of its beats long and the rest from 100 s. An intro found at double, or at three quarters with hits on every third beat
+        // like a 4:3 rhythm, is on the rest's beats where it starts and ends, but isn't at its tempo.
+        [TestCase(90.05, true)]
+        [TestCase(180, false)]
+        [TestCase(67.5, false)]
+        public void AnIntro_IsAtTheTempoOfTheRest(double introBpm, bool isIntro)
+        {
+            var grid = new BeatGrid(90, 0.25, 2, 300, 0.25, 100, 250);
+            var beats = (int)Math.Round(96 * introBpm / 90);
+            var intro = new BeatGrid(introBpm, 0.25, 2, beats, 0.25, 0.25, 0.25 + (beats * 60 / introBpm));
+
+            Assert.That(BeatGridAnalyzer.IsIntroOf(intro, grid, []), Is.EqualTo(isIntro));
+        }
+
+        // Its drums hardly louder than the noise: by how they stand out of the louder rest, they aren't heard.
+        [Test]
+        public void AQuietIntro_OnTheBeatOfTheRest_HasAGridOfItsOwn()
+        {
+            var beat = 60 / 128.0;
+            using var decoder = IntroAndBreak(beatsLater: 0, introDrums: 0.02);
+
+            var grid = BeatGridAnalyzer.Analyze(decoder, taggedBpm: 128)!;
+
+            Assert.That(grid.MusicStart, Is.EqualTo(70).Within(4 * beat), "not heard on the grid of the rest");
+            Assert.That(grid.Intro, Is.Not.Null);
+            Assert.That(OffBeat(grid.Intro!.FirstBeat - 0.25, beat), Is.EqualTo(0).Within(0.02).Or.EqualTo(1).Within(0.02));
+            Assert.That(grid.Intro.MusicStart, Is.EqualTo(0.25).Within(beat));
+            Assert.That(grid.Intro.MusicEnd, Is.EqualTo(40).Within(4 * beat));
         }
 
         [Test]

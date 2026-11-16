@@ -688,6 +688,20 @@ namespace LibLala.Unittests.Audio
             Assert.That((_engine.Tempo, _engine.BeatsPerMinute), Is.EqualTo((1.0, (double?)null)));
         }
 
+        // The music from 30 s, the intro's grid until half a beat before.
+        [Test]
+        public void InAnIntroWithAGridOfItsOwn_TheBeatsPerMinuteAreTheIntros()
+        {
+            var intro = new BeatGrid(119, 0, 2, 500, 0, 0, 20);
+            _engine.Open(_a, new BeatGrid(120, 0, 2, 500, 0, 30, 56) { Intro = intro });
+            Assert.That(_engine.BeatsPerMinute, Is.EqualTo(119));
+
+            _engine.Seek((long)(29.7 * Rate));
+            Assert.That(_engine.BeatsPerMinute, Is.EqualTo(119));
+            _engine.Seek((long)(29.8 * Rate));
+            Assert.That(_engine.BeatsPerMinute, Is.EqualTo(120));
+        }
+
         [Test]
         public void ASeekAfterTheTransitionWasRendered_ButBeforeItWasHeard_DoesntSeekTheNextTrack()
         {

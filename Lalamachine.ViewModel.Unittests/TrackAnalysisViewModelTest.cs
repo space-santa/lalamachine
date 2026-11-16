@@ -122,8 +122,10 @@ namespace Lalamachine.ViewModel.Unittests
             Assert.That(Analysis(path).Key, Is.EqualTo("8B"));
         }
 
-        // Version 4 only moves the beats where the cues say: a track without cues keeps what version 3 found in it, and
-        // what version 2 found with a tagged tempo, without being decoded for it again. The silence would have no beat.
+        // Version 4 only moves the beats where the cues say, version 5 only adds intros: a track without cues whose music
+        // starts early keeps what version 4 and 3 found in it, and what version 2 found with a tagged tempo, without being
+        // decoded for it again. The silence would have no beat.
+        [TestCase(4, 0, true)]
         [TestCase(3, 0, true)]
         [TestCase(2, 128, true)]
         [TestCase(2, 0, false)]
@@ -144,6 +146,25 @@ namespace Lalamachine.ViewModel.Unittests
             Assert.That(Analysis(path).AnalyzerVersion, Is.EqualTo(BeatGridAnalyzer.Version));
             Assert.That(found.Select(e => e.BeatsPerMinute), Is.EqualTo(taggedBeatsPerMinute > 0 ? Array.Empty<uint?>() : new uint?[] { isKept ? 128u : 0u }));
             Assert.That(_store.TracksToAnalyze(), Is.Empty);
+        }
+
+        // The music 16 bars in: there may be an intro with a grid of its own.
+        [Test]
+        public void ATrackWhoseMusicStartsLate_IsDecodedAgain()
+        {
+            var path = AddTrack("a.mp3", initialKey: "5A", beatsPerMinute: 128);
+            var grid = new BeatGrid(127.998, 0.312, 2.5, 400, 1.249, 31.25, 180.5);
+            _store.Save(_store.TracksToAnalyze().Single(), grid, key: null, waveform: null);
+            using (var context = new LalaContext(_options))
+            {
+                context.Set<TrackAnalysis>().Single().AnalyzerVersion = 4;
+                context.SaveChanges();
+            }
+
+            Analyze(path => new SilentDecoder());
+
+            Assert.That(_store.FindGrid(path), Is.Null);
+            Assert.That(Analysis(path).AnalyzerVersion, Is.EqualTo(BeatGridAnalyzer.Version));
         }
 
         [Test]

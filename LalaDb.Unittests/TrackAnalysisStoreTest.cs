@@ -135,6 +135,23 @@ namespace LalaDb.Unittests
         }
 
         [Test]
+        public void AGridWithAnIntro_IsFoundWithIt_AndWithoutItWhenFoundAgainWithout()
+        {
+            var path = AddTrack("a.mp3");
+            var track = _store.TracksToAnalyze().Single();
+            var withIntro = new BeatGrid(127.998, 0.312, 2.5, 400, 1.249, 70.6, 180.5) { Intro = new BeatGrid(128.01, 0.2, 1.5, 120, 0.2, 0.2, 55.4) };
+
+            _store.Save(track, withIntro, key: null, Levels);
+            var found = _store.FindGrid(path);
+            _store.Save(track, Grid, key: null, Levels);
+
+            Assert.That(found, Is.EqualTo(withIntro));
+            Assert.That(found!.Intro, Is.EqualTo(withIntro.Intro));
+            Assert.That(_store.FindGrid(path), Is.EqualTo(Grid));
+            Assert.That(Analysis(path).IntroBeatsPerMinute, Is.Zero);
+        }
+
+        [Test]
         public void AnAnalysis_OutlivesAScan()
         {
             var path = AddTrack("a.mp3");
@@ -245,6 +262,25 @@ namespace LalaDb.Unittests
 
             Assert.That(_store.TracksToAnalyze().Select(t => (t.Path, t.NeedsGrid, t.Earlier)), Is.EqualTo(new[] { (path, true, isEarlier ? Grid : null) }));
             Assert.That(_store.FindGrid(path), Is.EqualTo(Grid));
+        }
+
+        // So that it isn't lost when it is saved again as what this version finds.
+        [Test]
+        public void WhatTheBeatAnalysisBeforeFound_IsFoundAgain_WithItsIntro()
+        {
+            AddTrack("a.mp3");
+            var withIntro = new BeatGrid(127.998, 0.312, 2.5, 400, 1.249, 70.6, 180.5) { Intro = new BeatGrid(128.01, 0.2, 1.5, 120, 0.2, 0.2, 55.4) };
+            SaveAnalysis(withIntro);
+            using (var context = new LalaContext(_options))
+            {
+                context.Set<TrackAnalysis>().Single().AnalyzerVersion = BeatGridAnalyzer.Version - 1;
+                context.SaveChanges();
+            }
+
+            var earlier = _store.TracksToAnalyze().Single().Earlier;
+
+            Assert.That(earlier, Is.EqualTo(withIntro));
+            Assert.That(earlier!.Intro, Is.EqualTo(withIntro.Intro));
         }
 
         [Test]

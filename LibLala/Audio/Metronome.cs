@@ -10,15 +10,18 @@ namespace LibLala.Audio
         private const double Hz = 1500;
         private const double Loudness = 0.5;
 
-        // Adds the clicks to the frames of the buffer, which start at the track's frame firstFrame and move on by tempo.
+        // Adds the clicks to the frames of the buffer, which start at the track's frame firstFrame and move on by tempo. On
+        // the intro's grid before its end, like BeatGrid.At.
         public static void Add(Span<float> buffer, double firstFrame, double tempo, BeatGrid grid)
         {
-            var beatFrames = grid.BeatSeconds * AudioFormat.SampleRate;
-            var firstBeatFrame = grid.FirstBeat * AudioFormat.SampleRate;
+            var music = Beats.Of(grid);
+            var (intro, introEndFrame) = grid.Intro is { } introGrid ? (Beats.Of(introGrid), grid.IntroEnd * AudioFormat.SampleRate) : (music, double.NegativeInfinity);
             var frames = buffer.Length / AudioFormat.Channels;
             for (var i = 0; i < frames; i++)
             {
-                var sinceFirstBeat = firstFrame + (i * tempo) - firstBeatFrame;
+                var frame = firstFrame + (i * tempo);
+                var (beatFrames, firstBeatFrame) = frame < introEndFrame ? intro : music;
+                var sinceFirstBeat = frame - firstBeatFrame;
                 var sinceBeat = (sinceFirstBeat - (Math.Floor(sinceFirstBeat / beatFrames) * beatFrames)) / AudioFormat.SampleRate;
                 if (sinceBeat >= ClickSeconds)
                 {
@@ -28,6 +31,12 @@ namespace LibLala.Audio
                 buffer[i * AudioFormat.Channels] += click;
                 buffer[(i * AudioFormat.Channels) + 1] += click;
             }
+        }
+
+        // A grid's beats in frames: how long each is, and where the first is.
+        private readonly record struct Beats(double Frames, double FirstFrame)
+        {
+            public static Beats Of(BeatGrid grid) => new(grid.BeatSeconds * AudioFormat.SampleRate, grid.FirstBeat * AudioFormat.SampleRate);
         }
     }
 }

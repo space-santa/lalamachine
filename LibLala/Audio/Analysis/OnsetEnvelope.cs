@@ -9,6 +9,13 @@ namespace LibLala.Audio.Analysis
     internal sealed record Onsets(float[] All, float[] Bass, float[] Click, float[] Bands)
     {
         public const int BandCount = 12;
+
+        // The first hops of the track, all of it when it has fewer.
+        public Onsets Before(int hops)
+        {
+            var count = Math.Clamp(hops, 0, All.Length);
+            return new(All[..count], Bass[..count], Click[..count], Bands[..(count * BandCount)]);
+        }
     }
 
     internal static class OnsetEnvelope
