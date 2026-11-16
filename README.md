@@ -73,6 +73,9 @@ For macOS, run `./build-macos.sh` on a Mac after step 2. It builds `dist/lalamac
 Mac's architecture, or pass `x64` or `arm64`. The app only has an ad-hoc signature, so macOS blocks a downloaded copy
 until it's signed with a Developer ID and notarized.
 
+The icon is drawn in `assets/lalamachine.svg`. After editing it, run `dotnet run assets/make-icon.cs` on a Mac. It
+rebuilds `assets/lalamachine.icns` for the macOS app and `Lalamachine.Desktop/Assets/lalamachine.ico` for Windows.
+
 The project file is the only place with the version. The one in `install-forge.ifp` stays at 0.0.0, the script builds
 from a copy that has the real one.
 

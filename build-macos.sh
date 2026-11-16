@@ -50,7 +50,7 @@ find "$publish" -name '*.pdb' -delete
 
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
 cp -R "$publish/" "$app/Contents/MacOS/"
-cp "$root/assets/lala-icon.png.icns" "$app/Contents/Resources/lalamachine.icns"
+cp "$root/assets/lalamachine.icns" "$app/Contents/Resources/lalamachine.icns"
 
 cat > "$app/Contents/Info.plist" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>

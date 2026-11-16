@@ -1,0 +1,1 @@
+A new, more modern icon: the same orange horn speaker with its sound waves on blue, now with depth and soft shadows. It shows on macOS and on Windows, in the app, the Dock or taskbar, and the installer.
