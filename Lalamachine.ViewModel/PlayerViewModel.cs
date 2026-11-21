@@ -59,6 +59,7 @@ namespace Lalamachine.ViewModel
             _audioPlayer.PositionChanged += _audioPlayer_PositionChanged;
             _audioPlayer.TransitionDue += _audioPlayer_TransitionDue;
             _audioPlayer.MixedIn += _audioPlayer_MixedIn;
+            _audioPlayer.MixCalledOff += _audioPlayer_MixCalledOff;
 
             _changePlayPauseCommand = new DelegateCommand(OnChangePlayPause);
             _loadCommand = new DelegateCommand(OnLoad);
@@ -243,7 +244,7 @@ namespace Lalamachine.ViewModel
                 {
                     return;
                 }
-                _audioPlayer.Position = new TimeSpan(0, 0, (int)value);
+                _audioPlayer.Position = TimeSpan.FromSeconds(value);
             }
         }
 
@@ -355,6 +356,12 @@ namespace Lalamachine.ViewModel
                 }
             }
             TrackChanged();
+        }
+
+        // Next asks the list again, and the next track comes when this one ended.
+        private void _audioPlayer_MixCalledOff(object? sender, EventArgs e)
+        {
+            _mixing = null;
         }
 
         private void TrackChanged()

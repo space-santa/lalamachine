@@ -32,8 +32,12 @@ namespace LibLala.LibLalaTagReader
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>")]
         public LibLalaTags Read(string path)
         {
-            path = Uri.UnescapeDataString(path);
-            path = Utils.StringUtils.RemoveFilePrefix(path);
+            ArgumentNullException.ThrowIfNull(path);
+            // A file URI to its path. A path stays as it is: % is a letter in a file name, %20 is no space.
+            if (path.StartsWith("file:", StringComparison.OrdinalIgnoreCase) && Uri.TryCreate(path, UriKind.Absolute, out var uri) && uri.IsFile)
+            {
+                path = uri.LocalPath;
+            }
 
             if (path.Length == 0)
             {

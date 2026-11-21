@@ -100,7 +100,19 @@ namespace LibLala.Unittests.Audio
         {
             var grid = new BeatGrid(128, 0.25, deviationMs, 256, 0.25, musicStart, 119);
 
-            Assert.That(BeatGridAnalyzer.MayChange(grid, []), Is.EqualTo(mayChange));
+            Assert.That(BeatGridAnalyzer.MayChange(grid, version: 4, []), Is.EqualTo(mayChange));
+        }
+
+        // Version 4 may have moved the beats onto an intro on a beat of its own, with most of the cues in it: they're on the
+        // beats then. Version 3 didn't move them, with the cues on its beats this version finds the grid it found.
+        [TestCase(4, true)]
+        [TestCase(3, false)]
+        public void AGridWithTheCuesOnItsBeats_MayChange_WhenVersion4FoundIt(int version, bool mayChange)
+        {
+            var grid = new BeatGrid(128, 0.25, 1, 256, 0.25, 0.25, 119);
+
+            Assert.That(BeatGridAnalyzer.MayChange(grid, version, Cues()), Is.EqualTo(mayChange));
+            Assert.That(BeatGridAnalyzer.MayChange(grid, version, []), Is.False);
         }
 
         [Test]
@@ -398,6 +410,21 @@ namespace LibLala.Unittests.Audio
             Assert.That(OffBeat(grid.Intro!.FirstDownbeat - 0.25, 4 * beat), Is.EqualTo(0).Within(0.01).Or.EqualTo(1).Within(0.01));
         }
 
+        // Too few cues in the rest to say where its bars start: not where the intro's say, by where its sound changes. The
+        // pad chord changes on the first beat of the bars, 1.3 beats later after the break like the beat.
+        [Test]
+        public void AnIntroOnABeatOfItsOwn_WithAlmostAllTheCues_LeavesTheRestsBarsToItsSound()
+        {
+            var beat = 60 / 128.0;
+            using var decoder = new DrumDecoder(128, 0.25, seconds: 150) { BreakFrom = 40, BreakUntil = 70, BeatsLaterAfterBreak = 1.3, Downbeat = 0 };
+            double[] cues = [.. new[] { 0, 16, 32, 64, 161.3 }.Select(beats => 0.25 + (beats * beat) + 0.045)];
+
+            var grid = BeatGridAnalyzer.Analyze(decoder, taggedBpm: 128, cues)!;
+
+            Assert.That(OffBeat(grid.FirstBeat - 0.25, beat), Is.EqualTo(0.3).Within(0.01));
+            Assert.That(OffBeat(grid.FirstDownbeat - (0.25 + (161.3 * beat)), 4 * beat), Is.EqualTo(0).Within(0.01).Or.EqualTo(1).Within(0.01));
+        }
+
         // An intro longer than the rest, on a beat of its own, is where the beats are found first. The cues, most of them in
         // the rest, move them onto the rest's beat all the same, and the intro gets a grid of its own.
         [Test]
@@ -492,6 +519,30 @@ namespace LibLala.Unittests.Audio
             var grid = BeatGridAnalyzer.Analyze(decoder, taggedBpm: null);
 
             Assert.That(grid?.IsSteady ?? false, Is.False);
+        }
+
+        // A broken mp3 whose header counts more frames than there are, as many as fit: what's in it is analyzed.
+        [Test]
+        public void ATrackThatSaysItsFarLonger_IsAnalyzedAsItIs()
+        {
+            using var drums = new DrumDecoder(128, 0.25);
+            using var decoder = new LongerThanItIs(drums, length: int.MaxValue * 1152L);
+
+            var grid = BeatGridAnalyzer.Analyze(decoder, taggedBpm: null)!;
+
+            Assert.That(grid.BeatsPerMinute, Is.EqualTo(128).Within(0.005));
+        }
+
+        private sealed class LongerThanItIs(IAudioDecoder decoder, long length) : IAudioDecoder
+        {
+            public long Length => length;
+
+            public int Read(Span<float> buffer) => decoder.Read(buffer);
+
+            public void Seek(long frame) => decoder.Seek(frame);
+
+            // The test disposes the decoder.
+            public void Dispose() { }
         }
     }
 }

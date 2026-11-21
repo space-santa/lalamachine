@@ -38,6 +38,7 @@ namespace Lalamachine.Desktop.Services
             _engine = new AudioEngine(createOutput) { Clicks = clicks };
             _engine.TransitionDue += (sender, e) => PostForTrack(e.Track, () => TransitionDue?.Invoke(this, EventArgs.Empty));
             _engine.TookOver += (sender, e) => Post(() => TakeOver(e.Track));
+            _engine.MixCalledOff += (sender, e) => Post(() => CallOff(e.Track));
             // Stopped, the output doesn't keep the computer awake with silence.
             _engine.Ended += (sender, e) => PostForTrack(e.Track, () =>
             {
@@ -60,6 +61,7 @@ namespace Lalamachine.Desktop.Services
         public event EventHandler? PositionChanged;
         public event EventHandler? TransitionDue;
         public event EventHandler? MixedIn;
+        public event EventHandler? MixCalledOff;
 
         public Uri? Source { get; private set; }
 
@@ -229,6 +231,18 @@ namespace Lalamachine.Desktop.Services
             _mixTrack = 0;
             Source = _mixSource;
             MixedIn?.Invoke(this, EventArgs.Empty);
+        }
+
+        // The track mixed in won't take over.
+        private void CallOff(int track)
+        {
+            if (track != _mixTrack || _mixTrack == 0)
+            {
+                return;
+            }
+            _mixTrack = 0;
+            _mixSource = null;
+            MixCalledOff?.Invoke(this, EventArgs.Empty);
         }
 
         // An event of the track mixed in can come before its TookOver: the engine raises that when the output played the end

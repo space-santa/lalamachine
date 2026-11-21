@@ -260,7 +260,7 @@ namespace LalaDb.Unittests
                 context.SaveChanges();
             }
 
-            Assert.That(_store.TracksToAnalyze().Select(t => (t.Path, t.NeedsGrid, t.Earlier)), Is.EqualTo(new[] { (path, true, isEarlier ? Grid : null) }));
+            Assert.That(_store.TracksToAnalyze().Select(t => (t.Path, t.NeedsGrid, t.Earlier, t.EarlierVersion)), Is.EqualTo(new[] { (path, true, isEarlier ? Grid : null, isEarlier ? version : 0) }));
             Assert.That(_store.FindGrid(path), Is.EqualTo(Grid));
         }
 

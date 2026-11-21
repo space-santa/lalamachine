@@ -120,6 +120,19 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
+        public void NextAfterTheTransitionWasCalledOff_PlaysWhatTheListSaysNow()
+        {
+            _player.TransitionDue += Raise.Event();
+            _list.PlaylistShuffleRepeatState = ShuffleRepeatState.RepeatOne;
+            _player.MixCalledOff += Raise.Event();
+
+            _viewModel.NextCommand.Execute(null);
+
+            _player.DidNotReceive().Open(UriOf("b"));
+            _player.Received(1).Open(UriOf("a"));
+        }
+
+        [Test]
         public void NextDuringATransition_WhenTheIncomingTrackWasRemoved_PlaysWhatComesNextNow()
         {
             _player.TransitionDue += Raise.Event();
@@ -164,6 +177,17 @@ namespace Lalamachine.ViewModel.Unittests
             _viewModel.Position = 100;
 
             _player.Received(1).Position = TimeSpan.FromSeconds(100);
+        }
+
+        // Where the slider was let go, not the second before it.
+        [Test]
+        public void DraggingThePosition_SeeksBetweenSeconds()
+        {
+            _viewModel.IsDraggingPosition = true;
+
+            _viewModel.Position = 63.9;
+
+            _player.Received(1).Position = TimeSpan.FromSeconds(63.9);
         }
 
         // The slider writes back a position that it clamped to its maximum, when a track's duration changes before its

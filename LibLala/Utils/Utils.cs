@@ -6,17 +6,6 @@ namespace LibLala.Utils
 {
     public static class StringUtils
     {
-        public static string RemoveFilePrefix(string path)
-        {
-            ArgumentNullException.ThrowIfNull(path);
-
-            if (path.StartsWith("file:///", StringComparison.Ordinal))
-            {
-                path = path.Remove(0, 8);
-            }
-            return path;
-        }
-
         public static IList<string> SafeStringList(IList<string?> unsafeList)
         {
             ArgumentNullException.ThrowIfNull(unsafeList);

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -13,6 +12,7 @@ namespace LibLala.LibLalaTagReader
     public static class MixedInKeyCues
     {
         // In seconds, empty when the track has none or can't be read.
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "TagLib throws all kinds of exceptions for frames it can't make sense of, like ArgumentOutOfRangeException. The cues are an extra, the track is analyzed without them.")]
         public static IReadOnlyList<double> Read(string path)
         {
             try
@@ -39,7 +39,7 @@ namespace LibLala.LibLalaTagReader
                     }
                 }
             }
-            catch (Exception e) when (e is TagLib.CorruptFileException or TagLib.UnsupportedFormatException or IOException or UnauthorizedAccessException)
+            catch (Exception)
             {
             }
             return [];

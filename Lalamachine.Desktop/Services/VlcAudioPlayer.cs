@@ -72,6 +72,12 @@ namespace Lalamachine.Desktop.Services
             remove { }
         }
 
+        public event EventHandler? MixCalledOff
+        {
+            add { }
+            remove { }
+        }
+
         public TimeSpan? IncomingPosition => null;
         public TimeSpan? IncomingDuration => null;
         public double Tempo => 1;

@@ -21,16 +21,27 @@ namespace LibLala.Unittests.Tagreader
             Assert.That(ex is null || "Can't open `lalalala`." == ex.Message);
         }
 
+        // A % in a file name is a letter of it.
         [Test]
-        public void EncodedPathShouldReturnTags()
+        public void APath_IsOpenedAsItIs()
         {
-            var dirtyPath = "D:/OneDrive/musiclib/Various%20Artists/Ant-Man%20(Original%20Motion%20Picture%20Soundtr/Various%20Artists%20-%2007.%20I'll%20Call%20Him%20Antony.mp3";
-            var cleanPath = "D:/OneDrive/musiclib/Various Artists/Ant-Man (Original Motion Picture Soundtr/Various Artists - 07. I'll Call Him Antony.mp3";
+            var path = System.IO.Path.GetFullPath("Rock 50%25 Off.mp3");
             var tagReader = new TagReader();
             var tagCreatorMock = Substitute.For<TagCreator>();
             tagReader.TagCreator = tagCreatorMock;
-            tagReader.Read(dirtyPath);
-            tagCreatorMock.Received().Create(cleanPath);
+            tagReader.Read(path);
+            tagCreatorMock.Received().Create(path);
+        }
+
+        [Test]
+        public void AFileUri_IsOpenedAtItsPath()
+        {
+            var path = System.IO.Path.GetFullPath("Various Artists - 07. I'll Call Him 50%25.mp3");
+            var tagReader = new TagReader();
+            var tagCreatorMock = Substitute.For<TagCreator>();
+            tagReader.TagCreator = tagCreatorMock;
+            tagReader.Read(new System.Uri(path).AbsoluteUri);
+            tagCreatorMock.Received().Create(path);
         }
 
         [Test]

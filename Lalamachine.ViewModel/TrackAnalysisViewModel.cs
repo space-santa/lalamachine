@@ -188,7 +188,7 @@ namespace Lalamachine.ViewModel
             IReadOnlyList<double> cues = track.NeedsGrid ? MixedInKeyCues.Read(track.Path) : [];
             // What an earlier version found, when it can't have changed, is what this one finds: the track isn't decoded for
             // it.
-            var isEarlierCurrent = track.Earlier is not null && !BeatGridAnalyzer.MayChange(track.Earlier, cues);
+            var isEarlierCurrent = track.Earlier is not null && !BeatGridAnalyzer.MayChange(track.Earlier, track.EarlierVersion, cues);
             var grid = isEarlierCurrent ? track.Earlier : null;
             if (track.NeedsGrid && !isEarlierCurrent)
             {

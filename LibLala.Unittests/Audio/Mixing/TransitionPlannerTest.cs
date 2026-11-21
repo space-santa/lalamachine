@@ -275,16 +275,30 @@ namespace LibLala.Unittests.Audio.Mixing
             AssertCrossfadeFromTheStart(plan);
         }
 
+        // At the end of the file: where its beats were heard says little about where its music ends.
         [Test]
-        public void ADriftingBeat_Crossfades()
+        public void ADriftingBeat_CrossfadesAtTheEnd()
         {
             var plan = TransitionPlanner.Plan(nowA: 100, lengthA: 310, Grid(deviationMs: 30), tempoA: 1, Grid());
 
             Assert.That(plan.Kind, Is.EqualTo(TransitionKind.Crossfade));
-            Assert.That(plan.StartA, Is.EqualTo(300 - TransitionPlanner.CrossfadeSeconds));
+            Assert.That(plan.StartA, Is.EqualTo(310 - TransitionPlanner.CrossfadeSeconds));
             Assert.That(plan.Seconds, Is.EqualTo(TransitionPlanner.CrossfadeSeconds));
             Assert.That(plan.StartB, Is.Zero);
             Assert.That(plan.TempoB, Is.EqualTo(1));
+        }
+
+        // Beats heard only in a part of the track, not steady: its music may go on long after them.
+        [Test]
+        public void AFewBeatsHeard_CrossfadeAtTheEnd_NotWhereTheyStop()
+        {
+            var fewBeats = new BeatGrid(120, 0, 2, 40, 0, 60, 150);
+
+            var plan = TransitionPlanner.Plan(nowA: 100, lengthA: 360, fewBeats, tempoA: 1, Grid());
+
+            Assert.That(plan.Kind, Is.EqualTo(TransitionKind.Crossfade));
+            Assert.That(plan.StartA, Is.EqualTo(360 - TransitionPlanner.CrossfadeSeconds));
+            Assert.That(TransitionPlanner.EarliestStart(360, fewBeats), Is.EqualTo(356));
         }
 
         [Test]
@@ -300,7 +314,7 @@ namespace LibLala.Unittests.Audio.Mixing
         {
             Assert.That(TransitionPlanner.EarliestStart(310, Grid()), Is.EqualTo(268 - 16).Within(1e-9));
             Assert.That(TransitionPlanner.EarliestStart(310, null), Is.EqualTo(306));
-            Assert.That(TransitionPlanner.EarliestStart(310, Grid(deviationMs: 30)), Is.EqualTo(296));
+            Assert.That(TransitionPlanner.EarliestStart(310, Grid(deviationMs: 30)), Is.EqualTo(306));
         }
     }
 }

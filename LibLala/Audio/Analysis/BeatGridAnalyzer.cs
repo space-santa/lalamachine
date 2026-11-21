@@ -18,6 +18,9 @@ namespace LibLala.Audio.Analysis
         // change: see MayChange. Its tempo too.
         private const int SameUnlessChangedSinceVersion = 3;
         private const int SameWithTagUnlessChangedSinceVersion = 2;
+        // The version that moved the beats where the cues are even when the music on those beats ends before the rest's
+        // starts: an intro on a beat of its own. Such a grid has the cues on its beats like any other, see MayChange.
+        private const int MovedOntoIntrosVersion = 4;
 
         private const double MinBpm = 60;
         private const double MaxBpm = 200;
@@ -80,17 +83,20 @@ namespace LibLala.Audio.Analysis
         // Whether the tempo that a version found in a track without a tagged one is the tempo this one finds.
         public static bool HasCurrentTempo(int version) => version is >= SameUnlessChangedSinceVersion and <= Version;
 
-        // Whether this version may find another grid than one an earlier version found, see IsCurrentUnlessChanged: when
-        // the cues may move its beats, or there may be an intro with a grid of its own. When not, the grid is what this
+        // Whether this version may find another grid than the one that version found, see IsCurrentUnlessChanged: when the
+        // cues may move its beats, or there may be an intro with a grid of its own. Or when version 4 may have moved its
+        // beats onto an intro's: whenever the cues agree, it can't be told from the grid. When not, the grid is what this
         // version finds in the track.
-        public static bool MayChange(BeatGrid grid, IReadOnlyList<double> cueSeconds)
+        public static bool MayChange(BeatGrid grid, int version, IReadOnlyList<double> cueSeconds)
         {
             ArgumentNullException.ThrowIfNull(grid);
             ArgumentNullException.ThrowIfNull(cueSeconds);
-            return CuesMayMove(grid, cueSeconds) || MayHaveIntro(grid);
+            return CuesMayMove(grid, cueSeconds) || MayHaveIntro(grid) || (version == MovedOntoIntrosVersion && CuesAgree(grid, cueSeconds));
         }
 
         internal static bool CuesMayMove(BeatGrid grid, IReadOnlyList<double> cueSeconds) => CueQuarter(cueSeconds, grid.FirstBeat, grid.BeatSeconds) is not (null or 0);
+
+        private static bool CuesAgree(BeatGrid grid, IReadOnlyList<double> cueSeconds) => CueQuarter(cueSeconds, grid.FirstBeat, grid.BeatSeconds) is not null;
 
         // Whether the part before the music is looked at for an intro: only before steady beats, to mix in with.
         internal static bool MayHaveIntro(BeatGrid grid) => grid.IsSteady && grid.MusicStartBar >= IntroBars;
@@ -204,7 +210,8 @@ namespace LibLala.Audio.Analysis
             // intro on a beat of its own, most of the cues in it, which gets a grid of its own. The bars of the rest are then
             // where the cues in it say, when enough of them agree. Measured against the cues in a DJ's library, this puts 252
             // of 268 steady tracks that were a half or a quarter beat off on the beat, and leaves the others as they were.
-            IReadOnlyList<double> musicCues = [];
+            // Null unless the intro is on a beat of its own: then only the cues in the music count for its bars.
+            IReadOnlyList<double>? musicCues = null;
             if (CueQuarter(cueSeconds, line.First + OnsetLead, line.Period) is { } quarters and not 0)
             {
                 var atCues = line.First + (quarters * line.Period / 4);
@@ -240,7 +247,9 @@ namespace LibLala.Audio.Analysis
             firstBeat -= shift * period;
             var heard = line.Heard.Select(number => number + shift).ToHashSet();
             var (start, end) = MusicSpan(heard);
-            var downbeat = Downbeat(musicCues, firstBeat, period) ?? Downbeat(cueSeconds, firstBeat, period) ?? Downbeat(envelopes.Bands, hopSeconds, firstBeat, period);
+            // Not by the intro's cues when too few in the music agree: they're on the intro's beat, its bars a beat off the
+            // music's.
+            var downbeat = Downbeat(musicCues ?? cueSeconds, firstBeat, period) ?? Downbeat(envelopes.Bands, hopSeconds, firstBeat, period);
 
             return new BeatGrid(60 / period, firstBeat, line.DeviationMs, line.Heard.Count, firstBeat + (downbeat * period), firstBeat + (start * period), firstBeat + (end * period));
         }

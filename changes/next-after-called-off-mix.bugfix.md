@@ -1,0 +1,1 @@
+After a transition is called off before it starts, by turning transitions off, going back in the track, or a next track that can't be read, the next button plays what the list says comes next. Before, it played the track that was about to be mixed in.

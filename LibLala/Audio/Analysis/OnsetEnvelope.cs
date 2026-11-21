@@ -30,13 +30,16 @@ namespace LibLala.Audio.Analysis
         private const double BandsFromHz = 40;
         private const double TopHz = 11000;
         private const int BlockSamples = 8192;
+        // Room for the hops of up to an hour is made at once, so that the lists don't grow as they fill. Not for more, the
+        // decoder's length may be an estimate, or way off in a broken file.
+        private const long MaxReservedHops = 3600L * SampleRate / Hop;
 
         public static double HopSeconds => (double)Hop / SampleRate;
 
         // The key analyzer, if there is one, gets all that is read from the decoder.
         public static Onsets Compute(IAudioDecoder decoder, KeyAnalyzer? keyAnalyzer)
         {
-            var capacity = (int)(decoder.Length / 2 / Hop) + 1;
+            var capacity = (int)Math.Clamp((decoder.Length / 2 / Hop) + 1, 1, MaxReservedHops);
             var allEnvelope = new List<float>(capacity);
             var bassEnvelope = new List<float>(capacity);
             var clickEnvelope = new List<float>(capacity);

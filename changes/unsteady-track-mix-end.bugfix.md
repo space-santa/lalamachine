@@ -1,0 +1,1 @@
+A track without a steady beat, like a live recording whose tempo drifts or one with only a few beats, is mixed into the next one at its end. Before, it could fade out where the app last heard a beat, minutes early.

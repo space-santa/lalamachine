@@ -79,6 +79,36 @@ namespace LalaDb.Unittests
             Assert.That(model.AlbumList([], [], ""), Is.EqualTo(new[] { "Album" }));
         }
 
+        // Whatever is selected, the search narrows them down and they're sorted.
+        [Test]
+        public void ArtistsAndAlbums_AreSearchedAndSorted_WithAndWithoutFilters()
+        {
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            var house = new Genre { Name = "House" };
+            var techno = new Genre { Name = "Techno" };
+            void Add(string artist, string album, Genre genre)
+            {
+                var track = new Track { Title = album, Path = Path.Combine(_musicDir, $"{album}.mp3"), Album = context.Albums!.Local.SingleOrDefault(a => a.Name == album) ?? new Album { Name = album } };
+                context.ArtistTracks!.Add(new ArtistTrack { Artist = context.Artists!.Local.SingleOrDefault(a => a.Name == artist) ?? new Artist { Name = artist }, Track = track });
+                context.GenreTracks!.Add(new GenreTrack { Genre = genre, Track = track });
+            }
+            Add("Zed Love", "Zebra Love", house);
+            Add("Ann", "Love Songs", house);
+            Add("Love Inc", "Apple", house);
+            Add("Tim Love", "Techno Love", techno);
+            context.SaveChanges();
+            // As read from the database, like after a scan.
+            using var readContext = CreateContext(connection);
+            var model = new MusicLibModel(readContext, () => CreateContext(connection));
+
+            Assert.That(model.ArtistList(["House"], "love"), Is.EqualTo(new[] { "Love Inc", "Zed Love" }));
+            Assert.That(model.ArtistList(["House"], ""), Is.EqualTo(new[] { "Ann", "Love Inc", "Zed Love" }));
+            Assert.That(model.AlbumList([], ["House"], "love"), Is.EqualTo(new[] { "Love Songs", "Zebra Love" }));
+            Assert.That(model.AlbumList(["Zed Love", "Ann"], [], "zebra"), Is.EqualTo(new[] { "Zebra Love" }));
+            Assert.That(model.AlbumList([], [], ""), Is.EqualTo(new[] { "Apple", "Love Songs", "Techno Love", "Zebra Love" }));
+        }
+
         [Test]
         public async Task ScanKeepsInitialKeyAndBeatsPerMinute()
         {

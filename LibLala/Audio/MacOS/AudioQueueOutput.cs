@@ -27,6 +27,8 @@ namespace LibLala.Audio.MacOS
         private bool _isRunning;
         // While the queue drops its buffers, the callbacks for them must not render and put them back.
         private bool _isResetting;
+        // The queue refused a buffer: the others play out, and nothing is rendered until Reset.
+        private bool _isFailed;
         private bool _isDisposed;
         private float _volume = 1;
 
@@ -70,6 +72,17 @@ namespace LibLala.Audio.MacOS
 
         public void Play()
         {
+            // After it failed, what's still in the queue comes out first: all of it is rendered anew.
+            bool isFailed;
+            lock (_gate)
+            {
+                isFailed = _isFailed;
+            }
+            if (isFailed)
+            {
+                Reset();
+            }
+
             bool isStarting;
             lock (_gate)
             {
@@ -128,6 +141,7 @@ namespace LibLala.Audio.MacOS
             {
                 _isResetting = false;
                 _hasBuffers = false;
+                _isFailed = false;
             }
         }
 
@@ -161,7 +175,7 @@ namespace LibLala.Audio.MacOS
         {
             lock (_gate)
             {
-                if (_isResetting || _isDisposed || !_hasBuffers)
+                if (_isResetting || _isDisposed || !_hasBuffers || _isFailed)
                 {
                     return;
                 }
@@ -173,8 +187,23 @@ namespace LibLala.Audio.MacOS
                 }
                 catch (Exception)
                 {
-                    // The buffer stays out of the queue, it plays on with the others.
+                    Fail();
                 }
+            }
+        }
+
+        // The queue refuses buffers, the device is gone: the others would play out, and then nothing.
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "An exception that leaves a callback from native code ends the app.")]
+        private void Fail()
+        {
+            _isFailed = true;
+            try
+            {
+                _renderer.OutputFailed();
+            }
+            catch (Exception)
+            {
+                // The output stops rendering all the same.
             }
         }
 

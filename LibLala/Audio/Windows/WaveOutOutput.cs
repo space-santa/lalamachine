@@ -204,10 +204,27 @@ namespace LibLala.Audio.Windows
                         }
                         catch (Exception)
                         {
-                            // The buffer stays out, it plays on with the others.
+                            Fail();
+                            break;
                         }
                     }
                 }
+            }
+        }
+
+        // The device refuses buffers, it's gone: the others would play out, and then nothing. It's let go, the next Play
+        // opens Windows's default output again.
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "An exception that leaves the output's thread ends the app.")]
+        private void Fail()
+        {
+            Close();
+            try
+            {
+                _renderer.OutputFailed();
+            }
+            catch (Exception)
+            {
+                // The device is let go all the same.
             }
         }
 

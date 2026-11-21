@@ -14,6 +14,9 @@ namespace Lalamachine.ViewModel
         event EventHandler? TransitionDue;
         // The track given to MixTo took over, the one before is gone: it's the source from now on.
         event EventHandler? MixedIn;
+        // The track given to MixTo won't take over after all: its transition was called off, by Transitions turned off or a
+        // seek back to before it, or it can't be read any more. The one that plays goes on to its end.
+        event EventHandler? MixCalledOff;
 
         Uri? Source { get; }
         bool IsMuted { get; set; }

@@ -201,6 +201,24 @@ namespace LibLala.Unittests.Audio
             Assert.That(_failed, Is.EqualTo(new[] { track }));
         }
 
+        // Like headphones that were unplugged: the track goes on where it was heard, on the output there is then.
+        [Test]
+        public void AnOutputThatFailsWhilePlaying_RaisesFailed_AndTheTrackGoesOnWhereItWasHeard()
+        {
+            var track = _engine.Open(new CountingDecoder(100));
+            _engine.Play();
+            _output.PlayBuffer();
+
+            _output.FailBuffer();
+
+            Assert.That(_failed, Is.EqualTo(new[] { track }));
+            Assert.That(_engine.Position, Is.EqualTo(8), "what was played, not what was rendered for the device that failed");
+            _engine.Stop();
+            _engine.Play();
+            Assert.That(_output.PlayBuffer(), Is.EqualTo(new float[] { 8, 9, 10, 11 }));
+            Assert.That(_failed, Has.Count.EqualTo(1));
+        }
+
         [Test]
         public void Clicks_AreOnTheBeatsOfTheGrid()
         {

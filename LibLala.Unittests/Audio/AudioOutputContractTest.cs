@@ -132,6 +132,8 @@ namespace LibLala.Unittests.Audio
             }
 
             void IAudioRenderer.Played() => Interlocked.Increment(ref _played);
+
+            public void OutputFailed() { }
         }
     }
 }
