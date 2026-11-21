@@ -1,0 +1,1 @@
+Some tracks were never analyzed, so they had no key, tempo or waveform and weren't mixed on the beat: tracks with tags the app couldn't make sense of where Mixed In Key keeps its cue points, and broken mp3 files whose header says they're far longer than they are. They're analyzed now. The broken mp3 files also made the app use gigabytes of memory for a moment each time it tried.

@@ -59,6 +59,7 @@ namespace Lalamachine.ViewModel
             _audioPlayer.PositionChanged += _audioPlayer_PositionChanged;
             _audioPlayer.TransitionDue += _audioPlayer_TransitionDue;
             _audioPlayer.MixedIn += _audioPlayer_MixedIn;
+            _audioPlayer.MixCalledOff += _audioPlayer_MixCalledOff;
 
             _changePlayPauseCommand = new DelegateCommand(OnChangePlayPause);
             _loadCommand = new DelegateCommand(OnLoad);
@@ -163,8 +164,7 @@ namespace Lalamachine.ViewModel
 
         public string Source
         {
-            // LocalPath, not AbsolutePath: AbsolutePath drops the server of a network path (\\nas\music\a.mp3 becomes /music/a.mp3).
-            get => _audioPlayer.Source?.LocalPath ?? "";
+            get => _audioPlayer.Source ?? "";
             set => Open(value);
         }
 
@@ -243,7 +243,7 @@ namespace Lalamachine.ViewModel
                 {
                     return;
                 }
-                _audioPlayer.Position = new TimeSpan(0, 0, (int)value);
+                _audioPlayer.Position = TimeSpan.FromSeconds(value);
             }
         }
 
@@ -329,11 +329,11 @@ namespace Lalamachine.ViewModel
             if (next.Track is { } track)
             {
                 // Not mixed in, the next track comes when this one ended, like without transitions.
-                _mixing = _audioPlayer.MixTo(new Uri(track.Path)) ? next : null;
+                _mixing = _audioPlayer.MixTo(track.Path) ? next : null;
                 // Shown right away when it takes over.
                 if (_mixing is not null)
                 {
-                    _ = _waveforms?.Read(new Uri(track.Path).LocalPath);
+                    _ = _waveforms?.Read(track.Path);
                 }
             }
         }
@@ -355,6 +355,12 @@ namespace Lalamachine.ViewModel
                 }
             }
             TrackChanged();
+        }
+
+        // Next asks the list again, and the next track comes when this one ended.
+        private void _audioPlayer_MixCalledOff(object? sender, EventArgs e)
+        {
+            _mixing = null;
         }
 
         private void TrackChanged()
@@ -439,7 +445,7 @@ namespace Lalamachine.ViewModel
 
         public void Open(string path)
         {
-            _audioPlayer.Open(new Uri(path));
+            _audioPlayer.Open(path);
             // The new track's position right away, not the old one's until the next tick.
             TrackChanged();
         }

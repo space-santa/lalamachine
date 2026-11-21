@@ -28,5 +28,9 @@ namespace LibLala.Audio
 
         // The output played what the oldest Render it didn't report yet rendered. Not called for what Reset dropped.
         void Played();
+
+        // The output can't play any more, its device is gone or refuses what was rendered: what it didn't report played yet
+        // won't be. Render isn't called again until Play, after a Reset.
+        void OutputFailed();
     }
 }

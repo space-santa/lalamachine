@@ -72,12 +72,18 @@ namespace Lalamachine.Desktop.Services
             remove { }
         }
 
+        public event EventHandler? MixCalledOff
+        {
+            add { }
+            remove { }
+        }
+
         public TimeSpan? IncomingPosition => null;
         public TimeSpan? IncomingDuration => null;
         public double Tempo => 1;
         public double? BeatsPerMinute => null;
 
-        public Uri? Source { get; private set; }
+        public string? Source { get; private set; }
 
         public bool IsMuted
         {
@@ -108,17 +114,17 @@ namespace Lalamachine.Desktop.Services
             set => _mediaPlayer.Time = (long)value.TotalMilliseconds;
         }
 
-        public void Open(Uri source)
+        public void Open(string path)
         {
-            Source = source;
-            // The player keeps its own reference to the media.
-            using var media = new Media(_libVlc, source);
+            Source = path;
+            // The player keeps its own reference to the media. From the path: VLC would take %30 in a URI for a 0.
+            using var media = new Media(_libVlc, path, FromType.FromPath);
             _mediaPlayer.Media = media;
             // Only now, setting the media ends the old track and its thread. So no event of that track can still count as the new one's.
             Interlocked.Increment(ref _openedTracks);
         }
 
-        public bool MixTo(Uri source) => false;
+        public bool MixTo(string path) => false;
 
         public void Play() => _mediaPlayer.Play();
 

@@ -17,6 +17,7 @@ namespace LibLala.Unittests.Audio
         private List<int> _ended = null!;
         private List<(int Track, double Seconds)> _due = null!;
         private List<int> _tookOver = null!;
+        private List<int> _calledOff = null!;
         private CountingDecoder _a = null!;
 
         // 120 BPM, bars of 2 s from 0, the music from 4 s to the last hit at 56 s: the transition from 56 - 32 s, the tempo
@@ -31,8 +32,10 @@ namespace LibLala.Unittests.Audio
             _ended = [];
             _due = [];
             _tookOver = [];
+            _calledOff = [];
             _engine.Ended += (sender, e) => _ended.Add(e.Track);
             _engine.TookOver += (sender, e) => _tookOver.Add(e.Track);
+            _engine.MixCalledOff += (sender, e) => _calledOff.Add(e.Track);
             _engine.TransitionDue += (sender, e) => _due.Add((e.Track, _a.Position / (double)Rate));
             _a = new CountingDecoder(60 * Rate) { Silent = true };
         }
@@ -482,12 +485,13 @@ namespace LibLala.Unittests.Audio
             _engine.Play();
             PlayFor(23);
             var b = new CountingDecoder(50 * Rate) { Silent = true };
-            _engine.MixTo(b, Grid());
+            var trackB = _engine.MixTo(b, Grid());
             PlayFor(2);
 
             _engine.Seek(2 * Rate);
 
             Assert.That(b.IsDisposed, Is.True);
+            Assert.That(_calledOff, Is.EqualTo(new[] { trackB }));
             Assert.That(_due, Has.Count.EqualTo(1));
             PlayFor(4.5);
             Assert.That(_due, Has.Count.EqualTo(2));
@@ -724,6 +728,32 @@ namespace LibLala.Unittests.Audio
             Assert.That(_ended, Is.Empty);
         }
 
+        // Like a device unplugged right after the end of the transition was rendered: A is what was heard, its length is the
+        // one shown. On Stop, as the player does on Failed, B takes over where it was heard, with its length.
+        [Test]
+        public void AnOutputThatFailsAfterTheTransitionWasRendered_ButBeforeItWasHeard_FailsTheTrackHeard()
+        {
+            var failed = new List<int>();
+            _engine.Failed += (sender, e) => failed.Add(e.Track);
+            var trackA = _engine.Open(_a, Grid());
+            _engine.Play();
+            PlayFor(23);
+            var trackB = _engine.MixTo(new CountingDecoder(50 * Rate) { Silent = true }, Grid());
+            PlayFor(32.9);
+            // Past the end of the transition at 56 s of A, not played yet.
+            _engine.Render(new float[Rate / 5 * AudioFormat.Channels]);
+
+            _engine.OutputFailed();
+
+            Assert.That(failed, Is.EqualTo(new[] { trackA }));
+            Assert.That(_engine.Length, Is.EqualTo(60 * Rate));
+            _engine.Stop();
+            Assert.That(_tookOver, Is.EqualTo(new[] { trackB }));
+            Assert.That(_engine.Length, Is.EqualTo(50 * Rate));
+            // B came in at 4 s when A was at 24 s, and was heard until A was at 55.9 s.
+            Assert.That(_engine.Position / (double)Rate, Is.EqualTo(35.9).Within(0.01));
+        }
+
         [Test]
         public void TurnedOff_ATransitionThatDidntStart_IsCalledOff()
         {
@@ -731,12 +761,13 @@ namespace LibLala.Unittests.Audio
             _engine.Play();
             PlayFor(23);
             var b = new CountingDecoder(50 * Rate) { Silent = true };
-            _engine.MixTo(b, Grid());
+            var trackB = _engine.MixTo(b, Grid());
 
             _engine.Transitions = false;
             PlayFor(37.5);
 
             Assert.That(b.IsDisposed, Is.True);
+            Assert.That(_calledOff, Is.EqualTo(new[] { trackB }));
             Assert.That(_tookOver, Is.Empty);
             Assert.That(_ended, Is.EqualTo(new[] { trackA }));
         }
@@ -754,6 +785,25 @@ namespace LibLala.Unittests.Audio
             PlayFor(32);
 
             Assert.That(_tookOver, Is.EqualTo(new[] { trackB }));
+            Assert.That(_calledOff, Is.Empty);
+        }
+
+        // It comes in from 4 s, the drive is gone a second later.
+        [Test]
+        public void AnIncomingTrackThatCantBeReadAnyMore_IsCalledOff()
+        {
+            var trackA = _engine.Open(_a, Grid());
+            _engine.Play();
+            PlayFor(23);
+            var b = new CountingDecoder(50 * Rate) { Silent = true, FailsFrom = 5 * Rate };
+            var trackB = _engine.MixTo(b, Grid());
+
+            PlayFor(37.5);
+
+            Assert.That(b.IsDisposed, Is.True);
+            Assert.That(_calledOff, Is.EqualTo(new[] { trackB }));
+            Assert.That(_tookOver, Is.Empty);
+            Assert.That(_ended, Is.EqualTo(new[] { trackA }));
         }
 
         [Test]

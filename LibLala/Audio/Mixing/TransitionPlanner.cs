@@ -60,7 +60,7 @@ namespace LibLala.Audio.Mixing
         // where A's tempo starts going to B's before a beat matched transition. B's tempo decides how, so it can be later.
         public static double EarliestStart(double lengthA, BeatGrid? gridA)
         {
-            var crossfade = Math.Max(0, (gridA is null ? lengthA : MusicEnd(gridA, lengthA)) - CrossfadeSeconds);
+            var crossfade = Math.Max(0, CrossfadeEnd(lengthA, gridA) - CrossfadeSeconds);
             return gridA is { IsSteady: true } ? Math.Clamp(MusicEnd(gridA, lengthA) - ((RampBars + Bars) * gridA.BarSeconds), 0, crossfade) : crossfade;
         }
 
@@ -99,12 +99,15 @@ namespace LibLala.Audio.Mixing
                 return Cut(nowA, lengthA, gridA, tempoA, entryB);
             }
 
-            // Over by the end of A's music, not in a tail after it.
-            var crossfadeEnd = gridA is null ? lengthA : MusicEnd(gridA, lengthA);
+            var crossfadeEnd = CrossfadeEnd(lengthA, gridA);
             var crossfadeStart = Math.Max(nowA + MinLeadSeconds, crossfadeEnd - CrossfadeSeconds);
             var seconds = Math.Max(0, Math.Min(CrossfadeSeconds, lengthA - crossfadeStart)) / tempoA;
             return new TransitionPlan(crossfadeStart, seconds, 0, 1, TransitionKind.Crossfade, TempoRamp.None(crossfadeStart, tempoA));
         }
+
+        // Over by the end of A's music, not in a tail after it. Where that is only by a steady grid: an unsteady one's beats
+        // may be heard in a part of the music only, a drifting tempo or few beats. Then at the end of the file.
+        private static double CrossfadeEnd(double lengthA, BeatGrid? gridA) => gridA is { IsSteady: true } ? MusicEnd(gridA, lengthA) : lengthA;
 
         // The tempo, of the track's own, isn't so far from it that the stretching is heard.
         private static bool IsWithinReach(double tempo) => Math.Abs(Math.Log(tempo)) <= Math.Log(1 + MaxTempoChange) + 1e-12;

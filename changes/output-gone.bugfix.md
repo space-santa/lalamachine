@@ -1,0 +1,1 @@
+When the sound output stops working while a track plays, like a USB or Bluetooth device that disconnects, the track pauses where you last heard it, and play goes on from there once the device is back, even if you pressed play while it was gone. Before, the player kept showing the track as playing in silence and never went on to the next one.

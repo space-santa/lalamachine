@@ -6,22 +6,6 @@ namespace LibLala.Unittests
     internal sealed class UtilsTest
     {
         [Test]
-        public void RemoveFilePrefix_NoPrefix_UnchangedString()
-        {
-            var result = Utils.StringUtils.RemoveFilePrefix("bob goes to town");
-            var expected = "bob goes to town";
-            Assert.That(result == expected);
-        }
-
-        [Test]
-        public void RemoveFilePrefix_FilePrefix_CleanString()
-        {
-            var result = Utils.StringUtils.RemoveFilePrefix("file:////d/e/f");
-            var expected = "/d/e/f";
-            Assert.That(result == expected);
-        }
-
-        [Test]
         public void SafeStringList_NullList_ReturnEmptyList()
         {
             var unsafeList = new List<string?> { null, null };

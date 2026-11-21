@@ -348,7 +348,7 @@ namespace Lalamachine.ViewModel.Unittests
 
         private void PlayPath(string path)
         {
-            _audioPlayer.Source.Returns(new Uri(path));
+            _audioPlayer.Source.Returns(path);
             _player.PlayTrackHandler(this, new PlayTrackEventArgs(path, "MAIN"));
         }
 

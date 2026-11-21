@@ -14,8 +14,12 @@ namespace Lalamachine.ViewModel
         event EventHandler? TransitionDue;
         // The track given to MixTo took over, the one before is gone: it's the source from now on.
         event EventHandler? MixedIn;
+        // The track given to MixTo won't take over after all: its transition was called off, by Transitions turned off or a
+        // seek back to before it, or it can't be read any more. The one that plays goes on to its end.
+        event EventHandler? MixCalledOff;
 
-        Uri? Source { get; }
+        // The path of the track's file, null until one is opened.
+        string? Source { get; }
         bool IsMuted { get; set; }
         // From 0 to 1.
         double Volume { get; set; }
@@ -34,10 +38,12 @@ namespace Lalamachine.ViewModel
         // transition that didn't start yet is called off.
         bool Transitions { get; set; }
 
-        void Open(Uri source);
+        // The path of a file, as it is: a % in it is a letter of the name, %20 is no space. Not a URI.
+        void Open(string path);
         // Mixes the track into the one that plays, after TransitionDue. The source stays the one that plays until MixedIn.
         // False when it can't: the one that plays goes on to its end.
-        bool MixTo(Uri source);
+        bool MixTo(string path);
+        // A track that can't be read doesn't play, MediaFailed says so again.
         void Play();
         void Pause();
     }

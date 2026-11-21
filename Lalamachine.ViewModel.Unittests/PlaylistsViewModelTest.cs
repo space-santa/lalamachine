@@ -15,6 +15,8 @@ namespace Lalamachine.ViewModel.Unittests
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "<Pending>")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1001:Types that own disposable fields should be disposable", Justification = "The teardown disposes them.")]
+    // The playlists are sorted by name, in English here: Danish has Aaa after Ccc, as Å.
+    [SetCulture("en-US")]
     public class PlaylistsViewModelTest
     {
         private const string Liked = LibLala.Constants.LIKEDPLAYLISTNAME;

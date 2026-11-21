@@ -19,7 +19,7 @@ namespace Lalamachine.ViewModel.Unittests
         public void SetUp()
         {
             _player = Substitute.For<IAudioPlayer>();
-            _player.Source.Returns(UriOf("a"));
+            _player.Source.Returns(PathOf("a"));
             _viewModel = new PlayerViewModel(_player, Substitute.For<IDialogService>(), new PlayerSettings(new InMemorySettingsFile()));
             // Wired like the queue in the main window.
             _list = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
@@ -31,7 +31,7 @@ namespace Lalamachine.ViewModel.Unittests
             _viewModel.PeekNextTrackEvent += _list.PeekNextTrackHandler;
             _list.PlayTrackEvent += _viewModel.PlayTrackHandler;
             _list.PlayTrack(_list.Playlist[0]);
-            _player.MixTo(Arg.Any<Uri>()).Returns(true);
+            _player.MixTo(Arg.Any<string>()).Returns(true);
             _player.ClearReceivedCalls();
         }
 
@@ -47,8 +47,8 @@ namespace Lalamachine.ViewModel.Unittests
         {
             _player.TransitionDue += Raise.Event();
 
-            _player.Received(1).MixTo(UriOf("b"));
-            _player.DidNotReceive().Open(Arg.Any<Uri>());
+            _player.Received(1).MixTo(PathOf("b"));
+            _player.DidNotReceive().Open(Arg.Any<string>());
             Assert.That(_list.CurrentIndex, Is.Zero);
             Assert.That(_viewModel.IsPlaying, Is.True);
         }
@@ -61,7 +61,7 @@ namespace Lalamachine.ViewModel.Unittests
             _player.MixedIn += Raise.Event();
 
             Assert.That(_list.CurrentIndex, Is.EqualTo(1));
-            _player.DidNotReceive().Open(Arg.Any<Uri>());
+            _player.DidNotReceive().Open(Arg.Any<string>());
             Assert.That(_viewModel.IsPlaying, Is.True);
         }
 
@@ -75,7 +75,7 @@ namespace Lalamachine.ViewModel.Unittests
         public void WhenTheMixedInTrackTakesOver_ItIsShown()
         {
             _player.TransitionDue += Raise.Event();
-            _player.Source.Returns(UriOf("b"));
+            _player.Source.Returns(PathOf("b"));
 
             _player.MixedIn += Raise.Event();
 
@@ -90,21 +90,21 @@ namespace Lalamachine.ViewModel.Unittests
             _viewModel.NextCommand.Execute(null);
             _player.MixedIn += Raise.Event();
 
-            _player.Received(1).Open(UriOf("b"));
+            _player.Received(1).Open(PathOf("b"));
             Assert.That(_list.CurrentIndex, Is.EqualTo(1));
         }
 
         [Test]
         public void ATrackThatCantBeMixedIn_ComesWhenTheOneThatPlaysEnded()
         {
-            _player.MixTo(Arg.Any<Uri>()).Returns(false);
+            _player.MixTo(Arg.Any<string>()).Returns(false);
 
             _player.TransitionDue += Raise.Event();
-            _player.DidNotReceive().Open(Arg.Any<Uri>());
+            _player.DidNotReceive().Open(Arg.Any<string>());
             Assert.That(_list.CurrentIndex, Is.Zero);
             _player.MediaEnded += Raise.Event();
 
-            _player.Received(1).Open(UriOf("b"));
+            _player.Received(1).Open(PathOf("b"));
         }
 
         [Test]
@@ -116,7 +116,20 @@ namespace Lalamachine.ViewModel.Unittests
 
             _viewModel.NextCommand.Execute(null);
 
-            _player.Received(1).Open(UriOf("b"));
+            _player.Received(1).Open(PathOf("b"));
+        }
+
+        [Test]
+        public void NextAfterTheTransitionWasCalledOff_PlaysWhatTheListSaysNow()
+        {
+            _player.TransitionDue += Raise.Event();
+            _list.PlaylistShuffleRepeatState = ShuffleRepeatState.RepeatOne;
+            _player.MixCalledOff += Raise.Event();
+
+            _viewModel.NextCommand.Execute(null);
+
+            _player.DidNotReceive().Open(PathOf("b"));
+            _player.Received(1).Open(PathOf("a"));
         }
 
         [Test]
@@ -127,7 +140,7 @@ namespace Lalamachine.ViewModel.Unittests
 
             _viewModel.NextCommand.Execute(null);
 
-            _player.Received(1).Open(UriOf("c"));
+            _player.Received(1).Open(PathOf("c"));
         }
 
         [Test]
@@ -138,10 +151,10 @@ namespace Lalamachine.ViewModel.Unittests
 
             _player.MixedIn += Raise.Event();
             Assert.That(_list.CurrentIndex, Is.EqualTo(-1));
-            _player.DidNotReceive().Open(Arg.Any<Uri>());
+            _player.DidNotReceive().Open(Arg.Any<string>());
             _player.TransitionDue += Raise.Event();
 
-            _player.Received(1).MixTo(UriOf("c"));
+            _player.Received(1).MixTo(PathOf("c"));
         }
 
         [Test]
@@ -164,6 +177,17 @@ namespace Lalamachine.ViewModel.Unittests
             _viewModel.Position = 100;
 
             _player.Received(1).Position = TimeSpan.FromSeconds(100);
+        }
+
+        // Where the slider was let go, not the second before it.
+        [Test]
+        public void DraggingThePosition_SeeksBetweenSeconds()
+        {
+            _viewModel.IsDraggingPosition = true;
+
+            _viewModel.Position = 63.9;
+
+            _player.Received(1).Position = TimeSpan.FromSeconds(63.9);
         }
 
         // The slider writes back a position that it clamped to its maximum, when a track's duration changes before its
@@ -245,7 +269,7 @@ namespace Lalamachine.ViewModel.Unittests
 
             _player.TransitionDue += Raise.Event();
 
-            _player.DidNotReceive().MixTo(Arg.Any<Uri>());
+            _player.DidNotReceive().MixTo(Arg.Any<string>());
             Assert.That(_player.Transitions, Is.False);
         }
 
@@ -256,7 +280,7 @@ namespace Lalamachine.ViewModel.Unittests
 
             _player.TransitionDue += Raise.Event();
 
-            _player.DidNotReceive().MixTo(Arg.Any<Uri>());
+            _player.DidNotReceive().MixTo(Arg.Any<string>());
         }
 
         [Test]
@@ -266,12 +290,28 @@ namespace Lalamachine.ViewModel.Unittests
 
             _player.TransitionDue += Raise.Event();
 
-            _player.DidNotReceive().MixTo(Arg.Any<Uri>());
+            _player.DidNotReceive().MixTo(Arg.Any<string>());
         }
 
-        // Rooted where the tests run, /music on macOS and C:\music on Windows: a URI takes a path only when it's rooted.
-        private static string PathOf(string name) => Path.GetFullPath($"/music/{name}.mp3");
+        // A % in a file name is a letter of it: %30 is no 0, %C3%A9 no é.
+        [Test]
+        public void TracksWithPercentsInTheirNames_AreOpenedAndMixedInAtTheirPaths()
+        {
+            foreach (var name in new[] { "Top 100%30", "Beyonc%C3%A9 - Halo" })
+            {
+                _list.AddTrack(new LibLalaTagsBuilder(name, new UncheckedTrackPath(PathOf(name)), 5).Build());
+            }
+            _list.PlayTrack(_list.Playlist[3]);
+            _player.Source.Returns(PathOf("Top 100%30"));
 
-        private static Uri UriOf(string name) => new(PathOf(name));
+            _player.TransitionDue += Raise.Event();
+
+            _player.Received(1).Open(PathOf("Top 100%30"));
+            _player.Received(1).MixTo(PathOf("Beyonc%C3%A9 - Halo"));
+            Assert.That(_viewModel.Source, Is.EqualTo(PathOf("Top 100%30")));
+        }
+
+        // Rooted where the tests run, /music on macOS and C:\music on Windows.
+        private static string PathOf(string name) => Path.GetFullPath($"/music/{name}.mp3");
     }
 }

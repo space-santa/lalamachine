@@ -201,6 +201,59 @@ namespace LibLala.Unittests.Audio
             Assert.That(_failed, Is.EqualTo(new[] { track }));
         }
 
+        // Like headphones that were unplugged: the track goes on where it was heard, on the output there is then.
+        [Test]
+        public void AnOutputThatFailsWhilePlaying_RaisesFailed_AndTheTrackGoesOnWhereItWasHeard()
+        {
+            var track = _engine.Open(new CountingDecoder(100));
+            _engine.Play();
+            _output.PlayBuffer();
+
+            _output.FailBuffer();
+
+            Assert.That(_failed, Is.EqualTo(new[] { track }));
+            Assert.That(_engine.Position, Is.EqualTo(8), "what was played, not what was rendered for the device that failed");
+            _engine.Stop();
+            _engine.Play();
+            Assert.That(_output.PlayBuffer(), Is.EqualTo(new float[] { 8, 9, 10, 11 }));
+            Assert.That(_failed, Has.Count.EqualTo(1));
+        }
+
+        // Like pressing play while the headphones are still unplugged, and again once they're back. The player stops on
+        // Failed.
+        [Test]
+        public void AnOutputThatStillCantPlay_RaisesFailedAgain_AndPlayGoesOnOnceItCan()
+        {
+            var track = _engine.Open(new CountingDecoder(100));
+            _engine.Play();
+            _output.PlayBuffer();
+            _output.FailBuffer();
+            _engine.Stop();
+            _output.FailsToPlay = true;
+
+            _engine.Play();
+
+            Assert.That(_failed, Is.EqualTo(new[] { track, track }));
+            _engine.Stop();
+            _output.FailsToPlay = false;
+            Assert.That(_engine.Play(), Is.True);
+            Assert.That(_output.PlayBuffer(), Is.EqualTo(new float[] { 8, 9, 10, 11 }));
+        }
+
+        // Like a track whose drive is gone: Failed came, Play says it doesn't play.
+        [Test]
+        public void Play_OfATrackThatCantBeRead_ReturnsFalse_AndDoesntPlay()
+        {
+            _engine.Open(new CountingDecoder(100) { FailsFrom = 12 });
+            _engine.Play();
+            _output.PlayBuffer();
+            _engine.Stop();
+
+            Assert.That(_engine.Play(), Is.False);
+            Assert.That(_output.IsRunning, Is.False);
+            Assert.That(_failed, Has.Count.EqualTo(1));
+        }
+
         [Test]
         public void Clicks_AreOnTheBeatsOfTheGrid()
         {

@@ -176,6 +176,22 @@ namespace LibLala.Unittests.Audio
             return frames;
         }
 
+        // Plays the oldest buffer, and the device refuses it when it's rendered again: like WaveOutOutput, the output lets
+        // the device go with what it had queued, the next Play renders anew.
+        public void FailBuffer()
+        {
+            if (!IsRunning || _queued.Count == 0)
+            {
+                throw new InvalidOperationException("The output doesn't play.");
+            }
+            _queued.Dequeue();
+            _renderer.Played();
+            Render();
+            _queued.Clear();
+            IsRunning = false;
+            _renderer.OutputFailed();
+        }
+
         private float[] Render()
         {
             var buffer = new float[FramesPerBuffer * AudioFormat.Channels];

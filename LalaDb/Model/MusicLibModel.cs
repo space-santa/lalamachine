@@ -42,29 +42,19 @@ namespace LalaDb.Model
 
             ArgumentNullException.ThrowIfNull(genreFilter);
 
+            // With a genre selected, all of its artists, as DisplayLib lists all of its tracks: the search decided which
+            // genres could be selected, the LibraryViewModel lets go of one that doesn't match it.
             if (genreFilter.Count > 0 && _context.GenreTracks != null)
             {
-                return _context.GenreTracks.AsEnumerable()
+                return Matching(_context.GenreTracks.AsEnumerable()
                                .Where(x => IsIn(genreFilter, x.Genre?.Name))
-                               .SelectMany(x =>
-                               {
-                                   if (x.Track != null && x.Track.ArtistTracks != null)
-                                   {
-                                       return x.Track.ArtistTracks;
-                                   }
-
-                                   return new List<ArtistTrack>();
-                               })
-                               .Select(x => x.Artist?.Name).Distinct().ToArray();
+                               .SelectMany(x => x.Track?.ArtistTracks ?? Enumerable.Empty<ArtistTrack>())
+                               .Select(x => x.Artist?.Name), "");
             }
 
             if (_context.Artists != null)
             {
-                return _context.Artists.AsEnumerable()
-                                        .Where(x => x.Name is { } && x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                                        .Select(x => x.Name)
-                                        .OrderBy(x => x)
-                                        .ToArray();
+                return Matching(_context.Artists.Select(x => x.Name).AsEnumerable(), searchString);
             }
 
             return Array.Empty<string>();
@@ -77,43 +67,38 @@ namespace LalaDb.Model
             ArgumentNullException.ThrowIfNull(artistFilter);
             ArgumentNullException.ThrowIfNull(genreFilter);
 
-            string?[]? list;
+            IEnumerable<string?>? names;
 
             if (artistFilter.Count > 0)
             {
-                list = _context.ArtistTracks?.AsEnumerable()
+                names = _context.ArtistTracks?.AsEnumerable()
                                .Where(x => IsIn(artistFilter, x.Artist?.Name))
-                               .Select(x => x.Track)
-                               .Select(x => x?.Album?.Name).Distinct().ToArray();
+                               .Select(x => x.Track?.Album?.Name);
             }
             else if (genreFilter.Count > 0)
             {
-                list = _context.GenreTracks?.AsEnumerable()
+                names = _context.GenreTracks?.AsEnumerable()
                                .Where(x => IsIn(genreFilter, x.Genre?.Name))
-                               .Select(x => x.Track)
-                               .Select(x => x?.Album?.Name).Distinct().ToArray();
-            }
-            else if (string.IsNullOrEmpty(searchString))
-            {
-                list = _context.Albums?.Select(x => x.Name).ToArray();
+                               .Select(x => x.Track?.Album?.Name);
             }
             else
             {
-                list = _context.Albums?.AsEnumerable()
-                    .Where(x =>
-                    {
-                        if (x.Name is { })
-                        {
-                            return x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase);
-                        }
-
-                        return false;
-                    })
-                    .Select(x => x.Name)
-                    .OrderBy(x => x).ToArray();
+                names = _context.Albums?.Select(x => x.Name).AsEnumerable();
             }
 
-            return list;
+            // With an artist or genre selected, all of its albums, like the artists of a genre.
+            var isSelected = artistFilter.Count > 0 || genreFilter.Count > 0;
+            return names is null ? null : Matching(names, isSelected ? "" : searchString);
+        }
+
+        // The names with the search string in them, each once, sorted. All of them for an empty one.
+        private static string?[] Matching(IEnumerable<string?> names, string searchString)
+        {
+            return names
+                .Where(name => name is { } && name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                .Distinct()
+                .OrderBy(name => name)
+                .ToArray();
         }
 
         public Track?[]? DisplayLib(IReadOnlyCollection<string> albumFilter, IReadOnlyCollection<string> artistFilter, IReadOnlyCollection<string> genreFilter, string searchString)

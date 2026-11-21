@@ -69,7 +69,7 @@ namespace Lalamachine.ViewModel.Unittests
                 path => _stored.GetValueOrDefault(path),
                 (path, stamp, waveform) => _stored[path] = waveform);
             _player = Substitute.For<IAudioPlayer>();
-            _player.MixTo(Arg.Any<Uri>()).Returns(true);
+            _player.MixTo(Arg.Any<string>()).Returns(true);
             _viewModel = new PlayerViewModel(_player, Substitute.For<IDialogService>(), new PlayerSettings(new InMemorySettingsFile()), _waveforms);
             // Wired like the queue in the main window.
             _list = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
@@ -161,14 +161,14 @@ namespace Lalamachine.ViewModel.Unittests
         [Test]
         public void TheTrackMixedIn_IsReadBeforeItTakesOver_AndShownAtOnce()
         {
-            _player.Source.Returns(UriOf("a"));
+            _player.Source.Returns(PathOf("a"));
             _list.PlayTrack(_list.Playlist[0]);
             Assert.That(ShownSeconds(), Is.EqualTo(1));
 
             _player.TransitionDue += Raise.Event();
             Assert.That(SpinWait.SpinUntil(() => _opened.Contains(PathOf("b")), Timeout), Is.True);
             Assert.That(_waveforms.Read(PathOf("b")).Wait(Timeout), Is.True);
-            _player.Source.Returns(UriOf("b"));
+            _player.Source.Returns(PathOf("b"));
             _player.MixedIn += Raise.Event();
 
             Assert.That(SecondsOf(_viewModel), Is.EqualTo(2));
@@ -194,7 +194,7 @@ namespace Lalamachine.ViewModel.Unittests
         // Like the list does: the player opens it and plays.
         private void Play(string name)
         {
-            _player.Source.Returns(UriOf(name));
+            _player.Source.Returns(PathOf(name));
             _viewModel.PlayTrackHandler(this, new PlayTrackEventArgs(PathOf(name), "MAIN"));
         }
 
@@ -212,7 +212,5 @@ namespace Lalamachine.ViewModel.Unittests
         private static double? SecondsOf(PlayerViewModel viewModel) => viewModel.Waveform is { } waveform ? Math.Round(waveform.SliceCount * Waveform.SliceSeconds, 3) : null;
 
         private string PathOf(string name) => Path.Combine(_dir, $"{name}.mp3");
-
-        private Uri UriOf(string name) => new(PathOf(name));
     }
 }
