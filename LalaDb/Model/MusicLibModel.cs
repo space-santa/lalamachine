@@ -42,12 +42,14 @@ namespace LalaDb.Model
 
             ArgumentNullException.ThrowIfNull(genreFilter);
 
+            // With a genre selected, all of its artists, as DisplayLib lists all of its tracks: the search decided which
+            // genres could be selected, the LibraryViewModel lets go of one that doesn't match it.
             if (genreFilter.Count > 0 && _context.GenreTracks != null)
             {
                 return Matching(_context.GenreTracks.AsEnumerable()
                                .Where(x => IsIn(genreFilter, x.Genre?.Name))
                                .SelectMany(x => x.Track?.ArtistTracks ?? Enumerable.Empty<ArtistTrack>())
-                               .Select(x => x.Artist?.Name), searchString);
+                               .Select(x => x.Artist?.Name), "");
             }
 
             if (_context.Artists != null)
@@ -84,7 +86,9 @@ namespace LalaDb.Model
                 names = _context.Albums?.Select(x => x.Name).AsEnumerable();
             }
 
-            return names is null ? null : Matching(names, searchString);
+            // With an artist or genre selected, all of its albums, like the artists of a genre.
+            var isSelected = artistFilter.Count > 0 || genreFilter.Count > 0;
+            return names is null ? null : Matching(names, isSelected ? "" : searchString);
         }
 
         // The names with the search string in them, each once, sorted. All of them for an empty one.

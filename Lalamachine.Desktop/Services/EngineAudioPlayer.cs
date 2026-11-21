@@ -22,7 +22,7 @@ namespace Lalamachine.Desktop.Services
         private int _track;
         // Of the track mixed in, until it takes over.
         private int _mixTrack;
-        private Uri? _mixSource;
+        private string? _mixSource;
         private bool _isOpen;
         private bool _isTicking;
         private double _volume = 1;
@@ -63,7 +63,7 @@ namespace Lalamachine.Desktop.Services
         public event EventHandler? MixedIn;
         public event EventHandler? MixCalledOff;
 
-        public Uri? Source { get; private set; }
+        public string? Source { get; private set; }
 
         public bool IsMuted
         {
@@ -115,17 +115,17 @@ namespace Lalamachine.Desktop.Services
             }
         }
 
-        public void Open(Uri source)
+        public void Open(string path)
         {
-            Source = source;
+            Source = path;
             _mixTrack = 0;
             SetTicking(false);
             // Before the decoder, which has to be given to the engine once it's open.
-            var grid = source.IsFile ? _findGrid(source.LocalPath) : null;
+            var grid = _findGrid(path);
             IAudioDecoder? decoder = null;
             try
             {
-                decoder = source.IsFile ? _openDecoder(source.LocalPath) : null;
+                decoder = _openDecoder(path);
             }
             catch (IOException)
             {
@@ -146,17 +146,13 @@ namespace Lalamachine.Desktop.Services
 
         // A track that can't be read now isn't mixed in. The one that plays goes on to its end, the next one is opened then
         // and fails or plays like any other.
-        public bool MixTo(Uri source)
+        public bool MixTo(string path)
         {
-            if (!source.IsFile)
-            {
-                return false;
-            }
-            var grid = _findGrid(source.LocalPath);
+            var grid = _findGrid(path);
             IAudioDecoder decoder;
             try
             {
-                decoder = _openDecoder(source.LocalPath);
+                decoder = _openDecoder(path);
             }
             catch (IOException)
             {
@@ -168,7 +164,7 @@ namespace Lalamachine.Desktop.Services
                 if (_engine.MixTo(decoder, grid) is var track and > 0)
                 {
                     _mixTrack = track;
-                    _mixSource = source;
+                    _mixSource = path;
                     return true;
                 }
             }
@@ -181,8 +177,13 @@ namespace Lalamachine.Desktop.Services
 
         public void Play()
         {
-            _engine.Play();
-            SetTicking(_isOpen);
+            if (_engine.Play())
+            {
+                SetTicking(true);
+                return;
+            }
+            // The track can't be read, e.g. its drive is gone: it stays paused, as after MediaFailed, which says so again.
+            PostForTrack(_track, () => MediaFailed?.Invoke(this, EventArgs.Empty));
         }
 
         public void Pause()

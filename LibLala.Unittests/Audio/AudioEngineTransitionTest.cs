@@ -728,6 +728,32 @@ namespace LibLala.Unittests.Audio
             Assert.That(_ended, Is.Empty);
         }
 
+        // Like a device unplugged right after the end of the transition was rendered: A is what was heard, its length is the
+        // one shown. On Stop, as the player does on Failed, B takes over where it was heard, with its length.
+        [Test]
+        public void AnOutputThatFailsAfterTheTransitionWasRendered_ButBeforeItWasHeard_FailsTheTrackHeard()
+        {
+            var failed = new List<int>();
+            _engine.Failed += (sender, e) => failed.Add(e.Track);
+            var trackA = _engine.Open(_a, Grid());
+            _engine.Play();
+            PlayFor(23);
+            var trackB = _engine.MixTo(new CountingDecoder(50 * Rate) { Silent = true }, Grid());
+            PlayFor(32.9);
+            // Past the end of the transition at 56 s of A, not played yet.
+            _engine.Render(new float[Rate / 5 * AudioFormat.Channels]);
+
+            _engine.OutputFailed();
+
+            Assert.That(failed, Is.EqualTo(new[] { trackA }));
+            Assert.That(_engine.Length, Is.EqualTo(60 * Rate));
+            _engine.Stop();
+            Assert.That(_tookOver, Is.EqualTo(new[] { trackB }));
+            Assert.That(_engine.Length, Is.EqualTo(50 * Rate));
+            // B came in at 4 s when A was at 24 s, and was heard until A was at 55.9 s.
+            Assert.That(_engine.Position / (double)Rate, Is.EqualTo(35.9).Within(0.01));
+        }
+
         [Test]
         public void TurnedOff_ATransitionThatDidntStart_IsCalledOff()
         {

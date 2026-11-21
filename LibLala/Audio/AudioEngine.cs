@@ -90,8 +90,8 @@ namespace LibLala.Audio
         // The output played the last frame of the current track. Raised once, until Seek or Play starts it again. Not for a
         // track that a transition took over from.
         public event EventHandler<TrackEventArgs>? Ended;
-        // The track can't be read any more, raised once per track. Or the output can't play: then Stop puts the track where
-        // it was heard, and Play goes on from there when there's an output again.
+        // The track can't be read any more, raised once per track. Or the output can't play, raised for the track as heard:
+        // then Stop puts the track where it was heard, and Play goes on from there when there's an output again.
         public event EventHandler<TrackEventArgs>? Failed;
         // With Transitions on, the track gets close to where the next one would first change how it plays, its tempo going
         // to the next one's before a transition on the beat: time for MixTo. Raised once per track, again after a seek back
@@ -294,14 +294,16 @@ namespace LibLala.Audio
             return track;
         }
 
-        public void Play()
+        // False when there's no track, or it can't be read any more, as Failed said before: it doesn't play, and nothing is
+        // raised. Else it plays, or raises Failed.
+        public bool Play()
         {
             bool isAtEnd;
             lock (_gate)
             {
                 if (_current is null || _isFailed)
                 {
-                    return;
+                    return false;
                 }
                 isAtEnd = _isEndPlayed;
             }
@@ -312,11 +314,13 @@ namespace LibLala.Audio
                 _output.Reset();
                 if (!MoveTo(0))
                 {
-                    return;
+                    // It raised Failed.
+                    return true;
                 }
             }
             _isPlaying = true;
             StartOutput();
+            return true;
         }
 
         public void Pause()
@@ -496,7 +500,9 @@ namespace LibLala.Audio
                 {
                     return;
                 }
-                track = _current.Track;
+                // As heard: a track that took over in what wasn't played yet does so on Stop, once it's the one heard, see
+                // MoveTo. Until then, Position and Length are of the one before.
+                track = _playedTrack;
             }
             Failed?.Invoke(this, new TrackEventArgs(track));
         }
@@ -860,6 +866,8 @@ namespace LibLala.Audio
             return true;
         }
 
+        // An output that can't play, like one without a device, is one that failed: the track is fine, the next Play tries
+        // again.
         private void StartOutput()
         {
             try
@@ -869,13 +877,7 @@ namespace LibLala.Audio
             catch (IOException)
             {
                 _isPlaying = false;
-                int track;
-                lock (_gate)
-                {
-                    _isFailed = true;
-                    track = _current?.Track ?? 0;
-                }
-                Failed?.Invoke(this, new TrackEventArgs(track));
+                OutputFailed();
             }
         }
 

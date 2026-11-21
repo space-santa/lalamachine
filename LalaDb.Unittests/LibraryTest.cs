@@ -79,9 +79,11 @@ namespace LalaDb.Unittests
             Assert.That(model.AlbumList([], [], ""), Is.EqualTo(new[] { "Album" }));
         }
 
-        // Whatever is selected, the search narrows them down and they're sorted.
+        // The search narrows them down while nothing above them is selected. What is selected was found by it: all its
+        // artists and albums are listed, as all its tracks are. Sorted either way, in English: Estonian has Z before T.
         [Test]
-        public void ArtistsAndAlbums_AreSearchedAndSorted_WithAndWithoutFilters()
+        [SetCulture("en-US")]
+        public void ArtistsAndAlbums_AreSearchedOnlyWithoutASelectionAbove_AndSorted()
         {
             using var connection = OpenDatabase();
             using var context = CreateContext(connection);
@@ -102,11 +104,15 @@ namespace LalaDb.Unittests
             using var readContext = CreateContext(connection);
             var model = new MusicLibModel(readContext, () => CreateContext(connection));
 
-            Assert.That(model.ArtistList(["House"], "love"), Is.EqualTo(new[] { "Love Inc", "Zed Love" }));
-            Assert.That(model.ArtistList(["House"], ""), Is.EqualTo(new[] { "Ann", "Love Inc", "Zed Love" }));
-            Assert.That(model.AlbumList([], ["House"], "love"), Is.EqualTo(new[] { "Love Songs", "Zebra Love" }));
-            Assert.That(model.AlbumList(["Zed Love", "Ann"], [], "zebra"), Is.EqualTo(new[] { "Zebra Love" }));
+            Assert.That(model.ArtistList([], "love"), Is.EqualTo(new[] { "Love Inc", "Tim Love", "Zed Love" }));
+            Assert.That(model.AlbumList([], [], "love"), Is.EqualTo(new[] { "Love Songs", "Techno Love", "Zebra Love" }));
             Assert.That(model.AlbumList([], [], ""), Is.EqualTo(new[] { "Apple", "Love Songs", "Techno Love", "Zebra Love" }));
+            // Searched for "zed", then the artist clicked.
+            Assert.That(model.AlbumList(["Zed Love"], [], "zed"), Is.EqualTo(new[] { "Zebra Love" }));
+            // Searched for "house", then the genre clicked.
+            Assert.That(model.ArtistList(["House"], "house"), Is.EqualTo(new[] { "Ann", "Love Inc", "Zed Love" }));
+            Assert.That(model.AlbumList([], ["House"], "house"), Is.EqualTo(new[] { "Apple", "Love Songs", "Zebra Love" }));
+            Assert.That(model.AlbumList(["Zed Love", "Ann"], [], "love"), Is.EqualTo(new[] { "Love Songs", "Zebra Love" }));
         }
 
         [Test]
