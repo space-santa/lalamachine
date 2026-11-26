@@ -21,6 +21,23 @@
             <GradientStop Offset="0" Color="#FFCCCCCC" />
             <GradientStop Offset="1" Color="#FF444444" />
         </LinearGradientBrush>
+        <!-- A toggle button that's on is pressed in: the gradients and the border upside down. -->
+        <LinearGradientBrush x:Key="ControlCheckedBrush" StartPoint="50%,0%" EndPoint="50%,100%">
+            <GradientStop Offset="0" Color="#FF808080" />
+            <GradientStop Offset="1" Color="White" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="ControlCheckedMouseOverBrush" StartPoint="50%,0%" EndPoint="50%,100%">
+            <GradientStop Offset="0" Color="Orange" />
+            <GradientStop Offset="1" Color="White" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="ControlCheckedPressedBrush" StartPoint="50%,0%" EndPoint="50%,100%">
+            <GradientStop Offset="0" Color="DarkOrange" />
+            <GradientStop Offset="1" Color="White" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="ControlCheckedBorderBrush" StartPoint="50%,0%" EndPoint="50%,100%">
+            <GradientStop Offset="0" Color="#FF444444" />
+            <GradientStop Offset="1" Color="#FFCCCCCC" />
+        </LinearGradientBrush>
         <LinearGradientBrush x:Key="PlayerBackgroundBrush" StartPoint="50%,100%" EndPoint="50%,0%">
             <GradientStop Offset="0" Color="LightBlue" />
             <GradientStop Offset="1" Color="DarkBlue" />
@@ -35,6 +52,26 @@
         <SolidColorBrush x:Key="ButtonForeground" Color="Black" />
         <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Black" />
         <SolidColorBrush x:Key="ButtonForegroundPressed" Color="Black" />
+
+        <!-- The player's toggle buttons, like the buttons when they're off. -->
+        <StaticResource x:Key="ToggleButtonBackground" ResourceKey="ControlBrush" />
+        <StaticResource x:Key="ToggleButtonBackgroundPointerOver" ResourceKey="ControlMouseOverBrush" />
+        <StaticResource x:Key="ToggleButtonBackgroundPressed" ResourceKey="ControlPressedBrush" />
+        <StaticResource x:Key="ToggleButtonBackgroundChecked" ResourceKey="ControlCheckedBrush" />
+        <StaticResource x:Key="ToggleButtonBackgroundCheckedPointerOver" ResourceKey="ControlCheckedMouseOverBrush" />
+        <StaticResource x:Key="ToggleButtonBackgroundCheckedPressed" ResourceKey="ControlCheckedPressedBrush" />
+        <StaticResource x:Key="ToggleButtonBorderBrush" ResourceKey="ControlBorderBrush" />
+        <StaticResource x:Key="ToggleButtonBorderBrushPointerOver" ResourceKey="ControlBorderBrush" />
+        <StaticResource x:Key="ToggleButtonBorderBrushPressed" ResourceKey="ControlBorderBrush" />
+        <StaticResource x:Key="ToggleButtonBorderBrushChecked" ResourceKey="ControlCheckedBorderBrush" />
+        <StaticResource x:Key="ToggleButtonBorderBrushCheckedPointerOver" ResourceKey="ControlCheckedBorderBrush" />
+        <StaticResource x:Key="ToggleButtonBorderBrushCheckedPressed" ResourceKey="ControlCheckedBorderBrush" />
+        <SolidColorBrush x:Key="ToggleButtonForeground" Color="Black" />
+        <SolidColorBrush x:Key="ToggleButtonForegroundPointerOver" Color="Black" />
+        <SolidColorBrush x:Key="ToggleButtonForegroundPressed" Color="Black" />
+        <SolidColorBrush x:Key="ToggleButtonForegroundChecked" Color="Black" />
+        <SolidColorBrush x:Key="ToggleButtonForegroundCheckedPointerOver" Color="Black" />
+        <SolidColorBrush x:Key="ToggleButtonForegroundCheckedPressed" Color="Black" />
 
         <StaticResource x:Key="DataGridColumnHeaderBackgroundBrush" ResourceKey="ControlBrush" />
         <StaticResource x:Key="DataGridColumnHeaderHoveredBackgroundBrush" ResourceKey="ControlMouseOverBrush" />
@@ -154,7 +191,7 @@
         <Setter Property="Padding" Value="4,2" />
     </Style>
 
-    <Style Selector="Button">
+    <Style Selector="Button, ToggleButton">
         <Setter Property="MinHeight" Value="48" />
         <Setter Property="MinWidth" Value="64" />
         <Setter Property="FontSize" Value="24" />
@@ -165,6 +202,11 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <!-- Pressed in, what's on it a little lower. -->
+    <Style Selector="ToggleButton:checked">
+        <Setter Property="Padding" Value="2,4,2,0" />
     </Style>
 
     <Style Selector="TextBox">

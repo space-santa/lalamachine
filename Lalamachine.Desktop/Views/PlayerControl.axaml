@@ -17,6 +17,7 @@
 
         <StackPanel Grid.Column="1" VerticalAlignment="Center">
             <Grid ColumnDefinitions="Auto,Auto,*">
+                <!-- Pressed in while it's on. -->
                 <ToggleButton Grid.Column="0"
                               Content="🎛"
                               IsChecked="{Binding Transitions}"
@@ -36,9 +37,11 @@
 
             <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto,Auto,Auto,Auto" Margin="0,8,0,0">
                 <Button Grid.Column="0" Content="⏮" Command="{Binding LastCommand}" />
-                <Button Grid.Column="1"
-                        Content="{Binding IsPlaying, Converter={x:Static local:Converters.IsPlayingDisplay}}"
-                        Command="{Binding ChangePlayPauseCommand}" />
+                <!-- Pressed in while it plays. -->
+                <views:BoundToggleButton Grid.Column="1"
+                                         Content="{Binding IsPlaying, Converter={x:Static local:Converters.IsPlayingDisplay}}"
+                                         IsChecked="{Binding IsPlaying, Mode=OneWay}"
+                                         Command="{Binding ChangePlayPauseCommand}" />
                 <Button Grid.Column="2" Content="⏭" Command="{Binding NextCommand}" />
                 <!-- Not a Label, that would take the first underscore in a title for an access key. -->
                 <TextBlock Grid.Column="3"
