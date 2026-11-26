@@ -84,8 +84,9 @@ namespace LibLala.DomainPrimitives
             _ => 0,
         };
 
-        // A number and a letter, either of Camelot (A, B) or of Open Key (m, d).
-        [GeneratedRegex(@"^(?<number>\d{1,2})\s*(?<letter>[ABab]|[mMdD])$")]
+        // A number and a letter, either of Camelot (A, B) or of Open Key (m, d). The number in ASCII digits, \d would also
+        // take ones like a fullwidth ８ that int.Parse throws on.
+        [GeneratedRegex(@"^(?<number>[0-9]{1,2})\s*(?<letter>[ABab]|[mMdD])$")]
         private static partial Regex WheelPattern();
 
         // The note, maybe sharp or flat, maybe followed by its other name (as in F♯/G♭), and maybe the mode. A lone m is

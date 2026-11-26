@@ -190,6 +190,7 @@ namespace LalaDb.Unittests
             var track = _store.TracksToAnalyze().Single();
 
             Assert.That((track.NeedsGrid, track.NeedsKey), Is.EqualTo((true, true)));
+            Assert.That(track.TaggedKey, Is.EqualTo(initialKey));
         }
 
         // Written another way than on the Camelot wheel, it's still the key.

@@ -138,6 +138,14 @@ namespace Lalamachine.ViewModel
         public ICommand ClearSearchCommand => _clearSearchCommand;
         private void ClearSearch(object? obj)
         {
+            ClearSearchAndSelection();
+            FiltersCleared?.Invoke(this, EventArgs.Empty);
+        }
+
+        // The search and the genres, artists and albums selected, but not the filters of the track list's columns: to select
+        // other genres, like a saved combination of them.
+        public void ClearSearchAndSelection()
+        {
             // The search box reports being emptied after this emptied it. Rebuilding everything again would be for nothing.
             if (SearchString.Length > 0 || _genreFilter.Count > 0 || _artistFilter.Count > 0 || _albumFilter.Count > 0)
             {
@@ -146,7 +154,6 @@ namespace Lalamachine.ViewModel
                 _artistFilter = Array.Empty<string>();
                 SearchString = "";
             }
-            FiltersCleared?.Invoke(this, EventArgs.Empty);
         }
 
         private readonly DelegateCommand _startScanCommand;

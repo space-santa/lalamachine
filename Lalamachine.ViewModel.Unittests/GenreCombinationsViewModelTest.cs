@@ -142,6 +142,20 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
+        public void SettingsWithNulls_HaveTheCombinationsThatAreThere()
+        {
+            var file = new InMemorySettingsFile();
+            file.Save(new Dictionary<string, string>
+            {
+                ["Combinations"] = """[null, {"Name": "Mine", "Genres": [null, "Rock", " "]}, {"Name": null, "Genres": ["Jazz"]}, {"Name": "Empty", "Genres": null}]""",
+            });
+
+            var viewModel = new GenreCombinationsViewModel(new GenreCombinationSettings(file), _dialogs, () => _selectedGenres);
+
+            Assert.That(viewModel.Combinations.Select(x => (x.Name, x.GenresString)), Is.EqualTo(new[] { ("Mine", "Rock") }));
+        }
+
+        [Test]
         public void GenreSelectionChanged_TellsTheViewWhetherItCanSave()
         {
             var viewModel = ViewModel();

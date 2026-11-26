@@ -86,6 +86,24 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
+        public void ClearSearchAndSelection_LeavesTheColumnFiltersAlone()
+        {
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            var viewModel = CreateViewModel(connection, context);
+            viewModel.SearchString = "Rock";
+            viewModel.SetGenreFilterCommand.Execute("Rock");
+            var cleared = 0;
+            viewModel.FiltersCleared += (o, e) => cleared++;
+
+            viewModel.ClearSearchAndSelection();
+            Assert.That((viewModel.SearchString, viewModel.GenreFilter.Count, cleared), Is.EqualTo(("", 0, 0)));
+
+            viewModel.ClearSearchCommand.Execute(null);
+            Assert.That(cleared, Is.EqualTo(1));
+        }
+
+        [Test]
         public void GenreCombinations_CanBeSavedWhileGenresAreSelected()
         {
             using var connection = OpenDatabase();

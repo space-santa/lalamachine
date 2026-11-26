@@ -29,7 +29,8 @@ namespace Lalamachine.ViewModel
             {
                 try
                 {
-                    return JsonSerializer.Deserialize<List<GenreCombination>>(GetString("[]")) ?? [];
+                    // A null in a file that someone edited isn't a combination.
+                    return JsonSerializer.Deserialize<List<GenreCombination?>>(GetString("[]"))?.OfType<GenreCombination>().ToList() ?? [];
                 }
                 catch (JsonException)
                 {
@@ -54,10 +55,11 @@ namespace Lalamachine.ViewModel
             _settings = settings;
             _dialogs = dialogs;
             _selectedGenres = selectedGenres;
-            // Also the ones of a file that someone edited, with two of the same name or with no genres.
+            // Also the ones of a file that someone edited: none with two of the same name, without a name or without genres.
             Combinations = new ObservableCollection<GenreCombination>(
                 settings.Combinations
-                    .Where(x => !string.IsNullOrWhiteSpace(x.Name) && x.Genres is { Count: > 0 })
+                    .Select(x => x with { Genres = x.Genres?.Where(genre => !string.IsNullOrWhiteSpace(genre)).ToList() ?? [] })
+                    .Where(x => !string.IsNullOrWhiteSpace(x.Name) && x.Genres.Count > 0)
                     .DistinctBy(x => x.Name, StringComparer.OrdinalIgnoreCase)
                     .OrderBy(x => x.Name, StringComparer.CurrentCultureIgnoreCase));
             _saveCommand = new DelegateCommand(OnSave);

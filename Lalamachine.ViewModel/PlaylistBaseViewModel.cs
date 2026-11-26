@@ -96,8 +96,7 @@ namespace Lalamachine.ViewModel
             NotifyPropertyChanged(nameof(Playlist));
         }
 
-        // The column and direction the tracks are sorted by, null while they aren't. Tracks added since then come after
-        // the others, like without a sort.
+        // The column and direction the tracks are sorted by, null while they aren't, also after tracks were added to the end.
         public SortMessage? CurrentSort
         {
             get => _currentSort;
@@ -135,21 +134,40 @@ namespace Lalamachine.ViewModel
         }
 
         // The tracks in the order given. Ones that aren't in it, added since, come after the others in the order they have.
-        // By the object, the queue can have a track twice, and else by the path: a scan makes new objects.
+        // By the object, the queue can have a track twice. A place whose object is gone, after a scan made new ones, goes to
+        // a track with its path, once: not to a second copy added since, that comes after the others.
         protected static IReadOnlyList<PlaylistTags> InOrderOf(IReadOnlyList<PlaylistTags> order, IEnumerable<PlaylistTags> tracks)
         {
             ArgumentNullException.ThrowIfNull(order);
 
+            var shown = tracks.ToList();
+            var present = new HashSet<PlaylistTags>(shown, ReferenceEqualityComparer.Instance);
             var byObject = new Dictionary<PlaylistTags, int>(ReferenceEqualityComparer.Instance);
-            var byPath = new Dictionary<string, int>(StringComparer.Ordinal);
+            var goneByPath = new Dictionary<string, Queue<int>>(StringComparer.Ordinal);
             for (var i = 0; i < order.Count; i++)
             {
-                byObject.TryAdd(order[i], i);
-                byPath.TryAdd(order[i].Path, i);
+                if (present.Contains(order[i]))
+                {
+                    byObject.TryAdd(order[i], i);
+                }
+                else if (goneByPath.TryGetValue(order[i].Path, out var places))
+                {
+                    places.Enqueue(i);
+                }
+                else
+                {
+                    goneByPath[order[i].Path] = new Queue<int>([i]);
+                }
             }
-            return tracks
-                .OrderBy(x => byObject.TryGetValue(x, out var index) || byPath.TryGetValue(x.Path, out index) ? index : int.MaxValue)
-                .ToList();
+
+            var keys = new int[shown.Count];
+            for (var j = 0; j < shown.Count; j++)
+            {
+                keys[j] = byObject.TryGetValue(shown[j], out var index) ? index
+                    : goneByPath.TryGetValue(shown[j].Path, out var places) && places.Count > 0 ? places.Dequeue()
+                    : int.MaxValue;
+            }
+            return shown.Select((track, j) => (Track: track, Key: keys[j])).OrderBy(x => x.Key).Select(x => x.Track).ToList();
         }
 
         protected virtual void Sort(SortMessage sortMessage)
@@ -609,6 +627,12 @@ namespace Lalamachine.ViewModel
 
             tags.IsLiked = TrackPlaylists.IsLiked(tags.Path);
             Playlist.Add(tags);
+            // At the end, the list isn't sorted any more. The order from before the sort stays, to go back to with this one
+            // after the others.
+            if (CurrentSort is not null)
+            {
+                CurrentSort = null;
+            }
             NotifyPropertyChanged(nameof(Playlist));
         }
 

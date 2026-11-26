@@ -163,6 +163,41 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
+        public void Unsort_ACopyAddedSinceTheSort_ComesLast_NotNextToTheFirst()
+        {
+            var viewModel = ViewModelWithTitles("a", "b", "c");
+            viewModel.SortCommand.Execute(ByTitle(ListSortDirection.Descending));
+            viewModel.AddTrack(new LibLalaTagsBuilder("a", new UncheckedTrackPath("/path/to/a"), 5).Build());
+            viewModel.AddTrack(new LibLalaTagsBuilder("d", new UncheckedTrackPath("/path/to/d"), 5).Build());
+            var copy = viewModel.Playlist[3];
+
+            viewModel.UnsortCommand.Execute(null);
+
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "a", "b", "c", "a", "d" }));
+            Assert.That(viewModel.Playlist[3], Is.SameAs(copy));
+        }
+
+        [Test]
+        public void AddTrack_ToASortedList_ItIsNotSortedAnyMore_ButCanBeSortedAndUnsortedAgain()
+        {
+            var viewModel = ViewModelWithTitles("b", "c", "a");
+            viewModel.SortCommand.Execute(ByTitle(ListSortDirection.Ascending));
+            var notifications = new List<string?>();
+            viewModel.PropertyChanged += (o, e) => notifications.Add(e.PropertyName);
+
+            viewModel.AddTrack(new LibLalaTagsBuilder("aa", new UncheckedTrackPath("/path/to/aa"), 5).Build());
+            Assert.That(viewModel.CurrentSort, Is.Null);
+            Assert.That(notifications, Does.Contain(nameof(viewModel.CurrentSort)));
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "a", "b", "c", "aa" }));
+
+            viewModel.SortCommand.Execute(ByTitle(ListSortDirection.Ascending));
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "a", "aa", "b", "c" }));
+
+            viewModel.UnsortCommand.Execute(null);
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "b", "c", "a", "aa" }));
+        }
+
+        [Test]
         public void Unsort_TheSameTrackTwice_EachGoesBackToItsPlace()
         {
             var viewModel = ViewModelWithTitles("b", "a", "b");

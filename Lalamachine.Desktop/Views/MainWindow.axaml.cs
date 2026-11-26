@@ -49,6 +49,8 @@ namespace Lalamachine.Desktop.Views
         // Null where lalamachine doesn't have the system's media controls.
         private readonly MediaControlsViewModel? _mediaControls;
         private bool _isCloseConfirmed;
+        // From the press of the space bar to letting go of it, while it repeats.
+        private bool _isSpaceDown;
 
         public MainWindow()
         {
@@ -149,15 +151,21 @@ namespace Lalamachine.Desktop.Views
             // Before the control that has the focus: a button would be clicked, a list would select.
             AddHandler(KeyDownEvent, Window_KeyDown, RoutingStrategies.Tunnel);
             AddHandler(KeyUpEvent, Window_KeyUp, RoutingStrategies.Tunnel);
+            // Let go of in another app, it's never let go of here.
+            Deactivated += (sender, e) => _isSpaceDown = false;
         }
 
-        // Space plays and pauses, wherever the focus is. Not while typing: the search box and the settings' fields have
-        // spaces in them too.
+        // Space plays and pauses, wherever the focus is. Once per press: held, it repeats. Not while typing: the search box
+        // and the settings' fields have spaces in them too.
         private void Window_KeyDown(object? sender, KeyEventArgs e)
         {
             if (IsPlayPauseKey(e))
             {
-                _player.ChangePlayPauseCommand.Execute(null);
+                if (!_isSpaceDown)
+                {
+                    _isSpaceDown = true;
+                    _player.ChangePlayPauseCommand.Execute(null);
+                }
                 e.Handled = true;
             }
         }
@@ -165,6 +173,10 @@ namespace Lalamachine.Desktop.Views
         // A button that has the focus is clicked when Space is let go.
         private void Window_KeyUp(object? sender, KeyEventArgs e)
         {
+            if (e.Key == Key.Space)
+            {
+                _isSpaceDown = false;
+            }
             if (IsPlayPauseKey(e))
             {
                 e.Handled = true;

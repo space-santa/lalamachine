@@ -148,6 +148,10 @@ namespace LibLala.Unittests.DomainPrimitives
         [TestCase("4C")]
         [TestCase("Am7")]
         [TestCase("not a key")]
+        // Digits that aren't ASCII ones, a fullwidth and an Arabic-Indic 8.
+        [TestCase("８A")]
+        [TestCase("٨A")]
+        [TestCase("８m")]
         public void KeyThatCantBeRead_StaysAsItIs(string name)
         {
             Assert.That(new InitialKey(name).ToString(), Is.EqualTo(name));

@@ -139,7 +139,7 @@ namespace Lalamachine.ViewModel.Unittests
         public void WidthsOf_SkipsWhatCantBeRead()
         {
             var file = new InMemorySettingsFile();
-            file.Save(new Dictionary<string, string> { ["Library.Widths"] = "Title=400,Length,BPM=x,Key=-5,=7,Year=80" });
+            file.Save(new Dictionary<string, string> { ["Library.Widths"] = "Title=400,Length,BPM=x,Key=-5,=7,Year=80,Artist=Infinity,Genre=1e999,Disc=NaN,Comment=20000" });
 
             Assert.That(new ColumnSettings(file).WidthsOf("Library"), Is.EquivalentTo(new Dictionary<string, double> { ["Title"] = 400, ["Year"] = 80 }));
         }

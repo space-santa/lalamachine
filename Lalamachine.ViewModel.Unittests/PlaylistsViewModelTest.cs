@@ -1152,6 +1152,19 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
+        public void TickingAChoice_WhileSorted_ItIsNotSortedAnyMore()
+        {
+            var viewModel = ViewModelWith(("Aaa", ["b", "a"]));
+            var playlist = Select(viewModel, "Aaa");
+            playlist.SortCommand.Execute(new SortMessage(ListSortDirection.Ascending, new PlaylistColumn("Title")));
+
+            viewModel.ChoicesFor([Tags("c")]).Choices.Single(x => x.Name == "Aaa").ContainsTracks = true;
+
+            Assert.That(playlist.CurrentSort, Is.Null);
+            Assert.That(Titles(playlist), Is.EqualTo(new[] { "a", "b", "c" }));
+        }
+
+        [Test]
         public void DiscardOrder_ItIsNotSortedAnyMore()
         {
             var viewModel = ViewModelWith(("Aaa", ["b", "a"]));

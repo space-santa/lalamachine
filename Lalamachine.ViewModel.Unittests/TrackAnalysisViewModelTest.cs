@@ -199,9 +199,19 @@ namespace Lalamachine.ViewModel.Unittests
 
             var found = Analyze(path => new SilentDecoder());
 
-            // No key to show, and no tempo.
-            Assert.That(found.Select(e => (e.InitialKey, e.BeatsPerMinute)), Is.EqualTo(new[] { ((string?)null, (uint?)0) }));
+            // An empty key, which takes away one found before in the file as it was, and no tempo.
+            Assert.That(found.Select(e => (e.InitialKey, e.BeatsPerMinute)), Is.EqualTo(new[] { ((string?)"", (uint?)0) }));
             Assert.That(Analysis(path).KeyAnalyzerVersion, Is.EqualTo(KeyAnalyzer.Version));
+        }
+
+        [Test]
+        public void ATrackWhoseTagsHaveSomethingElseThanAKey_AndNoKeyToFind_ShowsWhatTheTagsHave()
+        {
+            AddTrack("a.mp3", initialKey: "o");
+
+            var found = Analyze(path => new SilentDecoder());
+
+            Assert.That(found.Select(e => e.InitialKey), Is.EqualTo(new[] { "o" }));
         }
 
         [Test]

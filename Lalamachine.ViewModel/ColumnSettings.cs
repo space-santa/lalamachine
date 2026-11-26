@@ -13,6 +13,8 @@ namespace Lalamachine.ViewModel
         private const char Separator = ',';
         private const char WidthSeparator = '=';
         private const string WidthsKey = ".Widths";
+        // Wider than any screen, a width past it was edited into the file. The grid can't have one that isn't finite.
+        private const double MaxWidth = 10000;
 
         // The file is still named after what it had at first, the order, so that the saved orders stay.
         public ColumnSettings() : this(new SettingsFile("Lalamachine.Desktop", "ColumnOrderSettings")) { }
@@ -57,7 +59,7 @@ namespace Lalamachine.ViewModel
             foreach (var entry in GetString("", grid + WidthsKey).Split(Separator, StringSplitOptions.RemoveEmptyEntries))
             {
                 var parts = entry.Split(WidthSeparator);
-                if (parts.Length == 2 && parts[0].Length > 0 && double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var width) && width > 0)
+                if (parts.Length == 2 && parts[0].Length > 0 && double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var width) && width > 0 && width <= MaxWidth)
                 {
                     widths[parts[0]] = width;
                 }
