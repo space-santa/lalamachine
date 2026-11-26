@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
@@ -84,6 +85,42 @@ namespace Lalamachine.Desktop.Views
             {
                 setFilterCommand(context).Execute(selection);
             }
+        }
+
+        // Selects the genres of a saved combination, the ones the library still has. All of them: a search that would hide
+        // some is cleared, along with the artists and albums selected, as for any other genres.
+        private void GenreCombination_Click(object? sender, RoutedEventArgs e)
+        {
+            if (sender is not Control { DataContext: GenreCombination combination } || DataContext is not LibraryViewModel context)
+            {
+                return;
+            }
+
+            GenreCombinationsButton.Flyout?.Hide();
+            if (context.SearchString.Length > 0 || !string.IsNullOrEmpty(SearchBox.Text))
+            {
+                ClearSearch(context);
+            }
+
+            var listed = GenreList.Items.OfType<string>().ToList();
+            var indexes = combination.Genres.Select(x => listed.IndexOf(x)).Where(x => x > 0).Order().ToList();
+            var selection = GenreList.Selection;
+            selection.BeginBatchUpdate();
+            try
+            {
+                selection.Clear();
+                // None of them left is no filter.
+                selection.Select(indexes.Count > 0 ? indexes[0] : 0);
+                foreach (var index in indexes.Skip(1))
+                {
+                    selection.Select(index);
+                }
+            }
+            finally
+            {
+                selection.EndBatchUpdate();
+            }
+            GenreList.ScrollIntoView(indexes.Count > 0 ? indexes[0] : 0);
         }
 
         private void SearchBox_TextChanged(object? sender, TextChangedEventArgs e)

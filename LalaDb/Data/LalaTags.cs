@@ -10,7 +10,8 @@ namespace LalaDb.Data
 {
     public class LalaTags : LibLalaTags
     {
-        // A track without a key or a tempo in its tags gets what the analysis found.
+        // A track without a key or a tempo in its tags gets what the analysis found. So does one whose tags have something
+        // that can't be read as a key, unless the analysis found nothing either.
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>")]
         public static LalaTags Build(Track track, DetectedTags detected)
         {
@@ -24,7 +25,9 @@ namespace LalaDb.Data
 
             // From the tags, or else what the analysis found.
             var beatsPerMinute = track.BeatsPerMinute > 0 ? (uint)track.BeatsPerMinute : detected.BeatsPerMinuteOf(track.Path);
-            var initialKey = string.IsNullOrWhiteSpace(track.InitialKey) ? detected.KeyOf(track.Path) : track.InitialKey;
+            var taggedKey = new InitialKey(track.InitialKey ?? "");
+            var detectedKey = detected.KeyOf(track.Path);
+            var initialKey = taggedKey.IsCamelot || detectedKey.Length == 0 ? taggedKey.ToString() : detectedKey;
 
             // The file was checked when it was scanned. Checking again here would make a whole playlist fail to load
             // just because one drive is unplugged.

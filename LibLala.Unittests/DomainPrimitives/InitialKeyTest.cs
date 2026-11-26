@@ -16,8 +16,8 @@ namespace LibLala.Unittests.DomainPrimitives
             Assert.That(key.Letter, Is.EqualTo(letter));
         }
 
-        [TestCase("Am")]
-        [TestCase("F#m")]
+        [TestCase("o")]
+        [TestCase("Unknown")]
         public void KeyWithoutNumberSortsAfterTheNumberedOnes(string name)
         {
             var key = new InitialKey(name);
@@ -75,8 +75,9 @@ namespace LibLala.Unittests.DomainPrimitives
         }
 
         [TestCase("")]
-        [TestCase("Am")]
-        [TestCase("F#m")]
+        [TestCase("o")]
+        [TestCase("H")]
+        [TestCase("AM")]
         [TestCase("0A")]
         [TestCase("13A")]
         [TestCase("4C")]
@@ -86,7 +87,86 @@ namespace LibLala.Unittests.DomainPrimitives
         [TestCase("99999999999A")]
         public void KeyThatIsNotCamelotHasNoNaturalNotation(string name)
         {
-            Assert.That(new InitialKey(name).NaturalNotation, Is.Null);
+            var key = new InitialKey(name);
+
+            Assert.That(key.NaturalNotation, Is.Null);
+            Assert.That(key.IsCamelot, Is.False);
+        }
+
+        // Camelot written another way.
+        [TestCase("8A", "8A")]
+        [TestCase("8a", "8A")]
+        [TestCase("8 b", "8B")]
+        [TestCase(" 12B ", "12B")]
+        // Open Key, where 1d is C major.
+        [TestCase("1d", "8B")]
+        [TestCase("1m", "8A")]
+        [TestCase("6d", "1B")]
+        [TestCase("12m", "7A")]
+        [TestCase("5M", "12A")]
+        // The key's name, as the ID3 standard and most DJ software write it.
+        [TestCase("Am", "8A")]
+        [TestCase("C", "8B")]
+        [TestCase("F#m", "11A")]
+        [TestCase("Gbm", "11A")]
+        [TestCase("Dbm", "12A")]
+        [TestCase("C#m", "12A")]
+        [TestCase("Bb", "6B")]
+        [TestCase("Bbm", "3A")]
+        [TestCase("Bm", "10A")]
+        [TestCase("Ebm", "2A")]
+        [TestCase("Abm", "1A")]
+        [TestCase("Cb", "1B")]
+        [TestCase("E#m", "4A")]
+        [TestCase("am", "8A")]
+        [TestCase("Amin", "8A")]
+        [TestCase("Cmaj", "8B")]
+        [TestCase("A minor", "8A")]
+        [TestCase("A Minor", "8A")]
+        [TestCase("D major", "10B")]
+        [TestCase("F♯m", "11A")]
+        [TestCase("B♭", "6B")]
+        [TestCase("F sharp minor", "11A")]
+        [TestCase("E flat", "5B")]
+        // As lalamachine names it, both names of a key on a black note.
+        [TestCase("F♯/G♭ minor", "11A")]
+        [TestCase("C#/Db", "3B")]
+        public void KeyIsShownOnTheCamelotWheel(string name, string camelot)
+        {
+            var key = new InitialKey(name);
+
+            Assert.That(key.ToString(), Is.EqualTo(camelot));
+            Assert.That(key.IsCamelot, Is.True);
+        }
+
+        [TestCase("")]
+        [TestCase("o")]
+        [TestCase("AM")]
+        [TestCase("H")]
+        [TestCase("13A")]
+        [TestCase("0m")]
+        [TestCase("4C")]
+        [TestCase("Am7")]
+        [TestCase("not a key")]
+        public void KeyThatCantBeRead_StaysAsItIs(string name)
+        {
+            Assert.That(new InitialKey(name).ToString(), Is.EqualTo(name));
+        }
+
+        // Every name of every key gets back to where it is on the wheel.
+        [Test]
+        public void NaturalNotation_IsReadBackAsTheSameKey()
+        {
+            for (var number = 1; number <= 12; number++)
+            {
+                foreach (var letter in new[] { "A", "B" })
+                {
+                    var camelot = $"{number}{letter}";
+                    var natural = new InitialKey(camelot).NaturalNotation!;
+
+                    Assert.That(new InitialKey(natural).ToString(), Is.EqualTo(camelot), natural);
+                }
+            }
         }
     }
 }

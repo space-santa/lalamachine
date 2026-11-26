@@ -770,7 +770,7 @@ namespace Lalamachine.ViewModel.Unittests
 
         private QueueViewModel QueueWith(PlaylistsViewModel viewModel, params string[] titles)
         {
-            var queue = new QueueViewModel(_context, _dialogs, viewModel);
+            var queue = new QueueViewModel(_context, viewModel);
             foreach (var title in titles)
             {
                 queue.AddTrack(Tags(title));
@@ -860,26 +860,8 @@ namespace Lalamachine.ViewModel.Unittests
             _dialogs.Received(1).ShowMessageAsync(Arg.Any<string>());
         }
 
-        private static PlaylistTags OutsideTheLibrary(string title)
-        {
-            return new PlaylistTags(Tags(title)) { IsOutsideLibrary = true };
-        }
-
         [Test]
-        public void SaveQueueAsPlaylist_WithATrackOutsideTheLibrary_DoesNotEvenAsk()
-        {
-            var viewModel = ViewModelWith();
-            var queue = QueueWith(viewModel, "a");
-            queue.AddTrack(OutsideTheLibrary("b"));
-
-            queue.SaveAsPlaylistCommand.Execute(null);
-
-            _dialogs.DidNotReceive().AskForTextAsync(Arg.Any<string>(), Arg.Any<string>());
-            Assert.That(Names(viewModel), Is.EqualTo(new[] { Liked }));
-        }
-
-        [Test]
-        public void CanSaveAsPlaylist_NeedsTracksAndNoneOutsideTheLibrary()
+        public void CanSaveAsPlaylist_NeedsTracks()
         {
             var queue = QueueWith(ViewModelWith());
             Assert.That(queue.CanSaveAsPlaylist, Is.False);
@@ -887,11 +869,8 @@ namespace Lalamachine.ViewModel.Unittests
             queue.AddTrack(Tags("a"));
             Assert.That(queue.CanSaveAsPlaylist, Is.True);
 
-            queue.AddTrack(OutsideTheLibrary("b"));
+            queue.RemoveTrackCommand.Execute(queue.Playlist[0]);
             Assert.That(queue.CanSaveAsPlaylist, Is.False);
-
-            queue.RemoveTrackCommand.Execute(queue.Playlist[1]);
-            Assert.That(queue.CanSaveAsPlaylist, Is.True);
         }
 
         [Test]
@@ -901,35 +880,9 @@ namespace Lalamachine.ViewModel.Unittests
             var notifications = new System.Collections.Generic.List<string?>();
             queue.PropertyChanged += (o, e) => notifications.Add(e.PropertyName);
 
-            queue.AddTrack(OutsideTheLibrary("a"));
+            queue.AddTrack(Tags("a"));
 
             Assert.That(notifications, Does.Contain(nameof(queue.CanSaveAsPlaylist)));
-        }
-
-        [Test]
-        public void TrackOutsideTheLibrary_CanNotBeLiked()
-        {
-            var viewModel = ViewModelWith();
-            var queue = QueueWith(viewModel);
-            queue.AddTrack(OutsideTheLibrary("a"));
-
-            queue.ToggleLikedCommand.Execute(queue.Playlist[0]);
-
-            Assert.That(viewModel.IsLiked(PathOf("a")), Is.False);
-            Assert.That(new PlaylistModel(_context).TrackPaths(Liked), Is.Empty);
-        }
-
-        [Test]
-        public void TrackOutsideTheLibrary_StillPlaysInTheQueue()
-        {
-            var queue = QueueWith(ViewModelWith());
-            queue.AddTrack(OutsideTheLibrary("a"));
-            PlayTrackEventArgs? args = null;
-            queue.PlayTrackEvent += (o, e) => args = e;
-
-            queue.PlayTrackCommand.Execute(queue.Playlist[0]);
-
-            Assert.That(args!.Path, Is.EqualTo(PathOf("a")));
         }
 
         [Test]
@@ -1168,6 +1121,60 @@ namespace Lalamachine.ViewModel.Unittests
 
             Assert.That(Titles(playlist), Is.EqualTo(new[] { "b", "a" }));
             Assert.That(playlist.HasUnsavedOrder, Is.True);
+        }
+
+        [Test]
+        public void Unsort_HasTheSavedOrderBack_AndNothingToSave()
+        {
+            var viewModel = ViewModelWith(("Aaa", ["b", "c", "a"]));
+            var playlist = Select(viewModel, "Aaa");
+            playlist.SortCommand.Execute(new SortMessage(ListSortDirection.Ascending, new PlaylistColumn("Title")));
+            Assert.That(playlist.HasUnsavedOrder, Is.True);
+
+            playlist.UnsortCommand.Execute(null);
+
+            Assert.That(Titles(playlist), Is.EqualTo(new[] { "b", "c", "a" }));
+            Assert.That(playlist.HasUnsavedOrder, Is.False);
+        }
+
+        [Test]
+        public void Unsort_AfterTheSortWasSaved_IsTheOrderFromBeforeToSave()
+        {
+            var viewModel = ViewModelWith(("Aaa", ["b", "c", "a"]));
+            var playlist = Select(viewModel, "Aaa");
+            playlist.SortCommand.Execute(new SortMessage(ListSortDirection.Ascending, new PlaylistColumn("Title")));
+            playlist.SaveOrderCommand.Execute(null);
+
+            playlist.UnsortCommand.Execute(null);
+
+            Assert.That(Titles(playlist), Is.EqualTo(new[] { "b", "c", "a" }));
+            Assert.That(playlist.HasUnsavedOrder, Is.True);
+        }
+
+        [Test]
+        public void DiscardOrder_ItIsNotSortedAnyMore()
+        {
+            var viewModel = ViewModelWith(("Aaa", ["b", "a"]));
+            var playlist = Select(viewModel, "Aaa");
+            playlist.SortCommand.Execute(new SortMessage(ListSortDirection.Ascending, new PlaylistColumn("Title")));
+
+            playlist.DiscardOrderCommand.Execute(null);
+
+            Assert.That(playlist.CurrentSort, Is.Null);
+            Assert.That(Titles(playlist), Is.EqualTo(new[] { "b", "a" }));
+        }
+
+        [Test]
+        public void Unsort_AfterAScan_GoesByThePaths()
+        {
+            var viewModel = ViewModelWith(("Aaa", ["b", "c", "a"]));
+            var playlist = Select(viewModel, "Aaa");
+            playlist.SortCommand.Execute(new SortMessage(ListSortDirection.Ascending, new PlaylistColumn("Title")));
+
+            viewModel.ScanningChangedHandler(null, new ScanningChangedEventArgs(false));
+            playlist.UnsortCommand.Execute(null);
+
+            Assert.That(Titles(playlist), Is.EqualTo(new[] { "b", "c", "a" }));
         }
 
         [Test]

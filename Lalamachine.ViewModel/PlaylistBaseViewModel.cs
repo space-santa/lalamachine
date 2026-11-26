@@ -24,17 +24,18 @@ namespace Lalamachine.ViewModel
 
     public class PlaylistBaseViewModel : BaseNotifyPropertyChanged
     {
-        private readonly IDialogService _dialogs;
         private string _name;
         // Where the playing track was after it got removed, so that next and previous go on from there and not from the top.
         private int _removedPlayingIndex = -1;
+        private SortMessage? _currentSort;
+        // The order the tracks had before they were sorted, to have it back. Null while they aren't sorted.
+        private List<PlaylistTags>? _unsortedOrder;
 
-        public PlaylistBaseViewModel(string name, IDialogService dialogs, ITrackPlaylists trackPlaylists)
+        public PlaylistBaseViewModel(string name, ITrackPlaylists trackPlaylists)
         {
             ArgumentNullException.ThrowIfNull(trackPlaylists);
 
             _name = name;
-            _dialogs = dialogs;
             TrackPlaylists = trackPlaylists;
             Playlist = new ObservableCollection<PlaylistTags>();
             _playTrackCommand = new DelegateCommand(OnPlayTrackCommandHandler);
@@ -44,6 +45,7 @@ namespace Lalamachine.ViewModel
             _addSelectionToQueueCommand = new DelegateCommand(OnAddSelectionToQueueCommand);
             _toggleLikedCommand = new DelegateCommand(OnToggleLikedCommand);
             _sortCommand = new DelegateCommand(OnSortCommandHandler);
+            _unsortCommand = new DelegateCommand(OnUnsortCommandHandler);
 
             PropertyChanged += UpdatePlaylistInfoHandler;
             TrackPlaylists.LikedChanged += LikedChangedHandler;
@@ -64,18 +66,90 @@ namespace Lalamachine.ViewModel
         public ICommand SortCommand => _sortCommand;
         private void OnSortCommandHandler(object? obj)
         {
-            if (obj is null) { return; }
-
-            var sortMessage = obj as SortMessage;
-            if (sortMessage is null)
+            if (obj is not SortMessage sortMessage)
             {
                 return;
             }
 
+            // Sorted by one column and then by another, unsorting goes back to the order before the first.
+            _unsortedOrder ??= AllTracks.ToList();
             Sort(sortMessage);
+            CurrentSort = sortMessage;
             // Sorted, the place of a removed track doesn't mean anything any more.
             _removedPlayingIndex = -1;
             NotifyPropertyChanged(nameof(Playlist));
+        }
+
+        // Back to the order before it was sorted.
+        private readonly DelegateCommand _unsortCommand;
+        public ICommand UnsortCommand => _unsortCommand;
+        private void OnUnsortCommandHandler(object? obj)
+        {
+            if (_unsortedOrder is not { } unsortedOrder)
+            {
+                return;
+            }
+
+            Unsort(unsortedOrder);
+            ForgetSort();
+            _removedPlayingIndex = -1;
+            NotifyPropertyChanged(nameof(Playlist));
+        }
+
+        // The column and direction the tracks are sorted by, null while they aren't. Tracks added since then come after
+        // the others, like without a sort.
+        public SortMessage? CurrentSort
+        {
+            get => _currentSort;
+            private set
+            {
+                _currentSort = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        // Arranged some other way, the tracks aren't sorted any more, and the order from before isn't the one to go back to.
+        protected void ForgetSort()
+        {
+            _unsortedOrder = null;
+            if (CurrentSort is not null)
+            {
+                CurrentSort = null;
+            }
+        }
+
+        // The list has other tracks now: sorted as the ones before, and unsorted in the order they came in.
+        protected void SortAgain()
+        {
+            _unsortedOrder = null;
+            if (CurrentSort is { } sort)
+            {
+                _unsortedOrder = AllTracks.ToList();
+                Sort(sort);
+            }
+        }
+
+        protected virtual void Unsort(IReadOnlyList<PlaylistTags> unsortedOrder)
+        {
+            ReplacePlaylist(InOrderOf(unsortedOrder, Playlist));
+        }
+
+        // The tracks in the order given. Ones that aren't in it, added since, come after the others in the order they have.
+        // By the object, the queue can have a track twice, and else by the path: a scan makes new objects.
+        protected static IReadOnlyList<PlaylistTags> InOrderOf(IReadOnlyList<PlaylistTags> order, IEnumerable<PlaylistTags> tracks)
+        {
+            ArgumentNullException.ThrowIfNull(order);
+
+            var byObject = new Dictionary<PlaylistTags, int>(ReferenceEqualityComparer.Instance);
+            var byPath = new Dictionary<string, int>(StringComparer.Ordinal);
+            for (var i = 0; i < order.Count; i++)
+            {
+                byObject.TryAdd(order[i], i);
+                byPath.TryAdd(order[i].Path, i);
+            }
+            return tracks
+                .OrderBy(x => byObject.TryGetValue(x, out var index) || byPath.TryGetValue(x.Path, out index) ? index : int.MaxValue)
+                .ToList();
         }
 
         protected virtual void Sort(SortMessage sortMessage)
@@ -323,7 +397,7 @@ namespace Lalamachine.ViewModel
         public ICommand ToggleLikedCommand => _toggleLikedCommand;
         private void OnToggleLikedCommand(object? obj)
         {
-            if (obj is PlaylistTags { IsOutsideLibrary: false } track)
+            if (obj is PlaylistTags track)
             {
                 TrackPlaylists.ToggleLiked(track);
             }
@@ -454,6 +528,8 @@ namespace Lalamachine.ViewModel
             // Not Move, the grid doesn't show that.
             Playlist.RemoveAt(oldIndex);
             Playlist.Insert(newIndex, track);
+            // Dragged around, it's not sorted by that column any more.
+            ForgetSort();
             // What comes next after a removed playing track stays next, when another track moves across its place.
             _removedPlayingIndex += (newIndex < _removedPlayingIndex ? 1 : 0) - (oldIndex < _removedPlayingIndex ? 1 : 0);
             NotifyPropertyChanged(nameof(Playlist));
@@ -582,29 +658,11 @@ namespace Lalamachine.ViewModel
         public void DeleteAllTracks()
         {
             Playlist.Clear();
+            ForgetSort();
             _removedPlayingIndex = -1;
             NotifyPropertyChanged(nameof(Playlist));
         }
         #endregion
-
-        public async void ManualLoadHandler(object? sender, ManualLoadEventArgs e)
-        {
-            if (e is null)
-            {
-                return;
-            }
-
-            var path = e.Path;
-            try
-            {
-                var tags = new TagReader().Read(path);
-                AddTrack(new PlaylistTags(tags) { IsOutsideLibrary = true });
-            }
-            catch (TagReaderException ex)
-            {
-                await _dialogs.ShowMessageAsync($"{ex.Message}\n{ex.InnerException?.Message}").ConfigureAwait(true);
-            }
-        }
 
         public void PlayNextTrackHandler(object? sender, EventArgs e)
         {

@@ -47,9 +47,11 @@ namespace Lalamachine.ViewModel
         private int _numberOfArtists;
         private int _numberOfAlbums;
 
-        public LibraryViewModel(LalaContext context, Func<LalaContext> createScanContext, IDialogService dialogs)
+        // The genre combinations of the app's settings folder, unless others are given.
+        public LibraryViewModel(LalaContext context, Func<LalaContext> createScanContext, IDialogService dialogs, GenreCombinationSettings? genreCombinations = null)
         {
             _dialogs = dialogs;
+            GenreCombinations = new GenreCombinationsViewModel(genreCombinations ?? new GenreCombinationSettings(), dialogs, () => GenreFilter);
             _model = new MusicLibModel(context, createScanContext);
             _model.FileScannedEvent += FileScannedEventHandler;
             _model.FilesToScanChangedEvent += FilesToScanChangedEventHandler;
@@ -72,8 +74,10 @@ namespace Lalamachine.ViewModel
         {
             switch (e.PropertyName)
             {
+                // After every change of a filter, also of the ones cleared along with another.
                 case nameof(DisplayLib):
                     NotifyDisplayLibChanged();
+                    GenreCombinations.GenreSelectionChanged();
                     break;
                 case nameof(Scanning):
                     NotifyScanningChanged();
@@ -299,6 +303,8 @@ namespace Lalamachine.ViewModel
                 selection.Remove(Constants.ALL);
             }
         }
+
+        public GenreCombinationsViewModel GenreCombinations { get; }
 
         public bool Scanning
         {

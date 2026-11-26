@@ -6,6 +6,7 @@ using System.Linq;
 using LalaDb.Data;
 using LibLala.Audio;
 using LibLala.Audio.Analysis;
+using LibLala.DomainPrimitives;
 using Microsoft.EntityFrameworkCore;
 
 namespace LalaDb.Model
@@ -40,7 +41,7 @@ namespace LalaDb.Model
         }
 
         // The library's tracks that weren't analyzed as their files are now, by these versions of the analyses. The key only
-        // of tracks whose tags have none. Not the tracks whose files are gone.
+        // of tracks whose tags have none, or one that can't be read as a key. Not the tracks whose files are gone.
         public IReadOnlyList<TrackToAnalyze> TracksToAnalyze()
         {
             using var context = _createContext();
@@ -71,7 +72,7 @@ namespace LalaDb.Model
                     analysis = null;
                 }
                 var needsGrid = analysis is null || !BeatGridAnalyzer.IsCurrent(analysis.AnalyzerVersion);
-                var needsKey = string.IsNullOrWhiteSpace(track.InitialKey) && analysis?.KeyAnalyzerVersion != KeyAnalyzer.Version;
+                var needsKey = !new InitialKey(track.InitialKey ?? "").IsCamelot && analysis?.KeyAnalyzerVersion != KeyAnalyzer.Version;
                 var earlier = needsGrid
                     && analysis is not null
                     && BeatGridAnalyzer.IsCurrentUnlessChanged(analysis.AnalyzerVersion, hasTaggedTempo: track.BeatsPerMinute > 0)

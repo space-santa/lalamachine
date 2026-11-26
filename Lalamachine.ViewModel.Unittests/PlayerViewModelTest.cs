@@ -20,9 +20,9 @@ namespace Lalamachine.ViewModel.Unittests
         {
             _player = Substitute.For<IAudioPlayer>();
             _player.Source.Returns(PathOf("a"));
-            _viewModel = new PlayerViewModel(_player, Substitute.For<IDialogService>(), new PlayerSettings(new InMemorySettingsFile()));
+            _viewModel = new PlayerViewModel(_player, new PlayerSettings(new InMemorySettingsFile()));
             // Wired like the queue in the main window.
-            _list = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
+            _list = new PlaylistBaseViewModel("MAIN", Substitute.For<ITrackPlaylists>());
             foreach (var name in new[] { "a", "b", "c" })
             {
                 _list.AddTrack(new LibLalaTagsBuilder(name, new UncheckedTrackPath(PathOf(name)), 5).Build());

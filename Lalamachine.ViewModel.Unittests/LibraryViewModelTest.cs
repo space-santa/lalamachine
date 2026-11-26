@@ -70,7 +70,7 @@ namespace Lalamachine.ViewModel.Unittests
 
         private static LibraryViewModel CreateViewModel(SqliteConnection connection, LalaContext context)
         {
-            return new LibraryViewModel(context, () => CreateContext(connection), Substitute.For<IDialogService>());
+            return new LibraryViewModel(context, () => CreateContext(connection), Substitute.For<IDialogService>(), new GenreCombinationSettings(new InMemorySettingsFile()));
         }
 
         private static List<string> RecordNotifications(LibraryViewModel viewModel)
@@ -83,6 +83,24 @@ namespace Lalamachine.ViewModel.Unittests
         private static string[] Titles(LibraryViewModel viewModel)
         {
             return viewModel.DisplayLib.Select(track => track.Title).OrderBy(title => title).ToArray();
+        }
+
+        [Test]
+        public void GenreCombinations_CanBeSavedWhileGenresAreSelected()
+        {
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            var viewModel = CreateViewModel(connection, context);
+            var notifications = new List<string?>();
+            viewModel.GenreCombinations.PropertyChanged += (o, e) => notifications.Add(e.PropertyName);
+            Assert.That(viewModel.GenreCombinations.CanSave, Is.False);
+
+            viewModel.SetGenreFilterCommand.Execute(new[] { "Rock", "Jazz" });
+            Assert.That(viewModel.GenreCombinations.CanSave, Is.True);
+            Assert.That(notifications, Does.Contain(nameof(GenreCombinationsViewModel.CanSave)));
+
+            viewModel.ClearSearchCommand.Execute(null);
+            Assert.That(viewModel.GenreCombinations.CanSave, Is.False);
         }
 
         // The list control selects its item again when it gets replaced, which sets the same filter again.
@@ -397,7 +415,7 @@ namespace Lalamachine.ViewModel.Unittests
             using var connection = OpenDatabase();
             using var context = CreateContext(connection);
             var viewModel = CreateViewModel(connection, context);
-            var queue = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
+            var queue = new PlaylistBaseViewModel("MAIN", Substitute.For<ITrackPlaylists>());
             viewModel.AddTracksToQueueEvent += queue.AddTracksToQueueHandler;
             viewModel.AddAlbumsToQueueCommand.Execute(new[] { "AliceAlbum1" });
 
@@ -529,9 +547,9 @@ namespace Lalamachine.ViewModel.Unittests
             context.Tracks!.Single(x => x.Title == "a1").InitialKey = "8A";
             context.SaveChanges();
             var viewModel = CreateViewModel(connection, context);
-            var playlist = new LibraryPlaylistViewModel(Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
+            var playlist = new LibraryPlaylistViewModel(Substitute.For<ITrackPlaylists>());
             viewModel.DisplayLibChanged += playlist.DisplayChangedHandler;
-            viewModel.FiltersCleared += playlist.ClearKeyFilterHandler;
+            viewModel.FiltersCleared += playlist.ClearColumnFiltersHandler;
             viewModel.SetGenreFilterCommand.Execute("Rock");
             playlist.KeyFilterOptions.Single(x => x.Key == "8A").IsSelected = true;
             Assert.That(playlist.Playlist.Select(track => track.Title), Is.EqualTo(new[] { "a1" }));
@@ -583,9 +601,9 @@ namespace Lalamachine.ViewModel.Unittests
             context.Tracks!.Single(x => x.Title == "a1").InitialKey = "8A";
             context.SaveChanges();
             var viewModel = CreateViewModel(connection, context);
-            var playlist = new LibraryPlaylistViewModel(Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
+            var playlist = new LibraryPlaylistViewModel(Substitute.For<ITrackPlaylists>());
             viewModel.DisplayLibChanged += playlist.DisplayChangedHandler;
-            viewModel.FiltersCleared += playlist.ClearKeyFilterHandler;
+            viewModel.FiltersCleared += playlist.ClearColumnFiltersHandler;
             viewModel.UpdateListsCommand.Execute(null);
             playlist.KeyFilterOptions.Single(x => x.Key == "8A").IsSelected = true;
 

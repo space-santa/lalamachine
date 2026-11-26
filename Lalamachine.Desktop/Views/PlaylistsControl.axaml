@@ -52,7 +52,7 @@
                         </ContextMenu>
                     </DataGrid.ContextMenu>
                     <DataGrid.Columns>
-                        <!-- The Tag is the column's name, see TrackGrid. -->
+                        <!-- The Tag is the column's name, see TrackGrid. That's where the columns' widths are too. -->
                         <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="🔊" Tag="Playing" CanUserSort="False" Binding="{Binding IsPlaying, Mode=OneWay, Converter={x:Static local:Converters.PlaylistItemIsPlaying}}" />
                         <DataGridTemplateColumn Tag="Liked" CanUserSort="False" CellTemplate="{StaticResource HeartCell}" />
                         <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Title" Tag="Title" Binding="{Binding Title}" />
@@ -76,7 +76,7 @@
                     </StackPanel>
                     <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" IsVisible="{Binding HasUnsavedOrder}">
                         <Button Classes="text" Content="Save order" Command="{Binding SaveOrderCommand}" />
-                        <Button Classes="text" Content="Discard" Command="{Binding DiscardOrderCommand}" Click="DiscardButton_Click" />
+                        <Button Classes="text" Content="Discard" Command="{Binding DiscardOrderCommand}" />
                     </StackPanel>
                     <!-- Not with a new order that isn't saved, what gets pushed has to be what's on screen. -->
                     <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" IsVisible="{Binding !HasUnsavedOrder}">

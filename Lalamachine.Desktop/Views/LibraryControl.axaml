@@ -8,7 +8,55 @@
     <Grid RowDefinitions="*,Auto,*,Auto,Auto">
         <Grid Grid.Row="0" ColumnDefinitions="*,*,*">
             <DockPanel Grid.Column="0">
-                <Label DockPanel.Dock="Top" Classes="header" Content="{Binding GenreHeader}" />
+                <Panel DockPanel.Dock="Top">
+                    <Label Classes="header" Content="{Binding GenreHeader}" />
+                    <!-- The saved genre combinations. -->
+                    <Button x:Name="GenreCombinationsButton"
+                            Classes="columnFilter"
+                            HorizontalAlignment="Right"
+                            Margin="0,0,4,0"
+                            DataContext="{Binding GenreCombinations}"
+                            x:DataType="vm:GenreCombinationsViewModel"
+                            ToolTip.Tip="Saved genre combinations">
+                        <PathIcon Width="12" Height="14" Data="M0,0 H10 V14 L5,10 L0,14 Z" />
+                        <Button.Flyout>
+                            <Flyout Placement="BottomEdgeAlignedRight">
+                                <StackPanel MinWidth="260" MaxWidth="400">
+                                    <TextBlock Classes="flyoutLabel"
+                                               TextWrapping="Wrap"
+                                               IsVisible="{Binding !HasCombinations}"
+                                               Text="None saved yet. Select some genres, then save them here to select them again in one go." />
+                                    <ScrollViewer MaxHeight="400">
+                                        <ItemsControl ItemsSource="{Binding Combinations}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="vm:GenreCombination">
+                                                    <DockPanel>
+                                                        <Button DockPanel.Dock="Right"
+                                                                Classes="flyoutItem"
+                                                                Content="✕"
+                                                                ToolTip.Tip="Delete"
+                                                                Command="{Binding $parent[ItemsControl].((vm:GenreCombinationsViewModel)DataContext).DeleteCommand}"
+                                                                CommandParameter="{Binding}" />
+                                                        <Button Classes="flyoutItem"
+                                                                HorizontalAlignment="Stretch"
+                                                                Click="GenreCombination_Click"
+                                                                ToolTip.Tip="{Binding GenresString}">
+                                                            <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                                                        </Button>
+                                                    </DockPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                    <Button Classes="flyoutAction"
+                                            Content="Save the selected genres..."
+                                            Command="{Binding SaveCommand}"
+                                            IsEnabled="{Binding CanSave}" />
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                </Panel>
                 <ListBox x:Name="GenreList" ItemsSource="{Binding GenreList}" SelectionMode="Multiple" SelectionChanged="GenreList_SelectionChanged" />
             </DockPanel>
             <DockPanel Grid.Column="1">

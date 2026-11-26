@@ -95,6 +95,34 @@ namespace LalaDb.Unittests
             Assert.That(tags.BeatsPerMinute, Is.EqualTo(140));
         }
 
+        [TestCase("Am", "8A")]
+        [TestCase("F#m", "11A")]
+        [TestCase("1d", "8B")]
+        public void AKeyInTheTagsInAnotherNotation_IsShownOnTheCamelotWheel(string tagged, string shown)
+        {
+            var track = AddTrack("a", initialKey: tagged);
+
+            Assert.That(Build(track).InitialKey, Is.EqualTo(shown));
+        }
+
+        [Test]
+        public void TagsWithSomethingElseThanAKey_HaveTheKeyTheAnalysisFound()
+        {
+            var track = AddTrack("a", initialKey: "o");
+            AddAnalysis("a", "8A", 127.998);
+
+            Assert.That(Build(track).InitialKey, Is.EqualTo("8A"));
+        }
+
+        [Test]
+        public void TagsWithSomethingElseThanAKey_ShowItWhenTheAnalysisFoundNone()
+        {
+            var track = AddTrack("a", initialKey: "o");
+            AddAnalysis("a", "", 127.998);
+
+            Assert.That(Build(track).InitialKey, Is.EqualTo("o"));
+        }
+
         [Test]
         public void ATrackWithOnlyOneOfThemInItsTags_HasTheOtherFromTheAnalysis()
         {

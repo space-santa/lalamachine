@@ -1,0 +1,1 @@
+The volume is a knob now: drag it up or down, or turn the mouse wheel over it, and hold Ctrl for small steps. The percentage shows above it while it turns. Clicking its middle mutes and unmutes, the mute button is gone.

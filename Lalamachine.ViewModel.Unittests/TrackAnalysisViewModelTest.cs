@@ -199,7 +199,8 @@ namespace Lalamachine.ViewModel.Unittests
 
             var found = Analyze(path => new SilentDecoder());
 
-            Assert.That(found.Select(e => (e.InitialKey, e.BeatsPerMinute)), Is.EqualTo(new[] { ((string?)"", (uint?)0) }));
+            // No key to show, and no tempo.
+            Assert.That(found.Select(e => (e.InitialKey, e.BeatsPerMinute)), Is.EqualTo(new[] { ((string?)null, (uint?)0) }));
             Assert.That(Analysis(path).KeyAnalyzerVersion, Is.EqualTo(KeyAnalyzer.Version));
         }
 

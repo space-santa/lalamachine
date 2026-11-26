@@ -1,17 +1,18 @@
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace Lalamachine.ViewModel.Unittests
 {
-    public class ColumnOrderSettingsTest
+    public class ColumnSettingsTest
     {
         private static readonly string[] DefaultOrder = ["Title", "Length", "Key", "BPM"];
 
-        private ColumnOrderSettings _settings = null!;
+        private ColumnSettings _settings = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _settings = new ColumnOrderSettings(new InMemorySettingsFile());
+            _settings = new ColumnSettings(new InMemorySettingsFile());
         }
 
         [Test]
@@ -40,9 +41,9 @@ namespace Lalamachine.ViewModel.Unittests
         public void OrderOf_IsKept_AfterTheAppStartsAgain()
         {
             var file = new InMemorySettingsFile();
-            new ColumnOrderSettings(file).SetOrderOf("Library", ["Key", "BPM", "Title", "Length"], DefaultOrder);
+            new ColumnSettings(file).SetOrderOf("Library", ["Key", "BPM", "Title", "Length"], DefaultOrder);
 
-            Assert.That(new ColumnOrderSettings(file).OrderOf("Library", DefaultOrder), Is.EqualTo(new[] { "Key", "BPM", "Title", "Length" }));
+            Assert.That(new ColumnSettings(file).OrderOf("Library", DefaultOrder), Is.EqualTo(new[] { "Key", "BPM", "Title", "Length" }));
         }
 
         [Test]
@@ -90,6 +91,57 @@ namespace Lalamachine.ViewModel.Unittests
             _settings.SetOrderOf("Library", ["Key", "Comment", "BPM", "Title", "Length"], DefaultOrder);
 
             Assert.That(_settings.OrderOf("Library", DefaultOrder), Is.EqualTo(new[] { "Key", "BPM", "Title", "Length" }));
+        }
+
+        private static readonly Dictionary<string, double> DefaultWidths = new() { ["Title"] = 320, ["Length"] = 100, ["BPM"] = 113 };
+
+        [Test]
+        public void WidthsOf_IsNothing_WhenNothingIsSaved()
+        {
+            Assert.That(_settings.WidthsOf("Library"), Is.Empty);
+        }
+
+        [Test]
+        public void WidthsOf_AreTheChangedOnes_InWholePixels_AfterTheAppStartsAgain()
+        {
+            var file = new InMemorySettingsFile();
+
+            new ColumnSettings(file).SetWidthsOf("Library", new Dictionary<string, double> { ["Title"] = 401.6, ["Length"] = 100.2, ["BPM"] = 90 }, DefaultWidths);
+
+            Assert.That(new ColumnSettings(file).WidthsOf("Library"), Is.EquivalentTo(new Dictionary<string, double> { ["Title"] = 402, ["BPM"] = 90 }));
+        }
+
+        [Test]
+        public void WidthsOf_IsTheOneOfTheGrid_AndLeavesItsOrderAlone()
+        {
+            _settings.SetOrderOf("Library", ["Key", "BPM", "Title", "Length"], DefaultOrder);
+
+            _settings.SetWidthsOf("Library", new Dictionary<string, double> { ["Title"] = 400 }, DefaultWidths);
+
+            Assert.That(_settings.WidthsOf("Queue"), Is.Empty);
+            Assert.That(_settings.OrderOf("Library", DefaultOrder), Is.EqualTo(new[] { "Key", "BPM", "Title", "Length" }));
+        }
+
+        [Test]
+        public void WidthsOf_IsNothing_AfterReset_OrWhenTheyAreBackToTheDefault()
+        {
+            _settings.SetWidthsOf("Library", new Dictionary<string, double> { ["Title"] = 400 }, DefaultWidths);
+            _settings.SetWidthsOf("Queue", new Dictionary<string, double> { ["Title"] = 400 }, DefaultWidths);
+
+            _settings.ResetWidthsOf("Library");
+            _settings.SetWidthsOf("Queue", new Dictionary<string, double> { ["Title"] = 320 }, DefaultWidths);
+
+            Assert.That(_settings.WidthsOf("Library"), Is.Empty);
+            Assert.That(_settings.WidthsOf("Queue"), Is.Empty);
+        }
+
+        [Test]
+        public void WidthsOf_SkipsWhatCantBeRead()
+        {
+            var file = new InMemorySettingsFile();
+            file.Save(new Dictionary<string, string> { ["Library.Widths"] = "Title=400,Length,BPM=x,Key=-5,=7,Year=80" });
+
+            Assert.That(new ColumnSettings(file).WidthsOf("Library"), Is.EquivalentTo(new Dictionary<string, double> { ["Title"] = 400, ["Year"] = 80 }));
         }
     }
 }

@@ -422,7 +422,7 @@ namespace Lalamachine.ViewModel
 
         private NamedPlaylistViewModel CreatePlaylist(string name)
         {
-            var playlist = new NamedPlaylistViewModel(name, this, _model, _dialogs) { PlaylistShuffleRepeatState = _shuffleRepeatState };
+            var playlist = new NamedPlaylistViewModel(name, this, _model) { PlaylistShuffleRepeatState = _shuffleRepeatState };
             playlist.PlayTrackEvent += PlaylistPlayTrackHandler;
             playlist.AddTracksToQueueEvent += PlaylistAddTracksToQueueHandler;
             return playlist;

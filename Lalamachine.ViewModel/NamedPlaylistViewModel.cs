@@ -18,7 +18,7 @@ namespace Lalamachine.ViewModel
         private List<PlaylistTags> _savedTracks = new List<PlaylistTags>();
         private bool _isLoaded;
 
-        internal NamedPlaylistViewModel(string name, PlaylistsViewModel playlists, PlaylistModel model, IDialogService dialogs) : base(name, dialogs, playlists)
+        internal NamedPlaylistViewModel(string name, PlaylistsViewModel playlists, PlaylistModel model) : base(name, playlists)
         {
             _playlists = playlists;
             _model = model;
@@ -54,6 +54,7 @@ namespace Lalamachine.ViewModel
         public ICommand DiscardOrderCommand => _discardOrderCommand;
         private void OnDiscardOrder(object? obj)
         {
+            ForgetSort();
             ReplacePlaylist(_savedTracks);
             NotifyPropertyChanged(nameof(Playlist));
         }

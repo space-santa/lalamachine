@@ -18,20 +18,9 @@ namespace Lalamachine.ViewModel
         public bool Transitions { get => GetBool(true); set => Set(value); }
     }
 
-    public class ManualLoadEventArgs : EventArgs
-    {
-        public ManualLoadEventArgs(string path)
-        {
-            Path = path;
-        }
-
-        public string Path { get; set; }
-    }
-
     public class PlayerViewModel : BaseNotifyPropertyChanged
     {
         private readonly IAudioPlayer _audioPlayer;
-        private readonly IDialogService _dialogs;
         private readonly PlayerSettings _playerSettings;
         // Null where lalamachine can't decode tracks itself.
         private readonly WaveformReader? _waveforms;
@@ -44,12 +33,11 @@ namespace Lalamachine.ViewModel
         private bool _isDragOfTrackBefore;
 
         // The player settings of the app's settings folder, unless others are given.
-        public PlayerViewModel(IAudioPlayer audioPlayer, IDialogService dialogs, PlayerSettings? settings = null, WaveformReader? waveforms = null)
+        public PlayerViewModel(IAudioPlayer audioPlayer, PlayerSettings? settings = null, WaveformReader? waveforms = null)
         {
             _playerSettings = settings ?? new PlayerSettings();
             _waveforms = waveforms;
             _audioPlayer = audioPlayer;
-            _dialogs = dialogs;
             IsMuted = _playerSettings.IsMuted;
             Volume = _playerSettings.Volume;
             _audioPlayer.Transitions = _playerSettings.Transitions;
@@ -62,10 +50,8 @@ namespace Lalamachine.ViewModel
             _audioPlayer.MixCalledOff += _audioPlayer_MixCalledOff;
 
             _changePlayPauseCommand = new DelegateCommand(OnChangePlayPause);
-            _loadCommand = new DelegateCommand(OnLoad);
             _nextCommand = new DelegateCommand(OnPlayNextTrack);
             _lastCommand = new DelegateCommand(OnPlayLastTrack);
-            _muteCommand = new DelegateCommand(OnMute);
         }
 
         public event EventHandler? PlayNextTrackEvent;
@@ -135,12 +121,6 @@ namespace Lalamachine.ViewModel
             {
                 PlayLastLibraryTrackEvent?.Invoke(this, EventArgs.Empty);
             }
-        }
-
-        public event EventHandler<ManualLoadEventArgs>? ManualLoadEvent;
-        protected virtual void OnManualLoad(ManualLoadEventArgs e)
-        {
-            ManualLoadEvent?.Invoke(this, e);
         }
 
         public void PlayTrackHandler(object? sender, PlayTrackEventArgs e)
@@ -286,17 +266,12 @@ namespace Lalamachine.ViewModel
 
         private readonly DelegateCommand _changePlayPauseCommand;
         public ICommand ChangePlayPauseCommand => _changePlayPauseCommand;
-        private readonly DelegateCommand _loadCommand;
-        public ICommand LoadCommand => _loadCommand;
 
         private readonly DelegateCommand _nextCommand;
         public ICommand NextCommand => _nextCommand;
 
         private readonly DelegateCommand _lastCommand;
         public ICommand LastCommand => _lastCommand;
-
-        private readonly DelegateCommand _muteCommand;
-        public ICommand MuteCommand => _muteCommand;
 
         private void _audioPlayer_MediaEnded(object? sender, EventArgs e)
         {
@@ -426,21 +401,6 @@ namespace Lalamachine.ViewModel
             {
                 Play();
             }
-        }
-
-        private async void OnLoad(object? commandParameter)
-        {
-            var paths = await _dialogs.PickMusicFilesAsync().ConfigureAwait(true);
-
-            foreach (var path in paths)
-            {
-                OnManualLoad(new ManualLoadEventArgs(path));
-            }
-        }
-
-        private void OnMute(object? commandParameter)
-        {
-            IsMuted = !IsMuted;
         }
 
         public void Open(string path)

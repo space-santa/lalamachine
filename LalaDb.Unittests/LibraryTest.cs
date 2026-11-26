@@ -130,6 +130,20 @@ namespace LalaDb.Unittests
             Assert.That(track.BeatsPerMinute, Is.EqualTo(128));
         }
 
+        // The database has it on the Camelot wheel, like every key lalamachine shows.
+        [Test]
+        public async Task ScanStoresAKeyInAnotherNotationOnTheCamelotWheel()
+        {
+            TestMp3.Write(Path.Combine(_musicDir, "a.mp3"), "A", album: "Album", initialKey: "F#m");
+            using var connection = OpenDatabase();
+            using var context = CreateContext(connection);
+            var model = new MusicLibModel(context, () => CreateContext(connection));
+
+            await model.ScanAsync(_musicDir).ConfigureAwait(false);
+
+            Assert.That(context.Tracks!.Single().InitialKey, Is.EqualTo("11A"));
+        }
+
         [Test]
         public async Task ScanOfTrackWithoutInitialKeyAndBeatsPerMinuteLeavesThemEmpty()
         {
