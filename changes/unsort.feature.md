@@ -1,0 +1,1 @@
+Clicking a column's header a third time puts the list back in the order it had before it was sorted. The arrow in the header always matches the order now, and the library stays sorted when you select other genres, artists or albums.

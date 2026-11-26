@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using LibLala.DomainPrimitives;
 
@@ -38,15 +39,18 @@ namespace Lalamachine.ViewModel
 
     public class LibraryPlaylistViewModel : PlaylistBaseViewModel
     {
-        // All the tracks of the library's selection, in the order on screen. Playlist has the ones that the key filter lets through,
-        // so that next, previous and adding the selection to the queue all go by what is on screen.
+        // All the tracks of the library's selection, in the order on screen. Playlist has the ones that the key and BPM filters
+        // let through, so that next, previous and adding the selection to the queue all go by what is on screen.
         private List<PlaylistTags> _allTracks = new List<PlaylistTags>();
         private ObservableCollection<KeyFilterOption> _keyFilterOptions = new ObservableCollection<KeyFilterOption>();
         private string? _playingPath;
+        private int? _bpmFilterFrom;
+        private int? _bpmFilterTo;
 
-        public LibraryPlaylistViewModel(IDialogService dialogs, ITrackPlaylists trackPlaylists) : base("LIBRARY", dialogs, trackPlaylists)
+        public LibraryPlaylistViewModel(ITrackPlaylists trackPlaylists) : base("LIBRARY", trackPlaylists)
         {
             _clearKeyFilterCommand = new DelegateCommand(OnClearKeyFilter);
+            _clearBpmFilterCommand = new DelegateCommand(OnClearBpmFilter);
         }
 
         private readonly DelegateCommand _clearKeyFilterCommand;
@@ -69,6 +73,42 @@ namespace Lalamachine.ViewModel
 
         public bool IsKeyFilterActive => KeyFilterOptions.Any(x => x.IsSelected);
 
+        // The lowest and the highest BPM to show, either one or both. Either way round, the range is between them. While
+        // there is one, the tracks without a BPM don't show.
+        public int? BpmFilterFrom
+        {
+            get => _bpmFilterFrom;
+            set => SetBpmFilter(ref _bpmFilterFrom, value);
+        }
+
+        public int? BpmFilterTo
+        {
+            get => _bpmFilterTo;
+            set => SetBpmFilter(ref _bpmFilterTo, value);
+        }
+
+        public bool IsBpmFilterActive => BpmFilterFrom is not null || BpmFilterTo is not null;
+
+        private void SetBpmFilter(ref int? bound, int? value, [CallerMemberName] string propertyName = "")
+        {
+            if (bound == value) { return; }
+            bound = value;
+            NotifyPropertyChanged(propertyName);
+            ShowFilteredTracks();
+        }
+
+        private readonly DelegateCommand _clearBpmFilterCommand;
+        public ICommand ClearBpmFilterCommand => _clearBpmFilterCommand;
+        private void OnClearBpmFilter(object? obj)
+        {
+            if (!IsBpmFilterActive) { return; }
+            _bpmFilterFrom = null;
+            _bpmFilterTo = null;
+            NotifyPropertyChanged(nameof(BpmFilterFrom));
+            NotifyPropertyChanged(nameof(BpmFilterTo));
+            ShowFilteredTracks();
+        }
+
         public void DisplayChangedHandler(object? sender, DisplayLibChangedEventArgs e)
         {
             if (e is null)
@@ -83,17 +123,21 @@ namespace Lalamachine.ViewModel
                 track.IsPlaying = true;
             }
             MarkLiked(_allTracks);
+            // Sorted like the selection before, the column header still says so.
+            SortAgain();
             UpdateKeyFilterOptions(SelectedKeys());
             ShowFilteredTracks();
         }
 
-        public void ClearKeyFilterHandler(object? sender, EventArgs e)
+        // The library's own filters were cleared, these go too.
+        public void ClearColumnFiltersHandler(object? sender, EventArgs e)
         {
-            // Most of the time there is no key filter, and no reason to rebuild the list.
+            // Most of the time there is no filter, and no reason to rebuild the list.
             if (IsKeyFilterActive)
             {
                 ClearKeyFilterCommand.Execute(null);
             }
+            ClearBpmFilterCommand.Execute(null);
         }
 
         public override void TrackAnalyzedHandler(object? sender, TrackAnalyzedEventArgs e)
@@ -107,7 +151,7 @@ namespace Lalamachine.ViewModel
             var tracks = _allTracks.Where(x => x.Path == e.Path).ToList();
             var wereLetThrough = tracks.Select(x => IsLetThrough(x, selectedKeys)).ToList();
             base.TrackAnalyzedHandler(sender, e);
-            if (e.InitialKey is null || tracks.Count == 0)
+            if (tracks.Count == 0)
             {
                 return;
             }
@@ -115,13 +159,13 @@ namespace Lalamachine.ViewModel
             // The keys to filter by are the ones the tracks have now: one that no track had is new, and "(no key)" goes when
             // the last track without one got one. The selected ones stay.
             var keys = _allTracks.Select(x => x.InitialKey).Concat(selectedKeys).ToHashSet();
-            if (!keys.SetEquals(KeyFilterOptions.Select(x => x.Key)))
+            if (e.InitialKey is not null && !keys.SetEquals(KeyFilterOptions.Select(x => x.Key)))
             {
                 UpdateKeyFilterOptions(selectedKeys);
             }
 
-            // A track that the filter hid can have a selected key now, or one that it let through not any more. Only then is
-            // the list replaced, that loses what is selected in it.
+            // A track that a filter hid can have a selected key or a BPM in the range now, or one that it let through not any
+            // more. Only then is the list replaced, that loses what is selected in it.
             if (!tracks.Select(x => IsLetThrough(x, selectedKeys)).SequenceEqual(wereLetThrough))
             {
                 ShowFilteredTracks();
@@ -139,6 +183,12 @@ namespace Lalamachine.ViewModel
             ReplacePlaylist(_allTracks);
             base.Sort(sortMessage);
             _allTracks = Playlist.ToList();
+            ReplacePlaylist(FilteredTracks());
+        }
+
+        protected override void Unsort(IReadOnlyList<PlaylistTags> unsortedOrder)
+        {
+            _allTracks = InOrderOf(unsortedOrder, _allTracks).ToList();
             ReplacePlaylist(FilteredTracks());
         }
 
@@ -185,6 +235,7 @@ namespace Lalamachine.ViewModel
             ReplacePlaylist(FilteredTracks());
             NotifyPropertyChanged(nameof(Playlist));
             NotifyPropertyChanged(nameof(IsKeyFilterActive));
+            NotifyPropertyChanged(nameof(IsBpmFilterActive));
         }
 
         private IEnumerable<PlaylistTags> FilteredTracks()
@@ -193,10 +244,22 @@ namespace Lalamachine.ViewModel
             return _allTracks.Where(x => IsLetThrough(x, selectedKeys));
         }
 
-        // Without a key selected, the filter lets all tracks through.
-        private static bool IsLetThrough(PlaylistTags track, HashSet<string> selectedKeys)
+        // Without a key selected, the key filter lets all tracks through, and without a BPM the BPM filter.
+        private bool IsLetThrough(PlaylistTags track, HashSet<string> selectedKeys)
         {
-            return selectedKeys.Count == 0 || selectedKeys.Contains(track.InitialKey);
+            return (selectedKeys.Count == 0 || selectedKeys.Contains(track.InitialKey)) && IsInBpmRange(track.BeatsPerMinute);
+        }
+
+        private bool IsInBpmRange(uint beatsPerMinute)
+        {
+            if (!IsBpmFilterActive)
+            {
+                return true;
+            }
+
+            long from = BpmFilterFrom ?? 0;
+            long to = BpmFilterTo ?? (long)uint.MaxValue;
+            return beatsPerMinute > 0 && beatsPerMinute >= Math.Min(from, to) && beatsPerMinute <= Math.Max(from, to);
         }
     }
 }

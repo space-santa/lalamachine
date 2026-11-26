@@ -6,6 +6,7 @@ using System.Linq;
 using LalaDb.Data;
 using LibLala.Audio;
 using LibLala.Audio.Analysis;
+using LibLala.DomainPrimitives;
 using Microsoft.EntityFrameworkCore;
 
 namespace LalaDb.Model
@@ -23,8 +24,8 @@ namespace LalaDb.Model
 
     // A track and what to look for in it: the beats, the key, the waveform, or more of them. With the grid that an earlier
     // version of the analysis found, and that version, when this one finds the same unless it may change: see
-    // BeatGridAnalyzer.MayChange.
-    public sealed record TrackToAnalyze(string Path, FileStamp Stamp, int TaggedBeatsPerMinute, bool NeedsGrid, bool NeedsKey, bool NeedsWaveform, BeatGrid? Earlier = null, int EarlierVersion = 0);
+    // BeatGridAnalyzer.MayChange. With what its tags have for a key, also when that isn't one, to show when none is found.
+    public sealed record TrackToAnalyze(string Path, FileStamp Stamp, int TaggedBeatsPerMinute, bool NeedsGrid, bool NeedsKey, bool NeedsWaveform, BeatGrid? Earlier = null, int EarlierVersion = 0, string TaggedKey = "");
 
     // The analyses and waveforms of the tracks, by path. Each call has its own context, so it can be used from any thread.
     public class TrackAnalysisStore
@@ -40,7 +41,7 @@ namespace LalaDb.Model
         }
 
         // The library's tracks that weren't analyzed as their files are now, by these versions of the analyses. The key only
-        // of tracks whose tags have none. Not the tracks whose files are gone.
+        // of tracks whose tags have none, or one that can't be read as a key. Not the tracks whose files are gone.
         public IReadOnlyList<TrackToAnalyze> TracksToAnalyze()
         {
             using var context = _createContext();
@@ -71,7 +72,7 @@ namespace LalaDb.Model
                     analysis = null;
                 }
                 var needsGrid = analysis is null || !BeatGridAnalyzer.IsCurrent(analysis.AnalyzerVersion);
-                var needsKey = string.IsNullOrWhiteSpace(track.InitialKey) && analysis?.KeyAnalyzerVersion != KeyAnalyzer.Version;
+                var needsKey = !new InitialKey(track.InitialKey ?? "").IsCamelot && analysis?.KeyAnalyzerVersion != KeyAnalyzer.Version;
                 var earlier = needsGrid
                     && analysis is not null
                     && BeatGridAnalyzer.IsCurrentUnlessChanged(analysis.AnalyzerVersion, hasTaggedTempo: track.BeatsPerMinute > 0)
@@ -80,7 +81,7 @@ namespace LalaDb.Model
                 var needsWaveform = !waveforms.TryGetValue(track.Path, out var waveformStamp) || waveformStamp != stamp;
                 if (needsGrid || needsKey || needsWaveform)
                 {
-                    toAnalyze.Add(new TrackToAnalyze(track.Path, stamp, track.BeatsPerMinute, needsGrid, needsKey, needsWaveform, earlier, earlier is null ? 0 : analysis!.AnalyzerVersion));
+                    toAnalyze.Add(new TrackToAnalyze(track.Path, stamp, track.BeatsPerMinute, needsGrid, needsKey, needsWaveform, earlier, earlier is null ? 0 : analysis!.AnalyzerVersion, track.InitialKey ?? ""));
                 }
             }
             return toAnalyze;

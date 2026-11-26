@@ -12,8 +12,6 @@ namespace Lalamachine.Desktop
     {
         public static readonly IValueConverter IsPlayingDisplay = new FuncValueConverter<bool, string>(isPlaying => isPlaying ? "⏸" : "▶");
 
-        public static readonly IValueConverter MutedDisplay = new FuncValueConverter<bool, string>(muted => muted ? "🔇" : "🔊");
-
         public static readonly IValueConverter PlaylistItemIsPlaying = new FuncValueConverter<bool, string>(isPlaying => isPlaying ? "🔊" : "");
 
         public static readonly IValueConverter ShuffleRepeatContent = new FuncValueConverter<ShuffleRepeatState, string>(state => state switch
@@ -32,7 +30,8 @@ namespace Lalamachine.Desktop
 
         public static readonly IValueConverter AtLeastOne = new FuncValueConverter<double, double>(value => Math.Max(value, 1));
 
-        public static readonly IValueConverter VolumeSize = new FuncValueConverter<double, double>(volume => Math.Floor(16.0 / 100 * volume + 12));
+        // Of the volume, a whole number.
+        public static readonly IValueConverter Percent = new FuncValueConverter<double, string>(value => $"{Math.Round(value).ToString(CultureInfo.InvariantCulture)}%");
 
         // The artist too, before the title.
         public static readonly IValueConverter TrackToTitle = new FuncValueConverter<TrackInfo?, string>(track => track switch
@@ -45,7 +44,7 @@ namespace Lalamachine.Desktop
         public static readonly IValueConverter CoverToBitmap = new FuncValueConverter<byte[]?, Bitmap?>(BitmapOf);
 
         // Twice as wide as Border.cover, sharp on a screen with a high resolution too. Not the thousands of pixels a cover can have.
-        private const int CoverWidth = 2 * 136;
+        private const int CoverWidth = 2 * 104;
 
         private static string FormatSeconds(double seconds)
         {

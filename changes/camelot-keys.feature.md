@@ -1,0 +1,1 @@
+Keys written another way in the tags, like Am, F#m, Dbmaj or Open Key's 1m, show as Camelot keys like Mixed In Key's (8A, 11A), with the key's name when you hover over them, and they sort and filter with the others. A track whose tags have something that isn't a key gets the key the app finds itself.

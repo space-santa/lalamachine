@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.VisualTree;
 using LalaDb.Data;
 using LalaDb.Model;
 using Lalamachine.Desktop.Services;
@@ -46,6 +49,8 @@ namespace Lalamachine.Desktop.Views
         // Null where lalamachine doesn't have the system's media controls.
         private readonly MediaControlsViewModel? _mediaControls;
         private bool _isCloseConfirmed;
+        // From the press of the space bar to letting go of it, while it repeats.
+        private bool _isSpaceDown;
 
         public MainWindow()
         {
@@ -64,7 +69,7 @@ namespace Lalamachine.Desktop.Views
             var openDecoder = AudioPlayerFactory.DecoderFactory();
             _audioPlayer = AudioPlayerFactory.Create(analyses);
             _waveforms = openDecoder is null ? null : new WaveformReader(openDecoder, analyses.FindWaveform, analyses.SaveWaveform);
-            _player = new PlayerViewModel(_audioPlayer, _dialogs, waveforms: _waveforms);
+            _player = new PlayerViewModel(_audioPlayer, waveforms: _waveforms);
 #pragma warning disable CA2000 // Dispose objects before losing scope. The view model owns the controls, it disposes them.
             if (MediaControlsFactory.Create() is { } mediaControls)
             {
@@ -73,15 +78,14 @@ namespace Lalamachine.Desktop.Views
 #pragma warning restore CA2000 // Dispose objects before losing scope
             _settingsViewModel = new SettingsViewModel(_dialogs, context);
             _playlistsViewModel = new PlaylistsViewModel(context, _dialogs, _settingsViewModel.JellyfinPusher, _settingsViewModel.JellyfinPuller);
-            _queueViewModel = new QueueViewModel(context, _dialogs, _playlistsViewModel);
+            _queueViewModel = new QueueViewModel(context, _playlistsViewModel);
             _shuffleRepeatViewModel = new ShuffleRepeatViewModel();
             _libraryViewModel = new LibraryViewModel(context, () => new LalaContext(optionsBuilder.Options), _dialogs);
-            _libraryPlaylistViewModel = new LibraryPlaylistViewModel(_dialogs, _playlistsViewModel);
+            _libraryPlaylistViewModel = new LibraryPlaylistViewModel(_playlistsViewModel);
 
             _shuffleRepeatViewModel.ShuffleRepeatChanged += _queueViewModel.ShuffleRepeatChangedHandler;
             _shuffleRepeatViewModel.ShuffleRepeatChanged += _playlistsViewModel.ShuffleRepeatChangedHandler;
             _shuffleRepeatViewModel.ShuffleRepeatChanged += _libraryPlaylistViewModel.ShuffleRepeatChangedHandler;
-            _player.ManualLoadEvent += _queueViewModel.ManualLoadHandler;
 
             _player.PlayNextTrackEvent += _queueViewModel.PlayNextTrackHandler;
             _player.PlayLastTrackEvent += _queueViewModel.PlayLastTrackHandler;
@@ -104,7 +108,7 @@ namespace Lalamachine.Desktop.Views
             _libraryViewModel.ScanningChanged += _settingsViewModel.ScanningChangedHandler;
             _libraryViewModel.ScanningChanged += _playlistsViewModel.ScanningChangedHandler;
             _libraryViewModel.DisplayLibChanged += _libraryPlaylistViewModel.DisplayChangedHandler;
-            _libraryViewModel.FiltersCleared += _libraryPlaylistViewModel.ClearKeyFilterHandler;
+            _libraryViewModel.FiltersCleared += _libraryPlaylistViewModel.ClearColumnFiltersHandler;
             _libraryViewModel.AddTracksToQueueEvent += _queueViewModel.AddTracksToQueueHandler;
 
             if (openDecoder is not null)
@@ -143,6 +147,45 @@ namespace Lalamachine.Desktop.Views
                 WindowStartupLocation = WindowStartupLocation.CenterScreen;
             }
             if (_settings.Maximized) { WindowState = WindowState.Maximized; }
+
+            // Before the control that has the focus: a button would be clicked, a list would select.
+            AddHandler(KeyDownEvent, Window_KeyDown, RoutingStrategies.Tunnel);
+            AddHandler(KeyUpEvent, Window_KeyUp, RoutingStrategies.Tunnel);
+            // Let go of in another app, it's never let go of here.
+            Deactivated += (sender, e) => _isSpaceDown = false;
+        }
+
+        // Space plays and pauses, wherever the focus is. Once per press: held, it repeats. Not while typing: the search box
+        // and the settings' fields have spaces in them too.
+        private void Window_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (IsPlayPauseKey(e))
+            {
+                if (!_isSpaceDown)
+                {
+                    _isSpaceDown = true;
+                    _player.ChangePlayPauseCommand.Execute(null);
+                }
+                e.Handled = true;
+            }
+        }
+
+        // A button that has the focus is clicked when Space is let go.
+        private void Window_KeyUp(object? sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Space)
+            {
+                _isSpaceDown = false;
+            }
+            if (IsPlayPauseKey(e))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private static bool IsPlayPauseKey(KeyEventArgs e)
+        {
+            return e.Key == Key.Space && e.KeyModifiers == KeyModifiers.None && (e.Source as Visual)?.FindAncestorOfType<TextBox>(includeSelf: true) is null;
         }
 
         // Not in OnClosed, by then the window has no platform window any more and its position reads as 0,0.

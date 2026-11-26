@@ -7,12 +7,13 @@ using System.Threading;
 using LalaDb.Model;
 using LibLala.Audio;
 using LibLala.Audio.Analysis;
+using LibLala.DomainPrimitives;
 using LibLala.LibLalaTagReader;
 
 namespace Lalamachine.ViewModel
 {
-    // What the analysis found in a track whose tags have no key, or no tempo: null for the one that the tags have, an empty
-    // key or 0 when there is none to find.
+    // What the analysis found in a track whose tags have no key, or no tempo: null for the one that the tags have. When there
+    // is none to find, what the tags have for a key, empty or something else than a key, and 0 for a tempo.
     public sealed class TrackAnalyzedEventArgs : EventArgs
     {
         public TrackAnalyzedEventArgs(string path, string? initialKey, uint? beatsPerMinute)
@@ -219,10 +220,11 @@ namespace Lalamachine.ViewModel
             while (read > 0);
         }
 
-        // Null when the tags have both, or what they don't have wasn't looked for this time.
+        // Null when the tags have both, or what they don't have wasn't looked for this time. A key that isn't found is what
+        // the tags have instead, as the lists show it then: a key found before in the file as it was goes.
         private static TrackAnalyzedEventArgs? Found(TrackToAnalyze track, BeatGrid? grid, MusicalKey? key)
         {
-            var initialKey = track.NeedsKey ? key?.Camelot ?? "" : null;
+            var initialKey = track.NeedsKey ? key?.Camelot ?? new InitialKey(track.TaggedKey).ToString() : null;
             uint? beatsPerMinute = track.NeedsGrid && track.TaggedBeatsPerMinute <= 0 ? grid?.ShownBeatsPerMinute ?? 0 : null;
             return initialKey is null && beatsPerMinute is null ? null : new TrackAnalyzedEventArgs(track.Path, initialKey, beatsPerMinute);
         }

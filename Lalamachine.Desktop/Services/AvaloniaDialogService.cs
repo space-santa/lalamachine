@@ -9,13 +9,6 @@ namespace Lalamachine.Desktop.Services
 {
     internal sealed class AvaloniaDialogService : IDialogService
     {
-        private static readonly FilePickerFileType MusicFiles = new("Music")
-        {
-            Patterns = ["*.mp3", "*.m4a"],
-            AppleUniformTypeIdentifiers = ["public.mp3", "public.mpeg-4-audio"],
-            MimeTypes = ["audio/mpeg", "audio/mp4"],
-        };
-
         private readonly Window _owner;
 
         public AvaloniaDialogService(Window owner)
@@ -30,28 +23,6 @@ namespace Lalamachine.Desktop.Services
         public Task<string?> AskForTextAsync(string prompt, string text) => TextInputWindow.ShowAsync(_owner, prompt, text);
 
         public Task<int?> ChooseAsync(string prompt, IReadOnlyList<string> choices) => ChoiceWindow.ShowAsync(_owner, prompt, choices);
-
-        public async Task<IReadOnlyList<string>> PickMusicFilesAsync()
-        {
-            var files = await _owner.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
-            {
-                AllowMultiple = true,
-                FileTypeFilter = [MusicFiles],
-            }).ConfigureAwait(true);
-
-            var paths = new List<string>();
-            foreach (var file in files)
-            {
-                using (file)
-                {
-                    if (file.TryGetLocalPath() is { } path)
-                    {
-                        paths.Add(path);
-                    }
-                }
-            }
-            return paths;
-        }
 
         public async Task<string?> PickFolderAsync()
         {

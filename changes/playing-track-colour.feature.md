@@ -1,0 +1,1 @@
+The track that plays has its own blue in the lists. When the orange selection is on it, the selection goes along to the next track, unless you selected another one. Clicking a selected track again deselects it.

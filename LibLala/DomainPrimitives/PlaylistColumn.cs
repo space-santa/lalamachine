@@ -17,6 +17,7 @@ namespace LibLala.DomainPrimitives
             }
 
             var title = headerContent.Trim();
+            Name = title;
             ColumnType = title switch
             {
                 "Track" => PlaylistColumnType.Track,
@@ -35,5 +36,8 @@ namespace LibLala.DomainPrimitives
         }
 
         public PlaylistColumnType ColumnType { get; }
+
+        // As the column is called, e.g. BPM.
+        public string Name { get; }
     }
 }

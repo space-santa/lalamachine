@@ -26,7 +26,7 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
-                <!-- The Tag is the column's name, see TrackGrid. -->
+                <!-- The Tag is the column's name, see TrackGrid. That's where the columns' widths are too. -->
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="🔊" Tag="Playing" CanUserSort="False" Binding="{Binding IsPlaying, Mode=OneWay, Converter={x:Static local:Converters.PlaylistItemIsPlaying}}" />
                 <DataGridTemplateColumn Tag="Liked" CanUserSort="False" CellTemplate="{StaticResource HeartCell}" />
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Title" Tag="Title" Binding="{Binding Title}" />
@@ -72,7 +72,39 @@
                         </DataTemplate>
                     </DataGridTextColumn.HeaderTemplate>
                 </DataGridTextColumn>
-                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="BPM" Tag="BPM" Binding="{Binding BeatsPerMinuteString}" />
+                <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="BPM" Tag="BPM" Binding="{Binding BeatsPerMinuteString}">
+                    <DataGridTextColumn.HeaderTemplate>
+                        <DataTemplate x:DataType="sys:String">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <TextBlock Text="{Binding}" VerticalAlignment="Center" />
+                                <!-- A header's data context is its text. -->
+                                <Button x:DataType="vm:LibraryPlaylistViewModel"
+                                        DataContext="{Binding $parent[DataGrid].DataContext}"
+                                        Classes="columnFilter"
+                                        Classes.active="{Binding IsBpmFilterActive}"
+                                        ToolTip.Tip="Filter by BPM">
+                                    <PathIcon Width="12" Height="12" Data="M0,0 H12 L7,6 V12 L5,10 V6 Z" />
+                                    <Button.Flyout>
+                                        <Flyout Placement="BottomEdgeAlignedLeft">
+                                            <StackPanel>
+                                                <!-- Either one alone, or both for a range. -->
+                                                <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+                                                    <TextBlock Grid.Row="0" Grid.Column="0" Classes="flyoutLabel" Text="From" />
+                                                    <NumericUpDown Grid.Row="0" Grid.Column="1" Classes="bpm" Value="{Binding BpmFilterFrom}" />
+                                                    <TextBlock Grid.Row="1" Grid.Column="0" Classes="flyoutLabel" Text="To" />
+                                                    <NumericUpDown Grid.Row="1" Grid.Column="1" Classes="bpm" Value="{Binding BpmFilterTo}" />
+                                                </Grid>
+                                                <Button Classes="flyoutAction"
+                                                        Content="Clear filter"
+                                                        Command="{Binding ClearBpmFilterCommand}" />
+                                            </StackPanel>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Artist" Tag="Artist" Binding="{Binding ArtistString}" />
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Genre" Tag="Genre" Binding="{Binding GenreString}" />
                 <DataGridTextColumn x:DataType="vm:PlaylistTags" Header="Track" Tag="Track" Binding="{Binding Track}" />

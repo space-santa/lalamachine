@@ -181,6 +181,31 @@ namespace LalaDb.Unittests
             Assert.That((track.NeedsGrid, track.NeedsKey), Is.EqualTo((true, true)));
         }
 
+        [TestCase("o")]
+        [TestCase("Unknown")]
+        public void ATrackWhoseTagsHaveSomethingElseThanAKey_IsToBeAnalyzedForItsKeyToo(string initialKey)
+        {
+            AddTrack("a.mp3", initialKey: initialKey);
+
+            var track = _store.TracksToAnalyze().Single();
+
+            Assert.That((track.NeedsGrid, track.NeedsKey), Is.EqualTo((true, true)));
+            Assert.That(track.TaggedKey, Is.EqualTo(initialKey));
+        }
+
+        // Written another way than on the Camelot wheel, it's still the key.
+        [TestCase("Am")]
+        [TestCase("8a")]
+        [TestCase("1m")]
+        public void ATrackWithAKeyInAnotherNotation_IsntAnalyzedForIt(string initialKey)
+        {
+            AddTrack("a.mp3", initialKey: initialKey);
+
+            var track = _store.TracksToAnalyze().Single();
+
+            Assert.That((track.NeedsGrid, track.NeedsKey), Is.EqualTo((true, false)));
+        }
+
         [Test]
         public void AKeyThatWasFound_IsKept_AndIsntLookedForAgain()
         {

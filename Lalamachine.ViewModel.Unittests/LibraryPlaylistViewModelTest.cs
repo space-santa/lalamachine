@@ -24,7 +24,7 @@ namespace Lalamachine.ViewModel.Unittests
 
         private static LibraryPlaylistViewModel ViewModelWith(params PlaylistTags[] tracks)
         {
-            var viewModel = new LibraryPlaylistViewModel(Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
+            var viewModel = new LibraryPlaylistViewModel(Substitute.For<ITrackPlaylists>());
             ShowLibrary(viewModel, tracks);
             return viewModel;
         }
@@ -101,25 +101,25 @@ namespace Lalamachine.ViewModel.Unittests
         }
 
         [Test]
-        public void ClearKeyFilterHandler_ShowsEverythingAndUnticksAll()
+        public void ClearColumnFiltersHandler_ShowsEverythingAndUnticksAll()
         {
             var viewModel = ViewModelWith(Track("a", "10A"), Track("b", "2A"));
             Tick(viewModel, "10A");
 
-            viewModel.ClearKeyFilterHandler(null, System.EventArgs.Empty);
+            viewModel.ClearColumnFiltersHandler(null, System.EventArgs.Empty);
 
             Assert.That(Titles(viewModel), Is.EqualTo(new[] { "a", "b" }));
             Assert.That(viewModel.IsKeyFilterActive, Is.False);
         }
 
         [Test]
-        public void ClearKeyFilterHandler_NoFilter_DoesNotRebuildTheList()
+        public void ClearColumnFiltersHandler_NoFilter_DoesNotRebuildTheList()
         {
             var viewModel = ViewModelWith(Track("a", "10A"), Track("b", "2A"));
             var notifications = new List<string?>();
             viewModel.PropertyChanged += (o, e) => notifications.Add(e.PropertyName);
 
-            viewModel.ClearKeyFilterHandler(null, System.EventArgs.Empty);
+            viewModel.ClearColumnFiltersHandler(null, System.EventArgs.Empty);
 
             Assert.That(notifications, Is.Empty);
         }
@@ -324,7 +324,7 @@ namespace Lalamachine.ViewModel.Unittests
         {
             var trackPlaylists = Substitute.For<ITrackPlaylists>();
             trackPlaylists.IsLiked("/path/to/a").Returns(true);
-            var viewModel = new LibraryPlaylistViewModel(Substitute.For<IDialogService>(), trackPlaylists);
+            var viewModel = new LibraryPlaylistViewModel(trackPlaylists);
 
             ShowLibrary(viewModel, Track("a", "2A"), Track("b", "2A"));
 
@@ -336,7 +336,7 @@ namespace Lalamachine.ViewModel.Unittests
         public void LikedChanged_TrackHiddenByTheFilter_IsLikedWhenShownAgain()
         {
             var trackPlaylists = Substitute.For<ITrackPlaylists>();
-            var viewModel = new LibraryPlaylistViewModel(Substitute.For<IDialogService>(), trackPlaylists);
+            var viewModel = new LibraryPlaylistViewModel(trackPlaylists);
             ShowLibrary(viewModel, Track("a", "2A"), Track("b", "10A"));
             Tick(viewModel, "10A");
 
@@ -455,6 +455,132 @@ namespace Lalamachine.ViewModel.Unittests
 
             Assert.That(viewModel.Playlist[0].InitialKey, Is.Empty);
             Assert.That(viewModel.KeyFilterOptions, Is.SameAs(options));
+        }
+
+        [TestCase(120, 130, new[] { "b", "c" })]
+        [TestCase(130, 120, new[] { "b", "c" })]
+        [TestCase(125, null, new[] { "c", "d" })]
+        [TestCase(null, 125, new[] { "a", "b" })]
+        [TestCase(128, 128, new[] { "c" })]
+        public void BpmFilter_ShowsTheTracksInTheRange_WithoutTheOnesWithoutABpm(int? from, int? to, string[] expected)
+        {
+            var viewModel = ViewModelWith(Track("a", "", 87), Track("b", "", 120), Track("c", "", 128), Track("d", "", 174), Track("e", "", 0));
+
+            viewModel.BpmFilterFrom = from;
+            viewModel.BpmFilterTo = to;
+
+            Assert.That(Titles(viewModel), Is.EqualTo(expected));
+            Assert.That(viewModel.IsBpmFilterActive, Is.True);
+        }
+
+        [Test]
+        public void BpmFilter_TellsTheViewWhatChanged()
+        {
+            var viewModel = ViewModelWith(Track("a", "", 87), Track("b", "", 120));
+            var notifications = new List<string?>();
+            viewModel.PropertyChanged += (o, e) => notifications.Add(e.PropertyName);
+
+            viewModel.BpmFilterFrom = 100;
+
+            Assert.That(notifications, Is.SupersetOf(new[] { nameof(viewModel.BpmFilterFrom), nameof(viewModel.Playlist), nameof(viewModel.IsBpmFilterActive) }));
+        }
+
+        [Test]
+        public void BpmFilter_AndKeyFilter_BothApply()
+        {
+            var viewModel = ViewModelWith(Track("a", "8A", 120), Track("b", "8A", 87), Track("c", "2A", 120));
+
+            Tick(viewModel, "8A");
+            viewModel.BpmFilterFrom = 100;
+
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "a" }));
+        }
+
+        [Test]
+        public void ClearBpmFilter_ShowsEverything()
+        {
+            var viewModel = ViewModelWith(Track("a", "", 87), Track("b", "", 120), Track("c", "", 0));
+            viewModel.BpmFilterFrom = 100;
+            viewModel.BpmFilterTo = 130;
+
+            viewModel.ClearBpmFilterCommand.Execute(null);
+
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "a", "b", "c" }));
+            Assert.That((viewModel.BpmFilterFrom, viewModel.BpmFilterTo, viewModel.IsBpmFilterActive), Is.EqualTo(((int?)null, (int?)null, false)));
+        }
+
+        [Test]
+        public void ClearColumnFiltersHandler_ClearsTheBpmFilterToo()
+        {
+            var viewModel = ViewModelWith(Track("a", "8A", 87), Track("b", "2A", 120));
+            Tick(viewModel, "8A");
+            viewModel.BpmFilterTo = 100;
+
+            viewModel.ClearColumnFiltersHandler(null, System.EventArgs.Empty);
+
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "a", "b" }));
+            Assert.That((viewModel.IsKeyFilterActive, viewModel.IsBpmFilterActive), Is.EqualTo((false, false)));
+        }
+
+        [Test]
+        public void BpmFilter_NewLibrarySelection_KeepsTheFilter()
+        {
+            var viewModel = ViewModelWith(Track("a", "", 87));
+            viewModel.BpmFilterFrom = 100;
+
+            ShowLibrary(viewModel, Track("b", "", 87), Track("c", "", 120));
+
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "c" }));
+        }
+
+        [Test]
+        public void TrackAnalyzed_ATrackThatTheBpmFilterHid_ShowsWhenItGetsABpmInTheRange()
+        {
+            var viewModel = ViewModelWith(Track("a", "8A", 120), Track("b", "8A", 0));
+            viewModel.BpmFilterFrom = 100;
+
+            viewModel.TrackAnalyzedHandler(null, new TrackAnalyzedEventArgs("/path/to/b", null, 128));
+
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "a", "b" }));
+        }
+
+        [Test]
+        public void UnsortWhileFiltered_HiddenTracksAreInTheirOrderToo()
+        {
+            var viewModel = ViewModelWith(Track("a", "10A", 128), Track("b", "2A", 90), Track("c", "10A", 87));
+            Tick(viewModel, "10A");
+            viewModel.SortCommand.Execute(new SortMessage(ListSortDirection.Ascending, new PlaylistColumn("BPM")));
+
+            viewModel.UnsortCommand.Execute(null);
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "a", "c" }));
+
+            viewModel.ClearKeyFilterCommand.Execute(null);
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "a", "b", "c" }));
+        }
+
+        [Test]
+        public void NewLibrarySelection_WhileSorted_IsSortedToo_AndUnsortsToTheOrderItCameIn()
+        {
+            var viewModel = ViewModelWith(Track("a", "", 128), Track("b", "", 90));
+            viewModel.SortCommand.Execute(new SortMessage(ListSortDirection.Ascending, new PlaylistColumn("BPM")));
+
+            ShowLibrary(viewModel, Track("c", "", 140), Track("d", "", 87), Track("e", "", 100));
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "d", "e", "c" }));
+            Assert.That(viewModel.CurrentSort?.Column.Name, Is.EqualTo("BPM"));
+
+            viewModel.UnsortCommand.Execute(null);
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "c", "d", "e" }));
+        }
+
+        [Test]
+        public void NewLibrarySelection_NotSorted_StaysInTheOrderItCameIn()
+        {
+            var viewModel = ViewModelWith(Track("a", "", 128));
+
+            ShowLibrary(viewModel, Track("c", "", 140), Track("d", "", 87));
+
+            Assert.That(Titles(viewModel), Is.EqualTo(new[] { "c", "d" }));
+            Assert.That(viewModel.CurrentSort, Is.Null);
         }
 
         [TestCase(ShuffleRepeatState.RepeatOne, "/path/to/a")]

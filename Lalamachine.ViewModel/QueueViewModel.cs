@@ -13,7 +13,7 @@ namespace Lalamachine.ViewModel
     {
         private readonly PlaylistModel _playlistModel;
 
-        public QueueViewModel(LalaContext context, IDialogService dialogs, ITrackPlaylists trackPlaylists) : base("MAIN", dialogs, trackPlaylists)
+        public QueueViewModel(LalaContext context, ITrackPlaylists trackPlaylists) : base("MAIN", trackPlaylists)
         {
             _playlistModel = new PlaylistModel(context);
             _saveAsPlaylistCommand = new DelegateCommand(OnSaveAsPlaylist);
@@ -29,8 +29,7 @@ namespace Lalamachine.ViewModel
             }
         }
 
-        // The queue is the only place for a track that is outside the library.
-        public bool CanSaveAsPlaylist => HasTracks && !Playlist.Any(x => x.IsOutsideLibrary);
+        public bool CanSaveAsPlaylist => HasTracks;
 
         private readonly DelegateCommand _saveAsPlaylistCommand;
         public ICommand SaveAsPlaylistCommand => _saveAsPlaylistCommand;

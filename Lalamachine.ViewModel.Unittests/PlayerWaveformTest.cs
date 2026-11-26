@@ -70,9 +70,9 @@ namespace Lalamachine.ViewModel.Unittests
                 (path, stamp, waveform) => _stored[path] = waveform);
             _player = Substitute.For<IAudioPlayer>();
             _player.MixTo(Arg.Any<string>()).Returns(true);
-            _viewModel = new PlayerViewModel(_player, Substitute.For<IDialogService>(), new PlayerSettings(new InMemorySettingsFile()), _waveforms);
+            _viewModel = new PlayerViewModel(_player, new PlayerSettings(new InMemorySettingsFile()), _waveforms);
             // Wired like the queue in the main window.
-            _list = new PlaylistBaseViewModel("MAIN", Substitute.For<IDialogService>(), Substitute.For<ITrackPlaylists>());
+            _list = new PlaylistBaseViewModel("MAIN", Substitute.For<ITrackPlaylists>());
             foreach (var name in new[] { "a", "b", "c" })
             {
                 _list.AddTrack(new LibLalaTagsBuilder(name, new UncheckedTrackPath(PathOf(name)), 5).Build());

@@ -21,6 +21,23 @@
             <GradientStop Offset="0" Color="#FFCCCCCC" />
             <GradientStop Offset="1" Color="#FF444444" />
         </LinearGradientBrush>
+        <!-- A toggle button that's on is pressed in: the gradients and the border upside down. -->
+        <LinearGradientBrush x:Key="ControlCheckedBrush" StartPoint="50%,0%" EndPoint="50%,100%">
+            <GradientStop Offset="0" Color="#FF808080" />
+            <GradientStop Offset="1" Color="White" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="ControlCheckedMouseOverBrush" StartPoint="50%,0%" EndPoint="50%,100%">
+            <GradientStop Offset="0" Color="Orange" />
+            <GradientStop Offset="1" Color="White" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="ControlCheckedPressedBrush" StartPoint="50%,0%" EndPoint="50%,100%">
+            <GradientStop Offset="0" Color="DarkOrange" />
+            <GradientStop Offset="1" Color="White" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="ControlCheckedBorderBrush" StartPoint="50%,0%" EndPoint="50%,100%">
+            <GradientStop Offset="0" Color="#FF444444" />
+            <GradientStop Offset="1" Color="#FFCCCCCC" />
+        </LinearGradientBrush>
         <LinearGradientBrush x:Key="PlayerBackgroundBrush" StartPoint="50%,100%" EndPoint="50%,0%">
             <GradientStop Offset="0" Color="LightBlue" />
             <GradientStop Offset="1" Color="DarkBlue" />
@@ -35,6 +52,26 @@
         <SolidColorBrush x:Key="ButtonForeground" Color="Black" />
         <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Black" />
         <SolidColorBrush x:Key="ButtonForegroundPressed" Color="Black" />
+
+        <!-- The player's toggle buttons, like the buttons when they're off. -->
+        <StaticResource x:Key="ToggleButtonBackground" ResourceKey="ControlBrush" />
+        <StaticResource x:Key="ToggleButtonBackgroundPointerOver" ResourceKey="ControlMouseOverBrush" />
+        <StaticResource x:Key="ToggleButtonBackgroundPressed" ResourceKey="ControlPressedBrush" />
+        <StaticResource x:Key="ToggleButtonBackgroundChecked" ResourceKey="ControlCheckedBrush" />
+        <StaticResource x:Key="ToggleButtonBackgroundCheckedPointerOver" ResourceKey="ControlCheckedMouseOverBrush" />
+        <StaticResource x:Key="ToggleButtonBackgroundCheckedPressed" ResourceKey="ControlCheckedPressedBrush" />
+        <StaticResource x:Key="ToggleButtonBorderBrush" ResourceKey="ControlBorderBrush" />
+        <StaticResource x:Key="ToggleButtonBorderBrushPointerOver" ResourceKey="ControlBorderBrush" />
+        <StaticResource x:Key="ToggleButtonBorderBrushPressed" ResourceKey="ControlBorderBrush" />
+        <StaticResource x:Key="ToggleButtonBorderBrushChecked" ResourceKey="ControlCheckedBorderBrush" />
+        <StaticResource x:Key="ToggleButtonBorderBrushCheckedPointerOver" ResourceKey="ControlCheckedBorderBrush" />
+        <StaticResource x:Key="ToggleButtonBorderBrushCheckedPressed" ResourceKey="ControlCheckedBorderBrush" />
+        <SolidColorBrush x:Key="ToggleButtonForeground" Color="Black" />
+        <SolidColorBrush x:Key="ToggleButtonForegroundPointerOver" Color="Black" />
+        <SolidColorBrush x:Key="ToggleButtonForegroundPressed" Color="Black" />
+        <SolidColorBrush x:Key="ToggleButtonForegroundChecked" Color="Black" />
+        <SolidColorBrush x:Key="ToggleButtonForegroundCheckedPointerOver" Color="Black" />
+        <SolidColorBrush x:Key="ToggleButtonForegroundCheckedPressed" Color="Black" />
 
         <StaticResource x:Key="DataGridColumnHeaderBackgroundBrush" ResourceKey="ControlBrush" />
         <StaticResource x:Key="DataGridColumnHeaderHoveredBackgroundBrush" ResourceKey="ControlMouseOverBrush" />
@@ -53,7 +90,6 @@
         <DataTemplate x:Key="HeartCell" x:DataType="vm:PlaylistTags">
             <Button Classes="heart"
                     Classes.liked="{Binding IsLiked}"
-                    IsVisible="{Binding !IsOutsideLibrary}"
                     Focusable="False"
                     Command="{Binding $parent[DataGrid].((vm:PlaylistBaseViewModel)DataContext).ToggleLikedCommand}"
                     CommandParameter="{Binding}">
@@ -109,16 +145,16 @@
         <Setter Property="Background" Value="{StaticResource PlayerBackgroundBrush}" />
     </Style>
 
-    <!-- The cover of the track that plays, as high as the title and the two rows of buttons next to it. A note when there's none. -->
+    <!-- The cover of the track that plays, as high as the two rows of buttons next to it. A note when there's none. -->
     <Style Selector="Border.cover">
-        <Setter Property="Width" Value="136" />
-        <Setter Property="Height" Value="136" />
+        <Setter Property="Width" Value="104" />
+        <Setter Property="Height" Value="104" />
         <Setter Property="Margin" Value="8,0" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Background" Value="#33FFFFFF" />
     </Style>
     <Style Selector="Border.cover TextBlock">
-        <Setter Property="FontSize" Value="48" />
+        <Setter Property="FontSize" Value="40" />
         <Setter Property="Foreground" Value="#80FFFFFF" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -155,7 +191,7 @@
         <Setter Property="Padding" Value="4,2" />
     </Style>
 
-    <Style Selector="Button">
+    <Style Selector="Button, ToggleButton">
         <Setter Property="MinHeight" Value="48" />
         <Setter Property="MinWidth" Value="64" />
         <Setter Property="FontSize" Value="24" />
@@ -166,6 +202,11 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <!-- Pressed in, what's on it a little lower. -->
+    <Style Selector="ToggleButton:checked">
+        <Setter Property="Padding" Value="2,4,2,0" />
     </Style>
 
     <Style Selector="TextBox">
@@ -216,6 +257,14 @@
         <Setter Property="FontSize" Value="20" />
     </Style>
 
+    <!-- The row of the track that plays, in its own colour. The selection's orange goes over it. -->
+    <Style Selector="DataGridRow" x:DataType="vm:PlaylistTags">
+        <Setter Property="views:TrackRow.IsPlaying" Value="{Binding IsPlaying}" />
+    </Style>
+    <Style Selector="DataGridRow.playing">
+        <Setter Property="Background" Value="#2D6BD6" />
+    </Style>
+
     <!-- A cell of the Key column names the key when hovered, TrackGrid gives the column this class. A key without a natural notation has no tooltip. -->
     <Style Selector="DataGridCell.key" x:DataType="vm:PlaylistTags">
         <Setter Property="ToolTip.Tip" Value="{Binding InitialKeyNaturalNotation}" />
@@ -231,6 +280,29 @@
     </Style>
     <Style Selector="Button.columnFilter.active">
         <Setter Property="Background" Value="DarkOrange" />
+    </Style>
+    <!-- What a column filter's flyout says about its fields. -->
+    <Style Selector="TextBlock.flyoutLabel">
+        <Setter Property="FontFamily" Value="Calibri" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="NumericUpDown.bpm">
+        <Setter Property="Width" Value="140" />
+        <Setter Property="Minimum" Value="0" />
+        <Setter Property="Maximum" Value="999" />
+        <Setter Property="Increment" Value="1" />
+        <Setter Property="FormatString" Value="0" />
+    </Style>
+    <!-- A row of a list in a flyout, to click on. -->
+    <Style Selector="Button.flyoutItem">
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="MinWidth" Value="32" />
+        <Setter Property="FontFamily" Value="Calibri" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="Padding" Value="8,2" />
+        <Setter Property="Margin" Value="0,2" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
     </Style>
     <!-- A button with text at the bottom of a flyout. -->
     <Style Selector="Button.flyoutAction">
@@ -274,5 +346,37 @@
     <Style Selector="FlyoutPresenter CheckBox">
         <Setter Property="FontFamily" Value="Calibri" />
         <Setter Property="FontSize" Value="20" />
+    </Style>
+
+    <!-- As big as the cover at the other end of the player, in the colours of the buttons and the position slider. -->
+    <Style Selector="views|VolumeKnob">
+        <Setter Property="Width" Value="104" />
+        <Setter Property="Height" Value="104" />
+        <Setter Property="ArcBrush" Value="DarkOrange" />
+        <!-- Dark, the bottom of the player is light. -->
+        <Setter Property="TrackBrush" Value="#4D000080" />
+        <Setter Property="MutedBrush" Value="#FF6A6A6A" />
+        <Setter Property="BodyBrush" Value="{StaticResource ControlBrush}" />
+        <Setter Property="BodyBorderBrush" Value="{StaticResource ControlBorderBrush}" />
+        <Setter Property="PointerBrush" Value="Black" />
+    </Style>
+    <Style Selector="views|VolumeKnob:pointerover">
+        <Setter Property="BodyBrush" Value="{StaticResource ControlMouseOverBrush}" />
+    </Style>
+    <Style Selector="views|VolumeKnob:focus-visible">
+        <Setter Property="TrackBrush" Value="#99000080" />
+    </Style>
+    <!-- The volume above the knob while it's turned. -->
+    <Style Selector="Border.volumeTip">
+        <Setter Property="Background" Value="#E6000040" />
+        <Setter Property="BorderBrush" Value="DarkOrange" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="8,2" />
+    </Style>
+    <Style Selector="Border.volumeTip TextBlock">
+        <Setter Property="FontFamily" Value="Calibri" />
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="Foreground" Value="White" />
     </Style>
 </Styles>

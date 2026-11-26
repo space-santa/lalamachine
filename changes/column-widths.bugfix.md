@@ -1,0 +1,1 @@
+The columns of the track lists don't get wider any more while you scroll. They start at a fixed width, and the widths you drag them to are kept, also after a restart. Right-clicking the column headers has the default widths back.

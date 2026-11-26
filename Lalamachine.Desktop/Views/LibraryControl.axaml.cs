@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
@@ -86,6 +87,42 @@ namespace Lalamachine.Desktop.Views
             }
         }
 
+        // Selects the genres of a saved combination, the ones the library still has. All of them: a search that would hide
+        // some is cleared, along with the artists and albums selected, as for any other genres. The key and BPM filters stay.
+        private void GenreCombination_Click(object? sender, RoutedEventArgs e)
+        {
+            if (sender is not Control { DataContext: GenreCombination combination } || DataContext is not LibraryViewModel context)
+            {
+                return;
+            }
+
+            GenreCombinationsButton.Flyout?.Hide();
+            if (context.SearchString.Length > 0 || !string.IsNullOrEmpty(SearchBox.Text))
+            {
+                ClearSearch(context, alsoColumnFilters: false);
+            }
+
+            var listed = GenreList.Items.OfType<string>().ToList();
+            var indexes = combination.Genres.Select(x => listed.IndexOf(x)).Where(x => x > 0).Order().ToList();
+            var selection = GenreList.Selection;
+            selection.BeginBatchUpdate();
+            try
+            {
+                selection.Clear();
+                // None of them left is no filter.
+                selection.Select(indexes.Count > 0 ? indexes[0] : 0);
+                foreach (var index in indexes.Skip(1))
+                {
+                    selection.Select(index);
+                }
+            }
+            finally
+            {
+                selection.EndBatchUpdate();
+            }
+            GenreList.ScrollIntoView(indexes.Count > 0 ? indexes[0] : 0);
+        }
+
         private void SearchBox_TextChanged(object? sender, TextChangedEventArgs e)
         {
             if (DataContext is not LibraryViewModel context)
@@ -93,12 +130,15 @@ namespace Lalamachine.Desktop.Views
                 return;
             }
 
+            // Emptied by the user, after a search. Not when it's reported later, after this control emptied it and cleared
+            // what it had to, like for a saved genre combination: the genres selected since would be cleared too. Nor when
+            // it had too few letters to be searched for.
             var text = SearchBox.Text ?? "";
             if (text.Length > 2)
             {
                 context.SearchString = text;
             }
-            else if (text.Length == 0)
+            else if (text.Length == 0 && context.SearchString.Length > 0)
             {
                 ClearSearch(context);
             }
@@ -112,13 +152,21 @@ namespace Lalamachine.Desktop.Views
             }
         }
 
-        private void ClearSearch(LibraryViewModel context)
+        // And the filters of the track list's columns, unless they are to stay.
+        private void ClearSearch(LibraryViewModel context, bool alsoColumnFilters = true)
         {
             // First, or the replaced lists would select these items again, which would set the filters again.
             GenreList.UnselectAll();
             ArtistList.UnselectAll();
             AlbumList.UnselectAll();
-            context.ClearSearchCommand.Execute(null);
+            if (alsoColumnFilters)
+            {
+                context.ClearSearchCommand.Execute(null);
+            }
+            else
+            {
+                context.ClearSearchAndSelection();
+            }
             // The view model has nothing to clear, and the binding nothing to update, for text too short to have been searched for.
             SearchBox.Clear();
         }

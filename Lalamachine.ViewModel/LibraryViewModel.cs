@@ -47,9 +47,11 @@ namespace Lalamachine.ViewModel
         private int _numberOfArtists;
         private int _numberOfAlbums;
 
-        public LibraryViewModel(LalaContext context, Func<LalaContext> createScanContext, IDialogService dialogs)
+        // The genre combinations of the app's settings folder, unless others are given.
+        public LibraryViewModel(LalaContext context, Func<LalaContext> createScanContext, IDialogService dialogs, GenreCombinationSettings? genreCombinations = null)
         {
             _dialogs = dialogs;
+            GenreCombinations = new GenreCombinationsViewModel(genreCombinations ?? new GenreCombinationSettings(), dialogs, () => GenreFilter);
             _model = new MusicLibModel(context, createScanContext);
             _model.FileScannedEvent += FileScannedEventHandler;
             _model.FilesToScanChangedEvent += FilesToScanChangedEventHandler;
@@ -72,8 +74,10 @@ namespace Lalamachine.ViewModel
         {
             switch (e.PropertyName)
             {
+                // After every change of a filter, also of the ones cleared along with another.
                 case nameof(DisplayLib):
                     NotifyDisplayLibChanged();
+                    GenreCombinations.GenreSelectionChanged();
                     break;
                 case nameof(Scanning):
                     NotifyScanningChanged();
@@ -134,6 +138,14 @@ namespace Lalamachine.ViewModel
         public ICommand ClearSearchCommand => _clearSearchCommand;
         private void ClearSearch(object? obj)
         {
+            ClearSearchAndSelection();
+            FiltersCleared?.Invoke(this, EventArgs.Empty);
+        }
+
+        // The search and the genres, artists and albums selected, but not the filters of the track list's columns: to select
+        // other genres, like a saved combination of them.
+        public void ClearSearchAndSelection()
+        {
             // The search box reports being emptied after this emptied it. Rebuilding everything again would be for nothing.
             if (SearchString.Length > 0 || _genreFilter.Count > 0 || _artistFilter.Count > 0 || _albumFilter.Count > 0)
             {
@@ -142,7 +154,6 @@ namespace Lalamachine.ViewModel
                 _artistFilter = Array.Empty<string>();
                 SearchString = "";
             }
-            FiltersCleared?.Invoke(this, EventArgs.Empty);
         }
 
         private readonly DelegateCommand _startScanCommand;
@@ -299,6 +310,8 @@ namespace Lalamachine.ViewModel
                 selection.Remove(Constants.ALL);
             }
         }
+
+        public GenreCombinationsViewModel GenreCombinations { get; }
 
         public bool Scanning
         {

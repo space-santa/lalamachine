@@ -17,9 +17,6 @@ namespace Lalamachine.ViewModel
         // The index of the chosen one, null when the user cancels.
         Task<int?> ChooseAsync(string prompt, IReadOnlyList<string> choices);
 
-        // Empty when the user cancels.
-        Task<IReadOnlyList<string>> PickMusicFilesAsync();
-
         // Null when the user cancels.
         Task<string?> PickFolderAsync();
     }

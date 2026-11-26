@@ -25,7 +25,7 @@ namespace Lalamachine.ViewModel.Unittests
         {
             _audioPlayer = Substitute.For<IAudioPlayer>();
             _audioPlayer.Duration.Returns(TimeSpan.FromSeconds(300));
-            _player = new PlayerViewModel(_audioPlayer, Substitute.For<IDialogService>(), new PlayerSettings(new InMemorySettingsFile()));
+            _player = new PlayerViewModel(_audioPlayer, new PlayerSettings(new InMemorySettingsFile()));
             _controls = Substitute.For<IMediaControls>();
             _shown = [];
             _controls.Show(Arg.Do<NowPlaying?>(_shown.Add));
